@@ -1,5 +1,3 @@
-<!-- Created by 南麓<haonan.whn@alibaba-inc.com> on 2017/8/10. -->
-
 <template>
   <div
     class="grid-option"

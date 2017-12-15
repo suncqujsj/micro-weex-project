@@ -38,7 +38,7 @@
       },
       openRenameDialog (event) {
          this.show=true;
-         this.inputName=this.deviceDetail.devName;
+         //this.inputName=this.deviceDetail.devName;
       },
       confirmRename(){
          this.show=false;

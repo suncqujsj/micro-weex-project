@@ -1,6 +1,5 @@
 const mm = weex.requireModule('modal');
-var ipAddress="http://10.74.144.55:8080";
-//var ipAddress="http://192.168.43.187:8080";
+var ipAddress="http://10.74.146.13:8080";
 const navigator = weex.requireModule('navigator');
 var dummy=true;
 const storage = weex.requireModule('storage');
@@ -308,6 +307,7 @@ export default {
       }, result => {
          callback(result)
       });
+
 
   }
  

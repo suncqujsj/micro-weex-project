@@ -4,8 +4,8 @@
 
 <script>
   //import IndexPage from './component/test.vue'
-  //import IndexPage from './sample/index.vue'
-  import IndexPage from  './device/switch.vue'
+  import IndexPage from './sample/index.vue'
+
   export default {
     components: { IndexPage }
   } 

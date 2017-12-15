@@ -50,23 +50,23 @@
          navList:[
          {
            "title":"QQ",
-           "img":"http://10.74.144.55:8080/dist/img/share/qq.png"
+           "img":"http://10.74.144.55:8080/dist/src/img/share/qq.png"
          },
          {
            "title":"微信",
-           "img":"http://10.74.144.55:8080/dist/img/share/wechat.png"
+           "img":"http://10.74.144.55:8080/dist/src/img/share/wechat.png"
          },
          {
            "title":"短信",
-           "img":"http://10.74.144.55:8080/dist/img/share/messege.png"
+           "img":"http://10.74.144.55:8080/dist/src/img/share/messege.png"
          },
          {
            "title":"电话",
-           "img":"http://10.74.144.55:8080/dist/img/share/qq.png"
+           "img":"http://10.74.144.55:8080/dist/src/img/share/qq.png"
          },
          {
            "title":"QQ",
-           "img":"http://10.74.144.55:8080/dist/img/share/qq.png"
+           "img":"http://10.74.144.55:8080/dist/src/img/share/qq.png"
          }
        ],
        cols:3

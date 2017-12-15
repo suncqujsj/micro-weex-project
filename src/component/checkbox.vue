@@ -27,10 +27,10 @@
   import mideaCell from './cell.vue';
   const modal = weex.requireModule('modal');
   //to be changed
-  var CHECKED="http://10.74.144.55:8080/dist/img/check/checked.png";
-  var UNCHECKED="http://10.74.144.55:8080/dist/img/check/unchecked.png";
-  var CHECKED_DISABLED="http://10.74.144.55:8080/dist/img/check/dischecked.png";
-  var UNCHECKED_DISABLED="http://10.74.144.55:8080/dist/img/check/disuncheked.png"
+  var CHECKED="../img/check/checked.png";
+  var UNCHECKED="../img/check/unchecked.png";
+  var CHECKED_DISABLED="../img/check/dischecked.png";
+  var UNCHECKED_DISABLED="../img/check/disuncheked.png"
   export default {
     components: { mideaCell },
     props: {

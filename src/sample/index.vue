@@ -47,7 +47,7 @@
     }),
     methods: {
       goTo(link) {
-        var path="sample/"+link+".js";
+        var path="src/sample/"+link+".js";
         nativeService.goTo(path);
       }
     }

@@ -185,7 +185,7 @@
     },
     data: () => ({
       //arrowIcon: icon.arrowIcon
-      arrowIcon:"http://10.74.144.55:8080/dist/img/arrow_right.png"
+      arrowIcon:"../img/arrow_right.png"
     }),
     methods: {
       cellClicked (e) {

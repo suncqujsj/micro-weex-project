@@ -9,7 +9,7 @@
                 @mideaCellClick="itemClicked"
                >
     </midea-cell>
-    <midea-cell title="标题附带描述"
+    <midea-cell title="标题附5444带描述"
                 desc="描述"
                 :hasMargin="true"
                 :hasArrow="true"
@@ -39,7 +39,7 @@
                 rightText="设置"
                 :hasArrow="true"
                 :clickActivied="true"
-                itemImg="http://10.74.144.55:8080/dist/img/icon/jiayun.light.002.png"
+                itemImg="../img/icon/jiayun.light.002.png"
                 @mideaCellClick="itemClicked"
                >
      </midea-cell>

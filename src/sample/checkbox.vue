@@ -37,10 +37,10 @@
             { title: '选项4', value: 4 }
          ],
          list1: [
-            { title: '一路开关面板', value: 1,itemImg:"http://10.74.144.55:8080/dist/img/icon/jiayun.switch.001.png" },
-            { title: '二路开关面板', value: 2, checked: true,itemImg:"http://10.74.144.55:8080/dist/img/icon/jiayun.switch.002.png" },
-            { title: '三路开关面板', value: 3,itemImg:"http://10.74.144.55:8080/dist/img/icon/jiayun.switch.003.png" },
-            { title: '四路开关面板', value: 4,itemImg:"http://10.74.144.55:8080/dist/img/icon/jiayun.switch.004.png" }
+            { title: '一路开关面板', value: 1,itemImg:"../img/icon/jiayun.switch.001.png" },
+            { title: '二路开关面板', value: 2, checked: true,itemImg:"../img/icon/jiayun.switch.002.png" },
+            { title: '三路开关面板', value: 3,itemImg:"../img/icon/jiayun.switch.003.png" },
+            { title: '四路开关面板', value: 4,itemImg:"../img/icon/jiayun.switch.004.png" }
          ],
          checkedList: [2],
          imgCheckedList: [2],

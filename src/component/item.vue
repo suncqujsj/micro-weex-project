@@ -197,7 +197,7 @@
       cellClicked (e) {
          this.$emit('mideaCellClick', { e });
       },
-      ondelete(e) {
+      onDelete(e) {
          this.$emit('onDelete', { e });
       },
       showEdit(e) {

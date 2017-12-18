@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <midea-seek-bar :max="max" :min="min"  :value="value" :step="step" :index="index" :attr="attr" @stopChange="slideEnd"  ></midea-seek-bar>
-  </div>
+    <midea-seek-bar :max="max" :min="min"  :value="value" :step="step" :unit="unit"  @stopChange="slideEnd"  ></midea-seek-bar>
 </template>
 <style scoped>
 </style>
@@ -33,6 +31,10 @@
         type: String,
         default: 'level'
       },
+      unit: {
+        type: String,
+        default: '%'
+      },
       
     },
     data: () => ({
@@ -43,8 +45,8 @@
     methods: {
       slideEnd (event) {
           let value = event.value
-          const { min,max,step,index, attr } = this;
-          this.$emit('slideEnd',{min,max,value,step,index, attr})
+          const { min,max,step,unit,attr,index } = this;
+          this.$emit('slideEnd',{min,max,value,step,unit,attr,index})
       }
     }
   }

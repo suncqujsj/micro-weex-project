@@ -1,7 +1,7 @@
 const mm = weex.requireModule('modal');
 var ipAddress="http://10.74.146.13:8080";
 const navigator = weex.requireModule('navigator');
-var dummy=true;
+var dummy= false;
 const storage = weex.requireModule('storage');
 var serviceList = {
         getDeviceList: "subdevice/list",

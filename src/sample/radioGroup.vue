@@ -1,44 +1,19 @@
 <template>
-   <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
-      <midea-button text="点击弹出选择列表"
-        type="green" @mideaButtonClicked="openSelect">
-      </midea-button>
-      <m-radio-group 
-      :show="isShow" title="选择设备" :items="list" 
-      :index="index" 
-      @close="isShow=false"
-        @itemClick="itemClick"
-        ></m-radio-group>
-       <text >{{result}}</text>
+  <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+    <midea-button text="点击弹出选择列表" type="green" @mideaButtonClicked="openSelect">
+    </midea-button>
+    <m-radio-group :show="isShow" title="选择设备" :items="list" :index="index" @close="isShow=false" @itemClick="itemClick"></m-radio-group>
+    <text>{{result}}</text>
 
+    <midea-button text="点击弹出选择列表1" type="green" @mideaButtonClicked="openSelect1">
+    </midea-button>
+    <text>{{result1}}</text>
+    <m-radio-group :show="isShow1" title="选择设备1" :items="list1" :index="index1" :hideOnMask="false" @close="isShow1=false" @itemClick="itemClick1"></m-radio-group>
 
-      <midea-button text="点击弹出选择列表1"
-        type="green" @mideaButtonClicked="openSelect1">
-      </midea-button>
-       <text >{{result1}}</text>
-      <m-radio-group 
-      :show="isShow1" 
-      title="选择设备1" 
-      :items="list1" 
-      :index="index1" 
-      :hideOnMask="false"
-      @close="isShow1=false"
-        @itemClick="itemClick1"
-        ></m-radio-group>
-
-
-
-      <midea-button text="点击弹出选择列表2"
-        type="green" @mideaButtonClicked="openSelect2">
-      </midea-button>
-       <text >{{result2}}</text>
-      <m-radio-group 
-      :show="isShow2" title="选择设备2" :items="list2" 
-      :index="index2" 
-      :rows="3"
-      @close="isShow2=false"
-        @itemClick="itemClick2"
-        ></m-radio-group>
+    <midea-button text="点击弹出选择列表2" type="green" @mideaButtonClicked="openSelect2">
+    </midea-button>
+    <text>{{result2}}</text>
+    <m-radio-group :show="isShow2" title="选择设备2" :items="list2" :index="index2" :rows="3" @close="isShow2=false" @itemClick="itemClick2"></m-radio-group>
   </div>
 </template>
 <style scoped>

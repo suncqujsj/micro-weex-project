@@ -4,7 +4,7 @@
         <div class="header-left-image-wrapper" @click="leftImgClick" >
             <image v-if="showLeftImg" class="header-left-image" :src="leftImg"></image>
         </div>
-        <div :style="{fontSize:fontSize+'px'}" ><text :style="{color:titleText}">{{title}}</text></div>
+        <div><text :style="{color:titleText, fontSize:fontSize+'px'}">{{title}}</text></div>
         <div class="header-right-image-wrapper" @click="rightImgClick" >
             <image v-if="showRightImg" class="header-right-image" :src="rightImg"></image>
         </div> 

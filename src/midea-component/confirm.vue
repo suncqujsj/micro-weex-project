@@ -89,10 +89,12 @@
     }
 
     .left-button {
+        font-size: 36px;
         color: #B4C0CB;
     }
 
     .right-button {
+        font-size: 36px;
         color: #0E90FF;
     }
 </style>

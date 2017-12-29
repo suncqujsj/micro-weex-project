@@ -21,8 +21,8 @@
 </template>
 
 <script>
-import mideaMask from "../component/mask.vue";
-import mideaCell from "../component/cell.vue";
+import mideaMask from "../midea-component/mask.vue";
+import mideaCell from "../midea-component/cell.vue";
 const CHECKED = "../img/check/radio_checked.png";
 const dom = weex.requireModule("dom");
 const animation = weex.requireModule("animation");

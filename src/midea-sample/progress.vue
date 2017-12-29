@@ -87,7 +87,7 @@ module.exports = {
         }
     },
     created() {
-        this.isIos = weex.config.env.platform == 'iOS' ? true : false;
+        //this.isIos = weex.config.env.platform == 'iOS' ? true : false;
     }
 };
 </script>

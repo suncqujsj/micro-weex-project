@@ -1,5 +1,5 @@
 <template>
- <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+ <div class="wrapper" :style="{paddingTop:isIos?'0px':'0px'}">
 
    <midea-title-bar title="选择地点"></midea-title-bar>
    <midea-cell title="地点"
@@ -135,7 +135,7 @@
        }
     },
     created () {
-      //this.isIos=weex.config.env.platform=='iOS'?true:false;
+      this.isIos=weex.config.env.platform=='iOS'?true:false;
     }
   };
 </script>

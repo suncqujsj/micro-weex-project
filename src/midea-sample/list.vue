@@ -1,10 +1,7 @@
 <template>
   <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
-      <list @loadmore="onloading" >
-        <refresh class="refresh-view" @refresh="onrefresh" :display="refreshing">
-           <loading-indicator class="indicator" ></loading-indicator>
-        </refresh>
-        <midea-item v-for="(item,i) in list"
+      <list >
+        <midea-item v-for="(item,i) in list" :key="item"
                :hasTopBorder="i==0?true:false" :title="item.name"
                 :hasArrow="true"
                 :clickActivied="true"
@@ -13,7 +10,7 @@
                 @onDelete="delItem(item)"
          >
         </midea-item>
-         <midea-item v-for="(item,i) in list1"
+         <midea-item v-for="(item,i) in list1" :key="item"
                :hasTopBorder="i==0?true:false" :title="item.name"
                 :hasArrow="false"
                 :desc="item.desc"
@@ -57,12 +54,11 @@
 <script>
 
   import mideaItem from '../midea-component/item.vue'
-  import mideaOperationModal from '../midea-component/operation-modal.vue'
   import nativeService from '../common/services/nativeService'
   const modal = weex.requireModule('modal');
   
   export default {
-    components: {mideaItem,mideaOperationModal},
+    components: {mideaItem},
     data () {
         return{
           refreshing:'hide',
@@ -70,26 +66,13 @@
           startIndex:16,
           loadMore:true,
           list:[
-            {"name":"设备1"},
-            {"name":"设备2"},
-            {"name":"设备3"},
-            {"name":"设备4"},
-            {"name":"设备5"},
-            {"name":"设备6"},
-            {"name":"设备7"},
-            {"name":"设备8"},
-            {"name":"设备9"},
-            {"name":"设备10"},
-            {"name":"设备11"},
-            {"name":"设备12"},
-            {"name":"设备13"},
-            {"name":"设备14"},
-            {"name":"设备15"}
+            {"name":"童锁"},
+            {"name":"云食普"},
           ],
           list1:[
-            {"name":"普京和特朗普未能会谈 克里姆宁宫：都怪美国","desc":"美居活动 2017-12-25","itemImg":"/dist/src/img/icon/01.png"},
-            {"name":"普京和特朗普未能会谈 克里姆宁宫：都怪美国","desc":"美居活动 2017-12-25","itemImg":"/dist/src/img/icon/02.png"},
-            {"name":"普京和特朗普未能会谈 克里姆宁宫：都怪美国","desc":"美居活动 2017-12-25","itemImg":"/dist/src/img/icon/03.png"},
+            {"name":"普京和特朗普未能会谈 克里姆宁宫 都怪美国","desc":"美居活动 2017-12-25","itemImg":"/dist/src/img/icon/01.png"},
+            {"name":"普京和特朗普未能会谈 克里姆宁宫 都怪美国","desc":"美居活动 2017-12-25","itemImg":"/dist/src/img/icon/02.png"},
+            {"name":"普京和特朗普未能会谈 克里姆宁宫 都怪美国","desc":"美居活动 2017-12-25","itemImg":"/dist/src/img/icon/03.png"}
           ]
         }
     },
@@ -106,39 +89,6 @@
        },
        delItem(item){
 
-       },
-       onrefresh (event) {
-          var self=this;
-          self.refreshing = 'show';
-          setTimeout(function(){
-            var list=[];
-            for(var i=0;i<15;i++){
-              var obj={"name":"设备"+(i+1)};
-              list.push(obj);
-            }
-            self.list=list;
-            self.startIndex=16;
-            self.refreshing = 'hide';
-          }, 1000)
-       },
-       onloading (event) {
-         var self=this;
-         self.showLoading = 'show';
-         setTimeout(function(){
-            if (self.loadMore) {
-              for(var i=0;i<10;i++){
-                 if(self.startIndex<=100){
-                   var obj={"name":"设备"+self.startIndex};
-                   self.list.push(obj);
-                   self.startIndex++;
-                 }else{
-                   self.loadMore=false;
-                   break;
-                 }
-              }
-            }
-            self.showLoading = 'hide';
-         }, 100);
        }
     },
     created () {

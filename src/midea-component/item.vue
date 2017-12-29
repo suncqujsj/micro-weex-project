@@ -191,7 +191,7 @@
       }
     },
     data: () => ({
-      arrowIcon:"http://10.74.148.105:8080/dist/img/arrow_right.png"
+      arrowIcon:"/dist/src/img/arrow_right.png"
     }),
     methods: {
       cellClicked (e) {

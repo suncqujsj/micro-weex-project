@@ -87,11 +87,9 @@
             {"name":"设备15"}
           ],
           list1:[
-            {"name":"普京和特朗普未能会谈 克里姆宁宫：都怪美国","desc":"美居活动 2017-12-25","itemImg":"/dist/src/img/icon/485_laffey.RFH.001.png"},
-            {"name":"普京和特朗普未能会谈 克里姆宁宫：都怪美国","desc":"美居活动 2017-12-25","itemImg":"/dist/src/img/icon/485_laffey.RFH.001.png"},
-            {"name":"普京和特朗普未能会谈 克里姆宁宫：都怪美国","desc":"美居活动 2017-12-25","itemImg":"/dist/src/img/icon/485_laffey.RFH.001.png"},
-            {"name":"普京和特朗普未能会谈 克里姆宁宫：都怪美国","desc":"美居活动 2017-12-25","itemImg":"/dist/src/img/icon/485_laffey.RFH.001.png"},
-            {"name":"普京和特朗普未能会谈 克里姆宁宫：都怪美国","desc":"美居活动 2017-12-25","itemImg":"/dist/src/img/icon/485_laffey.RFH.001.png"}
+            {"name":"普京和特朗普未能会谈 克里姆宁宫：都怪美国","desc":"美居活动 2017-12-25","itemImg":"/dist/src/img/icon/01.png"},
+            {"name":"普京和特朗普未能会谈 克里姆宁宫：都怪美国","desc":"美居活动 2017-12-25","itemImg":"/dist/src/img/icon/02.png"},
+            {"name":"普京和特朗普未能会谈 克里姆宁宫：都怪美国","desc":"美居活动 2017-12-25","itemImg":"/dist/src/img/icon/03.png"},
           ]
         }
     },

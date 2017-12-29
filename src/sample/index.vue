@@ -63,7 +63,8 @@ module.exports = {
             { title: 'RadioGroup', link: "radioGroup" },
             { title: 'Refresh', link: "refresh" },
             { title: 'Slider', link: "slider" },
-            { title: 'Switch', link: "switch" }
+            { title: 'Switch', link: "switch" },
+            { title: 'Tab', link: "tab" }
         ],
         list: [
             { title: 'Button', link: "button" },

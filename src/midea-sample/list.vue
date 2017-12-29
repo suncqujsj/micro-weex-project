@@ -1,6 +1,10 @@
 <template>
   <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+     <midea-cell title="童锁">
+           <midea-switch :checked="mideaChecked"  @change="onMideachange" :width="70" :height="38"  slot="value"></midea-switch>
+        </midea-cell>
       <list >
+       
         <midea-item v-for="(item,i) in list" :key="item"
                :hasTopBorder="i==0?true:false" :title="item.name"
                 :hasArrow="true"
@@ -10,6 +14,7 @@
                 @onDelete="delItem(item)"
          >
         </midea-item>
+       
          <midea-item v-for="(item,i) in list1" :key="item"
                :hasTopBorder="i==0?true:false" :title="item.name"
                 :hasArrow="false"
@@ -22,6 +27,7 @@
                 @onDelete="delItem(item)"
          >
         </midea-item>
+
       </list> 
       <midea-operation-modal
          :show="showDelModal"
@@ -54,19 +60,21 @@
 <script>
 
   import mideaItem from '../midea-component/item.vue'
+  import mideaCell from '../component/cell.vue'
+  import mideaSwitch from '../midea-component/switch.vue'
   import nativeService from '../common/services/nativeService'
   const modal = weex.requireModule('modal');
   
   export default {
-    components: {mideaItem},
+    components: {mideaItem,mideaCell,mideaSwitch},
     data () {
         return{
           refreshing:'hide',
           showDelModal:false,
           startIndex:16,
           loadMore:true,
+          mideaChecked: true,
           list:[
-            {"name":"童锁"},
             {"name":"云食普"},
           ],
           list1:[
@@ -89,7 +97,11 @@
        },
        delItem(item){
 
-       }
+       },
+       onMideachange(event) {
+        this.mideaChecked = event.value;
+        //nativeService.toast(this.checked);
+      },
     },
     created () {
       this.isIos=weex.config.env.platform=='iOS'?true:false;

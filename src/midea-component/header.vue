@@ -78,11 +78,11 @@
             },
             leftImg: {
                 type: String,
-                default: nativeService.convertImgPath('../img/header/tab_back@2x.png')
+                default: '../img/header/tab_back@2x.png'
             },
             rightImg: {
                 type: String,
-                default: nativeService.convertImgPath('../img/header/tab_seting@2x.png')
+                default: '../img/header/tab_seting@2x.png'
             },
             showLeftImg: {
                 type: Boolean,

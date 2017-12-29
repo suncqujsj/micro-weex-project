@@ -68,23 +68,23 @@ module.exports = {
         ],
         list: [
             { title: 'Action Sheet', link: "actionSheet" },
-            { title: 'Button', link: "button" },
-            { title: 'Cell', link: "cell" },
-            { title: 'CheckBox', link: "checkbox" },
+            // { title: 'Button', link: "button" },
+            // { title: 'Cell', link: "cell" },
+            // { title: 'CheckBox', link: "checkbox" },
             { title: 'Dialog', link: "dialog" },
             { title: 'Grid Select', link: "gridSelect" },
-            { title: 'List', link: "list" },
+            // { title: 'List', link: "list" },
             { title: 'Modal', link: "modal" },
-            { title: 'Nav List', link: "navList" },
-            { title: 'Picker', link: "picker" },
-            { title: 'Popup', link: "popup" },
-            { title: 'Progress', link: "progress" },
+            // { title: 'Nav List', link: "navList" },
+            // { title: 'Picker', link: "picker" },
+            // { title: 'Popup', link: "popup" },
+            // { title: 'Progress', link: "progress" },
             { title: 'Promt', link: "promt" },
-            { title: 'Radio', link: "radio" },
-            { title: 'Slider', link: "slider" },
-            { title: 'Swiper', link: "swiper" },
-            { title: 'Switch', link: "switch" },
-            { title: 'Tab', link: "tab" }
+            { title: 'Radio', link: "radio" }
+            // { title: 'Slider', link: "slider" },
+            // { title: 'Swiper', link: "swiper" },
+            // { title: 'Switch', link: "switch" },
+            // { title: 'Tab', link: "tab" }
         ]
     }),
     computed: {

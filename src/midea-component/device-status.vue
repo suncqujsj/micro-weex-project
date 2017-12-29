@@ -125,7 +125,7 @@
         props: {
             deviceImg: {
                 type: String,
-                default: nativeService.convertImgPath('../img/deviceStatus/blue_9b@2x.png')
+                default: '../img/deviceStatus/blue_9b@2x.png'
             },
             mainStatus: {
                 type: String,
@@ -161,7 +161,7 @@
             },
         },
         data: () => ({
-            deleteIcon: nativeService.convertImgPath("../img/deviceStatus/plugin_remind_ @2x.png")
+            deleteIcon: "../img/deviceStatus/plugin_remind_ @2x.png"
         }),
         computed: {
             

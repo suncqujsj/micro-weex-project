@@ -1,7 +1,7 @@
 const mm = weex.requireModule('modal');
 var ipAddress = "http://10.33.197.48:8080";
 const navigator = weex.requireModule('navigator');
-var dummy = false;
+var dummy = !false;
 const storage = weex.requireModule('storage');
 var serviceList = {
     getDeviceList: "subdevice/list",
@@ -315,8 +315,14 @@ export default {
         });
 
 
+    },
+    convertImgPath(path) {
+        if (dummy) {
+            path = path || '';
+            path = path.replace(/\..\//g, '');
+            return ipAddress + "/dist/src/" + path;
+        } else {
+            return path;
+        }
     }
-
-
-
 }

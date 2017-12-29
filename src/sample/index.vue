@@ -51,6 +51,9 @@ module.exports = {
         meijulist: [
             { title: 'Button', link: "button" },
             { title: 'CheckBox', link: "checkbox" },
+            { title: 'Confirm', link: "confirm" },
+            { title: 'Device Status', link: "device-status" },
+            { title: 'Header', link: "header" },
             { title: 'List', link: "list" },
             { title: 'Loading', link: "loading" },
             { title: 'Nav List', link: "navList" },

@@ -1,10 +1,16 @@
 <template>
   <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
-     <midea-cell title="童锁">
-           <midea-switch :checked="mideaChecked"  @change="onMideachange" :width="70" :height="38"  slot="value"></midea-switch>
-        </midea-cell>
-      <list >
-       
+      <list >  
+        <midea-item v-for="(item,i) in list2" :key="item"
+               :hasTopBorder="i==0?true:false" :title="item.name"
+                :hasArrow="false"
+                :clickActivied="true"
+                @onItemPress="showDel(item)"
+                :cantEdit="true"
+                @onDelete="delItem(item)"
+         >
+         <midea-switch2 :checked="mideaChecked"  @change="onMideachange" :width="70" :height="38"  slot="value"></midea-switch2>
+        </midea-item>
         <midea-item v-for="(item,i) in list" :key="item"
                :hasTopBorder="i==0?true:false" :title="item.name"
                 :hasArrow="true"
@@ -14,7 +20,6 @@
                 @onDelete="delItem(item)"
          >
         </midea-item>
-       
          <midea-item v-for="(item,i) in list1" :key="item"
                :hasTopBorder="i==0?true:false" :title="item.name"
                 :hasArrow="false"
@@ -61,12 +66,12 @@
 
   import mideaItem from '../midea-component/item.vue'
   import mideaCell from '../component/cell.vue'
-  import mideaSwitch from '../midea-component/switch.vue'
+  import mideaSwitch2 from '../midea-component/switch.vue'
   import nativeService from '../common/services/nativeService'
   const modal = weex.requireModule('modal');
   
   export default {
-    components: {mideaItem,mideaCell,mideaSwitch},
+    components: {mideaItem,mideaCell,mideaSwitch2},
     data () {
         return{
           refreshing:'hide',
@@ -76,6 +81,9 @@
           mideaChecked: true,
           list:[
             {"name":"云食普"},
+          ],
+          list2:[
+            {"name":"童锁"},
           ],
           list1:[
             {"name":"普京和特朗普未能会谈 克里姆宁宫 都怪美国","desc":"美居活动 2017-12-25","itemImg":"/dist/src/img/icon/01.png"},

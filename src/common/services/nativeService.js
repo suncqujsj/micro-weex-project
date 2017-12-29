@@ -84,6 +84,7 @@ var serviceList = {
     subDeviceConfigSpecific: "device/transport",
     generateLockNb5Pwd: "doorlock/unlock/gen",
     queryNb5Log: "device/log"
+
 }
 const platform = weex.config.env.platform;
 const bridgeModule = weex.requireModule('bridgeModule');

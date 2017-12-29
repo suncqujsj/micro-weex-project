@@ -1,6 +1,6 @@
 <template>
   <div>
-      <image :src="icon" class="item-img" @click="onchange" style="width:140px;height:76px;" ></image>
+      <image :src="icon" class="item-img" @click="onchange"    :style="{'width':width,'height':height}" ></image>
   </div>
 </template>
 
@@ -15,11 +15,19 @@
       // 是否选中
       iconOn: {
         type: String,
-        default: '../img/switch_on.png'
+        default: '../img/check/switch_on.png'
       },
       iconOff: {
         type: String,
-        default: '../img/switch_off.png'
+        default: '../img/check/switch_off.png'
+      },
+      width: {
+        type: String,
+        default: '70',
+      },
+      height: {
+        type: String,
+        default: '38',
       },
       checked: {
         type: Boolean,
@@ -29,8 +37,7 @@
     },
     computed: {
       icon() {
-        // nativeService.alert(this.checked ? this.iconOn : this.iconOff);
-         return nativeService.convertImgPath(this.checked ? this.iconOn : this.iconOff);
+         return this.checked ? this.iconOn : this.iconOff;
       }
     },
     methods: {

@@ -45,8 +45,8 @@
     },
     methods: {
        pickArea(){
+          const items = ['北京', '上海', '广州'];
           if(this.isIos ){
-            const items = ['北京', '上海', '广州'];
             picker.pick({
               'index': this.index,
               'items': items,
@@ -65,34 +65,13 @@
             })
           }else{
               var self=this;
-              var items1 = [];
-              for(var i=0;i<24;i++){
-                items1.push(i+1);
-              }
-              var items2 = [];
-              for (var j=0; j<60;j++){
-                items2.push(j+1);
-              }
-              var items3 = [];
-              for (var k = 0; k<60; k++) {
-                items3.push(k+1);
-              }
               var pickItem=[
                 {
-                  index:1,
-                  item:items1,
-                  label:"时"
-                },
-                {
-                  index:2,
-                  item:items2,
-                  label:"分"
-                },
-                {
-                  index:3,
-                  item:items3,
-                  label:"秒"
+                  index:this.index,
+                  item:items,
+                  label:""
                 }
+                
               ]
               picker.pick({
                 'items':pickItem,
@@ -106,16 +85,11 @@
               }, event => {
                 var data=event.data;
                 var dataArr=data.replace("[","").replace("]","").split(",");
-                //nativeService.toast(dataArr[0]);
-                var hour=parseInt(dataArr[0]);
-                var minute=parseInt(dataArr[1]);
-                var second=parseInt(dataArr[2]);
-                pickItem[0].index=hour;
-                pickItem[1].index=minute;
-                pickItem[2].index=second;
-                var area=pickItem[0].item[hour]+"时"+pickItem[1].item[minute]+"分"+(pickItem[2].item[second]+1)+"秒";
-                 // nativeService.toast(area);
+                var city = parseInt(dataArr[0]);
+                pickItem[0].index = city;
+                var area=pickItem[0].item[city];
                 self.area=area;
+                self.index = city;
              });
 
 

@@ -2,21 +2,24 @@
  <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
 
    <midea-title-bar title="工作温度℃" bgColor="#EEF4F7"></midea-title-bar>
-   <div style="height:300px;">
+   <div style="height:320px;">
    <midea-slider @slideEnd="slideEnd" @tipFormat="tempFormat" :max="max" :min="min" :value="value" :step="step"
    :axisH="axisH" :pointH="pointH" :axisColor="axisColor" :pointColor="pointColor" :tipTxt="tipTemp" ></midea-slider>
    </div>
 
    <midea-title-bar title="工作时长" bgColor="#EEF4F7"></midea-title-bar>
-   <div style="height:300px;">
+   <div style="height:380px;">
    <midea-slider @slideEnd="slideEnd" @tipFormat="timeFormat" max="120" min="0" value="84" :step="step"
    :axisH="axisH" :pointH="pointH" :axisColor="axisColor" :pointColor="pointColor" :tipTxt="tipTime" ></midea-slider>
    </div>
 
-   <midea-title-bar title="美智Slider" bgColor="#EEF4F7"></midea-title-bar>
-   <div style="height:100px;">
-   <midea-slider @slideEnd="slideEnd" :showTip="true" max="120" min="0" value="100" unit="度" :step="10"
+<!--
+   <midea-title-bar title="跟随变化" bgColor="#EEF4F7"></midea-title-bar>
+   <div style="height:200px;">
+   <midea-slider @slideEnd="slideEnd" :showTip="true" max="100" min="0" value="60" unit="度" :step="10"
    ></midea-slider>
+ -->
+
    </div>
 
 </div>
@@ -42,9 +45,9 @@
            value: 210, //初始化值
            step:5, //步长
            axisH: 10, //轴高度(px)
-           pointH: 30, //圆球高度（px）
-           axisColor: '#CCCC99',//滑条颜色
-           pointColor: '#0066CC', //圆球颜色 
+           pointH: 26, //圆球高度（px）
+           axisColor: '#DFE5E7',//滑条颜色
+           pointColor: '#0E90FF', //圆球颜色 
            showTip: false,
            tipTemp: '',
            tipTime: ''

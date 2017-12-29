@@ -57,35 +57,43 @@ module.exports = {
             navList: [
                 {
                     "title": "启动",
-                    "img": "../img/share/start.png"
+                    "img": "../img/share/start.png",
+                    "img_actived": "../img/share/start_actived.png"
                 },
                 {
                     "title": "暂停",
-                    "img": "../img/share/pause.png"
+                    "img": "../img/share/pause.png",
+                    "img_actived": "../img/share/pause_actived.png"
                 },
                 {
                     "title": "取消",
-                    "img": "../img/share/pause.png"
+                    "img": "../img/share/pause.png",
+                    "img_actived": "../img/share/pause_actived.png"
                 },
                 {
                     "title": "自动菜单",
-                    "img": "../img/share/menu.png"
+                    "img": "../img/share/menu.png",
+                    "img_actived": "../img/share/menu_actived.png"
                 },
                 {
                     "title": "蒸汽模式",
-                    "img": "../img/share/steam.png"
+                    "img": "../img/share/steam.png",
+                    "img_actived": "../img/share/steam_actived.png"
                 },
                 {
                     "title": "加热模式",
-                    "img": "../img/share/warm.png"
+                    "img": "../img/share/warm.png",
+                    "img_actived": "../img/share/warm_actived.png"
                 },
                 {
                     "title": "清洁模式",
-                    "img": "../img/share/clean.png"
+                    "img": "../img/share/clean.png",
+                    "img_actived": "../img/share/clean_actived.png"
                 },
                 {
                     "title": "速热模式",
-                    "img": "../img/share/fastwarm.png"
+                    "img": "../img/share/fastwarm.png",
+                    "img_actived": "../img/share/fastwarm_actived.png"
                 }
             ],
 

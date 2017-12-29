@@ -1,6 +1,16 @@
 <template>
   <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
-      <list >
+      <list >  
+        <midea-item v-for="(item,i) in list2" :key="item"
+               :hasTopBorder="i==0?true:false" :title="item.name"
+                :hasArrow="false"
+                :clickActivied="true"
+                @onItemPress="showDel(item)"
+                :cantEdit="true"
+                @onDelete="delItem(item)"
+         >
+         <midea-switch2 :checked="mideaChecked"  @change="onMideachange" :width="70" :height="38"  slot="value"></midea-switch2>
+        </midea-item>
         <midea-item v-for="(item,i) in list" :key="item"
                :hasTopBorder="i==0?true:false" :title="item.name"
                 :hasArrow="true"
@@ -22,6 +32,7 @@
                 @onDelete="delItem(item)"
          >
         </midea-item>
+
       </list> 
       <midea-operation-modal
          :show="showDelModal"
@@ -54,25 +65,30 @@
 <script>
 
   import mideaItem from '../midea-component/item.vue'
+  import mideaCell from '../component/cell.vue'
+  import mideaSwitch2 from '../midea-component/switch.vue'
   import nativeService from '../common/services/nativeService'
   const modal = weex.requireModule('modal');
   
   export default {
-    components: {mideaItem},
+    components: {mideaItem,mideaCell,mideaSwitch2},
     data () {
         return{
           refreshing:'hide',
           showDelModal:false,
           startIndex:16,
           loadMore:true,
+          mideaChecked: true,
           list:[
-            {"name":"童锁"},
             {"name":"云食普"},
           ],
+          list2:[
+            {"name":"童锁"},
+          ],
           list1:[
-            {"name":"普京和特朗普未能会谈 克里姆宁宫 都怪美国","desc":"美居活动 2017-12-25","itemImg":"/dist/src/img/icon/01.png"},
-            {"name":"普京和特朗普未能会谈 克里姆宁宫 都怪美国","desc":"美居活动 2017-12-25","itemImg":"/dist/src/img/icon/02.png"},
-            {"name":"普京和特朗普未能会谈 克里姆宁宫 都怪美国","desc":"美居活动 2017-12-25","itemImg":"/dist/src/img/icon/03.png"}
+            {"name":"普京和特朗普未能会谈 克里姆宁宫 都怪美国","desc":"美居活动 2017-12-25","itemImg":"../img/icon/01.png"},
+            {"name":"普京和特朗普未能会谈 克里姆宁宫 都怪美国","desc":"美居活动 2017-12-25","itemImg":"../img/icon/02.png"},
+            {"name":"普京和特朗普未能会谈 克里姆宁宫 都怪美国","desc":"美居活动 2017-12-25","itemImg":"../img/icon/03.png"}
           ]
         }
     },
@@ -89,7 +105,11 @@
        },
        delItem(item){
 
-       }
+       },
+       onMideachange(event) {
+        this.mideaChecked = event.value;
+        //nativeService.toast(this.checked);
+      },
     },
     created () {
       this.isIos=weex.config.env.platform=='iOS'?true:false;

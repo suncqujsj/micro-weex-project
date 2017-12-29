@@ -57,35 +57,35 @@ module.exports = {
             navList: [
                 {
                     "title": "启动",
-                    "img": "../img/share/instruction.png"
+                    "img": "../img/share/start.png"
                 },
                 {
                     "title": "暂停",
-                    "img": "../img/share/supplies.png"
+                    "img": "../img/share/pause.png"
                 },
                 {
                     "title": "取消",
-                    "img": "../img/share/reclaim.png"
+                    "img": "../img/share/pause.png"
                 },
                 {
                     "title": "自动菜单",
-                    "img": "../img/share/instruction.png"
+                    "img": "../img/share/menu.png"
                 },
                 {
                     "title": "蒸汽模式",
-                    "img": "../img/share/supplies.png"
+                    "img": "../img/share/steam.png"
                 },
                 {
                     "title": "加热模式",
-                    "img": "../img/share/reclaim.png"
+                    "img": "../img/share/warm.png"
                 },
                 {
                     "title": "清洁模式",
-                    "img": "../img/share/instruction.png"
+                    "img": "../img/share/clean.png"
                 },
                 {
                     "title": "速热模式",
-                    "img": "../img/share/supplies.png"
+                    "img": "../img/share/fastwarm.png"
                 }
             ],
 
@@ -104,7 +104,7 @@ module.exports = {
                 },
                 {
                     "title": "家电清洗",
-                    "img": "../img/share/supplies.png"
+                    "img": "../img/share/wash.png"
                 },
                 {
                     "title": "原厂耗材",

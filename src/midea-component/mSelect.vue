@@ -70,9 +70,9 @@ export default {
     },
     computed: {
         height: function () {
-            let rows = this.rows > 8 ? 8 : this.rows
+            let rows = this.rows > 9 ? 9 : this.rows
             rows = rows < 2 ? 2 : rows
-            var len = rows * 92 + 88;
+            var len = rows * 90 + 88;
             return len;
         },
         radioIcon() {
@@ -87,7 +87,7 @@ export default {
                         var elName = "item" + this.index;
                         var el = this.$refs[elName][0];
                         //滚动至选中值，并调整至中间
-                        dom.scrollToElement(el, { offset: - this.height / 2 + 46 + 15 });
+                        dom.scrollToElement(el, { offset: - this.height / 2 + 45 + 15 });
                     }
                     this.open();
                 });
@@ -220,7 +220,7 @@ export default {
 .midea-radiogroup-item {
   flex-direction: row;
   align-items: center;
-  min-height: 92px;
+  min-height: 90px;
   padding-right: 20px;
   padding-top: 30px;
   padding-bottom: 30px;

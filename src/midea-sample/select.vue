@@ -18,7 +18,7 @@
         <midea-button text="自定义显示个数" type="green" @mideaButtonClicked="isShow3 = true">
         </midea-button>
         <text>{{result3}}</text>
-        <midea-select :show="isShow3" title="选择设备3" :items="list3" :index="index3" :rows="3" @close="isShow3=false" @itemClick="itemClick3" keyField="otherKey" valueField="otherValue"></midea-select>
+        <midea-select :show="isShow3" title="选择设备3" :items="list3" :index="index3" :rows="9" @close="isShow3=false" @itemClick="itemClick3" keyField="otherKey" valueField="otherValue"></midea-select>
 
         <midea-button text="自定义显示字段" type="green" @mideaButtonClicked="isShow4 = true">
         </midea-button>
@@ -63,16 +63,15 @@ module.exports = {
             index4: 2,
             index5: 4,
             list: [
-                { value: "四路开关0", key: 0, otherKey: "other0", otherValue: "其他四路开关0" },
-                { value: "四路开关1", key: 1, otherKey: "other1", otherValue: "其他四路开关1" },
-                { value: "四路开关2", key: 2, otherKey: "other2", otherValue: "其他四路开关2" },
-                { value: "四路开关3", key: 3, otherKey: "other3", otherValue: "其他四路开关3", disabled: true },
-                { value: "四路开关4", key: 4, otherKey: "other4", otherValue: "其他四路开关4" },
-                { value: "四路开关四路开关四路开关四路开关四路开关四路开关5", key: 5, otherKey: "other5", otherValue: "其他四路开关5" },
-                { value: "四路开关6", key: 6, otherKey: "other6", otherValue: "其他四路开关6" },
-                { value: "四路开关7", key: 7, otherKey: "other7", otherValue: "其他四路开关7" },
-                { value: "四路开关8", key: 8, otherKey: "other8", otherValue: "其他四路开关8" },
-                { value: "四路开关9", key: 9, otherKey: "other9", otherValue: "其他四路开关9" }
+                { value: "清蒸鱼", key: 0, otherKey: "other0", otherValue: "清蒸鱼" },
+                { value: "蒜蓉粉蒸虾", key: 1, otherKey: "other1", otherValue: "蒜蓉粉蒸虾" },
+                { value: "清蒸大闸蟹", key: 2, otherKey: "other2", otherValue: "清蒸大闸蟹" },
+                { value: "蒜蓉粉蒸扇贝", key: 3, otherKey: "other3", otherValue: "蒜蓉粉蒸扇贝", disabled: true },
+                { value: "蒸排骨", key: 4, otherKey: "other4", otherValue: "蒸排骨" },
+                { value: "粉蒸肉", key: 5, otherKey: "other5", otherValue: "粉蒸肉" },
+                { value: "香菇蒸滑鸡", key: 6, otherKey: "other6", otherValue: "香菇蒸滑鸡" },
+                { value: "蒸氺蛋", key: 7, otherKey: "other7", otherValue: "蒸氺蛋" },
+                { value: "蒸米饭", key: 8, otherKey: "other8", otherValue: "蒸米饭" }
             ]
         };
     },

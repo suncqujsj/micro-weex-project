@@ -1,7 +1,8 @@
 const mm = weex.requireModule('modal');
-var ipAddress = "http://10.33.197.48:8080";
+var ipAddress = "http://10.74.144.55:8080";
+//var ipAddress="http://192.168.43.187:8080";
 const navigator = weex.requireModule('navigator');
-var dummy = !false;
+var dummy = false;
 const storage = weex.requireModule('storage');
 var serviceList = {
     getDeviceList: "subdevice/list",
@@ -91,7 +92,7 @@ var mockArray = [];
 export default {
     goTo(path) {
         var self = this;
-        var url
+        var url = ipAddress + "/dist/src/" + path;
         if (dummy != true) {
             //if (platform!='Web') {
             url = 'file://assets/' + path;
@@ -100,12 +101,6 @@ export default {
                 self.runGo(url);
             });
         } else {
-            let ip = weex.config.bundleUrl.match(new RegExp("[\?\&]ip=([^\&]+)", "i"));
-            if (ip == null || ip.length < 1) {
-                url = ipAddress + "/dist/" + path;
-            } else {
-                url = "http://" + ip[1] + ":8080" + "/dist/" + path;
-            }
             self.runGo(url);
         }
     },
@@ -279,30 +274,15 @@ export default {
     toast(message, duration) {
         mm.toast({ message: message, duration: duration || 1 });
     },
-    getGatewayCurrentVersion(callBack) {
-        var self = this;
-        if (dummy != true) {
-            bridgeModule.getGatewayCurrentVersion(callBack);
-        } else {
-            callBack({
-                currentVersion: '00000000000328'
-            });
-        }
-    },
-    setGatewayCurrentVersion(param, callBack) {
-        var self = this;
-        if (dummy != true) {
-            bridgeModule.setGatewayCurrentVersion(JSON.stringify(param), callBack);
-        } else {
-            callBack();
-        }
-    },
     alert(message, callback, okTitle) {
+        var callbackFunc = callback || function (value) {
+
+        }
         mm.alert({
             message: message,
             okTitle: okTitle || "确定"
         }, function (value) {
-            callback(value);
+            callbackFunc(value);
         });
     },
     confirm(message, callback, okTitle, cancelTitle) {
@@ -313,8 +293,6 @@ export default {
         }, result => {
             callback(result)
         });
-
-
     },
     convertImgPath(path) {
         if (dummy) {
@@ -323,6 +301,101 @@ export default {
             return ipAddress + "/dist/src/" + path;
         } else {
             return path;
+        }
+    },
+    getDeviceSN(callback, callbackFail) {
+        var finalCallBack = function (resData) {
+            if (typeof resData == 'string') {
+                resData = JSON.parse(resData);
+            }
+            callback(resData.deviceSN);
+        }
+        if (dummy != true) {
+            bridgeModule.getDeviceSN(finalCallBack, callbackFail);
+        } else {
+            callback(0);
+        }
+    },
+    getCurrentApplianceID(callback, callbackFail) {
+        var finalCallBack = function (resData) {
+            if (typeof resData == 'string') {
+                resData = JSON.parse(resData);
+            }
+            callback(resData.applianceID);
+        }
+        if (dummy != true) {
+            bridgeModule.getCurrentApplianceID(finalCallBack, callbackFail);
+        } else {
+            callback(0);
+        }
+    },
+    getApplianceSubtype(callback, callbackFail) {
+        var finalCallBack = function (resData) {
+            if (typeof resData == 'string') {
+                resData = JSON.parse(resData);
+            }
+            callback(resData.applianceSubtype);
+        }
+        if (dummy != true) {
+            bridgeModule.getApplianceSubtype(finalCallBack, callbackFail);
+        } else {
+            callback(0);
+        }
+    },
+    startCmdProcess(name, messageBody, callback, callbackFail) {
+        var param = {};
+        if (messageBody != undefined) {
+            param.messageBody = messageBody;
+        }
+        var finalCallBack = function (resData) {
+            //mm.toast({message:resData, duration:3});
+            if (typeof resData == 'string') {
+                resData = JSON.parse(resData);
+            }
+            if (resData.errorCode != 0) {
+                callbackFail(resData);
+            } else {
+                callback(resData.messageBody);
+            }
+        }
+        var finalCallbackFail = function (resData) {
+            if (typeof resData == 'string') {
+                resData = JSON.parse(resData);
+            }
+            callbackFail(resData);
+        }
+        if (dummy != true) {
+            bridgeModule.startCmdProcess(JSON.stringify(param), finalCallBack, finalCallbackFail);
+        } else {
+            callback(mockArray[name].messageBody);
+        }
+    },
+    sendLuaRequest(params, callback, callbackFail) {
+        var param = {};
+        param.operation = params.operation || "luaControl";//luaQuery or luaControl
+        param.params = params.data || {};
+        var finalCallBack = function (resData) {
+            //mm.toast({message:resData, duration:3});
+            if (typeof resData == 'string') {
+                resData = JSON.parse(resData);
+            }
+            if (resData.errorCode != 0) {
+                callbackFail(resData);
+            } else {
+                callback(resData);
+            }
+            callback(resData);
+        }
+        var finalCallbackFail = function (resData) {
+            if (typeof resData == 'string') {
+                resData = JSON.parse(resData);
+            }
+            callbackFail(resData);
+        }
+        if (dummy != true) {
+            bridgeModule.commandInterface(JSON.stringify(param), finalCallBack, finalCallbackFail);
+        } else {
+            callback(mockArray[params.name]);
         }
     }
 }

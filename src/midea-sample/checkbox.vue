@@ -13,6 +13,25 @@
      <midea-checkbox-list :list="list1"
         :needShowTopBorder="true"
         @mideaCheckBoxListChecked="imgItemChecked"></midea-checkbox-list>-->
+      <midea-button text="点击弹出底部面板"
+        type="green" @mideaButtonClicked="openBottomOverlay">
+      </midea-button>
+      <midea-popup 
+               :show="isBottomShow"
+               @mideaPopupOverlayClicked="popupOverlayBottomClick"
+               pos="bottom"
+               height="472">
+         <div class="btn-grp">
+              <text class="btn-grp-text" @click="cancel"> 取消</text>
+              <text class="btn-grp-text" @click="confirm"> 确定</text>
+         </div>
+         <scroller class="demo-content">
+             <midea-checkbox-list :list="list"
+                 :needShowTopBorder="true"
+                 @mideaCheckBoxListChecked="mideaCheckBoxListChecked">
+              </midea-checkbox-list>
+         </scroller>
+      </midea-popup>
   </div>
 </template>
 <style scoped>
@@ -20,17 +39,27 @@
    background-color:#F7F7F7;
     position:relative;
  }
+  .btn-grp{
+    padding-left:24px;padding-right:24px;height:72px;flex-direction:row;
+    align-items:center;justify-content: space-between;background-color:#F7F7F7;
+ }
+  .btn-grp-text{
+   color:#00B9EF;font-size:28px;
+ }
 </style>
 <script>
 
+  import mideaButton from '../midea-component/button.vue'
+  import mideaPopup from '../midea-component/popup.vue'
   import mideaCheckboxList from '../midea-component/checkboxList.vue'
   import nativeService from '../common/services/nativeService'
   const modal = weex.requireModule('modal');
   
   module.exports = {
-    components: {mideaCheckboxList},
+    components: {mideaButton,mideaPopup,mideaCheckboxList},
     data () {
       return {
+        isBottomShow:false,
          list: [
             { title: '选项1', value: 1 },
             { title: '选项2', value: 2, checked: true },
@@ -48,13 +77,27 @@
       }
     },
     methods: {
+       openBottomOverlay(){
+         this.isBottomShow=true;
+      },
+       popupOverlayBottomClick(){
+          this.isBottomShow=false;
+      },
       itemChecked(e){
          this.checkedList = e.checkedList;
       },
       imgItemChecked(e){
          this.imgCheckedList = e.checkedList;
+      },
+      confirm(){
+          this.isBottomShow=false;
+      },
+      cancel(){
+          this.isBottomShow=false;
+      },
+      mideaCheckBoxListChecked(e){
+         this.checkedList = e.checkedList;
       }
-
     },
     created () {
       this.isIos=weex.config.env.platform=='iOS'?true:false;

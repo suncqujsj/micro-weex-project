@@ -1,89 +1,10 @@
 const mm = weex.requireModule('modal');
 var ipAddress = "http://10.33.197.48:8080";
 const navigator = weex.requireModule('navigator');
-var dummy = false;
+var dummy = !false;
 const storage = weex.requireModule('storage');
 var serviceList = {
-    getDeviceList: "subdevice/list",
-    getDeviceList_add: "subdevice/list",
-    addDevice: "subdevice/add",
-    delDevice: "device/del",
-    updateDevice: "transport",
-    updateAllDevices: "transport",
-    queryLog: "logging/list",
-    queryAlarm: "alarm/list",
-    releaseAlarm: "alarm/release",
-    delLog: "report_log_del",
-    sceneDetail: "scene/detail",
-    sceneList: "scene/list",
-    addScene: "scene/add",
-    otaCheck: "ota/update/check",
-    otaCheck_update: "ota/update/check",
-    startUpdate: "transport",
-    getOtaProgress: "ota_get_progress",
-    executeNow: "transport",
-    updateScene: "scene/update",
-    updateNode: "subdevice/update",
-    delScene: "scene/del",
-    getSceneDeviceList: "getDeviceList",
-    operateDevice: "transport",
-    enableScene: "scene/enable",
-    getSceneDetail: "scene/detail",
-    queryEnvDetector: "query_env_detector",
-    sendPlayerControl: "sendPlayerControl",
-    gwStatus: "transport",
-    switchDefence: "defence/switch",
-    getDomainList: "domain/list",
-    getDomainDevice: "domain/get_device",
-    setAlarmDevice: "subdevice/set_alarm_device",
-    generateLockPwd: "subdevice/unlock/generate",
-    exeInfrared: "transport",
-    studyInfrared: "transport",
-    infraredList: "subdevice/infrared/order/list",
-    addInfrared: "subdevice/infrared/order/add",
-    delInfrared: "subdevice/infrared/order/del",
-    updateInfrared: "subdevice/infrared/order/update",
-    emptyInfrared: "subdevice/infrared/order/clean",
-    b2bAutoRunning: 'b2bAutoRunning',
-    b2bAddScene: "b2bAddScene",
-    b2bUpdScene: "b2bUpdScene",
-    b2bDelScene: "b2bDelScene",
-    //安全锁
-    getSaveLockStatus: "setup/lock/query",
-    //获取项目列表
-    getProjectList: "setup/project/list",
-    //获取楼盘列表
-    getBuildingList: "setup/project/building/list",
-    //获取房间列表
-    getRoomList: "setup/project/building/room/list",
-    //提交安装
-    sumitInstall: "setup/submit",
-    addDeviceToDomain: "domain/add_device",
-    subDeviceConfig: "transport",
-    deleteGateWay: "device/del",
-    modifyGateWay: "gateway/modify",
-    lockUserList: "subdevice/lock/user/list",
-    updateLockUserRole: "subdevice/lock/user/update",
-    emptySwitchBound: "transport",
-    getEndpointBoundDevice: "transport",
-    getSwitchBoundDevice: "transport",
-    selectSwitchBoundDevice: "transport",
-    gatewayBackup: "gateway/backup/req",
-    gatewayBackupProgress: "gateway/backup/progress",
-    gatewayRestore: "gateway/restore",
-    gatewayRestoreProgress: "gateway/restore/progress",
-    gatewayBackupHistory: "gateway/backup/history",
-    getDeviceStatus: "device/get",
-    gatewayResetDefault: "system/default",
-    gatewayWifiGet: "net/wifiap/get",
-    gatewayWifiSet: "net/wifiap/set",
-    gatewayDhcpGet: "net/dhcpd/get",
-    gatewayDhcpSet: "net/dhcpd/set",
-    deviceModify: "device/modify",
-    deviceList: "device/list",
-    subDeviceConfigSpecific: "device/transport",
-    generateLockNb5Pwd: "doorlock/unlock/gen",
-    queryNb5Log: "device/log"
+
 }
 const platform = weex.config.env.platform;
 const bridgeModule = weex.requireModule('bridgeModule');

@@ -1,6 +1,5 @@
 const mm = weex.requireModule('modal');
 var ipAddress = "http://10.74.144.55:8080";
-//var ipAddress="http://192.168.43.187:8080";
 const navigator = weex.requireModule('navigator');
 var dummy = false;
 const storage = weex.requireModule('storage');
@@ -92,7 +91,7 @@ var mockArray = [];
 export default {
     goTo(path) {
         var self = this;
-        var url = ipAddress + "/dist/src/" + path;
+        var url
         if (dummy != true) {
             //if (platform!='Web') {
             url = 'file://assets/' + path;
@@ -101,7 +100,13 @@ export default {
                 self.runGo(url);
             });
         } else {
-            self.runGo(url);
+            let ip = weex.config.bundleUrl.match(new RegExp("[\?\&]ip=([^\&]+)", "i"));
+            if (ip == null || ip.length < 1) {
+                url = ipAddress + "/dist/" + path;
+            } else {
+                url = "http://" + ip[1] + ":8080" + "/dist/" + path;
+                self.runGo(url);
+            }
         }
     },
     runGo(url) {

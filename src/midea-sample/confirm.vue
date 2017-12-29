@@ -27,7 +27,7 @@
 </style>
 <script>
 
-  import mideaButton from '../component/button.vue'
+  import mideaButton from '../midea-component/button.vue'
   import mideaConfirm from '../midea-component/confirm.vue'
   import nativeService from '../common/services/nativeService'
   const modal = weex.requireModule('modal');

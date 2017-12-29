@@ -31,6 +31,9 @@
          { title: 'loading', link:"loading" },
         { title: 'picker', link:"picker" },
           { title: 'cell', link:"cell" },
+		  { title: 'confirm', link:"confirm" },
+        { title: 'header', link:"header" },
+        { title: 'device-status', link:"device-status" }
       ]
     }),
     methods: {

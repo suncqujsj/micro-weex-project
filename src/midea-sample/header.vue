@@ -1,0 +1,55 @@
+<template>
+   <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+      <div style="height: 220px;">
+        <midea-header :title="title1" :isImmersion="true"></midea-header>
+      </div>
+
+      <div style="height: 220px;">
+        <midea-header :title="title2" :isImmersion="true" :showRightImg="true" @leftImgClick="leftImgClick1" @rightImgClick="rightImgClick1"></midea-header>
+      </div>
+
+      <div style="height: 220px;">
+        <midea-header :title="title3" :isImmersion="false"></midea-header>
+      </div>
+
+      <div style="height: 220px;">
+        <midea-header :title="title4" :isImmersion="false" :showRightImg="true" @leftImgClick="leftImgClick2" @rightImgClick="rightImgClick2"></midea-header>
+      </div>
+  </div>
+</template>
+<style scoped>
+</style>
+<script>
+  import mideaHeader from '../midea-component/header.vue'
+  import nativeService from '../common/services/nativeService'
+  const modal = weex.requireModule('modal');
+  
+  module.exports = {
+    components: {mideaHeader},
+    data () {
+        return{
+          title1: '沉浸式（无右侧图标）',
+          title2: '沉浸式（带右侧图标）',
+          title3: '非沉浸式（无右侧图标）',
+          title4: '非沉浸式（带右侧图标）',
+        }
+    },
+    methods: {
+      leftImgClick1 () {
+        this.title2="点击左边按钮"
+      },
+      rightImgClick1 () {
+        this.title2="点击右边按钮"
+      },
+      leftImgClick2 () {
+        this.title4="点击左边按钮"
+      },
+      rightImgClick2 () {
+        this.title4="点击右边按钮"
+      }
+    },
+    created () {
+      this.isIos=weex.config.env.platform=='iOS'?true:false;
+    }
+  };
+</script>

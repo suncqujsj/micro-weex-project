@@ -45,14 +45,14 @@
     computed: {
       defaultLeftBtnStyle () {
         return {
-           width:'351px',
+           width:'374px',
            ...this.leftBtnStyle
         }
       },
       defaultRightBtnStyle () {
         return {
           ...this.rightBtnStyle,
-          width:'350px'
+          width:'375px'
         }
       }
     },
@@ -74,8 +74,6 @@
    flex-direction:row;
    align-items:center;
    justify-content:space-between;
-   padding-left:24px;
-   padding-right:24px;
  }
 
 </style>

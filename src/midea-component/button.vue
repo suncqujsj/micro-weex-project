@@ -62,7 +62,7 @@
     margin-bottom:20px;
   }
   .midea-btn {
-    width: 702px;
+    width: 750px;
     height: 84px;
     align-items: center;
     justify-content: center;

@@ -36,7 +36,7 @@
 
 </style>
 <script>
-import mideaButton from "../component/button.vue";
+import mideaButton from "../midea-component/button.vue";
 import mRadioGroup from "../midea-component/mRadioGroup.vue";
 import nativeService from "../common/services/nativeService";
 

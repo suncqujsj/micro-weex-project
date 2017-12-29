@@ -20,10 +20,10 @@ const plugins = [
   new webpack.BannerPlugin({
     banner: '// { "framework": "Vue" }\n',
     raw: true
-  })
-  /*new CopyWebpackPlugin([
+  }),
+  new CopyWebpackPlugin([
     {from: './src/img', to: "./src/img"}
-  ])*/
+  ])
 ];
 
 console.log('Building..., Please wait a moment.');
@@ -49,11 +49,12 @@ const getEntry = dir => {
 };
 
 const sample = getEntry('sample');
+const mideaSample = getEntry('midea-sample');
 const device = getEntry('device');
 const view = getEntry('view');
 const entry = Object.assign({
   'index': './src/entry.js'
-}, sample,device,view);
+}, sample,mideaSample,device,view);
 
 const getBaseConfig = () => (
   {

@@ -24,7 +24,6 @@
 import mideaMask from "../component/mask.vue";
 import mideaCell from "../component/cell.vue";
 const CHECKED = "../img/check/radio_checked.png";
-// const CHECKED = "http://10.74.149.81:8080/dist/src/img/check/radio_checked.png";
 const dom = weex.requireModule("dom");
 const animation = weex.requireModule("animation");
 export default {

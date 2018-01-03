@@ -13,7 +13,7 @@
 </style>
 <script>
 
-  import mideaButton from '../component/button.vue'
+  import mideaButton from '../midea-component/button.vue'
   import nativeService from '../common/services/nativeService'
   const modal = weex.requireModule('modal');
  

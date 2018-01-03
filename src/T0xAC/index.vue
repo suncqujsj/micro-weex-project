@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper">
+  <midea-header title="空调" :isImmersion="false" :showRightImg="true" @leftImgClick="leftImgClick" @rightImgClick="rightImgClick"></midea-header>
   <scroller>
      <midea-button text="查询设备状态"
         type="green" @mideaButtonClicked="queryStatus">
@@ -39,7 +40,8 @@
 </style>
 <script>
 
-  import mideaButton from '../component/button.vue'
+  import mideaButton from '../midea-component/button.vue'
+  import mideaHeader from '../midea-component/header.vue'
   import nativeService from '../common/services/nativeService'
   import message from '../common/util/smartMessage'
   import query from '../dummy/query'
@@ -48,7 +50,7 @@
   var frameCumulative = 1;
   
   export default {
-    components: {mideaButton},
+    components: {mideaHeader,mideaButton},
     data () {
         return{
          
@@ -143,6 +145,9 @@
        },
        backToNative(){
           nativeService.backToNative();
+       },
+       leftImgClick(){
+       	  nativeService.backToNative();
        }
 
     },

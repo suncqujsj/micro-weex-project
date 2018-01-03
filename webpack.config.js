@@ -125,7 +125,7 @@ nativeCfg.output.filename = '[name].js';
 nativeCfg.module.rules[1].use.push('weex-loader');
 
 const exportConfig = [
-  webCfg,
+  //webCfg,
   nativeCfg
 ];
 

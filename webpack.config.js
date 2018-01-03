@@ -51,10 +51,10 @@ const getEntry = dir => {
 const sample = getEntry('sample');
 const mideaSample = getEntry('midea-sample');
 const device = getEntry('device');
-const view = getEntry('view');
+const AC = getEntry('T0xAC');
 const entry = Object.assign({
   'index': './src/entry.js'
-}, sample,mideaSample,device,view);
+}, sample,mideaSample,device,AC);
 
 const getBaseConfig = () => (
   {

@@ -390,7 +390,6 @@ export default {
             } else {
                 callback(resData);
             }
-            callback(resData);
         }
         var finalCallbackFail = function (resData) {
             if (typeof resData == 'string') {

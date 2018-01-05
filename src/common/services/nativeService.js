@@ -103,9 +103,9 @@ export default {
         } else {
             let ip = weex.config.bundleUrl.match(new RegExp("[\?\&]ip=([^\&]+)", "i"));
             if (ip == null || ip.length < 1) {
-                url = ipAddress + "/dist/" + path;
+                url = ipAddress + "/dist/src/" + path;
             } else {
-                url = "http://" + ip[1] + ":8080" + "/dist/" + path;
+                url = "http://" + ip[1] + ":8080" + "/dist/src/" + path;
                 self.runGo(url);
             }
         }

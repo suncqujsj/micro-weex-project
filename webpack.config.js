@@ -2,6 +2,7 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const fs = require('fs-extra')
 //const pkg = require('./package.json');
 const glob = require("glob");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -24,6 +25,10 @@ const plugins = [
   new CopyWebpackPlugin([
     {from: './src/img', to: "./src/img"}
   ])
+  /*,
+  new CopyWebpackPlugin([
+    {from: './src/T0xAC/img', to: "./src/T0xAC/img"}
+  ])*/
 ];
 
 console.log('Building..., Please wait a moment.');
@@ -47,14 +52,26 @@ const getEntry = dir => {
   }
   return entries;
 };
-
+var pluginObj={};
+function walk() {
+  let directory = path.join(__dirname, './src')
+  fs.readdirSync(directory)
+    .forEach(file => {
+      //let fullpath = path.join(directory, file)
+      //let stat = fs.statSync(fullpath)
+      if(file.indexOf("T0x")!=-1){
+        pluginObj=Object.assign(pluginObj,getEntry(file));
+      }
+  })
+}
+walk()
 const sample = getEntry('sample');
 const mideaSample = getEntry('midea-sample');
-const device = getEntry('device');
-const AC = getEntry('T0xAC');
+//const device = getEntry('device');
+//const AC = getEntry('T0xAC');
 const entry = Object.assign({
   'index': './src/entry.js'
-}, sample,mideaSample,device,AC);
+},sample,mideaSample,pluginObj);
 
 const getBaseConfig = () => (
   {

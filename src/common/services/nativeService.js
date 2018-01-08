@@ -97,15 +97,19 @@ export default {
             //if (platform!='Web') {
             url = 'file://assets/' + path;
             self.getPath(function (weexPath) {
+				//处理插件目录
+                if(path.indexOf("T0x")!=-1){
+                   path=path.substr(6,path.length-6);
+                }
                 url = weexPath + path;
                 self.runGo(url);
             });
         } else {
             let ip = weex.config.bundleUrl.match(new RegExp("[\?\&]ip=([^\&]+)", "i"));
             if (ip == null || ip.length < 1) {
-                url = ipAddress + "/dist/src/" + path;
+                url = ipAddress + "/dist/" + path;
             } else {
-                url = "http://" + ip[1] + ":8080" + "/dist/src/" + path;
+                url = "http://" + ip[1] + ":8080" + "/dist/" + path;
                 self.runGo(url);
             }
         }

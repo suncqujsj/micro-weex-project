@@ -33,45 +33,63 @@ const plugins = [
 
 console.log('Building..., Please wait a moment.');
 
-const getEntry = dir => {
+/*const getEntry = dir => {
   const entryFiles = glob.sync(`./src/${dir}/*.js`, {});
-  // 生成 entry 映射表
-  /*let ret = {};
-  foundScripts.forEach(function (scriptPath) {
-    if (!/\.entry\.js$/.test(scriptPath)) {
-      ret[scriptPath.replace(/^(.*)\.js$/, '$1')] = './' + scriptPath;
-    }
-  });*/
   var entries = {};
   for (var i = 0; i < entryFiles.length; i++) {
       var filePath = entryFiles[i];
       //console.log(filePath);
       //var filename = filePath.split('${dir}/')[1];
       var filename = filePath.substr(0, filePath.lastIndexOf('.'));
+      console.log(filePath);
       entries[filename] = filePath;
   }
   return entries;
-};
+};*/
 var pluginObj={};
+var entry={
+  'index': './src/entry.js'
+};
+//默认编译T0x开关的文件,目标文件如需要编译可添加到includeFiles
+var includeFiles=['sample','midea-sample'];
 function walk() {
   let directory = path.join(__dirname, './src')
   fs.readdirSync(directory)
     .forEach(file => {
-      //let fullpath = path.join(directory, file)
-      //let stat = fs.statSync(fullpath)
-      if(file.indexOf("T0x")!=-1){
-        pluginObj=Object.assign(pluginObj,getEntry(file));
+      var fileStr=includeFiles.join(",")+",";
+      if(file.indexOf("T0x")!=-1 || fileStr.indexOf(file+",")!=-1){
+        runWalk(file)
       }
   })
 }
+function runWalk(dir){
+   dir=dir||".";
+   let directory = path.join(__dirname, './src', dir)
+   fs.readdirSync(directory)
+    .forEach(file => {
+      let fullpath = path.join(directory, file)
+      let stat = fs.statSync(fullpath)
+      let extname = path.extname(fullpath)
+      if (stat.isFile() && extname === '.js') {
+        let entryFile = path.join(directory, path.basename(file, extname) + '.js')
+        //console.log(entryFile);
+        let name = path.join(dir, path.basename(file, extname))
+        //console.log(name+"@@");
+        entry[name] = entryFile;
+      } else if (stat.isDirectory()) {
+        let subdir = path.join(dir, file)
+        runWalk(subdir)
+      }
+   })
+}
 walk()
-const sample = getEntry('sample');
-const mideaSample = getEntry('midea-sample');
+//const sample = getEntry('T0xB1');
+//const mideaSample = getEntry('midea-sample');
 //const device = getEntry('device');
 //const AC = getEntry('T0xAC');
-const entry = Object.assign({
+/* entry = Object.assign({
   'index': './src/entry.js'
-},sample,mideaSample,pluginObj);
+});*/
 
 const getBaseConfig = () => (
   {

@@ -135,8 +135,8 @@
          nativeService.hideLoading();
        },
        goTo(){
-          var path="next.js";
-          nativeService.goTo(path);
+           var path="T0xAC/next.js";
+           nativeService.goTo(path);
        },
        getPath(){
           nativeService.getPath(function(path){

@@ -110,8 +110,8 @@ export default {
                 url = ipAddress + "/dist/" + path;
             } else {
                 url = "http://" + ip[1] + ":8080" + "/dist/" + path;
-                self.runGo(url);
             }
+			self.runGo(url);
         }
     },
     runGo(url) {

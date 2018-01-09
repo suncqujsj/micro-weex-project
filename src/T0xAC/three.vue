@@ -1,9 +1,6 @@
 <template>
   <div class="wrapper">
   <scroller>
-   <midea-button text="下一页"
-        type="green" @mideaButtonClicked="next">
-      </midea-button>
      <midea-button text="返会上一页"
         type="green" @mideaButtonClicked="goBack">
       </midea-button>
@@ -31,10 +28,6 @@
     methods: {
       goBack(){
         nativeService.goBack();
-      },
-      next(){
-          var path="T0xAC/three.js";
-          nativeService.goTo(path);
       }
 
     },

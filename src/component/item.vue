@@ -3,7 +3,7 @@
     :class="['midea-cell',clickActivied&& 'active-cell', hasTopBorder && 'cell-top-border', hasBottomBorder && 'cell-bottom-border', hasMargin && 'cell-margin', hasVerticalIndent && 'cell-indent', desc && 'has-desc']"
     :style="outputCellStyle"
     @click="cellClicked"
-    @delete="onDelete" :canEdit="canEdit"  
+    @delete="onDelete" :canEdit="isCanEdit"  
     @longpress="showEdit"
     >
     
@@ -178,7 +178,7 @@
         type: String,
         default: ''
       },
-      canEdit: {
+      isCanEdit: {
         type: Boolean,
         default: false
       }

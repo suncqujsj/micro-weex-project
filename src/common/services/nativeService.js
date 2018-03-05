@@ -90,19 +90,19 @@ const platform = weex.config.env.platform;
 const bridgeModule = weex.requireModule('bridgeModule');
 var mockArray = [];
 export default {
-    goTo(path) {
+    goTo(path, animated = 'true') {
         var self = this;
         var url
         if (dummy != true) {
             //if (platform!='Web') {
             url = 'file://assets/' + path;
             self.getPath(function (weexPath) {
-				//处理插件目录
-                if(path.indexOf("T0x")!=-1){
-                   path=path.substr(6,path.length-6);
+                //处理插件目录
+                if (path.indexOf("T0x") != -1) {
+                    path = path.substr(6, path.length - 6);
                 }
                 url = weexPath + path;
-                self.runGo(url);
+                self.runGo(url, animated);
             });
         } else {
             let ip = weex.config.bundleUrl.match(new RegExp("[\?\&]ip=([^\&]+)", "i"));
@@ -111,14 +111,14 @@ export default {
             } else {
                 url = "http://" + ip[1] + ":8080" + "/dist/" + path;
             }
-			self.runGo(url);
+            self.runGo(url, animated);
         }
     },
-    runGo(url) {
-        //mm.toast({message:url, duration: 2 })
+    runGo(url, animated = 'true') {
+        // mm.toast({ message: url, duration: 2 })
         navigator.push({
             url: url,
-            animated: "true"
+            animated: animated
         }, event => {
         });
     },

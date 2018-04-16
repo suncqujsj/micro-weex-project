@@ -9,26 +9,23 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const plugins = [
-  new CleanWebpackPlugin(['dist'], {
-    verbose: true
-  }),
-  new webpack.DefinePlugin({
-    "process.env": {
-      NODE_ENV: JSON.stringify("production")
-    },
-    'global': '{}'
-  }),
-  new webpack.BannerPlugin({
-    banner: '// { "framework": "Vue" }\n',
-    raw: true
-  }),
-  new CopyWebpackPlugin([
-    {from: './src/img', to: "./src/img"}
-  ])
-  /*,
-  new CopyWebpackPlugin([
-    {from: './src/T0xAC/img', to: "./src/T0xAC/img"}
-  ])*/
+    new CleanWebpackPlugin(['dist'], {
+        verbose: true
+    }),
+    new webpack.DefinePlugin({
+        "process.env": {
+            NODE_ENV: JSON.stringify("production"),
+            BUILD_TIME: JSON.stringify(new Date())
+        },
+        'global': '{}'
+    }),
+    new webpack.BannerPlugin({
+        banner: '// { "framework": "Vue" }\n',
+        raw: true
+    }),
+    // new CopyWebpackPlugin([
+    //     { from: './src/img', to: "./img" }
+    // ])
 ];
 
 console.log('Building..., Please wait a moment.');
@@ -46,113 +43,148 @@ console.log('Building..., Please wait a moment.');
   }
   return entries;
 };*/
-var pluginObj={};
-var entry={
-  'index': './src/entry.js'
+var pluginObj = {};
+var subProjectAssets = []
+var commonImagePath = path.join(__dirname, './src/img')
+const entryPath = path.resolve(__dirname, './entry/')
+var entry = {
+    'index': './src/entry.js'
 };
-//默认编译T0x开关的文件,目标文件如需要编译可添加到includeFiles
-var includeFiles=['sample','midea-sample'];
-function walk() {
-  let directory = path.join(__dirname, './src')
-  fs.readdirSync(directory)
-    .forEach(file => {
-      var fileStr=includeFiles.join(",")+",";
-      if(file.indexOf("T0x")!=-1 || fileStr.indexOf(file+",")!=-1){
-        runWalk(file)
-      }
-  })
+const FILE_TYPE = '.vue'
+const getEntryFileContent = path => {
+    return `// 自动生成的入口文件
+import App from '${path}${FILE_TYPE}'
+new Vue({
+  el: '#root',
+  render: h => h(App)
+})
+  `
 }
-function runWalk(dir){
-   dir=dir||".";
-   let directory = path.join(__dirname, './src', dir)
-   fs.readdirSync(directory)
-    .forEach(file => {
-      let fullpath = path.join(directory, file)
-      let stat = fs.statSync(fullpath)
-      let extname = path.extname(fullpath)
-      if (stat.isFile() && extname === '.js') {
-        let entryFile = path.join(directory, path.basename(file, extname) + '.js')
-        //console.log(entryFile);
-        let name = path.join(dir, path.basename(file, extname))
-        //console.log(name+"@@");
-        entry[name] = entryFile;
-      } else if (stat.isDirectory()) {
-        let subdir = path.join(dir, file)
-        runWalk(subdir)
-      }
-   })
+//默认编译T0x开关的文件,目标文件如需要编译可添加到includeFiles
+var includeFiles = ['sample', 'midea-sample'];
+function walk() {
+    let directory = path.join(__dirname, './src')
+    fs.readdirSync(directory)
+        .forEach(file => {
+            var fileStr = includeFiles.join(",") + ",";
+            if (file.indexOf("T0x") != -1 || fileStr.indexOf(file + ",") != -1) {
+                runWalk(file)
+            }
+        })
+}
+function runWalk(dir) {
+    console.log(dir);
+    dir = dir || ".";
+    let directory = path.join(__dirname, './src', dir)
+    let distPath = path.join(__dirname, 'dist')
+    let hasTargetFile = false
+    fs.readdirSync(directory)
+        .forEach(file => {
+            let fullpath = path.join(directory, file)
+            let stat = fs.statSync(fullpath)
+            let extname = path.extname(fullpath)
+            if (stat.isFile() && extname === FILE_TYPE) {
+                let name = path.join(dir, path.basename(file, extname))
+                let entryFile = path.resolve(entryPath, name + '.js')
+                // console.log((path.resolve(entryPath, name + '.js')) + "@@" + directory + name);
+                fs.outputFileSync(path.resolve(entryPath, name + '.js'), getEntryFileContent('@/' + dir.replace('\\', '/') + '/' + path.basename(file, extname)))
+                entry[name] = entryFile;
+                hasTargetFile = true
+            } else if (stat.isDirectory()) {
+                if (file == "assets") {
+                    let targetImgFolder = path.join(distPath, dir, "assets")
+                    subProjectAssets.push({ from: fullpath, to: targetImgFolder })
+                } else {
+                    let subdir = path.join(dir, file)
+                    runWalk(subdir)
+                }
+            }
+        })
+    if (hasTargetFile) {
+        plugins.push(
+            new CopyWebpackPlugin([
+                { from: commonImagePath, to: path.join(distPath, dir, "img") }
+            ])
+        )
+        if (fs.existsSync(path.join(directory, 'weex.html'))) {
+            plugins.push(
+                new CopyWebpackPlugin([
+                    { from: path.join(directory, 'weex.html'), to: path.join(distPath, dir) }
+                ])
+            )
+        }
+    }
 }
 walk()
-//const sample = getEntry('T0xB1');
-//const mideaSample = getEntry('midea-sample');
-//const device = getEntry('device');
-//const AC = getEntry('T0xAC');
-/* entry = Object.assign({
-  'index': './src/entry.js'
-});*/
 
+plugins.push(
+    new CopyWebpackPlugin(subProjectAssets)
+)
 const getBaseConfig = () => (
-  {
-  //devtool: '#source-map',
-  entry,
-  context: __dirname,
-  output: {
-    path: path.join(__dirname, 'dist')
-   /* publicPath: '/',
-    filename: 'aa/[name].js'
-    libraryTarget: 'umd',
-    library: `npm/${pkg.name}/[name]`,
-    umdNamedDefine: false*/
-  },
-  stats: {
-    colors: true,
-    modules: false,
-    reasons: false
-  },
-  module: {
-    rules: [{
-      test: /\.js$/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          cacheDirectory: true,
+    {
+        //devtool: '#source-map',
+        entry,
+        context: __dirname,
+        output: {
+            path: path.join(__dirname, 'dist')
+            /* publicPath: '/',
+             filename: 'aa/[name].js'
+             libraryTarget: 'umd',
+             library: `npm/${pkg.name}/[name]`,
+             umdNamedDefine: false*/
+        },
+        stats: {
+            colors: true,
+            modules: false,
+            reasons: false
+        },
+        module: {
+            rules: [{
+                test: /\.js$/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        cacheDirectory: true,
+                    }
+                }
+            }, {
+                test: /\.vue(\?[^?]+)?$/,
+                use: []
+            }]
+        },
+        plugins,
+        devServer: {
+            inline: true,
+            hot: true,
+            headers: {
+                "Cache-Control": "no-cache"
+            }
+        },
+        resolve: {
+            extensions: ['.js'],
+            modules: [
+                'node_modules'
+            ],
+            alias: {
+                '@': path.resolve(__dirname, 'src')
+            }
         }
-      }
-    }, {
-      test: /\.vue(\?[^?]+)?$/,
-      use: []
-    }]
-  },
-  plugins,
-  devServer: {
-    inline: true,
-    hot: true,
-    headers: {
-      "Cache-Control": "no-cache"
-    }
-  },
-  resolve: {
-    extensions: ['.js'],
-    modules: [
-      'node_modules'
-    ]
-  }
-});
+    });
 
 const webCfg = getBaseConfig();
 webCfg.output.filename = '[name].web.js';
 webCfg.module.rules[1].use.push({
-  loader: 'vue-loader',
-  options: {
-    compilerModules: [
-      {
-        postTransformNode: el => {
-          el.staticStyle = `$processStyle(${el.staticStyle})`
-          el.styleBinding = `$processStyle(${el.styleBinding})`
-        }
-      }
-    ]
-  }
+    loader: 'vue-loader',
+    options: {
+        compilerModules: [
+            {
+                postTransformNode: el => {
+                    el.staticStyle = `$processStyle(${el.staticStyle})`
+                    el.styleBinding = `$processStyle(${el.styleBinding})`
+                }
+            }
+        ]
+    }
 });
 
 const nativeCfg = getBaseConfig();
@@ -160,8 +192,8 @@ nativeCfg.output.filename = '[name].js';
 nativeCfg.module.rules[1].use.push('weex-loader');
 
 const exportConfig = [
-  //webCfg,
-  nativeCfg
+    // webCfg,
+    nativeCfg
 ];
 
 module.exports = exportConfig;

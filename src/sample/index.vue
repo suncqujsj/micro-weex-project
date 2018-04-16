@@ -50,6 +50,7 @@ module.exports = {
         index: 0,
         meijulist: [
             { title: 'Button', link: "button" },
+            { title: 'Barchart', link: "barchart" },
             { title: 'CheckBox', link: "checkbox" },
             { title: 'Confirm', link: "confirm" },
             { title: 'Device Status', link: "device-status" },
@@ -62,9 +63,11 @@ module.exports = {
             { title: 'Progress', link: "progress" },
             { title: 'Refresh', link: "refresh" },
             { title: 'Select', link: "select" },
+            { title: 'Share', link: "share" },
             { title: 'Slider', link: "slider" },
             { title: 'Switch', link: "switch" },
-            { title: 'Tab', link: "tab" }
+            { title: 'Tab', link: "tab" },
+            { title: 'Video', link: "video" }
         ],
         list: [
             { title: 'Action Sheet', link: "actionSheet" },
@@ -101,11 +104,11 @@ module.exports = {
             this.$refs.mTab.tabClicked(sliderIndex);
         },
         goToMeiju(link) {
-            var path = "src/midea-sample/" + link + ".js";
+            var path = "midea-sample/" + link + ".js";
             nativeService.goTo(path);
         },
         goTo(link) {
-            var path = "src/sample/" + link + ".js";
+            var path = "sample/" + link + ".js";
             nativeService.goTo(path);
         }
     }

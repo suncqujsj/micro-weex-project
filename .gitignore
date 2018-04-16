@@ -9,6 +9,7 @@ test/build
 weex_tmp
 coverage
 dist
+entry
 
 # Node
 logs

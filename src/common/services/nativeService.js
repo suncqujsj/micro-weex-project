@@ -1,96 +1,45 @@
 const mm = weex.requireModule('modal');
-var ipAddress = "http://10.74.144.55:8080";
 const navigator = weex.requireModule('navigator');
-var dummy = false;
+const stream = weex.requireModule('stream')
 const storage = weex.requireModule('storage');
-var serviceList = {
-    getDeviceList: "subdevice/list",
-    getDeviceList_add: "subdevice/list",
-    addDevice: "subdevice/add",
-    delDevice: "device/del",
-    updateDevice: "transport",
-    updateAllDevices: "transport",
-    queryLog: "logging/list",
-    queryAlarm: "alarm/list",
-    releaseAlarm: "alarm/release",
-    delLog: "report_log_del",
-    sceneDetail: "scene/detail",
-    sceneList: "scene/list",
-    addScene: "scene/add",
-    otaCheck: "ota/update/check",
-    otaCheck_update: "ota/update/check",
-    startUpdate: "transport",
-    getOtaProgress: "ota_get_progress",
-    executeNow: "transport",
-    updateScene: "scene/update",
-    updateNode: "subdevice/update",
-    delScene: "scene/del",
-    getSceneDeviceList: "getDeviceList",
-    operateDevice: "transport",
-    enableScene: "scene/enable",
-    getSceneDetail: "scene/detail",
-    queryEnvDetector: "query_env_detector",
-    sendPlayerControl: "sendPlayerControl",
-    gwStatus: "transport",
-    switchDefence: "defence/switch",
-    getDomainList: "domain/list",
-    getDomainDevice: "domain/get_device",
-    setAlarmDevice: "subdevice/set_alarm_device",
-    generateLockPwd: "subdevice/unlock/generate",
-    exeInfrared: "transport",
-    studyInfrared: "transport",
-    infraredList: "subdevice/infrared/order/list",
-    addInfrared: "subdevice/infrared/order/add",
-    delInfrared: "subdevice/infrared/order/del",
-    updateInfrared: "subdevice/infrared/order/update",
-    emptyInfrared: "subdevice/infrared/order/clean",
-    b2bAutoRunning: 'b2bAutoRunning',
-    b2bAddScene: "b2bAddScene",
-    b2bUpdScene: "b2bUpdScene",
-    b2bDelScene: "b2bDelScene",
-    //安全锁
-    getSaveLockStatus: "setup/lock/query",
-    //获取项目列表
-    getProjectList: "setup/project/list",
-    //获取楼盘列表
-    getBuildingList: "setup/project/building/list",
-    //获取房间列表
-    getRoomList: "setup/project/building/room/list",
-    //提交安装
-    sumitInstall: "setup/submit",
-    addDeviceToDomain: "domain/add_device",
-    subDeviceConfig: "transport",
-    deleteGateWay: "device/del",
-    modifyGateWay: "gateway/modify",
-    lockUserList: "subdevice/lock/user/list",
-    updateLockUserRole: "subdevice/lock/user/update",
-    emptySwitchBound: "transport",
-    getEndpointBoundDevice: "transport",
-    getSwitchBoundDevice: "transport",
-    selectSwitchBoundDevice: "transport",
-    gatewayBackup: "gateway/backup/req",
-    gatewayBackupProgress: "gateway/backup/progress",
-    gatewayRestore: "gateway/restore",
-    gatewayRestoreProgress: "gateway/restore/progress",
-    gatewayBackupHistory: "gateway/backup/history",
-    getDeviceStatus: "device/get",
-    gatewayResetDefault: "system/default",
-    gatewayWifiGet: "net/wifiap/get",
-    gatewayWifiSet: "net/wifiap/set",
-    gatewayDhcpGet: "net/dhcpd/get",
-    gatewayDhcpSet: "net/dhcpd/set",
-    deviceModify: "device/modify",
-    deviceList: "device/list",
-    subDeviceConfigSpecific: "device/transport",
-    generateLockNb5Pwd: "doorlock/unlock/gen",
-    queryNb5Log: "device/log"
+const bridgeModule = weex.requireModule('bridgeModule');
+const globalEvent = weex.requireModule("globalEvent");
 
+const isIos = weex.config.env.platform == "iOS" ? true : false;
+import debugUtil from '../util/debugUtil'
+
+var ipAddress = "http://localhost:8080";
+var dummy = false;
+// import Mock from './mock'  //正式场上线时注释掉
+
+const debugLogSeperator = "**************************************\n"
+
+
+var ipParam = weex.config.bundleUrl.match(new RegExp("[\?\&]ip=([^\&]+)", "i"));
+if (ipParam && ipParam.length > 1) {
+    ipParam = ipParam[1]
+    // 测试
+    dummy = true
 }
 const platform = weex.config.env.platform;
-const bridgeModule = weex.requireModule('bridgeModule');
-var mockArray = [];
+if (platform == 'Web') {
+    dummy = true
+}
+console.log("dummy:" + dummy)
+
 export default {
-    goTo(path, animated = 'true') {
+    serviceList: {
+        test: "commonservice"
+    },
+
+    //**********页面跳转接口***************START
+    /*
+    params:
+        path - 跳转页面路径（以插件文件夹为根目录的相对路径）
+        animated - 是否需要跳转动画
+        replace - 跳转后是否在历史栈保留当前页面
+    */
+    goTo(path, animated = 'true', replace = 'false') {
         var self = this;
         var url
         if (dummy != true) {
@@ -102,7 +51,7 @@ export default {
                     path = path.substr(6, path.length - 6);
                 }
                 url = weexPath + path;
-                self.runGo(url, animated);
+                self.runGo(url, animated, replace);
             });
         } else {
             let ip = weex.config.bundleUrl.match(new RegExp("[\?\&]ip=([^\&]+)", "i"));
@@ -111,20 +60,26 @@ export default {
             } else {
                 url = "http://" + ip[1] + ":8080" + "/dist/" + path;
             }
-            self.runGo(url, animated);
+            self.runGo(url, animated, replace);
         }
     },
-    runGo(url, animated = 'true') {
-        // mm.toast({ message: url, duration: 2 })
+    runGo(url, animated = 'true', replace = 'false') {
+        mm.toast({ message: url, duration: 2 })
+        if (typeof animated == 'boolean') {
+            animated = animated ? 'true' : 'false';
+        }
+        if (typeof replace == 'boolean') {
+            replace = replace ? 'true' : 'false';
+        }
         navigator.push({
             url: url,
-            animated: animated
+            animated: animated,
+            replace: replace
         }, event => {
         });
     },
     getPath(callBack) {
         bridgeModule.getWeexPath(function (resData) {
-            //mm.toast({message:"log"+resData, duration: 5 })
             var jsonData = JSON.parse(resData);
             var weexPath = jsonData.weexPath;
             callBack(weexPath);
@@ -139,6 +94,319 @@ export default {
     },
     backToNative() {
         bridgeModule.backToNative();
+    },
+    //**********页面跳转接口***************END
+
+
+    //**********非APP业务接口***************START
+    genMessageId() {
+        var messageId = '';
+        for (var i = 0; i < 8; i++) {
+            messageId += (Math.floor(Math.random() * 10)).toString();
+        }
+        return messageId;
+    },
+    getItem(key, callback) {
+        storage.getItem(key, callback)
+    },
+    setItem(key, value, callback) {
+        if (typeof value == 'object') {
+            value = JSON.stringify(value);
+        }
+        let defaultCallback = event => {
+            console.log('set success')
+        }
+        storage.setItem(key, value, callback || defaultCallback)
+    },
+    removeItem(key, callback) {
+        storage.removeItem(key, () => {
+            if (callback) callback()
+        })
+    },
+    toast(message, duration) {
+        mm.toast({ message: message, duration: duration || 1 });
+    },
+    alert(message, callback, okTitle) {
+        var callbackFunc = callback || function (value) { }
+
+        if (typeof message == 'object') {
+            try {
+                message = JSON.stringify(message)
+            } catch (error) { }
+        }
+        mm.alert({
+            message: message,
+            okTitle: okTitle || "确定"
+        }, function (value) {
+            callbackFunc(value);
+        });
+    },
+    confirm(message, callback, okTitle, cancelTitle) {
+        mm.confirm({
+            message: message,
+            okTitle: okTitle || '确定',
+            cancelTitle: cancelTitle || '取消'
+        }, result => {
+            callback(result)
+        });
+    },
+    showLoading() {
+        if (dummy != true) {
+            bridgeModule.showLoading();
+        }
+    },
+    hideLoading() {
+        if (dummy != true) {
+            bridgeModule.hideLoading();
+        }
+    },
+    //**********非APP业务接口***************END
+
+    //**********网络请求接口***************START
+    //发送智慧云网络请求：此接口固定Post到智慧云https地址及端口
+    call(name, params, isShowLoading = true) {
+        return new Promise((resolve, reject) => {
+            var self = this;
+            if (dummy != true) {
+                this.getItem("masterId", (resdata) => {
+                    let msgid = self.genMessageId()
+                    var masterId = resdata.data
+                    var sendData = {}
+                    sendData.url = self.serviceList[name] ? self.serviceList[name] : name
+                    sendData.params = Object.assign({
+                        applianceId: masterId + "",
+                        msgid: msgid
+                    }, params)
+                    if (isShowLoading) {
+                        this.showLoading()
+                    }
+                    bridgeModule.sendMCloudRequest(sendData,
+                        (resData) => {
+                            debugUtil.debugLog(debugLogSeperator, `request(${msgid}): `, sendData)
+                            debugUtil.debugLog(`response(${msgid}): `, resData, debugLogSeperator)
+                            if (typeof resData == 'string') {
+                                resData = JSON.parse(resData)
+                            }
+                            if (isShowLoading) {
+                                this.hideLoading()
+                            }
+                            if (resData.errorCode == 0) {
+                                resolve(resData)
+                            } else {
+                                reject(resData)
+                            }
+                        },
+                        (error) => {
+                            debugUtil.debugLog(debugLogSeperator, `request(${msgid}): `, sendData)
+                            debugUtil.debugLog(`=======> error(${msgid}): `, error, debugLogSeperator)
+                            if (isShowLoading) {
+                                this.hideLoading()
+                            }
+                            if (typeof error == 'string') {
+                                error = JSON.parse(error)
+                            }
+                            reject(error);
+                        }
+                    )
+                });
+            } else {
+                let resData = Mock.getMock(self.serviceList[name] ? self.serviceList[name] : name)
+                if (resData.errorCode == 0) {
+                    resolve(resData);
+                }
+            }
+        })
+    },
+    //发送POST网络请求：URL自定义
+    callWeb(options, isShowLoading = true) {
+        return new Promise((resolve, reject) => {
+            var self = this;
+            if (dummy != true) {
+                let defaultOption = {
+                    method: "POST",
+                    type: 'json'
+                }
+                if (options.body) {
+                    options.body = this.convertWebBody(options.body)
+                }
+                options = Object.assign(defaultOption, options)
+
+                if (isShowLoading) {
+                    this.showLoading()
+                }
+                stream.fetch(options,
+                    (resData) => {
+                        if (isShowLoading) {
+                            this.hideLoading()
+                        }
+                        if (!resData.ok) {
+                            debugUtil.debugLog(debugLogSeperator, "request: ", options)
+                            debugUtil.debugLog("error: ", resData, debugLogSeperator)
+                            if (typeof resData == 'string') {
+                                resData = JSON.parse(resData)
+                            }
+                            reject(resData);
+                        } else {
+                            debugUtil.debugLog(debugLogSeperator, "request: ", options)
+                            debugUtil.debugLog("response success: ", resData, debugLogSeperator)
+                            let result = resData.data
+                            if (typeof result == 'string') {
+                                result = JSON.parse(result)
+                            }
+                            if (result.errorCode == 0) {
+                                resolve(result)
+                            } else {
+                                reject(result)
+                            }
+                        }
+
+                    }
+                )
+            } else {
+                let resData = Mock.getMock(name)
+                if (resData.errorCode == 0) {
+                    resolve(resData);
+                }
+            }
+        })
+    },
+    convertWebBody(obj) {
+        var param = ""
+        for (const name in obj) {
+            if (typeof obj[name] != 'function') {
+                param += "&" + name + "=" + encodeURI(obj[name])
+            }
+        }
+        return param.substring(1)
+    },
+    //发送指令透传接口
+    startCmdProcess(name, messageBody, callback, callbackFail) {
+        let commandId = Math.floor(Math.random() * 1000);
+        var param = {
+            commandId: commandId
+        }
+        if (messageBody != undefined) {
+            param.messageBody = messageBody;
+        }
+        var finalCallBack = function (resData) {
+            if (typeof resData == 'string') {
+                resData = JSON.parse(resData);
+            }
+            if (resData.errorCode != 0) {
+                callbackFail(resData);
+            } else {
+                callback(resData.messageBody);
+            }
+        }
+        var finalCallbackFail = function (resData) {
+            if (typeof resData == 'string') {
+                resData = JSON.parse(resData);
+            }
+            callbackFail(resData);
+        }
+        if (dummy != true) {
+            if (isIos) {
+                this.createCallbackFunctionListener();
+                this.callbackFunctions[commandId] = finalCallBack;
+                this.callbackFailFunctions[commandId] = finalCallbackFail;
+            }
+            bridgeModule.startCmdProcess(JSON.stringify(param), finalCallBack, finalCallbackFail);
+        } else {
+            callback(Mock.getMock(name).messageBody);
+        }
+    },
+
+    /* *****即将删除, IOS已经做了改进，不在需要已callbackFunction回调callback ********/
+    isCreateListener: false,
+    createCallbackFunctionListener() {
+        if (!this.isCreateListener) {
+            this.isCreateListener = true;
+            globalEvent.addEventListener("callbackFunction", (result) => {
+                //IOS消息返回处理
+                var commandId = result.commandId;
+                if (commandId) {
+                    this.callbackFunction(commandId, result);
+                }
+            });
+        }
+    },
+    callbackFunctions: {},
+    callbackFailFunctions: {},
+    callbackFunction(commandId, result) {
+        var jsonResult = result;
+        var cbf = this.callbackFunctions[commandId];
+        var cbff = this.callbackFailFunctions[commandId];
+        if (jsonResult.errorCode !== undefined && jsonResult.errMessage == 'TimeOut') {
+            if (typeof cbff == "function") {
+                cbff(-1); //表示指令超时 －1
+            }
+        } else {
+            if (typeof cbf == "function") {
+                cbf(jsonResult);
+            }
+        }
+        delete this.callbackFunctions[commandId];
+        delete this.callbackFailFunctions[commandId];
+    },
+    /* *****即将删除, IOS已经做了改进，不在需要已callbackFunction回调callback ********/
+
+    //发送Lua指令接口
+    sendLuaRequest(params, isShowLoading = true) {
+        return new Promise((resolve, reject) => {
+            var param = {};
+            param.operation = params.operation || "luaControl";//luaQuery or luaControl
+            param.params = params.data || {};
+            if (dummy != true) {
+                if (isShowLoading) {
+                    this.showLoading()
+                }
+                let msgid = this.genMessageId()
+                bridgeModule.commandInterface(JSON.stringify(param),
+                    (resData) => {
+                        debugUtil.debugLog(debugLogSeperator, `Lua request(${msgid}): `, param)
+                        debugUtil.debugLog(`Lua response(${msgid}):`, resData, debugLogSeperator)
+                        if (typeof resData == 'string') {
+                            resData = JSON.parse(resData);
+                        }
+                        if (isShowLoading) {
+                            this.hideLoading()
+                        }
+                        if (resData.errorCode == 0) {
+                            //成功
+                            resolve(resData);
+                        } else {
+                            reject(resData);
+                        }
+                    }, (error) => {
+                        debugUtil.debugLog(debugLogSeperator, `Lua request(${msgid}): `, param)
+                        debugUtil.debugLog(`=======> Lua error(${msgid}): `, error, debugLogSeperator)
+                        if (isShowLoading) {
+                            this.hideLoading()
+                        }
+                        if (typeof error == 'string') {
+                            error = JSON.parse(error)
+                        }
+                        reject(error);
+                    });
+            } else {
+                let resData
+
+                if (params['operation']) {
+                    resData = Mock.getMock(params['operation'])
+                }
+                debugUtil.debugLog("Mock: ", resData)
+                resolve(resData);
+            }
+        })
+    },
+    //**********网络请求接口***************END
+
+
+
+    //**********APP业务接口***************START
+    showSharePanel(params, callback, callbackFail) {
+        mm.toast({ message: params, duration: 2 })
+        bridgeModule.showSharePanel(params, callback, callbackFail);
     },
     getApplianceID(callBack) {
         var self = this;
@@ -187,16 +455,6 @@ export default {
             bridgeModule.b2bUpdateGateway(JSON.stringify(obj), callback);
         }
     },
-    showLoading() {
-        if (dummy != true) {
-            bridgeModule.showLoading();
-        }
-    },
-    hideLoading() {
-        if (dummy != true) {
-            bridgeModule.hideLoading();
-        }
-    },
     updateTitle(title, showLeftBtn, showRightBtn) {
         var params = {
             title: title,
@@ -205,41 +463,6 @@ export default {
         }
         if (dummy != true) {
             bridgeModule.updateTitle(JSON.stringify(params));
-        }
-    },
-    call(name, params, successFunc, failFunc) {
-        //if (platform!='Web') {
-        var self = this;
-        if (dummy != true) {
-            this.getItem("masterId", function (resdata) {
-                //resdata=JSON.parse(resdata);
-                var masterId = resdata.data;
-                var sendData = {};
-                sendData.url = serviceList[name];
-                sendData.params = params || {};
-                sendData.params.applianceid = masterId + "";
-                sendData.params.msgid = self.genMessageId();
-                sendData.params.data = params.data || {};
-                if (failFunc == undefined) {
-                    failFunc = function () {
-
-                    }
-                }
-                if (successFunc != undefined) {
-                    var finalSuccFunc = function (resData) {
-                        var jsonData = JSON.parse(resData);
-                        successFunc(jsonData);
-                    }
-                }
-                bridgeModule.b2bAction(sendData, finalSuccFunc, failFunc);
-            });
-        } else {
-            successFunc(mockArray[name]);
-        }
-    },
-    initMockData(jsonObj) {
-        for (var key in jsonObj) {
-            mockArray[key] = jsonObj[key];
         }
     },
     isMyHouse(callBack) {
@@ -256,63 +479,7 @@ export default {
             self.setItem("isMyHouse", 1);
         }
     },
-    genMessageId() {
-        var messageId = '';
-        for (var i = 0; i < 8; i++) {
-            messageId += (Math.floor(Math.random() * 10)).toString();
-        }
-        return messageId;
-    },
-    getItem(key, callback) {
-        storage.getItem(key, callback)
-    },
-    setItem(key, value) {
-        if (typeof value == 'object') {
-            value = JSON.stringify(value);
-            //mm.toast({message:value, duration: 2 })
-        }
-        storage.setItem(key, value, event => {
-            console.log('set success')
-        })
-    },
-    removeItem(key) {
-        storage.removeItem(key, event => {
-            console.log('delete value:', event.data)
-            this.state = 'deleted'
-        })
-    },
-    toast(message, duration) {
-        mm.toast({ message: message, duration: duration || 1 });
-    },
-    alert(message, callback, okTitle) {
-        var callbackFunc = callback || function (value) {
 
-        }
-        mm.alert({
-            message: message,
-            okTitle: okTitle || "确定"
-        }, function (value) {
-            callbackFunc(value);
-        });
-    },
-    confirm(message, callback, okTitle, cancelTitle) {
-        mm.confirm({
-            message: message,
-            okTitle: okTitle || '确定',
-            cancelTitle: cancelTitle || '取消'
-        }, result => {
-            callback(result)
-        });
-    },
-    convertImgPath(path) {
-        if (dummy) {
-            path = path || '';
-            path = path.replace(/\..\//g, '');
-            return ipAddress + "/dist/src/" + path;
-        } else {
-            return path;
-        }
-    },
     getDeviceSN(callback, callbackFail) {
         var finalCallBack = function (resData) {
             if (typeof resData == 'string') {
@@ -351,60 +518,6 @@ export default {
         } else {
             callback(0);
         }
-    },
-    startCmdProcess(name, messageBody, callback, callbackFail) {
-        var param = {};
-        if (messageBody != undefined) {
-            param.messageBody = messageBody;
-        }
-        var finalCallBack = function (resData) {
-            //mm.toast({message:resData, duration:3});
-            if (typeof resData == 'string') {
-                resData = JSON.parse(resData);
-            }
-            if (resData.errorCode != 0) {
-                callbackFail(resData);
-            } else {
-                callback(resData.messageBody);
-            }
-        }
-        var finalCallbackFail = function (resData) {
-            if (typeof resData == 'string') {
-                resData = JSON.parse(resData);
-            }
-            callbackFail(resData);
-        }
-        if (dummy != true) {
-            bridgeModule.startCmdProcess(JSON.stringify(param), finalCallBack, finalCallbackFail);
-        } else {
-            callback(mockArray[name].messageBody);
-        }
-    },
-    sendLuaRequest(params, callback, callbackFail) {
-        var param = {};
-        param.operation = params.operation || "luaControl";//luaQuery or luaControl
-        param.params = params.data || {};
-        var finalCallBack = function (resData) {
-            //mm.toast({message:resData, duration:3});
-            if (typeof resData == 'string') {
-                resData = JSON.parse(resData);
-            }
-            if (resData.errorCode != 0) {
-                callbackFail(resData);
-            } else {
-                callback(resData);
-            }
-        }
-        var finalCallbackFail = function (resData) {
-            if (typeof resData == 'string') {
-                resData = JSON.parse(resData);
-            }
-            callbackFail(resData);
-        }
-        if (dummy != true) {
-            bridgeModule.commandInterface(JSON.stringify(param), finalCallBack, finalCallbackFail);
-        } else {
-            callback(mockArray[params.name]);
-        }
     }
+    //**********APP业务接口***************END
 }

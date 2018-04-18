@@ -182,12 +182,12 @@
     height:800px;
   }
 </style>
-<script>
+<script>  import base from './base'
 
-  import mideaTab from '../component/tab.vue'
-  import mideaFlowTab from '../component/flow-tab.vue'
-  import mideaCell from '../component/cell.vue'
-  import nativeService from '../common/services/nativeService'
+  import mideaTab from '@/component/tab.vue'
+  import mideaFlowTab from '@/component/flow-tab.vue'
+  import mideaCell from '@/component/cell.vue'
+  import nativeService from '@/common/services/nativeService'
   const modal = weex.requireModule('modal');
   
   module.exports = {

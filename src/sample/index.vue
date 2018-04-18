@@ -1,5 +1,6 @@
 <template>
     <div class="wrapper" ref="wrapper">
+        <midea-header title="DolphinWeex" :isImmersion="false" @leftImgClick="leftImgClick"></midea-header>
         <midea-tab ref="mTab" :tabArray="tabData" @tabClicked="tabClicked">
         </midea-tab>
 
@@ -7,6 +8,12 @@
             <div class="sample-list">
                 <list show-scrollbar="false">
                     <midea-cell :clickActivied="true" v-for="(item,index) in meijulist" :key="'tab2'+index" :title="item.title" height="120" :has-arrow="true" @mideaCellClick="goToMeiju(item.link)">
+                    </midea-cell>
+                </list>
+            </div>
+            <div class="sample-list">
+                <list show-scrollbar="false">
+                    <midea-cell :clickActivied="true" v-for="(item,index) in interfacelist" :key="'tab2'+index" :title="item.title" height="120" :has-arrow="true" @mideaCellClick="goToInterface(item.link)">
                     </midea-cell>
                 </list>
             </div>
@@ -30,31 +37,35 @@
   width: 750px;
 }
 </style>
-<script>
+<script>  import base from './base'
 
-import mideaTab from '../midea-component/mTab.vue';
-import mideaCell from '../midea-component/item.vue';
-import nativeService from '../common/services/nativeService'
+import mideaHeader from '@/midea-component/header.vue'
+import mideaTab from '@/midea-component/mTab.vue';
+import mideaCell from '@/midea-component/item.vue';
+import nativeService from '@/common/services/nativeService'
 
 module.exports = {
     components: {
+        mideaHeader,
         mideaTab,
         mideaCell
     },
     data: () => ({
         tabData: [
-            { "name": "美居组件", "selected": true },
+            { "name": "Dolphin组件", "selected": true },
+            { "name": "Dolphin接口", "selected": false },
             { "name": "基本组件", "selected": false }
         ],
         val: 0,
         index: 0,
         meijulist: [
-            { title: 'Button', link: "button" },
-            { title: 'Barchart', link: "barchart" },
+            { title: 'Button按钮', link: "button" },
+            { title: 'Barchart柱状图', link: "barchart" },
             { title: 'CheckBox', link: "checkbox" },
             { title: 'Confirm', link: "confirm" },
             { title: 'Device Status', link: "device-status" },
             { title: 'Header', link: "header" },
+            { title: 'Linechart折线图', link: "linechart" },
             { title: 'List', link: "list" },
             { title: 'Loading', link: "loading" },
             { title: 'Nav List', link: "navList" },
@@ -67,7 +78,12 @@ module.exports = {
             { title: 'Slider', link: "slider" },
             { title: 'Switch', link: "switch" },
             { title: 'Tab', link: "tab" },
-            { title: 'Video', link: "video" }
+            { title: 'Video视频', link: "video" }
+        ],
+        interfacelist: [
+            { title: 'showSharePanel打开分享界面', link: "showSharePanel" },
+            { title: 'getUserInfo获取用户信息', link: "getUserInfo" },
+            { title: 'callTel打电话', link: "callTel" }
         ],
         list: [
             { title: 'Action Sheet', link: "actionSheet" },
@@ -96,6 +112,9 @@ module.exports = {
         }
     },
     methods: {
+        leftImgClick() {
+            nativeService.goBack()
+        },
         tabClicked(tabIndex) {
             this.index = tabIndex;
         },
@@ -105,6 +124,10 @@ module.exports = {
         },
         goToMeiju(link) {
             var path = "midea-sample/" + link + ".js";
+            nativeService.goTo(path);
+        },
+        goToInterface(link) {
+            var path = "midea-interface/" + link + ".js";
             nativeService.goTo(path);
         },
         goTo(link) {

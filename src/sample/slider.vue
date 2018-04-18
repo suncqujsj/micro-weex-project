@@ -15,10 +15,10 @@
     position:relative;
  }
 </style>
-<script>
-  import mideaSlider from '../component/slider.vue'
-  import mideaTitleBar from '../component/title-bar.vue'
-  import nativeService from '../common/services/nativeService'
+<script>  import base from './base'
+  import mideaSlider from '@/component/slider.vue'
+  import mideaTitleBar from '@/component/title-bar.vue'
+  import nativeService from '@/common/services/nativeService'
   const modal = weex.requireModule('modal');
   
   module.exports = {

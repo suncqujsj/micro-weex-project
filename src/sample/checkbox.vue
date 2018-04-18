@@ -20,10 +20,10 @@
     position:relative;
  }
 </style>
-<script>
+<script>  import base from './base'
 
-  import mideaCheckboxList from '../component/checkboxList.vue'
-  import nativeService from '../common/services/nativeService'
+  import mideaCheckboxList from '@/component/checkboxList.vue'
+  import nativeService from '@/common/services/nativeService'
   const modal = weex.requireModule('modal');
   
   module.exports = {

@@ -1,5 +1,6 @@
 <template>
     <div class="wrapper" :style="{paddingTop:isIos?'0px':'0px'}">
+        <midea-header title="Picker" :isImmersion="false" @leftImgClick="back"></midea-header>
         <midea-title-bar title="选择城市（单列选择）"></midea-title-bar>
         <midea-cell title="城市" :hasTopBorder="true" :rightText="city ? city :'请选择城市'" @mideaCellClick="pickCity">
         </midea-cell>
@@ -22,14 +23,16 @@
 <style scoped>
 
 </style>
-<script>
-import mideaCell from '../component/cell.vue'
-import mideaTitleBar from '../midea-component/title-bar.vue'
-import nativeService from '../common/services/nativeService'
+<script> 
+import base from './base'
+import mideaCell from '@/component/cell.vue'
+import mideaTitleBar from '@/midea-component/title-bar.vue'
+import nativeService from '@/common/services/nativeService'
 const modal = weex.requireModule('modal');
 const picker = weex.requireModule('picker')
 export default {
     components: { mideaCell, mideaTitleBar },
+    mixins: [base],
     data() {
         return {
             index: 0,

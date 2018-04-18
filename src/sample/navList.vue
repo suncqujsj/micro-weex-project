@@ -36,10 +36,10 @@
      background-color:#FFF;
   }
 </style>
-<script>
+<script>  import base from './base'
 
-  import mideaNavList from '../component/navList.vue'
-  import nativeService from '../common/services/nativeService'
+  import mideaNavList from '@/component/navList.vue'
+  import nativeService from '@/common/services/nativeService'
   const modal = weex.requireModule('modal');
   
   module.exports = {

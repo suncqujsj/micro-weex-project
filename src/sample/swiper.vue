@@ -6,9 +6,9 @@
 </template>
 <style>
 </style>
-<script>
-  import mideaImageSlider from '../component/image-slider.vue'
-  import nativeService from '../common/services/nativeService'
+<script>  import base from './base'
+  import mideaImageSlider from '@/component/image-slider.vue'
+  import nativeService from '@/common/services/nativeService'
   export default {
     components: {mideaImageSlider},
     data () {

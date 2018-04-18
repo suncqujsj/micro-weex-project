@@ -21,11 +21,11 @@
     position:relative;
  }
 </style>
-<script>
+<script>  import base from './base'
 
-  import mideaCell from '../component/cell.vue'
-  import mideaTitleBar from '../component/title-bar.vue'
-  import nativeService from '../common/services/nativeService'
+  import mideaCell from '@/component/cell.vue'
+  import mideaTitleBar from '@/component/title-bar.vue'
+  import nativeService from '@/common/services/nativeService'
   const modal = weex.requireModule('modal');
   
   module.exports = {

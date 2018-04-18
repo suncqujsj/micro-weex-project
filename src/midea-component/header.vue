@@ -53,7 +53,7 @@
     }
 </style>
 <script>
-    import nativeService from '../common/services/nativeService'
+    import nativeService from '@/common/services/nativeService'
     export default {
         props: {
             title: {

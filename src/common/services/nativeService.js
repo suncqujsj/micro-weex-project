@@ -42,6 +42,7 @@ export default {
     goTo(path, animated = 'true', replace = 'false') {
         var self = this;
         var url
+        // mm.toast({ message: dummy, duration: 2 })
         if (dummy != true) {
             //if (platform!='Web') {
             url = 'file://assets/' + path;
@@ -64,7 +65,7 @@ export default {
         }
     },
     runGo(url, animated = 'true', replace = 'false') {
-        mm.toast({ message: url, duration: 2 })
+        // mm.toast({ message: url, duration: 2 })
         if (typeof animated == 'boolean') {
             animated = animated ? 'true' : 'false';
         }
@@ -404,23 +405,27 @@ export default {
 
 
     //**********APP业务接口***************START
-    showSharePanel(params, callback, callbackFail) {
-        mm.toast({ message: params, duration: 2 })
-        bridgeModule.showSharePanel(params, callback, callbackFail);
+    getDeviceSN(callback, callbackFail) {
+        return new Promise((resolve, reject) => {
+            bridgeModule.getDeviceSN(function (resData) {
+                let jsonData = JSON.parse(resData);
+                let deviceSN = jsonData.deviceSN
+                resolve(deviceSN)
+            }, (error) => {
+                reject(error)
+            });
+        })
     },
+
     getApplianceID(callBack) {
-        var self = this;
-        var finalCallBack = function (resData) {
-            var jsonData = JSON.parse(resData);
-            self.setItem("masterId", jsonData.devId);
-            callBack(jsonData.devId);
-        }
-        if (dummy != true) {
-            bridgeModule.getApplianceID(finalCallBack);
-        } else {
-            self.setItem("masterId", "123123");
-            callBack("0");
-        }
+        return new Promise((resolve, reject) => {
+            bridgeModule.getApplianceID(function (resData) {
+                let jsonData = JSON.parse(resData);
+                let applianceID = jsonData.devId
+                self.setItem("masterId", applianceID);
+                resolve(applianceID)
+            });
+        })
     },
     getDetailParams(callBack) {
         var finalCallBack = function (resData) {
@@ -479,20 +484,6 @@ export default {
             self.setItem("isMyHouse", 1);
         }
     },
-
-    getDeviceSN(callback, callbackFail) {
-        var finalCallBack = function (resData) {
-            if (typeof resData == 'string') {
-                resData = JSON.parse(resData);
-            }
-            callback(resData.deviceSN);
-        }
-        if (dummy != true) {
-            bridgeModule.getDeviceSN(finalCallBack, callbackFail);
-        } else {
-            callback(0);
-        }
-    },
     getCurrentApplianceID(callback, callbackFail) {
         var finalCallBack = function (resData) {
             if (typeof resData == 'string') {
@@ -518,6 +509,47 @@ export default {
         } else {
             callback(0);
         }
+    },
+
+    showSharePanel(params, callback, callbackFail) {
+        return new Promise((resolve, reject) => {
+            bridgeModule.showSharePanel(params,
+                (resData) => {
+                    resolve(resData)
+                },
+                (error) => {
+                    reject(error)
+                });
+        })
+    },
+    getUserInfo() {
+        return new Promise((resolve, reject) => {
+            let param = {
+                operation: 'getUserInfo'
+            }
+            bridgeModule.commandInterface(JSON.stringify(param),
+                (resData) => {
+                    resolve(resData)
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
+    },
+    callTel(TelNo) {
+        return new Promise((resolve, reject) => {
+            let param = {
+                operation: 'callTel',
+                tel: TelNo
+            }
+            bridgeModule.commandInterface(JSON.stringify(param),
+                (resData) => {
+                    resolve(resData)
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
     }
     //**********APP业务接口***************END
 }

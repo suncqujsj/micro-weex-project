@@ -1,34 +1,37 @@
 <template>
-    <scroller class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
-        <div style="padding:24px;">
-            <text style="font-size:28px">居中，默认高度</text>
-        </div>
-        <div class="container">
-            <m-nav-list :list="navList" :cols="4" @itemClicked="itemClicked">
-            </m-nav-list>
-        </div>
-        <div style="padding:24px;">
-            <text style="font-size:28px">两边对齐，自定义高度</text>
-        </div>
-        <div class="container">
-            <m-nav-list :list="navList" type="spaceBetween" :cols="4" height="200" @itemClicked="itemClicked">
-            </m-nav-list>
-        </div>
-        <div style="padding:24px;">
-            <text style="font-size:28px">横向内容，默认高度</text>
-        </div>
-        <div class="container-h">
-            <m-nav-list :list="hNavList" direction="h" :cols="3" @itemClicked="itemClicked">
-            </m-nav-list>
-        </div>
-        <div style="padding:24px;">
-            <text style="font-size:28px">横向内容，两边对齐，自定义高度</text>
-        </div>
-        <div class="container-h">
-            <m-nav-list :list="hNavList" direction="h" type="spaceBetween" :cols="3" height="200" @itemClicked="itemClicked">
-            </m-nav-list>
-        </div>
-    </scroller>
+    <div>
+        <midea-header title="Nav List" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <scroller class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+            <div style="padding:24px;">
+                <text style="font-size:28px">居中，默认高度</text>
+            </div>
+            <div class="container">
+                <m-nav-list :list="navList" :cols="4" @itemClicked="itemClicked">
+                </m-nav-list>
+            </div>
+            <div style="padding:24px;">
+                <text style="font-size:28px">两边对齐，自定义高度</text>
+            </div>
+            <div class="container">
+                <m-nav-list :list="navList" type="spaceBetween" :cols="4" height="200" @itemClicked="itemClicked">
+                </m-nav-list>
+            </div>
+            <div style="padding:24px;">
+                <text style="font-size:28px">横向内容，默认高度</text>
+            </div>
+            <div class="container-h">
+                <m-nav-list :list="hNavList" direction="h" :cols="3" @itemClicked="itemClicked">
+                </m-nav-list>
+            </div>
+            <div style="padding:24px;">
+                <text style="font-size:28px">横向内容，两边对齐，自定义高度</text>
+            </div>
+            <div class="container-h">
+                <m-nav-list :list="hNavList" direction="h" type="spaceBetween" :cols="3" height="200" @itemClicked="itemClicked">
+                </m-nav-list>
+            </div>
+        </scroller>
+    </div>
 </template>
 <style scoped>
 .wrapper {
@@ -43,15 +46,16 @@
   background-color: #fff;
 }
 </style>
-<script>
+<script>  
 
-import mNavList from '../midea-component/mNavList.vue'
-import nativeService from '../common/services/nativeService'
+import base from './base'
+import mNavList from '@/midea-component/mNavList.vue'
+import nativeService from '@/common/services/nativeService'
 const modal = weex.requireModule('modal');
 
 module.exports = {
-
     components: { mNavList },
+    mixins: [base],
     data() {
         return {
             navList: [

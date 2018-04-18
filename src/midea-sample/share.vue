@@ -1,16 +1,19 @@
 <template>
     <div class="wrapper">
+        <midea-header title="Share" :isImmersion="false" @leftImgClick="back"></midea-header>
         <midea-button text="点击调用分享功能" type="green" @mideaButtonClicked="showSharePannel"></midea-button>
     </div>
 </template>
 
 
-<script>
-import mideaButton from '../midea-component/button.vue'
-import nativeService from '../common/services/nativeService'
+<script> 
+import base from './base'
+import mideaButton from '@/midea-component/button.vue'
+import nativeService from '@/common/services/nativeService'
 
 export default {
     components: { mideaButton },
+    mixins: [base],
     data() {
         return {
 

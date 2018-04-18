@@ -48,7 +48,8 @@ var subProjectAssets = []
 var commonImagePath = path.join(__dirname, './src/img')
 const entryPath = path.resolve(__dirname, './entry/')
 var entry = {
-    'index': './src/entry.js'
+    'index': './src/entry.js',
+    'weex': './src/weex-entry.js'
 };
 const FILE_TYPE = '.vue'
 const getEntryFileContent = path => {
@@ -60,14 +61,14 @@ new Vue({
 })
   `
 }
-//默认编译T0x开关的文件,目标文件如需要编译可添加到includeFiles
-var includeFiles = ['sample', 'midea-sample'];
+//默认编译T0x和midea-开关的文件夹, 目标文件夹如需要编译可添加到includeFiles
+var includeFiles = ['sample'];
 function walk() {
     let directory = path.join(__dirname, './src')
     fs.readdirSync(directory)
         .forEach(file => {
             var fileStr = includeFiles.join(",") + ",";
-            if (file.indexOf("T0x") != -1 || fileStr.indexOf(file + ",") != -1) {
+            if (file.indexOf("T0x") != -1 || file.indexOf("midea-") != -1 || fileStr.indexOf(file + ",") != -1) {
                 runWalk(file)
             }
         })

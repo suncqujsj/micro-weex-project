@@ -1,5 +1,6 @@
 <template>
     <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+        <midea-header title="Tab" :isImmersion="false" @leftImgClick="back"></midea-header>
         <div style="background-color:#FFF;padding:24px;border-bottom-width:1px;border-bottom-color:#e2e2e2">
             <text style="font-size:28px">导航Tab</text>
         </div>
@@ -98,14 +99,16 @@
   height: 800px;
 }
 </style>
-<script>
+<script> 
+import base from './base'
 
-import mideaTab from '../midea-component/mTab.vue'
-import mideaFlowTab from '../midea-component/mFlowTab.vue'
+import mideaTab from '@/midea-component/mTab.vue'
+import mideaFlowTab from '@/midea-component/mFlowTab.vue'
 const modal = weex.requireModule('modal');
 
 module.exports = {
     components: { mideaTab, mideaFlowTab },
+    mixins: [base],
     data() {
         return {
             tabData: [

@@ -1,7 +1,7 @@
 <template>
     <div>
-        <midea-header title="barchart" :isImmersion="false" @leftImgClick="back"></midea-header>
-        <midea-barchart-view class="barchart" :data="chartData"></midea-barchart-view>
+        <midea-header title="Linechart折线图" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-linechart-view class="linechart" :data="chartData"></midea-linechart-view>
         <midea-button text="刷新数据" type="green" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <text>
@@ -11,7 +11,7 @@
 </template>
 
 <style scoped>
-.barchart {
+.linechart {
   width: 730px;
   margin-top: 20px;
   margin-left: 10px;
@@ -38,15 +38,20 @@ export default {
                 "y": [
                     {
                         "value": [1, 6, 2, 1, 2, 3, 7],
+                        "label": [1, 6, 2, 1, 2, 3, 7],
                         "title": "冷藏室",
                         "color": "#2AD2FC", //柱子颜色
-                        "background": "#ffffff"
+                        "starcolor": "#ffffff", //区域背景渐变开始颜色（从下自上）
+                        "endcolor": "#2AD2FC", //区域背景渐变结束颜色（从下自上）
+                        "smooth": 1  //0直线，1平滑
                     },
                     {
                         "value": [10, 5, 3, 4, 1, 2, 6],
                         "title": "下段冷冻室",
                         "color": "#1B81FB", //柱子颜色
-                        "background": "#ffffff"
+                        "starcolor": "#ffffff", //区域背景渐变开始颜色（从下自上）
+                        "endcolor": "#1B81FB", //区域背景渐变结束颜色（从下自上）
+                        "smooth": 0  //0直线，1平滑
                     }
                 ],
                 "description": "",
@@ -66,7 +71,9 @@ export default {
             let tempObj = JSON.parse(JSON.stringify(this.chartData))
             for (let index = 0; index < 7; index++) {
                 tempObj.x.label[index] = Math.ceil(Math.random() * 100) + ''
-                tempObj.y[0].value[index] = Math.ceil(Math.random() * 100)
+                let value = Math.ceil(Math.random() * 100)
+                tempObj.y[0].value[index] = value
+                tempObj.y[0].label[index] = value + "次"
                 tempObj.y[1].value[index] = Math.ceil(Math.random() * 100)
             }
 

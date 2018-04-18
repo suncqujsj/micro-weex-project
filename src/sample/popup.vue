@@ -70,12 +70,12 @@
    color:#00B9EF;font-size:28px;
  }
 </style>
-<script>
+<script>  import base from './base'
 
-  import mideaButton from '../component/button.vue'
-  import mideaPopup from '../component/popup.vue'
-  import mideaCheckboxList from '../component/checkboxList.vue'
-  import nativeService from '../common/services/nativeService'
+  import mideaButton from '@/component/button.vue'
+  import mideaPopup from '@/component/popup.vue'
+  import mideaCheckboxList from '@/component/checkboxList.vue'
+  import nativeService from '@/common/services/nativeService'
   const modal = weex.requireModule('modal');
   
   module.exports = {

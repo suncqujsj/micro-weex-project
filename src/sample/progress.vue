@@ -26,12 +26,12 @@
     align-items: center;
   }
 </style>
-<script>
+<script>  import base from './base'
 
-  import mideaButton from '../component/button.vue'
-  import mideaProgress from '../component/progress.vue';
-  import mideaProgressDialog from '../component/progressDialog.vue';
-  import nativeService from '../common/services/nativeService'
+  import mideaButton from '@/component/button.vue'
+  import mideaProgress from '@/component/progress.vue';
+  import mideaProgressDialog from '@/component/progressDialog.vue';
+  import nativeService from '@/common/services/nativeService'
   const modal = weex.requireModule('modal');
   
   module.exports = {

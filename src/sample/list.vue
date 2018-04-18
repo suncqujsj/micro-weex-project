@@ -42,11 +42,11 @@
     justify-content: center;
   }
 </style>
-<script>
+<script>  import base from './base'
 
-  import mideaItem from '../component/item.vue'
-  import mideaOperationModal from '../component/operation-modal.vue'
-  import nativeService from '../common/services/nativeService'
+  import mideaItem from '@/component/item.vue'
+  import mideaOperationModal from '@/component/operation-modal.vue'
+  import nativeService from '@/common/services/nativeService'
   const modal = weex.requireModule('modal');
   
   export default {

@@ -10,7 +10,7 @@
         </midea-cell>
 
         <midea-title-bar title="选择地址（多列选择级联）"></midea-title-bar>
-        <midea-cell title="属性" :hasTopBorder="true" :rightText="cascadedDesc" @mideaCellClick="pickCascaded">
+        <midea-cell title="属性" :hasTopBorder="true" :rightText="cascadedDesc" @mideaCellClick="pickCascade">
         </midea-cell>
 
         <midea-title-bar title="选择日期"></midea-title-bar>
@@ -83,12 +83,12 @@ export default {
             var pickItem = [{
                 index: that.colorIndex,
                 item: itemsColor,
-                label: ""
+                label: "颜色"
             },
             {
                 index: that.sizeIndex,
                 item: itemsSize,
-                label: ""
+                label: "尺寸"
             },
             ]
             picker.pick({
@@ -108,26 +108,23 @@ export default {
                 that.attribute = itemsColor[dataArr[0]] + ',' + itemsSize[dataArr[1]];
             });
         },
-        pickCascaded() {
+        pickCascade() {
             let pickItem = [
                 {
                     index: this.cascadedItem[0].id | 2,
-                    item: [],
                     label: "省"
                 },
                 {
                     index: this.cascadedItem[1].id || 22,
-                    item: [],
                     label: "市"
                 },
                 {
                     index: this.cascadedItem[2].id || 222,
-                    item: [],
                     label: "区/县"
                 },
             ]
             let pickItemMap = [
-                [{ id: 1, pId: 0, name: '北京' },
+                { id: 1, pId: 0, name: '北京' },
                 { id: 11, pId: 1, name: '北京' },
                 { id: 111, pId: 11, name: '朝阳区' },
                 { id: 112, pId: 11, name: '密云区' },
@@ -145,12 +142,11 @@ export default {
                 { id: 32, pId: 3, name: '北海' },
                 { id: 321, pId: 32, name: '海城区' },
                 { id: 322, pId: 32, name: '银海区' }
-                ]
             ]
-            picker.pick({
+            picker.pickCascade({
                 'items': pickItem,
                 'itemMaps': pickItemMap,
-                'title': '选择属性', //取消和确定中间那标题
+                'title': '选择地址', //取消和确定中间那标题
                 'cancelTxt': '取消', //取消按钮文字
                 'confirmTxt': '确定', //确定按钮文字,
                 'cancelTxtColor': '#020F13', //取消颜色

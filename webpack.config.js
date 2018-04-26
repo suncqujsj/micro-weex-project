@@ -23,9 +23,9 @@ const plugins = [
         banner: '// { "framework": "Vue" }\n',
         raw: true
     }),
-    // new CopyWebpackPlugin([
-    //     { from: './src/img', to: "./img" }
-    // ])
+    new CopyWebpackPlugin([
+        { from: './src/img', to: "./img" }
+    ])
 ];
 
 console.log('Building..., Please wait a moment.');

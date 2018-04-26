@@ -28,8 +28,8 @@ export default {
     mixins: [base],
     data() {
         return {
-            // src: 'http://flv2.bn.netease.com/videolib3/1611/01/XGqSL5981/SD/XGqSL5981-mobile.mp4',
-            src: 'http://midea-file.oss-cn-hangzhou.aliyuncs.com/meiju/meiju20171130.mp4',
+            src: 'http://flv2.bn.netease.com/videolib3/1611/01/XGqSL5981/SD/XGqSL5981-mobile.mp4',
+            // src: 'http://midea-file.oss-cn-hangzhou.aliyuncs.com/meiju/meiju20171130.mp4',
             autoplay: true
         }
     },

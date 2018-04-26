@@ -1,20 +1,15 @@
 <template>
     <div class="wrapper">
-        <midea-header title="getUserInfo" :isImmersion="false" @leftImgClick="back"></midea-header>
-        <midea-button text="执行getUserInfo" type="green" @mideaButtonClicked="mideaButtonClicked">
+        <midea-header title="showLoading" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-button text="执行showLoading" type="green" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <midea-title-bar title="代码"></midea-title-bar>
         <text class="display-block">
-            nativeService.getUserInfo().then(
-                (resp) => {
-                    this.result = resp
-                }
-            ).catch((error) => {
-                nativeService.toast(error)
-            })
+            nativeService.showLoading()
+            setTimeout(() => {
+                nativeService.hideLoading()
+            }, 2000);
         </text>
-        <midea-title-bar title="结果"></midea-title-bar>
-        <text class="display-block">{{result}}</text>
     </div>
 </template>
 <style scoped>
@@ -42,13 +37,10 @@ module.exports = {
     },
     methods: {
         mideaButtonClicked() {
-            nativeService.getUserInfo().then(
-                (resp) => {
-                    this.result = resp
-                }
-            ).catch((error) => {
-                nativeService.toast(error)
-            })
+            nativeService.showLoading()
+            setTimeout(() => {
+                nativeService.hideLoading()
+            }, 2000);
         }
     },
     created() {

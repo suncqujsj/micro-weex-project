@@ -4,7 +4,7 @@
         <midea-linechart-view class="linechart" :data="chartData"></midea-linechart-view>
         <midea-button text="刷新数据" type="green" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
-        <text>
+        <text class="display-text">
             {{JSON.stringify(chartData)}}
         </text>
     </div>
@@ -18,6 +18,11 @@
   margin-right: 10px;
   margin-bottom: 20px;
   height: 350px;
+}
+.display-text {
+  font-size: 30px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 </style>
 <script>  
@@ -47,6 +52,7 @@ export default {
                     },
                     {
                         "value": [10, 5, 3, 4, 1, 2, 6],
+                        "label": [10, 5, 3, 4, 1, 2, 6],
                         "title": "下段冷冻室",
                         "color": "#1B81FB", //柱子颜色
                         "starcolor": "#ffffff", //区域背景渐变开始颜色（从下自上）

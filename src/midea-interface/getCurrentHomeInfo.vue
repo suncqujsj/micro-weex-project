@@ -1,11 +1,11 @@
 <template>
     <div class="wrapper">
-        <midea-header title="getUserInfo" :isImmersion="false" @leftImgClick="back"></midea-header>
-        <midea-button text="执行getUserInfo" type="green" @mideaButtonClicked="mideaButtonClicked">
+        <midea-header title="getCurrentHomeInfo" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-button text="执行getCurrentHomeInfo" type="green" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <midea-title-bar title="代码"></midea-title-bar>
         <text class="display-block">
-            nativeService.getUserInfo().then(
+            nativeService.getCurrentHomeInfo().then(
                 (resp) => {
                     this.result = resp
                 }
@@ -42,7 +42,7 @@ module.exports = {
     },
     methods: {
         mideaButtonClicked() {
-            nativeService.getUserInfo().then(
+            nativeService.getCurrentHomeInfo().then(
                 (resp) => {
                     this.result = resp
                 }

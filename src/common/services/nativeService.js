@@ -161,6 +161,16 @@ export default {
             bridgeModule.hideLoading();
         }
     },
+    showLoadingWithMsg(msg) {
+        if (dummy != true) {
+            bridgeModule.showLoadingWithMsg(msg);
+        }
+    },
+    hideLoadingWithMsg() {
+        if (dummy != true) {
+            bridgeModule.hideLoadingWithMsg();
+        }
+    },
     //**********非APP业务接口***************END
 
     //**********网络请求接口***************START
@@ -405,6 +415,10 @@ export default {
 
 
     //**********APP业务接口***************START
+    //统一JS->Native接口
+    commandInterface(...args) {
+        bridgeModule.commandInterface(...args)
+    },
     getDeviceSN(callback, callbackFail) {
         return new Promise((resolve, reject) => {
             bridgeModule.getDeviceSN(function (resData) {
@@ -529,7 +543,8 @@ export default {
             }
             bridgeModule.commandInterface(JSON.stringify(param),
                 (resData) => {
-                    resolve(resData)
+                    let jsonResult = JSON.parse(resData)
+                    resolve(jsonResult)
                 },
                 (error) => {
                     reject(error)
@@ -550,6 +565,142 @@ export default {
                     reject(error)
                 })
         })
+    },
+    //触发手机震动
+    hapticFeedback() {
+        return new Promise((resolve, reject) => {
+            let param = {
+                operation: 'hapticFeedback'
+            }
+            bridgeModule.commandInterface(JSON.stringify(param),
+                (resData) => {
+                    resolve(resData)
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
+    },
+    //打开指定的系统设置页面，比如蓝牙开关页面
+    openNativeSystemPage(pageName) {
+        return new Promise((resolve, reject) => {
+            let param = {
+                operation: 'openNativeSystemPage',
+                page: pageName || 'bluetooth'
+            }
+            bridgeModule.commandInterface(JSON.stringify(param),
+                (resData) => {
+                    resolve(resData)
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
+    },
+    shareMsg(options) {
+        /* params =  {
+            "type": "wx", //分享类型，wx表示微信分享，qq表示qq分享，sms表示短信分享，weibo表示新浪微博，qzone表示QQ空间，wxTimeline表示微信朋友圈
+            "title": "xxxxxx", //分享的标题
+            "desc": "xxxxxx",//分享的文本内容
+            "imgUrl": "xxxxxx",//分享的图片链接
+            "link": "xxxxxx" //分享的跳转链接
+        } */
+        return new Promise((resolve, reject) => {
+            let param = {
+                operation: 'shareMsg',
+                params: options
+            }
+            bridgeModule.commandInterface(JSON.stringify(param),
+                (resData) => {
+                    resolve(resData)
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
+    },
+    //获取当前设备网络信息
+    getNetworkStatus() {
+        return new Promise((resolve, reject) => {
+            let param = {
+                operation: 'getNetworkStatus'
+            }
+            bridgeModule.commandInterface(JSON.stringify(param),
+                (resData) => {
+                    resolve(resData)
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
+    },
+    //获取当前家庭信息
+    getCurrentHomeInfo() {
+        return new Promise((resolve, reject) => {
+            let param = {
+                operation: 'getCurrentHomeInfo'
+            }
+            bridgeModule.commandInterface(JSON.stringify(param),
+                (resData) => {
+                    resolve(resData)
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
+    },
+    //获取当前设备信息
+    getDeviceInfo() {
+        return new Promise((resolve, reject) => {
+            let param = {
+                operation: 'getDeviceInfo'
+            }
+            bridgeModule.commandInterface(JSON.stringify(param),
+                (resData) => {
+                    resolve(resData)
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
+    },
+    //更新当前设备信息
+    updateDeviceInfo(params) {
+        return new Promise((resolve, reject) => {
+            let param = Object.assign(params, {
+                operation: 'updateDeviceInfo'
+            })
+            bridgeModule.commandInterface(JSON.stringify(param),
+                (resData) => {
+                    resolve(resData)
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
+    },
+    //打开指定的原生页面
+    jumpNativePage(params) {
+        /* params =  {
+            "pageName": "xxxx", //跳转的目标页面
+            "data": {xxxxxx}, //传参，为json格式字符串
+        } */
+        return new Promise((resolve, reject) => {
+            let param = Object.assign(params, {
+                operation: 'jumpNativePage'
+            })
+            bridgeModule.commandInterface(JSON.stringify(param),
+                (resData) => {
+                    resolve(resData)
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
+    },
+    //调用第三方SDK统一接口
+    interfaceForThirdParty(...args) {
+        bridgeModule.interfaceForThirdParty(...args)
     }
     //**********APP业务接口***************END
 }

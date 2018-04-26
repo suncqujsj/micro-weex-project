@@ -4,7 +4,7 @@
         <midea-barchart-view class="barchart" :data="chartData"></midea-barchart-view>
         <midea-button text="刷新数据" type="green" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
-        <text>
+        <text class="display-text">
             {{JSON.stringify(chartData)}}
         </text>
     </div>
@@ -18,6 +18,11 @@
   margin-right: 10px;
   margin-bottom: 20px;
   height: 350px;
+}
+.display-text {
+  font-size: 30px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 </style>
 <script>  

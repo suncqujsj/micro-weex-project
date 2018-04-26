@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="getDeviceSN" :isImmersion="false" @leftImgClick="leftImgClick"></midea-header>
+        <midea-header title="getDeviceSN" :isImmersion="false" @leftImgClick="back"></midea-header>
         <midea-button text="执行getDeviceSN" type="green" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <text>
@@ -21,6 +21,7 @@
 }
 </style>
 <script>
+import base from './base'
 
 import mideaHeader from '@/midea-component/header.vue'
 import mideaButton from '@/midea-component/button.vue'
@@ -28,6 +29,7 @@ import nativeService from '@/common/services/nativeService'
 
 module.exports = {
     components: { mideaHeader, mideaButton },
+    mixins: [base],
     data() {
 
     },
@@ -40,9 +42,6 @@ module.exports = {
             ).catch((error) => {
                 nativeService.toast(error)
             })
-        },
-        leftImgClick() {
-            nativeService.goBack()
         }
     },
     created() {

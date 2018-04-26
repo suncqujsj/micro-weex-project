@@ -1,10 +1,10 @@
 <template>
     <div class="wrapper">
-        <midea-header title="callTel" :isImmersion="false" @leftImgClick="back"></midea-header>
-        <midea-button text="执行callTel" type="green" @mideaButtonClicked="mideaButtonClicked">
+        <midea-header title="openNativeSystemPage" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-button text="打开系统蓝牙设置页面" type="green" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <text>
-            nativeService.callTel('10086').then(
+            nativeService.openNativeSystemPage('bluetooth').then(
                 (resp) => {
                     nativeService.toast(resp)
                 }
@@ -31,11 +31,10 @@ module.exports = {
     components: { mideaHeader, mideaButton },
     mixins: [base],
     data() {
-
     },
     methods: {
         mideaButtonClicked() {
-            nativeService.callTel('10086').then(
+            nativeService.openNativeSystemPage('bluetooth').then(
                 (resp) => {
                     nativeService.toast(resp)
                 }

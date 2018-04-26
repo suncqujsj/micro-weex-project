@@ -6,20 +6,20 @@
 
         <slider :value="val" :index="index" @change="changeArea" class="slider" auto-play="false">
             <div class="sample-list">
-                <list show-scrollbar="false">
-                    <midea-cell :clickActivied="true" v-for="(item,index) in meijulist" :key="'tab2'+index" :title="item.title" height="120" :has-arrow="true" @mideaCellClick="goToMeiju(item.link)">
+                <list show-scrollbar="true">
+                    <midea-cell :clickActivied="true" v-for="(item,index) in sortedMeijulist" :key="'tab2'+index" :title="item.title" height="120" :has-arrow="true" @mideaCellClick="goToMeiju(item.link)">
                     </midea-cell>
                 </list>
             </div>
             <div class="sample-list">
-                <list show-scrollbar="false">
-                    <midea-cell :clickActivied="true" v-for="(item,index) in interfacelist" :key="'tab2'+index" :title="item.title" height="120" :has-arrow="true" @mideaCellClick="goToInterface(item.link)">
+                <list show-scrollbar="true">
+                    <midea-cell :clickActivied="true" v-for="(item,index) in sortedInterfacelist" :key="'tab2'+index" :title="item.title" height="120" :has-arrow="true" @mideaCellClick="goToInterface(item.link)">
                     </midea-cell>
                 </list>
             </div>
             <div class="sample-list">
-                <list show-scrollbar="false" :style="{height:'1050px'}">
-                    <midea-cell :clickActivied="true" v-for="(item,index) in list" :key="'tab1'+index" :title="item.title" height="120" :has-arrow="true" @mideaCellClick="goTo(item.link)">
+                <list show-scrollbar="true" :style="{height:'1050px'}">
+                    <midea-cell :clickActivied="true" v-for="(item,index) in sortedList" :key="'tab1'+index" :title="item.title" height="120" :has-arrow="true" @mideaCellClick="goTo(item.link)">
                     </midea-cell>
                 </list>
             </div>
@@ -32,6 +32,7 @@
 }
 .sample-list {
   width: 750px;
+  height: 1050px;
 }
 .slider {
   width: 750px;
@@ -81,9 +82,22 @@ module.exports = {
             { title: 'Video视频', link: "video" }
         ],
         interfacelist: [
-            { title: 'showSharePanel打开分享界面', link: "showSharePanel" },
+            { title: 'callTel打电话', link: "callTel" },
+            { title: 'getCurrentHomeInfo获取当前家庭信息', link: "getCurrentHomeInfo" },
+            { title: 'getDeviceInfo获取当前设备信息', link: "getDeviceInfo" },
+            { title: 'getNetworkStatus获取网络信息', link: "getNetworkStatus" },
             { title: 'getUserInfo获取用户信息', link: "getUserInfo" },
-            { title: 'callTel打电话', link: "callTel" }
+            { title: 'hapticFeedback手机震动', link: "hapticFeedback" },
+            { title: 'interfaceForThirdParty第三方SDK接口', link: "interfaceForThirdParty" },
+            { title: 'jumpNativePage打开原生页面', link: "jumpNativePage" },
+            { title: 'openNativeSystemPage打开系统页面', link: "openNativeSystemPage" },
+            { title: 'receiveMessageFromApp接收APP主动调用', link: "receiveMessageFromApp" },
+            { title: 'shareMsg调用分享', link: "shareMsg" },
+            { title: 'showLoading打开原生loading界面', link: "showLoading" },
+            { title: 'showLoadingWithMsg打开原生loading界面', link: "showLoadingWithMsg" },
+            { title: 'showSharePanel打开分享界面', link: "showSharePanel" },
+            { title: 'updateDeviceInfo更新当前设备信息', link: "updateDeviceInfo" },
+            { title: 'weex环境变量', link: "weexEnv" }
         ],
         list: [
             { title: 'Action Sheet', link: "actionSheet" },
@@ -109,9 +123,21 @@ module.exports = {
     computed: {
         deviceHeight() {
             return weex.config.env.deviceHeight
+        },
+        sortedMeijulist() {
+            return this.meijulist.sort(this.compare)
+        },
+        sortedInterfacelist() {
+            return this.interfacelist.sort(this.compare)
+        },
+        sortedList() {
+            return this.list.sort(this.compare)
         }
     },
     methods: {
+        compare(a, b) {
+            return a.title > b.title ? 1 : -1
+        },
         leftImgClick() {
             nativeService.goBack()
         },

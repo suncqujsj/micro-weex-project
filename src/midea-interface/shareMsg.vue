@@ -1,26 +1,22 @@
 <template>
     <div class="wrapper">
-        <midea-header title="打开分享界面" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="shareMsg" :isImmersion="false" @leftImgClick="back"></midea-header>
+
         <midea-title-bar title="'接口参数:"></midea-title-bar>
         <textarea type="text" placeholder="Input Text" class="textarea" :value="messageParamString" @input="dataChange" rows=5 />
-        <midea-button text="执行showSharePannel" type="green" @mideaButtonClicked="showSharePannel">
+        <midea-button text="微信分享" type="green" @mideaButtonClicked="mideaButtonClicked('wx')">
         </midea-button>
-        <text class="display-text">
-            let params = {
-                title: '分享标题', // 分享标题
-                desc: '分享描述', // 分享描述
-                link: 'http://www.midea.com/cn/', // 分享链接
-                imgUrl: 'http://10.16.12.243/anonymous/json/weibo/1740248463_180.jpg', // 分享图标
-            }
-            
-            nativeService.showSharePanel(params).then(
-                (resp) => {
-                    nativeService.toast("分享成功")
-                }
-            ).catch((error) => {
-                nativeService.toast("分享失败")
-            })
-        </text>
+        <midea-button text="QQ分享" type="green" @mideaButtonClicked="mideaButtonClicked('qq')">
+        </midea-button>
+        <midea-button text="短信分享" type="green" @mideaButtonClicked="mideaButtonClicked('sms')">
+        </midea-button>
+        <midea-button text="新浪微博分享" type="green" @mideaButtonClicked="mideaButtonClicked('weibo')">
+        </midea-button>
+        <midea-button text="QQ空间分享" type="green" @mideaButtonClicked="mideaButtonClicked('qzone')">
+        </midea-button>
+        <midea-button text="微信朋友圈分享" type="green" @mideaButtonClicked="mideaButtonClicked('wxTimeline')">
+        </midea-button>
+
     </div>
 </template>
 <style scoped>
@@ -36,9 +32,6 @@
 .displayBtnStyle {
   display: inline-flex;
   border-radius: 0px;
-}
-.display-text {
-  font-size: 30px;
 }
 </style>
 <script>
@@ -58,8 +51,6 @@ module.exports = {
                 desc: '分享描述', // 分享描述
                 link: 'http://www.midea.com/cn/', // 分享链接
                 imgUrl: 'http://10.16.12.243/anonymous/json/weibo/1740248463_180.jpg', // 分享图标
-                type: '', // 分享类型,music、video或link，不填默认为link
-                dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
             }
         }
     },
@@ -75,18 +66,20 @@ module.exports = {
             } catch (error) {
             }
         },
-        showSharePannel() {
-            nativeService.showSharePanel(this.messageParam).then(
+        mideaButtonClicked(type) {
+            let param = Object.assign(this.messageParam, {
+                'type': type
+            })
+            nativeService.shareMsg('bluetooth').then(
                 (resp) => {
-                    nativeService.toast("分享成功")
+                    nativeService.toast(resp)
                 }
             ).catch((error) => {
-                nativeService.toast("分享失败")
+                nativeService.toast(error)
             })
         }
     },
     created() {
-        //this.isIos=weex.config.env.platform=='iOS'?true:false;
     }
 };
 </script>

@@ -161,9 +161,15 @@ export default {
             bridgeModule.hideLoading();
         }
     },
-    showLoadingWithMsg(msg) {
+    showLoadingWithMsg(option) {
         if (dummy != true) {
-            bridgeModule.showLoadingWithMsg(msg);
+            let params = param
+            if (typeof option == 'string') {
+                params = {
+                    msg: option
+                }
+            }
+            bridgeModule.showLoadingWithMsg(params);
         }
     },
     hideLoadingWithMsg() {
@@ -551,12 +557,11 @@ export default {
                 })
         })
     },
-    callTel(TelNo) {
+    callTel(options) {
         return new Promise((resolve, reject) => {
-            let param = {
-                operation: 'callTel',
-                tel: TelNo
-            }
+            let param = Object.assign(options, {
+                operation: 'callTel'
+            })
             bridgeModule.commandInterface(JSON.stringify(param),
                 (resData) => {
                     resolve(resData)

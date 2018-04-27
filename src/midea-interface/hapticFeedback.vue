@@ -1,16 +1,11 @@
 <template>
     <div class="wrapper">
-        <midea-header title="hapticFeedback" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="getUserInfo" :isImmersion="false" @leftImgClick="back"></midea-header>
         <midea-button text="执行hapticFeedback" type="green" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
-        <text>
-            nativeService.hapticFeedback().then(
-                (resp) => {
-                    nativeService.toast(resp)
-                }
-            ).catch((error) => {
-                nativeService.toast(error)
-            })
+        <midea-title-bar title="代码"></midea-title-bar>
+        <text class="display-block">
+            nativeService.hapticFeedback()
         </text>
     </div>
 </template>
@@ -19,28 +14,30 @@
   display: inline-flex;
   border-radius: 0px;
 }
+.display-block {
+  font-size: 30px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
 </style>
 <script>
 import base from './base'
 
-import mideaHeader from '@/midea-component/header.vue'
 import mideaButton from '@/midea-component/button.vue'
+import mideaTitleBar from '@/midea-component/title-bar.vue'
 import nativeService from '@/common/services/nativeService'
 
 module.exports = {
-    components: { mideaHeader, mideaButton },
+    components: { mideaButton, mideaTitleBar },
     mixins: [base],
     data() {
+        return {}
     },
     methods: {
         mideaButtonClicked() {
-            nativeService.hapticFeedback().then(
-                (resp) => {
-                    nativeService.toast(resp)
-                }
-            ).catch((error) => {
-                nativeService.toast(error)
-            })
+            nativeService.hapticFeedback()
         }
     },
     created() {

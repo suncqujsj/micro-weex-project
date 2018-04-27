@@ -4,7 +4,7 @@
         <midea-title-bar title="新设备名称"></midea-title-bar>
 
         <div style="background-color: #e2e2e2;">
-            <input type="input" placeholder="请输入新的设备名称" class="input" :value="newValue" />
+            <input type="input" placeholder="请输入新的设备名称" class="input" :value="newValue" @input="oninput" />
         </div>
         <midea-button text="执行updateDeviceInfo" type="green" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
@@ -60,6 +60,9 @@ module.exports = {
         }
     },
     methods: {
+        oninput: function (event) {
+            this.newValue = event.value
+        },
         mideaButtonClicked() {
             if (this.newValue){
                 nativeService.updateDeviceInfo({ name: this.newValue }).then(
@@ -73,6 +76,14 @@ module.exports = {
         }
     },
     created() {
+            nativeService.getDeviceInfo().then(
+                (resp) => {
+                    let obj = JSON.parse(resp)
+                    this.newValue = obj.deviceName
+                }
+            ).catch((error) => {
+                nativeService.toast(error)
+            })
     }
 };
 </script>

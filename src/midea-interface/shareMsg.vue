@@ -70,7 +70,7 @@ module.exports = {
             let param = Object.assign(this.messageParam, {
                 'type': type
             })
-            nativeService.shareMsg('bluetooth').then(
+            nativeService.shareMsg(param).then(
                 (resp) => {
                     nativeService.toast(resp)
                 }

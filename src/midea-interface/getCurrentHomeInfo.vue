@@ -14,15 +14,19 @@
             })
         </text>
         <midea-title-bar title="结果"></midea-title-bar>
-        <text class="display-block">{{result}}</text>
+        
+        <scroller>
+            <text class="display-block">{{result}}</text>
+        </scroller>
     </div>
 </template>
 <style scoped>
 .display-block {
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  font-size: 30px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 </style>
 <script>

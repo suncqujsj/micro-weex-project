@@ -31,7 +31,7 @@ module.exports = {
     components: { mideaHeader, mideaButton },
     mixins: [base],
     data() {
-
+        return {}
     },
     methods: {
         mideaButtonClicked() {

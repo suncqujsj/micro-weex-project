@@ -4,13 +4,16 @@
         <midea-title-bar title="显示文本"></midea-title-bar>
 
         <div style="background-color: #e2e2e2;">
-            <input type="input" placeholder="请输入显示文本" class="input" :value="newValue" />
+            <input type="input" placeholder="请输入显示文本" class="input" :value="newValue" @input="oninput" />
         </div>
         <midea-button text="执行showLoadingWithMsg" type="green" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <midea-title-bar title="代码"></midea-title-bar>
         <text class="display-block">
-            nativeService.showLoadingWithMsg(this.newValue)
+            let param = {
+                msg: this.newValue
+            }
+            nativeService.showLoadingWithMsg(param)
             setTimeout(() => {
                 nativeService.hideLoading()
             }, 2000);
@@ -48,13 +51,19 @@ module.exports = {
     mixins: [base],
     data() {
         return {
-            newValue: '',
+            newValue: '加载中...',
             result: ''
         }
     },
     methods: {
+        oninput(event) {
+            this.newValue = event.value
+        },
         mideaButtonClicked() {
-            nativeService.showLoadingWithMsg(this.newValue)
+            let param = {
+                msg: this.newValue
+            }
+            nativeService.showLoadingWithMsg(param)
             setTimeout(() => {
                 nativeService.hideLoading()
             }, 2000);

@@ -13,9 +13,7 @@
                 desc: '拨打热线电话：'
             }
             nativeService.callTel(messageParam).then(
-                (resp) => {
-                    nativeService.toast(resp)
-                }
+                (resp) => {}
             ).catch((error) => {
                 nativeService.toast(error)
             })
@@ -58,7 +56,7 @@ module.exports = {
             messageParam: {
                 tel: '10086',
                 title: '客户服务',
-                desc: '拨打热线电话：'
+                desc: '拨打热线电话：10086'
             },
             
         }
@@ -77,9 +75,7 @@ module.exports = {
         },
         mideaButtonClicked() {
             nativeService.callTel(this.messageParam).then(
-                (resp) => {
-                    nativeService.toast(resp)
-                }
+                (resp) => {}
             ).catch((error) => {
                 nativeService.toast(error)
             })

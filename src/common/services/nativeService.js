@@ -31,6 +31,19 @@ export default {
     serviceList: {
         test: "commonservice"
     },
+    //**********Util方法***************START
+    convertToJson(str){
+        let result = str
+        if (typeof str == 'string'){
+            try {
+                result = JSON.parse(str)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+        return result
+    },
+    //**********Util方法***************END
 
     //**********页面跳转接口***************START
     /*
@@ -44,8 +57,6 @@ export default {
         var url
         // mm.toast({ message: dummy, duration: 2 })
         if (dummy != true) {
-            //if (platform!='Web') {
-            url = 'file://assets/' + path;
             self.getPath(function (weexPath) {
                 //处理插件目录
                 if (path.indexOf("T0x") != -1) {
@@ -163,7 +174,7 @@ export default {
     },
     showLoadingWithMsg(option) {
         if (dummy != true) {
-            let params = param
+            let params = option
             if (typeof option == 'string') {
                 params = {
                     msg: option
@@ -549,8 +560,7 @@ export default {
             }
             bridgeModule.commandInterface(JSON.stringify(param),
                 (resData) => {
-                    let jsonResult = JSON.parse(resData)
-                    resolve(jsonResult)
+                    resolve(this.convertToJson(resData))
                 },
                 (error) => {
                     reject(error)
@@ -586,11 +596,11 @@ export default {
                 })
         })
     },
-    //打开指定的系统设置页面，比如蓝牙开关页面
-    openNativeSystemPage(pageName) {
+    //打开指定的系统设置，比如蓝牙
+    openNativeSystemSetting(pageName) {
         return new Promise((resolve, reject) => {
             let param = {
-                operation: 'openNativeSystemPage',
+                operation: 'openNativeSystemSetting',
                 page: pageName || 'bluetooth'
             }
             bridgeModule.commandInterface(JSON.stringify(param),
@@ -632,7 +642,7 @@ export default {
             }
             bridgeModule.commandInterface(JSON.stringify(param),
                 (resData) => {
-                    resolve(resData)
+                    resolve(this.convertToJson(resData))
                 },
                 (error) => {
                     reject(error)
@@ -647,7 +657,7 @@ export default {
             }
             bridgeModule.commandInterface(JSON.stringify(param),
                 (resData) => {
-                    resolve(resData)
+                    resolve(this.convertToJson(resData))
                 },
                 (error) => {
                     reject(error)
@@ -662,7 +672,7 @@ export default {
             }
             bridgeModule.commandInterface(JSON.stringify(param),
                 (resData) => {
-                    resolve(resData)
+                    resolve(this.convertToJson(resData))
                 },
                 (error) => {
                     reject(error)
@@ -677,7 +687,7 @@ export default {
             })
             bridgeModule.commandInterface(JSON.stringify(param),
                 (resData) => {
-                    resolve(resData)
+                    resolve(this.convertToJson(resData))
                 },
                 (error) => {
                     reject(error)

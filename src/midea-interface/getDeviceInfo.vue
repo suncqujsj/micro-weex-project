@@ -15,6 +15,7 @@
         </text>
         <midea-title-bar title="结果"></midea-title-bar>
         <scroller>
+            <text class="display-block">{{result?('返回类型:'+typeof result):''}}</text>
             <text class="display-block">{{result}}</text>
         </scroller>
     </div>

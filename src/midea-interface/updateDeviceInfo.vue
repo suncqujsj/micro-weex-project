@@ -78,8 +78,7 @@ module.exports = {
     created() {
             nativeService.getDeviceInfo().then(
                 (resp) => {
-                    let obj = JSON.parse(resp)
-                    this.newValue = obj.deviceName
+                    this.newValue = resp.deviceName
                 }
             ).catch((error) => {
                 nativeService.toast(error)

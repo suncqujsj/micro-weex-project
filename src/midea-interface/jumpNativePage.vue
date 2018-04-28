@@ -4,7 +4,14 @@
         <midea-title-bar title="'接口参数:（可修改）"></midea-title-bar>
         <textarea type="text" placeholder="Input Text" class="textarea" :value="messageParamString" @input="dataChange" rows=3 />
 
-        <midea-button text="打开指定的原生页面" type="green" @mideaButtonClicked="methodWithNoArg">
+        <midea-title-bar title="代码"></midea-title-bar>
+        <text class="display-block">
+            nativeService.jumpNativePage({
+                "pageName": "jumpToGatewayBindPage", //‘设置mini网关’原生页面
+                "data": {}
+            })
+        </text>
+        <midea-button text="打开指定原生页面" type="green" @mideaButtonClicked="methodWithNoArg">
         </midea-button>
         <text class="display-block">
 
@@ -42,7 +49,7 @@ module.exports = {
     data() {
         return {
             messageParam: {
-                "pageName": "xxxx", //跳转的目标页面
+                "pageName": "jumpToGatewayBindPage", //跳转的目标页面
                 "data": {}
             },
             result: ''

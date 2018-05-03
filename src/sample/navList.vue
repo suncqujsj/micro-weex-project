@@ -1,5 +1,5 @@
 <template>
-   <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+   <div class="wrapper">
     <div style="padding:24px;">
         <text style="font-size:28px">两边对齐，默认高度</text>
     </div>

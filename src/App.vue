@@ -4,7 +4,7 @@
 
 <script>
 //import IndexPage from './component/test.vue'
-import IndexPage from './sample/index.vue'
+import IndexPage from './midea-sample/weex.vue'
 
 export default {
     components: { IndexPage }

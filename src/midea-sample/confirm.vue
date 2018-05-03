@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+    <div class="wrapper">
         <midea-header title="Confirm" :isImmersion="false" @leftImgClick="back"></midea-header>
         <midea-button text="点击弹出底部面板" type="green" @mideaButtonClicked="show=true">
         </midea-button>

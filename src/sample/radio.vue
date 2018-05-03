@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+    <div class="wrapper">
         <midea-header title="Promt" :isImmersion="false" @leftImgClick="back"></midea-header>
         <div style="padding:24px">
             <text style="font-size:28px">当前选中 {{checkedInfo.title}}</text>

@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Weex Vue Demo</title>
+  <title>DolphinWeex Demo</title>
   <meta name="viewport" content="width=device-width, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
@@ -28,7 +28,7 @@
         jsonpCallback: 'weexJsonpCallback',
         appId: location.href,
         loader: getUrlParam('loader') || 'xhr',
-        source: 'dist/index.js',
+        source: 'dist/'+ (getUrlParam('path') || 'index.js'),
         rootId: 'root',
       })
     })();

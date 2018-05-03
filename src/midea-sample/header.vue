@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+    <div class="wrapper">
         <midea-header title="Header" :isImmersion="false" @leftImgClick="back"></midea-header>
         <div style="height: 220px; margin-top: 20px;">
             <midea-header :title="title1" :isImmersion="true"></midea-header>

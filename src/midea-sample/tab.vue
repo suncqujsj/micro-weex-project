@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+    <div class="wrapper">
         <midea-header title="Tab" :isImmersion="false" @leftImgClick="back"></midea-header>
         <div style="background-color:#FFF;padding:24px;border-bottom-width:1px;border-bottom-color:#e2e2e2">
             <text style="font-size:28px">导航Tab</text>

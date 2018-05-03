@@ -1,10 +1,12 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper" @viewappear="viewappear" @viewdisappear="viewdisappear">
         <midea-header title="weex.config.env变量" :isImmersion="false" @leftImgClick="back"></midea-header>
-        <div>
-            {{today}}
-        </div>
         <scroller>
+            <div class="group">
+                <text class="text key">生命周期钩子和事件</text>
+                <text class="text type"></text>
+                <text class="text value">{{lifeCycleLog}}</text>
+            </div>
             <div class="group">
                 <text class="text key">bundleUrl</text>
                 <text class="text type">string</text>
@@ -34,7 +36,7 @@
   font-size: 30px;
 }
 .key {
-  width: 280px;
+  width: 180px;
   text-align: right;
   color: #00b4ff;
 }
@@ -44,12 +46,13 @@
   color: #a0a0a0;
 }
 .value {
-  width: 320px;
+  width: 420px;
   color: #525252;
 }
 </style>
 <script>
 import base from './base'
+import nativeService from '@/common/services/nativeService'
 
 
 module.exports = {
@@ -57,6 +60,8 @@ module.exports = {
     data() {
         return {
             configObj: weex.config,
+            lifeCycleLog: '',
+            leftLog: '',
             today: new Date()
         }
     },
@@ -75,6 +80,45 @@ module.exports = {
             })
             return result
         }
+    },
+    methods: {
+        viewdisappear() {
+            this.leftLog = "页面消失" + '\n'
+            nativeService.toast(this.leftLog)
+        },
+        viewappear() {
+            this.appendLog('viewappear:页面展现')
+        },
+        appendLog(msg) {
+            this.lifeCycleLog = this.lifeCycleLog + msg + '\n\r'
+            nativeService.toast(this.lifeCycleLog)
+        }
+    },
+    beforeCreate: function () {
+        console.log('beforeCreate:在初始化内部变量，并且添加了事件功能后被触发')
+    },
+    created: function () {
+        this.appendLog('created:完成数据绑定之后，模板编译之前被触发')
+    },
+    beforeMount: function () {
+        this.appendLog('beforeMount:模板挂载前触发')
+    },
+    mounted: function () {
+        this.appendLog('mounted:模板已经编译并且生成了 Virtual DOM 之后被触发')
+    },
+    beforeUpdate: function () {
+        // 不可用于修改页面，否则死循环
+        console.log('beforeUpdate:更新前状态')
+    },
+    updated: function () {
+        // 不可用于修改页面，否则死循环
+        console.log('updated:更新完成状态')
+    },
+    beforeDestory: function () {
+        console.log('beforeDestroy:在页面被销毁前调用')
+    },
+    destroyed: function () {
+        console.log('destroyed:在页面被销毁时调用')
     }
 };
 </script>

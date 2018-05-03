@@ -32,9 +32,9 @@ export default {
         test: "commonservice"
     },
     //**********Util方法***************START
-    convertToJson(str){
+    convertToJson(str) {
         let result = str
-        if (typeof str == 'string'){
+        if (typeof str == 'string') {
             try {
                 result = JSON.parse(str)
             } catch (error) {
@@ -65,7 +65,7 @@ export default {
                 url = weexPath + path;
                 self.runGo(url, animated, replace);
             });
-        } else {
+        } else if (platform != 'Web') {
             let ip = weex.config.bundleUrl.match(new RegExp("[\?\&]ip=([^\&]+)", "i"));
             if (ip == null || ip.length < 1) {
                 url = ipAddress + "/dist/" + path;
@@ -73,6 +73,8 @@ export default {
                 url = "http://" + ip[1] + ":8080" + "/dist/" + path;
             }
             self.runGo(url, animated, replace);
+        } else {
+            location.href = location.origin + location.pathname + '?path=' + path
         }
     },
     runGo(url, animated = 'true', replace = 'false') {
@@ -597,11 +599,11 @@ export default {
         })
     },
     //打开指定的系统设置，比如蓝牙
-    openNativeSystemSetting(pageName) {
+    openNativeSystemSetting(settingName) {
         return new Promise((resolve, reject) => {
             let param = {
                 operation: 'openNativeSystemSetting',
-                page: pageName || 'bluetooth'
+                setting: settingName || 'bluetooth'
             }
             bridgeModule.commandInterface(JSON.stringify(param),
                 (resData) => {

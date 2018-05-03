@@ -1,5 +1,5 @@
 <template>
- <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+ <div class="wrapper">
    <midea-title-bar title="选择地点"></midea-title-bar>
    <midea-cell title="地点"
                 :hasTopBorder="true"

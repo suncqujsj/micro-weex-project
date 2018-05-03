@@ -1,5 +1,5 @@
 <template>
-   <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+   <div class="wrapper">
         
        <midea-title-bar title="暖度:ColorTemp"></midea-title-bar>
        <midea-slider :max="100" :min="20" :value="50" :step="5" :index="1" :unit="unit"  attr="ColorTemp"  @slideEnd="slideEnd"></midea-slider>

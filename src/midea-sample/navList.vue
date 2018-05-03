@@ -1,7 +1,7 @@
 <template>
     <div>
         <midea-header title="Nav List" :isImmersion="false" @leftImgClick="back"></midea-header>
-        <scroller class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+        <scroller class="wrapper">
             <div style="padding:24px;">
                 <text style="font-size:28px">居中，默认高度</text>
             </div>

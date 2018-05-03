@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+  <div class="wrapper">
       <list @loadmore="onloading" >
         <refresh class="refresh-view" @refresh="onrefresh" :display="refreshing">
            <loading-indicator class="indicator" ></loading-indicator>

@@ -6,9 +6,7 @@
         <midea-title-bar title="代码"></midea-title-bar>
         <text class="display-block">
             nativeService.openNativeSystemSetting('bluetooth').then(
-                (resp) => {
-                    nativeService.toast(resp)
-                }
+                (resp) => {}
             ).catch((error) => {
                 nativeService.toast(error)
             })
@@ -44,9 +42,7 @@ module.exports = {
     methods: {
         mideaButtonClicked() {
             nativeService.openNativeSystemSetting('bluetooth').then(
-                (resp) => {
-                    nativeService.toast(resp)
-                }
+                (resp) => {}
             ).catch((error) => {
                 nativeService.toast(error)
             })

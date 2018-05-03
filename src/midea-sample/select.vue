@@ -1,7 +1,7 @@
 <template>
     <div>
         <midea-header title="Select" :isImmersion="false" @leftImgClick="back"></midea-header>
-        <scroller class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+        <scroller class="wrapper">
             <midea-button text="默认选择列表" type="green" @mideaButtonClicked="isShow = true">
             </midea-button>
             <midea-select :show="isShow" title="选择设备" :items="list" :index="index" @close="isShow=false" @itemClick="itemClick"></midea-select>

@@ -1,5 +1,5 @@
 <template>
-   <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+   <div class="wrapper">
       <midea-progress style="margin-top:24px" v-if="progressVisible" :value="value"
                     :bar-width="702"></midea-progress>
       <midea-button text="显示带渐变颜色进度条"

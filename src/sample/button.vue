@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+    <div class="wrapper">
         <midea-button text="默认按钮" type="green" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
 

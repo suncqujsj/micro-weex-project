@@ -23,6 +23,7 @@ export default {
     },
     data: () => ({
         title: '',
+        isIos: weex.config.env.platform == 'iOS' ? true : false,
         srcFileName: srcFileName,
         pluginVersion: '1.0.0',
         pluginName: plugin_name,

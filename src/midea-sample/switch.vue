@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+    <div class="wrapper">
         <midea-header title="Switch" :isImmersion="false" @leftImgClick="back"></midea-header>
 
         <midea-cell title="Midea切换按钮">

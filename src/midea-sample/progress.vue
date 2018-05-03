@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+    <div class="wrapper">
         <midea-header title="Progress" :isImmersion="false" @leftImgClick="back"></midea-header>
         <midea-progress style="margin-top:24px" v-if="bgColorProgressVisible" :value="value" :bar-width="702"></midea-progress>
         <midea-button text="显示带背景色进度条" type="green" @mideaButtonClicked="showProgress('bgColorProgressVisible')">

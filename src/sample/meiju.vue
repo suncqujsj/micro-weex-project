@@ -1,5 +1,5 @@
 <template>
- <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+ <div class="wrapper">
 
    <midea-title-bar title="美居slider"></midea-title-bar>
    <div style="height:280px;margin-top:60px;">

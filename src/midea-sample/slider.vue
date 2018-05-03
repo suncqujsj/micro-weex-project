@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+    <div class="wrapper">
         <midea-header title="Slider" :isImmersion="false" @leftImgClick="back"></midea-header>
 
         <midea-title-bar title="工作温度℃" bgColor="#EEF4F7"></midea-title-bar>

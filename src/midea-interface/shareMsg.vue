@@ -72,7 +72,7 @@ module.exports = {
             })
             nativeService.shareMsg(param).then(
                 (resp) => {
-                    nativeService.toast(resp)
+                    // nativeService.toast(resp)
                 }
             ).catch((error) => {
                 nativeService.toast(error)

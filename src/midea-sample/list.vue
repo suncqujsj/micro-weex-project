@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+    <div class="wrapper">
         <midea-header title="List" :isImmersion="false" @leftImgClick="back"></midea-header>
         <list>
             <midea-item v-for="(item,i) in list2" :key="item" :hasTopBorder="i==0?true:false" :title="item.name" :hasArrow="false" :clickActivied="true" @onItemPress="showDel(item)" :cantEdit="true" @onDelete="delItem(item)">

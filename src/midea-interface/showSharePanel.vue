@@ -15,10 +15,10 @@
             
             nativeService.showSharePanel(params).then(
                 (resp) => {
-                    nativeService.toast("分享成功")
+                    nativeService.toast("分享调用成功")
                 }
             ).catch((error) => {
-                nativeService.toast("分享失败")
+                nativeService.toast("分享调用失败")
             })
         </text>
     </div>
@@ -78,10 +78,10 @@ module.exports = {
         showSharePannel() {
             nativeService.showSharePanel(this.messageParam).then(
                 (resp) => {
-                    nativeService.toast("分享成功")
+                    nativeService.toast("分享调用成功")
                 }
             ).catch((error) => {
-                nativeService.toast("分享失败")
+                nativeService.toast("分享调用失败")
             })
         }
     },

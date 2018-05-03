@@ -1,11 +1,11 @@
 <template>
     <div class="wrapper">
-        <div class="tab-wrapper">
+        <div class="tab-wrapper" ref="tabItem">
             <div v-for="(item,index) in tabArray" :key="index" class="tab-item" @click="tabClicked(index)">
                 <text class="tab-txt" :class="[item.selected?'tab-txt-selected':'']">{{item.name}}</text>
             </div>
         </div>
-        <div class="indicator-wrapper" ref="indicator">
+        <div class="indicator-wrapper" ref="indicator" :style="{width:indicatorWrapperWidth}">
             <div class="tab-indicator" :style="{width:indicatorWidth}">
             </div>
         </div>
@@ -57,6 +57,7 @@
 <script>
 const modal = weex.requireModule('modal');
 const animation = weex.requireModule('animation');
+const dom = weex.requireModule('dom');
 export default {
     name: 'mideaTab',
     props: {
@@ -72,7 +73,7 @@ export default {
             }
             Vue.set(this.tabArray[index], "selected", true);
             var strLen = this.tabArray[index].name.length;
-            this.indicatorWidth = (strLen * 28 + 20) + "px";
+            this.setIndicatorWidth(index)
             var xDis = index * (750 / len) + "px";
             var ref = this.$refs.indicator;
             animation.transition(ref, {
@@ -87,17 +88,29 @@ export default {
 
             });
             this.$emit('tabClicked', index)
+        },
+        setIndicatorWidth(index) {
+            let tabItem = this.$refs.tabItem;
+            dom.getComponentRect(tabItem.children[index].children[0], (result) => {
+                let size = result.size || {};
+                this.indicatorWidth = size.width + "px";
+            });
         }
     },
     data: function () {
         return {
-            indicatorWidth: 0
+            indicatorWrapperWidth: 0,
+            indicatorWidth: 0,
         }
     },
     created() {
-        var len = this.tabArray[0].name.length;
-        this.indicatorWidth = (len * 28 + 20) + "px";
+        var len = this.tabArray.length;
+        this.indicatorWrapperWidth = (750 / len) + "px";
+    },
+    mounted() {
+        this.setIndicatorWidth(0)
     }
+
 }
 </script>
 

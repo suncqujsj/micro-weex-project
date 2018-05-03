@@ -1,5 +1,5 @@
 <template>
-   <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+   <div class="wrapper">
     <midea-cell title="仅标题且带底部边距"
                 :hasArrow="true"
                 :hasMargin="true"

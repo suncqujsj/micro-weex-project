@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+    <div class="wrapper">
         <midea-header title="Popup" :isImmersion="false" @leftImgClick="back"></midea-header>
         <midea-button text="点击弹出顶部面板" type="green" @mideaButtonClicked="openTopOverlay">
         </midea-button>

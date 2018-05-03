@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" :style="{paddingTop:isIos?'40px':'0px'}">
+    <div class="wrapper">
         <midea-header title="Button按钮" :isImmersion="false" @leftImgClick="back"></midea-header>
 
         <midea-button text="默认按钮" type="green" @mideaButtonClicked="mideaButtonClicked">
@@ -34,13 +34,12 @@ import base from './base'
 import mideaButton from '@/midea-component/button.vue'
 import mideaDualButton from '@/midea-component/dualButton.vue'
 import nativeService from '@/common/services/nativeService'
-const modal = weex.requireModule('modal');
 
 module.exports = {
     components: { mideaButton, mideaDualButton },
     mixins: [base],
-    mixins: [base], data() {
-
+    data() {
+        return {}
     },
     methods: {
         mideaButtonClicked() {

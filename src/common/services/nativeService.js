@@ -8,7 +8,6 @@ const globalEvent = weex.requireModule("globalEvent");
 const isIos = weex.config.env.platform == "iOS" ? true : false;
 import debugUtil from '../util/debugUtil'
 
-var ipAddress = "http://localhost:8080";
 var dummy = false;
 // import Mock from './mock'  //正式场上线时注释掉
 
@@ -53,27 +52,36 @@ export default {
         replace - 跳转后是否在历史栈保留当前页面
     */
     goTo(path, animated = 'true', replace = 'false') {
-        var self = this;
         var url
         // mm.toast({ message: dummy, duration: 2 })
         if (dummy != true) {
-            self.getPath(function (weexPath) {
-                //处理插件目录
-                if (path.indexOf("T0x") != -1) {
-                    path = path.substr(6, path.length - 6);
-                }
+            //手机本地页面跳转
+            this.getPath((weexPath) => {
+                //weexPath为插件包地址，比如：files:///..../MideaHome/T0x99/
                 url = weexPath + path;
-                self.runGo(url, animated, replace);
+                this.runGo(url, animated, replace);
             });
         } else if (platform != 'Web') {
-            let ip = weex.config.bundleUrl.match(new RegExp("[\?\&]ip=([^\&]+)", "i"));
-            if (ip == null || ip.length < 1) {
-                url = ipAddress + "/dist/" + path;
-            } else {
-                url = "http://" + ip[1] + ":8080" + "/dist/" + path;
+            //手机远程weex页面调试跳转
+            let theRequest = new Object();
+            let bundleUrl = weex.config.bundleUrl
+            if (bundleUrl.indexOf("?") != -1) {
+                let str = bundleUrl.substr(bundleUrl.indexOf("?") + 1);
+                let strs = str.split("&");
+                for (let i = 0; i < strs.length; i++) {
+                    theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                }
             }
-            self.runGo(url, animated, replace);
+            let ip = theRequest['ip']
+            let root = theRequest['root']
+            if (ip == null || ip.length < 1) {
+                url = "http://localhost:8080/dist/" + root + '/' + path;
+            } else {
+                url = "http://" + ip + ":8080" + "/dist/" + root + '/' + path;
+            }
+            this.runGo(url, animated, replace);
         } else {
+            //PC网页调试跳转
             location.href = location.origin + location.pathname + '?path=' + path
         }
     },
@@ -92,6 +100,9 @@ export default {
         }, event => {
         });
     },
+    /*
+        取得当前weex页面的根路径
+    */
     getPath(callBack) {
         bridgeModule.getWeexPath(function (resData) {
             var jsonData = JSON.parse(resData);
@@ -248,6 +259,16 @@ export default {
         })
     },
     //发送POST网络请求：URL自定义
+    /* options: {
+        url: url,
+        type: 'text',
+        method: "POST",
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: {
+            'objectId': objectId,
+            'format': 'base64'
+        }
+    } */
     callWeb(options, isShowLoading = true) {
         return new Promise((resolve, reject) => {
             var self = this;
@@ -434,65 +455,6 @@ export default {
 
 
     //**********APP业务接口***************START
-    //统一JS->Native接口
-    commandInterface(...args) {
-        bridgeModule.commandInterface(...args)
-    },
-    getDeviceSN(callback, callbackFail) {
-        return new Promise((resolve, reject) => {
-            bridgeModule.getDeviceSN(function (resData) {
-                let jsonData = JSON.parse(resData);
-                let deviceSN = jsonData.deviceSN
-                resolve(deviceSN)
-            }, (error) => {
-                reject(error)
-            });
-        })
-    },
-
-    getApplianceID(callBack) {
-        return new Promise((resolve, reject) => {
-            bridgeModule.getApplianceID(function (resData) {
-                let jsonData = JSON.parse(resData);
-                let applianceID = jsonData.devId
-                self.setItem("masterId", applianceID);
-                resolve(applianceID)
-            });
-        })
-    },
-    getDetailParams(callBack) {
-        var finalCallBack = function (resData) {
-            var jsonData = JSON.parse(resData);
-            callBack(jsonData);
-        }
-        if (dummy != true) {
-            bridgeModule.getDetailParams(finalCallBack);
-        } else {
-            callBack({ "modelid": "jiayun.switch.003" });
-        }
-    },
-    shareMsg(params) {
-        if (dummy != true) {
-            bridgeModule.shareMsg(JSON.stringify(params));
-        }
-    },
-    updateAreaDevice(params, callback) {
-        if (dummy != true) {
-            bridgeModule.updateAreaDevice(JSON.stringify(params), callback);
-        }
-    },
-    b2bDelGateway(nodeid) {
-        var obj = {};
-        obj.nodeid = nodeid;
-        if (dummy != true) {
-            bridgeModule.b2bDelGateway(JSON.stringify(obj));
-        }
-    },
-    b2bUpdateGateway(obj, callback) {
-        if (dummy != true) {
-            bridgeModule.b2bUpdateGateway(JSON.stringify(obj), callback);
-        }
-    },
     updateTitle(title, showLeftBtn, showRightBtn) {
         var params = {
             title: title,
@@ -501,46 +463,6 @@ export default {
         }
         if (dummy != true) {
             bridgeModule.updateTitle(JSON.stringify(params));
-        }
-    },
-    isMyHouse(callBack) {
-        var self = this;
-        var finalCallBack = function (resData) {
-            var jsonData = JSON.parse(resData);
-            self.setItem("isMyHouse", jsonData.houseType);
-            callBack(jsonData.houseType);
-        }
-        if (dummy != true) {
-            bridgeModule.getHouseType(finalCallBack);
-        } else {
-            callBack(0);
-            self.setItem("isMyHouse", 1);
-        }
-    },
-    getCurrentApplianceID(callback, callbackFail) {
-        var finalCallBack = function (resData) {
-            if (typeof resData == 'string') {
-                resData = JSON.parse(resData);
-            }
-            callback(resData.applianceID);
-        }
-        if (dummy != true) {
-            bridgeModule.getCurrentApplianceID(finalCallBack, callbackFail);
-        } else {
-            callback(0);
-        }
-    },
-    getApplianceSubtype(callback, callbackFail) {
-        var finalCallBack = function (resData) {
-            if (typeof resData == 'string') {
-                resData = JSON.parse(resData);
-            }
-            callback(resData.applianceSubtype);
-        }
-        if (dummy != true) {
-            bridgeModule.getApplianceSubtype(finalCallBack, callbackFail);
-        } else {
-            callback(0);
         }
     },
 
@@ -555,11 +477,10 @@ export default {
                 });
         })
     },
-    getUserInfo() {
+
+    //统一JS->Native接口
+    commandInterfaceWrapper(param) {
         return new Promise((resolve, reject) => {
-            let param = {
-                operation: 'getUserInfo'
-            }
             bridgeModule.commandInterface(JSON.stringify(param),
                 (resData) => {
                     resolve(this.convertToJson(resData))
@@ -569,52 +490,36 @@ export default {
                 })
         })
     },
-    callTel(options) {
-        return new Promise((resolve, reject) => {
-            let param = Object.assign(options, {
-                operation: 'callTel'
-            })
-            bridgeModule.commandInterface(JSON.stringify(param),
-                (resData) => {
-                    resolve(resData)
-                },
-                (error) => {
-                    reject(error)
-                })
+    //获取用户信息
+    getUserInfo() {
+        let param = {
+            operation: 'getUserInfo'
+        }
+        return this.commandInterfaceWrapper(param)
+    },
+    //打电话
+    callTel(params) {
+        let param = Object.assign(params, {
+            operation: 'callTel'
         })
+        return this.commandInterfaceWrapper(param)
     },
     //触发手机震动
     hapticFeedback() {
-        return new Promise((resolve, reject) => {
-            let param = {
-                operation: 'hapticFeedback'
-            }
-            bridgeModule.commandInterface(JSON.stringify(param),
-                (resData) => {
-                    resolve(resData)
-                },
-                (error) => {
-                    reject(error)
-                })
-        })
+        let param = {
+            operation: 'hapticFeedback'
+        }
+        return this.commandInterfaceWrapper(param)
     },
     //打开指定的系统设置，比如蓝牙
     openNativeSystemSetting(settingName) {
-        return new Promise((resolve, reject) => {
-            let param = {
-                operation: 'openNativeSystemSetting',
-                setting: settingName || 'bluetooth'
-            }
-            bridgeModule.commandInterface(JSON.stringify(param),
-                (resData) => {
-                    resolve(resData)
-                },
-                (error) => {
-                    reject(error)
-                })
-        })
+        let param = {
+            operation: 'openNativeSystemSetting',
+            setting: settingName || 'bluetooth'
+        }
+        return this.commandInterfaceWrapper(param)
     },
-    shareMsg(options) {
+    shareMsg(params) {
         /* params =  {
             "type": "wx", //分享类型，wx表示微信分享，qq表示qq分享，sms表示短信分享，weibo表示新浪微博，qzone表示QQ空间，wxTimeline表示微信朋友圈
             "title": "xxxxxx", //分享的标题
@@ -622,79 +527,39 @@ export default {
             "imgUrl": "xxxxxx",//分享的图片链接
             "link": "xxxxxx" //分享的跳转链接
         } */
-        return new Promise((resolve, reject) => {
-            let param = {
-                operation: 'shareMsg',
-                params: options
-            }
-            bridgeModule.commandInterface(JSON.stringify(param),
-                (resData) => {
-                    resolve(resData)
-                },
-                (error) => {
-                    reject(error)
-                })
-        })
+        let param = {
+            'operation': 'shareMsg',
+            'params': params
+        }
+        return this.commandInterfaceWrapper(param)
     },
     //获取当前设备网络信息
     getNetworkStatus() {
-        return new Promise((resolve, reject) => {
-            let param = {
-                operation: 'getNetworkStatus'
-            }
-            bridgeModule.commandInterface(JSON.stringify(param),
-                (resData) => {
-                    resolve(this.convertToJson(resData))
-                },
-                (error) => {
-                    reject(error)
-                })
-        })
+        let param = {
+            operation: 'getNetworkStatus'
+        }
+        return this.commandInterfaceWrapper(param)
     },
     //获取当前家庭信息
     getCurrentHomeInfo() {
-        return new Promise((resolve, reject) => {
-            let param = {
-                operation: 'getCurrentHomeInfo'
-            }
-            bridgeModule.commandInterface(JSON.stringify(param),
-                (resData) => {
-                    resolve(this.convertToJson(resData))
-                },
-                (error) => {
-                    reject(error)
-                })
-        })
+        let param = {
+            operation: 'getCurrentHomeInfo'
+        }
+        return this.commandInterfaceWrapper(param)
     },
     //获取当前设备信息
     getDeviceInfo() {
-        return new Promise((resolve, reject) => {
-            let param = {
-                operation: 'getDeviceInfo'
-            }
-            bridgeModule.commandInterface(JSON.stringify(param),
-                (resData) => {
-                    resolve(this.convertToJson(resData))
-                },
-                (error) => {
-                    reject(error)
-                })
-        })
+        let param = {
+            operation: 'getDeviceInfo'
+        }
+        return this.commandInterfaceWrapper(param)
     },
     //更新当前设备信息
     updateDeviceInfo(params) {
-        return new Promise((resolve, reject) => {
-            let param = Object.assign(params, {
-                operation: 'updateDeviceInfo'
-            })
-            bridgeModule.commandInterface(JSON.stringify(param),
-                (resData) => {
-                    resolve(this.convertToJson(resData))
-                },
-                (error) => {
-                    reject(error)
-                })
+        let param = Object.assign(params, {
+            operation: 'updateDeviceInfo'
         })
+        return this.commandInterfaceWrapper(param)
     },
     //打开指定的原生页面
     jumpNativePage(params) {
@@ -702,18 +567,10 @@ export default {
             "pageName": "xxxx", //跳转的目标页面
             "data": {xxxxxx}, //传参，为json格式字符串
         } */
-        return new Promise((resolve, reject) => {
-            let param = Object.assign(params, {
-                operation: 'jumpNativePage'
-            })
-            bridgeModule.commandInterface(JSON.stringify(param),
-                (resData) => {
-                    resolve(resData)
-                },
-                (error) => {
-                    reject(error)
-                })
+        let param = Object.assign(params, {
+            operation: 'jumpNativePage'
         })
+        return this.commandInterfaceWrapper(param)
     },
     //调用第三方SDK统一接口
     interfaceForThirdParty(...args) {

@@ -5,6 +5,7 @@
                   :hasTopBorder="(i==0&&needShowTopBorder)?true:false"
                   :hasBottomBorder="(i!=list.length-1||needShowLastBottomBorder)?true:false"
                   v-on:mideaCheckBoxItemChecked="mideaCheckBoxItemChecked"
+                  :itemImg="item.itemImg"
                   :key="i"></midea-checkbox>
   </div>
 </template>

@@ -63,6 +63,7 @@ module.exports = {
         baseList: [
             { title: 'Button按钮', link: "button" },
             { title: 'CheckBox', link: "checkbox" },
+            { title: 'Cell', link: "cell" },
             { title: 'Confirm', link: "confirm" },
             { title: 'Dialog', link: "dialog" },
             { title: 'List', link: "list" },

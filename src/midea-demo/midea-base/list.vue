@@ -61,9 +61,9 @@ export default {
                 { "name": "童锁" },
             ],
             list1: [
-                { "name": "普京和特朗普未能会谈 克里姆宁宫 都怪美国", "desc": "美居活动 2017-12-25", "itemImg": "../img/icon/01.png" },
-                { "name": "普京和特朗普未能会谈 克里姆宁宫 都怪美国", "desc": "美居活动 2017-12-25", "itemImg": "../img/icon/02.png" },
-                { "name": "普京和特朗普未能会谈 克里姆宁宫 都怪美国", "desc": "美居活动 2017-12-25", "itemImg": "../img/icon/03.png" }
+                { "name": "普京和特朗普未能会谈 克里姆宁宫 都怪美国", "desc": "美居活动 2017-12-25", "itemImg": "http://tmp666.oss-cn-shenzhen.aliyuncs.com/img/icon/midea.env.002.png" },
+                { "name": "普京和特朗普未能会谈 克里姆宁宫 都怪美国", "desc": "美居活动 2017-12-25", "itemImg": "http://tmp666.oss-cn-shenzhen.aliyuncs.com/img/icon/midea.env.002.png" },
+                { "name": "普京和特朗普未能会谈 克里姆宁宫 都怪美国", "desc": "美居活动 2017-12-25", "itemImg": "../img/check/checked.png" }
             ]
         }
     },

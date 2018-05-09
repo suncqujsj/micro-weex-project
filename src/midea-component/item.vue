@@ -8,7 +8,7 @@
     >
     
     <slot name="itemImg">
-      <image v-if="itemImg&&itemImg!=''" :src="itemImg" class="item-img" >
+      <image v-if="itemImg&&itemImg!=''" :src="itemImg" class="item-img" resize='contain' >
       </image>
     </slot>
     <slot name="label">

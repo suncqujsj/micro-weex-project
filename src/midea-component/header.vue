@@ -8,7 +8,9 @@
                 <text :style="{color:titleText, fontSize:fontSize+'px'}">{{title}}</text>
             </div>
             <div class="header-right-image-wrapper" @click="rightImgClick">
-                <image v-if="showRightImg" class="header-right-image" :src="rightImg"></image>
+                <slot name="rightContent">
+                    <image v-if="showRightImg" class="header-right-image" :src="rightImg"></image>
+                </slot>
             </div>
         </div>
     </div>

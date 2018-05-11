@@ -90,6 +90,7 @@ module.exports = {
             { title: 'Slider拉动条', link: "slider" },
             { title: 'Swipe手势', link: "swipe" },
             { title: 'Tab', link: "tab" },
+            { title: 'TimeCycle时间转盘', link: "timeCycle" },
             { title: 'Video视频', link: "video" }
         ],
         interfacelist: [
@@ -101,8 +102,11 @@ module.exports = {
             { title: 'hapticFeedback手机震动', link: "hapticFeedback" },
             { title: 'interfaceForThirdParty第三方SDK接口', link: "interfaceForThirdParty" },
             { title: 'jumpNativePage打开原生页面', link: "jumpNativePage" },
+            { title: 'navigator页面跳转', link: "navigatorPageA" },
             { title: 'openNativeSystemPage打开系统页面', link: "openNativeSystemPage" },
             { title: 'receiveMessageFromApp接收APP主动调用', link: "receiveMessageFromApp" },
+            { title: 'sendHttpRequest直接发送网络请求', link: "sendHttpRequest" },
+            { title: 'setBackHandle监听安卓返回键', link: "setBackHandle" },
             { title: 'shareMsg调用分享', link: "shareMsg" },
             { title: 'showLoading打开原生loading界面', link: "showLoading" },
             { title: 'showLoadingWithMsg打开原生loading界面', link: "showLoadingWithMsg" },
@@ -143,7 +147,7 @@ module.exports = {
         },
         goToInterface(link) {
             var path = "midea-interface/" + link + ".js";
-            nativeService.goTo(path);
+            nativeService.goTo(path, {viewTag: link});
         }
     }
 };

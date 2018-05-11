@@ -56,13 +56,13 @@ export default {
             if (!results[2]) return '';
             return decodeURIComponent(results[2].replace(/\+/g, " "));
         },
-        goTo(link, params) {
+        goTo(pageName, options, params) {
             if (!this.isNavigating) {
                 this.isNavigating = true
                 // 离开时同步全局应用数据
                 nativeService.setItem(this.appDataKey, this.appData, () => {
                     //跳转页面
-                    var path = link + ".js";
+                    var path = pageName + ".js";
                     if (params) {
                         path += '?' + Object.keys(params).map(k =>
                             encodeURIComponent(k) + '=' + encodeURIComponent(params[k])

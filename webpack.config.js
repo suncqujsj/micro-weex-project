@@ -62,13 +62,13 @@ new Vue({
   `
 }
 //默认编译T0x和midea-开关的文件夹, 目标文件夹如需要编译可添加到includeFiles
-var includeFiles = ['sample'];
+var includeFiles = ['midea-demo', 'customer-service'];
 function walk() {
     let directory = path.join(__dirname, './src')
     fs.readdirSync(directory)
         .forEach(file => {
             var fileStr = includeFiles.join(",") + ",";
-            if (file.indexOf("T0x") != -1 || file.indexOf("midea-") != -1 || fileStr.indexOf(file + ",") != -1) {
+            if (file.indexOf("T0x") != -1 || fileStr.indexOf(file + ",") != -1) {
                 runWalk(file)
             }
         })

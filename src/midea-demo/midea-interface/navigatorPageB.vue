@@ -7,6 +7,8 @@
         </midea-button>
         <midea-button text="返回至第一个页面" type="green" @mideaButtonClicked="backToRoot">
         </midea-button>
+        <midea-button text="退出至主页面" type="green" @mideaButtonClicked="backToNative">
+        </midea-button>
     </div>
 </template>
 <style scoped>
@@ -41,6 +43,9 @@ module.exports = {
         },
         backToRoot() {
             nativeService.goBack({ viewTag: 'rootView' })
+        },
+        backToNative(){
+            nativeService.backToNative()
         }
     },
     created() {

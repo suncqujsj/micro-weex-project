@@ -292,7 +292,7 @@ export default {
         return new Promise((resolve, reject) => {
             let options = JSON.parse(JSON.stringify(params))
             var self = this;
-            if (true || dummy != true) {
+            if (dummy != true) {
                 let defaultOption = {
                     method: "POST",
                     type: 'json'
@@ -322,7 +322,6 @@ export default {
                             }
                             resolve(result)
                         }
-
                     }
                 )
             } else {
@@ -510,6 +509,11 @@ export default {
         return this.commandInterfaceWrapper(param)
     },
     //打电话
+    /* param: {
+        tel: '10086',
+        title: '客户服务',
+        desc: '拨打热线电话：'
+    } */
     callTel(params) {
         let param = Object.assign(params, {
             operation: 'callTel'

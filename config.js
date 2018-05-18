@@ -1,4 +1,6 @@
-var CURRENT_IP = '10.74.149.81'
+// var CURRENT_IP = '10.74.149.81'
+var CURRENT_IP = '10.8.81.45'
+
 //var CURRENT_IP = '192.168.43.187'
 
 function getIPs(callback) {

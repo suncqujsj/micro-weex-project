@@ -41,6 +41,10 @@ export default {
         value: {
             type: Number,
             default: 0
+        },
+        isRadius: {
+            type: Boolean,
+            default: true
         }
     },
     computed: {
@@ -49,7 +53,7 @@ export default {
             return {
                 width: barWidth + 'px',
                 height: barHeight + 'px',
-                borderRadius: barHeight / 2 + 'px'
+                borderRadius: this.isRadius ? barHeight / 2 + 'px' : '0px'
             }
         },
         progressStyle() {
@@ -63,7 +67,7 @@ export default {
             }
             return {
                 ...obj,
-                borderRadius: barHeight / 2 + 'px',
+                borderRadius:  this.isRadius ? barHeight / 2 + '0px' : '0px',
                 height: barHeight + 'px',
                 width: newValue / 100 * barWidth + 'px'
             }

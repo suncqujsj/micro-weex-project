@@ -29,7 +29,9 @@ module.exports = {
         mideaButton
     },
     data: () => ({
-        url: "http://10.8.81.38:8080/dist/midea-demo/weex.js?root=midea-demo&ip=10.8.81.38"
+        // url: "http://10.8.81.38:8080/dist/midea-demo/weex.js?root=midea-demo&ip=10.8.81.38"
+        url: "http://10.8.81.45:8080/dist/midea-demo/weex.js?root=midea-demo&ip=10.8.81.45"
+         
     }),
     methods: {
         leftImgClick() {

@@ -73,7 +73,7 @@ export default {
                 }
             }
             let ip = theRequest['ip']
-            let root = theRequest['root']
+            let root = theRequest['root'] || ''
             if (ip == null || ip.length < 1) {
                 url = "http://localhost:8080/dist/" + root + '/' + path;
             } else {

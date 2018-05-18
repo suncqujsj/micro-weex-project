@@ -3,7 +3,7 @@
         <midea-mask v-if="show" @click="layoutClick"></midea-mask>
         <div v-if="show" class="midea-actionsheet-box" :style="{'bottom': '-'+bottom+'px'}" ref="actionsheetBox">
             <div class="midea-actionsheet-top">
-                <text class="midea-actionsheet-title">{{title}}</text>
+                <text v-if="title" class="midea-actionsheet-title">{{title}}</text>
                 <div class="midea-actionsheet-content">
                     <text class="midea-actionsheet-list" v-for="(item,index) in items" @click="actionsheetItemClick(item,index)">{{item}}</text>
                 </div>
@@ -24,7 +24,7 @@
         props: {
             title: {
                 type: String,
-                default: "请选择操作"
+                default: ""
             },
             items: {
                 type: Array

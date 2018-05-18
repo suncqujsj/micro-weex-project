@@ -61,70 +61,70 @@ module.exports = {
             navList: [
                 {
                     "title": "启动",
-                    "img": "../img/share/start.png",
-                    "img_actived": "../img/share/start_actived.png"
+                    "img": "../assets/img/share/start.png",
+                    "img_actived": "../assets/img/share/start_actived.png"
                 },
                 {
                     "title": "暂停",
-                    "img": "../img/share/pause.png",
-                    "img_actived": "../img/share/pause_actived.png"
+                    "img": "../assets/img/share/pause.png",
+                    "img_actived": "../assets/img/share/pause_actived.png"
                 },
                 {
                     "title": "取消",
-                    "img": "../img/share/pause.png",
-                    "img_actived": "../img/share/pause_actived.png"
+                    "img": "../assets/img/share/pause.png",
+                    "img_actived": "../assets/img/share/pause_actived.png"
                 },
                 {
                     "title": "自动菜单",
-                    "img": "../img/share/menu.png",
-                    "img_actived": "../img/share/menu_actived.png"
+                    "img": "../assets/img/share/menu.png",
+                    "img_actived": "../assets/img/share/menu_actived.png"
                 },
                 {
                     "title": "蒸汽模式",
-                    "img": "../img/share/steam.png",
-                    "img_actived": "../img/share/steam_actived.png"
+                    "img": "../assets/img/share/steam.png",
+                    "img_actived": "../assets/img/share/steam_actived.png"
                 },
                 {
                     "title": "加热模式",
-                    "img": "../img/share/warm.png",
-                    "img_actived": "../img/share/warm_actived.png"
+                    "img": "../assets/img/share/warm.png",
+                    "img_actived": "../assets/img/share/warm_actived.png"
                 },
                 {
                     "title": "清洁模式",
-                    "img": "../img/share/clean.png",
-                    "img_actived": "../img/share/clean_actived.png"
+                    "img": "../assets/img/share/clean.png",
+                    "img_actived": "../assets/img/share/clean_actived.png"
                 },
                 {
                     "title": "速热模式",
-                    "img": "../img/share/fastwarm.png",
-                    "img_actived": "../img/share/fastwarm_actived.png"
+                    "img": "../assets/img/share/fastwarm.png",
+                    "img_actived": "../assets/img/share/fastwarm_actived.png"
                 }
             ],
 
             hNavList: [
                 {
                     "title": "使用说明",
-                    "img": "../img/share/instruction.png"
+                    "img": "../assets/img/share/instruction.png"
                 },
                 {
                     "title": "在线服务",
-                    "img": "../img/share/service.png"
+                    "img": "../assets/img/share/service.png"
                 },
                 {
                     "title": "售后保修",
-                    "img": "../img/share/aftersale.png"
+                    "img": "../assets/img/share/aftersale.png"
                 },
                 {
                     "title": "家电清洗",
-                    "img": "../img/share/wash.png"
+                    "img": "../assets/img/share/wash.png"
                 },
                 {
                     "title": "原厂耗材",
-                    "img": "../img/share/supplies.png"
+                    "img": "../assets/img/share/supplies.png"
                 },
                 {
                     "title": "家电回收",
-                    "img": "../img/share/reclaim.png"
+                    "img": "../assets/img/share/reclaim.png"
                 }
             ]
         }

@@ -91,8 +91,8 @@
   position: relative;
 }
 .device-list {
-  width: 750px;
   position: relative;
+  width: 750px;
 }
 .slider {
   width: 750px;
@@ -104,10 +104,11 @@ import base from '../base'
 
 import mideaTab from '@/midea-component/mTab.vue'
 import mideaFlowTab from '@/midea-component/mFlowTab.vue'
+import mideaCell from '@/component/cell.vue'
 const modal = weex.requireModule('modal');
 
 module.exports = {
-    components: { mideaTab, mideaFlowTab },
+    components: { mideaTab, mideaFlowTab, mideaCell },
     mixins: [base],
     data() {
         return {
@@ -121,8 +122,7 @@ module.exports = {
                 { "name": "卧室一", "selected": false },
                 { "name": "卧室二", "selected": false },
                 { "name": "卧室三", "selected": false },
-                { "name": "阳台", "selected": false },
-                { "name": "厕所", "selected": false }
+                { "name": "阳台", "selected": false }
             ],
             val: 0,
             index: 0
@@ -138,7 +138,7 @@ module.exports = {
         changeArea(sliObj) {
             var sliderIndex = sliObj.index;
             this.$refs.flowTab.tabClicked(sliderIndex);
-            //modal.toast({ message:'index:'+val.index, duration: 1 })
+            // modal.toast({ message:'index:'+sliObj.index, duration: 1 })
         }
 
     },

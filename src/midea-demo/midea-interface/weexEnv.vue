@@ -93,30 +93,30 @@ module.exports = {
             this.lifeCycleLog = this.lifeCycleLog + msg + '\n\r'
         }
     },
-    beforeCreate: function () {
+    beforeCreate() {
         console.log('beforeCreate:在初始化内部变量，并且添加了事件功能后被触发')
     },
-    created: function () {
+    created() {
         this.appendLog('created:完成数据绑定之后，模板编译之前被触发')
     },
-    beforeMount: function () {
+    beforeMount() {
         this.appendLog('beforeMount:模板挂载前触发')
     },
-    mounted: function () {
+    mounted() {
         this.appendLog('mounted:模板已经编译并且生成了 Virtual DOM 之后被触发')
     },
-    beforeUpdate: function () {
+    beforeUpdate() {
         // 不可用于修改页面，否则死循环
         console.log('beforeUpdate:更新前状态')
     },
-    updated: function () {
+    updated() {
         // 不可用于修改页面，否则死循环
         console.log('updated:更新完成状态')
     },
-    beforeDestory: function () {
+    beforeDestory() {
         console.log('beforeDestroy:在页面被销毁前调用')
     },
-    destroyed: function () {
+    destroyed() {
         console.log('destroyed:在页面被销毁时调用')
     }
 };

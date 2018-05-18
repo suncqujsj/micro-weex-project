@@ -63,6 +63,7 @@ module.exports = {
         baseList: [
             { title: 'Button按钮', link: "button" },
             { title: 'CheckBox', link: "checkbox" },
+            { title: 'Cell', link: "cell" },
             { title: 'Confirm', link: "confirm" },
             { title: 'Dialog', link: "dialog" },
             { title: 'List', link: "list" },
@@ -76,19 +77,20 @@ module.exports = {
         advancedlist: [
             { title: 'Action Sheet', link: "actionSheet" },
             { title: 'Barchart柱状图', link: "barchart" },
-            { title: 'Device Status', link: "device-status" },
             { title: 'Grid Select', link: "gridSelect" },
             { title: 'Header', link: "header" },
             { title: 'IconFont字体图标', link: "iconFont" },
             { title: 'Linechart折线图', link: "linechart" },
-            { title: 'Loading', link: "loading" },
+            { title: 'Loading上拉加载', link: "loading" },
             { title: 'Nav List', link: "navList" },
             { title: 'Picker', link: "picker" },
-            { title: 'Progress', link: "progress" },
-            { title: 'Refresh', link: "refresh" },
-            { title: 'Share', link: "share" },
-            { title: 'Slider', link: "slider" },
+            { title: 'Progress进度条', link: "progress" },
+            { title: 'Refresh下拉刷新', link: "refresh" },
+            { title: 'Share打开分享弹窗', link: "share" },
+            { title: 'Slider拉动条', link: "slider" },
+            { title: 'Swipe手势', link: "swipe" },
             { title: 'Tab', link: "tab" },
+            { title: 'TimeCycle时间转盘', link: "timeCycle" },
             { title: 'Video视频', link: "video" }
         ],
         interfacelist: [
@@ -100,8 +102,11 @@ module.exports = {
             { title: 'hapticFeedback手机震动', link: "hapticFeedback" },
             { title: 'interfaceForThirdParty第三方SDK接口', link: "interfaceForThirdParty" },
             { title: 'jumpNativePage打开原生页面', link: "jumpNativePage" },
+            { title: 'navigator页面跳转', link: "navigatorPageA" },
             { title: 'openNativeSystemPage打开系统页面', link: "openNativeSystemPage" },
             { title: 'receiveMessageFromApp接收APP主动调用', link: "receiveMessageFromApp" },
+            { title: 'sendHttpRequest直接发送网络请求', link: "sendHttpRequest" },
+            { title: 'setBackHandle监听安卓返回键', link: "setBackHandle" },
             { title: 'shareMsg调用分享', link: "shareMsg" },
             { title: 'showLoading打开原生loading界面', link: "showLoading" },
             { title: 'showLoadingWithMsg打开原生loading界面', link: "showLoadingWithMsg" },
@@ -142,7 +147,7 @@ module.exports = {
         },
         goToInterface(link) {
             var path = "midea-interface/" + link + ".js";
-            nativeService.goTo(path);
+            nativeService.goTo(path, {viewTag: link});
         }
     }
 };

@@ -48,10 +48,13 @@ export default {
     /*
     params:
         path - 跳转页面路径（以插件文件夹为根目录的相对路径）
-        animated - 是否需要跳转动画
-        replace - 跳转后是否在历史栈保留当前页面
+        options: {
+            animated: true/false, - 是否需要跳转动画
+            replace: true/false, - 跳转后是否在历史栈保留当前页面
+            viewTag: string - 给跳转后的页面设置标识，可用于goBack时指定返回页面
+        }
     */
-    goTo(path, animated = 'true', replace = 'false') {
+    goTo(path, options) {
         var url
         // mm.toast({ message: dummy, duration: 2 })
         if (dummy != true) {
@@ -59,46 +62,59 @@ export default {
             this.getPath((weexPath) => {
                 //weexPath为插件包地址，比如：files:///..../MideaHome/T0x99/
                 url = weexPath + path;
-                this.runGo(url, animated, replace);
+                this.runGo(url, options);
             });
         } else if (platform != 'Web') {
             //手机远程weex页面调试跳转
             let theRequest = new Object();
             let bundleUrl = weex.config.bundleUrl
+            let queryString = ''
             if (bundleUrl.indexOf("?") != -1) {
-                let str = bundleUrl.substr(bundleUrl.indexOf("?") + 1);
-                let strs = str.split("&");
+                queryString = bundleUrl.substr(bundleUrl.indexOf("?") + 1);
+                let strs = queryString.split("&");
                 for (let i = 0; i < strs.length; i++) {
                     theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
                 }
             }
             let ip = theRequest['ip']
-            let root = theRequest['root'] || ''
-            if (ip == null || ip.length < 1) {
-                url = "http://localhost:8080/dist/" + root + '/' + path;
+            let root = theRequest['root']
+            let targetPath = path
+            if (targetPath.indexOf("?") != -1) {
+                targetPath += '&root=' + root + '&ip=' + ip
             } else {
-                url = "http://" + ip + ":8080" + "/dist/" + root + '/' + path;
+                targetPath += '?root=' + root + '&ip=' + ip
             }
-            this.runGo(url, animated, replace);
+            if (ip == null || ip.length < 1) {
+                url = "http://localhost:8080/dist/" + root + '/' + targetPath;
+            } else {
+                url = "http://" + ip + ":8080" + "/dist/" + root + '/' + targetPath;
+            }
+            this.runGo(url, options);
         } else {
             //PC网页调试跳转
             location.href = location.origin + location.pathname + '?path=' + path
         }
     },
-    runGo(url, animated = 'true', replace = 'false') {
+    runGo(url, options) {
         // mm.toast({ message: url, duration: 2 })
-        if (typeof animated == 'boolean') {
-            animated = animated ? 'true' : 'false';
+        if (!options) {
+            options = {
+                animated: 'true',
+                replace: 'false'
+            }
+        } else {
+            if (typeof options.animated == 'boolean') {
+                options.animated = options.animated ? 'true' : 'false';
+            }
+            if (typeof options.replace == 'boolean') {
+                options.replace = options.replace ? 'true' : 'false';
+            }
         }
-        if (typeof replace == 'boolean') {
-            replace = replace ? 'true' : 'false';
-        }
-        navigator.push({
-            url: url,
-            animated: animated,
-            replace: replace
-        }, event => {
-        });
+        let params = Object.assign(options, {
+            url: url
+        })
+        // this.toast(params)
+        navigator.push(params, event => { });
     },
     /*
         取得当前weex页面的根路径
@@ -110,12 +126,12 @@ export default {
             callBack(weexPath);
         });
     },
-    goBack() {
-        var params = {
+    goBack(options = {}) {
+        var params = Object.assign({
             animated: 'true'
-        }
-        navigator.pop(params, function () {
-        });
+        }, options)
+        // this.toast(params)
+        navigator.pop(params, event => { });
     },
     backToNative() {
         bridgeModule.backToNative();
@@ -149,6 +165,9 @@ export default {
         })
     },
     toast(message, duration) {
+        if (typeof message == 'object') {
+            message = JSON.stringify(message)
+        }
         mm.toast({ message: message, duration: duration || 1 });
     },
     alert(message, callback, okTitle) {
@@ -205,7 +224,7 @@ export default {
 
     //**********网络请求接口***************START
     //发送智慧云网络请求：此接口固定Post到智慧云https地址及端口
-    call(name, params, isShowLoading = true) {
+    sendMCloudRequest(name, params, isShowLoading = true) {
         return new Promise((resolve, reject) => {
             var self = this;
             if (dummy != true) {
@@ -269,8 +288,9 @@ export default {
             'format': 'base64'
         }
     } */
-    callWeb(options, isShowLoading = true) {
+    sendHttpRequest(params, isShowLoading = true) {
         return new Promise((resolve, reject) => {
+            let options = JSON.parse(JSON.stringify(params))
             var self = this;
             if (dummy != true) {
                 let defaultOption = {
@@ -278,7 +298,7 @@ export default {
                     type: 'json'
                 }
                 if (options.body) {
-                    options.body = this.convertWebBody(options.body)
+                    options.body = this.convertRequestBody(options.body)
                 }
                 options = Object.assign(defaultOption, options)
 
@@ -291,26 +311,17 @@ export default {
                             this.hideLoading()
                         }
                         if (!resData.ok) {
-                            debugUtil.debugLog(debugLogSeperator, "request: ", options)
-                            debugUtil.debugLog("error: ", resData, debugLogSeperator)
                             if (typeof resData == 'string') {
                                 resData = JSON.parse(resData)
                             }
                             reject(resData);
                         } else {
-                            debugUtil.debugLog(debugLogSeperator, "request: ", options)
-                            debugUtil.debugLog("response success: ", resData, debugLogSeperator)
                             let result = resData.data
                             if (typeof result == 'string') {
                                 result = JSON.parse(result)
                             }
-                            if (result.errorCode == 0) {
-                                resolve(result)
-                            } else {
-                                reject(result)
-                            }
+                            resolve(result)
                         }
-
                     }
                 )
             } else {
@@ -321,7 +332,7 @@ export default {
             }
         })
     },
-    convertWebBody(obj) {
+    convertRequestBody(obj) {
         var param = ""
         for (const name in obj) {
             if (typeof obj[name] != 'function') {
@@ -498,6 +509,11 @@ export default {
         return this.commandInterfaceWrapper(param)
     },
     //打电话
+    /* param: {
+        tel: '10086',
+        title: '客户服务',
+        desc: '拨打热线电话：'
+    } */
     callTel(params) {
         let param = Object.assign(params, {
             operation: 'callTel'
@@ -571,6 +587,18 @@ export default {
             operation: 'jumpNativePage'
         })
         return this.commandInterfaceWrapper(param)
+    },
+    //设置是否监控安卓手机物理返回键功能, v4.4.0
+    setBackHandle(status) {
+        /* params =  {
+            "pageName": "xxxx", //跳转的目标页面
+            "isMonitor": on,  //on: 打开监控，off: 关闭监控
+        } */
+        let params = {
+            operation: 'setBackHandle',
+            isMonitor: status
+        }
+        return this.commandInterfaceWrapper(params)
     },
     //调用第三方SDK统一接口
     interfaceForThirdParty(...args) {

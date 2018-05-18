@@ -7,9 +7,14 @@ const fs = require('fs-extra')
 const glob = require("glob");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const argv = require('yargs').argv;
 
+var defaultCleanFolder = ['dist']
+if (argv.env) {
+    defaultCleanFolder = ['dist/'+argv.env]
+}
 const plugins = [
-    new CleanWebpackPlugin(['dist'], {
+    new CleanWebpackPlugin(defaultCleanFolder, {
         verbose: true
     }),
     new webpack.DefinePlugin({
@@ -62,19 +67,23 @@ new Vue({
   `
 }
 //默认编译T0x和midea-开关的文件夹, 目标文件夹如需要编译可添加到includeFiles
-var includeFiles = ['sample'];
+var includeFiles = ['midea-demo'];
 function walk() {
-    let directory = path.join(__dirname, './src')
-    fs.readdirSync(directory)
+    if (argv.env) {
+        runWalk(argv.env)
+    } else {
+        let directory = path.join(__dirname, './src')
+        fs.readdirSync(directory)
         .forEach(file => {
-            var fileStr = includeFiles.join(",") + ",";
-            if (file.indexOf("T0x") != -1 || file.indexOf("midea-") != -1 || fileStr.indexOf(file + ",") != -1) {
-                runWalk(file)
-            }
-        })
+                var fileStr = includeFiles.join(",") + ",";
+                if (file.indexOf("T0x") != -1 || fileStr.indexOf(file + ",") != -1) {
+                    runWalk(file)
+                }
+            })
+    }
 }
 function runWalk(dir) {
-    console.log(dir);
+    // console.log(dir);
     dir = dir || ".";
     let directory = path.join(__dirname, './src', dir)
     let distPath = path.join(__dirname, 'dist')
@@ -95,7 +104,7 @@ function runWalk(dir) {
                 if (file == "assets") {
                     let targetImgFolder = path.join(distPath, dir, "assets")
                     subProjectAssets.push({ from: fullpath, to: targetImgFolder })
-                } else {
+                } else if (file !== "components") { 
                     let subdir = path.join(dir, file)
                     runWalk(subdir)
                 }

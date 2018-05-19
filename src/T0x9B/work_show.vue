@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="秀一秀" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="秀一秀" :isImmersion="false" @leftImgClick="goBack"></midea-header>
         <div class="vote-div">
         	<text class="vote-text">评分</text>
             <midea-vote  :defaulSelectd='3' @itemClicked="selected"></midea-vote>
@@ -114,6 +114,9 @@ module.exports = {
         }
     },
     methods: {
+        goBack(){
+          nativeService.goBack()
+        },
         selected(event) {
             //set selected index to local field
             this.currentSelected = event.selected;

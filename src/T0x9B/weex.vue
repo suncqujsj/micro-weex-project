@@ -18,28 +18,30 @@
                         </div>
                     </div>
                 </scroller>
-                <div class="status-bar">
-                    <text class="text">{{status}}</text>
-                    <text class="text">{{workTime}}</text>
-                </div>
             </div>
             <div class="panel">
+                <scroller class="scroller">
                 <div class="card-list">
                     <div v-for="item in recipeData">
-                        <recipe-card :recipe="item"></recipe-card>
+                        <recipe-card :recipe="item" @goRecipe="goRecipe"></recipe-card>
                     </div>
                 </div>
+                </scroller>
             </div>
             <div class="panel fav-panel">
                 <div class="fav-type">
-                    <text v-for="item in favTypeList">{{item}}</text>
+                    <text v-for="item in favTypeList" class="fav-type-item">{{item}}</text>
+                    <text class="fav-type-item">更多</text>
                 </div>
                 <div class="fav-recipe">
                     <scroller>
-                        <nav-list :lists="favRecipeList" :cols="2" @itemClicked="goRecipe" :style="favListStyle" :type="favListStyle.type"></nav-list>
+                        <need-list :lists="favRecipeList" :cols="2" @itemClicked="goRecipe" :styles="favListStyle"></need-list>
                     </scroller>
                 </div>
-                
+            </div>
+            <div class="status-bar">
+                <text class="text">{{status}}</text>
+                <text class="text">{{workTime}}</text>
             </div>
         </div>
     </div>
@@ -65,7 +67,7 @@
                 tabs: ['推荐', '评分', '收藏'],
                 icon: {
                     leftImg: './img/header/tab_back.png',
-                    rightImg: 'assets/search.png',
+                    rightImg: 'assets/img/search.png',
                 },
                 bgColor: '#111',
                 title: '云菜谱',
@@ -75,17 +77,17 @@
                     {
                         name: '早上吃什么',
                         desc: '面包+酸奶 酸奶很健康，面包饱腹。可以提供一段能量充足的上午时光',
-                        imgPath: 'assets/tmp_bg.png',
+                        imgPath: 'https://tse4.mm.bing.net/th?id=OIP.LvHQvxcLRpnUTcVie9HABwHaDQ&pid=Api',
                         favorite: 'off'
                     },{
                         name: '中午吃什么',
                         desc: '沙拉+脆皮叉烧 健康沙拉有丰富膳食纤维，叉烧满满的蛋白质，又能满足口腹之欲，完美！',
-                        imgPath: 'assets/tmp_bg.png',
+                        imgPath: 'http://images.abi.com.cn:8080/news/201601/20160104164356978.jpg',
                         favorite: 'on'
                     },{
                         name: '晚上吃什么',
                         desc: '香蕉奶昔+熏鱼拉面 一天工作辛苦，简单又好吃的熏鱼拉面，再喝点奶昔，可以愉快的睡觉了',
-                        imgPath: 'assets/tmp_bg.png',
+                        imgPath: 'https://tse4.mm.bing.net/th?id=OIP.LvHQvxcLRpnUTcVie9HABwHaDQ&pid=Api',
                         favorite: 'on'
                     }
                 ],
@@ -93,7 +95,7 @@
                     {
                         name: '虎视眈眈记得看见了',
                         desc: '号地块数据库等级考试',
-                        imgPath: 'assets/tmp_bg.png',
+                        imgPath: 'https://tse4.mm.bing.net/th?id=OIP.LvHQvxcLRpnUTcVie9HABwHaDQ&pid=Api',
                         scores: '4.5',
                         difficulty: '难',
                         duration: '90',
@@ -103,7 +105,7 @@
                     }, {
                         name: '人体各方',
                         desc: '有核桃仁感人肺腑',
-                        imgPath: 'assets/tmp_bg.png',
+                        imgPath: 'http://images.abi.com.cn:8080/news/201601/20160104164356978.jpg',
                         scores: '5',
                         difficulty: '简单',
                         duration: '10',
@@ -113,7 +115,7 @@
                     }, {
                         name: '截截图节电',
                         desc: '尽快回复VR额乬',
-                        imgPath: 'assets/tmp_bg.png',
+                        imgPath: 'https://tse4.mm.bing.net/th?id=OIP.LvHQvxcLRpnUTcVie9HABwHaDQ&pid=Api',
                         scores: '3',
                         difficulty: '难',
                         duration: '60',
@@ -122,58 +124,59 @@
                         hasVideo: false
                     }
                 ],
-                favTypeList: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+                favTypeList: ['烤肉', '蛋糕', '海鲜', '月饼', '面包', '主食', '饼干'],
                 favRecipeList: [
                     {
                         name: '烤鸡',
-                        imgPath: ''
+                        imgPath: 'http://www.ghost64.com/qqtupian/qqbiaoqing/151203558120/32.png'
                     },
                     {
                         name: 'n蛋糕',
-                        imgPath: 'http://pic165.nipic.com/pic/20180515/12398452_090008154000_4.jpg'
+                        imgPath: 'http://www.ghost64.com/qqtupian/qqbiaoqing/151203558120/32.png'
                     },
                     {
                         name: '焗虾',
-                        imgPath: ''
+                        imgPath: 'http://www.ghost64.com/qqtupian/qqbiaoqing/151203558120/32.png'
                     }, {
                         name: '烤鸡',
-                        imgPath: ''
+                        imgPath: 'http://www.ghost64.com/qqtupian/qqbiaoqing/151203558120/32.png'
                     },
                     {
                         name: 'n蛋糕',
-                        imgPath: ''
+                        imgPath: 'http://www.ghost64.com/qqtupian/qqbiaoqing/151203558120/32.png'
                     },
                     {
                         name: '焗虾',
-                        imgPath: ''
+                        imgPath: 'http://www.ghost64.com/qqtupian/qqbiaoqing/151203558120/32.png'
                     }, {
                         name: '烤鸡',
-                        imgPath: ''
+                        imgPath: 'http://www.ghost64.com/qqtupian/qqbiaoqing/151203558120/32.png'
                     },
                     {
                         name: 'n蛋糕',
-                        imgPath: ''
+                        imgPath: 'http://www.ghost64.com/qqtupian/qqbiaoqing/151203558120/32.png'
                     },
                     {
                         name: '焗虾',
-                        imgPath: ''
+                        imgPath: 'http://www.ghost64.com/qqtupian/qqbiaoqing/151203558120/32.png'
                     }, {
                         name: '烤鸡',
-                        imgPath: ''
+                        imgPath: 'http://www.ghost64.com/qqtupian/qqbiaoqing/151203558120/32.png'
                     },
                     {
                         name: 'n蛋糕',
-                        imgPath: ''
+                        imgPath: 'http://www.ghost64.com/qqtupian/qqbiaoqing/151203558120/32.png'
                     },
                     {
                         name: '焗虾',
-                        imgPath: ''
+                        imgPath: 'http://www.ghost64.com/qqtupian/qqbiaoqing/151203558120/32.png'
                     },
                 ],
                 favListStyle: {
-                    img: {
-                        height: '400px',
-                    }
+                    wrapWidth: '560px',
+                    imgSize: '240px',
+                    textJustify: 'center',
+                    colWrapJustify: 'space-around'
                 }
             }
         },
@@ -239,7 +242,7 @@
     background-color: #e5e5e5;
 }
 .status-bar{
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left:0;
     right: 0;
@@ -267,7 +270,20 @@
 .fav-type{
     flex: 1
 }
+.fav-type-item{
+    border-color: #aaa;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    border-right-width: 2px;
+    border-right-style: solid;
+    justify-content: center;
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
 .fav-recipe{
-    flex: 3
+    flex: 4;
+    padding-top: 20px;
+    padding-left: 20px;
 }
 </style>

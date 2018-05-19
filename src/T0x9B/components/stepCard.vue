@@ -2,10 +2,9 @@
 <template>
     <div class="wrap">
         <div class="banner">
+            <text>{{stepData.banner.stype}}</text>
             <image v-if="stepData.banner.type == 'img'" :src="stepData.banner.src"></image>
-            <div v-else>
-                <text class="text">视频占位</text>
-            </div>
+            <midea-video v-else class="video" :src="stepData.banner.src" @start="vdStart" @pause="vdPause" @finish="vdFinish" @fail="vdFail"></midea-video>
         </div>
         <div class="floor floor-l">
             <text class="text">{{stepData.name}}</text>
@@ -61,7 +60,18 @@
             }
         },
         methods:{
-         
+            vdStart(e) {
+                this.$emit('videoStart',e)
+            },
+            vdPause(e) {
+                this.$emit('videoPause',e)
+            },
+            vdFinish(e) {
+                this.$emit('videoFinish',e)
+            },
+            vdFail(e) {
+                this.$emit('videoFail',e)
+            }
         },
         created(){
 
@@ -116,5 +126,9 @@
         color: #6A462E;
         font-size: 70px;
         font-weight: bold;
+    }
+    .video{
+        width: 750px;
+        height: 750px;
     }
 </style>

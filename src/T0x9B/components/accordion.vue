@@ -2,7 +2,7 @@
 <template>
     <div>
         <text style="font-size:38px">{{xx}}</text>
-        <scroller>
+        <scroller class="scroller">
             <div class="title">
                 <text>全部分类</text>
             </div>
@@ -84,8 +84,8 @@
         data() {
             return {
                 activeMenu: '',
-                switchOpen: '../assets/img/open.png',
-                switchClose: '../assets/img/close.png',
+                switchOpen: 'assets/img/open.png',
+                switchClose: 'assets/img/close.png',
                 xx: '',
                 gridStyle: {
                     width: '222px'
@@ -101,7 +101,7 @@
                 this.activeMenu = (this.activeMenu == theName) ? '':theName
             },
             itemSelected(e){
-
+                
             }
         },
         created() {
@@ -114,8 +114,8 @@
     .title {
         margin-top: 20px;
         margin-bottom: 30px;
+        padding-left: 25px;
     }
-
     .menu {
         border-bottom-style: solid;
         border-width: 1px;

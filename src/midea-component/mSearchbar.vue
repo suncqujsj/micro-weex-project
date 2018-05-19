@@ -252,9 +252,9 @@
       }
     },
     data: () => ({
-      inputIcon: "../img/icon/search1.png",
-      closeIcon: "../img/icon/delete.png",
-      arrowIcon: "../img/icon/arrow.png",
+      inputIcon: "./img/search/search.png",
+      closeIcon: "./img/search/delete.png",
+      arrowIcon: "../img/header/tab_back.png",
       showCancel: false,
       showClose: false,
       value: '',

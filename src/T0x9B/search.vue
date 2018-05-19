@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="midea-search">
-            <div class="title-div" >
+            <div class="title-div" @click="goBack">
                 <image :src="arrowIcon" class="title-div-img"></image>
                 <text class="hint">返回</text>
             </div>
@@ -140,6 +140,9 @@
       },
       mideaSearchbarInputReturned () {
         
+      },
+      goBack(){
+          nativeService.goBack()
       },
       goToPage(link) {
             var path = link + ".js";

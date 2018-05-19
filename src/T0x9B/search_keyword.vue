@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="midea-search">
-        <div class="title-div" @click="goToPage('search_result')">
+        <div class="title-div" @click="goBack">
           <image :src="arrowIcon" class="title-div-img"></image>
           <text class="hint">取消</text>
         </div>
@@ -81,7 +81,7 @@
   export default {
     components: { mideaSearchbar,mideaItem },
     data: () => ({
-      arrowIcon:"./img/header/tab_back@2x.png",
+      arrowIcon:"./img/header/tab_back.png",
       isDisabled:true,
       setWidth:"450px",
        list: [
@@ -135,6 +135,9 @@
       },
       delItem(item) {
 
+      },
+      goBack(){
+        nativeService.goBack();
       },
       goToPage(link) {
           var path = link + ".js";

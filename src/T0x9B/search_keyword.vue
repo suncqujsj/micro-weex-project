@@ -83,7 +83,7 @@
     data: () => ({
       arrowIcon:"./img/header/tab_back.png",
       isDisabled:true,
-      setWidth:"450px",
+      setWidth:"560px",
        list: [
                 { "name": "云食普" },
                  { "name": "云食普1" },

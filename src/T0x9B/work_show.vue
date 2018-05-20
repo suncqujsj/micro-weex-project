@@ -3,7 +3,7 @@
         <midea-header title="秀一秀" :isImmersion="false" @leftImgClick="goBack"></midea-header>
         <div class="vote-div">
         	<text class="vote-text">评分</text>
-            <midea-vote  :defaulSelectd='3' @itemClicked="selected"></midea-vote>
+            <midea-vote :styles="voteStyle" :defaulSelectd='3' @itemClicked="selected"></midea-vote>
         </div>
         <div class="grey-line"></div>
         <div style="background-color: white">
@@ -110,7 +110,12 @@ module.exports = {
         return {
             currentSelected:'',
             isDisabled:true,
-            isBottomShow:false
+            isBottomShow:false,
+            voteStyle: {
+		        box: {
+		            width: '500px'
+		        }
+		    }
         }
     },
     methods: {

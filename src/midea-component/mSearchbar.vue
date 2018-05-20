@@ -26,6 +26,7 @@
              :aria-hidden="true"
              @click="closeClicked"
              :src="closeIcon"
+             :style="closeButton"
              ></image>
       <text :class="['search-bar-button','search-bar-button-'+theme]"
             :style="buttonStyle"
@@ -249,6 +250,10 @@
             return {backgroundColor:barStyle.backgroundColor}
         }
         return {}
+      },
+      closeButton () {
+      	let len = 750 - this.setWidth.replace("px","");
+      	return {right:len + "px"};
       }
     },
     data: () => ({

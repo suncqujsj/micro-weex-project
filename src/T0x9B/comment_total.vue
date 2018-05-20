@@ -37,7 +37,7 @@
 	    <div style="position: fixed;bottom:0px">
 	    	<input type="text" placeholder="写下你的评论" class="input" :autofocus=true value="" @change="onchange" @input="oninput"/>
 	    </div>
-	   </div>
+    </div>
 	  <div v-if="!displayAll">
 	  	<div style="flex-direction: row;align-items:flex-start;background-color: white;">
 	       <div style="margin-top:30px;margin-left:30px"><image src="http://img.jf258.com/uploads/2013-08-05/063625267.jpg" style="width:80px;height:80px"></image></div>

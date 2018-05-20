@@ -149,5 +149,6 @@
         border-color: #777;
         flex-direction: column;
         margin-bottom: 30px;
+        background-color: #fff;
     }
 </style>

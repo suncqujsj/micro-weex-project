@@ -7,7 +7,7 @@
                 <image class="icon" :src="icon.fav[isFav]"></image>
                 <text class="text">{{favsNum}}</text>
             </div>
-            <div class="share">
+            <div class="share" @click="sharePage">
                 <image class="icon" :src="icon.share"></image>
             </div>
             <div class="interaction-tag" @click="goComments">
@@ -17,7 +17,7 @@
         </div>
         <scroller class="scroller">
             <!-- <midea-video class="video" :src="videoSrc" :autoplay="true" controls @start="onVideoStart" @pause="onVideoPause" @finish="onVideoFinish" @fail="onVideoFail"></midea-video> -->
-            <video v-if="coverVideoPlay" class="video" :src="videoSrc" @start="vdStart" @pause="vdPause" @finish="vdFinish" @fail="vdFail"></video>
+            <midea-video v-if="coverVideoPlay" class="video" :src="videoSrc" @start="vdStart" @pause="vdPause" @finish="vdFinish" @fail="vdFail"></midea-video>
             <div v-else>
                 <div class="video">
                     <image class="video-cover" :src="videoCover"></image>
@@ -91,7 +91,7 @@
                     <text class="text progress-time">10:30</text>
                 </div>
                 <div class="floor floor-c">
-                    <text class="text start-btn">一键启动</text>
+                    <text class="text start-btn" @click="quickStart">一键启动</text>
                 </div>
              </div>
         </div>
@@ -125,6 +125,7 @@
                 </div>
             </scroller>
         </midea-popup>
+        <MideaModal :showModal="true" @modalConfirm="modalConfirm" @modalCancel="modalCancel"></MideaModal>
     </div>
 </template>
 
@@ -137,11 +138,12 @@
     import mideaPopup from '@/midea-component/popup.vue'
     import MideaProgress from '@/midea-component/mProgress.vue'
     import MideaVote from '@/midea-component/mVote.vue'
+    import MideaModal from '@/midea-component/modal.vue'
     import scale from '@/T0x9B/components/scale.vue'
 
     export default {
         components: {
-            MideaHeader, MideaProgress, mideaPopup, MideaVote, scale, StepCard, NeedList
+            MideaHeader, MideaProgress, mideaPopup, MideaVote, MideaModal, scale, StepCard, NeedList
         },
         computed: {
         },
@@ -319,7 +321,15 @@
                 ],
                 showBuyPop: false,
                 showWeightPop: false,
-                progressValue: 50
+                progressValue: 50,
+                messageParam: {
+                    title: '分享标题', // 分享标题
+                    desc: '分享描述', // 分享描述
+                    link: 'http://www.midea.com/cn/', // 分享链接
+                    imgUrl: 'http://10.16.12.243/anonymous/json/weibo/1740248463_180.jpg', // 分享图标
+                    type: '', // 分享类型,music、video或link，不填默认为link
+                    dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                }
             }
         },
         methods:{
@@ -357,6 +367,24 @@
             },
             vdFail() {
                 this.coverVideoPlay = false
+            },
+            sharePage(){
+                nativeService.showSharePanel(this.messageParam).then(
+                    (resp) => {
+                        nativeService.toast("分享调用成功")
+                    }
+                ).catch((error) => {
+                    nativeService.toast("分享调用失败")
+                })
+            },
+            quickStart(){
+
+            },
+            modalCancel(){
+                
+            },
+            modalConfirm(){
+
             }
         },
         created(){

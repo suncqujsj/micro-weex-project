@@ -54,6 +54,7 @@
 .header-right-image {
   height: 44px;
   width: 44px;
+  margin-right: 25px;
 }
 .header-right-text-wrap{
     height: 88px;

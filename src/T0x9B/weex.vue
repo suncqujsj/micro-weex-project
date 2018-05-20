@@ -21,11 +21,11 @@
             </div>
             <div class="panel">
                 <scroller class="scroller">
-                <div class="card-list">
-                    <div v-for="item in recipeData">
-                        <recipe-card :recipe="item" @goRecipe="goRecipe"></recipe-card>
+                    <div class="card-list">
+                        <div v-for="item in recipeData">
+                            <recipe-card :recipe="item" @goRecipe="goRecipe"></recipe-card>
+                        </div>
                     </div>
-                </div>
                 </scroller>
             </div>
             <div class="panel fav-panel">
@@ -77,7 +77,7 @@
                     {
                         name: '早上吃什么',
                         desc: '面包+酸奶 酸奶很健康，面包饱腹。可以提供一段能量充足的上午时光',
-                        imgPath: 'https://tse4.mm.bing.net/th?id=OIP.LvHQvxcLRpnUTcVie9HABwHaDQ&pid=Api',
+                        imgPath: 'https://images-cn.ssl-images-amazon.com/images/G/28/cnbooks/event/children/2018/Apr/May_49off_PCATF._CB495162946_.jpg',
                         favorite: 'off'
                     },{
                         name: '中午吃什么',
@@ -87,7 +87,7 @@
                     },{
                         name: '晚上吃什么',
                         desc: '香蕉奶昔+熏鱼拉面 一天工作辛苦，简单又好吃的熏鱼拉面，再喝点奶昔，可以愉快的睡觉了',
-                        imgPath: 'https://tse4.mm.bing.net/th?id=OIP.LvHQvxcLRpnUTcVie9HABwHaDQ&pid=Api',
+                        imgPath: 'https://images-cn.ssl-images-amazon.com/images/G/28/Yuhao/2018POC/May/phase2_49/ATF_1._CB495129543_.jpg',
                         favorite: 'on'
                     }
                 ],
@@ -95,7 +95,7 @@
                     {
                         name: '虎视眈眈记得看见了',
                         desc: '号地块数据库等级考试',
-                        imgPath: 'https://tse4.mm.bing.net/th?id=OIP.LvHQvxcLRpnUTcVie9HABwHaDQ&pid=Api',
+                        imgPath: 'https://images-cn.ssl-images-amazon.com/images/G/28/Yuhao/2018POC/May/phase2_49/ATF_1._CB495129543_.jpg',
                         scores: '4.5',
                         difficulty: '难',
                         duration: '90',
@@ -192,7 +192,7 @@
             },
             goRecipe(){
                 nativeService.goTo('recipe.js')
-            },
+            }
         }
     }
 </script>
@@ -262,6 +262,9 @@
 }
 .card-list{
     margin-bottom: 100px;
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-top: 25px;
 }
 .fav-panel{
     flex-direction: row;

@@ -1,7 +1,6 @@
 //手风琴菜单
 <template>
     <div>
-        <text style="font-size:38px">{{xx}}</text>
         <scroller class="scroller">
             <div class="title">
                 <text>全部分类</text>
@@ -86,7 +85,6 @@
                 activeMenu: '',
                 switchOpen: 'assets/img/open.png',
                 switchClose: 'assets/img/close.png',
-                xx: '',
                 gridStyle: {
                     width: '222px'
                 }

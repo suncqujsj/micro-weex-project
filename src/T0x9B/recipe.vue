@@ -63,12 +63,12 @@
             </div>
             <div class="block">
                 <div class="add-sub">
-                    <image class="big-icon minus" :src="icon.minus"></image>
+                    <image class="big-icon minus" :src="icon.minus" @click="minusPeople"></image>
                     <div class="floor">
                         <text class="text">{{peopleNum}}</text>
                         <text class="text">人份</text>
                     </div>
-                    <image class="big-icon plus" :src="icon.plus"></image>
+                    <image class="big-icon plus" :src="icon.plus" @click="plusPeople"></image>
                 </div>
                 <div class="needs">
                     <need-list :cols="2" :lists="needList1" :style="needStyle" :title="needTitle1"></need-list>
@@ -377,6 +377,12 @@
                 ).catch((error) => {
                     nativeService.toast("分享调用失败")
                 })
+            },
+            minusPeople(){
+                this.peopleNum-= 1;
+            },
+            plusPeople(){
+                this.peopleNum+= 1;
             },
             quickStart(){
                 this.showModal = true

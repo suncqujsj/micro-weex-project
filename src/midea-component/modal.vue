@@ -60,9 +60,9 @@
             checkModalHeight(){
                 let modal = this.$ref.modal
                 dom.getComponentRect(modal, (result) => {
-                let size = result.size || {};
-                this.modalHeight = size.height;
-            });
+                    let size = result.size || {};
+                    this.modalHeight = size.height;
+                });
             },
             mideaButtonClicked() {
                 nativeService.toast("button clicked");

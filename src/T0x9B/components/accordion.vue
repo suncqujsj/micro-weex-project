@@ -1,13 +1,13 @@
 //手风琴菜单
 <template>
-    <scroller class="scroller">
+    <scroller class="scroller" :style="style.scroller">
         <div class="title" ref="title">
             <text>全部分类</text>
         </div>
         <div v-for="(menu, mIndex) in menus" :class="['menu', mIndex == 0 ? 'menu-first': '']">
             <div class="menu-bar">
                 <!-- <image class="icon"></image> -->
-                <text>{{menu.name}}</text>
+                <text class="menu-name">{{menu.name}}</text>
                 <div class="switch-wrap" @click="makeSwitch" :data-menu-name="menu.name">
                     <image v-if="activeMenu==menu.name" class="switch" :src="switchOpen"></image>
                     <image v-else class="switch" :src="switchClose"></image>
@@ -23,9 +23,6 @@
 <script>
     import nativeService from '@/common/services/nativeService.js'
     import mideaGridSelect from '@/component/optionList.vue'
-    const dom = weex.requireModule('dom');
-    
-    // import mideaBtn from '@/midea-component/button.vue'
 
     export default {
         props: {
@@ -83,7 +80,7 @@
             style(){
                 return {
                     scroller: {
-                        height: this.headerHeight + this.listsHeight + 'px'
+                        height: WXEnvironment.deviceHeight + 'px'
                     }
                 }
             }
@@ -106,7 +103,7 @@
                 this.activeMenu = (this.activeMenu == theName) ? '':theName
             },
             itemSelected(e){
-            },
+            }
         },
         created() {
            
@@ -115,9 +112,6 @@
 </script>
 
 <style>
-    .scroller{
-        min-height: 1000px;
-    }
     .title {
         margin-top: 20px;
         margin-bottom: 30px;
@@ -140,7 +134,11 @@
     .menu-first {
         border-top-style: solid;
     }
+    .menu-name{
+        width: 620px;
+    }
     .switch-wrap{
+        justify-content: right;
         padding-left: 30px;
         padding-right: 30px;
         padding-top: 10px;

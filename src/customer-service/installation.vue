@@ -1,79 +1,50 @@
 <template>
     <div class="wrapper">
         <midea-header :title="title" @leftImgClick="back"></midea-header>
-        <midea-cell title="安装产品*" rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectProduct">
-        </midea-cell>
-        <midea-cell title="物流状态*" rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectTransportStatus">
-        </midea-cell>
-        <midea-cell title="期望服务时间*" rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectServiePeriod">
-        </midea-cell>
-        <midea-cell title="服务地址*" rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectTAdress">
-        </midea-cell>
+        <scroller class="content-wrapper">
+            <midea-cell title="安装产品*" rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectProduct">
+            </midea-cell>
+            <midea-cell title="物流状态*" :rightText="transportStatusDesc" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectTransportStatus">
+            </midea-cell>
+            <midea-cell title="期望服务时间*" :rightText="serviePeriodDesc" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectServiePeriod">
+            </midea-cell>
+            <midea-cell title="服务地址*" rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectAddress">
+            </midea-cell>
 
-        <div class="item-group">
-            <text class="type-select-label">以下为选填信息，有助于更快更好地为您服务</text>
+            <div class="item-group">
+                <text class="type-select-label">以下为选填信息，有助于更快更好地为您服务</text>
 
-            <midea-grid-select class="type-select-grid" :cols="3" :single="true" :customStyles="{width:'200px',height:'48px'}" :list="types" @select="typeSelected">
-            </midea-grid-select>
-        </div>
+                <midea-grid-select class="type-select-grid" :cols="3" :single="true" :customStyles="{width:'200px',height:'48px'}" :list="types" @select="typeSelected">
+                </midea-grid-select>
+            </div>
 
-        <div class="item-group scan-group group-bottom-border">
-            <input class="scan-input" type="text" placeholder="请输入型号或扫机身条码" :autofocus=false value="" @change="onchange" @input="oninput" />
+            <div class="item-group scan-group group-bottom-border">
+                <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false :value="code" @change="onchange" @input="oninput" />
 
-            <image class="scan-icon" src="./assets/img/progress.png" resize='contain'></image>
-        </div>
+                <image class="scan-icon" src="./assets/img/progress.png" resize='contain' @click="scanCode"></image>
+            </div>
 
-        <div class="item-group info-group">
-            <text class="info-label">其他备注信息</text>
+            <div class="item-group info-group">
+                <text class="info-label">其他备注信息</text>
 
-            <image class="mic-icon" src="./assets/img/progress.png" resize='contain'></image>
-        </div>
+                <image class="mic-icon" src="./assets/img/progress.png" resize='contain'></image>
+            </div>
 
-        <div class="item-group info-group group-bottom-border">
-            <textarea class="info-textarea" rows="4" @input="onInfoInput" @change="onInfoIChange"></textarea>
-            <text class="info-textarea-calc">119/120</text>
-        </div>
-
+            <div class="item-group info-group group-bottom-border">
+                <textarea class="info-textarea" placeholder="请输入其他备注信息" rows="4" @input="onInfoInput" @change="onInfoIChange"></textarea>
+                <text class="info-textarea-calc">119/120</text>
+            </div>
+        </scroller>
         <div class="action-bar">
             <midea-button text="提交" type="green" @mideaButtonClicked="submit">
             </midea-button>
         </div>
 
-        <midea-actionsheet :items="actionsheetItems" :show="showBar" @close="closeActionsheet" @itemClick="actionsheetItemClick" @btnClick="actionsheetBtnClick" ref="actionsheet">
+        <midea-actionsheet :items="TransportStatusItems" :show="isShowTransportStatus" @close="closeTransportStatusActionsheet" @itemClick="TransportStatustItemClick" @btnClick="transportStatusBtnClick" ref="transportStatusActionsheet">
         </midea-actionsheet>
 
-        <midea-popup :show="isBottomShow" @mideaPopupOverlayClicked="cancelServiePeriod" pos="bottom" height="700">
-            <div class="period-header-bar">
-                <text class="period-header-action"></text>
-                <text class="period-header-text">服务时间</text>
-                <text class="period-header-action" @click="cancelServiePeriod">取消</text>
-            </div>
-            <div class="period-content">
-                <scroller class="period-content-left">
-                    <text class="period-content-date">今天</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                </scroller>
-                <scroller class="period-content-right">
-                    <text class="period-content-time-desc">具体上门时间以服务商与您沟通约定为准</text>
-                    <text class="period-content-time">8:00-10:00</text>
-                    <text class="period-content-time">8:00-10:00</text>
-                    <text class="period-content-time">8:00-10:00</text>
-                    <text class="period-content-time">8:00-10:00</text>
-                    <text class="period-content-time">8:00-10:00</text>
-                </scroller>
-            </div>
-        </midea-popup>
+        <period-picker :isShow="isShowPeriodPicker" :dates="serviePeriodDate" :dateIndex="selectedDateIndex" :times="serviePeriodTime" :timeIndex="selectedTimeIndex" @oncancel="isShowPeriodPicker=false" @onchanged="serviePeriodSelected">
+        </period-picker>
     </div>
 </template>
 
@@ -81,24 +52,26 @@
 import base from './base'
 import nativeService from '@/common/services/nativeService';
 
-import mideaCell from '@/component/cell.vue'
-import mideaGridSelect from '@/component/optionList.vue'
-import mideaButton from '@/midea-component/button.vue'
-import mideaActionsheet from '@/component/actionsheet.vue'
-import mideaPopup from '@/midea-component/popup.vue'
+
+import { MideaCell, MideaGridSelect, MideaButton, MideaActionsheet, MideaPopup, MideaSelect } from '@/index'
+
+import PeriodPicker from './components/periodPicker.vue'
 
 export default {
     components: {
-        mideaCell,
-        mideaGridSelect,
-        mideaButton,
-        mideaActionsheet,
-        mideaPopup
+        MideaCell,
+        MideaGridSelect,
+        MideaButton,
+        MideaActionsheet,
+        MideaPopup,
+        MideaSelect,
+
+        PeriodPicker
     },
     mixins: [base],
     data() {
         return {
-            title: '维修服务',
+            title: '安装服务',
             types: [
                 {
                     'title': '机身条码',
@@ -108,40 +81,105 @@ export default {
                     'title': '产品型号'
                 }
             ],
-            showBar: false,
-            actionsheetItems: ['货已到需要安装', '或未到需要安装'],
-            isBottomShow: false
+            isShowTransportStatus: false,
+            TransportStatusItems: ['货已到需要安装', '货未到需要安装'],
+
+            isShowPeriodPicker: false,
+            selectedDateIndex: 0,
+            selectedTimeIndex: 0,
+            serviePeriodDate: [],
+            serviePeriodTime: [
+                { key: 0, desc: "08:00-10:00" },
+                { key: 1, desc: "10:00-12:00" },
+                { key: 2, desc: "12:00-14:00" },
+                { key: 3, desc: "14:00-16:00" },
+                { key: 4, desc: "16:00-18:00" }
+            ],
+
+            code: '',
+            data: {
+                transportStatus: ''
+            }
+        }
+    },
+    computed: {
+        transportStatusDesc() {
+            return this.data.transportStatus ? this.data.transportStatus : '请选择'
+        },
+        serviePeriodDesc() {
+            if (this.serviePeriodDate && this.selectedDateIndex && this.serviePeriodTime && this.selectedTimeIndex) {
+                return this.serviePeriodDate[this.selectedDateIndex].desc + ' ' + this.serviePeriodTime[this.selectedTimeIndex].desc
+            } else {
+                return '请选择'
+            }
         }
     },
     methods: {
+        initProductData() {
+            let params = {
+                url: 'http://weixincs.midea.com/wxgw/myproduct/searchProductType?mpType=MIDEASERVICE',
+                type: 'text',
+                method: "POST",
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: {
+                    'codeType': 'bzbx',
+                    'version': '1.0'
+                }
+            }
+            nativeService.sendHttpRequest(params)
+        },
         selectProduct() {
-
+            this.goTo('productSelection', {}, { from: 'installation' })
         },
         selectTransportStatus() {
-            this.showBar = true;
+            this.isShowTransportStatus = true;
             this.$nextTick(e => {
-                this.$refs.actionsheet.open();
+                this.$refs.transportStatusActionsheet.open();
             });
         },
-        closeActionsheet() {
-            this.showBar = false
+        closeTransportStatusActionsheet() {
+            this.isShowTransportStatus = false
         },
-        actionsheetItemClick(event) {
-            this.showBar = false
+        TransportStatustItemClick(event) {
+            this.isShowTransportStatus = false
+            this.data.transportStatus = this.TransportStatusItems[event.index]
         },
-        actionsheetBtnClick() {
-            this.showBar = false
+        transportStatusBtnClick() {
+            this.isShowTransportStatus = false
+        },
+        initServiePeriod() {
+            let today = new Date()
+
+            this.serviePeriodDate.push({
+                key: 0,
+                desc: '今天'
+            })
+            let weekDesc = {
+                0: "日",
+                1: "一",
+                2: "二",
+                3: "三",
+                4: "四",
+                5: "五",
+                6: "六",
+            }
+            for (let index = 1; index < 31; index++) {
+                let nextDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + index)
+
+                this.serviePeriodDate.push({
+                    key: index,
+                    desc: nextDate.getMonth() + '月' + nextDate.getDate() + '日 (周' + weekDesc[nextDate.getDay()] + ')'
+                })
+            }
         },
         selectServiePeriod() {
-            this.isBottomShow = true
+            this.isShowPeriodPicker = true
         },
-        confirmServiePeriod() {
-            this.isBottomShow = false;
+        serviePeriodSelected(event) {
+            this.selectedDateIndex = event.dateIndex
+            this.selectedTimeIndex = event.timeIndex
         },
-        cancelServiePeriod() {
-            this.isBottomShow = false;
-        },
-        selectTAdress() {
+        selectAddress() {
 
         },
         typeSelected() {
@@ -150,8 +188,17 @@ export default {
         onchange() {
 
         },
-        oninput() {
-
+        oninput(event) {
+            this.code = event.value
+        },
+        scanCode() {
+            nativeService.scanCode().then(
+                (resp) => {
+                    if (resp.status == 0) {
+                        this.code = resp.data
+                    }
+                }
+            )
         },
         onInfoInput() {
 
@@ -164,7 +211,8 @@ export default {
         }
     },
     created() {
-
+        this.initServiePeriod()
+        this.initProductData()
     }
 }
 </script>
@@ -173,6 +221,9 @@ export default {
 .wrapper {
   background-color: #ffffff;
   position: relative;
+}
+.content-wrapper {
+  padding-bottom: 120px;
 }
 .item-group {
   padding: 24px;
@@ -195,8 +246,10 @@ export default {
 }
 .scan-input {
   flex: 1;
-  font-size: 28px;
+  font-size: 32px;
   margin-right: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 .scan-icon {
   height: 40px;
@@ -232,61 +285,5 @@ export default {
   bottom: 0px;
   width: 750px;
   text-align: center;
-}
-.period-header-bar {
-  height: 80px;
-  width: 750px;
-  display: inline-flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom-color: #e2e2e2;
-  border-bottom-width: 1px;
-}
-.period-header-text {
-  font-size: 32px;
-}
-.period-header-action {
-  width: 88px;
-  font-size: 28px;
-}
-.period-content {
-  width: 750px;
-  height: 620px;
-  flex-direction: row;
-}
-.period-content-left {
-  flex: 1;
-  align-content: center;
-  align-items: center;
-}
-.period-content-date {
-  text-align: center;
-  font-size: 32px;
-  padding: 20px;
-}
-.period-content-right {
-  flex: 1;
-  align-content: center;
-  align-items: center;
-  padding-bottom: 20px;
-}
-.period-content-time-desc {
-  width: 340px;
-  text-align: center;
-  font-size: 32px;
-  padding: 20px;
-  margin-top: 20px;
-  color: red;
-  word-wrap: break-word;
-}
-.period-content-time {
-  text-align: center;
-  font-size: 32px;
-  padding: 15px;
-  margin-top: 20px;
-  border-radius: 8px;
-  background-color: gray;
 }
 </style>

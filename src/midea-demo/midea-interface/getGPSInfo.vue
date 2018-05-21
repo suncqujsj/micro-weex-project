@@ -1,13 +1,17 @@
 <template>
     <div class="wrapper">
-        <midea-header title="sendHttpRequest" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="getGPSInfo获取GPS定位信息" :isImmersion="false" @leftImgClick="back"></midea-header>
         <midea-title-bar title="接口参数:"></midea-title-bar>
-        <textarea type="text" placeholder="Input Text" class="textarea" :value="messageParamString" @input="dataChange" rows=6 />
-        <midea-button text="发送网络请求" type="green" @mideaButtonClicked="mideaButtonClicked">
+        <textarea type="text" placeholder="Input Text" class="textarea" :value="messageParamString" @input="dataChange" rows=2 />
+        <midea-button text="获取GPS定位" type="green" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <midea-title-bar title="代码"></midea-title-bar>
         <text class="display-block">
-
+            nativeService.getGPSInfo(messageParam).then(
+                (resp) => {
+                    this.result = resp
+                }
+            )
         </text>
         <midea-title-bar title="结果"></midea-title-bar>
 
@@ -21,7 +25,6 @@
 .textarea {
   font-size: 30px;
   width: 750px;
-  height: 250px;
   border-color: gray;
   padding-left: 20px;
   padding-right: 20px;
@@ -48,10 +51,9 @@ module.exports = {
     data() {
         return {
             messageParam: {
-                method: 'GET',
-                url: "http://wap.cjm.so/Common/DataService.ashx?function=AntiFakeQuery&CorpID=14469&Code=71194051834614143035&QueryType=2",
-                type: 'jsonp',
-                headers: { 'Content-Type': 'application/json' }
+                desiredAccuracy: "10",  //定位的精确度
+                distanceFilter: "10", //移动多少米回调一次定位信息，
+                alwaysAuthorization: "0" //是否需要一直定位, 0:不一直定位，1：一直定位
             },
             result: ''
         }
@@ -69,7 +71,7 @@ module.exports = {
             }
         },
         mideaButtonClicked() {
-            nativeService.sendHttpRequest(this.messageParam).then(
+            nativeService.getGPSInfo(this.messageParam).then(
                 (resp) => {
                     this.result = resp
                 }

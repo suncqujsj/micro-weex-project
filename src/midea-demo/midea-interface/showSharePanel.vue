@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <midea-header title="打开分享界面" :isImmersion="false" @leftImgClick="back"></midea-header>
-        <midea-title-bar title="'接口参数:"></midea-title-bar>
+        <midea-title-bar title="接口参数:"></midea-title-bar>
         <textarea type="text" placeholder="Input Text" class="textarea" :value="messageParamString" @input="dataChange" rows=5 />
         <midea-button text="执行showSharePannel" type="green" @mideaButtonClicked="showSharePannel">
         </midea-button>

@@ -95,8 +95,10 @@ module.exports = {
         ],
         interfacelist: [
             { title: 'callTel打电话', link: "callTel" },
+            { title: 'choosePhoto选相片', link: "choosePhoto" },
             { title: 'getCurrentHomeInfo获取当前家庭信息', link: "getCurrentHomeInfo" },
             { title: 'getDeviceInfo获取当前设备信息', link: "getDeviceInfo" },
+            { title: 'getGPSInfo获取GPS定位信息', link: "getGPSInfo" },
             { title: 'getNetworkStatus获取网络信息', link: "getNetworkStatus" },
             { title: 'getUserInfo获取用户信息', link: "getUserInfo" },
             { title: 'hapticFeedback手机震动', link: "hapticFeedback" },
@@ -105,12 +107,15 @@ module.exports = {
             { title: 'navigator页面跳转', link: "navigatorPageA" },
             { title: 'openNativeSystemPage打开系统页面', link: "openNativeSystemPage" },
             { title: 'receiveMessageFromApp接收APP主动调用', link: "receiveMessageFromApp" },
+            { title: 'recordAudio录音', link: "recordAudio" },
+            { title: 'scanCode扫描', link: "scanCode" },
             { title: 'sendHttpRequest直接发送网络请求', link: "sendHttpRequest" },
             { title: 'setBackHandle监听安卓返回键', link: "setBackHandle" },
             { title: 'shareMsg调用分享', link: "shareMsg" },
             { title: 'showLoading打开原生loading界面', link: "showLoading" },
             { title: 'showLoadingWithMsg打开原生loading界面', link: "showLoadingWithMsg" },
             { title: 'showSharePanel打开分享界面', link: "showSharePanel" },
+            { title: 'takePhoto照相', link: "takePhoto" },
             { title: 'updateDeviceInfo更新当前设备信息', link: "updateDeviceInfo" },
             { title: 'weex环境变量', link: "weexEnv" }
         ]
@@ -147,7 +152,7 @@ module.exports = {
         },
         goToInterface(link) {
             var path = "midea-interface/" + link + ".js";
-            nativeService.goTo(path, {viewTag: link});
+            nativeService.goTo(path, { viewTag: link });
         }
     }
 };

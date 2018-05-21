@@ -42,6 +42,19 @@ export default {
         }
         return result
     },
+    getParameters(key) {
+        let theRequest = new Object();
+        let bundleUrl = weex.config.bundleUrl
+        let queryString = ''
+        if (bundleUrl.indexOf("?") != -1) {
+            queryString = bundleUrl.substr(bundleUrl.indexOf("?") + 1);
+            let strs = queryString.split("&");
+            for (let i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+            }
+        }
+        return key ? theRequest[key] : theRequest
+    },
     //**********Util方法***************END
 
     //**********页面跳转接口***************START
@@ -66,16 +79,7 @@ export default {
             });
         } else if (platform != 'Web') {
             //手机远程weex页面调试跳转
-            let theRequest = new Object();
-            let bundleUrl = weex.config.bundleUrl
-            let queryString = ''
-            if (bundleUrl.indexOf("?") != -1) {
-                queryString = bundleUrl.substr(bundleUrl.indexOf("?") + 1);
-                let strs = queryString.split("&");
-                for (let i = 0; i < strs.length; i++) {
-                    theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
-                }
-            }
+            let theRequest = this.getParameters()
             let ip = theRequest['ip']
             let root = theRequest['root']
             let targetPath = path
@@ -92,7 +96,7 @@ export default {
             this.runGo(url, options);
         } else {
             //PC网页调试跳转
-            location.href = location.origin + location.pathname + '?path=' + path
+            location.href = location.origin + location.pathname + '?path=' + path.replace('?','&')
         }
     },
     runGo(url, options) {
@@ -120,11 +124,28 @@ export default {
         取得当前weex页面的根路径
     */
     getPath(callBack) {
-        bridgeModule.getWeexPath(function (resData) {
-            var jsonData = JSON.parse(resData);
-            var weexPath = jsonData.weexPath;
+        if (dummy != true) {
+            bridgeModule.getWeexPath(function (resData) {
+                var jsonData = JSON.parse(resData);
+                var weexPath = jsonData.weexPath;
+                callBack(weexPath);
+            });
+        } else if (platform != 'Web') {
+            //手机远程weex页面调试
+            let theRequest = this.getParameters()
+            let ip = theRequest['ip']
+            let root = theRequest['root']
+            let weexPath
+            if (ip == null || ip.length < 1) {
+                weexPath = "http://localhost:8080/dist/" + root + '/'
+            } else {
+                weexPath = "http://" + ip + ":8080" + "/dist/" + root + '/'
+            }
             callBack(weexPath);
-        });
+        } else {
+            //PC网页调试跳转
+            location.href = location.origin + location.pathname + '?path=' + path
+        }
     },
     goBack(options = {}) {
         var params = Object.assign({
@@ -599,6 +620,65 @@ export default {
             isMonitor: status
         }
         return this.commandInterfaceWrapper(params)
+    },
+    //二维码/条形码扫码功能，用于读取二维码/条形码的内容
+    scanCode(status) {
+        let params = {
+            operation: 'scanCode'
+        }
+        return this.commandInterfaceWrapper(params)
+    },
+    //开启麦克风录音，可以保存录音文件或者把声音转换成文字
+    startRecordAudio(params) {
+        /* params =  {
+            max:number, //最长录音时间, 单位为秒
+            isSave:true/false, //是否保存语音录音文件
+            isTransform:true/false, //是否需要转换语音成文字
+        } */
+        let param = Object.assign(params, {
+            operation: 'startRecordAudio'
+        })
+        return this.commandInterfaceWrapper(param)
+    },
+    //开启麦克风录音后，自行控制结束录音
+    stopRecordAudio() {
+        let params = {
+            operation: 'stopRecordAudio'
+        }
+        return this.commandInterfaceWrapper(params)
+    },
+    takePhoto(params) {
+        /* params =  {
+            compressRage:60, , //number, 返回照片的压缩率，范围为0~100，数值越高保真率越高
+            type:'jpg', //值为jpg或png，指定返回相片的格式
+            isNeedBase64: true/false //是否需要返回相片base64数据
+        } */
+        let param = Object.assign(params, {
+            operation: 'takePhoto'
+        })
+        return this.commandInterfaceWrapper(param)
+    },
+    choosePhoto(params) {
+        /* params =  {
+            compressRage:60, , //number, 返回照片的压缩率，范围为0~100，数值越高保真率越高
+            type:'jpg', //值为jpg或png，指定返回相片的格式
+            isNeedBase64: true/false //是否需要返回相片base64数据
+        } */
+        let param = Object.assign(params, {
+            operation: 'choosePhoto'
+        })
+        return this.commandInterfaceWrapper(param)
+    },
+    getGPSInfo(params) {
+        /* params =  {
+            desiredAccuracy: "10",  //定位的精确度，单位：米
+            alwaysAuthorization: "0",  //是否开启实时定位功能，0: 只返回一次GPS信息（默认），1:APP在前台时，每移动distanceFilter的距离返回一次回调。2:无论APP在前后台，每移动distanceFilter的距离返回一次回调（注意耗电）
+            distanceFilter: "10", //alwaysAuthorization为1或2时有效，每移动多少米回调一次定位信息
+        } */
+        let param = Object.assign(params, {
+            operation: 'getGPSInfo'
+        })
+        return this.commandInterfaceWrapper(param)
     },
     //调用第三方SDK统一接口
     interfaceForThirdParty(...args) {

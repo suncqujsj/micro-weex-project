@@ -59,7 +59,7 @@
                             on: 'assets/img/fav_on.png',
                             off: 'assets/img/fav.png'
                         },
-                        mark: 'assets/img/mark.png'
+                        mark: 'assets/img/markie.png'
                     }
                 }
             }
@@ -133,10 +133,11 @@
 }
 .mark-icon {
     position: absolute;
-    left:-2px;
-    top: -2px;
-    width: 150px;
-    height: 150px;
+    left:-100px;
+    top: -100px;
+    width: 200px;
+    height: 200px;
+    transform: rotate(315deg)
 }
 
 .indicator {

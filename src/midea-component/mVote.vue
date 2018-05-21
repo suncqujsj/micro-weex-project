@@ -1,5 +1,5 @@
 <template>
-<div class="box">
+<div class="box" :style="styles.box">
     <m-nav-list :list="navList" :cols="cols" @itemClicked="itemClicked">
     </m-nav-list>
 </div>
@@ -27,6 +27,16 @@
             disabled: {
                 type: Boolean,
                 default: false
+            },
+            styles: {
+                type: Object,
+                default: function(){
+                    return {
+                        box: {
+                            width: '750px'
+                        }
+                    }
+                }
             }
         },
         data () {
@@ -34,27 +44,27 @@
                 navList: [
                     {
                         "title": "",
-                        "img": "../img/icon/select.png",
+                        "img": "../img/star.png",
                         "img_actived": ""
                     },
                     {
                         "title": "",
-                        "img": "../img/icon/unselect.png",
+                        "img": "../img/unstar.png",
                         "img_actived": ""
                     },
                     {
                         "title": "",
-                        "img": "../img/icon/unselect.png",
+                        "img": "../img/unstar.png",
                         "img_actived": ""
                     },
                     {
                         "title": "",
-                        "img": "../img/icon/unselect.png",
+                        "img": "../img/unstar.png",
                         "img_actived": ""
                     },
                     {
                         "title": "",
-                        "img": "../img/icon/unselect.png",
+                        "img": "../img/unstar.png",
                         "img_actived": ""
                     }
                 ],
@@ -68,23 +78,23 @@
                 let currentSelected = false;
                 for(var i = 0;i<5;i++) {
                     if(i < event.index) {
-                        this.navList[i].img = "../img/icon/select.png";
+                        this.navList[i].img = "../img/star.png";
                     } else {
                         if(i == event.index) {
-                            if(this.navList[i].img == "../img/icon/select.png") {
-                                if(this.navList[i+1] && this.navList[i+1].img && this.navList[i+1].img == "../img/icon/select.png") {
-                                    this.navList[i].img = "../img/icon/select.png";
+                            if(this.navList[i].img == "../img/star.png") {
+                                if(this.navList[i+1] && this.navList[i+1].img && this.navList[i+1].img == "../img/star.png") {
+                                    this.navList[i].img = "../img/star.png";
                                     currentSelected = true;
                                 } else {
-                                    this.navList[i].img = "../img/icon/unselect.png";
+                                    this.navList[i].img = "../img/unstar.png";
                                     currentSelected = false;
                                 }       
                             } else {
-                                this.navList[i].img = "../img/icon/select.png";
+                                this.navList[i].img = "../img/star.png";
                                 currentSelected = true;
                             }
                         } else {
-                            this.navList[i].img = "../img/icon/unselect.png";    
+                            this.navList[i].img = "../img/unstar.png";    
                         }
                     }
 
@@ -102,9 +112,9 @@
 
             for(var i = 0;i< this.cols;i++) {
                 if(i<this.defaulSelectd) {
-                    this.navList[i].img = "../img/icon/select.png";    
+                    this.navList[i].img = "../img/star.png";    
                 } else {
-                    this.navList[i].img = "../img/icon/unselect.png";
+                    this.navList[i].img = "../img/unstar.png";
                 }
                 
             }

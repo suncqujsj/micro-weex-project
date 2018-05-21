@@ -68,7 +68,7 @@
                 type: Object,
                 default:  function(){
                     return {
-                        width: '700px',
+                        width: '650px',
                         height: '250px'
                     }
                 }
@@ -102,7 +102,6 @@
            }
         },
         created(){
-
         }
     }
 </script>
@@ -112,20 +111,16 @@
     font-size: 32px;
 }
 .card{
-    width: 700px;
-    margin-top: 25px;
-    margin-left: 25px;
-    margin-right: 25px;
     padding-top:25px;
+    padding-left: 25px;
+    padding-right: 25px;
     background-color: #fff;
     border-radius: 10px;
     overflow: hidden;
+    margin-bottom: 25px;
 }
 .card-img{
-    margin-left: 20px;
-    margin-right: 20px;
-    width:650px;
-    height: 250px;
+    margin-bottom: 6px;
 }
 .icon{
     width: 36px;
@@ -144,9 +139,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    width: 700px;
-    padding-left: 25px;
-    padding-right: 25px;
+    width: 650px;
     padding-bottom: 10px;
 }
 .card-name, .card-desc{

@@ -7,37 +7,42 @@
                 <image class="icon" :src="icon.fav[isFav]"></image>
                 <text class="text">{{favsNum}}</text>
             </div>
-            <div class="share">
+            <div class="share" @click="sharePage">
                 <image class="icon" :src="icon.share"></image>
             </div>
-            <div class="interaction-tag">
+            <div class="interaction-tag" @click="goComments">
                 <image class="icon" :src="icon.comment"></image>
                 <text class="text">{{commentsNum}}</text>
             </div>
         </div>
         <scroller class="scroller">
             <!-- <midea-video class="video" :src="videoSrc" :autoplay="true" controls @start="onVideoStart" @pause="onVideoPause" @finish="onVideoFinish" @fail="onVideoFail"></midea-video> -->
-            <div class="video">
-                <text class="text">视频视频视频视频视频视频视频视频视频视频视频视频视频</text>
-            </div>
-            <div class="recipe-intro-floor" v-if="showRecipeIntro">
-                <div class="recipe-intro">
-                    <div class="intro-item">
-                        <text class="text machine-name">{{recipeData.type}}</text>
-                        <text class="text">难度</text>
-                        <text class="text">{{recipeData.difficulty}}</text>
-                    </div>
-                    <div class="intro-item">
-                        <image class="icon" :src="icon.duration"></image>
-                        <text class="text intro-text">{{recipeData.duration}}</text>
+            <midea-video v-if="coverVideoPlay" class="video" :src="videoSrc" @start="vdStart" @pause="vdPause" @finish="vdFinish" @fail="vdFail"></midea-video>
+            <div v-else>
+                <div class="video">
+                    <image class="video-cover" :src="videoCover"></image>
+                    <image class="play-icon" :src="icon.play"></image>
+                </div>
+                <div class="recipe-intro-floor" v-if="showRecipeIntro">
+                    <div class="recipe-intro">
+                        <div class="intro-item">
+                            <text class="text machine-name">{{recipeData.type}}</text>
+                            <text class="text">难度</text>
+                            <text class="text">{{recipeData.difficulty}}</text>
+                        </div>
+                        <div class="intro-item">
+                            <image class="icon" :src="icon.duration"></image>
+                            <text class="text intro-text">{{recipeData.duration}}</text>
+                        </div>
                     </div>
                 </div>
             </div>
+
             <div class="block">
                 <div class="score-floor floor">
                     <div class="score">
-                        <div class=""><text class="text">评分组件</text></div>
-                        <div><text class="text">{{recipeData.scoreNum}}</text></div>
+                        <midea-vote :styles="voteStyle" :disabled="true"></midea-vote>
+                        <text class="text">{{recipeData.scoreNum}}条</text>
                     </div>
                     <div><text class="text">{{recipeData.madeNum}}人做过</text></div>
                 </div>
@@ -58,19 +63,19 @@
             </div>
             <div class="block">
                 <div class="add-sub">
-                    <image class="big-icon minus" :src="icon.minus"></image>
+                    <image class="big-icon minus" :src="icon.minus" @click="minusPeople"></image>
                     <div class="floor">
                         <text class="text">{{peopleNum}}</text>
                         <text class="text">人份</text>
                     </div>
-                    <image class="big-icon plus" :src="icon.plus"></image>
+                    <image class="big-icon plus" :src="icon.plus" @click="plusPeople"></image>
                 </div>
                 <div class="needs">
-                    <need-list :cols="2" :lists="needList1" :wrapStyle="needStyle" :title="needTitle1"></need-list>
-                    <need-list :cols="2" :lists="needList2" :wrapStyle="needStyle" :title="needTitle2"></need-list>
+                    <need-list :cols="2" :lists="needList1" :style="needStyle" :title="needTitle1"></need-list>
+                    <need-list :cols="2" :lists="needList2" :style="needStyle" :title="needTitle2"></need-list>
                 </div>
-                <div class="go-buy" @click="goBuy">
-                    <text class="text go-buy-text">食材购买</text>
+                <div class="btn-wrap go-buy" @click="goBuy">
+                    <text class="text btn-text">食材购买</text>
                 </div>
             </div>
             <div class="block" v-for="item in stepData">
@@ -86,40 +91,41 @@
                     <text class="text progress-time">10:30</text>
                 </div>
                 <div class="floor floor-c">
-                    <text class="text start-btn">一键启动</text>
+                    <text class="text start-btn" @click="quickStart">一键启动</text>
                 </div>
              </div>
         </div>
         <midea-popup :show="showWeightPop" @mideaPopupOverlayClicked="closePop" pos="bottom">
             <div class="weight-pop-list">
-                <div class="floor gram-list" v-for="item in recipeData.gramData">
+                <div class="floor gram-list gram-list-pop" v-for="item in recipeData.gramData">
                     <div><text class="text gram-name">{{item.name}}</text></div>
                     <div><text class="text gram-value">{{item.value}}</text></div>
                 </div>
             </div>
-          
             <scale :max="1000"></scale>
+            <div class="btn-wrap"><text class="btn-text">确认</text></div>
         </midea-popup>
         <midea-popup :show="showBuyPop" @mideaPopupOverlayClicked="closePop" pos="bottom">
-            <scroller>
+            <scroller class="buy-list">
                 <div class="floor">
                     <text class="text">牛肉</text>
                     <a href="" class="text">去购买</a>
                 </div>
-                <div>
+                <div class="floor">
                     <text class="text">面粉</text>
                     <a href="" class="text">去购买</a>
                 </div>
-                <div>
+                <div class="floor">
                     <text class="text">羊肉</text>
                     <a href="" class="text">去购买</a>
                 </div>
-                <div>
+                <div class="floor">
                     <text class="text">鸡蛋</text>
                     <a href="" class="text">去购买</a>
                 </div>
             </scroller>
         </midea-popup>
+        <MideaModal :showModal="showModal" @modalConfirm="modalConfirm" @modalCancel="modalCancel"></MideaModal>
     </div>
 </template>
 
@@ -131,11 +137,13 @@
     import StepCard from '@/T0x9B/components/stepCard.vue'
     import mideaPopup from '@/midea-component/popup.vue'
     import MideaProgress from '@/midea-component/mProgress.vue'
-    import Scale from '@/T0x9B/components/scale.vue'
+    import MideaVote from '@/midea-component/mVote.vue'
+    import MideaModal from '@/midea-component/modal.vue'
+    import scale from '@/T0x9B/components/scale.vue'
 
     export default {
         components: {
-            MideaHeader, MideaProgress, mideaPopup, Scale, StepCard, NeedList
+            MideaHeader, MideaProgress, mideaPopup, MideaVote, MideaModal, scale, StepCard, NeedList
         },
         computed: {
         },
@@ -156,14 +164,17 @@
                     weighter: 'assets/img/weight.png',
                     plus: 'assets/img/plus.png',
                     minus: 'assets/img/minus.png',
-                    cart: 'assets/img/cart.png'
+                    cart: 'assets/img/cart.png',
+                    play: 'assets/img/play.png'
                 },
                 bgColor: '#111',
                 title: '烤面包',
                 favsNum: 20,
                 commentsNum: 1000,
                 isFav: 'off',
+                coverVideoPlay: false,
                 videoSrc: '',
+                videoCover: 'https://img1.doubanio.com/lpic/o143758.jpg',
                 recipeData: {
                     duration: '90分',
                     type: '微波炉',
@@ -193,9 +204,16 @@
                    weight: 100
                 },
                 showRecipeIntro: true,
+                voteStyle: {
+                    box: {
+                        width: '220px',
+                        height: '50px'
+                    }
+                },
                 peopleNum: 3,
                 needStyle: {
-                    width: '750px'
+                    wrapWidth: '750px',
+                    itemBorderColor: 'transparent'
                 },
                 needTitle1: '主料',
                 needList1:[
@@ -266,8 +284,8 @@
                 stepData: [
                     {
                         banner: {
-                            type: 'img',
-                            src: 'assets/img/tmp_bg.png'
+                            type: 'video',
+                            src: 'http://flv2.bn.netease.com/videolib3/1611/01/XGqSL5981/SD/XGqSL5981-mobile.mp4'
                         },
                         name: '步骤1',
                         icon: 'assets/img/oven.png',
@@ -279,7 +297,7 @@
                     {
                         banner: {
                             type: 'img',
-                            src: 'assets/img/tmp_bg.png'
+                            src: 'http://www.5068.com/uploads/allimg/140619/69_140619161827_1.jpg'
                         },
                         name: '步骤2',
                         icon: 'assets/img/oven.png',
@@ -291,7 +309,7 @@
                     {
                         banner: {
                             type: 'img',
-                            src: 'assets/img/tmp_bg.png'
+                            src: 'http://www.5068.com/uploads/allimg/140619/69_140619161827_1.jpg'
                         },
                         name: '步骤3',
                         icon: 'assets/img/oven.png',
@@ -304,6 +322,15 @@
                 showBuyPop: false,
                 showWeightPop: false,
                 progressValue: 50,
+                messageParam: {
+                    title: '分享标题', // 分享标题
+                    desc: '分享描述', // 分享描述
+                    link: 'http://www.midea.com/cn/', // 分享链接
+                    imgUrl: 'http://10.16.12.243/anonymous/json/weibo/1740248463_180.jpg', // 分享图标
+                    type: '', // 分享类型,music、video或link，不填默认为link
+                    dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                },
+                showModal: false
             }
         },
         methods:{
@@ -316,6 +343,12 @@
             goBuy(){
                 this.showBuyPop = true
             },
+            goComments(){
+                nativeService.goTo('comment_total.js')
+            },
+            scrollScale(){
+                this.$emit('changeScale')
+            },
             changeWeight(){
                 this.showWeightPop = true
             },
@@ -323,14 +356,42 @@
                 this.showWeightPop = false
                 this.showBuyPop = false
             },
-            onVideoStart() {
+            vdStart() {
                 this.showRecipeIntro = false
+                this.coverVideoPlay = true
             },
-            onVideoPause() {
+            vdPause() {
+                this.coverVideoPlay = false
             },
-            onVideoFinish() {
+            vdFinish() {
+                this.coverVideoPlay = false
             },
-            onVideoFail() {
+            vdFail() {
+                this.coverVideoPlay = false
+            },
+            sharePage(){
+                nativeService.showSharePanel(this.messageParam).then(
+                    (resp) => {
+                        nativeService.toast("分享调用成功")
+                    }
+                ).catch((error) => {
+                    nativeService.toast("分享调用失败")
+                })
+            },
+            minusPeople(){
+                this.peopleNum-= 1;
+            },
+            plusPeople(){
+                this.peopleNum+= 1;
+            },
+            quickStart(){
+                this.showModal = true
+            },
+            modalCancel(){
+                this.showModal = false
+            },
+            modalConfirm(){
+                this.showModal = false
             }
         },
         created(){
@@ -401,12 +462,17 @@
             justify-content: center;
             padding-top: 8px;
     }
-    .video {
+    .video, .video-cover{
         width: 750px;
         height: 750px;
-        /* background-color: #111; */
-        
-        background-image: linear-gradient(to top,#08c,#999);
+        align-content: center
+    }
+    .play-icon{
+        position: absolute;
+        left: 325px;
+        top: 300px;
+        width: 100px;
+        height: 100px;
     }
     .machine-name{
         border-width: 2px;
@@ -440,11 +506,11 @@
     }
     .score-floor{
         margin-top: 20px;
+        align-items: center;
     }
     .score{
         flex-direction: row;
-        justify-content: space-between;
-        align-text: center;
+        justify-content: space-between; 
     }
     .recipe-desc{
         margin-top: 20px;
@@ -454,6 +520,10 @@
     }
     .gram-list{
         height: 50px;
+    }
+    .gram-list-pop{
+        padding-left: 150px;
+        padding-right: 150px;
     }
     .nutritions{
         padding-top: 30px;
@@ -505,15 +575,15 @@
         justify-content: flex-start;
         align-items: center;
     }
-    .go-buy{
+    .btn-wrap{
         margin-bottom: 50px;
         flex-direction: row;
         justify-content: center;
     }
-    .weight:active, .go-buy-text:active{
+    .weight:active, .btn-text:active{
         background-color: #808080;
     }
-    .go-buy-text{
+    .btn-text{
         padding-left: 120px;
         padding-right: 120px;
         padding-top: 15px;
@@ -521,6 +591,9 @@
         background-color: #b7b7b7;
         color: #fff;
         font-size: 40px;
+    }
+    .weight-confirm{
+        
     }
     .progress{
         position: absolute;
@@ -561,6 +634,16 @@
         height: 180px;
     }
     .weight-pop-list{
+        margin: 50px;
+        padding-bottom: 25px;
         justify-content: center;
+        border-bottom-width: 2px;
+        border-bottom-style: solid;
+        border-bottom-color: #e5e5e5;
+    }
+    .buy-list{
+        margin: 20px;
+        padding-left: 30px;
+        padding-right: 30px;
     }
 </style>

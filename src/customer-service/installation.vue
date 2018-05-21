@@ -118,9 +118,6 @@ export default {
         initProductData() {
             let params = {
                 url: 'http://weixincs.midea.com/wxgw/myproduct/searchProductType?mpType=MIDEASERVICE',
-                type: 'text',
-                method: "POST",
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: {
                     'codeType': 'bzbx',
                     'version': '1.0'

@@ -125,7 +125,7 @@
                 </div>
             </scroller>
         </midea-popup>
-        <MideaModal :showModal="true" @modalConfirm="modalConfirm" @modalCancel="modalCancel"></MideaModal>
+        <MideaModal :showModal="showModal" @modalConfirm="modalConfirm" @modalCancel="modalCancel"></MideaModal>
     </div>
 </template>
 
@@ -329,7 +329,8 @@
                     imgUrl: 'http://10.16.12.243/anonymous/json/weibo/1740248463_180.jpg', // 分享图标
                     type: '', // 分享类型,music、video或link，不填默认为link
                     dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-                }
+                },
+                showModal: false
             }
         },
         methods:{
@@ -378,13 +379,13 @@
                 })
             },
             quickStart(){
-
+                this.showModal = true
             },
             modalCancel(){
-                
+                this.showModal = false
             },
             modalConfirm(){
-
+                this.showModal = false
             }
         },
         created(){

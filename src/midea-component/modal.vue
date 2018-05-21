@@ -68,11 +68,9 @@
                 nativeService.toast("button clicked");
             },
             cancel(){
-                this.showModal = false
                 this.$emit('modalCancel')
             },
             confirm(){
-                this.showModal = false
                 this.$emit('modalConfirm')
             }
         },

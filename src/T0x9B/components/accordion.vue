@@ -1,30 +1,29 @@
 //手风琴菜单
 <template>
-    <div>
-        <scroller class="scroller">
-            <div class="title">
-                <text>全部分类</text>
-            </div>
-            <div v-for="(menu, mIndex) in menus" :class="['menu', mIndex == 0 ? 'menu-first': '']">
-                <div class="menu-bar">
-                    <!-- <image class="icon"></image> -->
-                    <text>{{menu.name}}</text>
-                    <div class="switch-wrap" @click="makeSwitch" :data-menu-name="menu.name">
-                        <image v-if="activeMenu==menu.name" class="switch" :src="switchOpen"></image>
-                        <image v-else class="switch" :src="switchClose"></image>
-                    </div>
-                </div>
-                <div class="sub-menu" v-if="activeMenu == menu.name">
-                    <midea-grid-select :cols="3" class="grid-floor" :list="menu.subMenu" @select="itemSelected" :customStyles="gridStyle"></midea-grid-select>
+    <scroller class="scroller">
+        <div class="title" ref="title">
+            <text>全部分类</text>
+        </div>
+        <div v-for="(menu, mIndex) in menus" :class="['menu', mIndex == 0 ? 'menu-first': '']">
+            <div class="menu-bar">
+                <!-- <image class="icon"></image> -->
+                <text>{{menu.name}}</text>
+                <div class="switch-wrap" @click="makeSwitch" :data-menu-name="menu.name">
+                    <image v-if="activeMenu==menu.name" class="switch" :src="switchOpen"></image>
+                    <image v-else class="switch" :src="switchClose"></image>
                 </div>
             </div>
-        </scroller>
-    </div>
+            <div class="sub-menu" v-if="activeMenu == menu.name">
+                <midea-grid-select :cols="3" class="grid-floor" :list="menu.subMenu" @select="itemSelected" :customStyles="gridStyle"></midea-grid-select>
+            </div>
+        </div>
+    </scroller>
 </template>
 
 <script>
     import nativeService from '@/common/services/nativeService.js'
     import mideaGridSelect from '@/component/optionList.vue'
+    const dom = weex.requireModule('dom');
     
     // import mideaBtn from '@/midea-component/button.vue'
 
@@ -80,6 +79,15 @@
         components: {
             mideaGridSelect
         },
+        computed: {
+            style(){
+                return {
+                    scroller: {
+                        height: this.headerHeight + this.listsHeight + 'px'
+                    }
+                }
+            }
+        },
         data() {
             return {
                 activeMenu: '',
@@ -87,11 +95,10 @@
                 switchClose: 'assets/img/close.png',
                 gridStyle: {
                     width: '222px'
-                }
+                },
+                headerHeight: '',
+                listsHeight: '',
             }
-        },
-        computed: {
-
         },
         methods: {
             makeSwitch(e){
@@ -99,16 +106,18 @@
                 this.activeMenu = (this.activeMenu == theName) ? '':theName
             },
             itemSelected(e){
-                
-            }
+            },
         },
         created() {
-
+           
         }
     }
 </script>
 
 <style>
+    .scroller{
+        min-height: 1000px;
+    }
     .title {
         margin-top: 20px;
         margin-bottom: 30px;

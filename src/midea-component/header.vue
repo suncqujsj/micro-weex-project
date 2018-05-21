@@ -7,12 +7,13 @@
             <div>
                 <text :style="{color:titleText, fontSize:fontSize+'px'}">{{title}}</text>
             </div>
-            <div class="header-right-image-wrapper" @click="rightImgClick" :style="style.rightWrap">
+            <div class="header-right-image-wrapper" @click="rightImgClick">
                 <slot name="rightContent">
                     <image v-if="showRightImg" class="header-right-image" :src="rightImg"></image>
-                    <text class="right-text">{{rightText}}</text>
                 </slot>
             </div>
+            <slot name="customerContent">
+            </slot>
         </div>
     </div>
 </template>
@@ -42,6 +43,7 @@
   padding-left: 32px;
 }
 .header-right-image-wrapper {
+  width: 88px;
   height: 88px;
   display: flex;
   justify-content: center;
@@ -54,18 +56,6 @@
 .header-right-image {
   height: 44px;
   width: 44px;
-  margin-right: 25px;
-}
-.header-right-text-wrap{
-    height: 88px;
-    display: flex;
-    justify-content: center;
-    padding-right: 25px;
-}
-.right-text{
-    color: #fff;
-    font-size: 32px;
-    margin-right: 25px;
 }
 </style>
 <script>
@@ -107,31 +97,6 @@ export default {
         showRightImg: {
             type: Boolean,
             default: false
-        },
-        showRightText: {
-            type: Boolean,
-            default: false
-        },
-        rightText: {
-            type: String,
-            default: ''
-        },
-        styles: {
-            type: Object,
-            default: function(){
-                return {
-                    rightWrapWidth: '88px',
-                }
-            } 
-        }
-    },
-    computed: {
-        style(){
-            return {
-                wrapRight: {
-                    width: this.styles.rightWrapWidth,
-                }
-            }
         }
     },
     data() {
@@ -146,7 +111,7 @@ export default {
             this.$emit('leftImgClick')
         },
         rightImgClick() {
-            if (!this.showRightImg && !this.showRightText) {
+            if (!this.showRightImg) {
                 return;
             }
             this.$emit('rightImgClick')

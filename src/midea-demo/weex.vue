@@ -73,6 +73,7 @@ module.exports = {
             { title: 'Radio', link: "radio" },
             { title: 'Select', link: "select" },
             { title: 'Switch', link: "switch" },
+            { title: 'Accordion', link: "accordion" },
         ],
         advancedlist: [
             { title: 'Action Sheet', link: "actionSheet" },

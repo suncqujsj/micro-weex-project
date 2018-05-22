@@ -5,10 +5,10 @@
             <text>全部分类</text>
         </div>
         <div v-for="(menu, mIndex) in menus" :class="['menu', mIndex == 0 ? 'menu-first': '']">
-            <div class="menu-bar">
+            <div class="menu-bar"  @click="makeSwitch"  :data-menu-name="menu.name">
                 <!-- <image class="icon"></image> -->
                 <text class="menu-name">{{menu.name}}</text>
-                <div class="switch-wrap" @click="makeSwitch" :data-menu-name="menu.name">
+                <div class="switch-wrap">
                     <image v-if="activeMenu==menu.name" class="switch" :src="switchOpen"></image>
                     <image v-else class="switch" :src="switchClose"></image>
                 </div>
@@ -99,6 +99,7 @@
         },
         methods: {
             makeSwitch(e){
+                console.log(e)
                 let theName = e.target.attr.dataMenuName
                 this.activeMenu = (this.activeMenu == theName) ? '':theName
             },

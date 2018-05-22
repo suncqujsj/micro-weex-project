@@ -16,27 +16,26 @@
             </div>
         </div>
         <scroller class="scroller">
-            <!-- <midea-video class="video" :src="videoSrc" :autoplay="true" controls @start="onVideoStart" @pause="onVideoPause" @finish="onVideoFinish" @fail="onVideoFail"></midea-video> -->
-            <midea-video v-if="coverVideoPlay" class="video" :src="videoSrc" @start="vdStart" @pause="vdPause" @finish="vdFinish" @fail="vdFail"></midea-video>
-            <div v-else>
-                <div class="video">
-                    <image class="video-cover" :src="videoCover"></image>
-                    <image class="play-icon" :src="icon.play"></image>
-                </div>
-                <div class="recipe-intro-floor" v-if="showRecipeIntro">
-                    <div class="recipe-intro">
-                        <div class="intro-item">
-                            <text class="text machine-name">{{recipeData.type}}</text>
-                            <text class="text">难度</text>
-                            <text class="text">{{recipeData.difficulty}}</text>
-                        </div>
-                        <div class="intro-item">
-                            <image class="icon" :src="icon.duration"></image>
-                            <text class="text intro-text">{{recipeData.duration}}</text>
-                        </div>
+            <midea-video class="video" :src="videoSrc" @start="vdStart" @pause="vdPause" @finish="vdFinish" @fail="vdFail"></midea-video>
+            <div class="recipe-intro-floor" v-if="showRecipeIntro">
+                <div class="recipe-intro">
+                    <div class="intro-item">
+                        <text class="text machine-name">{{recipeData.type}}</text>
+                        <text class="text">难度</text>
+                        <text class="text">{{recipeData.difficulty}}</text>
+                    </div>
+                    <div class="intro-item">
+                        <image class="icon" :src="icon.duration"></image>
+                        <text class="text intro-text">{{recipeData.duration}}</text>
                     </div>
                 </div>
             </div>
+            <!-- <div v-else>
+                <div class="video">
+                    <image class="video-cover" :src="videoCover"></image>
+                    <image class="play-icon" :src="icon.play"></image>
+                </div> -->
+            <!-- </div> -->
 
             <div class="block">
                 <div class="score-floor floor">
@@ -90,8 +89,15 @@
                     <text class="text progress-step">步骤一</text>
                     <text class="text progress-time">10:30</text>
                 </div>
-                <div class="floor floor-c">
+                <div v-if="progress == 0" class="floor progress-floor  floor-c">
                     <text class="text start-btn" @click="quickStart">一键启动</text>
+                </div>
+                <div v-if="progress == 1" class="floor progress-floor ">
+                    <text class="text cancel-btn" @click="cancelProgress">取消</text>
+                    <text class="text start-btn" @click="excuteProgress">完成</text>
+                </div>
+                <div v-if="progress == 2" class="floor progress-floor ">
+                    <text class="text start-btn" @click="excuteProgress">继续</text>
                 </div>
              </div>
         </div>
@@ -125,7 +131,8 @@
                 </div>
             </scroller>
         </midea-popup>
-        <MideaModal :showModal="showModal" @modalConfirm="modalConfirm" @modalCancel="modalCancel"></MideaModal>
+        <midea-modal :show="showModal" @modalConfirm="modalConfirm" @modalCancel="modalCancel"></midea-modal>
+        <cover v-if="showCover" @coverOff="coverOff"></cover>
     </div>
 </template>
 
@@ -140,10 +147,11 @@
     import MideaVote from '@/midea-component/mVote.vue'
     import MideaModal from '@/midea-component/modal.vue'
     import scale from '@/T0x9B/components/scale.vue'
+    import cover from '@/T0x9B/components/cover.vue'
 
     export default {
         components: {
-            MideaHeader, MideaProgress, mideaPopup, MideaVote, MideaModal, scale, StepCard, NeedList
+            MideaHeader, MideaProgress, mideaPopup, MideaVote, MideaModal, scale, StepCard, NeedList, cover
         },
         computed: {
         },
@@ -173,7 +181,7 @@
                 commentsNum: 1000,
                 isFav: 'off',
                 coverVideoPlay: false,
-                videoSrc: '',
+                videoSrc: 'http://flv2.bn.netease.com/videolib3/1611/01/XGqSL5981/SD/XGqSL5981-mobile.mp4',
                 videoCover: 'https://img1.doubanio.com/lpic/o143758.jpg',
                 recipeData: {
                     duration: '90分',
@@ -322,6 +330,7 @@
                 showBuyPop: false,
                 showWeightPop: false,
                 progressValue: 50,
+                progress: 0,
                 messageParam: {
                     title: '分享标题', // 分享标题
                     desc: '分享描述', // 分享描述
@@ -330,7 +339,8 @@
                     type: '', // 分享类型,music、video或link，不填默认为link
                     dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
                 },
-                showModal: false
+                showModal: false,
+                showCover: false
             }
         },
         methods:{
@@ -358,16 +368,12 @@
             },
             vdStart() {
                 this.showRecipeIntro = false
-                this.coverVideoPlay = true
             },
             vdPause() {
-                this.coverVideoPlay = false
             },
             vdFinish() {
-                this.coverVideoPlay = false
             },
             vdFail() {
-                this.coverVideoPlay = false
             },
             sharePage(){
                 nativeService.showSharePanel(this.messageParam).then(
@@ -391,11 +397,18 @@
                 this.showModal = false
             },
             modalConfirm(){
-                this.showModal = false
+                this.progress = 1;
+                this.showModal = false;
+            },
+            excuteProgress(){
+                this.showCover = true;
+            },
+            coverOff(){
+                this.showCover = false
             }
         },
         created(){
-
+            
         }
     }
 </script>
@@ -615,8 +628,11 @@
         color: #fff;
         padding-top: 20px;
     }
-    .start-btn{
-        background-color: #F6862B;
+    .progress-floor{
+        width: 500px;
+        margin-left: 125px;
+    }
+    .start-btn, .cancel-btn{
         padding-left: 50px;
         padding-right: 50px;
         padding-top: 10px;
@@ -626,9 +642,18 @@
         border-radius: 10px;
         font-weight: bold;
     }
+    .start-btn{
+        background-color: #F6862B;
+    }
     .start-btn:active{
         background-color: #B15B16
     }
+    .cancel-btn{
+        background-color: #A4A4A4;
+    }
+    .cancel-btn:active{
+        background-color: #808080;
+    }    
     .scroller-last{
         width: 750px;
         height: 180px;

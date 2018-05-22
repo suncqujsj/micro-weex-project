@@ -37,6 +37,15 @@
                         }
                     }
                 }
+            },
+            imgPath: {
+                type: Object,
+                default: function(){
+                    return {
+                        star: '../img/star.png',
+                        unstar: '../img/unstar.png'
+                    }
+                }
             }
         },
         data () {
@@ -44,27 +53,27 @@
                 navList: [
                     {
                         "title": "",
-                        "img": "../img/star.png",
+                        "img": this.imgPath.star,
                         "img_actived": ""
                     },
                     {
                         "title": "",
-                        "img": "../img/unstar.png",
+                        "img": this.imgPath.unstar,
                         "img_actived": ""
                     },
                     {
                         "title": "",
-                        "img": "../img/unstar.png",
+                        "img": this.imgPath.unstar,
                         "img_actived": ""
                     },
                     {
                         "title": "",
-                        "img": "../img/unstar.png",
+                        "img": this.imgPath.unstar,
                         "img_actived": ""
                     },
                     {
                         "title": "",
-                        "img": "../img/unstar.png",
+                        "img": this.imgPath.unstar,
                         "img_actived": ""
                     }
                 ],
@@ -78,23 +87,23 @@
                 let currentSelected = false;
                 for(var i = 0;i<5;i++) {
                     if(i < event.index) {
-                        this.navList[i].img = "../img/star.png";
+                        this.navList[i].img = this.imgPath.star;
                     } else {
                         if(i == event.index) {
-                            if(this.navList[i].img == "../img/star.png") {
-                                if(this.navList[i+1] && this.navList[i+1].img && this.navList[i+1].img == "../img/star.png") {
-                                    this.navList[i].img = "../img/star.png";
+                            if(this.navList[i].img == this.imgPath.star) {
+                                if(this.navList[i+1] && this.navList[i+1].img && this.navList[i+1].img == this.imgPath.star) {
+                                    this.navList[i].img = this.imgPath.star;
                                     currentSelected = true;
                                 } else {
-                                    this.navList[i].img = "../img/unstar.png";
+                                    this.navList[i].img = this.imgPath.unstar;
                                     currentSelected = false;
                                 }       
                             } else {
-                                this.navList[i].img = "../img/star.png";
+                                this.navList[i].img = this.imgPath.star;
                                 currentSelected = true;
                             }
                         } else {
-                            this.navList[i].img = "../img/unstar.png";    
+                            this.navList[i].img = this.imgPath.unstar;    
                         }
                     }
 
@@ -112,9 +121,9 @@
 
             for(var i = 0;i< this.cols;i++) {
                 if(i<this.defaulSelectd) {
-                    this.navList[i].img = "../img/star.png";    
+                    this.navList[i].img = this.imgPath.star;    
                 } else {
-                    this.navList[i].img = "../img/unstar.png";
+                    this.navList[i].img =this.imgPath.unstar;
                 }
                 
             }

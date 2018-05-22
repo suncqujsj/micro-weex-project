@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="秀一秀" :isImmersion="false" @leftImgClick="goBack"></midea-header>
+        <midea-header title="秀一秀" :isImmersion="false"  :bgColor="bgColor" @leftImgClick="goBack"></midea-header>
         <div class="vote-div">
         	<text class="vote-text">评分</text>
             <midea-vote :styles="voteStyle" :defaulSelectd='3' @itemClicked="selected"></midea-vote>
@@ -109,13 +109,14 @@ module.exports = {
     data() {
         return {
             currentSelected:'',
+            bgColor: '#111',
             isDisabled:true,
             isBottomShow:false,
             voteStyle: {
-		        box: {
-		            width: '500px'
-		        }
-		    }
+              box: {
+                  width: '500px'
+              }
+          }
         }
     },
     methods: {
@@ -128,31 +129,31 @@ module.exports = {
         },
         oninput (event) {
 	        console.log('oninput:', event.value)
-	        modal.toast({
-	          message: `oninput: ${event.value}`,
-	          duration: 0.8
-	        })
+	        // modal.toast({
+	        //   message: `oninput: ${event.value}`,
+	        //   duration: 0.8
+	        // })
 	      },
 	      onchange (event) {
 	        console.log('onchange:', event.value)
-	        modal.toast({
-	          message: `onchange: ${event.value}`,
-	          duration: 0.8
-	        })
+	        // modal.toast({
+	        //   message: `onchange: ${event.value}`,
+	        //   duration: 0.8
+	        // })
 	      },
 	      onfocus (event) {
 	        console.log('onfocus:', event.value)
-	        modal.toast({
-	          message: `onfocus: ${event.value}`,
-	          duration: 0.8
-	        })
+	        // modal.toast({
+	        //   message: `onfocus: ${event.value}`,
+	        //   duration: 0.8
+	        // })
 	      },
 	      onblur (event) {
 	        console.log('onblur:', event.value)
-	        modal.toast({
-	          message: `input blur: ${event.value}`,
-	          duration: 0.8
-	        })
+	        // modal.toast({
+	        //   message: `input blur: ${event.value}`,
+	        //   duration: 0.8
+	        // })
      	 },
      	 mideaButtonClicked() {
             nativeService.toast("button clicked");

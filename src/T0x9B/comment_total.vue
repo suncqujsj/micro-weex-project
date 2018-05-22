@@ -79,8 +79,8 @@
   },
   .tab {
     width:375px;
-    height:60px;
-
+    padding-top: 15px;
+    padding-bottom: 15px;
   },
   .tab-text {
   	color:white;

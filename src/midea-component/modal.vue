@@ -1,12 +1,12 @@
 <template>
-    <div v-if="showModal" class="wrap">
+    <div v-if="show" class="wrap">
         <div class="box" :style="style.box" ref="modal">
             <div class="info-box">
                 <image class="info-img" :src="icon.food"></image>
-                <text class="info-text">请确认，食物已经放入微波炉~</text>
+                <text class="info-text">{{content}}</text>
                 <div class="floor">
                     <text class="btn" @click="cancel">取消</text>
-                    <text class="btn" @click="confirm">确认</text>
+                    <text class="btn cancel" @click="confirm">确认</text>
                 </div>
             </div>
         </div>
@@ -30,9 +30,13 @@
                     }
                 }
             },
-            showModal: {
+            show:{
                 type: Boolean,
                 default: false
+            },
+            content: {
+                type: String,
+                default: '请确认，食物已经放入微波炉~'
             }
         },
         data() {
@@ -85,8 +89,7 @@
     right: 0;
     top: 0;
     bottom: 0;
-    background-color: rgba(0,0,0,0.7)
-    
+    background-color: rgba(0,0,0,0.7);
 }
 .displayBtnStyle {
   text-align: center;
@@ -112,6 +115,7 @@
 }
 .info-box{
     background-color: #fff;
+    border-radius: 10px;
 }
 .info-img{
     width: 300px;
@@ -122,5 +126,9 @@
 .info-text{
     text-align: center;
     padding: 25px;
+}
+.cancel{
+    border-bottom-right-radius: 10px;
+    border-right-color: #fff;
 }
 </style>

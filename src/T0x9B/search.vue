@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="accordion">
-            <accordion :menus="menus"></accordion>
+            <midea-accordion :menus="menus"></midea-accordion>
         </div>
     </div>
 </template>
@@ -57,11 +57,11 @@
 <script>
   const modal = weex.requireModule('modal');
   import mideaSearchbar from '@/midea-component/mSearchbar.vue'
-  import accordion from '@/T0x9B/components/accordion.vue'
+  import MideaAccordion from '@/midea-component/accordion.vue'
   import nativeService from '@/common/services/nativeService'
 
   export default {
-    components: { mideaSearchbar, accordion },
+    components: { mideaSearchbar, MideaAccordion },
     data: () => ({
         arrowIcon:"./img/header/tab_back.png",
         isDisabled:true,

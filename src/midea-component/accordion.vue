@@ -88,8 +88,8 @@
         data() {
             return {
                 activeMenu: '',
-                switchOpen: 'assets/img/open.png',
-                switchClose: 'assets/img/close.png',
+                switchOpen: 'img/open.png',
+                switchClose: 'img/close.png',
                 gridStyle: {
                     width: '222px'
                 },

@@ -14,11 +14,13 @@
         <text class="cell-label-text">{{label}}</text>
       </div>
     </slot>
-   
-   <image :src="arrowIcon" :style="{top:((height-24)/2)+'px'}"
-           class="cell-arrow-icon"
-           v-if="hasArrow"></image>
-  
+    <div class="cell-title">
+      <slot name="title">
+        <text class="cell-content">{{title}}</text>
+        <text class="cell-desc-text"
+              v-if="desc">{{desc}}</text>
+       </slot>
+    </div>
     
     <slot name="value"></slot>
     <slot name="text"></slot>
@@ -27,13 +29,9 @@
            <text class="right-text">{{rightText}}</text>
         </div>
     </slot>
-      <div class="cell-title">
-      <slot name="title">
-        <text class="cell-content">{{title}}</text>
-        <text class="cell-desc-text"
-              v-if="desc">{{desc}}</text>
-       </slot>
-    </div>
+    <image :src="arrowIcon" :style="{top:((height-24)/2)+'px'}"
+           class="cell-arrow-icon"
+           v-if="hasArrow"></image>
   </div>
 </template>
 

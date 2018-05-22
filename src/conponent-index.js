@@ -2,13 +2,13 @@ import MideaActionsheet from '@/component/actionsheet.vue'
 import MideaDialog from '@/component/dialog.vue'
 import MideaImageSlider from '@/component/image-slider.vue'
 import MideaOption from '@/component/option.vue'
-import MideaGridSelect from '@/component/optionList.vue'
+import MideaOptionList from '@/component/optionList.vue'
 import MideaPromt from '@/component/promt.vue'
 import MideaRadio from '@/component/radio.vue'
 import MideaRadioList from '@/component/radioList.vue'
 
 import MideaButton from '@/midea-component/button.vue'
-import MideaCell from '@/component/cell.vue'
+import MideaCell from '@/midea-component/cell.vue'
 import MideaCheckbox from '@/midea-component/checkbox.vue'
 import MideaCheckboxList from '@/midea-component/checkboxList.vue'
 import MideaConfirm from '@/midea-component/confirm.vue'
@@ -29,16 +29,13 @@ import MideaSlider from '@/midea-component/slider.vue'
 import MideaSwitch from '@/midea-component/switch.vue'
 import MideaTitleBar from '@/midea-component/title-bar.vue'
 
-import MideaSearchbar from '@/midea-component/mSearchbar.vue'
-import MideaVote from '@/midea-component/mVote.vue'
-
 
 export {
   MideaActionsheet,
   MideaDialog,
   MideaImageSlider,
   MideaOption,
-  MideaGridSelect,
+  MideaOptionList,
   MideaPromt,
   MideaRadio,
   MideaRadioList,
@@ -62,7 +59,5 @@ export {
   MideaPopup,
   MideaSlider,
   MideaSwitch,
-  MideaTitleBar,
-  MideaSearchbar,
-  MideaVote
+  MideaTitleBar
 };

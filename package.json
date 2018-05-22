@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "scripts": {
     "build": "webpack",
-    "dev": "webpack --watch",
+    "dev": "webpack --watch", 
     "dev_demo": "webpack --watch --env=midea-demo",
     "dev_customer": "webpack --watch --env=customer-service",
     "serve": "serve -p 8080",

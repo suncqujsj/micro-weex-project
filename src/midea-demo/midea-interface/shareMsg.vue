@@ -2,7 +2,7 @@
     <div class="wrapper">
         <midea-header title="shareMsg" :isImmersion="false" @leftImgClick="back"></midea-header>
 
-        <midea-title-bar title="'接口参数:"></midea-title-bar>
+        <midea-title-bar title="接口参数:"></midea-title-bar>
         <textarea type="text" placeholder="Input Text" class="textarea" :value="messageParamString" @input="dataChange" rows=5 />
         <midea-button text="微信分享" type="green" @mideaButtonClicked="mideaButtonClicked('wx')">
         </midea-button>

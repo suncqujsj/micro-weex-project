@@ -1,86 +1,67 @@
 <template>
     <div class="wrapper">
         <midea-header :title="title" @leftImgClick="back"></midea-header>
-        <midea-cell title="维修产品*" rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectProduct">
-        </midea-cell>
-        <midea-cell title="故障类型*" rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectTransportStatus">
-        </midea-cell>
-        <midea-cell title="期望服务时间*" rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectServiePeriod">
-        </midea-cell>
-        <midea-cell title="服务地址*" rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectTAdress">
-        </midea-cell>
+        <scroller class="content-wrapper">
+            <midea-cell title="维修产品*" rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectProduct">
+            </midea-cell>
+            <midea-cell title="故障类型*" :rightText="malfunctionDesc" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectMalfunction">
+            </midea-cell>
+            <midea-cell title="期望服务时间*" :rightText="serviePeriodDesc" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectServiePeriod">
+            </midea-cell>
+            <midea-cell title="服务地址*" rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectAddress">
+            </midea-cell>
 
-        <div class="item-group">
-            <text class="type-select-label">以下为选填信息，有助于更快更好地为您服务</text>
+            <div class="item-group">
+                <text class="type-select-label">以下为选填信息，有助于更快更好地为您服务</text>
 
-            <midea-grid-select class="type-select-grid" :cols="3" :single="true" :customStyles="{width:'200px',height:'48px'}" :list="types" @select="typeSelected">
-            </midea-grid-select>
-        </div>
+                <midea-grid-select class="type-select-grid" :cols="3" :single="true" :customStyles="{width:'200px',height:'48px'}" :list="types" @select="typeSelected">
+                </midea-grid-select>
+            </div>
 
-        <div class="item-group scan-group group-bottom-border">
-            <input class="scan-input" type="text" placeholder="请输入型号或扫机身条码" :autofocus=false value="" @change="onchange" @input="oninput" />
+            <div class="item-group scan-group group-bottom-border">
+                <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false :value="code" @change="onchange" @input="oninput" />
 
-            <image class="scan-icon" src="./assets/img/progress.png" resize='contain'></image>
-        </div>
+                <image class="scan-icon" src="./assets/img/progress.png" resize='contain' @click="scanCode"></image>
+            </div>
 
-        <div class="item-group photo-group group-bottom-border">
-            <text class="photo-label">现场图片</text>
-            <text class="photo-right-label">最多上传3张</text>
+            <div class="item-group photo-group">
+                <text class="photo-label">现场图片</text>
+                <text class="photo-right-label">最多上传3张</text>
 
-            <image class="photo-icon" src="./assets/img/progress.png" resize='contain'></image>
-        </div>
+                <image class="photo-icon" src="./assets/img/progress.png" resize='contain' @click="takePhoto"></image>
+            </div>
+            <div class="photo-item-group group-bottom-border">
+                <div v-for="(item,index) in photoData" :key="index" class="photo-item-detail">
+                    <image :src="item" class="photo-item-img" @click="removePhoto(index)"></image>
+                    <image src="./assets/img/progress.png" class="photo-delete-img"></image>
+                </div>
+                <image v-if="photoData.length<3" src="./assets/img/add.png" class="photo-item-img" @click="takePhoto"></image>
+            </div>
 
-        <div class="item-group info-group">
-            <text class="info-label">其他备注信息</text>
+            <div class="item-group info-group">
+                <text class="info-label">其他备注信息</text>
 
-            <image class="mic-icon" src="./assets/img/progress.png" resize='contain'></image>
-        </div>
+                <image class="mic-icon" src="./assets/img/progress.png" resize='contain'></image>
+            </div>
 
-        <div class="item-group info-group group-bottom-border">
-            <textarea class="info-textarea" rows="4" @input="onInfoInput" @change="onInfoIChange"></textarea>
-            <text class="info-textarea-calc">119/120</text>
-        </div>
-
+            <div class="item-group info-group group-bottom-border">
+                <textarea class="info-textarea" placeholder="请输入其他备注信息" rows="4" @input="onInfoInput" @change="onInfoIChange"></textarea>
+                <text class="info-textarea-calc">119/120</text>
+            </div>
+        </scroller>
         <div class="action-bar">
             <midea-button text="提交" type="green" @mideaButtonClicked="submit">
             </midea-button>
         </div>
 
-        <midea-actionsheet :items="actionsheetItems" :show="showBar" @close="closeActionsheet" @itemClick="actionsheetItemClick" @btnClick="actionsheetBtnClick" ref="actionsheet">
-        </midea-actionsheet>
+        <midea-select :show="isShowMalfunctionSelection" title="选择故障类型" :items="malfunctionList" :index="malfunctionIndex" @close="isShowMalfunctionSelection=false" @itemClick="malfunctionSelected">
+        </midea-select>
 
-        <midea-popup :show="isBottomShow" @mideaPopupOverlayClicked="cancelServiePeriod" pos="bottom" height="700">
-            <div class="period-header-bar">
-                <text class="period-header-action"></text>
-                <text class="period-header-text">服务时间</text>
-                <text class="period-header-action" @click="cancelServiePeriod">取消</text>
-            </div>
-            <div class="period-content">
-                <scroller class="period-content-left">
-                    <text class="period-content-date">今天</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                    <text class="period-content-date">4月12日(周四)</text>
-                </scroller>
-                <scroller class="period-content-right">
-                    <text class="period-content-time-desc">具体上门时间以服务商与您沟通约定为准</text>
-                    <text class="period-content-time">8:00-10:00</text>
-                    <text class="period-content-time">8:00-10:00</text>
-                    <text class="period-content-time">8:00-10:00</text>
-                    <text class="period-content-time">8:00-10:00</text>
-                    <text class="period-content-time">8:00-10:00</text>
-                </scroller>
-            </div>
-        </midea-popup>
+        <period-picker :isShow="isShowPeriodPicker" :dates="serviePeriodDate" :dateIndex="selectedDateIndex" :times="serviePeriodTime" :timeIndex="selectedTimeIndex" @oncancel="isShowPeriodPicker=false" @onchanged="serviePeriodSelected">
+        </period-picker>
+
+        <midea-actionsheet :items="takePhotoItems" :show="showTakePhotoBar" @close="closeTakePhotoActionsheet" @itemClick="takePhotoItemClick" @btnClick="takePhotoBtnClick" ref="takePhotoActionsheet">
+        </midea-actionsheet>
     </div>
 </template>
 
@@ -88,19 +69,21 @@
 import base from './base'
 import nativeService from '@/common/services/nativeService';
 
-import mideaCell from '@/component/cell.vue'
-import mideaGridSelect from '@/component/optionList.vue'
-import mideaButton from '@/midea-component/button.vue'
-import mideaActionsheet from '@/component/actionsheet.vue'
-import mideaPopup from '@/midea-component/popup.vue'
+
+import { MideaCell, MideaGridSelect, MideaButton, MideaActionsheet, MideaPopup, MideaSelect } from '@/index'
+
+import PeriodPicker from './components/periodPicker.vue'
 
 export default {
     components: {
-        mideaCell,
-        mideaGridSelect,
-        mideaButton,
-        mideaActionsheet,
-        mideaPopup
+        MideaCell,
+        MideaGridSelect,
+        MideaButton,
+        MideaActionsheet,
+        MideaPopup,
+        MideaSelect,
+
+        PeriodPicker
     },
     mixins: [base],
     data() {
@@ -115,40 +98,92 @@ export default {
                     'title': '产品型号'
                 }
             ],
-            showBar: false,
-            actionsheetItems: ['货已到需要安装', '或未到需要安装'],
-            isBottomShow: false
+            isShowMalfunctionSelection: false,
+            malfunctionIndex: null,
+            malfunctionList: [
+                { value: "故障一", key: 0 },
+                { value: "故障二", key: 1 },
+                { value: "故障三", key: 2 }
+            ],
+
+            isShowPeriodPicker: false,
+            selectedDateIndex: 0,
+            selectedTimeIndex: 0,
+            serviePeriodDate: [],
+            serviePeriodTime: [
+                { key: 0, desc: "08:00-10:00" },
+                { key: 1, desc: "10:00-12:00" },
+                { key: 2, desc: "12:00-14:00" },
+                { key: 3, desc: "14:00-16:00" },
+                { key: 4, desc: "16:00-18:00" }
+            ],
+
+            code: '',
+
+            showTakePhotoBar: false,
+            takePhotoItems: ['拍摄', '从手机相册选择'],
+            photoData: [],
+
+            data: {
+                malfunction: ''
+            }
+        }
+    },
+    computed: {
+        malfunctionDesc() {
+            return this.data.malfunction ? this.data.malfunction : '请选择'
+        },
+        serviePeriodDesc() {
+            if (this.serviePeriodDate && this.selectedDateIndex && this.serviePeriodTime && this.selectedTimeIndex) {
+                return this.serviePeriodDate[this.selectedDateIndex].desc + ' ' + this.serviePeriodTime[this.selectedTimeIndex].desc
+            } else {
+                return '请选择'
+            }
         }
     },
     methods: {
         selectProduct() {
+            this.goTo('productSelection', {}, { from: 'maintenance' })
+        },
+        selectMalfunction() {
+            this.isShowMalfunctionSelection = true
+        },
+        malfunctionSelected(event) {
+            this.data.malfunction = event.item.value;
+        },
+        initServiePeriod() {
+            let today = new Date()
 
-        },
-        selectTransportStatus() {
-            this.showBar = true;
-            this.$nextTick(e => {
-                this.$refs.actionsheet.open();
-            });
-        },
-        closeActionsheet() {
-            this.showBar = false
-        },
-        actionsheetItemClick(event) {
-            this.showBar = false
-        },
-        actionsheetBtnClick() {
-            this.showBar = false
+            this.serviePeriodDate.push({
+                key: 0,
+                desc: '今天'
+            })
+            let weekDesc = {
+                0: "日",
+                1: "一",
+                2: "二",
+                3: "三",
+                4: "四",
+                5: "五",
+                6: "六",
+            }
+            for (let index = 1; index < 31; index++) {
+                let nextDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + index)
+
+                this.serviePeriodDate.push({
+                    key: index,
+                    desc: nextDate.getMonth() + '月' + nextDate.getDate() + '日 (周' + weekDesc[nextDate.getDay()] + ')'
+                })
+            }
         },
         selectServiePeriod() {
-            this.isBottomShow = true
+            this.isShowPeriodPicker = true
         },
-        confirmServiePeriod() {
-            this.isBottomShow = false;
+        serviePeriodSelected(event) {
+            this.selectedDateIndex = event.dateIndex
+            this.selectedTimeIndex = event.timeIndex
         },
-        cancelServiePeriod() {
-            this.isBottomShow = false;
-        },
-        selectTAdress() {
+        selectAddress() {
 
         },
         typeSelected() {
@@ -157,8 +192,63 @@ export default {
         onchange() {
 
         },
-        oninput() {
-
+        oninput(event) {
+            this.code = event.value
+        },
+        scanCode() {
+            nativeService.scanCode().then(
+                (resp) => {
+                    if (resp.status == 0) {
+                        this.code = resp.data
+                    }
+                }
+            )
+        },
+        takePhoto() {
+            if (this.photoData.length > 2) {
+                nativeService.toast("最多上传3张")
+            } else {
+                this.showTakePhotoBar = true;
+                this.$nextTick(e => {
+                    this.$refs.takePhotoActionsheet.open();
+                });
+            }
+        },
+        closeTakePhotoActionsheet() {
+            this.showTakePhotoBar = false
+        },
+        takePhotoItemClick(event) {
+            this.showTakePhotoBar = false
+            let messageParam = {
+                compressRage: 60,
+                type: 'jpg',
+                isNeedBase64: true
+            }
+            if (event.index == 0) {
+                //拍照
+                nativeService.takePhoto(messageParam).then(
+                    (resp) => {
+                        this.photoData.push(resp.data)
+                    }
+                ).catch((error) => {
+                    this.result = "error: " + JSON.stringify(error || {})
+                })
+            } else {
+                //选照片
+                nativeService.choosePhoto(messageParam).then(
+                    (resp) => {
+                        this.photoData.push(resp.data)
+                    }
+                ).catch((error) => {
+                    this.result = "error: " + JSON.stringify(error || {})
+                })
+            }
+        },
+        takePhotoBtnClick() {
+            this.showTakePhotoBar = false
+        },
+        removePhoto(index) {
+            this.photoData.splice(index, 1)
         },
         onInfoInput() {
 
@@ -171,7 +261,7 @@ export default {
         }
     },
     created() {
-
+        this.initServiePeriod()
     }
 }
 </script>
@@ -180,6 +270,9 @@ export default {
 .wrapper {
   background-color: #ffffff;
   position: relative;
+}
+.content-wrapper {
+  padding-bottom: 120px;
 }
 .item-group {
   padding: 24px;
@@ -202,8 +295,10 @@ export default {
 }
 .scan-input {
   flex: 1;
-  font-size: 28px;
+  font-size: 32px;
   margin-right: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 .scan-icon {
   height: 40px;
@@ -228,6 +323,27 @@ export default {
 .photo-icon {
   height: 40px;
   width: 40px;
+}
+.photo-item-group {
+  width: 750px;
+  padding-left: 24px;
+  padding-bottom: 24px;
+  flex-direction: row;
+}
+.photo-item-detail {
+  flex-direction: row;
+}
+.photo-item-img {
+  width: 180px;
+  height: 180px;
+  margin-right: 20px;
+}
+.photo-delete-img {
+  position: absolute;
+  right: 20px;
+  top: 0px;
+  width: 60px;
+  height: 60px;
 }
 .info-group {
   flex-direction: row;
@@ -259,61 +375,5 @@ export default {
   bottom: 0px;
   width: 750px;
   text-align: center;
-}
-.period-header-bar {
-  height: 80px;
-  width: 750px;
-  display: inline-flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom-color: #e2e2e2;
-  border-bottom-width: 1px;
-}
-.period-header-text {
-  font-size: 32px;
-}
-.period-header-action {
-  width: 88px;
-  font-size: 28px;
-}
-.period-content {
-  width: 750px;
-  height: 620px;
-  flex-direction: row;
-}
-.period-content-left {
-  flex: 1;
-  align-content: center;
-  align-items: center;
-}
-.period-content-date {
-  text-align: center;
-  font-size: 32px;
-  padding: 20px;
-}
-.period-content-right {
-  flex: 1;
-  align-content: center;
-  align-items: center;
-  padding-bottom: 20px;
-}
-.period-content-time-desc {
-  width: 340px;
-  text-align: center;
-  font-size: 32px;
-  padding: 20px;
-  margin-top: 20px;
-  color: red;
-  word-wrap: break-word;
-}
-.period-content-time {
-  text-align: center;
-  font-size: 32px;
-  padding: 15px;
-  margin-top: 20px;
-  border-radius: 8px;
-  background-color: gray;
 }
 </style>

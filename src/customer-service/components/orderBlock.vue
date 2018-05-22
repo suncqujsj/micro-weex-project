@@ -45,7 +45,9 @@ export default {
 
 <style>
 .order-block {
-  padding: 20px;
+  padding-top: 20px;
+  padding-right: 20px;
+  padding-left: 20px;
   background-color: #fcfcfc;
 }
 .order-block-header {
@@ -74,7 +76,9 @@ export default {
 .order-block-body {
   height: 150px;
   flex-direction: row;
+  justify-content: center;
   padding-top: 10px;
+  align-items: center;
 }
 .order-block-img {
   height: 100px;
@@ -95,7 +99,7 @@ export default {
 }
 .order-block-price {
   width: 200px;
-  justify-content: center;
+  font-size: 26px;
   text-align: right;
   color: red;
 }

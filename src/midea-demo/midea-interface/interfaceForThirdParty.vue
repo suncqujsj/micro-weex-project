@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <midea-header title="第三方SDK接口" :isImmersion="false" @leftImgClick="back"></midea-header>
-        <midea-title-bar title="'接口参数:"></midea-title-bar>
+        <midea-title-bar title="接口参数:"></midea-title-bar>
         <textarea type="text" placeholder="Input Text" class="textarea" :value="messageParamString" @input="dataChange" rows=3 />
         <midea-title-bar title="调用第三方SDK接口"></midea-title-bar>
         <midea-button text="没有参数和回调" type="green" @mideaButtonClicked="methodWithNoArg">

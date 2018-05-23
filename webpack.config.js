@@ -160,6 +160,12 @@ const getBaseConfig = () => (
             }, {
                 test: /\.vue(\?[^?]+)?$/,
                 use: []
+            },
+            {
+                test: /\.css$/,
+                use: [{
+                    loader: 'css-loader'
+                }]
             }]
         },
         plugins,

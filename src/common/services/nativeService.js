@@ -96,7 +96,7 @@ export default {
             this.runGo(url, options);
         } else {
             //PC网页调试跳转
-            location.href = location.origin + location.pathname + '?path=' + path.replace('?','&')
+            location.href = location.origin + location.pathname + '?path=' + path.replace('?', '&')
         }
     },
     runGo(url, options) {
@@ -678,6 +678,13 @@ export default {
         let param = Object.assign(params, {
             operation: 'getGPSInfo'
         })
+        return this.commandInterfaceWrapper(param)
+    },
+    //获取登录态信息
+    getLogonInfo() {
+        let param = {
+            operation: 'getLogonInfo'
+        }
         return this.commandInterfaceWrapper(param)
     },
     //调用第三方SDK统一接口

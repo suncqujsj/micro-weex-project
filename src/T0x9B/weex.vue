@@ -110,7 +110,7 @@
                         bgImg: {
                             backgroundImage: 'linear-gradient(to right,#3DADFF,#3377FE)'
                         },
-                        page: 'auto'
+                        page: 'mode'
                     },
                     { 
                         name: "云菜谱",

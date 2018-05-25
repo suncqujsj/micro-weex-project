@@ -15,6 +15,7 @@
 
 <script>
 
+    const storage = weex.requireModule('storage')
     import nativeService from '@/common/services/nativeService.js'
     import MideaHeader from '@/midea-component/header.vue'
     import RecipeCard from '@/T0x9B/components/recipeCard.vue'
@@ -87,6 +88,7 @@
             }
         },
         created(){
+            storage.setItem('refer','', e=>{})
 
         }
     }

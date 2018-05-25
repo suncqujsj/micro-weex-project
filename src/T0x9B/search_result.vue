@@ -52,6 +52,7 @@
 
 <script>
   const modal = weex.requireModule('modal');
+  const storage = weex.requireModule('storage')
   import mideaSearchbar from '@/midea-component/mSearchbar.vue'
   import nativeService from '@/common/services/nativeService'
 
@@ -63,6 +64,7 @@
       setWidth:"450px"
     }),
     created () {
+       storage.setItem('refer','', e=>{})
       //setTitle('Searchbar');
     },
     methods: {

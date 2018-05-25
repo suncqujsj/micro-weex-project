@@ -7,15 +7,12 @@
         </midea-button>
         <midea-title-bar title="代码"></midea-title-bar>
         <text class="display-block">
-            nativeService.choosePhoto(this.messageParam).then(
-                (resp) => {
-                    this.result = resp
-                }
-            )
+            nativeService.choosePhoto(this.messageParam).then( (resp) => { this.result = resp } )
         </text>
         <midea-title-bar title="结果"></midea-title-bar>
 
         <scroller>
+            <image :src="result.data" class="photo"></image>
             <text class="display-block">{{result?('返回类型:'+typeof result):''}}</text>
             <text class="display-block">{{result}}</text>
         </scroller>
@@ -28,7 +25,7 @@
   border-color: gray;
   padding-left: 20px;
   padding-right: 20px;
-  margin-bottom: 100px;
+  margin-bottom: 30px;
 }
 .display-block {
   font-size: 30px;
@@ -36,6 +33,13 @@
   padding-right: 10px;
   padding-top: 10px;
   padding-bottom: 10px;
+}
+.photo {
+  margin: 5px;
+  width: 200px;
+  height: 200px;
+  border-color: #e2e2e2;
+  border-width: 1px;
 }
 </style>
 <script>
@@ -51,9 +55,9 @@ module.exports = {
     data() {
         return {
             messageParam: {
-                compressRage:60,
-                type:'jpg',
-                isNeedBase64:true
+                compressRage: 60,
+                type: 'jpg',
+                isNeedBase64: true
             },
             result: ''
         }

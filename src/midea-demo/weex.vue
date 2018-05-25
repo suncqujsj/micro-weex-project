@@ -100,6 +100,7 @@ module.exports = {
             { title: 'getCurrentHomeInfo获取当前家庭信息', link: "getCurrentHomeInfo" },
             { title: 'getDeviceInfo获取当前设备信息', link: "getDeviceInfo" },
             { title: 'getGPSInfo获取GPS定位信息', link: "getGPSInfo" },
+            { title: 'getLogonInfo获取登录态', link: "getLogonInfo" },
             { title: 'getNetworkStatus获取网络信息', link: "getNetworkStatus" },
             { title: 'getUserInfo获取用户信息', link: "getUserInfo" },
             { title: 'hapticFeedback手机震动', link: "hapticFeedback" },

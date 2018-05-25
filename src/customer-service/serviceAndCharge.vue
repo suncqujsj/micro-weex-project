@@ -2,11 +2,11 @@
     <div>
         <midea-header :title="title" @leftImgClick="back"></midea-header>
         <list>
-            <midea-item title="收费标准" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('search')">
+            <midea-item title="收费标准" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('productSelection')">
             </midea-item>
-            <midea-item title="包修政策" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('help')">
+            <midea-item title="包修政策" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('guaranteeRepair')">
             </midea-item>
-            <midea-item title="配件价格" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('help')">
+            <midea-item title="配件价格" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('priceOfParts')">
             </midea-item>
         </list>
     </div>

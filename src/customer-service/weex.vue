@@ -1,44 +1,66 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" :showLeftImg='false'>
-            <div slot="customerContent" class="header-right">
-                <text class="header-right-text" @click="showHotLine">服务热线</text>
-            </div>
+        <midea-header title="" bgColor="#ffffff" :isImmersion="true" :showLeftImg="false" :showRightImg="true" rightImg="./assets/img/progress.png" @rightImgClick="showHotLine">
         </midea-header>
-        <div class="navigation-list">
-            <div v-for="(item, index) in navList" :key="index" class="navigation-item">
-                <div class="navigation-inner-item" @click="itemClicked(item)">
-                    <image class="navigation-img" :src="item.img"></image>
-                    <text class="navigation-desc">{{item.title}}</text>
+        <scroller>
+            <div class="service-desc-wrapper">
+                <text class="service-title">服务</text>
+                <text class="service-desc">在线客服，随时为您提供服务</text>
+                <div class="service-desc-img-wrapper">
+                    <image class="service-desc-img" src="./assets/img/progress.png" resize='contain'></image>
                 </div>
             </div>
-        </div>
-        <div class="order-block">
-            <image class="order-block-img" src="./assets/img/progress.png" resize='contain'>
-            </image>
-            <div class="order-block-content">
-                <text class="order-block-label">安装家用空调</text>
-                <text class="order-block-desc">已接单</text>
-                <text class="order-block-time">2018-12-23 16:00</text>
+            <div class="navigation-list">
+                <div v-for="(item, index) in navList" :key="index" class="navigation-item">
+                    <div class="navigation-inner-item" @click="itemClicked(item)">
+                        <image class="navigation-img" :src="item.img" resize='contain'></image>
+                        <text class="navigation-desc">{{item.title}}</text>
+                    </div>
+                </div>
             </div>
-            <text class="order-block-action" @click="goToOrderDetail">查看</text>
-        </div>
-        <list>
-            <midea-item title="网点查询" height="120" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('productSelection')">
-                <image slot="itemImg" src="./assets/img/progress.png" class="item-img" resize='contain'>
-                </image>
-            </midea-item>
-            <midea-item title="服务与收费政策" itemImg="./assets/img/progress.png" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('help')">
-                <image slot="itemImg" src="./assets/img/progress.png" class="item-img" resize='contain'>
-                </image>
-            </midea-item>
-            <midea-item title="滤芯防伪" itemImg="./assets/img/progress.png" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('antifake')">
-                <image slot="itemImg" src="./assets/img/progress.png" class="item-img" resize='contain'>
-                </image>
-            </midea-item>
-        </list>
+            <div class="arraw-line">
+                <div class="arraw-triangle"></div>
+            </div>
+            <list class="order-list">
+                <midea-item height="150" :hasArrow="true" :clickActivied="true" @mideaCellClick="goToOrderDetail">
+                    <image slot="itemImg" class="order-img" src="./assets/img/progress.png" resize='contain'>
+                    </image>
+                    <div slot="title" class="order-content">
+                        <text class="order-title">安装只能洗衣机</text>
+                        <text class="order-desc">待工程师上门</text>
+                        <text class="order-time">12-23 16:00</text>
+                    </div>
+                </midea-item>
+            </list>
+            <list class="service-list">
+                <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('productSelection')">
+                    <image slot="itemImg" src="./assets/img/progress.png" class="service-item-img" resize='contain'>
+                    </image>
+                    <text slot="title" class="service-item-title">网点查询</text>
+                </midea-item>
+                <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('help')">
+                    <image slot="itemImg" src="./assets/img/progress.png" class="service-item-img" resize='contain'>
+                    </image>
+                    <text slot="title" class="service-item-title">服务与收费政策</text>
+                </midea-item>
+                <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('antifake')">
+                    <image slot="itemImg" src="./assets/img/progress.png" class="service-item-img" resize='contain'>
+                    </image>
+                    <text slot="title" class="service-item-title">滤芯防伪</text>
+                </midea-item>
+            </list>
+        </scroller>
 
-        <midea-actionsheet :items="actionsheetItems" :show="showBar" @close="closeActionsheet" @itemClick="actionsheetItemClick" @btnClick="actionsheetBtnClick" ref="actionsheet"></midea-actionsheet>
+        <midea-actionsheet :items="actionsheetItems" :show="showBar" @close="closeActionsheet" @itemClick="actionsheetItemClick" @btnClick="actionsheetBtnClick" ref="actionsheet">
+            <div slot="item-0" class="actionsheet-item">
+                <text class="actionsheet-item-label">美的：</text>
+                <text class="actionsheet-item-desc">400-889-9315</text>
+            </div>
+            <div slot="item-1" class="actionsheet-item">
+                <text class="actionsheet-item-label">小天鹅：</text>
+                <text class="actionsheet-item-desc">400-822-8228</text>
+            </div>
+        </midea-actionsheet>
     </div>
 </template>
 
@@ -112,29 +134,50 @@ export default {
 }
 </script>
 
+<style src='./assets/css/base.css' />
+
 <style>
-.header-right {
-  position: absolute;
-  right: 0px;
-  width: 160px;
-  height: 88px;
-  display: flex;
-  justify-content: center;
+.wrapper {
+  background-color: #f2f2f2;
 }
-.header-right-text {
-  color: #ffffff;
+.service-desc-wrapper {
+  flex-direction: column;
+  align-items: stretch;
+  padding-right: 32px;
+  padding-left: 32px;
+  background-color: #ffffff;
+}
+.service-title {
+  /* font-family: PingFangSC-Medium; */
+  font-size: 56px;
+  color: #000000;
+  line-height: 80px;
+}
+.service-desc {
+  font-family: PingFangSC-Regular;
   font-size: 28px;
-  padding-left: 20px;
-  padding-right: 20px;
-  text-align: right;
+  color: #8a8a8f;
+  letter-spacing: 0;
+  line-height: 44px;
+}
+.service-desc-img-wrapper {
+  margin-top: 38px;
+  align-items: center;
+  width: 686px;
+  opacity: 0.5;
+}
+.service-desc-img {
+  width: 686px;
+  height: 276px;
 }
 .navigation-list {
   flex-direction: row;
   justify-content: space-between;
-  padding-top: 50px;
-  padding-right: 80px;
-  padding-bottom: 50px;
-  padding-left: 80px;
+  padding-top: 34px;
+  padding-right: 72px;
+  padding-bottom: 42px;
+  padding-left: 72px;
+  background-color: #ffffff;
 }
 .navigation-inner-item {
   flex-direction: column;
@@ -142,54 +185,96 @@ export default {
   align-items: center;
 }
 .navigation-img {
-  height: 100px;
-  width: 100px;
+  height: 120px;
+  width: 120px;
 }
 .navigation-desc {
-  padding-top: 15px;
-  font-size: 28px;
+  padding-top: 28px;
+  font-size: 24px;
+  color: #000000;
 }
-.order-block {
-  padding: 20px;
-  background-color: #fcfcfc;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-bottom: 50px;
-  align-items: center;
+.arraw-line {
+  width: 750px;
+  height: 15px;
+  border-top-color: #e5e5e8;
+  border-top-width: 1px;
+  background-color: #ffffff;
+  overflow: hidden;
 }
-.order-block-content {
+.arraw-triangle {
+  left: 120px;
+  top: -14px;
+  width: 22px;
+  height: 22px;
+  background-color: #ffffff;
+  border-color: #e5e5e8;
+  border-width: 1px;
+  transform: rotate(45deg);
+}
+.order-list {
+  height: 200px;
+}
+.order-img {
+  height: 120px;
+  width: 120px;
+  margin-right: 30px;
+}
+.order-content {
   flex: 1;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
 }
-.order-block-img {
-  height: 100px;
-  width: 120px;
-  margin: 20px;
-}
-.order-block-label {
+.order-title {
+  font-family: PingFangSC-Semibold;
   font-size: 28px;
-  margin-bottom: 8px;
+  color: #000000;
+  line-height: 40px;
+  padding-bottom: 4px;
 }
-.order-block-desc {
-  font-size: 26px;
-  margin-bottom: 8px;
+.order-desc {
+  font-family: PingFangSC-Regular;
+  font-size: 24px;
+  color: #8a8a8f;
+  padding-bottom: 4px;
 }
-.order-block-time {
-  color: #e2e2e2;
-  text-align: left;
-  font-size: 26px;
+.order-time {
+  justify-self: flex-end;
+  font-family: PingFangSC-Regular;
+  font-size: 24px;
+  color: #8a8a8f;
+  line-height: 38px;
 }
-.order-block-action{
-  font-size: 26px;
-  width: 120px;
-  padding: 8px;
-  text-align: center;
-  background-color: #e2e2e2;
-  border-radius: 20px;
+.service-list {
+  margin-top: 24px;
+  height: 360px;
 }
-.item-img {
-  height: 60px;
-  width: 60px;
+.service-item-img {
+  height: 32px;
+  width: 32px;
   margin-right: 24px;
+}
+.service-item-title {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #000000;
+}
+.actionsheet-item {
+  flex-direction: row;
+  justify-content: center;
+  padding: 30px;
+}
+.actionsheet-item-label {
+  flex: 1;
+  font-family: PingFangSC-Regular;
+  text-align: right;
+  font-size: 32px;
+  color: #000000;
+}
+.actionsheet-item-desc {
+  flex: 1.8;
+  font-family: PingFangSC-Regular;
+  text-align: left;
+  font-size: 32px;
+  color: #3399ff;
 }
 </style>

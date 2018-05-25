@@ -1,4 +1,3 @@
-import MideaActionsheet from '@/component/actionsheet.vue'
 import MideaDialog from '@/component/dialog.vue'
 import MideaImageSlider from '@/component/image-slider.vue'
 import MideaOption from '@/component/option.vue'
@@ -7,6 +6,7 @@ import MideaPromt from '@/component/promt.vue'
 import MideaRadio from '@/component/radio.vue'
 import MideaRadioList from '@/component/radioList.vue'
 
+import MideaActionsheet from '@/midea-component/actionsheet.vue'
 import MideaButton from '@/midea-component/button.vue'
 import MideaCell from '@/component/cell.vue'
 import MideaCheckbox from '@/midea-component/checkbox.vue'

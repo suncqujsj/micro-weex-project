@@ -4,10 +4,10 @@
     <div ref="dialog" class="dialog-box" :style="{top:dialogTop+'px'}">
       <div class="dialog-content">
         <slot name="title">
-          <text class="content-title">{{title}}</text>
+          <text v-if="title" class="content-title">{{title}}</text>
         </slot>
         <slot name="content">
-          <text class="content-subtext">{{content}}</text>
+          <text v-if="content" class="content-subtext">{{content}}</text>
         </slot>
       </div>
       <div class="dialog-footer">

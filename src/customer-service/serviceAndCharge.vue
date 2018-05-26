@@ -1,12 +1,23 @@
 <template>
-    <div>
-        <midea-header :title="title" @leftImgClick="back"></midea-header>
+    <div class="wrapper">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        </midea-header>
+        <div class="top-gap"></div>
         <list>
-            <midea-item title="收费标准" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('productSelection')">
+            <midea-item title="" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('productSelection', {}, { from: 'serviceAndCharge'})">
+                <div slot="title">
+                    <text class="cell-label">收费标准</text>
+                </div>
             </midea-item>
-            <midea-item title="包修政策" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('guaranteeRepair')">
+            <midea-item title="" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('guaranteeRepair')">
+                <div slot="title">
+                    <text class="cell-label">包修政策</text>
+                </div>
             </midea-item>
-            <midea-item title="配件价格" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('priceOfParts')">
+            <midea-item title="" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('priceOfParts')">
+                <div slot="title">
+                    <text class="cell-label">配件价格</text>
+                </div>
             </midea-item>
         </list>
     </div>
@@ -16,12 +27,10 @@
 import base from './base'
 import nativeService from '@/common/services/nativeService';
 
-import mideaNavList from '@/midea-component/mNavList.vue'
 import mideaItem from '@/midea-component/item.vue'
 
 export default {
     components: {
-        mideaNavList,
         mideaItem,
     },
     mixins: [base],
@@ -42,20 +51,16 @@ export default {
 </script>
 
 <style>
-.header-right {
-  position: absolute;
-  right: 50px;
-  width: 100px;
-  color: #ffffff;
+.wrapper {
+  background-color: #f2f2f2;
+  position: relative;
+}
+.top-gap {
+  height: 28px;
+}
+.cell-label {
+  font-family: PingFangSC-Regular;
   font-size: 32px;
-}
-.navigation-list {
-  margin-top: 50px;
-  margin-bottom: 50px;
-}
-.item-img {
-  height: 80px;
-  width: 80px;
-  margin-right: 24px;
+  color: #000000;
 }
 </style>

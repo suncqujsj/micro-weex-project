@@ -33,12 +33,12 @@
                 </midea-item>
             </list>
             <list class="service-list">
-                <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('productSelection')">
+                <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('productSelection', {}, { from: 'rootView' })">
                     <image slot="itemImg" src="./assets/img/progress.png" class="service-item-img" resize='contain'>
                     </image>
                     <text slot="title" class="service-item-title">网点查询</text>
                 </midea-item>
-                <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('help')">
+                <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('serviceAndCharge')">
                     <image slot="itemImg" src="./assets/img/progress.png" class="service-item-img" resize='contain'>
                     </image>
                     <text slot="title" class="service-item-title">服务与收费政策</text>

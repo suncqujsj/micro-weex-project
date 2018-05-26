@@ -1,44 +1,64 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" @leftImgClick="back"></midea-header>
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+            <div slot="customerContent" class="header-right">
+                <text class="header-right-text" @click="goTo('productSelection', {}, { from: 'installation' })">收费标准</text>
+            </div>
+        </midea-header>
         <scroller class="content-wrapper">
-            <midea-cell title="安装产品*" rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectProduct">
-            </midea-cell>
-            <midea-cell title="物流状态*" :rightText="transportStatusDesc" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectTransportStatus">
-            </midea-cell>
-            <midea-cell title="期望服务时间*" :rightText="serviePeriodDesc" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectServiePeriod">
-            </midea-cell>
-            <midea-cell title="服务地址*" rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectAddress">
-            </midea-cell>
-
-            <div class="item-group">
-                <text class="type-select-label">以下为选填信息，有助于更快更好地为您服务</text>
-
-                <midea-grid-select class="type-select-grid" :cols="3" :single="true" :customStyles="{width:'200px',height:'48px'}" :list="types" @select="typeSelected">
-                </midea-grid-select>
+            <div class="base-group">
+                <midea-cell rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectProduct">
+                    <div slot="title" class="cell-title">
+                        <text class="cell-label">安装产品</text>
+                        <text class="cell-label-star">*</text>
+                    </div>
+                </midea-cell>
+                <midea-cell :rightText="transportStatusDesc" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectTransportStatus">
+                    <div slot="title" class="cell-title">
+                        <text class="cell-label">物流状态</text>
+                        <text class="cell-label-star">*</text>
+                    </div>
+                </midea-cell>
+                <midea-cell :rightText="serviePeriodDesc" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectServiePeriod">
+                    <div slot="title" class="cell-title">
+                        <text class="cell-label">期望服务时间</text>
+                        <text class="cell-label-star">*</text>
+                    </div>
+                </midea-cell>
+                <midea-cell rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectAddress">
+                    <div slot="title" class="cell-title">
+                        <text class="cell-label">服务地址</text>
+                        <text class="cell-label-star">*</text>
+                    </div>
+                </midea-cell>
             </div>
 
-            <div class="item-group scan-group group-bottom-border">
-                <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false :value="code" @change="onchange" @input="oninput" />
+            <div class="base-group">
+                <div class="item-group">
+                    <text class="type-select-label">以下为选填信息，有助于更快更好地为您服务</text>
 
-                <image class="scan-icon" src="./assets/img/progress.png" resize='contain' @click="scanCode"></image>
-            </div>
+                    <div class="search-history">
+                        <text v-for="(item,index) in types" :key="index" v-bind:class="['search-history-item', typeSelectedIndex==index?'search-history-item-selected':'']" @click="typeSelected(index)">{{item.title}}</text>
+                    </div>
+                </div>
 
-            <div class="item-group info-group">
-                <text class="info-label">其他备注信息</text>
+                <div class="item-group scan-group">
+                    <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false :value="code" @change="onchange" @input="oninput" />
 
-                <image class="mic-icon" src="./assets/img/progress.png" resize='contain'></image>
-            </div>
+                    <image class="scan-icon" src="./assets/img/progress.png" resize='contain' @click="scanCode"></image>
+                </div>
 
-            <div class="item-group info-group group-bottom-border">
-                <textarea class="info-textarea" placeholder="请输入其他备注信息" rows="4" @input="onInfoInput" @change="onInfoIChange"></textarea>
-                <text class="info-textarea-calc">119/120</text>
+                <div class="item-group info-group">
+                    <textarea class="info-textarea" placeholder="请输入其他备注信息" :value="infoText" rows="5" @input="onInfoInput" maxlength="120"></textarea>
+                    <text class="info-textarea-calc">{{infoText.length}}/120</text>
+                    <image class="mic-icon" src="./assets/img/progress.png" resize='contain'></image>
+                </div>
+                <div class="action-bar">
+                    <midea-button text="提交" type="green" :btnStyle="{'background-color': isDataReady?'#267AFF':'#267AFF','opacity':isDataReady?'1':'0.2','border-radius': '4px'}" @mideaButtonClicked="submit">
+                    </midea-button>
+                </div>
             </div>
         </scroller>
-        <div class="action-bar">
-            <midea-button text="提交" type="green" @mideaButtonClicked="submit">
-            </midea-button>
-        </div>
 
         <midea-actionsheet :items="TransportStatusItems" :show="isShowTransportStatus" @close="closeTransportStatusActionsheet" @itemClick="TransportStatustItemClick" @btnClick="transportStatusBtnClick" ref="transportStatusActionsheet">
         </midea-actionsheet>
@@ -75,12 +95,14 @@ export default {
             types: [
                 {
                     'title': '机身条码',
-                    'checked': true
+                    'isSelected': true
                 },
                 {
-                    'title': '产品型号'
+                    'title': '产品型号',
+                    'isSelected': false
                 }
             ],
+            typeSelectedIndex: 0,
             isShowTransportStatus: false,
             TransportStatusItems: ['货已到需要安装', '货未到需要安装'],
 
@@ -99,7 +121,8 @@ export default {
             code: '',
             data: {
                 transportStatus: ''
-            }
+            },
+            infoText: ''
         }
     },
     computed: {
@@ -112,6 +135,9 @@ export default {
             } else {
                 return '请选择'
             }
+        },
+        isDataReady() {
+            return true
         }
     },
     methods: {
@@ -123,7 +149,7 @@ export default {
                     'version': '1.0'
                 }
             }
-            nativeService.sendHttpRequest(params)
+            // nativeService.sendHttpRequest(params)
         },
         selectProduct() {
             this.goTo('productSelection', {}, { from: 'installation' })
@@ -147,6 +173,14 @@ export default {
         initServiePeriod() {
             let today = new Date()
 
+            this.serviePeriodDate.push({
+                key: -2,
+                desc: ''
+            })
+            this.serviePeriodDate.push({
+                key: -1,
+                desc: ''
+            })
             this.serviePeriodDate.push({
                 key: 0,
                 desc: '今天'
@@ -179,8 +213,8 @@ export default {
         selectAddress() {
 
         },
-        typeSelected() {
-
+        typeSelected(index) {
+            this.typeSelectedIndex = index
         },
         onchange() {
 
@@ -197,8 +231,8 @@ export default {
                 }
             )
         },
-        onInfoInput() {
-
+        onInfoInput(event) {
+            this.infoText = event.value
         },
         onInfoIChange() {
 
@@ -219,68 +253,132 @@ export default {
   background-color: #ffffff;
   position: relative;
 }
+.header-right {
+  position: absolute;
+  right: 0px;
+  width: 160px;
+  height: 88px;
+  display: flex;
+  justify-content: center;
+}
+.header-right-text {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #666666;
+  padding-left: 20px;
+  padding-right: 20px;
+  text-align: right;
+}
 .content-wrapper {
-  padding-bottom: 120px;
+}
+.base-group {
+  padding-top: 24px;
+  background-color: #f2f2f2;
+}
+.cell-title {
+  flex: 1;
+  flex-direction: row;
+}
+.cell-label {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #000000;
+}
+.cell-label-star {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #ff3b30;
 }
 .item-group {
   padding: 24px;
-}
-
-.group-bottom-border {
-  border-bottom-color: #e2e2e2;
-  border-bottom-width: 1px;
+  background-color: #ffffff;
 }
 
 .type-select-label {
+  font-family: PingFangSC-Regular;
   font-size: 28px;
-  padding-bottom: 15px;
+  color: #666666;
+  padding-bottom: 32px;
 }
-.type-select-grid {
-  font-size: 28px;
+.search-history {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.search-history-item {
+  font-family: PingFangSC-Regular;
+  font-size: 24px;
+  color: #666666;
+  background-color: #f6f6f6;
+  text-align: center;
+  padding-top: 8px;
+  padding-right: 28px;
+  padding-bottom: 8px;
+  padding-left: 28px;
+  margin-left: 12px;
+  margin-right: 12px;
+  border-radius: 4px;
+}
+.search-history-item-selected {
+  background-color: #e8f1ff;
+  color: #267aff;
 }
 .scan-group {
-  flex-direction: row;
+  position: relative;
 }
 .scan-input {
-  flex: 1;
-  font-size: 32px;
-  margin-right: 20px;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #000000;
+  border-radius: 4px;
+  border-color: #e5e5e8;
+  border-width: 1px;
+  height: 72px;
+  padding-left: 22px;
+  padding-right: 50px;
+  background-color: #fafafa;
 }
 .scan-icon {
+  position: absolute;
+  top: 40px;
+  right: 50px;
   height: 40px;
   width: 40px;
 }
 .info-group {
-  flex-direction: row;
-}
-.info-label {
-  flex: 1;
-  font-size: 28px;
-  margin-right: 20px;
-  text-align: left;
-}
-.mic-icon {
-  height: 40px;
-  width: 40px;
+  position: relative;
 }
 .info-textarea {
-  flex: 1;
+  font-family: PingFangSC-Regular;
   font-size: 28px;
-  padding-bottom: 30px;
+  color: #000000;
+  border-radius: 4px;
+  border-color: #e5e5e8;
+  border-width: 1px;
+  padding-top: 10px;
+  padding-left: 22px;
+  padding-right: 50px;
+  background-color: #fafafa;
 }
 .info-textarea-calc {
   position: absolute;
-  bottom: 24px;
-  right: 26px;
-  color: #e2e2e2;
-  font-size: 20px;
+  bottom: 28px;
+  right: 100px;
+  color: #8a8a8f;
+  height: 40px;
+  font-size: 24px;
+}
+.mic-icon {
+  position: absolute;
+  bottom: 35px;
+  right: 50px;
+  height: 40px;
+  width: 40px;
 }
 .action-bar {
-  position: fixed;
-  bottom: 0px;
+  background-color: #ffffff;
   width: 750px;
   text-align: center;
+  padding-bottom: 50px;
 }
 </style>

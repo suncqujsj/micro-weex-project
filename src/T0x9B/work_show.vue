@@ -97,12 +97,14 @@
   }
 </style>
 <script>  
+const modal = weex.requireModule('modal')
+const storage = weex.requireModule('storage')
 import base from '../midea-demo/base'
 import mideaVote from '@/midea-component/mVote.vue'
 import mideaButton from '@/midea-component/button.vue'
 import mideaPopup from '@/midea-component/popup.vue'
 import nativeService from '@/common/services/nativeService'
-const modal = weex.requireModule('modal')
+
 module.exports = {
     components: {mideaVote,mideaButton,mideaPopup },
     mixins: [base],
@@ -177,6 +179,7 @@ module.exports = {
       }
     },
     created() {
+        storage.setItem('refer','', e=>{})
         //this.isIos=weex.config.env.platform=='iOS'?true:false;
     }
 };

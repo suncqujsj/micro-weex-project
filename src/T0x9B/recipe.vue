@@ -1,7 +1,7 @@
 //菜谱详情页
 <template>
     <div class="recipe">
-        <midea-header :title="title" :bgColor="bgColor" :showLeftImg="true" :showRightImg="true" :leftImg="icon.leftImg" :rightImg="icon.rightImg" @leftImgClick="goBack" @rightImgClick="goSearch"></midea-header>
+        <midea-header :title="title" :bgColor="bgColor" :showLeftImg="true" :showRightImg="true" :leftImg="icon.leftImg" :rightImg="icon.rightImg" @leftImgClick="goBack" @rightImgClick="goTo('search')"></midea-header>
         <div class="interaction-bar">
             <div class="interaction-tag">
                 <image class="icon" :src="icon.fav[isFav]"></image>
@@ -10,7 +10,7 @@
             <div class="share" @click="sharePage">
                 <image class="icon" :src="icon.share"></image>
             </div>
-            <div class="interaction-tag" @click="goComments">
+            <div class="interaction-tag" @click="goTo('comment_total')">
                 <image class="icon" :src="icon.comment"></image>
                 <text class="text">{{commentsNum}}</text>
             </div>
@@ -90,7 +90,7 @@
                     <text class="text progress-time">10:30</text>
                 </div>
                 <div v-if="progress == 0" class="floor progress-floor  floor-c">
-                    <text class="text start-btn" @click="quickStart">一键启动</text>
+                    <text class="text start-btn" @click="goModeSet">一键启动</text>
                 </div>
                 <div v-if="progress == 1" class="floor progress-floor ">
                     <text class="text cancel-btn" @click="cancelProgress">取消</text>
@@ -138,6 +138,7 @@
 
 <script>
 
+    const storage = weex.requireModule('storage')
     import nativeService from '@/common/services/nativeService.js'
     import MideaHeader from '@/midea-component/header.vue'
     import NeedList from '@/T0x9B/components/needList.vue'
@@ -344,17 +345,20 @@
             }
         },
         methods:{
+            goTo(src){
+                var path = src + '.js'
+                nativeService.goTo(path)
+            },
             goBack(){
                 nativeService.goBack();
             },
-            goSearch(){
-                nativeService.goTo('search.js')
+            goModeSet(){
+                storage.setItem('refer','recipe', e=>{
+                    nativeService.goTo('modeSet.js', {viewTag: 'recipe'})
+                })
             },
             goBuy(){
                 this.showBuyPop = true
-            },
-            goComments(){
-                nativeService.goTo('comment_total.js')
             },
             scrollScale(){
                 this.$emit('changeScale')
@@ -408,7 +412,7 @@
             }
         },
         created(){
-            
+            storage.setItem('refer','', e=>{})
         }
     }
 </script>

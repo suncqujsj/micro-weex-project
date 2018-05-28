@@ -1,13 +1,13 @@
 <template>
     <div class="wrapper">
-        <midea-header title="" bgColor="#ffffff" :isImmersion="true" :showLeftImg="false" :showRightImg="true" rightImg="./assets/img/progress.png" @rightImgClick="showHotLine">
+        <midea-header title="" bgColor="#ffffff" :isImmersion="true" :showLeftImg="false" :showRightImg="true" rightImg="./assets/img/service_ic_call@3x.png" @rightImgClick="showHotLine">
         </midea-header>
         <scroller>
             <div class="service-desc-wrapper">
                 <text class="service-title">服务</text>
                 <text class="service-desc">在线客服，随时为您提供服务</text>
                 <div class="service-desc-img-wrapper">
-                    <image class="service-desc-img" src="./assets/img/progress.png" resize='contain'></image>
+                    <image class="service-desc-img" src="./assets/img/servie_pic_banner03@3x.png" resize='contain'></image>
                 </div>
             </div>
             <div class="navigation-list">
@@ -34,17 +34,17 @@
             </list>
             <list class="service-list">
                 <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('productSelection', {}, { from: 'rootView' })">
-                    <image slot="itemImg" src="./assets/img/progress.png" class="service-item-img" resize='contain'>
+                    <image slot="itemImg" src="./assets/img/service_ic_location@3x.png" class="service-item-img" resize='contain'>
                     </image>
                     <text slot="title" class="service-item-title">网点查询</text>
                 </midea-item>
                 <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('serviceAndCharge')">
-                    <image slot="itemImg" src="./assets/img/progress.png" class="service-item-img" resize='contain'>
+                    <image slot="itemImg" src="./assets/img/service_ic_policy@3x.png" class="service-item-img" resize='contain'>
                     </image>
                     <text slot="title" class="service-item-title">服务与收费政策</text>
                 </midea-item>
                 <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('antifake')">
-                    <image slot="itemImg" src="./assets/img/progress.png" class="service-item-img" resize='contain'>
+                    <image slot="itemImg" src="./assets/img/service_ic_fake@3x.png" class="service-item-img" resize='contain'>
                     </image>
                     <text slot="title" class="service-item-title">滤芯防伪</text>
                 </midea-item>
@@ -81,15 +81,15 @@ export default {
             title: '服务',
             navList: [{
                 title: '进度查询',
-                img: './assets/img/progress.png',
+                img: './assets/img/service_ic_schedule@3x.png',
                 page: 'orderList'
             }, {
                 title: '安装服务',
-                img: './assets/img/progress.png',
+                img: './assets/img/service_ic_custom@3x.png',
                 page: 'installation'
             }, {
                 title: '维修服务',
-                img: './assets/img/progress.png',
+                img: './assets/img/service_ic_repair@3x.png',
                 page: 'maintenance'
             }],
 

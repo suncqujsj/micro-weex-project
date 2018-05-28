@@ -12,7 +12,7 @@
             <div class="item-group scan-group">
                 <input class="scan-input" type="text" placeholder="请输入编号或扫描二维码" :autofocus=false :value="code" @input="oninput" />
 
-                <image class="scan-icon" src="./assets/img/progress.png" resize='contain' @click="scanCode"></image>
+                <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
             </div>
 
             <div class="item-group scan-group">

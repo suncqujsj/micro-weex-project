@@ -4,7 +4,7 @@
         </midea-header>
         <div class="search-bar">
             <div class="search-bar-content">
-                <image class="search-bar-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                <image class="search-bar-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
                 <input class="search-bar-input" placeholder="请输入产品品类，如空调、洗衣机" :value="keyWord" @input="oninput" @return="keyBoardsearch" return-key-type="search"></input>
             </div>
             <text class="search-action" @click="searchProduct()">搜索</text>
@@ -13,7 +13,7 @@
             <template v-if="searchResult">
                 <div v-for="(item, index) in convertedSearchResult" @click="selectItem(item)" :key="index">
                     <div class="search-result-content">
-                        <image class="search-result-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                        <image class="search-result-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
                         <midea-rich-text class="search-result-desc" :hasTextMargin="false" :config-list="item.richDesc"></midea-rich-text>
                     </div>
                 </div>

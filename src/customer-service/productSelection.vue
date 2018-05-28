@@ -4,7 +4,7 @@
         </midea-header>
         <div class="search-bar">
             <div class="search-bar-content" @click="searchProduct">
-                <image class="search-bar-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                <image class="search-bar-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
                 <text class="search-bar-desc">请输入产品品类，如空调、洗衣机</text>
             </div>
         </div>

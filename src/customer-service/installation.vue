@@ -45,13 +45,13 @@
                 <div class="item-group scan-group">
                     <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false :value="code" @change="onchange" @input="oninput" />
 
-                    <image class="scan-icon" src="./assets/img/progress.png" resize='contain' @click="scanCode"></image>
+                    <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
                 </div>
 
                 <div class="item-group info-group">
                     <textarea class="info-textarea" placeholder="请输入其他备注信息" :value="infoText" rows="5" @input="onInfoInput" maxlength="120"></textarea>
                     <text class="info-textarea-calc">{{infoText.length}}/120</text>
-                    <image class="mic-icon" src="./assets/img/progress.png" resize='contain'></image>
+                    <image class="mic-icon" src="./assets/img/service_ic_tape@3x.png" resize='contain'></image>
                 </div>
                 <div class="action-bar">
                     <midea-button text="提交" type="green" :btnStyle="{'background-color': isDataReady?'#267AFF':'#267AFF','opacity':isDataReady?'1':'0.2','border-radius': '4px'}" @mideaButtonClicked="submit">
@@ -288,6 +288,7 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 32px;
   color: #ff3b30;
+  padding-left: 5px;
 }
 .item-group {
   padding: 24px;

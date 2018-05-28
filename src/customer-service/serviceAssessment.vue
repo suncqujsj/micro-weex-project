@@ -2,53 +2,49 @@
     <div class="wrapper">
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
         <scroller class="scroller">
-            <div class="order-detail-header group-bottom-border">
-                <image class="order-detail-img" :src="order.imageUrl" resize='contain'>
-                </image>
-                <div class="order-detail-content">
-                    <text class="order-detail-label">{{order.label}}</text>
+            <order-block class="order-block" :data="order">
+                <div slot="action-bar">
+                    <div class="service-status-bar">
+                        <text v-bind:class="['service-status-action',serviceStatus==1?'service-status-action-selected':'']" @click="switchServiceStatus(1)">服务未完成</text>
+                        <text v-bind:class="['service-status-action',serviceStatus==0?'service-status-action-selected':'']" @click="switchServiceStatus(0)">服务已完成</text>
+                    </div>
                 </div>
-            </div>
-            <div class="service-status-bar group-bottom-border">
-                <text v-bind:class="['service-status-action',serviceStatus==1?'service-status-action-selected':'']" @click="switchServiceStatus(1)">服务未完成</text>
-                <text v-bind:class="['service-status-action',serviceStatus==0?'service-status-action-selected':'']" @click="switchServiceStatus(0)">服务已完成</text>
-            </div>
+            </order-block>
 
-            <div v-if="serviceStatus==0" class="assess-block">
-                <div v-if="serviceStatus==0" class="navigation-list">
-                    <div v-for="(item, index) in navList" :key="'level'+index" class="navigation-item">
-                        <div class="navigation-inner-item" @click="selectLeve(item)">
-                            <image class="navigation-img" :src="item.img"></image>
-                            <text v-bind:class="['navigation-desc',serviceLevel==item.level?'navigation-desc-selected':'']">{{item.title}}</text>
+            <div class="assess-block">
+                <div v-if="serviceStatus==0">
+                    <div v-if="serviceStatus==0" class="navigation-list">
+                        <div v-for="(item, index) in navList" :key="'level'+index" class="navigation-item">
+                            <div class="navigation-inner-item" @click="selectLeve(item)">
+                                <image class="navigation-img" :src="item.img + (serviceLevel==item.level?'on@3x.png':'off@3x.png')"></image>
+                                <text v-bind:class="['navigation-desc',serviceLevel==item.level?'navigation-desc-selected':'']">{{item.title}}</text>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="serviceLevel" class="search-history-block group-bottom-border">
+                        <div class="search-history">
+                            <text v-for="(item,index) in assessKeys" :key="index" v-bind:class="['search-history-item', item.isSelected?'search-history-item-selected':'']" @click="selectAssess(index)">{{item.title}}</text>
+                        </div>
+                    </div>
+
+                    <div v-if="serviceLevel=='bad'" class="search-history-block">
+                        <text class="search-history-title">是否有以下行为</text>
+                        <div class="search-history">
+                            <text v-for="(item,index) in assessBadKeys" :key="index" v-bind:class="['search-history-item', item.isSelected?'search-history-item-selected':'']" @click="selectBadAssess(index)">{{item.title}}</text>
+                        </div>
+                    </div>
+                    <div v-if="serviceLevel" class="remark-group">
+                        <textarea class="remark-textarea" placeholder="还想说点，将匿名并延迟告诉工程师" rows="4" @input="onInfoInput" @change="onInfoIChange"></textarea>
+                    </div>
+                </div>
+                <div v-if="serviceStatus==1">
+                    <div class="search-history-block">
+                        <div class="search-history">
+                            <text v-for="(item,index) in assessUncompletedKeys" :key="index" v-bind:class="['search-history-item', item.isSelected?'search-history-item-selected':'']" @click="selectUncompletedAssess(index)">{{item.title}}</text>
                         </div>
                     </div>
                 </div>
-                <div v-if="serviceLevel" class="search-history-block group-bottom-border">
-                    <div class="search-history">
-                        <text v-for="(item,index) in assessKeys" :key="index" v-bind:class="['search-history-item', item.isSelected?'search-history-item-selected':'']" @click="selectAssess(index)">{{item.title}}</text>
-                    </div>
-                </div>
-
-                <div v-if="serviceLevel=='bad'" class="search-history-block">
-                    <text class="search-history-title">是否有以下行为</text>
-                    <div class="search-history">
-                        <text v-for="(item,index) in assessBadKeys" :key="index" v-bind:class="['search-history-item', item.isSelected?'search-history-item-selected':'']" @click="selectBadAssess(index)">{{item.title}}</text>
-                    </div>
-                </div>
-                <div class="remark-group">
-                    <textarea class="remark-textarea" placeholder="还想说点，将匿名并延迟告诉工程师" rows="4" @input="onInfoInput" @change="onInfoIChange"></textarea>
-                </div>
-            </div>
-            <div v-if="serviceStatus==1" class="assess-block">
-                <div class="search-history-block group-bottom-border">
-                    <div class="search-history">
-                        <text v-for="(item,index) in assessUncompletedKeys" :key="index" v-bind:class="['search-history-item', item.isSelected?'search-history-item-selected':'']" @click="selectUncompletedAssess(index)">{{item.title}}</text>
-                    </div>
-                </div>
-            </div>
-            <div class="action-bar" v-if="isDataReady">
-                <midea-button text="提交" :btnStyle="{'background-color': isDataReady?'#267AFF':'#8a8a8f','border-radius': '4px'}" @mideaButtonClicked="submit">
-                </midea-button>
+                <text v-if="isDataReady" class="action-button" @click="submit">提交</text>
             </div>
         </scroller>
 
@@ -58,12 +54,14 @@
 <script>
 import base from './base'
 import nativeService from '@/common/services/nativeService'
+import OrderBlock from '@/customer-service/components/orderBlock.vue'
 import { MideaDialog, MideaButton } from '@/index'
 
 const clipboard = weex.requireModule('clipboard')
 
 export default {
     components: {
+        OrderBlock,
         MideaDialog,
         MideaButton
     },
@@ -86,15 +84,15 @@ export default {
             serviceLevel: null,
             navList: [{
                 title: '不满意',
-                img: './assets/img/progress.png',
+                img: './assets/img/service_ic_bad_',
                 level: 'bad'
             }, {
                 title: '一般',
-                img: './assets/img/progress.png',
+                img: './assets/img/service_ic_nobad_',
                 level: 'normal'
             }, {
                 title: '满意',
-                img: './assets/img/progress.png',
+                img: './assets/img/service_ic_ok_',
                 level: 'good'
             }],
             assessKeys: [
@@ -259,53 +257,30 @@ export default {
 
 <style>
 .wrapper {
-  background-color: #ffffff;
+  background-color: #f2f2f2;
 }
 .scroller {
   background-color: #f2f2f2;
+}
+
+.order-block {
+  margin-top: 24px;
+  margin-right: 24px;
+  margin-left: 24px;
 }
 .group-bottom-border {
   border-bottom-color: #e2e2e2;
   border-bottom-width: 1px;
 }
-.order-detail-header {
-  width: 750px;
-  height: 224px;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  background-color: #ffffff;
-  padding: 32px;
-  margin-top: 22px;
-}
-.order-detail-img {
-  height: 160px;
-  width: 160px;
-  border-radius: 4px;
-  border-color: #e5e5e8;
-  border-width: 1px;
-  border-style: solid;
-  margin-right: 28px;
-}
-.order-detail-content {
-  flex: 1;
-  justify-content: center;
-}
-.order-detail-label {
-  font-family: PingFangSC-Regular;
-  font-size: 36px;
-  color: #000000;
-  margin-bottom: 27px;
-}
 .service-status-bar {
-  width: 750px;
-  height: 125px;
+  /* width: 750px; */
   justify-content: space-around;
   flex-direction: row;
   align-items: center;
   background-color: #ffffff;
-  padding-left: 170px;
-  padding-right: 170px;
+  padding-top: 32px;
+  padding-left: 130px;
+  padding-right: 130px;
 }
 .service-status-action {
   font-family: PingFangSC-Regular;
@@ -320,7 +295,15 @@ export default {
 }
 .service-status-action-selected {
   color: #ffffff;
-  background-color: #267aff;
+  background-color: #0078ff;
+}
+.assess-block {
+  background-color: #ffffff;
+  margin-top: 24px;
+  margin-right: 24px;
+  margin-left: 24px;
+  margin-bottom: 48px;
+  border-radius: 4px;
 }
 .navigation-list {
   flex-direction: row;
@@ -329,7 +312,6 @@ export default {
   padding-right: 130px;
   padding-left: 130px;
   padding-bottom: 32px;
-  background-color: #ffffff;
 }
 .navigation-inner-item {
   flex-direction: column;
@@ -344,11 +326,11 @@ export default {
   padding-top: 20px;
   font-family: PingFangSC-Regular;
   font-size: 28px;
-  color: #8a8a8f;
+  color: #c8c7cc;
   text-align: center;
 }
 .navigation-desc-selected {
-  color: #267aff;
+  color: #0078ff;
 }
 
 .search-history-block {
@@ -401,11 +383,20 @@ export default {
   border-color: #e5e5e8;
   border-width: 1px;
   padding: 8px;
+  background-color: #fafafa;
 }
-.action-bar {
-  background-color: #ffffff;
-  width: 750px;
+.action-button {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #ffffff;
   text-align: center;
-  padding-bottom: 50px;
+  background-color: #267aff;
+  text-align: center;
+  margin-left: 24px;
+  margin-right: 24px;
+  border-radius: 4px;
+  padding-top: 22px;
+  padding-bottom: 22px;
+  margin-bottom: 48px;
 }
 </style>

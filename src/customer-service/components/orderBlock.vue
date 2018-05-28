@@ -1,12 +1,14 @@
 <template>
     <div class="order-block">
         <div class="order-block-header">
-            <text class="order-block-time">{{data.time}}</text>
-            <text class="order-block-channel">{{data.type}}</text>
-            <image class="order-block-status-icon" src="./assets/img/progress.png" resize='contain'>
+            <image class="order-block-channel-icon" :src="channelIconSrc" resize='contain'>
             </image>
-            <text class="order-block-status">{{data.statusDesc}}</text>
+            <text class="order-block-channel">{{data.type}}</text>
+            <text class="order-block-time">{{data.time}}</text>
+            <text v-if="data.status != 5" class="order-block-status">{{data.statusDesc}}</text>
         </div>
+        <image v-if="data.status == 5" class="order-block-status-icon" src="./assets/img/service_ic_finish@3x.png" resize='contain'>
+        </image>
         <div class="order-block-body">
             <image class="order-block-img" :src="data.imageUrl" resize='contain'>
             </image>
@@ -37,6 +39,29 @@ export default {
         return {
         }
     },
+    computed: {
+        channelIconSrc() {
+            let result = './assets/img/service_ic_JD@3x.png'
+            switch (this.data.id) {
+                case '1':
+                    return './assets/img/service_ic_JD@3x.png'
+                    break;
+                case '2':
+                    return './assets/img/service_ic_taobao@3x.png'
+                    break;
+                case '3':
+                    return './assets/img/service_ic_call400@3x.png'
+                    break;
+                case '4':
+                    return './assets/img/service_ic_meiju@3x.png'
+                    break;
+                case '5':
+                    return './assets/img/service_midea@3x.png'
+                    break;
+            }
+            return result
+        }
+    },
     methods: {
     },
     created() {
@@ -47,34 +72,49 @@ export default {
 
 <style>
 .order-block {
-  padding: 32px;
+  padding-bottom: 24px;
   border-radius: 8px;
   background-color: #ffffff;
+  overflow: hidden;
 }
 .order-block-header {
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 24px;
   padding-bottom: 22px;
   border-bottom-color: #e5e5e8;
-  border-bottom-width: 2px;
+  border-bottom-width: 1px;
   border-bottom-style: solid;
+  overflow: visible;
 }
-.order-block-time {
-  width: 170px;
+.order-block-channel-icon {
+  height: 40px;
+  width: 40px;
+  margin-left: 24px;
+  margin-right: 8px;
+}
+.order-block-channel {
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #666666;
   text-align: left;
+  margin-right: 32px;
 }
-.order-block-channel {
+.order-block-time {
   flex: 1;
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #666666;
+  text-align: left;
+  margin-right: 8px;
 }
 .order-block-status-icon {
-  height: 40px;
-  width: 40px;
+  position: absolute;
+  top: -8px;
+  right: 8px;
+  height: 116px;
+  width: 116px;
 }
 .order-block-status {
   width: 90px;
@@ -82,13 +122,18 @@ export default {
   font-size: 28px;
   color: #666666;
   text-align: right;
+  margin-right: 32px;
 }
 .order-block-body {
   height: 200px;
   flex-direction: row;
   justify-content: center;
   padding-top: 10px;
+  padding-bottom: 10px;
   align-items: center;
+  border-bottom-color: #e5e5e8;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
 }
 .order-block-img {
   height: 160px;
@@ -97,7 +142,8 @@ export default {
   border-color: #e5e5e8;
   border-width: 1px;
   border-style: solid;
-  margin-right: 28px;
+  margin-left: 24px;
+  margin-right: 32px;
 }
 .order-block-content {
   flex: 1;
@@ -118,5 +164,6 @@ export default {
   font-size: 32px;
   text-align: right;
   color: #ff9500;
+  margin-right: 32px;
 }
 </style>

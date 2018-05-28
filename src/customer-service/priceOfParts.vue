@@ -15,7 +15,7 @@
                 <div class="item-group scan-group">
                     <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false :value="code" @change="onchange" @input="oninput" />
 
-                    <image class="scan-icon" src="./assets/img/progress.png" resize='contain' @click="scanCode"></image>
+                    <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
                 </div>
 
                 <div class="item-group scan-group group-bottom-border">

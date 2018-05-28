@@ -3,7 +3,7 @@
         <div class="period-header-bar">
             <text class="period-header-action"></text>
             <text class="period-header-text">{{title}}</text>
-            <image class="period-header-action" src="./assets/img/progress.png" resize='contain' @click="buttonCancel"></image>
+            <image class="period-header-action" src="./assets/img/service_ic_cancel@3x.png" resize='contain' @click="buttonCancel"></image>
         </div>
         <text v-if="desc" class="period-content-time-desc">{{desc}}</text>
         <div class="period-content">

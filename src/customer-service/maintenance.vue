@@ -13,14 +13,15 @@
                         <text class="cell-label-star">*</text>
                     </div>
                 </midea-cell>
-                <midea-cell :rightText="malfunctionDesc" :hasBottomBorder="!true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectMalfunction">
+                <midea-cell :rightText="malfunctionDesc" :height="80" :hasBottomBorder="!true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectMalfunction">
                     <div slot="title" class="cell-title">
                         <text class="cell-label">故障类型</text>
                         <text class="cell-label-star">*</text>
                     </div>
                 </midea-cell>
-                <midea-cell class="malfunction-reason" rightText="可能原因" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectMalfunction">
+                <midea-cell class="malfunction-reason" :height="80" rightText="可能原因" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectMalfunction">
                     <div slot="title" class="cell-title">
+                        <image class="malfunction-reason-icon" src="./assets/img/service_ic_warming@3x.png" resize='contain'></image>
                         <text class="malfunction-reason-label">有水流生或噗声？</text>
                     </div>
                 </midea-cell>
@@ -50,7 +51,7 @@
                 <div class="item-group scan-group">
                     <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false :value="code" @change="onchange" @input="oninput" />
 
-                    <image class="scan-icon" src="./assets/img/progress.png" resize='contain' @click="scanCode"></image>
+                    <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
                 </div>
                 <div class="item-group photo-group">
                     <text class="photo-label">现场图片</text>
@@ -59,14 +60,14 @@
                 <div class="item-group photo-item-group">
                     <div v-for="(item,index) in photoData" :key="index" class="photo-item-detail">
                         <image :src="item" class="photo-item-img" @click="removePhoto(index)"></image>
-                        <image src="./assets/img/progress.png" class="photo-delete-img"></image>
+                        <image src="./assets/img/service_ic_delone@3x.png" class="photo-delete-img"></image>
                     </div>
-                    <image v-if="photoData.length<3" src="./assets/img/add.png" class="photo-item-img" @click="takePhoto"></image>
+                    <image v-if="photoData.length<3" src="./assets/img/service_ic_carema@3x.png" class="photo-item-add" @click="takePhoto"></image>
                 </div>
                 <div class="item-group info-group">
                     <textarea class="info-textarea" placeholder="请输入其他备注信息" :value="infoText" rows="5" @input="onInfoInput" maxlength="120"></textarea>
                     <text class="info-textarea-calc">{{infoText.length}}/120</text>
-                    <image class="mic-icon" src="./assets/img/progress.png" resize='contain'></image>
+                    <image class="mic-icon" src="./assets/img/service_ic_tape@3x.png" resize='contain'></image>
                 </div>
                 <div class="action-bar">
                     <midea-button text="提交" type="green" :btnStyle="{'background-color': isDataReady?'#267AFF':'#267AFF','opacity':isDataReady?'1':'0.2','border-radius': '4px'}" @mideaButtonClicked="submit">
@@ -337,6 +338,7 @@ export default {
 .cell-title {
   flex: 1;
   flex-direction: row;
+  align-items: center;
 }
 .cell-label {
   font-family: PingFangSC-Regular;
@@ -350,6 +352,11 @@ export default {
 }
 .malfunction-reason {
   background-color: #fff7d5;
+}
+.malfunction-reason-icon {
+  height: 40px;
+  width: 40px;
+  margin-right: 5px;
 }
 .malfunction-reason-label {
   font-family: PingFangSC-Regular;
@@ -484,11 +491,19 @@ export default {
   margin-top: 20px;
   margin-right: 32px;
 }
+.photo-item-add {
+  width: 128px;
+  height: 128px;
+  margin-top: 20px;
+  margin-right: 32px;
+  padding: 34px;
+  background-color: #f2f2f2;
+}
 .photo-delete-img {
   position: absolute;
-  right: 10px;
-  top: 0px;
-  width: 40px;
-  height: 40px;
+  right: 20px;
+  top: 10px;
+  width: 30px;
+  height: 30px;
 }
 </style>

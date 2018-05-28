@@ -26,13 +26,13 @@
 <script>
 import base from './base'
 import nativeService from '@/common/services/nativeService'
-import orderBlock from '@/customer-service/components/orderBlock.vue'
+import OrderBlock from '@/customer-service/components/orderBlock.vue'
 
 import { MideaDialog } from '@/index'
 
 export default {
     components: {
-        orderBlock,
+        OrderBlock,
         MideaDialog
     },
     mixins: [base],
@@ -210,8 +210,8 @@ export default {
 }
 .order-block {
   margin-top: 24px;
-  margin-right: 24px;
-  margin-left: 24px;
+  margin-right: 32px;
+  margin-left: 32px;
 }
 .gap-bottom {
   margin-bottom: 80px;
@@ -220,6 +220,7 @@ export default {
   flex-direction: row;
   justify-content: flex-end;
   padding-top: 15px;
+  margin-right: 32px;
 }
 .action {
   font-family: PingFangSC-Regular;

@@ -32,7 +32,7 @@
                     <text class="info-title">综合停伪技术</text>
                 </div>
                 <div class="item-group">
-                    <image class="antifake-footer-img" src="./assets/img/progress.png" resize='contain'>
+                    <image class="antifake-footer-img" src="./assets/img/servie_pic_banner03@3x.png" resize='contain'>
                     </image>
                 </div>
                 <div class="item-group">

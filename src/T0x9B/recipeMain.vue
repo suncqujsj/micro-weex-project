@@ -48,6 +48,7 @@
 </template>
 
 <script>
+    const storage = weex.requireModule('storage')
     import nativeService from '@/common/services/nativeService.js'
     import MideaHeader from '@/midea-component/header.vue'
     import CarouselCard from '@/T0x9B/components/carouselCard.vue'

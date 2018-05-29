@@ -100,7 +100,7 @@
                         width: this.w/2 + 'px',
                         height: this.w + 'px',
                         transform: 'rotate('+ this.rightDeg +'deg)',
-                        transformOrigin: 'center left'
+                        transformOrigin: 'left center'
                     }
                 }
             },

@@ -313,7 +313,7 @@ export default {
         return new Promise((resolve, reject) => {
             let options = JSON.parse(JSON.stringify(params))
             var self = this;
-            if (dummy != true) {
+            if (true || dummy != true) {
                 let defaultOption = {
                     method: "POST",
                     type: 'json'
@@ -681,9 +681,9 @@ export default {
         return this.commandInterfaceWrapper(param)
     },
     //获取登录态信息
-    getLogonInfo() {
+    getLoginInfo() {
         let param = {
-            operation: 'getLogonInfo'
+            operation: 'getLoginInfo'
         }
         return this.commandInterfaceWrapper(param)
     },

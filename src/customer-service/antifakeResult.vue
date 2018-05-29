@@ -1,36 +1,47 @@
 <template>
-    <div>
-        <midea-header :title="title" @leftImgClick="back"></midea-header>
+    <div class="wrapper">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        </midea-header>
         <scroller class="scroller">
-            <div class="antifake-result-body  group-bottom-border">
-                <text class="group-title">查询信息</text>
-                <div class="antifake-result-body-row">
+            <div class="base-group">
+                <div class="item-group">
+                    <text class="info-title">查询信息</text>
+                </div>
+
+                <div class="item-group antifake-result-body-row">
                     <text class="antifake-result-label">总共查询次数:</text>
-                    <text class="antifake-result-desc">3次(改码已被查询过，请谨防假冒)</text>
+                    <text class="antifake-result-desc result-count">{{result.result.QueryCount}}</text>
+                    <text class="antifake-result-desc">次{{result.result.QueryCount>1?' (该码已被查询过，请谨防假冒)':''}}</text>
                 </div>
-                <div class="antifake-result-body-row">
+                <div class="item-group antifake-result-body-row">
                     <text class="antifake-result-label">首次查询时间:</text>
-                    <text class="antifake-result-desc">2018年8月8日 12:12</text>
+                    <text class="antifake-result-desc">{{firstQueryTimeDesc}}</text>
                 </div>
-                <div class="antifake-result-body-row">
+                <div class="item-group antifake-result-body-row">
                     <text class="antifake-result-label">企业名称:</text>
-                    <text class="antifake-result-desc">广东阿斯蒂芬法师打发</text>
+                    <text class="antifake-result-desc">美的集团股份有限公司</text>
                 </div>
-                <div class="antifake-result-body-row">
+                <div class="item-group antifake-result-body-row">
                     <text class="antifake-result-label">品牌名称:</text>
                     <text class="antifake-result-desc">美的</text>
                 </div>
             </div>
 
-            <div class="antifake-result-footer">
-                <text class="group-title">综合停伪技术</text>
-                <image class="antifake-result-img" src="./assets/img/progress.png" resize='contain'>
-                </image>
-                <text class="antifake-result-desc">查询小贴士:xxxxxx</text>
+            <div class="base-group">
+                <div class="item-group">
+                    <text class="info-title">综合停伪技术</text>
+                </div>
+                <div class="item-group">
+                    <image class="antifake-footer-img" src="./assets/img/servie_pic_banner03@3x.png" resize='contain'>
+                    </image>
+                </div>
+                <div class="item-group">
+                    <text class="antifake-footer-desc">查询小贴士:xxxxxx</text>
+                </div>
             </div>
         </scroller>
 
-        <midea-dialog title="改码已被查询过，请谨防假冒" :show="dialogShow" @close="closeDialog" @mideaDialogCancelBtnClicked="dialogConfirm" @mideaDialogConfirmBtnClicked="dialogConfirm" content="尊敬的客户您好，你所查询的是：xxxxx" :single="true">
+        <midea-dialog :title="resultMessage" mainBtnColor="#267AFF" secondBtnColor="#267AFF" :show="dialogShow" cancelText="否" confirmText="我知道了" @mideaDialogCancelBtnClicked="dialogConfirm" @mideaDialogConfirmBtnClicked="dialogConfirm" single=true>
         </midea-dialog>
     </div>
 </template>
@@ -50,7 +61,22 @@ export default {
     data() {
         return {
             title: '滤芯防伪',
-            dialogShow: true
+            dialogShow: true,
+            result: {}
+        }
+    },
+    computed: {
+        firstQueryTimeDesc() {
+            let firstQueryTime = this.result.result.FirstQueryTime
+            let timeObj = new Date(firstQueryTime)
+            return timeObj.getFullYear() + '年' + (timeObj.getMonth() + 1) + '月' + timeObj.getDate() + '日 ' + timeObj.getHours() + ':' + timeObj.getMinutes()
+        },
+        resultMessage() {
+            if (this.result.result.QueryCount == 1) {
+                return "该码第一次被查询，是美的正品。"
+            } else if (this.result.result.QueryCount > 1) {
+                return "该码已被查询过，请谨防假冒。"
+            }
         }
     },
     methods: {
@@ -79,28 +105,36 @@ export default {
         },
         dialogConfirm() {
             this.dialogShow = false
-        },
-        callService(index) {
-            nativeService.callTel({
-                tel: this.order.tel,
-                title: '网点客户服务',
-                desc: '拨打网点热线电话：' + this.order.tel
-            }).then(
-                (resp) => { }
-            ).catch((error) => {
-                nativeService.toast(error)
-            })
         }
     },
     created() {
         nativeService.getItem("antifakeResult", (resp) => {
-            nativeService.toast(resp)
+            this.result = JSON.parse(resp.data)
         })
     }
 }
 </script>
 
 <style>
+.wrapper {
+  background-color: #f5f5f5;
+  position: relative;
+}
+.advertisement {
+  width: 750px;
+  height: 428px;
+  background-color: #ffffff;
+}
+.base-group {
+  padding-top: 24px;
+  background-color: #f2f2f2;
+}
+.item-group {
+  padding-top: 32px;
+  padding-left: 32px;
+  padding-right: 32px;
+  background-color: #ffffff;
+}
 .antifake-result-body {
   width: 750px;
   flex-direction: column;
@@ -113,35 +147,38 @@ export default {
 }
 .antifake-result-body-row {
   flex-direction: row;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  justify-content: flex-start;
+  align-items: center;
 }
 .group-bottom-border {
   border-bottom-color: #e2e2e2;
   border-bottom-width: 1px;
 }
 .antifake-result-label {
-  width: 200px;
-  font-size: 26px;
-  text-align: right;
-  padding-right: 15px;
+  width: 210px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #666666;
+  text-align: left;
 }
 .antifake-result-desc {
-  flex: 1;
-  font-size: 26px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #000000;
 }
-.antifake-result-footer {
-  width: 750px;
-  flex-direction: column;
-  justify-content: center;
-  padding-top: 50px;
-  padding-right: 50px;
-  padding-bottom: 50px;
-  padding-left: 50px;
-  margin-top: 50px;
+.result-count {
+  font-size: 36px;
+  color: #ff3b30;
 }
-.antifake-result-img {
-  width: 650px;
-  height: 300px;
+.antifake-footer-img {
+  width: 686px;
+  height: 270px;
+}
+.antifake-footer-desc {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #000000;
+  width: 686px;
+  text-align: center;
 }
 </style>

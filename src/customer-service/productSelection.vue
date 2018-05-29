@@ -1,121 +1,138 @@
 <template>
     <div>
-        <midea-header :title="title" @leftImgClick="back"></midea-header>
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        </midea-header>
         <div class="search-bar">
-            <text class="search-bar-content" @click="searchProduct">&#xe606;Search</text>
+            <div class="search-bar-content" @click="searchProduct">
+                <image class="search-bar-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
+                <text class="search-bar-desc">请输入产品品类，如空调、洗衣机</text>
+            </div>
         </div>
         <div class="product-content">
-                <scroller class="product-content-left">
-                    <text class="product-brand">我的家电</text>
-                    <text class="product-brand">美的</text>
-                    <text class="product-brand">小天鹅</text>
-                    <text class="product-brand">雪尔</text>
-                    <text class="product-brand">华凌</text>
-                    <text class="product-brand">美的</text>
-                    <text class="product-brand">美的</text>
-                    <text class="product-brand">美的</text>
-                    <text class="product-brand">美的</text>
-                    <text class="product-brand">美的</text>
-                    <text class="product-brand">美的</text>
-                    <text class="product-brand">美的</text>
-                    <text class="product-brand">美的</text>
-                    <text class="product-brand">美的</text>
-                    <text class="product-brand">美的</text>
-                    <text class="product-brand">美的</text>
-                    <text class="product-brand">美的</text>
-                    <text class="product-brand">美的</text>
-                    <text class="product-brand">美的</text>
-                </scroller>
-                <scroller class="product-content-right">
-                    <div class="product-group">
-                        <text class="product-group-title">空调</text>
-                        <div class="product-group-content">
-                            <div class="product-appliance"  @click="selectItem">
-                                <image class="appliance-img" :src="'./assets/img/progress.png'"></image>
-                                <text class="appliance-name">家用空调</text>
-                            </div>
-                            <div class="product-appliance">
-                                <image class="appliance-img" :src="'./assets/img/progress.png'"></image>
-                                <text class="appliance-name">家用空调</text>
-                            </div>
-                            <div class="product-appliance">
-                                <image class="appliance-img" :src="'./assets/img/progress.png'"></image>
-                                <text class="appliance-name">家用空调</text>
-                            </div>
-                            <div class="product-appliance">
-                                <image class="appliance-img" :src="'./assets/img/progress.png'"></image>
-                                <text class="appliance-name">家用空调</text>
-                            </div>
+            <scroller class="">
+                <text class="product-brand product-brand-selected">我的家电</text>
+                <text class="product-brand">美的</text>
+                <text class="product-brand">小天鹅</text>
+                <text class="product-brand">雪尔</text>
+                <text class="product-brand">华凌</text>
+                <text class="product-brand">美的</text>
+                <text class="product-brand">美的</text>
+                <text class="product-brand">美的</text>
+                <text class="product-brand">美的</text>
+                <text class="product-brand">美的</text>
+                <text class="product-brand">美的</text>
+                <text class="product-brand">美的</text>
+                <text class="product-brand">美的</text>
+                <text class="product-brand">美的</text>
+                <text class="product-brand">美的</text>
+                <text class="product-brand">美的</text>
+                <text class="product-brand">美的</text>
+                <text class="product-brand">美的</text>
+                <text class="product-brand">美的</text>
+            </scroller>
+            <scroller class="product-content-right">
+                <div class="product-group">
+                    <text class="product-group-title">空调</text>
+                    <div class="product-group-content">
+                        <div class="product-appliance" @click="selectItem">
+                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                            <text class="appliance-name">家用空调家用空调</text>
+                        </div>
+                        <div class="product-appliance">
+                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                            <text class="appliance-name">家用空调</text>
+                        </div>
+                        <div class="product-appliance">
+                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                            <text class="appliance-name">家用空调</text>
+                        </div>
+                        <div class="product-appliance">
+                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                            <text class="appliance-name">家用空调</text>
+                        </div>
+                        <div class="product-appliance">
+                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                            <text class="appliance-name">家用空调</text>
+                        </div>
+                        <div class="product-appliance">
+                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                            <text class="appliance-name">家用空调</text>
                         </div>
                     </div>
-                    
-                    <div class="product-group">
-                        <text class="product-group-title">洗衣机</text>
-                        <div class="product-group-content">
-                            <div class="product-appliance">
-                                <image class="appliance-img" :src="'./assets/img/progress.png'"></image>
-                                <text class="appliance-name">洗衣机</text>
-                            </div>
-                            <div class="product-appliance">
-                                <image class="appliance-img" :src="'./assets/img/progress.png'"></image>
-                                <text class="appliance-name">洗衣机</text>
-                            </div>
-                            <div class="product-appliance">
-                                <image class="appliance-img" :src="'./assets/img/progress.png'"></image>
-                                <text class="appliance-name">洗衣机</text>
-                            </div>
-                            <div class="product-appliance">
-                                <image class="appliance-img" :src="'./assets/img/progress.png'"></image>
-                                <text class="appliance-name">洗衣机</text>
-                            </div>
+                </div>
+
+                <div class="product-group">
+                    <text class="product-group-title">洗衣机</text>
+                    <div class="product-group-content">
+                        <div class="product-appliance">
+                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                            <text class="appliance-name">洗衣机</text>
+                        </div>
+                        <div class="product-appliance">
+                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                            <text class="appliance-name">洗衣机</text>
+                        </div>
+                        <div class="product-appliance">
+                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                            <text class="appliance-name">洗衣机</text>
+                        </div>
+                        <div class="product-appliance">
+                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                            <text class="appliance-name">洗衣机</text>
                         </div>
                     </div>
-                    <div class="product-group">
-                        <text class="product-group-title">洗衣机</text>
-                        <div class="product-group-content">
-                            <div class="product-appliance" @click="selectItem">
-                                <image class="appliance-img" :src="'./assets/img/progress.png'"></image>
-                                <text class="appliance-name">洗衣机</text>
-                            </div>
-                            <div class="product-appliance">
-                                <image class="appliance-img" :src="'./assets/img/progress.png'"></image>
-                                <text class="appliance-name">洗衣机</text>
-                            </div>
-                            <div class="product-appliance">
-                                <image class="appliance-img" :src="'./assets/img/progress.png'"></image>
-                                <text class="appliance-name">洗衣机</text>
-                            </div>
-                            <div class="product-appliance">
-                                <image class="appliance-img" :src="'./assets/img/progress.png'"></image>
-                                <text class="appliance-name">洗衣机</text>
-                            </div>
+                </div>
+                <div class="product-group">
+                    <text class="product-group-title">洗衣机</text>
+                    <div class="product-group-content">
+                        <div class="product-appliance" @click="selectItem">
+                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                            <text class="appliance-name">洗衣机</text>
+                        </div>
+                        <div class="product-appliance">
+                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                            <text class="appliance-name">洗衣机</text>
+                        </div>
+                        <div class="product-appliance">
+                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                            <text class="appliance-name">洗衣机</text>
+                        </div>
+                        <div class="product-appliance">
+                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                            <text class="appliance-name">洗衣机</text>
                         </div>
                     </div>
-                    <div class="product-group">
-                        <text class="product-group-title">洗衣机</text>
-                        <div class="product-group-content">
-                            <div class="product-appliance">
-                                <image class="appliance-img" :src="'./assets/img/progress.png'"></image>
-                                <text class="appliance-name">洗衣机</text>
-                            </div>
-                            <div class="product-appliance">
-                                <image class="appliance-img" :src="'./assets/img/progress.png'"></image>
-                                <text class="appliance-name">洗衣机</text>
-                            </div>
-                            <div class="product-appliance">
-                                <image class="appliance-img" :src="'./assets/img/progress.png'"></image>
-                                <text class="appliance-name">洗衣机</text>
-                            </div>
-                            <div class="product-appliance">
-                                <image class="appliance-img" :src="'./assets/img/progress.png'"></image>
-                                <text class="appliance-name">洗衣机</text>
-                            </div>
+                </div>
+                <div class="product-group">
+                    <text class="product-group-title">洗衣机</text>
+                    <div class="product-group-content">
+                        <div class="product-appliance">
+                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                            <text class="appliance-name">洗衣机</text>
+                        </div>
+                        <div class="product-appliance">
+                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                            <text class="appliance-name">洗衣机</text>
+                        </div>
+                        <div class="product-appliance">
+                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                            <text class="appliance-name">洗衣机</text>
+                        </div>
+                        <div class="product-appliance">
+                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                            <text class="appliance-name">洗衣机</text>
                         </div>
                     </div>
-                </scroller>
-            </div>
+                </div>
+            </scroller>
+        </div>
         <div class="action-bar">
-            <text class="action" @click="submit">完成</text>
+            <div class="product-selected-items">
+                <text class="product-action">洗衣机</text>
+                <text class="product-action">电冰箱</text>
+                <text class="product-action">洗碗机</text>
+            </div>
+            <text class="action-btn" @click="submit">完成</text>
         </div>
     </div>
 </template>
@@ -123,7 +140,7 @@
 <script>
 import base from './base'
 import nativeService from '@/common/services/nativeService'
-import {  MideaDialog } from '@/index'
+import { MideaDialog } from '@/index'
 
 export default {
     components: {
@@ -144,15 +161,15 @@ export default {
                     ]
                 }
             ],
-            dialogShow: false
+            dialogShow: false,
+            fromPage: ''
         }
     },
     methods: {
-        searchProduct(){
-            let fromPage = nativeService.getParameters('from')
-            this.goTo("productSearch", {}, {from: fromPage})
+        searchProduct() {
+            this.goTo("productSearch", {}, { from: this.fromPage })
         },
-        selectItem(){
+        selectItem() {
             this.back()
         },
         submit() {
@@ -176,91 +193,161 @@ export default {
                     'src': "url('" + fontUrl + "')"
                 });
             })
-        } catch (error) {}
+        } catch (error) { }
 
     },
     created() {
-
+        this.fromPage = nativeService.getParameters('from')
     }
 }
 </script>
 
 <style>
-.search-bar{
+.search-bar {
   width: 750px;
-  height: 88px;
+  height: 96px;
   justify-content: center;
   align-items: center;
+  padding-top: 16px;
+  padding-left: 32px;
+  padding-right: 32px;
+  padding-bottom: 16px;
   border-bottom-color: #e2e2e2;
   border-bottom-width: 1px;
+  background-color: #ffffff;
 }
-.search-bar-content{
-  padding: 10px;
-  font-size: 26px;
-  text-align:center;
-  font-family: iconfont;
+.search-bar-content {
+  width: 686px;
+  height: 64px;
+  border-radius: 4px;
+  background-color: #f2f2f2;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
-.product-content{
-    flex: 1;
-    flex-direction: row;
+.search-bar-img {
+  height: 40px;
+  width: 40px;
+  margin-right: 10px;
 }
-.product-content-left{
-    flex: 1;
+.search-bar-desc {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #c8c7cc;
+}
+.product-content {
+  flex: 1;
+  flex-direction: row;
+}
+.product-content-left {
+  flex: 1;
   align-content: center;
   align-items: center;
 }
-.product-brand{
+.product-brand {
+  width: 200px;
+  height: 96px;
+  align-items: center;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #666666;
   text-align: center;
-  font-size: 32px;
-  padding-top: 20px;
-  padding-right: 15px;
-  padding-bottom: 20px;
-  padding-left: 15px;
+  padding-top: 34px;
+  padding-right: 16px;
+  padding-bottom: 34px;
+  padding-left: 16px;
 }
-.product-content-right{
-    flex: 3;
+.product-brand-selected {
+  font-family: PingFangSC-Medium;
+  color: #000000;
+}
+.product-content-right {
+  flex: 2.75;
   justify-content: flex-start;
   align-items: center;
 }
-.product-group{
-    margin-bottom: 30px;
+.product-group {
+  margin-bottom: 30px;
 }
-.product-group-title{
+.product-group-title {
+  width: 550px;
+  padding: 32px;
+  font-family: PingFangSC-Regular;
   font-size: 28px;
-  padding: 20px;
+  color: #000000;
 }
-.product-group-content{
-    width:562px;
-    flex-direction: row;
+.product-group-content {
+  width: 550px;
+  padding-left: 32px;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+.product-appliance {
+  width: 144px;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
-    flex-wrap: wrap;
+  border-color: #f2f2f2;
+  border-width: 4px;
+  margin-right: 24px;
+  margin-bottom: 24px;
+  padding: 16px;
 }
-.product-appliance{
-    width:187px;
-    height:187px;
-    flex-direction: column;
-  align-items: center;
+.appliance-img {
+  height: 124px;
+  width: 124px;
 }
-.appliance-img{
-  height: 80px;
-  width: 80px;
-}
-.appliance-name{
-  font-size: 28px;
-  padding-top: 15px;
+.appliance-name {
+  font-family: PingFangSC-Regular;
+  font-size: 24px;
+  color: #666666;
+  text-align: center;
+  padding-top: 10px;
 }
 .action-bar {
-  position: fixed;
-  bottom: 0px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   width: 750px;
-  height: 88px;
-  text-align: right;
-  background-color: gray;
-  justify-content: center;
+  height: 96px;
+  padding-right: 32px;
+  padding-left: 40px;
+  border-top-color: #e2e2e2;
+  border-top-width: 1px;
+  background-color: #ffffff;
 }
-.action {
-  margin-right: 40px;
-  color: blue;
-  font-size: 28px;
+.product-selected-items {
+  flex: 1;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+.product-action {
+  font-family: PingFangSC-Regular;
+  font-size: 24px;
+  color: #666666;
+  text-align: center;
+  background-color: #f6f6f6;
+  border-radius: 4px;
+  padding-top: 10px;
+  padding-right: 16px;
+  padding-bottom: 10px;
+  padding-left: 16px;
+  margin-right: 32px;
+}
+.action-btn {
+  width: 120px;
+  font-family: PingFangSC-Regular;
+  font-size: 24px;
+  color: #ffffff;
+  text-align: center;
+  background-color: #267aff;
+  border-radius: 4px;
+  padding-top: 10px;
+  padding-right: 18px;
+  padding-bottom: 10px;
+  padding-left: 18px;
 }
 </style>

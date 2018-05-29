@@ -1,36 +1,43 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" @leftImgClick="back"></midea-header>
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        </midea-header>
         <scroller class="content-wrapper">
-            <div class="item-group">
-                <midea-grid-select class="type-select-grid" :cols="3" :single="true" :customStyles="{width:'200px',height:'48px'}" :list="types" @select="typeSelected">
-                </midea-grid-select>
-            </div>
+            <div class="base-group">
+                <div class="item-group">
+                    <text class="type-select-label">以下为选填信息，有助于更快更好地为您服务</text>
 
-            <div class="item-group scan-group group-bottom-border">
-                <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false :value="code" @change="onchange" @input="oninput" />
+                    <div class="search-history">
+                        <text v-for="(item,index) in types" :key="index" v-bind:class="['search-history-item', typeSelectedIndex==index?'search-history-item-selected':'']" @click="typeSelected(index)">{{item.title}}</text>
+                    </div>
+                </div>
 
-                <image class="scan-icon" src="./assets/img/progress.png" resize='contain' @click="scanCode"></image>
-            </div>
+                <div class="item-group scan-group">
+                    <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false :value="code" @change="onchange" @input="oninput" />
 
-            <div class="item-group scan-group group-bottom-border">
-                <input class="scan-input" placeholder="请输入配件名称" :autofocus=false :value="code" @change="onchange" @input="oninput" />
+                    <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
+                </div>
 
-                <text class="search" @click="search">查询</text>
-            </div>
+                <div class="item-group scan-group group-bottom-border">
+                    <input class="scan-input" placeholder="请输入配件名称" :autofocus=false :value="code" @change="onchange" @input="oninput" />
+                </div>
 
-            <div class="item-group group-bottom-border">
-                <text class="result-title">指导价格</text>
-
-                <div class="result-content">
-                    <text class="result-product">压缩机ABCS</text>
-                    <text class="result-price">200元</text>
+                <div class="action-bar">
+                    <midea-button text="查询" type="green" :btnStyle="{'background-color': '#267AFF','border-radius': '4px'}" @mideaButtonClicked="search">
+                    </midea-button>
                 </div>
             </div>
 
-            <div class="item-group">
-                <text class="result-desc">若本价格标准高于当地物价部门制定有关标准，请以当地物价部门标准为准</text>
+            <div class="base-group">
+                <div class="item-group result-header">
+                    <text class="result-title">压缩机ABCS</text>
+                    <text class="result-price">指导价200元</text>
+                </div>
+                <div class="item-group">
+                    <text class="result-desc">若本价格标准高于当地物价部门制定有关标准，请以当地物价部门标准为准</text>
+                </div>
             </div>
+
         </scroller>
     </div>
 </template>
@@ -39,13 +46,11 @@
 import base from './base'
 import nativeService from '@/common/services/nativeService';
 
-
-import { MideaGridSelect } from '@/index'
-
+import { MideaButton } from '@/index'
 
 export default {
     components: {
-        MideaGridSelect
+        MideaButton
     },
     mixins: [base],
     data() {
@@ -60,13 +65,14 @@ export default {
                     'title': '产品型号'
                 }
             ],
+            typeSelectedIndex: 0,
         }
     },
     computed: {
     },
     methods: {
-        typeSelected() {
-
+        typeSelected(index) {
+            this.typeSelectedIndex = index
         },
         onchange() {
 
@@ -88,73 +94,114 @@ export default {
         }
     },
     created() {
-        this.initServiePeriod()
-        this.initProductData()
     }
 }
 </script>
 
 <style>
 .wrapper {
-  background-color: #ffffff;
+  background-color: #f2f2f2;
   position: relative;
 }
-.content-wrapper {
-  padding-bottom: 120px;
+.base-group {
+  padding-top: 24px;
+  background-color: #f2f2f2;
+}
+.cell-title {
+  flex: 1;
+  flex-direction: row;
+}
+.cell-label {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #000000;
+}
+.cell-label-star {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #ff3b30;
 }
 .item-group {
-  padding: 24px;
-}
-
-.group-bottom-border {
-  border-bottom-color: #e2e2e2;
-  border-bottom-width: 1px;
+  padding-top: 32px;
+  padding-left: 32px;
+  padding-right: 32px;
+  background-color: #ffffff;
 }
 
 .type-select-label {
+  font-family: PingFangSC-Regular;
   font-size: 28px;
-  padding-bottom: 15px;
+  color: #666666;
+  padding-bottom: 32px;
 }
-.type-select-grid {
-  font-size: 28px;
+.search-history {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.search-history-item {
+  font-family: PingFangSC-Regular;
+  font-size: 24px;
+  color: #666666;
+  background-color: #f6f6f6;
+  text-align: center;
+  padding-top: 8px;
+  padding-right: 28px;
+  padding-bottom: 8px;
+  padding-left: 28px;
+  margin-right: 24px;
+  border-radius: 4px;
+}
+.search-history-item-selected {
+  background-color: #e8f1ff;
+  color: #267aff;
 }
 .scan-group {
-  flex-direction: row;
+  position: relative;
 }
 .scan-input {
-  flex: 1;
-  font-size: 32px;
-  margin-right: 20px;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #000000;
+  border-radius: 4px;
+  border-color: #e5e5e8;
+  border-width: 1px;
+  height: 72px;
+  padding-left: 22px;
+  padding-right: 50px;
+  background-color: #fafafa;
 }
 .scan-icon {
+  position: absolute;
+  top: 40px;
+  right: 50px;
   height: 40px;
   width: 40px;
 }
-.search {
-  font-size: 26px;
-  width: 120px;
-  padding: 8px;
+.action-bar {
+  background-color: #ffffff;
+  width: 750px;
   text-align: center;
-  background-color: #e2e2e2;
-  border-radius: 6px;
 }
-.result-title {
-  font-size: 28px;
-  padding-bottom: 15px;
-}
-.result-content {
+.result-header {
   flex-direction: row;
   justify-content: space-between;
 }
-.result-product {
-  font-size: 28px;
+.result-title {
+  font-family: PingFangSC-Medium;
+  font-size: 32px;
+  color: #000000;
+  padding-bottom: 24px;
 }
 .result-price {
+  font-family: PingFangSC-Regular;
   font-size: 28px;
+  color: #ff9500;
 }
 .result-desc {
-  font-size: 26px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #666666;
+  padding-bottom: 32px;
 }
 </style>

@@ -13,6 +13,7 @@
 
 <script>
 
+    const storage = weex.requireModule('storage')
     import mideaNavlist from '@/midea-component/mNavList.vue'
     import MideaHeader from '@/midea-component/header.vue'
     import nativeService from '@/common/services/nativeService'

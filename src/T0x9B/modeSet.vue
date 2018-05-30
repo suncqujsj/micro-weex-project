@@ -184,13 +184,13 @@
                 showPop1: false, //温度时长弹窗
                 showPop2: false, //撤销预约弹窗
                 temperature: 180,
-                minutes: 0,
-                seconds: 0,
+                minutes: '00',
+                seconds: '00',
                 activeMinI: null,
                 activeTempI: null,
                 activeSecI: null,
-                countMin: 0, //设置的分
-                countSec: 0, //设置的秒
+                countMin: '00', //设置的分
+                countSec: '00', //设置的秒
                 countTemperature: null, //设置的温度
                 reserveTime: null, //预约启动时间
                 reserveStatus: false,//是否预约
@@ -282,7 +282,7 @@
             countdownTime(){
                 let that = this
                 if (this.workStatus) {
-                    let time = that.countMin*60 + that.countSec
+                    let time = Number(that.countMin*60) + Number(that.countSec)
                     let wholeTime = time
                     let timeCount = setInterval(function(){
                         if (time > 0){
@@ -291,7 +291,7 @@
                             let s = time - 60*m
                             that.countMin = that.formatNum(m)
                             that.countSec = that.formatNum(s)
-                            that.workPercent = Math.floor((wholeTime -time)*100/wholeTime)
+                            that.workPercent = (wholeTime -time)*100/wholeTime
                         }else{
                             that.workStatus = false
                             that.workFinish = true

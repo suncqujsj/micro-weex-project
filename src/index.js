@@ -6,6 +6,7 @@ import MideaPromt from '@/component/promt.vue'
 import MideaRadio from '@/component/radio.vue'
 import MideaRadioList from '@/component/radioList.vue'
 
+import MideaAccordion from '@/midea-component/accordion.vue'
 import MideaActionsheet from '@/midea-component/actionsheet.vue'
 import MideaButton from '@/midea-component/button.vue'
 import MideaCell from '@/component/cell.vue'
@@ -35,6 +36,7 @@ import MideaVote from '@/midea-component/mVote.vue'
 import MideaRichText from '@/midea-component/wxc-rich-text';
 
 export {
+  MideaAccordion,
   MideaActionsheet,
   MideaDialog,
   MideaImageSlider,

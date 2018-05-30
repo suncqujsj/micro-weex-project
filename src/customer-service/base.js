@@ -14,6 +14,9 @@ import nativeService from '@/common/services/nativeService'
 import debugUtil from '@/common/util/debugUtil'
 import mideaHeader from '@/midea-component/header.vue'
 
+import appConfig from './settings/config'
+import serviceList from './settings/serviceList'
+
 const appDataChannel = new BroadcastChannel(plugin_name + 'appData')
 const pushDataChannel = new BroadcastChannel(plugin_name + 'pushData')
 
@@ -125,6 +128,7 @@ export default {
     },
     created() {
         console.log("created")
+        nativeService.serviceList = Object.assign(nativeService.serviceList || {}, serviceList)
         //若isMixinCreated为false, 则不继承
         if (!this.isMixinCreated) return
 

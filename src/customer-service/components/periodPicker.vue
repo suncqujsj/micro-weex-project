@@ -5,16 +5,31 @@
             <text class="period-header-text">{{title}}</text>
             <image class="period-header-action" src="./assets/img/service_ic_cancel@3x.png" resize='contain' @click="buttonCancel"></image>
         </div>
-        <text v-if="desc" class="period-content-time-desc">{{desc}}</text>
+        <text v-if="desc" class="period-head-desc">{{desc}}</text>
         <div class="period-content">
-            <scroller class="period-content-left" @scrollend="scrollEnd">
-                <div v-for="(item, index) in dates" :key="index" :ref="'date'+index">
-                    <text :style="{'height': itemHeight+'px'}" v-bind:class="['period-content-date',dateIndex==index?'selected-date':'unselected-date']">{{item.desc}}</text>
+            <div class="period-content-select-area"></div>
+            <scroller class="period-content-wrapper" show-scrollbar=false @scroll="scroll" @scrollend="scrollEnd">
+                <div v-for="(item, index) in datesArray" :key="index" :ref="'date'+index">
+                    <text v-bind:class="['period-content-item',
+                    index==0?'first-content-item':'',
+                    index==(datesArray.length-1)?'last-content-item':'',
+                    index==dateIndex-2?'first-visible-item':'',
+                    index==dateIndex-1?'second-visible-item':'',
+                    index==dateIndex?'selected-item':'unselected-item',
+                    index==dateIndex+1?'second-last-visible-item':'',
+                    index==dateIndex+2?'first-last-visible-item':'']">{{item.desc}}</text>
                 </div>
             </scroller>
-            <scroller class="period-content-right">
-                <div v-for="(item, index) in times" :key="index">
-                    <text :style="{'height': itemHeight+'px'}" v-bind:class="['period-content-time',timeIndex==index?'selected-time':'']" @click="selectTime(index)">{{item.desc}}</text>
+            <scroller class="period-content-wrapper" show-scrollbar=false @scroll="scrollTime" @scrollend="scrollTimeEnd">
+                <div v-for="(item, index) in timesArray" :key="index" :ref="'time'+index">
+                    <text v-bind:class="['period-content-item',
+                    index==0?'first-content-item':'',
+                    index==(timesArray.length-1)?'last-content-item':'',
+                    index==timeIndex-2?'first-visible-item':'',
+                    index==timeIndex-1?'second-visible-item':'',
+                    index==timeIndex?'selected-item':'unselected-item',
+                    index==timeIndex+1?'second-last-visible-item':'',
+                    index==timeIndex+2?'first-last-visible-item':'']">{{item.desc}}</text>
                 </div>
             </scroller>
         </div>
@@ -44,7 +59,18 @@ export default {
             type: Array,
             default: []
         },
-        dateIndex: 0,
+        dateIndex: {
+            type: Number,
+            default: 0
+        },
+        times: {
+            type: Array,
+            default: []
+        },
+        timeIndex: {
+            type: Number,
+            default: 0
+        },
         height: {
             type: Number,
             default: 610
@@ -60,47 +86,106 @@ export default {
         buttonText: {
             type: String,
             default: "确定"
-        },
-        times: {
-            type: Array,
-            default: []
-        },
-        timeIndex: 0,
-        itemHeight: {
-            type: Number,
-            default: 70
         }
     },
     data() {
         return {
+            itemHeight: 70
         }
     },
     watch: {
         isShow(value) {
             if (value) {
                 this.$nextTick(() => {
-                    const el = this.$refs['date' + this.dateIndex]
-                    if (el) {
-                        dom.scrollToElement(el[0], { offset: -210 })
-                    }
+                    this.refreshDate()
+                    if (!this.dateIndex || this.dateIndex < 0) this.dateIndex = 0
+                    const dateEl = this.$refs['date0'][0]
+                    dom.scrollToElement(dateEl, { offset: this.dateIndex * 70 })
+                    this.refreshTime()
+                    const timeEl = this.$refs['time0'][0]
+                    dom.scrollToElement(timeEl, { offset: this.timeIndex * 70 })
                 })
             }
         }
     },
+    computed: {
+        datesArray() {
+            return this.dates.filter((date) => {
+                return date.disable != true
+            })
+        },
+        timesArray() {
+            return this.times.filter((time) => {
+                return time.disable != true
+            })
+        }
+    },
     methods: {
-        scrollEnd(event) {
+        scroll(event) {
             let offsetY = event.contentOffset.y
             if (offsetY % this.itemHeight != 0) {
                 let firstVisibleItemIndex = Math.abs(Math.round(offsetY / 70))
-                nativeService.toast(firstVisibleItemIndex)
-                const el = this.$refs['date0'][0]
-                dom.scrollToElement(el, { offset: firstVisibleItemIndex * 70 })
-                this.dateIndex = firstVisibleItemIndex + 2
+                this.dateIndex = firstVisibleItemIndex
             }
         },
-        selectTime(index) {
-            this.timeIndex = index
-            this.confirm()
+        scrollEnd(event) {
+            const el = this.$refs['date0'][0]
+            dom.scrollToElement(el, { offset: this.dateIndex * 70 })
+            this.refreshTime()
+        },
+        scrollTime(event) {
+            let offsetY = event.contentOffset.y
+            if (offsetY % this.itemHeight != 0) {
+                let firstVisibleItemIndex = Math.abs(Math.round(offsetY / 70))
+                this.timeIndex = firstVisibleItemIndex
+            }
+        },
+        scrollTimeEnd(event) {
+            const el = this.$refs['time0'][0]
+            dom.scrollToElement(el, { offset: this.timeIndex * 70 })
+        },
+        refreshDate() {
+            if (this.dates) {
+                let now = new Date()
+                if (now.getHours() >= 18) {
+                    this.dates[0].disable = true
+                }
+            }
+        },
+        refreshTime() {
+            if (this.times) {
+                if (this.dateIndex == 0) {
+                    let now = new Date()
+                    if (now.getHours() >= 18) {
+                        this.times[0].disable = true
+                        this.times[1].disable = true
+                        this.times[2].disable = true
+                        this.times[3].disable = true
+                        this.times[4].disable = true
+                    } else if (now.getHours() >= 16) {
+                        this.times[0].disable = true
+                        this.times[1].disable = true
+                        this.times[2].disable = true
+                        this.times[3].disable = true
+                    } else if (now.getHours() >= 14) {
+                        this.times[0].disable = true
+                        this.times[1].disable = true
+                        this.times[2].disable = true
+                    } else if (now.getHours() >= 12) {
+                        this.times[0].disable = true
+                        this.times[1].disable = true
+                    } else if (now.getHours() >= 10) {
+                        this.times[0].disable = true
+                    }
+                } else {
+                    this.times[0].disable = false
+                    this.times[1].disable = false
+                    this.times[2].disable = false
+                    this.times[3].disable = false
+                    this.times[4].disable = false
+                }
+            }
+            if (!this.timeIndex || this.timeIndex < 0 || this.timeIndex >= this.timesArray.length) this.timeIndex = 0
         },
         cancel() {
             this.$emit('oncancel')
@@ -111,8 +196,8 @@ export default {
         },
         confirm() {
             this.$emit('onchanged', {
-                dateIndex: this.dateIndex,
-                timeIndex: this.timeIndex
+                dateIndex: this.datesArray[this.dateIndex].index,
+                timeIndex: this.timesArray[this.timeIndex].index,
             })
             this.$refs.popup.hide()
         }
@@ -120,8 +205,6 @@ export default {
     mounted() {
     },
     created() {
-        if (!this.dateIndex) this.dateIndex = 0
-        if (!this.timeIndex) this.timeIndex = 0
     }
 }
 </script>
@@ -147,11 +230,11 @@ export default {
   background-color: #ffffff;
 }
 .period-header-action {
-  height: 60px;
-  width: 60px;
-  padding-right: 20px;
+  height: 45px;
+  width: 45px;
+  margin-right: 24px;
 }
-.period-content-time-desc {
+.period-head-desc {
   width: 750px;
   text-align: center;
   font-family: PingFangSC-Regular;
@@ -163,62 +246,76 @@ export default {
 }
 .period-content {
   width: 750px;
-  height: 363px;
+  height: 350px;
   flex-direction: row;
   background-color: #ffffff;
 }
-.period-content-left {
+.period-content-wrapper {
   flex: 1;
   align-content: center;
   align-items: center;
 }
-.period-content-date {
+.period-content-item {
   width: 300px;
+  height: 70px;
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #000000;
   text-align: center;
   padding: 8px;
 }
-.period-content-right {
-  flex: 1;
-  align-content: center;
-  align-items: center;
-  padding-bottom: 20px;
+.first-content-item {
+  margin-top: 140px;
 }
-.period-content-time {
-  width: 300px;
-  font-family: PingFangSC-Regular;
-  font-size: 28px;
-  text-align: center;
-  padding: 20px;
+.last-content-item {
+  margin-bottom: 140px;
 }
-.selected-date {
+.first-visible-item {
+  opacity: 0.3;
+}
+.second-visible-item {
+  opacity: 0.6;
+}
+.second-last-visible-item {
+  opacity: 0.6;
+}
+.first-last-visible-item {
+  opacity: 0.3;
+}
+.selected-item {
   opacity: 1;
   color: #000000;
 }
-.unselected-date {
+.unselected-item {
   opacity: 0.6;
   color: #000000;
 }
-.selected-time {
-  background-color: aliceblue;
-  color: blue;
+.period-content-select-area {
+  position: absolute;
+  top: 136px;
+  left: 0px;
+  width: 750px;
+  height: 72px;
+  padding-left: 120px;
+  padding-right: 120px;
+  border-top-color: #e2e2e2;
+  border-top-width: 1px;
+  border-bottom-color: #e2e2e2;
+  border-bottom-width: 1px;
+  /* background-color: aquamarine; */
 }
 .action-bar {
-  height: 96px;
-  align-items: center;
   background-color: #f2f2f2;
 }
 .action-btn {
-  margin-top: 15px;
+  margin-top: 16px;
   font-family: PingFangSC-Regular;
   font-size: 32px;
   color: #000000;
   text-align: center;
-  padding-top: 30px;
-  padding-bottom: 30px;
-  text-align: center;
   background-color: #ffffff;
+  text-align: center;
+  padding-top: 22px;
+  padding-bottom: 22px;
 }
 </style>

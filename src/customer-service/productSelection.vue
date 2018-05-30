@@ -10,25 +10,8 @@
         </div>
         <div class="product-content">
             <scroller class="">
-                <text class="product-brand product-brand-selected">我的家电</text>
-                <text class="product-brand">美的</text>
-                <text class="product-brand">小天鹅</text>
-                <text class="product-brand">雪尔</text>
-                <text class="product-brand">华凌</text>
-                <text class="product-brand">美的</text>
-                <text class="product-brand">美的</text>
-                <text class="product-brand">美的</text>
-                <text class="product-brand">美的</text>
-                <text class="product-brand">美的</text>
-                <text class="product-brand">美的</text>
-                <text class="product-brand">美的</text>
-                <text class="product-brand">美的</text>
-                <text class="product-brand">美的</text>
-                <text class="product-brand">美的</text>
-                <text class="product-brand">美的</text>
-                <text class="product-brand">美的</text>
-                <text class="product-brand">美的</text>
-                <text class="product-brand">美的</text>
+                <text v-for="(item,index) in brandList" :key="index" v-bind:class="['product-brand',
+                    index==selectedBrandIndex?'product-brand-selected':'']" @click="selectBrand(index)">{{item.name}}</text>
             </scroller>
             <scroller class="product-content-right">
                 <div class="product-group">
@@ -36,25 +19,25 @@
                     <div class="product-group-content">
                         <div class="product-appliance" @click="selectItem">
                             <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
-                            <text class="appliance-name">家用空调家用空调</text>
+                            <text class="appliance-name">家用空调</text>
                         </div>
-                        <div class="product-appliance">
+                        <div class="product-appliance" @click="selectItem">
                             <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
                             <text class="appliance-name">家用空调</text>
                         </div>
-                        <div class="product-appliance">
+                        <div class="product-appliance" @click="selectItem">
                             <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
                             <text class="appliance-name">家用空调</text>
                         </div>
-                        <div class="product-appliance">
+                        <div class="product-appliance" @click="selectItem">
                             <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
                             <text class="appliance-name">家用空调</text>
                         </div>
-                        <div class="product-appliance">
+                        <div class="product-appliance" @click="selectItem">
                             <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
                             <text class="appliance-name">家用空调</text>
                         </div>
-                        <div class="product-appliance">
+                        <div class="product-appliance" @click="selectItem">
                             <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
                             <text class="appliance-name">家用空调</text>
                         </div>
@@ -64,19 +47,19 @@
                 <div class="product-group">
                     <text class="product-group-title">洗衣机</text>
                     <div class="product-group-content">
-                        <div class="product-appliance">
+                        <div class="product-appliance" @click="selectItem">
                             <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
                             <text class="appliance-name">洗衣机</text>
                         </div>
-                        <div class="product-appliance">
+                        <div class="product-appliance" @click="selectItem">
                             <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
                             <text class="appliance-name">洗衣机</text>
                         </div>
-                        <div class="product-appliance">
+                        <div class="product-appliance" @click="selectItem">
                             <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
                             <text class="appliance-name">洗衣机</text>
                         </div>
-                        <div class="product-appliance">
+                        <div class="product-appliance" @click="selectItem">
                             <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
                             <text class="appliance-name">洗衣机</text>
                         </div>
@@ -89,15 +72,15 @@
                             <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
                             <text class="appliance-name">洗衣机</text>
                         </div>
-                        <div class="product-appliance">
+                        <div class="product-appliance" @click="selectItem">
                             <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
                             <text class="appliance-name">洗衣机</text>
                         </div>
-                        <div class="product-appliance">
+                        <div class="product-appliance" @click="selectItem">
                             <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
                             <text class="appliance-name">洗衣机</text>
                         </div>
-                        <div class="product-appliance">
+                        <div class="product-appliance" @click="selectItem">
                             <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
                             <text class="appliance-name">洗衣机</text>
                         </div>
@@ -106,19 +89,19 @@
                 <div class="product-group">
                     <text class="product-group-title">洗衣机</text>
                     <div class="product-group-content">
-                        <div class="product-appliance">
+                        <div class="product-appliance" @click="selectItem">
                             <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
                             <text class="appliance-name">洗衣机</text>
                         </div>
-                        <div class="product-appliance">
+                        <div class="product-appliance" @click="selectItem">
                             <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
                             <text class="appliance-name">洗衣机</text>
                         </div>
-                        <div class="product-appliance">
+                        <div class="product-appliance" @click="selectItem">
                             <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
                             <text class="appliance-name">洗衣机</text>
                         </div>
-                        <div class="product-appliance">
+                        <div class="product-appliance" @click="selectItem">
                             <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
                             <text class="appliance-name">洗衣机</text>
                         </div>
@@ -150,6 +133,14 @@ export default {
     data() {
         return {
             title: '选择需服务产品',
+            brandList: [
+                { id: 0, name: '我的家电' },
+                { id: 1, name: '美的' },
+                { id: 2, name: '小天鹅' },
+                { id: 3, name: '雪尔' },
+                { id: 4, name: '华凌' }
+            ],
+            selectedBrandIndex: 0,
             productList: [
                 {
                     category: '',
@@ -169,8 +160,15 @@ export default {
         searchProduct() {
             this.goTo("productSearch", {}, { from: this.fromPage })
         },
+        selectBrand(index) {
+            this.selectedBrandIndex = index
+        },
         selectItem() {
-            this.back()
+            if (this.fromPage == 'serviceAndCharge') {
+                this.goTo('chargeList', {}, { from: this.fromPage })
+            } else {
+                this.back()
+            }
         },
         submit() {
             this.dialogShow = true;

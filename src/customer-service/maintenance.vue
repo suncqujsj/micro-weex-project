@@ -142,7 +142,7 @@ export default {
 
             showTakePhotoBar: false,
             takePhotoItems: ['拍摄', '从手机相册选择'],
-            photoData: ['./assets/img/progress.png'],
+            photoData: [],
             data: {
                 malfunction: ''
             },

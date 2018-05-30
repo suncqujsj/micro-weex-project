@@ -1,13 +1,14 @@
 <template>
     <div>
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header v-if="!isIos" :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
-        <div class="search-bar">
+        <div class="search-bar" :style="{'height':isIos?'136px':'96px','padding-top':isIos?'40px':'0px'}">
             <div class="search-bar-content">
                 <image class="search-bar-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
                 <input class="search-bar-input" placeholder="请输入产品品类，如空调、洗衣机" :value="keyWord" @input="oninput" @return="keyBoardsearch" return-key-type="search"></input>
             </div>
-            <text class="search-action" @click="searchProduct()">搜索</text>
+            <text v-if="isIos" class="search-action" @click="back">取消</text>
+            <text v-if="!isIos" class="search-action" @click="searchProduct()">搜索</text>
         </div>
         <scroller class="product-content">
             <template v-if="searchResult">
@@ -46,6 +47,7 @@ export default {
             title: '产品搜索',
             fromPage: '',
             keyWord: '',
+            searchKeyWord: '',
             historyKeys: [
                 {
                     'title': '洗衣机',
@@ -64,7 +66,7 @@ export default {
     computed: {
         convertedSearchResult() {
             let result = []
-            let reg = new RegExp(this.keyWord, "gi")
+            let reg = new RegExp(this.searchKeyWord, "gi")
             if (this.searchResult) {
                 for (let index = 0; index < this.searchResult.length; index++) {
                     let item = this.searchResult[index]
@@ -76,7 +78,7 @@ export default {
                         if (element == "*") {
                             item.richDesc.push({
                                 type: 'text',
-                                value: this.keyWord,
+                                value: this.searchKeyWord,
                                 style: {
                                     fontSize: 28,
                                     color: '#007AFF'
@@ -114,6 +116,8 @@ export default {
             if (!this.keyWord) {
                 this.keyWord = value
             }
+
+            this.searchKeyWord = this.keyWord
             this.searchResult = [
                 { id: 1, desc: "美的洗衣机" },
                 { id: 1, desc: "洗衣机-小天鹅" },

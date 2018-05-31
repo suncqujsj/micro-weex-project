@@ -7,28 +7,40 @@
         </midea-header>
         <scroller class="content-wrapper">
             <div class="base-group">
-                <midea-cell rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectProduct">
+                <midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectProduct">
                     <div slot="title" class="cell-title">
                         <text class="cell-label">安装产品</text>
                         <text class="cell-label-star">*</text>
                     </div>
+                    <div slot="rightText">
+                        <text class="right-text">请选择</text>
+                    </div>
                 </midea-cell>
-                <midea-cell :rightText="transportStatusDesc" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectTransportStatus">
+                <midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectTransportStatus">
                     <div slot="title" class="cell-title">
                         <text class="cell-label">物流状态</text>
                         <text class="cell-label-star">*</text>
                     </div>
+                    <div slot="rightText">
+                        <text class="right-text">{{transportStatusDesc}}</text>
+                    </div>
                 </midea-cell>
-                <midea-cell :rightText="serviePeriodDesc" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectServiePeriod">
+                <midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectServiePeriod">
                     <div slot="title" class="cell-title">
                         <text class="cell-label">期望服务时间</text>
                         <text class="cell-label-star">*</text>
                     </div>
+                    <div slot="rightText">
+                        <text class="right-text">{{serviePeriodDesc}}</text>
+                    </div>
                 </midea-cell>
-                <midea-cell rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectAddress">
+                <midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectAddress">
                     <div slot="title" class="cell-title">
                         <text class="cell-label">服务地址</text>
                         <text class="cell-label-star">*</text>
+                    </div>
+                    <div slot="rightText">
+                        <text class="right-text">请选择</text>
                     </div>
                 </midea-cell>
             </div>
@@ -152,7 +164,7 @@ export default {
             // nativeService.sendHttpRequest(params)
         },
         selectProduct() {
-            this.goTo('productSelection', {}, { from: 'installation' })
+            this.goTo('productSelection', {}, { from: 'installation', isMultiMode: true })
         },
         selectTransportStatus() {
             this.isShowTransportStatus = true;
@@ -276,6 +288,14 @@ export default {
   font-size: 32px;
   color: #ff3b30;
   padding-left: 5px;
+}
+.right-text {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #666666;
+  padding-right: 24px;
+  text-align: right;
+  width: 480px;
 }
 .item-group {
   padding: 24px;

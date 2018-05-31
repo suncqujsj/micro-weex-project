@@ -81,7 +81,7 @@ export default {
                                 value: this.searchKeyWord,
                                 style: {
                                     fontSize: 28,
-                                    color: '#007AFF'
+                                    color: '#FF8F00'
                                 }
                             })
                         } else {

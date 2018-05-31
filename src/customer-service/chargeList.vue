@@ -3,7 +3,7 @@
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <div class="search-bar">
-            <div class="search-bar-content" @click="searchProduct">
+            <div class="search-bar-content">
                 <image class="search-bar-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
                 <text class="search-bar-desc">查询关键字</text>
             </div>
@@ -18,17 +18,19 @@
                 </div>
                 <div class="cell-expand-item" v-if="isDisplay">
                     <div class="cell-sub-item level-two">
-                        <text class="cell-item-title">线上购买（非京东自营）</text>
+                        <text class="cell-item-sub-title">线上购买（非京东自营）</text>
                         <image class="cell-arrow-icon" :src="'./assets/img/service_ic_show_s@3x.png'" resize="contain"></image>
                     </div>
                     <div class="cell-sub-item level-two">
-                        <text class="cell-item-title">线上购买（京东自营）</text>
-                        <image class="cell-arrow-icon" :src="'./assets/img/service_ic_show_s@3x.png'" resize="contain"></image>
+                        <text class="cell-item-sub-title">线上购买（京东自营）</text>
+                        <image class="cell-arrow-icon" :src="'./assets/img/service_ic_hide_s@3x.png'" resize="contain"></image>
                     </div>
                     <div class="cell-sub-item level-three">
-                        <text class="cell-item-title">线下购买</text>
-                        <image class="cell-arrow-icon" :src="'./assets/img/service_ic_hide_s@3x.png'" resize="contain">
-                        </image>
+                        <text class="cell-item-sub-title">远程上门费</text>
+                        <text class="cell-item-price">1.5元 / 公里</text>
+                    </div>
+                    <div class="level-three">
+                        <text class="cell-item-desc" :style="{'width':'700px'}">远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费</text>
                     </div>
                 </div>
             </cell>
@@ -125,6 +127,7 @@ export default {
   padding-left: 32px;
   padding-right: 24px;
   background-color: #f6f6f6;
+  transition: 500ms;
 }
 .cell-item-title {
   font-family: PingFangSC-Regular;
@@ -140,16 +143,34 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  border-bottom-color: #e2e2e2;
-  border-bottom-width: 1px;
 }
 .level-one {
   background-color: #ffffff;
+  border-top-color: #e2e2e2;
+  border-top-width: 1px;
 }
 .level-two {
   background-color: #f6f6f6;
+  border-top-color: #e2e2e2;
+  border-top-width: 1px;
+}
+.cell-item-sub-title {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #666666;
+}
+.cell-item-price {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #ff8f00;
 }
 .level-three {
   background-color: #f6f6f6;
+}
+.cell-item-desc {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #666666;
+  margin-bottom: 24px;
 }
 </style>

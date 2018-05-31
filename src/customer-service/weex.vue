@@ -48,6 +48,8 @@
                 </image>
                 <text slot="title" class="service-item-title">滤芯防伪</text>
             </midea-item>
+
+            <cell class="wrapper-gap"></cell>
         </list>
 
         <midea-actionsheet :items="actionsheetItems" :show="showBar" @close="closeActionsheet" @itemClick="actionsheetItemClick" @btnClick="actionsheetBtnClick" ref="actionsheet">
@@ -138,6 +140,9 @@ export default {
 <style>
 .wrapper {
   background-color: #f2f2f2;
+}
+.wrapper-gap {
+  height: 120px;
 }
 .service-desc-wrapper {
   flex-direction: column;

@@ -3,6 +3,7 @@
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
         <scroller class="scroller">
             <div class="order-detail-header">
+                <div class="order-detail-background"></div>
                 <div class="order-detail-content">
                     <text class="order-detail-label">{{statusObj.desc}}</text>
                     <text class="order-detail-desc">订单已经收到，即将分配</text>
@@ -111,27 +112,27 @@ export default {
             switch (this.order.status) {
                 case 1:
                     //待接单
-                    result = {desc: "待接单", icon: "./assets/img/service_ic_order_new@3x.png"}
+                    result = { desc: "待接单", icon: "./assets/img/service_ic_order_new@3x.png" }
                     break;
                 case 2:
                     //已接单 - 上门
-                    result = {desc: "待工程师上门", icon: "./assets/img/service_ic_order_ongoing@3x.png"}
+                    result = { desc: "待工程师上门", icon: "./assets/img/service_ic_order_ongoing@3x.png" }
                     break;
                 case 3:
                     //已取消
-                    result = {desc: "(已取消)" + this.order.label, icon: "./assets/img/service_ic_order_cancel@3x.png"}
+                    result = { desc: "(已取消)" + this.order.label, icon: "./assets/img/service_ic_order_cancel@3x.png" }
                     break;
                 case 4:
                     //已完成 - 待评价
-                    result = {desc: "(已完成)" + this.order.label, icon: "./assets/img/service_ic_order_finish@3x.png"}
+                    result = { desc: "(已完成)" + this.order.label, icon: "./assets/img/service_ic_order_finish@3x.png" }
                     break;
                 case 5:
                     //已完成 - 已评价
-                    result = {desc: "(已完成)" + this.order.label, icon: "./assets/img/service_ic_order_finish@3x.png"}
+                    result = { desc: "(已完成)" + this.order.label, icon: "./assets/img/service_ic_order_finish@3x.png" }
                     break;
                 case 6:
                     //待服务
-                    result = {desc: "待接单", icon: "./assets/img/service_ic_order_new@3x.png"}
+                    result = { desc: "待接单", icon: "./assets/img/service_ic_order_new@3x.png" }
                     break;
             }
             return result
@@ -193,7 +194,6 @@ export default {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background-color: #0078ff;
   padding-left: 50px;
   margin-top: 22px;
 }
@@ -212,9 +212,19 @@ export default {
   font-size: 24px;
   color: #ffffff;
 }
+.order-detail-background {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 750px;
+  height: 192px;
+  background-color: #0078ff;
+  opacity: 0.6;
+}
 .order-detail-img {
   height: 192px;
   width: 320px;
+  right: -10px;
 }
 .order-detail-step {
   width: 750px;

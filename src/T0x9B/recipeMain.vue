@@ -196,7 +196,7 @@
             }
         },
         created(){
-             storage.setItem('refer','', e=>{})        
+             storage.setItem('refer','', e=>{})
         }
     }
 </script>
@@ -231,7 +231,7 @@
   }
 .tab-panels {
     position: relative;
-    width: 3750;
+    width: 750;
     flex: 1;
     flex-direction: row;
     align-items: stretch;

@@ -293,7 +293,7 @@
                 stepData: [
                     {
                         bannerType: 'video',
-                        bannerSrc: 'http://flv2.bn.netease.com/videolib3/1611/01/XGqSL5981/SD/XGqSL5981-mobile.mp4'
+                        bannerSrc: 'http://flv2.bn.netease.com/videolib3/1611/01/XGqSL5981/SD/XGqSL5981-mobile.mp4',
                         name: '步骤1',
                         icon: 'assets/img/oven.png',
                         desc: '看看啥的金黄色的健康绝对是开心时刻新年开始色即是空几点开始',

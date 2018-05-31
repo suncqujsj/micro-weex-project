@@ -7,34 +7,49 @@
         </midea-header>
         <scroller class="content-wrapper">
             <div class="base-group">
-                <midea-cell rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectProduct">
+                <midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectProduct">
                     <div slot="title" class="cell-title">
                         <text class="cell-label">维修产品</text>
                         <text class="cell-label-star">*</text>
                     </div>
+                    <div slot="rightText">
+                        <text class="right-text">请选择</text>
+                    </div>
                 </midea-cell>
-                <midea-cell :rightText="malfunctionDesc" :height="80" :hasBottomBorder="!true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectMalfunction">
+                <midea-cell :height="80" :hasBottomBorder="!true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectMalfunction">
                     <div slot="title" class="cell-title">
                         <text class="cell-label">故障类型</text>
                         <text class="cell-label-star">*</text>
                     </div>
+                    <div slot="rightText">
+                        <text class="right-text">{{malfunctionDesc}}</text>
+                    </div>
                 </midea-cell>
-                <midea-cell class="malfunction-reason" :height="80" rightText="可能原因" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectMalfunction">
+                <midea-cell class="malfunction-reason" :height="80" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectMalfunction">
                     <div slot="title" class="cell-title">
                         <image class="malfunction-reason-icon" src="./assets/img/service_ic_warming@3x.png" resize='contain'></image>
                         <text class="malfunction-reason-label">有水流生或噗声？</text>
                     </div>
+                    <div slot="rightText">
+                        <text class="right-text">可能原因</text>
+                    </div>
                 </midea-cell>
-                <midea-cell :rightText="serviePeriodDesc" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectServiePeriod">
+                <midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectServiePeriod">
                     <div slot="title" class="cell-title">
                         <text class="cell-label">期望服务时间</text>
                         <text class="cell-label-star">*</text>
                     </div>
+                    <div slot="rightText">
+                        <text class="right-text">{{serviePeriodDesc}}</text>
+                    </div>
                 </midea-cell>
-                <midea-cell rightText="请选择" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectAddress">
+                <midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectAddress">
                     <div slot="title" class="cell-title">
                         <text class="cell-label">服务地址</text>
                         <text class="cell-label-star">*</text>
+                    </div>
+                    <div slot="rightText">
+                        <text class="right-text">请选择</text>
                     </div>
                 </midea-cell>
             </div>
@@ -127,22 +142,22 @@ export default {
             ],
 
             isShowPeriodPicker: false,
-            selectedDateIndex: 0,
-            selectedTimeIndex: 0,
+            selectedDateIndex: null,
+            selectedTimeIndex: null,
             serviePeriodDate: [],
             serviePeriodTime: [
-                { key: 0, desc: "08:00-10:00" },
-                { key: 1, desc: "10:00-12:00" },
-                { key: 2, desc: "12:00-14:00" },
-                { key: 3, desc: "14:00-16:00" },
-                { key: 4, desc: "16:00-18:00" }
+                { index: 0, desc: "08:00-10:00", disable: false },
+                { index: 1, desc: "10:00-12:00", disable: false },
+                { index: 2, desc: "12:00-14:00", disable: false },
+                { index: 3, desc: "14:00-16:00", disable: false },
+                { index: 4, desc: "16:00-18:00", disable: false }
             ],
 
             code: '',
 
             showTakePhotoBar: false,
             takePhotoItems: ['拍摄', '从手机相册选择'],
-            photoData: ['./assets/img/progress.png'],
+            photoData: [],
             data: {
                 malfunction: ''
             },
@@ -154,7 +169,7 @@ export default {
             return this.data.malfunction ? this.data.malfunction : '请选择'
         },
         serviePeriodDesc() {
-            if (this.serviePeriodDate && this.selectedDateIndex && this.serviePeriodTime && this.selectedTimeIndex) {
+            if (this.serviePeriodDate && this.selectedDateIndex != null && this.serviePeriodTime && this.selectedTimeIndex != null) {
                 return this.serviePeriodDate[this.selectedDateIndex].desc + ' ' + this.serviePeriodTime[this.selectedTimeIndex].desc
             } else {
                 return '请选择'
@@ -186,19 +201,6 @@ export default {
         },
         initServiePeriod() {
             let today = new Date()
-
-            this.serviePeriodDate.push({
-                key: -2,
-                desc: ''
-            })
-            this.serviePeriodDate.push({
-                key: -1,
-                desc: ''
-            })
-            this.serviePeriodDate.push({
-                key: 0,
-                desc: '今天'
-            })
             let weekDesc = {
                 0: "日",
                 1: "一",
@@ -208,12 +210,12 @@ export default {
                 5: "五",
                 6: "六",
             }
-            for (let index = 1; index < 31; index++) {
-                let nextDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + index)
-
+            for (let index = 0; index < 31; index++) {
+                let theDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + index)
+                let theDateDesc = theDate.getMonth() + '月' + theDate.getDate() + '日'
                 this.serviePeriodDate.push({
-                    key: index,
-                    desc: nextDate.getMonth() + '月' + nextDate.getDate() + '日 (周' + weekDesc[nextDate.getDay()] + ')'
+                    'index': index,
+                    'desc': theDateDesc + (index == 0 ? '(今天)' : '(周' + weekDesc[theDate.getDay()] + ')')
                 })
             }
         },
@@ -349,6 +351,14 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 32px;
   color: #ff3b30;
+}
+.right-text {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #666666;
+  padding-right: 24px;
+  text-align: right;
+  width: 430px;
 }
 .malfunction-reason {
   background-color: #fff7d5;

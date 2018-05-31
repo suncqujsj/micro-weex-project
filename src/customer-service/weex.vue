@@ -2,54 +2,55 @@
     <div class="wrapper">
         <midea-header title="" bgColor="#ffffff" :isImmersion="true" :showLeftImg="false" :showRightImg="true" rightImg="./assets/img/service_ic_call@3x.png" @rightImgClick="showHotLine">
         </midea-header>
-        <scroller>
-            <div class="service-desc-wrapper">
-                <text class="service-title">服务</text>
-                <text class="service-desc">在线客服，随时为您提供服务</text>
-                <div class="service-desc-img-wrapper">
-                    <image class="service-desc-img" src="./assets/img/servie_pic_banner03@3x.png" resize='contain'></image>
-                </div>
-            </div>
-            <div class="navigation-list">
-                <div v-for="(item, index) in navList" :key="index" class="navigation-item">
-                    <div class="navigation-inner-item" @click="itemClicked(item)">
-                        <image class="navigation-img" :src="item.img" resize='contain'></image>
-                        <text class="navigation-desc">{{item.title}}</text>
+        <list>
+            <cell>
+                <div class="service-desc-wrapper">
+                    <text class="service-title">服务</text>
+                    <text class="service-desc">在线客服，随时为您提供服务</text>
+                    <div class="service-desc-img-wrapper">
+                        <image class="service-desc-img" src="./assets/img/servie_pic_banner03@3x.png" resize='contain'></image>
                     </div>
                 </div>
-            </div>
-            <div class="arraw-line">
-                <div class="arraw-triangle"></div>
-            </div>
-            <list class="order-list">
-                <midea-item height="150" :hasArrow="true" :clickActivied="true" @mideaCellClick="goToOrderDetail">
-                    <image slot="itemImg" class="order-img" src="./assets/img/progress.png" resize='contain'>
-                    </image>
-                    <div slot="title" class="order-content">
-                        <text class="order-title">安装只能洗衣机</text>
-                        <text class="order-desc">待工程师上门</text>
-                        <text class="order-time">12-23 16:00</text>
+                <div class="navigation-list">
+                    <div v-for="(item, index) in navList" :key="index" class="navigation-item">
+                        <div class="navigation-inner-item" @click="itemClicked(item)">
+                            <image class="navigation-img" :src="item.img" resize='contain'></image>
+                            <text class="navigation-desc">{{item.title}}</text>
+                        </div>
                     </div>
-                </midea-item>
-            </list>
-            <list class="service-list">
-                <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('productSelection', {}, { from: 'rootView' })">
-                    <image slot="itemImg" src="./assets/img/service_ic_location@3x.png" class="service-item-img" resize='contain'>
-                    </image>
-                    <text slot="title" class="service-item-title">网点查询</text>
-                </midea-item>
-                <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('serviceAndCharge')">
-                    <image slot="itemImg" src="./assets/img/service_ic_policy@3x.png" class="service-item-img" resize='contain'>
-                    </image>
-                    <text slot="title" class="service-item-title">服务与收费政策</text>
-                </midea-item>
-                <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('antifake')">
-                    <image slot="itemImg" src="./assets/img/service_ic_fake@3x.png" class="service-item-img" resize='contain'>
-                    </image>
-                    <text slot="title" class="service-item-title">滤芯防伪</text>
-                </midea-item>
-            </list>
-        </scroller>
+                </div>
+                <div class="arraw-line">
+                    <div class="arraw-triangle"></div>
+                </div>
+            </cell>
+            <midea-item height="150" :hasArrow="true" :clickActivied="true" @mideaCellClick="goToOrderDetail">
+                <image slot="itemImg" class="order-img" src="./assets/img/progress.png" resize='contain'>
+                </image>
+                <div slot="title" class="order-content">
+                    <text class="order-title">安装只能洗衣机</text>
+                    <text class="order-desc">待工程师上门</text>
+                    <text class="order-time">12-23 16:00</text>
+                </div>
+            </midea-item>
+            <cell class="group-gap-top"></cell>
+            <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('productSelection', {}, { from: 'rootView' })">
+                <image slot="itemImg" src="./assets/img/service_ic_location@3x.png" class="service-item-img" resize='contain'>
+                </image>
+                <text slot="title" class="service-item-title">网点查询</text>
+            </midea-item>
+            <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('serviceAndCharge')">
+                <image slot="itemImg" src="./assets/img/service_ic_policy@3x.png" class="service-item-img" resize='contain'>
+                </image>
+                <text slot="title" class="service-item-title">服务与收费政策</text>
+            </midea-item>
+            <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('antifake')">
+                <image slot="itemImg" src="./assets/img/service_ic_fake@3x.png" class="service-item-img" resize='contain'>
+                </image>
+                <text slot="title" class="service-item-title">滤芯防伪</text>
+            </midea-item>
+
+            <cell class="wrapper-gap"></cell>
+        </list>
 
         <midea-actionsheet :items="actionsheetItems" :show="showBar" @close="closeActionsheet" @itemClick="actionsheetItemClick" @btnClick="actionsheetBtnClick" ref="actionsheet">
             <div slot="item-0" class="actionsheet-item">
@@ -140,6 +141,9 @@ export default {
 .wrapper {
   background-color: #f2f2f2;
 }
+.wrapper-gap {
+  height: 120px;
+}
 .service-desc-wrapper {
   flex-direction: column;
   align-items: stretch;
@@ -211,9 +215,6 @@ export default {
   border-width: 1px;
   transform: rotate(45deg);
 }
-.order-list {
-  height: 200px;
-}
 .order-img {
   height: 120px;
   width: 120px;
@@ -244,9 +245,8 @@ export default {
   color: #8a8a8f;
   line-height: 38px;
 }
-.service-list {
-  margin-top: 24px;
-  height: 360px;
+.group-gap-top {
+  height: 24px;
 }
 .service-item-img {
   height: 32px;

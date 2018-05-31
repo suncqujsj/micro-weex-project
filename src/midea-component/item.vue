@@ -181,7 +181,11 @@
       canEdit: {
         type: Boolean,
         default: false
-      }
+      },
+      arrowIcon: {
+        type: String,
+        default: './img/arrow_right.png'
+      },
     },
     computed:{
       outputCellStyle () {
@@ -191,7 +195,7 @@
       }
     },
     data: () => ({
-      arrowIcon:"../img/arrow_right.png"
+      
     }),
     methods: {
       cellClicked (e) {

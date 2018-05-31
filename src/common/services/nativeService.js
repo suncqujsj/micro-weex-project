@@ -346,7 +346,7 @@ export default {
                     }
                 )
             } else {
-                let resData = Mock.getMock(name)
+                let resData = Mock.getMock(params.url)
                 if (resData.errorCode == 0) {
                     resolve(resData);
                 }

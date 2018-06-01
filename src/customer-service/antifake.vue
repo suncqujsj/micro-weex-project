@@ -3,7 +3,7 @@
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller>
-            <image class="advertisement" src="./assets/img/progress.png" resize='contain'></image>
+            <image class="advertisement" src="./assets/img/servie_pic_banner03@3x.png" resize='contain'></image>
 
             <div class="item-group">
                 <text class="info-title">滤芯防伪查询</text>

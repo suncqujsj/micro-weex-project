@@ -32,6 +32,7 @@ import MideaTitleBar from '@/midea-component/title-bar.vue'
 
 import MideaSearchbar from '@/midea-component/mSearchbar.vue'
 import MideaVote from '@/midea-component/mVote.vue'
+import MideaZoom from '@/midea-component/zoom.vue'
 
 import MideaRichText from '@/midea-component/wxc-rich-text';
 
@@ -68,5 +69,6 @@ export {
   MideaTitleBar,
   MideaSearchbar,
   MideaVote,
-  MideaRichText
+  MideaRichText,
+  MideaZoom
 };

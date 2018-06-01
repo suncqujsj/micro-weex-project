@@ -33,7 +33,7 @@
                 </div>
             </midea-item>
             <cell class="group-gap-top"></cell>
-            <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('productSelection', {}, { from: 'rootView' })">
+            <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('productSelection', {}, { from: 'rootView', to:'branchList' })">
                 <image slot="itemImg" src="./assets/img/service_ic_location@3x.png" class="service-item-img" resize='contain'>
                 </image>
                 <text slot="title" class="service-item-title">网点查询</text>

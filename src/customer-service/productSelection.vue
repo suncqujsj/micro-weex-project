@@ -186,6 +186,7 @@ export default {
             ],
             dialogShow: false,
             fromPage: '',
+            toPage: '',
             isMultiMode: false,
             isShowAnimation: false,
             animationConfig: {
@@ -206,8 +207,8 @@ export default {
                 // nativeService.toast(event)
                 this.showSelectAnimation(event)
             } else {
-                if (this.fromPage == 'serviceAndCharge') {
-                    this.goTo('chargeList', {}, { from: this.fromPage })
+                if (this.toPage) {
+                    this.goTo(this.toPage, {}, { from: this.fromPage })
                 } else {
                     this.back()
                 }
@@ -290,6 +291,7 @@ export default {
     },
     created() {
         this.fromPage = nativeService.getParameters('from')
+        this.toPage = nativeService.getParameters('to')
         this.isMultiMode = nativeService.getParameters('isMultiMode')
     }
 }

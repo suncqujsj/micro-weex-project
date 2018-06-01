@@ -81,6 +81,7 @@ module.exports = {
             { title: 'Grid Select', link: "gridSelect" },
             { title: 'Header', link: "header" },
             { title: 'IconFont字体图标', link: "iconFont" },
+            { title: 'imageZoom', link: "imageZoom" },
             { title: 'Linechart折线图', link: "linechart" },
             { title: 'Loading上拉加载', link: "loading" },
             { title: 'Nav List', link: "navList" },
@@ -92,7 +93,8 @@ module.exports = {
             { title: 'Swipe手势', link: "swipe" },
             { title: 'Tab', link: "tab" },
             { title: 'TimeCycle时间转盘', link: "timeCycle" },
-            { title: 'Video视频', link: "video" }
+            { title: 'Video视频', link: "video" },
+
         ],
         interfacelist: [
             { title: 'callTel打电话', link: "callTel" },

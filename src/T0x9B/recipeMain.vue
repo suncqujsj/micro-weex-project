@@ -231,7 +231,7 @@
   }
 .tab-panels {
     position: relative;
-    width: 750;
+    width: 2250;
     flex: 1;
     flex-direction: row;
     align-items: stretch;

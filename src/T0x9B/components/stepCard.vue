@@ -2,9 +2,8 @@
 <template>
     <div class="wrap">
         <div class="banner">
-            <text>{{stepData.banner.stype}}</text>
-            <image v-if="stepData.banner.type == 'img'" :src="stepData.banner.src"></image>
-            <midea-video v-else class="video" :src="stepData.banner.src" @start="vdStart" @pause="vdPause" @finish="vdFinish" @fail="vdFail"></midea-video>
+            <image v-if="stepData.bannerType == 'img'" class="step-image" :src="stepData.bannerSrc"></image>
+            <midea-video v-else class="video" :src="stepData.bannerSrc" @start="vdStart" @pause="vdPause" @finish="vdFinish" @fail="vdFail"></midea-video>
         </div>
         <div class="floor floor-l">
             <text class="text">{{stepData.name}}</text>
@@ -38,10 +37,8 @@
                 type: Object,
                 default: function(){
                     return {
-                        banner: {
-                            type: 'img',
-                            src: 'assets/img/tmp_bg.png'
-                        },
+                        bannerType: 'img',
+                        bannerSrc: 'assets/img/tmp_bg.png',
                         name: '步骤1',
                         icon: 'assets/img/oven.png',
                         desc: '看看啥的金黄色的健康绝对是开心时刻新年开始色即是空几点开始',
@@ -107,10 +104,12 @@
         padding-left: 20px;
         padding-right: 20px;
     }
-    .banner{
+    
+    .banner,.video, .step-image{
         width: 750px;
         height: 750px;
     }
+    
     .duration-text{
         font-size: 34px;
         margin-right: 10px;
@@ -126,9 +125,5 @@
         color: #6A462E;
         font-size: 70px;
         font-weight: bold;
-    }
-    .video{
-        width: 750px;
-        height: 750px;
     }
 </style>

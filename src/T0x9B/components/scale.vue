@@ -70,6 +70,7 @@
 .scale{
     height: 90px;
     margin-top: -30px;
+    flex-direction: row;
 }
 .scale-item{
     width: 125px;

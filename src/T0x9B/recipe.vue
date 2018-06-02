@@ -292,10 +292,8 @@
                 ],
                 stepData: [
                     {
-                        banner: {
-                            type: 'video',
-                            src: 'http://flv2.bn.netease.com/videolib3/1611/01/XGqSL5981/SD/XGqSL5981-mobile.mp4'
-                        },
+                        bannerType: 'video',
+                        bannerSrc: 'http://flv2.bn.netease.com/videolib3/1611/01/XGqSL5981/SD/XGqSL5981-mobile.mp4',
                         name: '步骤1',
                         icon: 'assets/img/oven.png',
                         desc: '看看啥的金黄色的健康绝对是开心时刻新年开始色即是空几点开始',
@@ -304,10 +302,8 @@
                         runSecond: '30'
                     },
                     {
-                        banner: {
-                            type: 'img',
-                            src: 'http://www.5068.com/uploads/allimg/140619/69_140619161827_1.jpg'
-                        },
+                        bannerType: 'img',
+                        bannerSrc: 'http://www.5068.com/uploads/allimg/140619/69_140619161827_1.jpg',
                         name: '步骤2',
                         icon: 'assets/img/oven.png',
                         desc: 'sddsfyhgfjgf发给他然后给他人教育厅',
@@ -316,10 +312,8 @@
                         runSecond: ''
                     },
                     {
-                        banner: {
-                            type: 'img',
-                            src: 'http://www.5068.com/uploads/allimg/140619/69_140619161827_1.jpg'
-                        },
+                        bannerType: 'img',
+                        bannerSrc: 'http://www.5068.com/uploads/allimg/140619/69_140619161827_1.jpg',
                         name: '步骤3',
                         icon: 'assets/img/oven.png',
                         desc: '看看啥的金黄色的健康绝对是开心时刻新年开始色即是空几点开始',

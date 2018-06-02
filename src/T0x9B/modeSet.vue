@@ -62,7 +62,7 @@
                         </scroller>
                     </div>
                 </div>
-            </div>
+            </div> 
             <midea-button text="确定"  :btnStyle="style.btn2" :textStyle="style.btn2Text" @mideaButtonClicked="confirmStart"></midea-button>
         </midea-popup>
         <midea-popup :show="showPop2" @mideaPopupOverlayClicked="closePop2" :height="270">
@@ -127,6 +127,7 @@
 
     const storage = weex.requireModule('storage')
     const picker = weex.requireModule('picker')
+    const platform = weex.config.env.platform.toLowerCase()
     import MideaHeader from '@/midea-component/header.vue'
     import circleProgress from '@/midea-component/circleProgress.vue'
     import MideaButton from '@/midea-component/button.vue'
@@ -197,7 +198,8 @@
                 workStatus: false, //运行状态
                 workFinish: false, //烹饪是否完成
                 workPercent: 0,
-                showBackRecipe: false
+                showBackRecipe: false,
+               
             }
         },
         computed: {
@@ -322,7 +324,6 @@
             this.temperatureData = this.createArrayData(0, 320, 10)
             this.minuteData = this.createArrayData(0, 60, 1)
             this.secondData = this.createArrayData(0, 60, 1)
-
         }
     }
 </script>

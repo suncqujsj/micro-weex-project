@@ -1,8 +1,8 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
             <div slot="customerContent" class="header-right">
-                <text class="header-right-text" @click="goTo('productSelection', {}, { from: 'maintenance' })">收费标准</text>
+                <text class="header-right-text" @click="goTo('productSelection', {}, { from: 'maintenance', to:'chargeList' })">收费标准</text>
             </div>
         </midea-header>
         <scroller class="content-wrapper">
@@ -13,25 +13,25 @@
                         <text class="cell-label-star">*</text>
                     </div>
                     <div slot="rightText">
-                        <text class="right-text">请选择</text>
+                        <text class="right-text">{{selectedProductDesc}}</text>
                     </div>
                 </midea-cell>
-                <midea-cell :height="80" :hasBottomBorder="!true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectMalfunction">
+                <midea-cell height="80" :hasBottomBorder="!true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectFaultType">
                     <div slot="title" class="cell-title">
                         <text class="cell-label">故障类型</text>
                         <text class="cell-label-star">*</text>
                     </div>
                     <div slot="rightText">
-                        <text class="right-text">{{malfunctionDesc}}</text>
+                        <text class="right-text">{{faultDesc}}</text>
                     </div>
                 </midea-cell>
-                <midea-cell class="malfunction-reason" :height="80" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectMalfunction">
+                <midea-cell v-if="excludedFault && excludedFault.length>0" class="fault-reason" height="80" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="showExcludedFault">
                     <div slot="title" class="cell-title">
-                        <image class="malfunction-reason-icon" src="./assets/img/service_ic_warming@3x.png" resize='contain'></image>
-                        <text class="malfunction-reason-label">有水流生或噗声？</text>
+                        <image class="fault-reason-icon" src="./assets/img/service_ic_warming@3x.png" resize='contain'></image>
+                        <text class="fault-reason-label">{{excludedFault[0].faultServiceDesc}}</text>
                     </div>
                     <div slot="rightText">
-                        <text class="right-text">可能原因</text>
+                        <text class="right-text fault-reason-right-text">可能原因</text>
                     </div>
                 </midea-cell>
                 <midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectServiePeriod">
@@ -49,7 +49,7 @@
                         <text class="cell-label-star">*</text>
                     </div>
                     <div slot="rightText">
-                        <text class="right-text">请选择</text>
+                        <text class="right-text">{{userAddressDesc}}</text>
                     </div>
                 </midea-cell>
             </div>
@@ -91,11 +91,11 @@
             </div>
         </scroller>
 
-        <period-picker :isShow="isShowPeriodPicker" :dates="serviePeriodDate" :dateIndex="selectedDateIndex" :times="serviePeriodTime" :timeIndex="selectedTimeIndex" @oncancel="isShowPeriodPicker=false" @onchanged="serviePeriodSelected">
-        </period-picker>
-
         <midea-actionsheet :items="takePhotoItems" :show="showTakePhotoBar" @close="closeTakePhotoActionsheet" @itemClick="takePhotoItemClick" @btnClick="takePhotoBtnClick" ref="takePhotoActionsheet">
         </midea-actionsheet>
+
+        <period-picker :isShow="isShowPeriodPicker" :dates="serviePeriodDate" :dateIndex="selectedDateIndex" :times="serviePeriodTime" :timeIndex="selectedTimeIndex" @oncancel="isShowPeriodPicker=false" @onchanged="serviePeriodSelected">
+        </period-picker>
     </div>
 </template>
 
@@ -123,16 +123,9 @@ export default {
     data() {
         return {
             title: '维修服务',
-            types: [
-                {
-                    'title': '机身条码',
-                    'isSelected': true
-                },
-                {
-                    'title': '产品型号',
-                    'isSelected': false
-                }
-            ],
+
+            selectedProduct: [],
+
             typeSelectedIndex: 0,
             malfunctionIndex: null,
             malfunctionList: [
@@ -152,7 +145,19 @@ export default {
                 { index: 3, desc: "14:00-16:00", disable: false },
                 { index: 4, desc: "16:00-18:00", disable: false }
             ],
-
+            userAddress: null,
+            selectedFault: null,
+            excludedFault: null,
+            types: [
+                {
+                    'title': '机身条码',
+                    'isSelected': true
+                },
+                {
+                    'title': '产品型号',
+                    'isSelected': false
+                }
+            ],
             code: '',
 
             showTakePhotoBar: false,
@@ -165,8 +170,22 @@ export default {
         }
     },
     computed: {
-        malfunctionDesc() {
-            return this.data.malfunction ? this.data.malfunction : '请选择'
+        selectedProductDesc() {
+            let result = '请选择'
+            if (this.selectedProduct && this.selectedProduct.length > 0) {
+                const temp = this.selectedProduct.map((item) => {
+                    return item.prodName
+                })
+                result = temp.join("、")
+            }
+            return result
+        },
+        faultDesc() {
+            let result = '请选择'
+            if (this.selectedFault && this.selectedFault.length > 0) {
+                result = this.selectedFault.serviceRequireName
+            }
+            return result
         },
         serviePeriodDesc() {
             if (this.serviePeriodDate && this.selectedDateIndex != null && this.serviePeriodTime && this.selectedTimeIndex != null) {
@@ -174,6 +193,13 @@ export default {
             } else {
                 return '请选择'
             }
+        },
+        userAddressDesc() {
+            let result = '请选择'
+            if (this.userAddress) {
+                result = this.userAddress.customerName + ' ' + this.userAddress.customerMobilephone + '\n' + this.userAddress.customerAddress + '\n' + this.userAddress.customerAddressDetail
+            }
+            return result
         },
         isDataReady() {
             return true
@@ -191,13 +217,36 @@ export default {
             // nativeService.sendHttpRequest(params)
         },
         selectProduct() {
-            this.goTo('productSelection', {}, { from: 'maintenance' })
+            nativeService.setItem("SERVICE_STORAGE_selectedProduct", JSON.stringify(this.selectedProduct), () => {
+                this.goTo('productSelection', {}, { from: 'maintenance' })
+            })
         },
-        selectMalfunction() {
+        handlePageData(data) {
+            if (data.page == "maintenance") {
+                if (data.key == "selectedProduct") {
+                    this.selectedProduct = data.data
+                    //清空故障原因
+                    if (this.selectedFault && this.selectedFault.length > 0) {
+                        this.selectedFault.splice(0, this.selectedFault.length)
+                    }
+                    if (this.excludedFault && this.excludedFault.length > 0) {
+                        this.excludedFault.splice(0, this.excludedFault.length)
+                    }
+                } else if (data.key == "userAddress") {
+                    this.userAddress = data.data
+                } else if (data.key == "selectedFault") {
+                    this.selectedFault = data.data
+                    nativeService.searchExcludedFault().then((data) => {
+                        this.excludedFault = data
+                    })
+                }
+            }
+        },
+        selectFaultType() {
             this.goTo('malfunctionList', {}, { from: 'maintenance' })
         },
-        malfunctionSelected(event) {
-            this.data.malfunction = event.item.value;
+        showExcludedFault(event) {
+
         },
         initServiePeriod() {
             let today = new Date()
@@ -227,7 +276,9 @@ export default {
             this.selectedTimeIndex = event.timeIndex
         },
         selectAddress() {
-
+            nativeService.setItem("SERVICE_STORAGE_userAddress", JSON.stringify(this.userAddress), () => {
+                this.goTo('userAddress', {}, { from: 'maintenance' })
+            })
         },
         typeSelected(index) {
             this.typeSelectedIndex = index
@@ -300,7 +351,11 @@ export default {
 
         },
         submit() {
-
+            if (this.fromPage == "orderList") {
+                this.back()
+            } else {
+                this.goTo('orderList', { "replace": true })
+            }
         }
     },
     created() {
@@ -351,6 +406,7 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 32px;
   color: #ff3b30;
+  padding-left: 5px;
 }
 .right-text {
   font-family: PingFangSC-Regular;
@@ -360,18 +416,22 @@ export default {
   text-align: right;
   width: 430px;
 }
-.malfunction-reason {
+
+.fault-reason {
   background-color: #fff7d5;
 }
-.malfunction-reason-icon {
+.fault-reason-icon {
   height: 40px;
   width: 40px;
   margin-right: 5px;
 }
-.malfunction-reason-label {
+.fault-reason-label {
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #ff9500;
+}
+.fault-reason-right-text {
+  width: 200px;
 }
 .item-group {
   padding: 24px;

@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller>
             <image class="advertisement" src="./assets/img/servie_pic_banner03@3x.png" resize='contain'></image>
@@ -83,7 +83,7 @@ export default {
                 (resp) => {
                     this.result = resp
                     if (resp.success && resp.result.ResultID) {
-                        nativeService.setItem("antifakeResult", resp, (resp) => {
+                        nativeService.setItem("SERVICE_STORAGE_antifakeResult", resp, (resp) => {
                             this.goTo('antifakeResult')
                         })
                     } else {
@@ -127,6 +127,7 @@ export default {
 }
 .info-title {
   font-family: PingFangSC-Medium;
+  font-weight: 600;
   font-size: 28px;
   color: #000000;
 }
@@ -154,6 +155,7 @@ export default {
 }
 .result-title {
   font-family: PingFangSC-Medium;
+  font-weight: 600;
   font-size: 32px;
   color: #000000;
   padding-bottom: 24px;

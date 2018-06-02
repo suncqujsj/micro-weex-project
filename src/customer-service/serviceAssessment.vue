@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
         <scroller class="scroller">
             <order-block class="order-block" :data="order">
                 <div slot="action-bar">
@@ -77,7 +77,7 @@ export default {
                 label: '维修净水器',
                 desc: '工程师即将上门为您服务',
                 price: '',
-                imageUrl: './assets/img/progress.png'
+                imageUrl: './assets/img/service_midea@3x.png'
             },
             dialogShow: false,
             serviceStatus: null,

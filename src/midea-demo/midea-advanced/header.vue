@@ -2,11 +2,11 @@
     <div class="wrapper">
         <midea-header title="Header" :isImmersion="false" @leftImgClick="back"></midea-header>
         <div style="height: 220px; margin-top: 20px;">
-            <midea-header :title="title1" :isImmersion="true"></midea-header>
+            <midea-header :title="title1" :isImmersion="isipx?false:true"></midea-header>
         </div>
 
         <div style="height: 220px;">
-            <midea-header :title="title2" :isImmersion="true" :showRightImg="true" @leftImgClick="leftImgClick1" @rightImgClick="rightImgClick1"></midea-header>
+            <midea-header :title="title2" :isImmersion="isipx?false:true" :showRightImg="true" @leftImgClick="leftImgClick1" @rightImgClick="rightImgClick1"></midea-header>
         </div>
 
         <div style="height: 220px;">

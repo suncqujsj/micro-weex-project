@@ -1,8 +1,8 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
             <div slot="customerContent" class="header-right">
-                <text class="header-right-text" @click="goTo('productSelection', {}, { from: 'installation' })">收费标准</text>
+                <text class="header-right-text" @click="goTo('productSelection', {}, { from: 'installation', to:'chargeList' })">收费标准</text>
             </div>
         </midea-header>
         <scroller class="content-wrapper">
@@ -13,7 +13,7 @@
                         <text class="cell-label-star">*</text>
                     </div>
                     <div slot="rightText">
-                        <text class="right-text">请选择</text>
+                        <text class="right-text">{{selectedProductDesc}}</text>
                     </div>
                 </midea-cell>
                 <midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectTransportStatus">
@@ -40,7 +40,7 @@
                         <text class="cell-label-star">*</text>
                     </div>
                     <div slot="rightText">
-                        <text class="right-text">请选择</text>
+                        <text class="right-text">{{userAddressDesc}}</text>
                     </div>
                 </midea-cell>
             </div>
@@ -104,16 +104,9 @@ export default {
     data() {
         return {
             title: '安装服务',
-            types: [
-                {
-                    'title': '机身条码',
-                    'isSelected': true
-                },
-                {
-                    'title': '产品型号',
-                    'isSelected': false
-                }
-            ],
+
+            selectedProduct: [],
+
             typeSelectedIndex: 0,
             isShowTransportStatus: false,
             TransportStatusItems: ['货已到需要安装', '货未到需要安装'],
@@ -129,7 +122,18 @@ export default {
                 { index: 3, desc: "14:00-16:00", disable: false },
                 { index: 4, desc: "16:00-18:00", disable: false }
             ],
+            userAddress: null,
 
+            types: [
+                {
+                    'title': '机身条码',
+                    'isSelected': true
+                },
+                {
+                    'title': '产品型号',
+                    'isSelected': false
+                }
+            ],
             code: '',
             data: {
                 transportStatus: ''
@@ -138,6 +142,16 @@ export default {
         }
     },
     computed: {
+        selectedProductDesc() {
+            let result = '请选择'
+            if (this.selectedProduct && this.selectedProduct.length > 0) {
+                const temp = this.selectedProduct.map((item) => {
+                    return item.prodName
+                })
+                result = temp.join("、")
+            }
+            return result
+        },
         transportStatusDesc() {
             return this.data.transportStatus ? this.data.transportStatus : '请选择'
         },
@@ -147,6 +161,13 @@ export default {
             } else {
                 return '请选择'
             }
+        },
+        userAddressDesc() {
+            let result = '请选择'
+            if (this.userAddress) {
+                result = this.userAddress.customerName + ' ' + this.userAddress.customerMobilephone + '\n' + this.userAddress.customerAddress + '\n' + this.userAddress.customerAddressDetail
+            }
+            return result
         },
         isDataReady() {
             return true
@@ -164,7 +185,18 @@ export default {
             // nativeService.sendHttpRequest(params)
         },
         selectProduct() {
-            this.goTo('productSelection', {}, { from: 'installation', isMultiMode: true })
+            nativeService.setItem("SERVICE_STORAGE_selectedProduct", JSON.stringify(this.selectedProduct), () => {
+                this.goTo('productSelection', {}, { from: 'installation', isMultiMode: true })
+            })
+        },
+        handlePageData(data) {
+            if (data.page == "installation") {
+                if (data.key == "selectedProduct") {
+                    this.selectedProduct = data.data
+                } else if (data.key == "userAddress") {
+                    this.userAddress = data.data
+                }
+            }
         },
         selectTransportStatus() {
             this.isShowTransportStatus = true;
@@ -210,7 +242,9 @@ export default {
             this.selectedTimeIndex = event.timeIndex
         },
         selectAddress() {
-
+            nativeService.setItem("SERVICE_STORAGE_userAddress", JSON.stringify(this.userAddress), () => {
+                this.goTo('userAddress', {}, { from: 'installation' })
+            })
         },
         typeSelected(index) {
             this.typeSelectedIndex = index
@@ -237,7 +271,11 @@ export default {
 
         },
         submit() {
-
+            if (["orderList", "orderDetail"].indexOf(this.fromPage) > -1) {
+                this.back({ viewTag: "orderList" })
+            } else {
+                this.goTo('orderList', { "replace": true })
+            }
         }
     },
     created() {
@@ -277,6 +315,7 @@ export default {
 .cell-title {
   flex: 1;
   flex-direction: row;
+  align-items: center;
 }
 .cell-label {
   font-family: PingFangSC-Regular;

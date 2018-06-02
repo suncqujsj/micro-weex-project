@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <list>
             <cell class="top-gap"></cell>
@@ -24,7 +24,6 @@ export default {
     data() {
         return {
             title: '选择地址',
-            fromPage: '',
             searchResult: null
         }
     },
@@ -70,7 +69,6 @@ export default {
     beforeCreate: function () {
     },
     created() {
-        this.fromPage = nativeService.getParameters('from')
         this.getAddressList()
     }
 }

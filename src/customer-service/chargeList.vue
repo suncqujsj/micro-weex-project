@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <div class="search-bar">
             <div class="search-bar-content">
@@ -9,45 +9,26 @@
             </div>
         </div>
         <list>
-            <cell>
+            <cell v-for="(itemA, indexA) in sortedFreePlocy" :key="indexA">
                 <div class="cell-item">
-                    <div class="cell-sub-item level-one" @click="itemClicked">
-                        <text class="cell-item-title">特殊环境（线下）</text>
+                    <div class="cell-sub-item level-one" @click="expandedAIndex=indexA;expandedBIndex=-1">
+                        <text class="cell-item-title">{{itemA.classAProject}}</text>
                         <image class="cell-arrow-icon" :src="'./assets/img/service_ic_hide@3x.png'" resize="contain"></image>
                     </div>
                 </div>
-                <div class="cell-expand-item" v-if="isDisplay">
-                    <div class="cell-sub-item level-two">
-                        <text class="cell-item-sub-title">线上购买（非京东自营）</text>
+                <div v-if="expandedAIndex==indexA" class="cell-expand-item" v-for="(itemB, indexB) in itemA.children" :key="indexB">
+                    <div class="cell-sub-item level-two" @click="expandedBIndex=indexB">
+                        <text class="cell-item-sub-title">{{itemB.classBProject}}</text>
                         <image class="cell-arrow-icon" :src="'./assets/img/service_ic_show_s@3x.png'" resize="contain"></image>
                     </div>
-                    <div class="cell-sub-item level-two">
-                        <text class="cell-item-sub-title">线上购买（京东自营）</text>
-                        <image class="cell-arrow-icon" :src="'./assets/img/service_ic_hide_s@3x.png'" resize="contain"></image>
-                    </div>
-                    <div class="cell-sub-item level-three">
-                        <text class="cell-item-sub-title">远程上门费</text>
-                        <text class="cell-item-price">1.5元 / 公里</text>
-                    </div>
-                    <div class="level-three">
-                        <text class="cell-item-desc" :style="{'width':'700px'}">远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费远程上门费</text>
-                    </div>
-                </div>
-            </cell>
-
-            <cell>
-                <div class="cell-item">
-                    <div class="cell-sub-item level-one">
-                        <text class="cell-item-title">特殊环境（线下）</text>
-                        <image class="cell-arrow-icon" :src="'./assets/img/service_ic_hide@3x.png'" resize="contain"></image>
-                    </div>
-                </div>
-            </cell>
-            <cell>
-                <div class="cell-item">
-                    <div class="cell-sub-item level-one">
-                        <text class="cell-item-title">特殊环境（线下）</text>
-                        <image class="cell-arrow-icon" :src="'./assets/img/service_ic_hide@3x.png'" resize="contain"></image>
+                    <div v-if="expandedBIndex==indexB" v-for="(itemC, indexC) in itemB.children" :key="indexC">
+                        <div class="cell-sub-item level-three">
+                            <text class="cell-item-sub-title">{{itemC.classCProject}}</text>
+                            <text class="cell-item-price">{{itemC.chargeStandard}}{{itemC.unit}}</text>
+                        </div>
+                        <div class="level-three">
+                            <text class="cell-item-desc" :style="{'width':'700px'}">{{itemC.pubRemark}}</text>
+                        </div>
                     </div>
                 </div>
             </cell>
@@ -66,7 +47,51 @@ export default {
     data() {
         return {
             title: '家用空调',
-            isDisplay: true
+            feePlocy: [],
+            expandedAIndex: null,
+            expandedBIndex: null,
+            expandedCIndex: null
+        }
+    },
+    computed: {
+        sortedFreePlocy() {
+            let result = []
+            let classACodeIndexs = {}, classBCodeIndexs = {}
+            if (this.feePlocy && this.feePlocy.length > 0) {
+                for (let index = 0; index < this.feePlocy.length; index++) {
+                    const item = this.feePlocy[index];
+                    let Aindex = classACodeIndexs[item.classACode]
+                    if (!Aindex) {
+                        result.push({
+                            "classACode": item.classACode,
+                            "classAProject": item.classAProject,
+                            "children": []
+                        })
+                        Aindex = classACodeIndexs[item.classACode] = result.length - 1
+                    }
+
+                    let Bindex = classBCodeIndexs[item.classBCode]
+                    if (!Bindex) {
+                        result[Aindex]["children"].push({
+                            "classBCode": item.classBCode,
+                            "classBProject": item.classBProject,
+                            "children": []
+                        })
+                        Bindex = classBCodeIndexs[item.classBCode] = result[Aindex]["children"].length - 1
+                    }
+
+                    result[Aindex]["children"][Bindex]["children"].push({
+                        "classCCode": item.classCCode,
+                        "classCProject": item.classCProject,
+                        "unit": item.unit,
+                        "chargeStandard": item.chargeStandard,
+                        "pubRemark": item.pubRemark
+                    })
+                }
+            }
+
+            debugger
+            return result
         }
     },
     methods: {
@@ -75,7 +100,9 @@ export default {
         }
     },
     created() {
-
+        nativeService.getFeePlocy().then((data) => {
+            this.feePlocy = data
+        })
     }
 }
 </script>

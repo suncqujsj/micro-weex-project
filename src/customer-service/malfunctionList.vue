@@ -1,12 +1,12 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller class="scroller">
             <div class="top-gap">
             </div>
-            <div class="scroller-item-wrapper" v-for="(item, index) in searchResult" @click="selectItem(item)" :key="index">
-                <text class="scroller-item">{{item.desc}}</text>
+            <div class="scroller-item-wrapper" v-for="(item, index) in faultData" @click="selectItem(item)" :key="index">
+                <text class="scroller-item">{{item.serviceRequireName}}</text>
             </div>
         </scroller>
     </div>
@@ -23,63 +23,21 @@ export default {
     data() {
         return {
             title: '故障类型',
-            fromPage: '',
-            searchResult: null
+            faultData: []
         }
     },
     methods: {
-        getMmalfunction(event) {
-            this.searchResult = [
-                { id: 1, desc: "清洁保养" },
-                { id: 1, desc: "不制冷/制冷效果差" },
-                { id: 1, desc: "不制热/制热效果差" },
-                { id: 1, desc: "清洁保养" },
-                { id: 1, desc: "不制冷/制冷效果差" },
-                { id: 1, desc: "不制热/制热效果差" },
-                { id: 1, desc: "清洁保养" },
-                { id: 1, desc: "不制冷/制冷效果差" },
-                { id: 1, desc: "不制热/制热效果差" },
-                { id: 1, desc: "清洁保养" },
-                { id: 1, desc: "不制冷/制冷效果差" },
-                { id: 1, desc: "不制热/制热效果差" },
-                { id: 1, desc: "清洁保养" },
-                { id: 1, desc: "不制冷/制冷效果差" },
-                { id: 1, desc: "不制热/制热效果差" },
-                { id: 1, desc: "清洁保养" },
-                { id: 1, desc: "不制冷/制冷效果差" },
-                { id: 1, desc: "不制热/制热效果差" },
-                { id: 1, desc: "清洁保养" },
-                { id: 1, desc: "不制冷/制冷效果差" },
-                { id: 1, desc: "不制热/制热效果差" },
-                { id: 1, desc: "清洁保养" },
-                { id: 1, desc: "不制冷/制冷效果差" },
-                { id: 1, desc: "不制热/制热效果差" },
-                { id: 1, desc: "清洁保养" },
-                { id: 1, desc: "不制冷/制冷效果差" },
-                { id: 1, desc: "不制热/制热效果差" },
-                { id: 1, desc: "清洁保养" },
-                { id: 1, desc: "不制冷/制冷效果差" },
-                { id: 1, desc: "不制热/制热效果差" },
-                { id: 1, desc: "清洁保养" },
-                { id: 1, desc: "不制冷/制冷效果差" },
-                { id: 1, desc: "不制热/制热效果差" },
-                { id: 1, desc: "清洁保养" },
-                { id: 1, desc: "不制冷/制冷效果差" },
-                { id: 1, desc: "不制热/制热效果差" },
-                { id: 1, desc: "清洁保养" },
-                { id: 1, desc: "不制冷/制冷效果差" },
-                { id: 1, desc: "不制热/制热效果差" }
-            ]
-        },
         selectItem(item) {
+            this.appPageDataChannel.postMessage({ page: this.fromPage, key: "selectedFault", data: item })
             this.back()
         }
     },
     beforeCreate: function () {
     },
     created() {
-        this.fromPage = nativeService.getParameters('from')
-        this.getMmalfunction()
+        nativeService.searchFaultType().then((data) => {
+            this.faultData = data
+        })
     }
 }
 </script>

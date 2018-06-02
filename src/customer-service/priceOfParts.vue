@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller class="content-wrapper">
             <div class="base-group">
@@ -189,6 +189,7 @@ export default {
 }
 .result-title {
   font-family: PingFangSC-Medium;
+  font-weight: 600;
   font-size: 32px;
   color: #000000;
   padding-bottom: 24px;

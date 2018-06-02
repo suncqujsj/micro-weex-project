@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
             <div slot="customerContent" class="header-right">
                 <text class="header-right-text" @click="switchMode">地图模式</text>
             </div>
@@ -230,6 +230,7 @@ export default {
 }
 .info-address {
   font-family: PingFangSC-Medium;
+  font-weight: 600;
   font-size: 28px;
   color: #000000;
 }

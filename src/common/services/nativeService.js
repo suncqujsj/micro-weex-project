@@ -30,6 +30,7 @@ export default {
     serviceList: {
         test: "commonservice"
     },
+    Mock: {},
     //**********Util方法***************START
     convertToJson(str) {
         let result = str
@@ -245,7 +246,7 @@ export default {
 
     //**********网络请求接口***************START
     //发送智慧云网络请求：此接口固定Post到智慧云https地址及端口
-    sendMCloudRequest(name, params, isShowLoading = true) {
+    sendMCloudRequest(name, params, options = { isShowLoading: true, isValidate: true }) {
         return new Promise((resolve, reject) => {
             var self = this;
             if (dummy != true) {
@@ -258,7 +259,7 @@ export default {
                         applianceId: masterId + "",
                         msgid: msgid
                     }, params)
-                    if (isShowLoading) {
+                    if (options.isShowLoading) {
                         this.showLoading()
                     }
                     bridgeModule.sendMCloudRequest(sendData,
@@ -268,19 +269,27 @@ export default {
                             if (typeof resData == 'string') {
                                 resData = JSON.parse(resData)
                             }
-                            if (isShowLoading) {
+                            if (options.isShowLoading) {
                                 this.hideLoading()
                             }
-                            if (resData.errorCode == 0) {
-                                resolve(resData)
+
+                            if (options.isValidate) {
+                                //resData.status为5.0判断；resData.errorCode为4.判断
+                                if (resData.errorCode == 0) {
+                                    resolve(resData)
+                                } else if (resData.status === true) {
+                                    resolve(resData)
+                                } else {
+                                    reject(resData)
+                                }
                             } else {
-                                reject(resData)
+                                resolve(resData)
                             }
                         },
                         (error) => {
                             debugUtil.debugLog(debugLogSeperator, `request(${msgid}): `, sendData)
                             debugUtil.debugLog(`=======> error(${msgid}): `, error, debugLogSeperator)
-                            if (isShowLoading) {
+                            if (options.isShowLoading) {
                                 this.hideLoading()
                             }
                             if (typeof error == 'string') {
@@ -291,9 +300,18 @@ export default {
                     )
                 });
             } else {
-                let resData = Mock.getMock(self.serviceList[name] ? self.serviceList[name] : name)
-                if (resData.errorCode == 0) {
-                    resolve(resData);
+                let resData = this.Mock.getMock(self.serviceList[name] ? self.serviceList[name] : name)
+                if (options.isValidate) {
+                    //resData.status为5.0判断；resData.errorCode为4.判断
+                    if (resData.errorCode == 0) {
+                        resolve(resData)
+                    } else if (resData.status === true) {
+                        resolve(resData)
+                    } else {
+                        reject(resData)
+                    }
+                } else {
+                    resolve(resData)
                 }
             }
         })
@@ -346,7 +364,7 @@ export default {
                     }
                 )
             } else {
-                let resData = Mock.getMock(params.url)
+                let resData = this.Mock.getMock(params.url)
                 if (resData.errorCode == 0) {
                     resolve(resData);
                 }
@@ -395,7 +413,7 @@ export default {
             }
             bridgeModule.startCmdProcess(JSON.stringify(param), finalCallBack, finalCallbackFail);
         } else {
-            callback(Mock.getMock(name).messageBody);
+            callback(this.Mock.getMock(name).messageBody);
         }
     },
 
@@ -475,7 +493,7 @@ export default {
                 let resData
 
                 if (params['operation']) {
-                    resData = Mock.getMock(params['operation'])
+                    resData = this.Mock.getMock(params['operation'])
                 }
                 debugUtil.debugLog("Mock: ", resData)
                 resolve(resData);

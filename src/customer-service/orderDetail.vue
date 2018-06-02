@@ -1,15 +1,15 @@
 <template>
     <div>
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
         <scroller class="scroller">
             <div class="order-detail-header">
                 <div class="order-detail-background"></div>
+                <image class="order-detail-img" :src="statusObj.icon" resize='cover'>
+                </image>
                 <div class="order-detail-content">
                     <text class="order-detail-label">{{statusObj.desc}}</text>
                     <text class="order-detail-desc">订单已经收到，即将分配</text>
                 </div>
-                <image class="order-detail-img" :src="statusObj.icon" resize='cover'>
-                </image>
             </div>
             <div class="order-detail-step">
                 <div class="order-detail-step-row">
@@ -101,7 +101,7 @@ export default {
                 label: '维修净水器',
                 desc: '工程师即将上门为您服务',
                 price: '',
-                imageUrl: './assets/img/progress.png'
+                imageUrl: './assets/img/service_midea@3x.png'
             },
             dialogShow: false
         }
@@ -144,16 +144,16 @@ export default {
             nativeService.toast("复制单号成功")
         },
         checkAddress() {
-            this.goTo('productSelection', {}, { from: 'orderList' })
+            this.goTo('productSelection', {}, { from: 'orderList', to: 'branchList' })
         },
         urgeOrder(index) {
             nativeService.toast("催单成功")
         },
         renewOrder(index) {
             if (this.order.orderType == 1) {
-                this.goTo("maintenance", {}, { id: this.order.id })
+                this.goTo("maintenance", {}, { from: "orderDetail", id: this.order.id })
             } else {
-                this.goTo("installation", {}, { id: this.order.id })
+                this.goTo("installation", {}, { from: "orderDetail", id: this.order.id })
             }
         },
         showDialog(index) {
@@ -203,6 +203,7 @@ export default {
 }
 .order-detail-label {
   font-family: PingFangSC-Medium;
+  font-weight: 600;
   font-size: 56px;
   color: #ffffff;
   margin-bottom: 24px;
@@ -222,9 +223,11 @@ export default {
   opacity: 0.6;
 }
 .order-detail-img {
+  position: absolute;
+  bottom: 0px;
+  right: -10px;
   height: 192px;
   width: 320px;
-  right: -10px;
 }
 .order-detail-step {
   width: 750px;

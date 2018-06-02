@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="" bgColor="#ffffff" :isImmersion="true" :showLeftImg="false" :showRightImg="true" rightImg="./assets/img/service_ic_call@3x.png" @rightImgClick="showHotLine">
+        <midea-header title="" bgColor="#ffffff" :isImmersion="isipx?false:true" :showLeftImg="false" :showRightImg="true" rightImg="./assets/img/service_ic_call@3x.png" @rightImgClick="showHotLine">
         </midea-header>
         <list>
             <cell>
@@ -19,19 +19,23 @@
                         </div>
                     </div>
                 </div>
-                <div class="arraw-line">
-                    <div class="arraw-triangle"></div>
-                </div>
             </cell>
-            <midea-item height="150" :hasArrow="true" :clickActivied="true" @mideaCellClick="goToOrderDetail">
-                <image slot="itemImg" class="order-img" src="./assets/img/progress.png" resize='contain'>
-                </image>
-                <div slot="title" class="order-content">
-                    <text class="order-title">安装只能洗衣机</text>
-                    <text class="order-desc">待工程师上门</text>
-                    <text class="order-time">12-23 16:00</text>
-                </div>
-            </midea-item>
+            <template v-if="currentOrder">
+                <cell>
+                    <div class="arraw-line">
+                        <div class="arraw-triangle"></div>
+                    </div>
+                </cell>
+                <midea-item height="150" :hasArrow="true" :clickActivied="true" @mideaCellClick="goToOrderDetail">
+                    <image slot="itemImg" class="order-img" src="./assets/img/service_midea@3x.png" resize='contain'>
+                    </image>
+                    <div slot="title" class="order-content">
+                        <text class="order-title">{{currentOrder.serviceMainTypeName + currentOrder.serviceUserDemandVOs[0].prodName}}</text>
+                        <text class="order-desc">{{currentOrder.statusDesc}}</text>
+                        <text class="order-time">{{currentOrder.pubCreateDate}}</text>
+                    </div>
+                </midea-item>
+            </template>
             <cell class="group-gap-top"></cell>
             <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('productSelection', {}, { from: 'rootView', to:'branchList' })">
                 <image slot="itemImg" src="./assets/img/service_ic_location@3x.png" class="service-item-img" resize='contain'>
@@ -68,6 +72,7 @@
 <script>
 import base from './base'
 import nativeService from '@/common/services/nativeService';
+import util from '@/common/util/util'
 
 import { MideaActionsheet, MideaItem } from '@/index'
 
@@ -96,10 +101,30 @@ export default {
 
             showBar: false,
             actionsheetItems: ['美的：400-899-935', '小天鹅：400-822-8228'],
-            actionsheetItemsValue: ['400899935', '4008228228']
+            actionsheetItemsValue: ['400899935', '4008228228'],
+            orderList: []
+        }
+    },
+    computed: {
+        currentOrder() {
+            let order
+            if (this.orderList && this.orderList.length > 0) {
+                order = this.orderList[0]
+                switch (order.serviceOrderStatus) {
+                    case '22':
+                        order.statusDesc = "待工程师上门服务"
+                        break;
+                }
+                order.pubCreateDate = util.dateFormat(new Date(order.pubCreateDate), "yyyy-MM-dd hh:mm")
+            }
+
+            return order
         }
     },
     methods: {
+        compare(a, b) {
+            return a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1
+        },
         itemClicked(item) {
             this.goTo(item.page)
         },
@@ -130,7 +155,13 @@ export default {
         }
     },
     created() {
-
+        let param = {
+            dispatchOrderStatus: "22",  //派工单状态
+            orderColumn: "pubCreateDate"
+        }
+        nativeService.sendMCloudRequest('queryserviceorder', param).then((data) => {
+            this.orderList = data.list
+        })
     }
 }
 </script>
@@ -152,7 +183,8 @@ export default {
   background-color: #ffffff;
 }
 .service-title {
-  /* font-family: PingFangSC-Medium; */
+  font-family: PingFangSC-Medium;
+  font-weight: 600;
   font-size: 56px;
   color: #000000;
   line-height: 80px;

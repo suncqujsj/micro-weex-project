@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller class="scroller">
             <div class="base-group">
@@ -61,7 +61,7 @@ export default {
     data() {
         return {
             title: '滤芯防伪',
-            dialogShow: true,
+            dialogShow: false,
             result: {}
         }
     },
@@ -80,36 +80,17 @@ export default {
         }
     },
     methods: {
-        copyOrder(orderNo) {
-            clipboard.setString(orderNo)
-            nativeService.toast("复制单号成功")
-        },
-        checkAddress() {
-            this.goTo('productSelection', {}, { from: 'orderList' })
-        },
-        urgeOrder(index) {
-            nativeService.toast("催单成功")
-        },
-        renewOrder(index) {
-            if (this.order.orderType == 1) {
-                this.goTo("maintenance", {}, { id: this.order.id })
-            } else {
-                this.goTo("installation", {}, { id: this.order.id })
-            }
-        },
         showDialog(index) {
             this.dialogShow = true
-        },
-        dialogCancel() {
-            this.dialogShow = false
         },
         dialogConfirm() {
             this.dialogShow = false
         }
     },
     created() {
-        nativeService.getItem("antifakeResult", (resp) => {
+        nativeService.getItem("SERVICE_STORAGE_antifakeResult", (resp) => {
             this.result = JSON.parse(resp.data)
+            this.showDialog()
         })
     }
 }

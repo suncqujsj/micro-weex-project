@@ -2,6 +2,7 @@ const appDataTemplate = {
 
 }
 
+
 const bundleUrl = weex.config.bundleUrl
 const match = /.*\/(T0x.*)\//g.exec(bundleUrl)
 const plugin_name = match ? match[1] : 'common' //appConfig.plugin_name
@@ -10,15 +11,21 @@ const srcFileName = bundleUrl.substring(bundleUrl.lastIndexOf('/') + 1, bundleUr
 const globalEvent = weex.requireModule('globalEvent')
 const storage = weex.requireModule('storage')
 
-import nativeService from '@/common/services/nativeService'
 import debugUtil from '@/common/util/debugUtil'
-import mideaHeader from '@/midea-component/header.vue'
 
 import appConfig from './settings/config'
-import serviceList from './settings/serviceList'
+import nativeService from './settings/nativeService'
+
+import Mock from './settings/mock'  //正式场上线时注释掉
+if (appConfig.isMock) {
+    nativeService.Mock = Mock
+}
 
 const appDataChannel = new BroadcastChannel(plugin_name + 'appData')
 const pushDataChannel = new BroadcastChannel(plugin_name + 'pushData')
+const appPageDataChannel = new BroadcastChannel('appPageData')
+
+import mideaHeader from '@/midea-component/header.vue'
 
 export default {
     components: {
@@ -34,14 +41,20 @@ export default {
         isNavigating: false,
         appDataKey: plugin_name + 'appData',
         appDataChannel: appDataChannel,
+        appPageDataChannel: appPageDataChannel,
         pushKey: 'receiveMessage',
         pushDataChannel: pushDataChannel,
 
-        appData: appDataTemplate
+        appData: appDataTemplate,
+        fromPage: '',
+        toPage: ''
     }),
     computed: {
         pageHeight() {
             return 750 / weex.config.env.deviceWidth * weex.config.env.deviceHeight
+        },
+        isipx: function () {
+            return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6');
         }
     },
     methods: {
@@ -124,11 +137,15 @@ export default {
         handleNotification(data) {
             //处理推送消息
             debugUtil.debugLog(srcFileName, this.pushKey, data)
+        },
+        handlePageData(data) {
+            //处理页面传递的信息
         }
     },
     created() {
         console.log("created")
-        nativeService.serviceList = Object.assign(nativeService.serviceList || {}, serviceList)
+        this.fromPage = nativeService.getParameters('from')
+        this.toPage = nativeService.getParameters('to')
         //若isMixinCreated为false, 则不继承
         if (!this.isMixinCreated) return
 
@@ -153,9 +170,14 @@ export default {
         appDataChannel.onmessage = (event) => {
             this.appData = event.data || {}
         }
+        appPageDataChannel.onmessage = (event) => {
+            this.handlePageData(event.data || {})
+        }
         //页面创建时获取全局应用数据
         this.getAppData().then((data) => {
             this.appData = data || {}
         })
+
+
     }
 };

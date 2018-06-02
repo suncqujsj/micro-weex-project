@@ -1,111 +1,26 @@
 <template>
     <div>
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <div class="search-bar">
             <div class="search-bar-content" @click="searchProduct">
                 <image class="search-bar-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
-                <text class="search-bar-desc">请输入产品品类，如空调、洗衣机</text>
+                <text class="search-bar-desc">请输入产品品类，如空调、洗衣机{{productData.length}}</text>
             </div>
         </div>
         <div class="product-content">
-            <scroller class="">
-                <text v-for="(item,index) in brandList" :key="index" v-bind:class="['product-brand',
-                    index==selectedBrandIndex?'product-brand-selected':'']" @click="selectBrand(index)">{{item.name}}</text>
+            <scroller class="product-content-left">
+                <text v-for="(item,index) in productData" :key="index" v-bind:class="['product-brand',
+                    index==selectedBrandIndex?'product-brand-selected':'']" @click="selectBrand(index)">{{item.brand}}</text>
             </scroller>
             <scroller class="product-content-right">
-                <div class="product-group">
-                    <text class="product-group-title">空调</text>
+                <div class="product-group" v-for="(item,index) in selectedBranchProductData" :key="index">
+                    <text class="product-group-title">{{item.prodName}}</text>
                     <div class="product-group-content">
-                        <div class="product-appliance-wrapper" @click="selectItem">
-                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
-                            <text class="appliance-name">家用空调</text>
-                            <image v-if="isMultiMode" class="appliance-add-img" :src="'./assets/img/service_ic_addone@3x.png'" resize="contain"></image>
-                        </div>
-                        <div class="product-appliance-wrapper" @click="selectItem">
-                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
-                            <text class="appliance-name">家用空调</text>
-                            <image v-if="isMultiMode" class="appliance-add-img" :src="'./assets/img/service_ic_addone@3x.png'" resize="contain"></image>
-                        </div>
-                        <div class="product-appliance-wrapper" @click="selectItem">
-                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
-                            <text class="appliance-name">家用空调</text>
-                        </div>
-                        <div class="product-appliance-wrapper" @click="selectItem">
-                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
-                            <text class="appliance-name">家用空调</text>
-                        </div>
-                        <div class="product-appliance-wrapper" @click="selectItem">
-                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
-                            <text class="appliance-name">家用空调</text>
-                        </div>
-                        <div class="product-appliance-wrapper" @click="selectItem">
-                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
-                            <text class="appliance-name">家用空调</text>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="product-group">
-                    <text class="product-group-title">洗衣机</text>
-                    <div class="product-group-content">
-                        <div class="product-appliance-wrapper" @click="selectItem">
-                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
-                            <text class="appliance-name">洗衣机</text>
-                        </div>
-                        <div class="product-appliance-wrapper" @click="selectItem">
-                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
-                            <text class="appliance-name">洗衣机</text>
-                        </div>
-                        <div class="product-appliance-wrapper" @click="selectItem">
-                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
-                            <text class="appliance-name">洗衣机</text>
-                        </div>
-                        <div class="product-appliance-wrapper" @click="selectItem">
-                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
-                            <text class="appliance-name">洗衣机</text>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-group">
-                    <text class="product-group-title">洗衣机</text>
-                    <div class="product-group-content">
-                        <div class="product-appliance-wrapper" @click="selectItem">
-                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
-                            <text class="appliance-name">洗衣机</text>
-                        </div>
-                        <div class="product-appliance-wrapper" @click="selectItem">
-                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
-                            <text class="appliance-name">洗衣机</text>
-                        </div>
-                        <div class="product-appliance-wrapper" @click="selectItem">
-                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
-                            <text class="appliance-name">洗衣机</text>
-                        </div>
-                        <div class="product-appliance-wrapper" @click="selectItem">
-                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
-                            <text class="appliance-name">洗衣机</text>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-group">
-                    <text class="product-group-title">洗衣机</text>
-                    <div class="product-group-content">
-                        <div class="product-appliance-wrapper" @click="selectItem">
-                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
-                            <text class="appliance-name">洗衣机</text>
-                        </div>
-                        <div class="product-appliance-wrapper" @click="selectItem">
-                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
-                            <text class="appliance-name">洗衣机</text>
-                        </div>
-                        <div class="product-appliance-wrapper" @click="selectItem">
-                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
-                            <text class="appliance-name">洗衣机</text>
-                        </div>
-                        <div class="product-appliance-wrapper" @click="selectItem">
-                            <image class="appliance-img" :src="'./assets/img/progress.png'" resize="contain"></image>
-                            <text class="appliance-name">洗衣机</text>
+                        <div class="product-appliance-wrapper" v-for="(childrenItem,childrenIndex) in item.children" :key="childrenIndex" @click="selectItem($event, childrenItem)">
+                            <image class="appliance-img" :src="'./assets/img/service_midea@3x.png'" resize="contain"></image>
+                            <text class="appliance-name">{{childrenItem.prodName}}</text>
+                            <image v-if="isMultiMode && childrenItem.isSelected!=true" class="appliance-add-img" :src="'./assets/img/service_ic_addone@3x.png'" resize="contain"></image>
                         </div>
                     </div>
                 </div>
@@ -113,39 +28,19 @@
         </div>
         <div v-if="isShowAnimation" class="animation-outer" ref="outer">
             <div class="animation-inner" ref="inner" :style="{'left': animationConfig.startX,'top': animationConfig.startY}">
-                <image class="animation-img" :src="'./assets/img/progress.png'" resize="contain"></image>
+                <image class="animation-img" :src="'./assets/img/service_midea@3x.png'" resize="contain"></image>
             </div>
         </div>
         <div v-if="isMultiMode" class="action-bar">
             <div class="product-selected-items-wrapper">
                 <scroller class="product-selected-items" scroll-direction="horizontal">
-                    <div class="selected-action-wrapper">
-                        <text class="selected-action-desc">洗衣机</text>
-                        <image class="selected-action-img" :src="'./assets/img/service_ic_delone@3x.png'" resize="contain"></image>
-                    </div>
-                    <div class="selected-action-wrapper">
-                        <text class="selected-action-desc">洗衣机</text>
-                        <image class="selected-action-img" :src="'./assets/img/service_ic_delone@3x.png'" resize="contain"></image>
-                    </div>
-                    <div class="selected-action-wrapper">
-                        <text class="selected-action-desc">洗衣机</text>
-                        <image class="selected-action-img" :src="'./assets/img/service_ic_delone@3x.png'" resize="contain"></image>
-                    </div>
-                    <div class="selected-action-wrapper">
-                        <text class="selected-action-desc">洗衣机</text>
-                        <image class="selected-action-img" :src="'./assets/img/service_ic_delone@3x.png'" resize="contain"></image>
-                    </div>
-                    <div class="selected-action-wrapper">
-                        <text class="selected-action-desc">洗衣机</text>
-                        <image class="selected-action-img" :src="'./assets/img/service_ic_delone@3x.png'" resize="contain"></image>
-                    </div>
-                    <div class="selected-action-wrapper">
-                        <text class="selected-action-desc">洗衣机</text>
+                    <div class="selected-action-wrapper" v-for="(item,index) in selectedProduct" :key="index" :ref="'selectedProduct'+index" @click="removeSelectedProduct(index)">
+                        <text class="selected-action-desc">{{item.prodName}}</text>
                         <image class="selected-action-img" :src="'./assets/img/service_ic_delone@3x.png'" resize="contain"></image>
                     </div>
                 </scroller>
             </div>
-            <text class="action-btn" @click="submit">完成</text>
+            <text v-bind:class="['action-btn',selectedProduct.length>0?'':'disable-btn']" @click="submit">完成</text>
         </div>
     </div>
 </template>
@@ -156,6 +51,7 @@ import nativeService from '@/common/services/nativeService'
 import { MideaDialog } from '@/index'
 
 const animation = weex.requireModule('animation')
+const dom = weex.requireModule('dom')
 
 export default {
     components: {
@@ -165,34 +61,26 @@ export default {
     data() {
         return {
             title: '选择需服务产品',
-            brandList: [
-                { id: 0, name: '我的家电' },
-                { id: 1, name: '美的' },
-                { id: 2, name: '小天鹅' },
-                { id: 3, name: '雪尔' },
-                { id: 4, name: '华凌' }
-            ],
+            productData: [],
             selectedBrandIndex: 0,
-            productList: [
-                {
-                    category: '',
-                    list: [
-                        {
-                            name: "家用空调",
-                            imageUrl: './assets/img/progress.png'
-                        }
-                    ]
-                }
-            ],
             dialogShow: false,
-            fromPage: '',
-            toPage: '',
             isMultiMode: false,
+            enableAnimation: true,
             isShowAnimation: false,
             animationConfig: {
                 startX: 0,
                 startY: 0
+            },
+            selectedProduct: [],
+        }
+    },
+    computed: {
+        selectedBranchProductData() {
+            let result
+            if (this.productData && this.productData.length > 0) {
+                result = this.productData[this.selectedBrandIndex].productTypeDTOList
             }
+            return result
         }
     },
     methods: {
@@ -202,19 +90,36 @@ export default {
         selectBrand(index) {
             this.selectedBrandIndex = index
         },
-        selectItem(event) {
+        selectItem(event, item) {
             if (this.isMultiMode) {
-                // nativeService.toast(event)
-                this.showSelectAnimation(event)
-            } else {
-                if (this.toPage) {
-                    this.goTo(this.toPage, {}, { from: this.fromPage })
-                } else {
-                    this.back()
+                if (item.isSelected != true) {
+                    if (this.selectedProduct.length < 5) {
+                        this.$set(item, "isSelected", true)
+                        if (this.enableAnimation) {
+                            this.showSelectAnimation(event, () => {
+                                this.selectedProduct.push(item)
+                                this.$nextTick(() => {
+                                    const el = this.$refs["selectedProduct" + (this.selectedProduct.length - 1)][0]
+                                    dom.scrollToElement(el, {})
+                                })
+                            })
+                        } else {
+                            this.selectedProduct.push(item)
+                            this.$nextTick(() => {
+                                const el = this.$refs["selectedProduct" + (this.selectedProduct.length - 1)][0]
+                                dom.scrollToElement(el, {})
+                            })
+                        }
+                    } else {
+                        nativeService.toast("最多只能选5个")
+                    }
                 }
+            } else {
+                this.selectedProduct.push(item)
+                this.submit()
             }
         },
-        showSelectAnimation(event) {
+        showSelectAnimation(event, callback) {
             this.animationConfig.startX = event.position.x
             this.animationConfig.startY = event.position.y
 
@@ -251,22 +156,38 @@ export default {
                     timingFunction: 'linear',
                     delay: 0 //ms
                 }, function () {
-                    this.isShowAnimation = false
                 })
                 animation.transition(innerEl, {
                     styles: {
-                        transform: 'translateY(' + (this.pageHeight - event.position.y) + 'px) scale(0.5)',
+                        transform: 'translateY(' + (this.pageHeight - event.position.y - 100) + 'px) scale(0.5)',
                         transformOrigin: 'center center'
                     },
-                    duration: 800, //ms
+                    duration: 801, //ms
                     timingFunction: 'cubic-bezier(.38,-0.93,.66,.74)',
                     delay: 0 //ms
                 }, function () {
+                    callback()
+                    this.isShowAnimation = false
                 })
             })
         },
+        removeSelectedProduct(index) {
+            this.$set(this.selectedProduct[index], "isSelected", false)
+            this.selectedProduct.splice(index, 1)
+        },
         submit() {
-            this.dialogShow = true;
+            if (this.selectedProduct.length <= 0) return
+
+            let result = this.selectedProduct
+            if (this.toPage) {
+                nativeService.setItem("SERVICE_STORAGE_selectedProduct", result,
+                    () => {
+                        this.goTo(this.toPage, {}, { from: this.fromPage })
+                    })
+            } else {
+                this.appPageDataChannel.postMessage({ page: this.fromPage, key: "selectedProduct", data: result })
+                this.back()
+            }
         },
         submitConfirm() {
             this.dialogShow = false;
@@ -290,9 +211,18 @@ export default {
 
     },
     created() {
-        this.fromPage = nativeService.getParameters('from')
-        this.toPage = nativeService.getParameters('to')
         this.isMultiMode = nativeService.getParameters('isMultiMode')
+        if (this.isMultiMode) {
+            nativeService.getItem("SERVICE_STORAGE_selectedProduct", (resp) => {
+                if (resp.result == 'success') {
+                    this.selectedProduct = JSON.parse(resp.data) || []
+                }
+            })
+        }
+
+        nativeService.searchProductType().then((data) => {
+            this.productData = data
+        })
     }
 }
 </script>
@@ -338,6 +268,8 @@ export default {
   flex: 1;
   align-content: center;
   align-items: center;
+  border-right-color: #e5e5e8;
+  border-right-width: 2px;
 }
 .product-brand {
   width: 200px;
@@ -354,7 +286,9 @@ export default {
 }
 .product-brand-selected {
   font-family: PingFangSC-Medium;
+  font-weight: 600;
   color: #000000;
+  background-color: #f2f2f2;
 }
 .product-content-right {
   flex: 2.75;
@@ -467,6 +401,10 @@ export default {
   padding-right: 18px;
   padding-bottom: 10px;
   padding-left: 18px;
+  opacity: 1;
+}
+.disable-btn {
+  opacity: 0.2;
 }
 .animation-outer {
   position: absolute;

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
         <scroller class="scroller">
             <div v-for="(order, index) in orderList" :key="index" @click="goToOrderDetail(order)">
                 <order-block class="order-block" :data="order">
@@ -50,7 +50,7 @@ export default {
                     label: '维修净水器',
                     desc: '工程师即将上门为您服务',
                     price: '',
-                    imageUrl: './assets/img/progress.png'
+                    imageUrl: './assets/img/service_midea@3x.png'
                 },
 
                 {
@@ -63,7 +63,7 @@ export default {
                     label: '安装家用空调',
                     desc: '工程师即将上门为您服务工程师即将上门为您服务工程师即将上门为您服务工程师即将上门',
                     price: '',
-                    imageUrl: './assets/img/progress.png',
+                    imageUrl: './assets/img/service_midea@3x.png',
                     createTime: '2017-12-12'
                 },
 
@@ -77,7 +77,7 @@ export default {
                     label: '安装家用空调',
                     desc: '工程师即将上门为您服务',
                     price: '',
-                    imageUrl: './assets/img/progress.png'
+                    imageUrl: './assets/img/service_midea@3x.png'
                 },
 
 
@@ -91,7 +91,7 @@ export default {
                     label: '维修家用空调',
                     desc: '工程师即将上门为您服务',
                     price: '',
-                    imageUrl: './assets/img/progress.png'
+                    imageUrl: './assets/img/service_midea@3x.png'
                 },
 
                 {
@@ -104,7 +104,7 @@ export default {
                     label: '清洗家用空调',
                     desc: '工程师即将上门为您服务',
                     price: '120.00',
-                    imageUrl: './assets/img/progress.png'
+                    imageUrl: './assets/img/service_midea@3x.png'
                 },
 
                 {
@@ -117,7 +117,7 @@ export default {
                     label: '维修净水器',
                     desc: '工程师即将上门为您服务',
                     price: '',
-                    imageUrl: './assets/img/progress.png'
+                    imageUrl: './assets/img/service_midea@3x.png'
                 },
 
                 {
@@ -130,7 +130,7 @@ export default {
                     label: '维修净水器',
                     desc: '工程师即将上门为您服务',
                     price: '',
-                    imageUrl: './assets/img/progress.png',
+                    imageUrl: './assets/img/service_midea@3x.png',
                     tel: '4008228228'
                 }
             ],
@@ -151,9 +151,9 @@ export default {
         renewOrder(index) {
             let order = this.orderList[index]
             if (order.orderType == 1) {
-                this.goTo("maintenance", {}, { id: order.id })
+                this.goTo("maintenance", {}, { from: "orderList", id: order.id })
             } else {
-                this.goTo("installation", {}, { id: order.id })
+                this.goTo("installation", {}, { from: "orderList", id: order.id })
             }
         },
         showDialog(index) {
@@ -199,7 +199,13 @@ export default {
         }
     },
     created() {
-
+        let param = {
+            dispatchOrderStatus: "22",  //派工单状态
+            orderColumn: "pubCreateDate"
+        }
+        nativeService.sendMCloudRequest('queryserviceorder', param).then((data) => {
+            // this.orderList = data.list
+        })
     }
 }
 </script>

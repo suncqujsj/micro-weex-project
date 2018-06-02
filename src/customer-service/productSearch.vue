@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header v-if="!isIos" :title="title" bgColor="#ffffff" :isImmersion="true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header v-if="!isIos" :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <div class="search-bar" :style="{'height':isIos?'136px':'96px','padding-top':isIos?'40px':'0px'}">
             <div class="search-bar-content">
@@ -45,7 +45,6 @@ export default {
     data() {
         return {
             title: '产品搜索',
-            fromPage: '',
             keyWord: '',
             searchKeyWord: '',
             historyKeys: [
@@ -148,7 +147,6 @@ export default {
 
     },
     created() {
-        this.fromPage = nativeService.getParameters('from')
     }
 }
 </script>

@@ -104,6 +104,7 @@ export default {
 }
 .branch-block-label {
   font-family: PingFangSC-Medium;
+  font-weight: 600;
   font-size: 28px;
   color: #000000;
 }

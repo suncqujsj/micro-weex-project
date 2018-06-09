@@ -135,7 +135,36 @@ export default {
                 }
             ],
             code: '',
-            data: {
+            order: {
+                customerName: '',   //报单人姓名
+                customerMobilephone1: '',  //报单人手机号1
+                areaNum: '',  //报单人所在地区号
+                customerAddress: '',  //报单人所在地址
+                areaCode: '',  //报单人所在区域编码
+                areaName: '',  //报单人所在区域名称
+                servCustomerName: '',  //现场服务用户姓名
+                servCustomerMobilephone1: '',  //现场服务用户手机号1
+                servAreaNum: '',  //现场服务用户所在地区号
+                servCustomerAddress: '',  //现场服务用户所在地址
+                servAreaCode: '',  //现场服务用户所在区域编码
+                servAreaName: '',  //现场服务用户所在区域名称
+                orderOrigin: '38',  //38
+                interfaceSource: 'MJAPP',  //MJAPP
+                requireServiceDate: '',  //用户要求服务时间
+                webUserCode: '',  //APP用户UUID
+                webUserPhone: '',  //APP用户注册手机号
+                serviceMainTypeCode: '',  //业务类型如安装值为10，从选择服务请求项目中带过来
+                serviceMainTypeName: '',  //业务类型如安装值为10，从选择服务请求项目中带过来
+                serviceSubTypeCode: '',  //业务类型如安装值1010，从选择服务请求项目中带过来
+                serviceSubTypeName: '',  //业务类型如安装，从选择服务请求项目中带过来
+                contactOrderSerItemCode: '',  //用户报单请求项目，如需要安装值为BZ01001
+                contactOrderSerItemName: '',  //用户报单请求项目，如需要安装
+                prodBrand: '',  //产品品牌
+                brandName: '',  //产品品牌名称
+                prodCode: '',  //产品品类
+                prodName: '',  //产品品类名称
+                productAmount: '',  //默认填1
+
                 transportStatus: ''
             },
             infoText: ''
@@ -153,7 +182,7 @@ export default {
             return result
         },
         transportStatusDesc() {
-            return this.data.transportStatus ? this.data.transportStatus : '请选择'
+            return this.order.transportStatus ? this.order.transportStatus : '请选择'
         },
         serviePeriodDesc() {
             if (this.serviePeriodDate && this.selectedDateIndex != null && this.serviePeriodTime && this.selectedTimeIndex != null) {
@@ -165,7 +194,7 @@ export default {
         userAddressDesc() {
             let result = '请选择'
             if (this.userAddress) {
-                result = this.userAddress.customerName + ' ' + this.userAddress.customerMobilephone + '\n' + this.userAddress.customerAddress + '\n' + this.userAddress.customerAddressDetail
+                result = this.userAddress.customerName + ' ' + this.userAddress.customerMobilephone1 + '\n' + this.userAddress.customerAddress + '\n' + this.userAddress.customerAddressDetail
             }
             return result
         },
@@ -174,18 +203,8 @@ export default {
         }
     },
     methods: {
-        initProductData() {
-            let params = {
-                url: 'http://weixincs.midea.com/wxgw/myproduct/searchProductType?mpType=MIDEASERVICE',
-                body: {
-                    'codeType': 'bzbx',
-                    'version': '1.0'
-                }
-            }
-            // nativeService.sendHttpRequest(params)
-        },
         selectProduct() {
-            nativeService.setItem("SERVICE_STORAGE_selectedProduct", JSON.stringify(this.selectedProduct), () => {
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, JSON.stringify(this.selectedProduct), () => {
                 this.goTo('productSelection', {}, { from: 'installation', isMultiMode: true })
             })
         },
@@ -209,7 +228,7 @@ export default {
         },
         TransportStatustItemClick(event) {
             this.isShowTransportStatus = false
-            this.data.transportStatus = this.TransportStatusItems[event.index]
+            this.order.transportStatus = this.TransportStatusItems[event.index]
         },
         transportStatusBtnClick() {
             this.isShowTransportStatus = false
@@ -242,8 +261,8 @@ export default {
             this.selectedTimeIndex = event.timeIndex
         },
         selectAddress() {
-            nativeService.setItem("SERVICE_STORAGE_userAddress", JSON.stringify(this.userAddress), () => {
-                this.goTo('userAddress', {}, { from: 'installation' })
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.userAddress, JSON.stringify(this.userAddress), () => {
+                this.goTo('userAddressList', {}, { from: 'installation' })
             })
         },
         typeSelected(index) {
@@ -271,16 +290,27 @@ export default {
 
         },
         submit() {
-            if (["orderList", "orderDetail"].indexOf(this.fromPage) > -1) {
-                this.back({ viewTag: "orderList" })
-            } else {
-                this.goTo('orderList', { "replace": true })
-            }
+            nativeService.createserviceorder().then(() => {
+                if (["orderList", "orderDetail"].indexOf(this.fromPage) > -1) {
+                    //重新报单
+                    this.back({ viewTag: "orderList" })
+                } else {
+                    //安装，维修
+                    this.goTo('orderList', { "replace": true })
+                }
+            }).catch((error) => {
+                nativeService.toast(nativeService.getCssErrorMessage(error))
+            })
         }
     },
     created() {
         this.initServiePeriod()
-        this.initProductData()
+
+        nativeService.getItem(this.SERVICE_STORAGE_KEYS.order, (resp) => {
+            if (resp.result == 'success') {
+                this.order = JSON.parse(resp.data) || []
+            }
+        })
     }
 }
 </script>

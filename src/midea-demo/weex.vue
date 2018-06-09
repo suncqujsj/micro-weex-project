@@ -84,6 +84,7 @@ module.exports = {
             { title: 'imageZoom', link: "imageZoom" },
             { title: 'Linechart折线图', link: "linechart" },
             { title: 'Loading上拉加载', link: "loading" },
+            { title: 'lottieView动效视图', link: "lottieView" },
             { title: 'Nav List', link: "navList" },
             { title: 'Picker', link: "picker" },
             { title: 'Progress进度条', link: "progress" },
@@ -119,6 +120,7 @@ module.exports = {
             { title: 'showLoading打开原生loading界面', link: "showLoading" },
             { title: 'showLoadingWithMsg打开原生loading界面', link: "showLoadingWithMsg" },
             { title: 'showSharePanel打开分享界面', link: "showSharePanel" },
+            { title: 'storage数据', link: "storage" },
             { title: 'takePhoto照相', link: "takePhoto" },
             { title: 'updateDeviceInfo更新当前设备信息', link: "updateDeviceInfo" },
             { title: 'weex环境变量', link: "weexEnv" }

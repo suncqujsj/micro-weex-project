@@ -2,16 +2,16 @@
     <div>
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
         <scroller class="scroller">
-            <div v-for="(order, index) in orderList" :key="index" @click="goToOrderDetail(order)">
-                <order-block class="order-block" :data="order">
+            <div v-for="(order, index) in formattedOrderList" :key="index" @click="goToOrderDetail(index)">
+                <order-block class="order-block" :order="order">
                     <div slot="action-bar" class="action-bar">
-                        <text class="action" v-if="order.status == 1" @click="checkAddress()">查看网点</text>
-                        <text class="action" v-if="order.status == 2 || order.status == 6" @click="showDialog(index)">取消工单</text>
-                        <text class="action" v-if="order.status == 2 && checkPassTime(order)" @click="urgeOrder(index)">催办</text>
-                        <text class="action" v-if="order.status == 3" @click="renewOrder(index)">重新报单</text>
-                        <text class="action" v-if="order.status == 4" @click="assessService(index)">评价有礼</text>
-                        <text class="action primary-action" v-if="order.status == 5" @click="checkAssess(index)">查看评价</text>
-                        <text class="action" v-if="order.status == 6" @click="callService(index)">联系网点</text>
+                        <text class="action" v-if="order.calcServiceOrderStatus == 1" @click="checkAddress()">查看网点</text>
+                        <text class="action" v-if="[2, 6].indexOf(order.calcServiceOrderStatus)>-1" @click="showDialog(index)">取消工单</text>
+                        <text class="action" v-if="order.calcServiceOrderStatus == 2 && checkPassTime(order)" @click="urgeOrder(index)">催办</text>
+                        <text class="action" v-if="order.calcServiceOrderStatus == 3" @click="renewOrder(index)">重新报单</text>
+                        <text class="action" v-if="order.calcServiceOrderStatus == 4" @click="assessService(index)">评价有礼</text>
+                        <text class="action primary-action" v-if="order.calcServiceOrderStatus == 5" @click="assessService(index)">查看评价</text>
+                        <text class="action" v-if="order.calcServiceOrderStatus == 6" @click="callService(index)">联系网点</text>
                     </div>
                 </order-block>
             </div>
@@ -25,6 +25,7 @@
 
 <script>
 import base from './base'
+import orderBase from './order-base'
 import nativeService from '@/common/services/nativeService'
 import OrderBlock from '@/customer-service/components/orderBlock.vue'
 
@@ -35,126 +36,52 @@ export default {
         OrderBlock,
         MideaDialog
     },
-    mixins: [base],
+    mixins: [base, orderBase],
     data() {
         return {
             title: '进度查询',
-            orderList: [
-                {
-                    id: '1',
-                    orderType: 1,
-                    time: '2018-05-11',
-                    type: '京东接入',
-                    status: 1,
-                    statusDesc: '已接单',
-                    label: '维修净水器',
-                    desc: '工程师即将上门为您服务',
-                    price: '',
-                    imageUrl: './assets/img/service_midea@3x.png'
-                },
-
-                {
-                    id: '2',
-                    orderType: 0,
-                    time: '8888-88-88',
-                    type: '美的服务',
-                    status: 2,
-                    statusDesc: '已接单',
-                    label: '安装家用空调',
-                    desc: '工程师即将上门为您服务工程师即将上门为您服务工程师即将上门为您服务工程师即将上门',
-                    price: '',
-                    imageUrl: './assets/img/service_midea@3x.png',
-                    createTime: '2017-12-12'
-                },
-
-                {
-                    id: '3',
-                    orderType: 0,
-                    time: '2018-05-11',
-                    type: '美的APP',
-                    status: 3,
-                    statusDesc: '已取消',
-                    label: '安装家用空调',
-                    desc: '工程师即将上门为您服务',
-                    price: '',
-                    imageUrl: './assets/img/service_midea@3x.png'
-                },
-
-
-                {
-                    id: '3',
-                    orderType: 1,
-                    time: '2018-05-11',
-                    type: '京东接入',
-                    status: 3,
-                    statusDesc: '已取消',
-                    label: '维修家用空调',
-                    desc: '工程师即将上门为您服务',
-                    price: '',
-                    imageUrl: './assets/img/service_midea@3x.png'
-                },
-
-                {
-                    id: '4',
-                    orderType: 3,
-                    time: '2018-05-11',
-                    type: '京东接入',
-                    status: 4,
-                    statusDesc: '待评价',
-                    label: '清洗家用空调',
-                    desc: '工程师即将上门为您服务',
-                    price: '120.00',
-                    imageUrl: './assets/img/service_midea@3x.png'
-                },
-
-                {
-                    id: '5',
-                    orderType: 1,
-                    time: '2018-05-11',
-                    type: '京东接入',
-                    status: 5,
-                    statusDesc: '已完成',
-                    label: '维修净水器',
-                    desc: '工程师即将上门为您服务',
-                    price: '',
-                    imageUrl: './assets/img/service_midea@3x.png'
-                },
-
-                {
-                    id: '6',
-                    orderType: 1,
-                    time: '2018-05-11',
-                    type: '京东接入',
-                    status: 6,
-                    statusDesc: '待服务',
-                    label: '维修净水器',
-                    desc: '工程师即将上门为您服务',
-                    price: '',
-                    imageUrl: './assets/img/service_midea@3x.png',
-                    tel: '4008228228'
-                }
-            ],
+            orderList: [],
             selectedOrderIndex: null,
             dialogShow: false
         }
     },
+    computed: {
+        formattedOrderList() {
+            return this.orderList.map((order) => {
+                let calcServiceOrderStatus = this.calcServiceOrderStatus(order)
+
+                return Object.assign(order, { calcServiceOrderStatus: calcServiceOrderStatus })
+            })
+        }
+    },
     methods: {
-        goToOrderDetail(order) {
-            this.goTo("orderDetail", {}, { id: order.id })
+        goToOrderDetail(index) {
+            let order = this.orderList[index]
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.order, order, () => {
+                this.goTo("orderDetail", {}, { from: 'orderList', id: order.serviceOrderNo })
+            })
         },
         checkAddress() {
             this.goTo('productSelection', {}, { from: 'orderList' })
         },
         urgeOrder(index) {
-            nativeService.toast("催单成功")
+            let oldOrder = this.orderList[index]
+            let param = {
+                serviceOrderNo: oldOrder.serviceOrderNo
+            }
+            nativeService.createserviceuserdemand().then(() => {
+                nativeService.toast("催单成功")
+            })
         },
         renewOrder(index) {
             let order = this.orderList[index]
-            if (order.orderType == 1) {
-                this.goTo("maintenance", {}, { from: "orderList", id: order.id })
-            } else {
-                this.goTo("installation", {}, { from: "orderList", id: order.id })
-            }
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.order, order, () => {
+                if (order.serviceSubTypeCode == 1111) {
+                    this.goTo("maintenance", {}, { from: "orderList", id: order.serviceOrderNo })
+                } else {
+                    this.goTo("installation", {}, { from: "orderList", id: order.serviceOrderNo })
+                }
+            })
         },
         showDialog(index) {
             this.dialogShow = true
@@ -166,23 +93,27 @@ export default {
         dialogConfirm() {
             this.dialogShow = false
             let oldOrder = this.orderList[this.selectedOrderIndex]
-            oldOrder.status = 3
-            this.$set(this.orderList, this.selectedOrderIndex, oldOrder)
+            let param = {
+                serviceOrderNo: oldOrder.serviceOrderNo
+            }
+            nativeService.cancelserviceorder(param).then(() => {
+                oldOrder.serviceOrderStatus = '22'
+                this.$set(this.orderList, this.selectedOrderIndex, oldOrder)
+            })
         },
         assessService(index) {
             let order = this.orderList[index]
-            this.goTo("serviceAssessment", {}, { id: order.id })
-        },
-        checkAssess(index) {
-            let order = this.orderList[index]
-            this.goTo("serviceAssessment", {}, { id: order.id })
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.order, order,
+                () => {
+                    this.goTo("serviceAssessment", {}, { from: 'orderList', id: order.serviceOrderNo })
+                })
         },
         callService(index) {
             let order = this.orderList[index]
             nativeService.callTel({
-                tel: order.tel,
+                tel: order.unitTel,
                 title: '网点客户服务',
-                desc: '拨打网点热线电话：' + order.tel
+                desc: '拨打网点热线电话：' + order.unitTel
             }).then(
                 (resp) => { }
             ).catch((error) => {
@@ -192,7 +123,7 @@ export default {
         checkPassTime(order) {
             let result = false
             let now = new Date()
-            if (order.createTime && new Date(order.createTime) < now.setHours(now.getHours() - 1)) {
+            if (order.contactTime && new Date(order.contactTime) < now.setHours(now.getHours() - 1)) {
                 result = true
             }
             return result
@@ -203,8 +134,8 @@ export default {
             dispatchOrderStatus: "22",  //派工单状态
             orderColumn: "pubCreateDate"
         }
-        nativeService.sendMCloudRequest('queryserviceorder', param).then((data) => {
-            // this.orderList = data.list
+        nativeService.queryserviceorder(param).then((data) => {
+            this.orderList = data.list
         })
     }
 }

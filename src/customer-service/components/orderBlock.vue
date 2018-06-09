@@ -1,22 +1,25 @@
 <template>
     <div class="order-block">
         <div class="order-block-header">
-            <image class="order-block-channel-icon" :src="channelIconSrc" resize='contain'>
-            </image>
-            <text class="order-block-channel">{{data.type}}</text>
-            <text class="order-block-time">{{data.time}}</text>
-            <text v-if="data.status != 5" class="order-block-status">{{data.statusDesc}}</text>
+            <div class="order-block-icon">
+                <image class="order-block-channel-icon" src="./assets/img/logo/OW.png" resize='contain'>
+                </image>
+                <image class="order-block-channel-icon" :src="formattedOrder.interfaceSourceIcon" resize='stretch'>
+                </image>
+            </div>
+            <text class="order-block-channel">{{formattedOrder.interfaceSourceDesc}}</text>
+            <text class="order-block-time">{{formattedOrder.contactTimeDesc}}</text>
+            <text v-if="showStatus" class="order-block-status">{{formattedOrder.isFinished?'':formattedOrder.statusDesc}}</text>
         </div>
-        <image v-if="data.status == 5" class="order-block-status-icon" src="./assets/img/service_ic_finish@3x.png" resize='contain'>
+        <image v-if="showStatus && formattedOrder.isFinished" class="order-block-status-icon" src="./assets/img/service_ic_finish@3x.png" resize='contain'>
         </image>
         <div class="order-block-body">
-            <image class="order-block-img" :src="data.imageUrl" resize='contain'>
+            <image class="order-block-img" :src="formattedOrder.imageUrl" resize='contain'>
             </image>
             <div class="order-block-content">
-                <text class="order-block-label">{{data.label}}</text>
-                <!-- <text v-if="data.desc" class="order-block-desc">{{data.desc}}</text> -->
+                <text class="order-block-label">{{formattedOrder.orderDesc}}</text>
             </div>
-            <text v-if="data.price" class="order-block-price">{{data.price}}元</text>
+            <text v-if="formattedOrder.price" class="order-block-price">{{formattedOrder.price}}元</text>
         </div>
         <slot name="action-bar">
         </slot>
@@ -24,15 +27,19 @@
 </template>
 
 <script>
-import nativeService from '@/common/services/nativeService';
-
+import orderBase from '../order-base'
 
 export default {
     components: {
     },
+    mixins: [orderBase],
     props: {
-        data: {
+        order: {
             type: Object
+        },
+        showStatus: {
+            type: Boolean,
+            default: true
         }
     },
     data() {
@@ -40,27 +47,6 @@ export default {
         }
     },
     computed: {
-        channelIconSrc() {
-            let result = './assets/img/service_ic_JD@3x.png'
-            switch (this.data.id) {
-                case '1':
-                    return './assets/img/service_ic_JD@3x.png'
-                    break;
-                case '2':
-                    return './assets/img/service_ic_taobao@3x.png'
-                    break;
-                case '3':
-                    return './assets/img/service_ic_call400@3x.png'
-                    break;
-                case '4':
-                    return './assets/img/service_ic_meiju@3x.png'
-                    break;
-                case '5':
-                    return './assets/img/service_midea@3x.png'
-                    break;
-            }
-            return result
-        }
     },
     methods: {
     },
@@ -88,11 +74,19 @@ export default {
   border-bottom-style: solid;
   overflow: visible;
 }
-.order-block-channel-icon {
+
+.order-block-icon {
   height: 40px;
   width: 40px;
   margin-left: 24px;
   margin-right: 8px;
+}
+.order-block-channel-icon {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  height: 40px;
+  width: 40px;
 }
 .order-block-channel {
   font-family: PingFangSC-Regular;

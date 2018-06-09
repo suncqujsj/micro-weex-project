@@ -327,11 +327,11 @@ export default {
             'format': 'base64'
         }
     } */
-    sendHttpRequest(params, isShowLoading = true) {
+    sendHttpRequest(params, options = { isShowLoading: true, isValidate: true }) {
         return new Promise((resolve, reject) => {
             let options = JSON.parse(JSON.stringify(params))
             var self = this;
-            if (true || dummy != true) {
+            if (dummy != true) {
                 let defaultOption = {
                     method: "POST",
                     type: 'json'
@@ -340,13 +340,19 @@ export default {
                     options.body = this.convertRequestBody(options.body)
                 }
                 options = Object.assign(defaultOption, options)
+                if (options.body && options.method == "GET") {
+                    /* body 参数仅支持 string 类型的参数，请勿直接传递 JSON，必须先将其转为字符串。
+                    GET 请求不支持 body 方式传递参数，请使用 url 传参。 */
+                    options.url += "?" + options.body
+                    options.body = ""
+                }
 
-                if (isShowLoading) {
+                if (options.isShowLoading) {
                     this.showLoading()
                 }
                 stream.fetch(options,
                     (resData) => {
-                        if (isShowLoading) {
+                        if (options.isShowLoading) {
                             this.hideLoading()
                         }
                         if (!resData.ok) {
@@ -365,9 +371,7 @@ export default {
                 )
             } else {
                 let resData = this.Mock.getMock(params.url)
-                if (resData.errorCode == 0) {
-                    resolve(resData);
-                }
+                resolve(resData);
             }
         })
     },

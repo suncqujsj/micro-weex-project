@@ -2,28 +2,29 @@
     <div class="wrapper">
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
             <div slot="customerContent" class="header-right">
-                <text class="header-right-text" @click="switchMode">地图模式</text>
+                <text class="header-right-text" @click="switchMode">{{isListMode?'地图模式':'列表模式'}}</text>
             </div>
         </midea-header>
         <div class="info-bar">
-            <text class="info-address" @click="changeAddress">深圳</text>
-            <image class="arraw-down-icon" src="./assets/img/service_ic_hide@3x.png" resize='contain' @click="changeAddress">
+            <text class="info-address" @click="changeArea">{{areaDesc}}</text>
+            <image class="arraw-down-icon" src="./assets/img/service_ic_hide@3x.png" resize='contain' @click="changeArea">
             </image>
             <div class="info-product">
                 <midea-rich-text class="search-result-desc" :hasTextMargin="false" :config-list="richDesc"></midea-rich-text>
             </div>
         </div>
         <scroller v-if="isListMode" class="scroller">
-            <div v-for="(order, index) in branchList" :key="index">
-                <branch-block class="branch-block" :data="order">
+            <div v-for="(branch, index) in sortedBranchList" :key="index">
+                <branch-block class="branch-block" :data="branch" :index="index">
                 </branch-block>
             </div>
+            <div class="gap-bottom"></div>
         </scroller>
-        <div v-else class="scroller">
+        <div v-else class="map-scroller">
             <web class="map" :src="mapSrc"></web>
             <slider class="slider" :index="currentAddressIndex" @change="changeBranch" interval="3000" auto-play="false">
-                <div v-for="(order, index) in branchList" :key="index">
-                    <branch-block class="branch-slider-block" :data="order">
+                <div v-for="(branch, index) in sortedBranchList" :key="index">
+                    <branch-block class="branch-slider-block" ellipsis=true :data="branch" :index="index">
                     </branch-block>
                 </div>
             </slider>
@@ -49,75 +50,29 @@ export default {
         return {
             title: '网点查询',
             isListMode: true,
-            branchList: [
-                {
-                    id: '1',
-                    label: '美的总部大楼',
-                    desc: '业务范围：家用空调、洗衣机、热水器，净水器',
-                    address: "广东省佛山市顺德区伦教街道128号",
-                    x: '12604424.88',
-                    y: '2608019.27'
-                },
-                {
-                    id: '1',
-                    label: '美的全球创新中心',
-                    desc: '业务范围：家用空调、洗衣机、热水器，净水器',
-                    address: "广东省佛山市顺德区伦教街道128号",
-                    x: '12604435.08',
-                    y: '2608005.12'
-                },
-                {
-                    id: '1',
-                    label: '美的总部大楼',
-                    desc: '业务范围：家用空调、洗衣机、热水器，净水器',
-                    address: "广东省佛山市顺德区伦教街道128号",
-                    x: '12604424.88',
-                    y: '2608019.27'
-                },
-                {
-                    id: '1',
-                    label: '美的全球创新中心',
-                    desc: '业务范围：家用空调、洗衣机、热水器，净水器',
-                    address: "广东省佛山市顺德区伦教街道128号",
-                    x: '12604435.08',
-                    y: '2608005.12'
-                },
-                {
-                    id: '1',
-                    label: '美的总部大楼',
-                    desc: '业务范围：家用空调、洗衣机、热水器，净水器',
-                    address: "广东省佛山市顺德区伦教街道128号",
-                    x: '12604424.88',
-                    y: '2608019.27'
-                },
-                {
-                    id: '1',
-                    label: '美的全球创新中心',
-                    desc: '业务范围：家用空调、洗衣机、热水器，净水器',
-                    address: "广东省佛山市顺德区伦教街道128号",
-                    x: '12604435.08',
-                    y: '2608005.12'
-                },
-                {
-                    id: '1',
-                    label: '美的总部大楼',
-                    desc: '业务范围：家用空调、洗衣机、热水器，净水器',
-                    address: "广东省佛山市顺德区伦教街道128号",
-                    x: '12604424.88',
-                    y: '2608019.27'
-                },
-                {
-                    id: '1',
-                    label: '美的全球创新中心',
-                    desc: '业务范围：家用空调、洗衣机、热水器，净水器',
-                    address: "广东省佛山市顺德区伦教街道128号",
-                    x: '12604435.08',
-                    y: '2608005.12'
-                }
-            ],
+            areaList: [{
+                regionDesc: '广东'
+            },
+            {
+                regionDesc: '佛山市'
+            },
+            {
+                regionDesc: '顺德区'
+            }],
+            keyword: '',
+            branchList: [],
             currentAddressIndex: 0,
-            dialogShow: false,
-            richDesc: [
+            dialogShow: false
+        }
+    },
+    computed: {
+        areaDesc() {
+            return this.areaList.map((item) => {
+                return item.regionDesc
+            }).join(' ')
+        },
+        richDesc() {
+            return [
                 {
                     type: 'text',
                     value: '附近“',
@@ -128,7 +83,7 @@ export default {
                 },
                 {
                     type: 'text',
-                    value: '热水器',
+                    value: this.keyword,
                     style: {
                         fontSize: 28,
                         color: '#FF8F00'
@@ -143,9 +98,12 @@ export default {
                     }
                 }
             ]
-        }
-    },
-    computed: {
+        },
+        sortedBranchList() {
+            return this.branchList.map((item) => {
+                return Object.assign({}, item)
+            })
+        },
         addressPoint() {
             let result = {
                 desc: '',
@@ -171,7 +129,7 @@ export default {
         switchMode() {
             this.isListMode = !this.isListMode
         },
-        changeAddress() {
+        changeArea() {
             this.goTo('addressList', {}, { from: 'branchList' })
         },
         changeBranch(event) {
@@ -192,7 +150,17 @@ export default {
         }
     },
     created() {
+        nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, (resp) => {
+            if (resp.result == 'success') {
+                this.keyword = JSON.parse(resp.data)[0].prodName || ''
+            }
+        })
 
+        let param = {
+        }
+        nativeService.queryunitarchives(param).then((data) => {
+            this.branchList = data.list
+        })
     }
 }
 </script>
@@ -201,6 +169,7 @@ export default {
 .wrapper {
   background-color: #f2f2f2;
   position: relative;
+  flex-direction: column;
 }
 .header-right {
   position: absolute;
@@ -247,8 +216,16 @@ export default {
   flex: 1;
   background-color: #f2f2f2;
 }
+.map-scroller {
+  flex: 1;
+  background-color: #f2f2f2;
+  flex-direction: column;
+}
 .branch-block {
   margin-top: 24px;
+}
+.gap-bottom {
+  margin-bottom: 80px;
 }
 .map {
   flex: 1;
@@ -263,5 +240,6 @@ export default {
   left: 0px;
 }
 .branch-slider-block {
+  width: 750px;
 }
 </style>

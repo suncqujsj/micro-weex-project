@@ -2,7 +2,7 @@
     <div class="wrapper">
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
         <scroller class="scroller">
-            <order-block class="order-block" :data="order">
+            <order-block class="order-block" :order="order" :showStatus="false">
                 <div slot="action-bar">
                     <div class="service-status-bar">
                         <text v-bind:class="['service-status-action',serviceStatus==1?'service-status-action-selected':'']" @click="switchServiceStatus(1)">服务未完成</text>
@@ -12,8 +12,13 @@
             </order-block>
 
             <div class="assess-block">
-                <div v-if="serviceStatus==0">
-                    <div v-if="serviceStatus==0" class="navigation-list">
+                <template v-if="serviceStatus==1">
+                    <div class="search-history-block">
+                        <text v-for="(item,index) in assessUncompletedKeys" :key="index" v-bind:class="['search-history-item', item.isSelected?'search-history-item-selected':'']" @click="selectUncompletedAssess(index)">{{item.title}}</text>
+                    </div>
+                </template>
+                <template v-if="serviceStatus==0">
+                    <div class="navigation-list">
                         <div v-for="(item, index) in navList" :key="'level'+index" class="navigation-item">
                             <div class="navigation-inner-item" @click="selectLeve(item)">
                                 <image class="navigation-img" :src="item.img + (serviceLevel==item.level?'on@3x.png':'off@3x.png')"></image>
@@ -22,28 +27,17 @@
                         </div>
                     </div>
                     <div v-if="serviceLevel" class="search-history-block group-bottom-border">
-                        <div class="search-history">
-                            <text v-for="(item,index) in assessKeys" :key="index" v-bind:class="['search-history-item', item.isSelected?'search-history-item-selected':'']" @click="selectAssess(index)">{{item.title}}</text>
-                        </div>
+                        <text v-for="(item,index) in assessKeys" :key="index" v-bind:class="['search-history-item', item.isSelected?'search-history-item-selected':'']" @click="selectAssess(index)">{{item.title}}</text>
                     </div>
 
+                    <text v-if="serviceLevel=='bad'" class="search-history-title">是否有以下行为</text>
                     <div v-if="serviceLevel=='bad'" class="search-history-block">
-                        <text class="search-history-title">是否有以下行为</text>
-                        <div class="search-history">
-                            <text v-for="(item,index) in assessBadKeys" :key="index" v-bind:class="['search-history-item', item.isSelected?'search-history-item-selected':'']" @click="selectBadAssess(index)">{{item.title}}</text>
-                        </div>
+                        <text v-for="(item,index) in assessBadKeys" :key="index" v-bind:class="['search-history-item', item.isSelected?'search-history-item-selected':'']" @click="selectBadAssess(index)">{{item.title}}</text>
                     </div>
                     <div v-if="serviceLevel" class="remark-group">
                         <textarea class="remark-textarea" placeholder="还想说点，将匿名并延迟告诉工程师" rows="4" @input="onInfoInput" @change="onInfoIChange"></textarea>
                     </div>
-                </div>
-                <div v-if="serviceStatus==1">
-                    <div class="search-history-block">
-                        <div class="search-history">
-                            <text v-for="(item,index) in assessUncompletedKeys" :key="index" v-bind:class="['search-history-item', item.isSelected?'search-history-item-selected':'']" @click="selectUncompletedAssess(index)">{{item.title}}</text>
-                        </div>
-                    </div>
-                </div>
+                </template>
                 <text v-if="isDataReady" class="action-button" @click="submit">提交</text>
             </div>
         </scroller>
@@ -53,7 +47,9 @@
 
 <script>
 import base from './base'
+import orderBase from './order-base'
 import nativeService from '@/common/services/nativeService'
+import util from '@/common/util/util'
 import OrderBlock from '@/customer-service/components/orderBlock.vue'
 import { MideaDialog, MideaButton } from '@/index'
 
@@ -65,22 +61,13 @@ export default {
         MideaDialog,
         MideaButton
     },
-    mixins: [base],
+    mixins: [base, orderBase],
     data() {
         return {
             title: '评价服务',
-            order: {
-                time: '2018-05-11',
-                type: '京东接入',
-                status: 6,
-                statusDesc: '待服务',
-                label: '维修净水器',
-                desc: '工程师即将上门为您服务',
-                price: '',
-                imageUrl: './assets/img/service_midea@3x.png'
-            },
+            order: null,
             dialogShow: false,
-            serviceStatus: null,
+            serviceStatus: 1,
             serviceLevel: null,
             navList: [{
                 title: '不满意',
@@ -250,7 +237,13 @@ export default {
         }
     },
     created() {
+        this.serviceOrderNo = nativeService.getParameters('id') || null
 
+        nativeService.getItem(this.SERVICE_STORAGE_KEYS.order, (resp) => {
+            if (resp.result == 'success') {
+                this.order = JSON.parse(resp.data) || []
+            }
+        })
     }
 }
 </script>
@@ -335,19 +328,18 @@ export default {
 
 .search-history-block {
   padding-top: 32px;
-  padding-right: 58px;
-  padding-left: 58px;
+  padding-right: 46px;
+  padding-left: 46px;
   background-color: #ffffff;
-}
-.search-history-title {
-  font-family: PingFangSC-Regular;
-  font-size: 28px;
-  color: #000000;
-  margin-bottom: 30px;
-}
-.search-history {
   flex-direction: row;
   flex-wrap: wrap;
+}
+.search-history-title {
+  padding-top: 32px;
+  font-family: PingFangSC-Regular;
+  font-size: 24px;
+  color: #666666;
+  text-align: center;
 }
 .search-history-item {
   font-family: PingFangSC-Regular;

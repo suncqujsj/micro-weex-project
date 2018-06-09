@@ -11,22 +11,22 @@
         <list>
             <cell v-for="(itemA, indexA) in sortedFreePlocy" :key="indexA">
                 <div class="cell-item">
-                    <div class="cell-sub-item level-one" @click="expandedAIndex=indexA;expandedBIndex=-1">
+                    <div class="cell-sub-item level-one" @click="levelAClicked(itemA, indexA)">
                         <text class="cell-item-title">{{itemA.classAProject}}</text>
-                        <image class="cell-arrow-icon" :src="'./assets/img/service_ic_hide@3x.png'" resize="contain"></image>
+                        <image class="cell-arrow-icon" :src="expandedAIndex==indexA?'./assets/img/service_ic_hide@3x.png':'./assets/img/service_ic_show@3x.png'" resize="contain"></image>
                     </div>
                 </div>
                 <div v-if="expandedAIndex==indexA" class="cell-expand-item" v-for="(itemB, indexB) in itemA.children" :key="indexB">
-                    <div class="cell-sub-item level-two" @click="expandedBIndex=indexB">
+                    <div class="cell-sub-item level-two" @click="levelBClicked(itemB, indexB)">
                         <text class="cell-item-sub-title">{{itemB.classBProject}}</text>
-                        <image class="cell-arrow-icon" :src="'./assets/img/service_ic_show_s@3x.png'" resize="contain"></image>
+                        <image class="cell-arrow-icon" :src="expandedBIndex==indexB?'./assets/img/service_ic_hide_s@3x.png':'./assets/img/service_ic_show_s@3x.png'" resize="contain"></image>
                     </div>
-                    <div v-if="expandedBIndex==indexB" v-for="(itemC, indexC) in itemB.children" :key="indexC">
-                        <div class="cell-sub-item level-three">
+                    <div v-if="expandedBIndex==indexB" class="level-three" v-for="(itemC, indexC) in itemB.children" :key="indexC">
+                        <div class="cell-sub-item">
                             <text class="cell-item-sub-title">{{itemC.classCProject}}</text>
                             <text class="cell-item-price">{{itemC.chargeStandard}}{{itemC.unit}}</text>
                         </div>
-                        <div class="level-three">
+                        <div>
                             <text class="cell-item-desc" :style="{'width':'700px'}">{{itemC.pubRemark}}</text>
                         </div>
                     </div>
@@ -48,9 +48,8 @@ export default {
         return {
             title: '家用空调',
             feePlocy: [],
-            expandedAIndex: null,
-            expandedBIndex: null,
-            expandedCIndex: null
+            expandedAIndex: -1,
+            expandedBIndex: -1
         }
     },
     computed: {
@@ -90,13 +89,27 @@ export default {
                 }
             }
 
-            debugger
             return result
         }
     },
     methods: {
-        itemClicked(event) {
-            this.isDisplay = !this.isDisplay
+        levelAClicked(item, index) {
+            if (this.expandedAIndex == index) {
+                this.expandedAIndex = -1
+                this.expandedBIndex = -1
+            } else {
+                this.expandedAIndex = index
+                this.expandedBIndex = -1
+            }
+        },
+        levelBClicked(item, index) {
+            if (this.expandedBIndex == index) {
+                this.expandedBIndex = -1
+                this.expandedCIndex = -1
+            } else {
+                this.expandedBIndex = index
+                this.expandedCIndex = -1
+            }
         }
     },
     created() {
@@ -173,13 +186,13 @@ export default {
 }
 .level-one {
   background-color: #ffffff;
-  border-top-color: #e2e2e2;
-  border-top-width: 1px;
+  border-bottom-color: #e2e2e2;
+  border-bottom-width: 1px;
 }
 .level-two {
   background-color: #f6f6f6;
-  border-top-color: #e2e2e2;
-  border-top-width: 1px;
+  border-bottom-color: #e2e2e2;
+  border-bottom-width: 1px;
 }
 .cell-item-sub-title {
   font-family: PingFangSC-Regular;
@@ -193,6 +206,8 @@ export default {
 }
 .level-three {
   background-color: #f6f6f6;
+  border-bottom-color: #e2e2e2;
+  border-bottom-width: 1px;
 }
 .cell-item-desc {
   font-family: PingFangSC-Regular;

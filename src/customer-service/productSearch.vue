@@ -5,14 +5,14 @@
         <div class="search-bar" :style="{'height':isIos?'136px':'96px','padding-top':isIos?'40px':'0px'}">
             <div class="search-bar-content">
                 <image class="search-bar-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
-                <input class="search-bar-input" placeholder="请输入产品品类，如空调、洗衣机" :value="keyWord" @input="oninput" @return="keyBoardsearch" return-key-type="search"></input>
+                <input class="search-bar-input" placeholder="请输入产品品类，如空调、洗衣机" v-model="keyWord" @return="keyBoardsearch" return-key-type="search"></input>
             </div>
             <text v-if="isIos" class="search-action" @click="back">取消</text>
-            <text v-if="!isIos" class="search-action" @click="searchProduct()">搜索</text>
+            <text v-if="!isIos" class="search-action" @click="searchProduct(keyWord)">搜索</text>
         </div>
         <scroller class="product-content">
-            <template v-if="searchResult">
-                <div v-for="(item, index) in convertedSearchResult" @click="selectItem(item)" :key="index">
+            <template v-if="convertedProductData && convertedProductData.length>0">
+                <div v-for="(item, index) in convertedProductData" @click="selectItem(item)" :key="index">
                     <div class="search-result-content">
                         <image class="search-result-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
                         <midea-rich-text class="search-result-desc" :hasTextMargin="false" :config-list="item.richDesc"></midea-rich-text>
@@ -22,7 +22,7 @@
             <div v-else class="search-history-block">
                 <text class="search-history-title">历史记录</text>
                 <div class="search-history">
-                    <text class="search-history-item" v-for="(item,index) in historyKeys" :key="index" @click="searchProduct(item.title)">{{item.title}}</text>
+                    <text class="search-history-item" v-for="(item,index) in historyKeys" :key="index" @click="searchProduct(item)">{{item}}</text>
                 </div>
             </div>
         </scroller>
@@ -47,106 +47,96 @@ export default {
             title: '产品搜索',
             keyWord: '',
             searchKeyWord: '',
-            historyKeys: [
-                {
-                    'title': '洗衣机',
-                    'index': 0
-                },
-                {
-                    'title': '空调',
-                    'index': 1
-
-                }
-            ],
+            historyKeys: [],
             dialogShow: false,
-            searchResult: null
+            productData: []
         }
     },
     computed: {
-        convertedSearchResult() {
+        convertedProductData() {
             let result = []
-            let reg = new RegExp(this.searchKeyWord, "gi")
-            if (this.searchResult) {
-                for (let index = 0; index < this.searchResult.length; index++) {
-                    let item = this.searchResult[index]
-                    item.richDesc = []
-                    let desc = item.desc.replace(reg, ",*,")
-                    let descArray = desc.split(',')
-                    for (let i = 0; i < descArray.length; i++) {
-                        const element = descArray[i];
-                        if (element == "*") {
-                            item.richDesc.push({
-                                type: 'text',
-                                value: this.searchKeyWord,
-                                style: {
-                                    fontSize: 28,
-                                    color: '#FF8F00'
+            if (this.searchKeyWord && this.productData && this.productData.length > 0) {
+                let reg = new RegExp(this.searchKeyWord, "gi")
+                for (let index = 0; index < this.productData.length; index++) {
+                    const brandItem = this.productData[index]
+                    for (let indexChild = 0; indexChild < brandItem.productTypeDTOList.length; indexChild++) {
+                        const productCategary = brandItem.productTypeDTOList[indexChild];
+                        let matchProductArray = productCategary.children.filter((product) => {
+                            return reg.test(brandItem.brand + product.prodName)
+                        })
+                        for (let indexMatch = 0; indexMatch < matchProductArray.length; indexMatch++) {
+                            let product = matchProductArray[indexMatch];
+                            let richDesc = []
+                            let desc = (brandItem.brand + product.prodName).replace(reg, ",*,")
+                            let descArray = desc.split(',')
+                            for (let i = 0; i < descArray.length; i++) {
+                                const descItem = descArray[i];
+                                if (descItem == "*") {
+                                    richDesc.push({
+                                        type: 'text',
+                                        value: this.searchKeyWord,
+                                        style: {
+                                            fontSize: 28,
+                                            color: '#FF8F00'
+                                        }
+                                    })
+                                } else if (descItem) {
+                                    richDesc.push({
+                                        type: 'text',
+                                        value: descItem,
+                                        style: {
+                                            fontSize: 28,
+                                            color: '#000000'
+                                        }
+                                    })
                                 }
-                            })
-                        } else {
-                            item.richDesc.push({
-                                type: 'text',
-                                value: element,
-                                style: {
-                                    fontSize: 28,
-                                    color: '#000000'
-                                }
-                            })
+                            }
+                            result.push({ 'product': product, 'richDesc': richDesc })
                         }
                     }
-                    result.push(item)
                 }
             }
             return result
         }
     },
     methods: {
-        oninput(event) {
-            this.keyWord = event.value
-        },
         keyBoardsearch(event) {
             this.searchProduct(event.value)
         },
         searchProduct(value) {
-            if (!value && !this.keyWord) {
+            if (!value) {
                 nativeService.toast("请输入搜索关键字")
                 return
             }
-            if (!this.keyWord) {
-                this.keyWord = value
-            }
+            this.keyWord = value
 
             this.searchKeyWord = this.keyWord
-            this.searchResult = [
-                { id: 1, desc: "美的洗衣机" },
-                { id: 1, desc: "洗衣机-小天鹅" },
-                { id: 1, desc: "洗衣机东芝" },
-                { id: 1, desc: "洗衣机洗衣机" },
-                { id: 1, desc: "小天鹅洗衣机小天鹅洗衣机小天鹅" }
-            ]
-        },
-        itemSelected(item) {
-            this.back({ viewTag: this.fromPage })
+            if (this.historyKeys.indexOf(this.searchKeyWord) < 0) {
+                this.historyKeys.push(this.searchKeyWord)
+                nativeService.setItem(this.SERVICE_STORAGE_KEYS.historyKeys, this.historyKeys, () => { })
+            }
         },
         selectItem(item) {
-            this.back({ viewTag: this.fromPage })
+            if (this.toPage) {
+                nativeService.setItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, [item.product],
+                    () => {
+                        this.goTo(this.toPage, {}, { from: this.fromPage })
+                    })
+            } else {
+                this.appPageDataChannel.postMessage({ page: this.fromPage, key: "selectedProduct", data: [item.product] })
+                this.back({ viewTag: this.fromPage })
+            }
         }
     },
-    beforeCreate: function () {
-        //目前支持ttf、woff文件，不支持svg、eot类型,moreItem at http://www.iconfont.cn/
-        var domModule = weex.requireModule('dom');
-        try {
-            nativeService.getPath((path) => {
-                let fontUrl = path + 'assets/font/midea_font.ttf'
-                domModule.addRule('fontFace', {
-                    'fontFamily': "iconfont2",
-                    'src': "url('" + fontUrl + "')"
-                });
-            })
-        } catch (error) { }
-
-    },
     created() {
+        nativeService.getItem(this.SERVICE_STORAGE_KEYS.historyKeys, (resp) => {
+            if (resp.result == 'success') {
+                this.historyKeys = JSON.parse(resp.data) || []
+            }
+        })
+        nativeService.searchProductType().then((data) => {
+            this.productData = data
+        })
     }
 }
 </script>

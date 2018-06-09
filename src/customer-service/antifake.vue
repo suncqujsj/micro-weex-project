@@ -83,7 +83,7 @@ export default {
                 (resp) => {
                     this.result = resp
                     if (resp.success && resp.result.ResultID) {
-                        nativeService.setItem("SERVICE_STORAGE_antifakeResult", resp, (resp) => {
+                        nativeService.setItem(this.SERVICE_STORAGE_KEYS.antifakeResult, resp, (resp) => {
                             this.goTo('antifakeResult')
                         })
                     } else {

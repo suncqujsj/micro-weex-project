@@ -20,19 +20,18 @@
                     </div>
                 </div>
             </cell>
-            <template v-if="currentOrder">
+            <template v-if="formattedOrder">
                 <cell>
                     <div class="arraw-line">
                         <div class="arraw-triangle"></div>
                     </div>
                 </cell>
                 <midea-item height="150" :hasArrow="true" :clickActivied="true" @mideaCellClick="goToOrderDetail">
-                    <image slot="itemImg" class="order-img" src="./assets/img/service_midea@3x.png" resize='contain'>
+                    <image slot="itemImg" class="order-img" :src="formattedOrder.imageUrl" resize='contain'>
                     </image>
                     <div slot="title" class="order-content">
-                        <text class="order-title">{{currentOrder.serviceMainTypeName + currentOrder.serviceUserDemandVOs[0].prodName}}</text>
-                        <text class="order-desc">{{currentOrder.statusDesc}}</text>
-                        <text class="order-time">{{currentOrder.pubCreateDate}}</text>
+                        <text class="order-title">{{formattedOrder.orderDesc}}</text>
+                        <text class="order-time">{{formattedOrder.contactTimeDesc}}</text>
                     </div>
                 </midea-item>
             </template>
@@ -71,7 +70,8 @@
 
 <script>
 import base from './base'
-import nativeService from '@/common/services/nativeService';
+import orderBase from './order-base'
+import nativeService from '@/common/services/nativeService'
 import util from '@/common/util/util'
 
 import { MideaActionsheet, MideaItem } from '@/index'
@@ -81,7 +81,7 @@ export default {
         MideaActionsheet,
         MideaItem
     },
-    mixins: [base],
+    mixins: [base, orderBase],
     data() {
         return {
             title: '服务',
@@ -106,25 +106,15 @@ export default {
         }
     },
     computed: {
-        currentOrder() {
-            let order
+        order() {
+            let result
             if (this.orderList && this.orderList.length > 0) {
-                order = this.orderList[0]
-                switch (order.serviceOrderStatus) {
-                    case '22':
-                        order.statusDesc = "待工程师上门服务"
-                        break;
-                }
-                order.pubCreateDate = util.dateFormat(new Date(order.pubCreateDate), "yyyy-MM-dd hh:mm")
+                result = this.orderList[0]
             }
-
-            return order
+            return result
         }
     },
     methods: {
-        compare(a, b) {
-            return a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1
-        },
         itemClicked(item) {
             this.goTo(item.page)
         },
@@ -152,14 +142,29 @@ export default {
         },
         goToOrderDetail() {
             this.goTo("orderDetail", {}, { id: '1234' })
+        },
+        resetStorage() {
+            //清楚本地缓存数据
+            for (const key in this.SERVICE_STORAGE_KEYS) {
+                if (this.SERVICE_STORAGE_KEYS.hasOwnProperty(key)) {
+                    if (['historyKeys'].indexOf(key) < 0) {
+                        nativeService.removeItem(this.SERVICE_STORAGE_KEYS[key])
+                    }
+                }
+            }
         }
     },
+    beforeCreate() {
+        console.log('beforeCreate:在初始化内部变量，并且添加了事件功能后被触发')
+    },
     created() {
+        this.resetStorage()
+
         let param = {
             dispatchOrderStatus: "22",  //派工单状态
-            orderColumn: "pubCreateDate"
+            orderColumn: "contactTime"
         }
-        nativeService.sendMCloudRequest('queryserviceorder', param).then((data) => {
+        nativeService.queryserviceorder(param).then((data) => {
             this.orderList = data.list
         })
     }

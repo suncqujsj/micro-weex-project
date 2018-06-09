@@ -4,8 +4,8 @@
         </midea-header>
         <list>
             <cell class="top-gap"></cell>
-            <midea-item v-for="(item, index) in searchResult" :key="index" height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="back">
-                <text slot="title" class="address-item-title">{{item.desc}}</text>
+            <midea-item v-for="(item, index) in areaList" :key="index" height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectItem(index)">
+                <text slot="title" class="address-item-title">{{item.regionDesc}}</text>
             </midea-item>
         </list>
     </div>
@@ -24,52 +24,28 @@ export default {
     data() {
         return {
             title: '选择地址',
-            searchResult: null
+            parentCode: '',
+            areaList: []
         }
     },
     methods: {
-        getAddressList(event) {
-            this.searchResult = [
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-            ]
-        },
-        selectItem(item) {
-            this.back()
+        selectItem(index) {
+            if (this.areaList[index].regionLevel == 3) {
+                this.appPageDataChannel.postMessage({ page: this.fromPage, key: "areaList", data: this.areaList[index] })
+                this.back({ viewTag: 'branchList' })
+            } else {
+                this.goTo('addressList', {}, { from: 'branchList', parentCode: this.areaList[index].regionCode })
+            }
         }
     },
-    beforeCreate: function () {
-    },
     created() {
-        this.getAddressList()
+        this.parentCode = nativeService.getParameters('parentCode')
+        let param = {
+            parentCode: this.parentCode
+        }
+        nativeService.getAreaList(param).then((data) => {
+            this.areaList = data
+        })
     }
 }
 </script>

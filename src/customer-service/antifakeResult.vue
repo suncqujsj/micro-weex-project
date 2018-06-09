@@ -88,7 +88,7 @@ export default {
         }
     },
     created() {
-        nativeService.getItem("SERVICE_STORAGE_antifakeResult", (resp) => {
+        nativeService.getItem(this.SERVICE_STORAGE_KEYS.antifakeResult, (resp) => {
             this.result = JSON.parse(resp.data)
             this.showDialog()
         })

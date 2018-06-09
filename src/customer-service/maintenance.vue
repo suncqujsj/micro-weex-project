@@ -206,18 +206,8 @@ export default {
         }
     },
     methods: {
-        initProductData() {
-            let params = {
-                url: 'http://weixincs.midea.com/wxgw/myproduct/searchProductType?mpType=MIDEASERVICE',
-                body: {
-                    'codeType': 'bzbx',
-                    'version': '1.0'
-                }
-            }
-            // nativeService.sendHttpRequest(params)
-        },
         selectProduct() {
-            nativeService.setItem("SERVICE_STORAGE_selectedProduct", JSON.stringify(this.selectedProduct), () => {
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, JSON.stringify(this.selectedProduct), () => {
                 this.goTo('productSelection', {}, { from: 'maintenance' })
             })
         },
@@ -276,7 +266,7 @@ export default {
             this.selectedTimeIndex = event.timeIndex
         },
         selectAddress() {
-            nativeService.setItem("SERVICE_STORAGE_userAddress", JSON.stringify(this.userAddress), () => {
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.userAddress, JSON.stringify(this.userAddress), () => {
                 this.goTo('userAddress', {}, { from: 'maintenance' })
             })
         },
@@ -351,16 +341,21 @@ export default {
 
         },
         submit() {
-            if (this.fromPage == "orderList") {
-                this.back()
-            } else {
-                this.goTo('orderList', { "replace": true })
-            }
+            nativeService.createserviceorder().then(() => {
+                if (["orderList", "orderDetail"].indexOf(this.fromPage) > -1) {
+                    //重新报单
+                    this.back({ viewTag: "orderList" })
+                } else {
+                    //安装，维修
+                    this.goTo('orderList', { "replace": true })
+                }
+            }).catch((error) => {
+                nativeService.toast(nativeService.getCssErrorMessage(error))
+            })
         }
     },
     created() {
         this.initServiePeriod()
-        this.initProductData()
     }
 }
 </script>

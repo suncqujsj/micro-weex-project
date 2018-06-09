@@ -5,22 +5,22 @@
         <div class="search-bar">
             <div class="search-bar-content" @click="searchProduct">
                 <image class="search-bar-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
-                <text class="search-bar-desc">请输入产品品类，如空调、洗衣机{{productData.length}}</text>
+                <text class="search-bar-desc">请输入产品品类，如空调、洗衣机</text>
             </div>
         </div>
         <div class="product-content">
             <scroller class="product-content-left">
-                <text v-for="(item,index) in productData" :key="index" v-bind:class="['product-brand',
-                    index==selectedBrandIndex?'product-brand-selected':'']" @click="selectBrand(index)">{{item.brand}}</text>
+                <text v-for="(brandItem,brandIndex) in productData" :key="brandIndex" v-bind:class="['product-brand',
+                    brandIndex==selectedBrandIndex?'product-brand-selected':'']" @click="selectBrand(brandIndex)">{{brandItem.brand}}</text>
             </scroller>
             <scroller class="product-content-right">
-                <div class="product-group" v-for="(item,index) in selectedBranchProductData" :key="index">
-                    <text class="product-group-title">{{item.prodName}}</text>
+                <div class="product-group" v-for="(categaryItem,index) in selectedBrandProductData" :key="index">
+                    <text class="product-group-title">{{categaryItem.prodName}}</text>
                     <div class="product-group-content">
-                        <div class="product-appliance-wrapper" v-for="(childrenItem,childrenIndex) in item.children" :key="childrenIndex" @click="selectItem($event, childrenItem)">
+                        <div class="product-appliance-wrapper" v-for="(productItem,productIndex) in categaryItem.children" :key="productIndex" @click="selectProductItem($event, productItem)">
                             <image class="appliance-img" :src="'./assets/img/service_midea@3x.png'" resize="contain"></image>
-                            <text class="appliance-name">{{childrenItem.prodName}}</text>
-                            <image v-if="isMultiMode && childrenItem.isSelected!=true" class="appliance-add-img" :src="'./assets/img/service_ic_addone@3x.png'" resize="contain"></image>
+                            <text class="appliance-name">{{productItem.prodName}}</text>
+                            <image v-if="isMultiMode && !checkIsSelected(productItem)" class="appliance-add-img" :src="'./assets/img/service_ic_addone@3x.png'" resize="contain"></image>
                         </div>
                     </div>
                 </div>
@@ -34,13 +34,13 @@
         <div v-if="isMultiMode" class="action-bar">
             <div class="product-selected-items-wrapper">
                 <scroller class="product-selected-items" scroll-direction="horizontal">
-                    <div class="selected-action-wrapper" v-for="(item,index) in selectedProduct" :key="index" :ref="'selectedProduct'+index" @click="removeSelectedProduct(index)">
+                    <div class="selected-action-wrapper" v-for="(item,index) in selectedProductArray" :key="index" :ref="'selectedProduct'+index" @click="removeSelectedProduct(index)">
                         <text class="selected-action-desc">{{item.prodName}}</text>
                         <image class="selected-action-img" :src="'./assets/img/service_ic_delone@3x.png'" resize="contain"></image>
                     </div>
                 </scroller>
             </div>
-            <text v-bind:class="['action-btn',selectedProduct.length>0?'':'disable-btn']" @click="submit">完成</text>
+            <text v-bind:class="['action-btn',selectedProductArray.length>0?'':'disable-btn']" @click="submit">完成</text>
         </div>
     </div>
 </template>
@@ -67,15 +67,16 @@ export default {
             isMultiMode: false,
             enableAnimation: true,
             isShowAnimation: false,
+            isProceedingSelection: false,
             animationConfig: {
                 startX: 0,
                 startY: 0
             },
-            selectedProduct: [],
+            selectedProductArray: [],
         }
     },
     computed: {
-        selectedBranchProductData() {
+        selectedBrandProductData() {
             let result
             if (this.productData && this.productData.length > 0) {
                 result = this.productData[this.selectedBrandIndex].productTypeDTOList
@@ -84,29 +85,57 @@ export default {
         }
     },
     methods: {
+        handlePageData(data) {
+            if (data.page == "productSelection") {
+                if (data.key == "selectedProduct") {
+                    this.selectProductItem(null, data.data[0])
+                }
+            }
+        },
         searchProduct() {
-            this.goTo("productSearch", {}, { from: this.fromPage })
+            if (this.isMultiMode) {
+                //选择后返回本页
+                this.goTo("productSearch", {}, { from: 'productSelection' })
+            } else {
+                //选择后跳转到toPage页
+                this.goTo("productSearch", {}, { from: this.fromPage, to: this.toPage })
+            }
         },
         selectBrand(index) {
             this.selectedBrandIndex = index
         },
-        selectItem(event, item) {
+        checkIsSelected(productItem) {
+            let result = []
+            if (this.selectedProductArray) {
+                result = this.selectedProductArray.filter((item) => {
+                    return item.brandCode == productItem.brandCode && item.prodCode == productItem.prodCode
+                })
+            }
+            return result.length > 0 ? true : false
+        },
+        selectProductItem(event, productItem) {
+            if (this.isProceedingSelection) return
+
             if (this.isMultiMode) {
-                if (item.isSelected != true) {
-                    if (this.selectedProduct.length < 5) {
-                        this.$set(item, "isSelected", true)
-                        if (this.enableAnimation) {
+                //多选模式
+                if (!this.checkIsSelected(productItem)) {
+                    //之前未被选中
+                    if (this.selectedProductArray.length < 5) {
+                        this.isProceedingSelection = true
+                        if (event && this.enableAnimation) {
                             this.showSelectAnimation(event, () => {
-                                this.selectedProduct.push(item)
+                                this.selectedProductArray.push(productItem)
+                                this.isProceedingSelection = false
                                 this.$nextTick(() => {
-                                    const el = this.$refs["selectedProduct" + (this.selectedProduct.length - 1)][0]
+                                    const el = this.$refs["selectedProduct" + (this.selectedProductArray.length - 1)][0]
                                     dom.scrollToElement(el, {})
                                 })
                             })
                         } else {
-                            this.selectedProduct.push(item)
+                            this.selectedProductArray.push(productItem)
+                            this.isProceedingSelection = false
                             this.$nextTick(() => {
-                                const el = this.$refs["selectedProduct" + (this.selectedProduct.length - 1)][0]
+                                const el = this.$refs["selectedProduct" + (this.selectedProductArray.length - 1)][0]
                                 dom.scrollToElement(el, {})
                             })
                         }
@@ -115,7 +144,8 @@ export default {
                     }
                 }
             } else {
-                this.selectedProduct.push(item)
+                this.selectedProductArray.splice(0, this.selectedProductArray.length, productItem)
+                this.isProceedingSelection = false
                 this.submit()
             }
         },
@@ -172,20 +202,18 @@ export default {
             })
         },
         removeSelectedProduct(index) {
-            this.$set(this.selectedProduct[index], "isSelected", false)
-            this.selectedProduct.splice(index, 1)
+            this.selectedProductArray.splice(index, 1)
         },
         submit() {
-            if (this.selectedProduct.length <= 0) return
+            if (this.selectedProductArray.length <= 0) return
 
-            let result = this.selectedProduct
             if (this.toPage) {
-                nativeService.setItem("SERVICE_STORAGE_selectedProduct", result,
+                nativeService.setItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, this.selectedProductArray,
                     () => {
                         this.goTo(this.toPage, {}, { from: this.fromPage })
                     })
             } else {
-                this.appPageDataChannel.postMessage({ page: this.fromPage, key: "selectedProduct", data: result })
+                this.appPageDataChannel.postMessage({ page: this.fromPage, key: "selectedProduct", data: this.selectedProductArray })
                 this.back()
             }
         },
@@ -196,33 +224,19 @@ export default {
             this.dialogShow = false;
         },
     },
-    beforeCreate: function () {
-        //目前支持ttf、woff文件，不支持svg、eot类型,moreItem at http://www.iconfont.cn/
-        var domModule = weex.requireModule('dom');
-        try {
-            nativeService.getPath((path) => {
-                let fontUrl = path + 'assets/font/midea_font.ttf'
-                domModule.addRule('fontFace', {
-                    'fontFamily': "iconfont",
-                    'src': "url('" + fontUrl + "')"
-                });
-            })
-        } catch (error) { }
-
-    },
     created() {
-        this.isMultiMode = nativeService.getParameters('isMultiMode')
-        if (this.isMultiMode) {
-            nativeService.getItem("SERVICE_STORAGE_selectedProduct", (resp) => {
-                if (resp.result == 'success') {
-                    this.selectedProduct = JSON.parse(resp.data) || []
-                }
-            })
-        }
-
         nativeService.searchProductType().then((data) => {
             this.productData = data
         })
+
+        this.isMultiMode = nativeService.getParameters('isMultiMode')
+        if (this.isMultiMode) {
+            nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, (resp) => {
+                if (resp.result == 'success') {
+                    this.selectedProductArray = JSON.parse(resp.data) || []
+                }
+            })
+        }
     }
 }
 </script>

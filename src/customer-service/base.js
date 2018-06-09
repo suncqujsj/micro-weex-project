@@ -14,6 +14,7 @@ const storage = weex.requireModule('storage')
 import debugUtil from '@/common/util/debugUtil'
 
 import appConfig from './settings/config'
+import { SERVICE_STORAGE_KEYS } from './settings/globalKeys'
 import nativeService from './settings/nativeService'
 
 import Mock from './settings/mock'  //正式场上线时注释掉
@@ -47,7 +48,8 @@ export default {
 
         appData: appDataTemplate,
         fromPage: '',
-        toPage: ''
+        toPage: '',
+        SERVICE_STORAGE_KEYS: SERVICE_STORAGE_KEYS
     }),
     computed: {
         pageHeight() {
@@ -81,7 +83,7 @@ export default {
                     var path = pageName + ".js";
                     if (params) {
                         path += '?' + Object.keys(params).map(k =>
-                            encodeURIComponent(k) + '=' + encodeURIComponent(params[k])
+                            encodeURIComponent(k) + '=' + encodeURIComponent(params[k] || '')
                         ).join('&')
                     }
                     options.viewTag = pageName
@@ -144,8 +146,8 @@ export default {
     },
     created() {
         console.log("created")
-        this.fromPage = nativeService.getParameters('from')
-        this.toPage = nativeService.getParameters('to')
+        this.fromPage = nativeService.getParameters('from') || null
+        this.toPage = nativeService.getParameters('to') || null
         //若isMixinCreated为false, 则不继承
         if (!this.isMixinCreated) return
 

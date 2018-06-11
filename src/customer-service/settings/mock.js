@@ -7122,22 +7122,29 @@ export const all = [
         }
     },
     {
-        path: "ccrm2-core/userAddr/getUserAddrPageList",
+        path: ".*ccrm2-core/userAddr/getUserAddrPageList.*",
         data: {
-            "data": {
-                "qty": 3,
-                "addrList": [
-                    {
-                        "userAddrId": 11111,
-                        "userId": 1111,
-                        "addrAlias": "11111",
-                        "provinceCode": "11111",
-                        "provinceName": "XX省",
-                        "cityCode": "11111111",
-                        "cityName": "XX市"
-                    }
-                ]
-            },
+            "data|1-10": [
+                {
+                    "userAddrId": "1111",
+                    "userId": "1111",
+                    "receiverName": "@cname",
+                    "receiverMobile": /^1[385][1-9]\d{8}/,
+                    "province": "",
+                    "provinceName": Mock.Random.province(),
+                    "city": "",
+                    "cityName": Mock.Random.city(),
+                    "county": "",
+                    "countyName": Mock.Random.county(),
+                    "street": "",
+                    "streetName": "",
+                    "addr": "详细地址详细地址详细地址",
+                    "zipCode": "",
+                    "defaultAddr|1": false,
+
+                }
+            ]
+            ,
             "code": "0",
             "msg": "000000000"
         }

@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller>
             <image class="advertisement" src="./assets/img/servie_pic_banner03@3x.png" resize='contain'></image>
@@ -72,14 +72,7 @@ export default {
             this.validCode = event.value
         },
         submit() {
-            let url = "http://wap.cjm.so/Common/DataService.ashx?function=AntiFakeQuery&CorpID=14500&Code=" + this.code + this.validCode + "&QueryType=2"
-            let param = {
-                method: 'GET',
-                url: url,
-                type: 'jsonp',
-                headers: { 'Content-Type': 'application/json' }
-            }
-            nativeService.sendHttpRequest(param).then(
+            nativeService.antiFakeQuery({ code: this.code, validCode: this.validCode }).then(
                 (resp) => {
                     this.result = resp
                     if (resp.success && resp.result.ResultID) {

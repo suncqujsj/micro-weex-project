@@ -28,6 +28,7 @@ const appPageDataChannel = new BroadcastChannel('appPageData')
 
 import mideaHeader from '@/midea-component/header.vue'
 
+var handler = null, headerClickCount = 0
 export default {
     components: {
         mideaHeader
@@ -142,6 +143,21 @@ export default {
         },
         handlePageData(data) {
             //处理页面传递的信息
+        },
+        headerClick() {
+            if (!appConfig.enable_debug) return
+
+            if (handler) {
+                clearTimeout(handler);
+            }
+            handler = setTimeout(function () {
+                headerClickCount = 0
+            }, 500)
+            headerClickCount++
+            if (headerClickCount == 3) {
+                headerClickCount = 0
+                this.goTo('debugInfo')
+            }
         }
     },
     created() {
@@ -152,7 +168,7 @@ export default {
         if (!this.isMixinCreated) return
 
         //Debug Log相关信息
-        debugUtil.isEnableDebugInfo = false //开启关闭debuglog功能
+        debugUtil.isEnableDebugInfo = appConfig.enable_debug || false //开启关闭debuglog功能
         debugUtil.debugLog("@@@@@@ " + this.title + "(" + plugin_name + "-" + srcFileName + ") @@@@@@")
 
         //监听全局推送(native->weex)

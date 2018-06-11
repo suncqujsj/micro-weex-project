@@ -66,7 +66,7 @@ export default {
             others.contactTimeDesc = util.dateFormat(new Date(order.contactTime), "yyyy-MM-dd hh:mm")
 
             //产品图片
-            others.imageUrl = './assets/img/service_midea@3x.png'
+            others.imageUrl = './assets/img/product/default.png'
             //订单描述
             let prodName
             if (order.serviceUserDemandVOs && order.serviceUserDemandVOs.length > 0) {

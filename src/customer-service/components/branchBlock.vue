@@ -51,27 +51,6 @@ export default {
         }
     },
     computed: {
-        channelIconSrc() {
-            let result = './assets/img/service_ic_JD@3x.png'
-            switch (this.data.id) {
-                case '1':
-                    return './assets/img/service_ic_JD@3x.png'
-                    break;
-                case '2':
-                    return './assets/img/service_ic_taobao@3x.png'
-                    break;
-                case '3':
-                    return './assets/img/service_ic_call400@3x.png'
-                    break;
-                case '4':
-                    return './assets/img/service_ic_meiju@3x.png'
-                    break;
-                case '5':
-                    return './assets/img/service_midea@3x.png'
-                    break;
-            }
-            return result
-        }
     },
     methods: {
         makeCall() {

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <div class="search-bar">
             <div class="search-bar-content" @click="searchProduct">
@@ -18,7 +18,7 @@
                     <text class="product-group-title">{{categaryItem.prodName}}</text>
                     <div class="product-group-content">
                         <div class="product-appliance-wrapper" v-for="(productItem,productIndex) in categaryItem.children" :key="productIndex" @click="selectProductItem($event, productItem)">
-                            <image class="appliance-img" :src="'./assets/img/service_midea@3x.png'" resize="contain"></image>
+                            <image class="appliance-img" :src="'./assets/img/product/default.png'" resize="contain"></image>
                             <text class="appliance-name">{{productItem.prodName}}</text>
                             <image v-if="isMultiMode && !checkIsSelected(productItem)" class="appliance-add-img" :src="'./assets/img/service_ic_addone@3x.png'" resize="contain"></image>
                         </div>
@@ -28,7 +28,7 @@
         </div>
         <div v-if="isShowAnimation" class="animation-outer" ref="outer">
             <div class="animation-inner" ref="inner" :style="{'left': animationConfig.startX,'top': animationConfig.startY}">
-                <image class="animation-img" :src="'./assets/img/service_midea@3x.png'" resize="contain"></image>
+                <image class="animation-img" :src="'./assets/img/product/default.png'" resize="contain"></image>
             </div>
         </div>
         <div v-if="isMultiMode" class="action-bar">

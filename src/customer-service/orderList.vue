@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
         <scroller class="scroller">
             <div v-for="(order, index) in formattedOrderList" :key="index" @click="goToOrderDetail(index)">
                 <order-block class="order-block" :order="order">

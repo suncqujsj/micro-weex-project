@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
             <div slot="customerContent" class="header-right">
                 <text class="header-right-text" @click="goTo('productSelection', {}, { from: 'installation', to:'chargeList' })">收费标准</text>
             </div>
@@ -261,9 +261,7 @@ export default {
             this.selectedTimeIndex = event.timeIndex
         },
         selectAddress() {
-            nativeService.setItem(this.SERVICE_STORAGE_KEYS.userAddress, JSON.stringify(this.userAddress), () => {
-                this.goTo('userAddressList', {}, { from: 'installation' })
-            })
+            this.goTo('userAddressList', {}, { from: 'installation' })
         },
         typeSelected(index) {
             this.typeSelectedIndex = index

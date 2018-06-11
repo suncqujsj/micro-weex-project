@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="" bgColor="#ffffff" :isImmersion="isipx?false:true" :showLeftImg="false" :showRightImg="true" rightImg="./assets/img/service_ic_call@3x.png" @rightImgClick="showHotLine">
+        <midea-header title="" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" :showLeftImg="false" :showRightImg="true" rightImg="./assets/img/service_ic_call@3x.png" @rightImgClick="showHotLine">
         </midea-header>
         <list>
             <cell>
@@ -205,7 +205,6 @@ export default {
   margin-top: 38px;
   align-items: center;
   width: 686px;
-  opacity: 0.5;
 }
 .service-desc-img {
   width: 686px;

@@ -8,7 +8,7 @@ const globalEvent = weex.requireModule("globalEvent");
 const isIos = weex.config.env.platform == "iOS" ? true : false;
 import debugUtil from '../util/debugUtil'
 
-var dummy = false;
+var isDummy = false;
 // import Mock from './mock'  //正式场上线时注释掉
 
 const debugLogSeperator = "**************************************\n"
@@ -18,19 +18,20 @@ var ipParam = weex.config.bundleUrl.match(new RegExp("[\?\&]ip=([^\&]+)", "i"));
 if (ipParam && ipParam.length > 1) {
     ipParam = ipParam[1]
     // 测试
-    dummy = true
+    isDummy = true
 }
 const platform = weex.config.env.platform;
 if (platform == 'Web') {
-    dummy = true
+    isDummy = true
 }
-console.log("dummy:" + dummy)
+console.log("isDummy:" + isDummy)
 
 export default {
     serviceList: {
         test: "commonservice"
     },
     Mock: {},
+    isDummy: isDummy,
     //**********Util方法***************START
     convertToJson(str) {
         let result = str
@@ -70,8 +71,8 @@ export default {
     */
     goTo(path, options) {
         var url
-        // mm.toast({ message: dummy, duration: 2 })
-        if (dummy != true) {
+        // mm.toast({ message: isDummy, duration: 2 })
+        if (this.isDummy != true) {
             //手机本地页面跳转
             this.getPath((weexPath) => {
                 //weexPath为插件包地址，比如：files:///..../MideaHome/T0x99/
@@ -125,7 +126,7 @@ export default {
         取得当前weex页面的根路径
     */
     getPath(callBack) {
-        if (dummy != true) {
+        if (this.isDummy != true) {
             bridgeModule.getWeexPath(function (resData) {
                 var jsonData = JSON.parse(resData);
                 var weexPath = jsonData.weexPath;
@@ -217,17 +218,17 @@ export default {
         });
     },
     showLoading() {
-        if (dummy != true) {
+        if (this.isDummy != true) {
             bridgeModule.showLoading();
         }
     },
     hideLoading() {
-        if (dummy != true) {
+        if (this.isDummy != true) {
             bridgeModule.hideLoading();
         }
     },
     showLoadingWithMsg(option) {
-        if (dummy != true) {
+        if (this.isDummy != true) {
             let params = option
             if (typeof option == 'string') {
                 params = {
@@ -238,7 +239,7 @@ export default {
         }
     },
     hideLoadingWithMsg() {
-        if (dummy != true) {
+        if (this.isDummy != true) {
             bridgeModule.hideLoadingWithMsg();
         }
     },
@@ -249,7 +250,7 @@ export default {
     sendMCloudRequest(name, params, options = { isShowLoading: true, isValidate: true }) {
         return new Promise((resolve, reject) => {
             var self = this;
-            if (dummy != true) {
+            if (this.isDummy != true) {
                 this.getItem("masterId", (resdata) => {
                     let msgid = self.genMessageId()
                     var masterId = resdata.data
@@ -331,27 +332,31 @@ export default {
         return new Promise((resolve, reject) => {
             let options = JSON.parse(JSON.stringify(params))
             var self = this;
-            if (dummy != true) {
+            if (this.isDummy != true) {
                 let defaultOption = {
                     method: "POST",
                     type: 'json'
                 }
-                if (options.body) {
-                    options.body = this.convertRequestBody(options.body)
-                }
                 options = Object.assign(defaultOption, options)
+
+                /* body 参数仅支持 string 类型的参数，请勿直接传递 JSON，必须先将其转为字符串。
+                GET 请求不支持 body 方式传递参数，请使用 url 传参。 */
                 if (options.body && options.method == "GET") {
-                    /* body 参数仅支持 string 类型的参数，请勿直接传递 JSON，必须先将其转为字符串。
-                    GET 请求不支持 body 方式传递参数，请使用 url 传参。 */
-                    options.url += "?" + options.body
+                    let bodyStr = this.convertRequestBody(options.body)
+                    options.url += "?" + bodyStr
                     options.body = ""
+                } else if (options.body && options.method == "POST") {
+                    options.body = JSON.stringify(options.body)
                 }
 
                 if (options.isShowLoading) {
                     this.showLoading()
                 }
+                let msgid = self.genMessageId()
                 stream.fetch(options,
                     (resData) => {
+                        debugUtil.debugLog(debugLogSeperator, `request(${msgid}): `, options)
+                        debugUtil.debugLog(`response(${msgid}): `, resData, debugLogSeperator)
                         if (options.isShowLoading) {
                             this.hideLoading()
                         }
@@ -409,7 +414,7 @@ export default {
             }
             callbackFail(resData);
         }
-        if (dummy != true) {
+        if (this.isDummy != true) {
             if (isIos) {
                 this.createCallbackFunctionListener();
                 this.callbackFunctions[commandId] = finalCallBack;
@@ -461,7 +466,7 @@ export default {
             var param = {};
             param.operation = params.operation || "luaControl";//luaQuery or luaControl
             param.params = params.data || {};
-            if (dummy != true) {
+            if (this.isDummy != true) {
                 if (isShowLoading) {
                     this.showLoading()
                 }
@@ -515,7 +520,7 @@ export default {
             showLeftBtn: showLeftBtn,
             showRightBtn: showRightBtn
         }
-        if (dummy != true) {
+        if (this.isDummy != true) {
             bridgeModule.updateTitle(JSON.stringify(params));
         }
     },

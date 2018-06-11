@@ -20,8 +20,11 @@ let customizeNativeService = Object.assign(nativeService, {
 
         //中控消息
         searchProductType: "pdgw-ap/message/getProdType", //产品列表
-        getUserAddrPageList: "ccrm2-core/userAddr/getUserAddrPageList", //按照用户ID获取用户下所有的地址数据
-        getAreaList: "wxgw/css/areaList", //服务地区
+        getAreaList: "cmms/area/list", //服务地区
+        getUserAddrPageList: "ccrm2-core/userAddr/getUserAddrPageList", //地址列表查询
+        userAddrAdd: "ccrm2-core/userAddr/add", //地址新增
+        userAddrUpdate: "ccrm2-core/userAddr/update", //地址修改
+        userAddrDelete: "ccrm2-core/userAddr/delete", //地址删除
     },
     getCssErrorMessage(error) {
         let msg = error.errorMsg || "请求失败，请稍后重试。"
@@ -161,19 +164,8 @@ let customizeNativeService = Object.assign(nativeService, {
             })
         })
     },
-    getAreaList(param = {}) {
-        return new Promise((resolve, reject) => {
-            let result
-            this.sendMCloudRequest('getAreaList', param, { isValidate: false }).then((resp) => {
-                resolve(resp.data)
-            }).catch((error) => {
-                reject(error)
-            })
-        })
-    },
     queryunitarchives(param = {}) {
         return new Promise((resolve, reject) => {
-            let result
             this.sendMCloudRequest('queryunitarchives', param, { isValidate: false }).then((resp) => {
                 resolve(resp)
             }).catch((error) => {
@@ -183,7 +175,6 @@ let customizeNativeService = Object.assign(nativeService, {
     },
     querywarrantydescbycodeorsn(param = {}) {
         return new Promise((resolve, reject) => {
-            let result
             this.sendMCloudRequest('querywarrantydescbycodeorsn', param, { isValidate: false }).then((resp) => {
                 resolve(resp)
             }).catch((error) => {
@@ -241,23 +232,81 @@ let customizeNativeService = Object.assign(nativeService, {
         return result
     },
 
-    getUserAddrPageList(param = {}) {
+    getAreaListCache(param = { regionCode: "0" }) {
         return new Promise((resolve, reject) => {
             let result
+            this.getItem(SERVICE_STORAGE_KEYS.areaList, (data) => {
+                let cacheObj = {}
+                if (data.result == 'success' && data.data) {
+                    try {
+                        cacheObj = JSON.parse(data.data)
+                        result = cacheObj[param.regionCode]
+                    } catch (error) { }
+                }
+
+                if (result) {
+                    resolve(result)
+                } else {
+                    this.getAreaList(param).then((resp) => {
+                        cacheObj[param.regionCode] = resp
+                        this.setItem(SERVICE_STORAGE_KEYS.areaList, JSON.stringify(cacheObj), () => {
+                            resolve(resp)
+                        })
+                    }).catch((error) => {
+                        reject(error)
+                    })
+                }
+            })
+        })
+    },
+    getAreaList(param = {}) {
+        return new Promise((resolve, reject) => {
             let requestParam = {
-                url: "http://10.16.38.95:8080/ccrm2-core/userAddr/getUserAddrPageList",
+                url: "http://10.16.85.47/cmms/area/list",
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: Object.assign({
+                    regionCode: "0"
+                }, param)
+            }
+            let oldDummy = this.isDummy
+            this.isDummy = !false
+            this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
+                this.isDummy = oldDummy
+                if (resp.code == 0) {
+                    resolve(resp.content)
+                } else {
+                    reject(resp)
+                }
+            }).catch((error) => {
+                this.isDummy = oldDummy
+                reject(error)
+            })
+        })
+    },
+
+    getUserAddrPageList(param = {}) {
+        return new Promise((resolve, reject) => {
+            let requestParam = {
+                url: "http://10.16.85.47/ccrm2-core/userAddr/getUserAddrPageList",
                 method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 body: Object.assign({
                     sourceSys: "10001",
                     uid: "b986b7612c2d462491bb2462d29cdc34"
                 }, param)
             }
+            let oldDummy = this.isDummy
+            this.isDummy = !false
             this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
-                result = this.proceedProductData(resp.data)
-                this.setItem(SERVICE_STORAGE_KEYS.productType, JSON.stringify(result), () => {
-                    resolve(result)
-                })
+                this.isDummy = oldDummy
+                resolve(resp)
             }).catch((error) => {
+                this.isDummy = oldDummy
                 reject(error)
             })
         })
@@ -265,21 +314,98 @@ let customizeNativeService = Object.assign(nativeService, {
 
     userAddrAdd(param = {}) {
         return new Promise((resolve, reject) => {
-            let result
             let requestParam = {
-                url: "http://10.16.38.95:8080/ccrm2-core/userAddr/add",
+                url: "http://10.16.85.47/ccrm2-core/userAddr/add",
                 method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 body: Object.assign({
                     sourceSys: "10001",
                     uid: "b986b7612c2d462491bb2462d29cdc34"
                 }, param)
             }
+            let oldDummy = this.isDummy
+            this.isDummy = !false
             this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
-                result = this.proceedProductData(resp.data)
-                this.setItem(SERVICE_STORAGE_KEYS.productType, JSON.stringify(result), () => {
-                    resolve(result)
-                })
+                this.isDummy = oldDummy
+                resolve(resp)
             }).catch((error) => {
+                this.isDummy = oldDummy
+                reject(error)
+            })
+        })
+    },
+
+    userAddrUpdate(param = {}) {
+        return new Promise((resolve, reject) => {
+            let requestParam = {
+                url: "http://10.16.85.47/ccrm2-core/userAddr/update",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: Object.assign({
+                    sourceSys: "10001",
+                    uid: "b986b7612c2d462491bb2462d29cdc34"
+                }, param)
+            }
+            let oldDummy = this.isDummy
+            this.isDummy = !false
+            this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
+                this.isDummy = oldDummy
+                resolve(resp)
+            }).catch((error) => {
+                this.isDummy = oldDummy
+                reject(error)
+            })
+        })
+    },
+
+    userAddrDelete(param = {}) {
+        return new Promise((resolve, reject) => {
+            let requestParam = {
+                url: "http://10.16.85.47/ccrm2-core/userAddr/delete",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: Object.assign({
+                    sourceSys: "10001",
+                    uid: "b986b7612c2d462491bb2462d29cdc34"
+                }, param)
+            }
+            let oldDummy = this.isDummy
+            this.isDummy = !false
+            this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
+                this.isDummy = oldDummy
+                resolve(resp)
+            }).catch((error) => {
+                this.isDummy = oldDummy
+                reject(error)
+            })
+        })
+    },
+
+    //防伪
+    antiFakeQuery(param = {}) {
+        return new Promise((resolve, reject) => {
+            let url = "http://wap.cjm.so/Common/DataService.ashx?function=AntiFakeQuery&CorpID=14500&Code=" + param.code + param.validCode + "&QueryType=2"
+            let param = {
+                method: 'GET',
+                url: url,
+                type: 'jsonp',
+                headers: { 'Content-Type': 'application/json' }
+            }
+            let oldDummy = this.isDummy
+            this.isDummy = false
+            nativeService.sendHttpRequest(param).then(
+                (resp) => {
+                    this.isDummy = oldDummy
+                    resolve(resp)
+                }
+            ).catch((error) => {
+                this.isDummy = oldDummy
                 reject(error)
             })
         })

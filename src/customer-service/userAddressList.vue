@@ -1,15 +1,11 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back" :showRightImg="true" rightImg="./assets/img/home_ic_add@3x.png" @rightImgClick="addAddress">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back" :showRightImg="true" rightImg="./assets/img/home_ic_add@3x.png" @rightImgClick="addAddress">
         </midea-header>
         <scroller>
-            <div class="address-block" @click="goToAddressDetail">
-                <text class="text-label">李小龙 13512341234</text>
-                <text class="text-desc">广东省 广州市 荔湾区 红金南园801</text>
-            </div>
-            <div class="address-block" @click="goToAddressDetail">
-                <text class="text-label">李小龙 13512341234</text>
-                <text class="text-desc">广东省 广州市 荔湾区 红金南园801</text>
+            <div v-for="(item, index) in userAddressList" :key="index" class="address-block" @click="goToAddressDetail(item)">
+                <text class="text-label">{{item.receiverName}} {{item.receiverMobile}}</text>
+                <text class="text-desc">{{item.provinceName}} {{item.cityName}} {{item.countyName}} {{item.addr}}</text>
             </div>
         </scroller>
     </div>
@@ -29,20 +25,17 @@ export default {
     data() {
         return {
             title: '我的地址',
-            userAddress: {
-                customerName: '',
-                customerMobilephone1: '',
-                customerAddress: '',
-                customerAddressDetail: ''
-            }
+            userAddressList: []
         }
     },
     methods: {
         addAddress() {
             this.goTo('userAddress')
         },
-        goToAddressDetail() {
-            this.goTo('userAddress')
+        goToAddressDetail(item) {
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.userAddress, item, () => {
+                this.goTo('userAddress', {}, { id: item.userAddrId })
+            })
         },
         submit() {
             if (this.toPage) {
@@ -57,10 +50,8 @@ export default {
         }
     },
     created() {
-        nativeService.getItem(this.SERVICE_STORAGE_KEYS.userAddress, (resp) => {
-            if (resp.result == 'success') {
-                this.userAddress = Object.assign(this.userAddress, JSON.parse(resp.data) || {})
-            }
+        nativeService.getUserAddrPageList().then((data) => {
+            this.userAddressList = data.data
         })
     }
 }

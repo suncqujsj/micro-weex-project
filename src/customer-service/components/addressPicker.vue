@@ -1,31 +1,33 @@
 <template>
     <midea-popup ref="popup" :show="isShow" @mideaPopupOverlayClicked="cancel" pos="bottom" :height="height">
         <div class="period-header-bar">
-            <text class="period-header-action"></text>
+            <div class="period-header-area-wrapper">
+                <text v-if="currentRegionLevel>0" class="period-header-area" @click="getAreaList(0)">{{areaObj.provinceName||''}}</text>
+                <text v-if="currentRegionLevel>1" class="period-header-area" @click="getAreaList(areaObj.province)">{{areaObj.cityName}}</text>
+                <text v-if="currentRegionLevel>2" class="period-header-area" @click="getAreaList(areaObj.city)">{{areaObj.countyName}}</text>
+                <text v-if="currentRegionLevel>3" class="period-header-area" @click="getAreaList(areaObj.county)">{{areaObj.streetName}}</text>
+                <text class="period-header-area-current">{{nextRegionDesc}}</text>
+            </div>
             <image class="period-header-action" src="./assets/img/service_ic_cancel@3x.png" resize='contain' @click="buttonCancel"></image>
         </div>
-        <div class="period-content">
-            <div class="period-content-select-area"></div>
-            <scroller class="period-content-wrapper" show-scrollbar=false @scroll="scroll" @scrollend="scrollEnd">
-                <midea-item v-for="(item, index) in areaListObj[currentregionCode]" :key="index" height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectItem(item)">
-                    <text slot="title" class="address-item-title">{{item.regionDesc}}</text>
-                </midea-item>
-            </scroller>
-        </div>
+        <scroller class="period-content-wrapper" show-scrollbar=false>
+            <div class="period-content-item-wrapper" v-for="(item, index) in currentRegionList" :key="index" @click="selectItem(item)" :ref="'area'+index">
+                <text v-bind:class="['period-content-item']">{{item.regionName}}</text>
+            </div>
+        </scroller>
     </midea-popup>
 </template>
 
 <script>
 import nativeService from '@/common/services/nativeService';
 
-import { MideaPopup, MideaItem } from '@/index'
-
 const dom = weex.requireModule('dom')
+
+import { MideaPopup } from '@/index'
 
 export default {
     components: {
-        MideaPopup,
-        MideaItem
+        MideaPopup
     },
     props: {
         isShow: {
@@ -53,7 +55,18 @@ export default {
     data() {
         return {
             itemHeight: 70,
+            areaObj: {
+                province: '',
+                provinceName: '',
+                city: '',
+                cityName: '',
+                county: '',
+                countyName: '',
+                street: '',
+                streetName: ''
+            },
             areaListObj: {},
+            currentRegionLevel: 0,
             currentregionCode: '0'
         }
     },
@@ -61,42 +74,88 @@ export default {
         isShow(value) {
             if (value) {
                 this.$nextTick(() => {
-
+                    this.areaObj = Object.assign(this.areaObj, this.data)
+                    if (this.areaObj.street) {
+                        //修改地址
+                        this.currentRegionLevel = 4
+                        this.currentregionCode = this.areaObj.county
+                        this.getAreaList(this.areaObj.county)
+                    } else {
+                        //新选
+                        this.getAreaList()
+                    }
                 })
             }
         }
     },
     computed: {
-
+        nextRegionDesc() {
+            let result = ""
+            switch (this.currentRegionLevel) {
+                case 0:
+                    result = "选择省"
+                    break;
+                case 1:
+                    result = "选择市"
+                    break;
+                case 2:
+                    result = "选择区/县"
+                    break;
+                case 3:
+                    result = "选择街道"
+                    break;
+            }
+            return result
+        },
+        currentRegionList() {
+            let result = []
+            if (this.areaListObj) {
+                result = this.areaListObj.children || []
+            }
+            return result
+        }
     },
     methods: {
-        scroll(event) {
-            let offsetY = event.contentOffset.y
-            if (offsetY % this.itemHeight != 0) {
-                let firstVisibleItemIndex = Math.abs(Math.round(offsetY / 70))
-                this.dateIndex = firstVisibleItemIndex
+        getAreaList(regionCode = 0) {
+            let param = {
+                "regionCode": regionCode
             }
-        },
-        scrollEnd(event) {
-            const el = this.$refs['date0'][0]
-            dom.scrollToElement(el, { offset: this.dateIndex * 70 })
-            this.refreshTime()
-        },
-        getAreaList(regionCode) {
-            let param = {}
-            if (regionCode) {
-                param.regionCode = regionCode
-            }
-            this.currentregionCode = regionCode || '0'
             nativeService.getAreaList(param).then((data) => {
-                this.areaListObj[this.currentregionCode] = data
+                this.areaListObj = data
+                if (data.self) {
+                    this.currentRegionLevel = data.self.level
+                } else {
+                    this.currentRegionLevel = 0
+                }
+                this.currentregionCode = regionCode
+                const el = this.$refs['area0'][0]
+                dom.scrollToElement(el)
             })
         },
         selectItem(item) {
-            if (item.regionLevel == 3) {
-
+            switch (item.level) {
+                case 1:
+                    this.areaObj.province = item.regionCode
+                    this.areaObj.provinceName = item.regionName
+                    break;
+                case 2:
+                    this.areaObj.city = item.regionCode
+                    this.areaObj.cityName = item.regionName
+                    break;
+                case 3:
+                    this.areaObj.county = item.regionCode
+                    this.areaObj.countyName = item.regionName
+                    break;
+                case 4:
+                    this.areaObj.street = item.regionCode
+                    this.areaObj.streetName = item.regionName
+                    break;
+            }
+            if (item.level < 4) {
+                //仍有下级区域
+                this.getAreaList(item.regionCode)
             } else {
-                this.getAreaList(regionCode)
+                this.confirm()
             }
         },
         cancel() {
@@ -107,16 +166,13 @@ export default {
             this.$emit('oncancel')
         },
         confirm() {
-            this.$emit('onchanged', {
-
-            })
+            this.$emit('onchanged', this.areaObj)
             this.$refs.popup.hide()
         }
     },
     mounted() {
     },
     created() {
-        this.getAreaList()
     }
 }
 </script>
@@ -134,27 +190,31 @@ export default {
   justify-content: space-between;
   align-items: center;
   background-color: #ffffff;
+  padding-right: 32px;
+  border-bottom-color: #e5e5e8;
+  border-bottom-width: 1px;
 }
-.period-header-text {
+.period-header-area-wrapper {
+  flex: 1;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+}
+.period-header-area {
   font-family: PingFangSC-Regular;
-  font-size: 36px;
+  font-size: 28px;
+  color: #8a8a8f;
+  padding-left: 32px;
+}
+.period-header-area-current {
+  font-family: PingFangSC-Medium;
+  font-size: 28px;
   color: #000000;
-  background-color: #ffffff;
+  padding-left: 32px;
 }
 .period-header-action {
   height: 45px;
   width: 45px;
-  margin-right: 24px;
-}
-.period-head-desc {
-  width: 750px;
-  text-align: center;
-  font-family: PingFangSC-Regular;
-  font-size: 28px;
-  color: #8a8a8f;
-  border-bottom-color: #e2e2e2;
-  border-bottom-width: 1px;
-  padding-bottom: 24px;
 }
 .period-content {
   width: 750px;
@@ -163,18 +223,27 @@ export default {
   background-color: #ffffff;
 }
 .period-content-wrapper {
+  width: 750px;
   flex: 1;
-  align-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.period-content-item-wrapper {
+  width: 718px;
+  height: 95px;
+  margin-left: 32px;
+  border-bottom-color: #e5e5e8;
+  border-bottom-width: 1px;
+  flex-direction: row;
+  justify-content: flex-start;
   align-items: center;
 }
 .period-content-item {
-  width: 300px;
-  height: 70px;
   font-family: PingFangSC-Regular;
-  font-size: 28px;
+  font-size: 32px;
   color: #000000;
-  text-align: center;
-  padding: 8px;
+  text-align: left;
 }
 .first-content-item {
   margin-top: 140px;
@@ -201,20 +270,6 @@ export default {
 .unselected-item {
   opacity: 0.6;
   color: #000000;
-}
-.period-content-select-area {
-  position: absolute;
-  top: 136px;
-  left: 0px;
-  width: 750px;
-  height: 72px;
-  padding-left: 120px;
-  padding-right: 120px;
-  border-top-color: #e2e2e2;
-  border-top-width: 1px;
-  border-bottom-color: #e2e2e2;
-  border-bottom-width: 1px;
-  /* background-color: aquamarine; */
 }
 .action-bar {
   background-color: #f2f2f2;

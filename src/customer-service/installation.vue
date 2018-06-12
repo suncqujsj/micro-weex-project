@@ -16,6 +16,15 @@
                         <text class="right-text">{{selectedProductDesc}}</text>
                     </div>
                 </midea-cell>
+                <midea-cell v-if="includeU99" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectProductUse">
+                    <div slot="title" class="cell-title">
+                        <text class="cell-label">使用场所</text>
+                        <text class="cell-label-star">*</text>
+                    </div>
+                    <div slot="rightText">
+                        <text class="right-text">{{productUseDesc}}</text>
+                    </div>
+                </midea-cell>
                 <midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectTransportStatus">
                     <div slot="title" class="cell-title">
                         <text class="cell-label">物流状态</text>
@@ -72,7 +81,10 @@
             </div>
         </scroller>
 
-        <midea-actionsheet :items="TransportStatusItems" :show="isShowTransportStatus" @close="closeTransportStatusActionsheet" @itemClick="TransportStatustItemClick" @btnClick="transportStatusBtnClick" ref="transportStatusActionsheet">
+        <midea-actionsheet :items="productUseItems" :show="isShowProductUse" @close="closeProductUseActionsheet" @itemClick="productUsetItemClick" @btnClick="productUseBtnClick" ref="productUseActionsheet">
+        </midea-actionsheet>
+
+        <midea-actionsheet :items="transportStatusItems" :show="isShowTransportStatus" @close="closeTransportStatusActionsheet" @itemClick="TransportStatustItemClick" @btnClick="transportStatusBtnClick" ref="transportStatusActionsheet">
         </midea-actionsheet>
 
         <period-picker :isShow="isShowPeriodPicker" :dates="serviePeriodDate" :dateIndex="selectedDateIndex" :times="serviePeriodTime" :timeIndex="selectedTimeIndex" @oncancel="isShowPeriodPicker=false" @onchanged="serviePeriodSelected">
@@ -107,9 +119,12 @@ export default {
 
             selectedProduct: [],
 
+            isShowProductUse: false,
+            productUseItems: ['商用', '家用'],
+
             typeSelectedIndex: 0,
             isShowTransportStatus: false,
-            TransportStatusItems: ['货已到需要安装', '货未到需要安装'],
+            transportStatusItems: ['货已到需要安装', '货未到需要安装'],
 
             isShowPeriodPicker: false,
             selectedDateIndex: null,
@@ -165,7 +180,8 @@ export default {
                 prodName: '',  //产品品类名称
                 productAmount: '',  //默认填1
 
-                transportStatus: ''
+                transportStatus: '',
+                productUse: '' //中央空调家用、商用标志
             },
             infoText: ''
         }
@@ -181,6 +197,19 @@ export default {
             }
             return result
         },
+        includeU99() {
+            let result = false
+            if (this.selectedProduct && this.selectedProduct.length > 0) {
+                const temp = this.selectedProduct.filter((item) => {
+                    return item.userTypeCode == "U99"
+                })
+                result = temp.length > 0 ? true : false
+            }
+            return result
+        },
+        productUseDesc() {
+            return this.order.productUse ? this.order.productUse : '请选择'
+        },
         transportStatusDesc() {
             return this.order.transportStatus ? this.order.transportStatus : '请选择'
         },
@@ -194,7 +223,7 @@ export default {
         userAddressDesc() {
             let result = '请选择'
             if (this.userAddress) {
-                result = this.userAddress.customerName + ' ' + this.userAddress.customerMobilephone1 + '\n' + this.userAddress.customerAddress + '\n' + this.userAddress.customerAddressDetail
+                result = this.userAddress.receiverName + ' ' + this.userAddress.receiverMobile + '\n' + this.userAddress.provinceName + ' ' + this.userAddress.cityName + ' ' + this.userAddress.countyName + ' ' + this.userAddress.streetName + '\n' + this.userAddress.addr
             }
             return result
         },
@@ -212,11 +241,29 @@ export default {
             if (data.page == "installation") {
                 if (data.key == "selectedProduct") {
                     this.selectedProduct = data.data
-                } else if (data.key == "userAddress") {
+                } else if (data.key == "userAddressList") {
                     this.userAddress = data.data
                 }
             }
         },
+
+        selectProductUse() {
+            this.isShowProductUse = true;
+            this.$nextTick(e => {
+                this.$refs.productUseActionsheet.open();
+            });
+        },
+        closeProductUseActionsheet() {
+            this.isShowProductUse = false
+        },
+        productUsetItemClick(event) {
+            this.isShowProductUse = false
+            this.order.productUse = this.productUseItems[event.index]
+        },
+        productUseBtnClick() {
+            this.isShowProductUse = false
+        },
+
         selectTransportStatus() {
             this.isShowTransportStatus = true;
             this.$nextTick(e => {
@@ -228,7 +275,7 @@ export default {
         },
         TransportStatustItemClick(event) {
             this.isShowTransportStatus = false
-            this.order.transportStatus = this.TransportStatusItems[event.index]
+            this.order.transportStatus = this.transportStatusItems[event.index]
         },
         transportStatusBtnClick() {
             this.isShowTransportStatus = false
@@ -261,7 +308,11 @@ export default {
             this.selectedTimeIndex = event.timeIndex
         },
         selectAddress() {
-            this.goTo('userAddressList', {}, { from: 'installation' })
+            let userAddrId = ''
+            if (this.userAddress && this.userAddress.userAddrId) {
+                userAddrId = this.userAddress.userAddrId
+            }
+            this.goTo('userAddressList', {}, { from: 'installation', id: userAddrId })
         },
         typeSelected(index) {
             this.typeSelectedIndex = index

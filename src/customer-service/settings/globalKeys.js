@@ -1,4 +1,5 @@
 export const SERVICE_STORAGE_KEYS = {
+  debugInfo: "debugInfo",
   selectedProductArray: "SERVICE_STORAGE_selectedProductArray",
   areaList: "SERVICE_STORAGE_areaList",
   userAddress: "SERVICE_STORAGE_userAddress",

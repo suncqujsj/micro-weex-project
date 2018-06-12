@@ -14,7 +14,7 @@ Mock.Random.extend({
 
 export const all = [
     {
-        path: "c-css-ipms/api/wom/order/createserviceorder",
+        path: ".*/c-css-ipms/api/wom/order/createserviceorder",
         data: {
             "status": true,
             "errorCode": null,
@@ -25,7 +25,7 @@ export const all = [
         }
     },
     {
-        path: 'c-css-ipms/api/wom/order/queryserviceorder',
+        path: '.*/c-css-ipms/api/wom/order/queryserviceorder',
         data: {
             "status": true,
             "errorCode": null,
@@ -2000,7 +2000,7 @@ export const all = [
         }
     },
     {
-        path: "mideaService/getFeePlocy",
+        path: ".*/c-css-ipms/css/api/mmp/insp/getChargeStandardList",
         data: {
             "error": null,
             "content": [
@@ -5822,7 +5822,7 @@ export const all = [
         }
     },
     {
-        path: "c-css-ipms/api/wom/order/queryunitarchives",
+        path: ".*/c-css-ipms/api/wom/order/queryunitarchives",
         data: {
             "status": true,
             "errorCode": null,
@@ -6832,7 +6832,7 @@ export const all = [
         }
     },
     {
-        path: "c-css-ipms/api/wom/order/querywarrantydescbycodeorsn",
+        path: ".*/c-css-ipms/api/wom/order/querywarrantydescbycodeorsn",
         data: {
             "status": true,
             "errorCode": null,
@@ -6871,7 +6871,7 @@ export const all = [
         }
     },
     {
-        path: "c-css-ipms/api/wom/order/queryserviceuserdemanddispatch",
+        path: ".*/c-css-ipms/api/wom/order/queryserviceuserdemanddispatch",
         data: {
             "status": true,
             "errorCode": null,
@@ -7077,7 +7077,7 @@ export const all = [
         }
     },
     {
-        path: "c-css-ipms/api/wom/order/cancelserviceorder",
+        path: ".*/c-css-ipms/api/wom/order/cancelserviceorder",
         data: {
             "status": true,
             "errorCode": "WOM510001",
@@ -7085,14 +7085,14 @@ export const all = [
         }
     },
     {
-        path: "c-css-ipms/api/wom/order/createserviceuserdemand",
+        path: ".*/c-css-ipms/api/wom/order/createserviceuserdemand",
         data: {
             "status": true,
             " serviceCustomerDemandId": "18"
         }
     },
     {
-        path: "c-css-ipms/api/wom/order/queryconsumerorderprogress",
+        path: ".*/c-css-ipms/api/wom/order/queryconsumerorderprogress",
         data: {
             "status": true,
             "errorCode": "0",

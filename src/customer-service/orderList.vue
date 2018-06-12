@@ -1,7 +1,7 @@
 <template>
     <div>
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
-        <scroller class="scroller">
+        <scroller class="scroller" loadmoreoffset=750 @loadmore="loadmore">
             <div v-for="(order, index) in formattedOrderList" :key="index" @click="goToOrderDetail(index)">
                 <order-block class="order-block" :order="order">
                     <div slot="action-bar" class="action-bar">
@@ -15,10 +15,17 @@
                     </div>
                 </order-block>
             </div>
-            <div class="gap-bottom"></div>
+            <text class="indicator-text" v-if="!loadingEnd">加载中...</text>
+            <text class="loading-end" v-if="loadingEnd">———— 到底了 ————</text>
+            <!-- <loading class="loading" :display="showLoading" v-if="!loadingEnd">
+                <loading-indicator class="indicator"></loading-indicator>
+            </loading> -->
         </scroller>
 
-        <midea-dialog title="要取消此订单？" mainBtnColor="#267AFF" secondBtnColor="#267AFF" :show="dialogShow" cancelText="否" confirmText="是" @mideaDialogCancelBtnClicked="dialogCancel" @mideaDialogConfirmBtnClicked="dialogConfirm">
+        <midea-actionsheet :items="urgeOrderItems" :show="isShowUrgeOrder" @close="closeUrgeOrderActionsheet" @itemClick="urgeOrdertItemClick" @btnClick="urgeOrderBtnClick" ref="urgeOrderActionsheet">
+        </midea-actionsheet>
+
+        <midea-dialog title="要取消此订单？" mainBtnColor="#267AFF" secondBtnColor="#267AFF" :show="dialogShow" cancelText="否" confirmText="是" @mideaDialogCancelBtnClicked="dialogCancel" @mideaDialogConfirmBtnClicked="cancelOrder">
         </midea-dialog>
     </div>
 </template>
@@ -29,32 +36,80 @@ import orderBase from './order-base'
 import nativeService from '@/common/services/nativeService'
 import OrderBlock from '@/customer-service/components/orderBlock.vue'
 
-import { MideaDialog } from '@/index'
+import { MideaDialog, MideaActionsheet } from '@/index'
 
 export default {
     components: {
         OrderBlock,
-        MideaDialog
+        MideaDialog,
+        MideaActionsheet
     },
     mixins: [base, orderBase],
     data() {
         return {
             title: '进度查询',
+            orderListParam: null,
             orderList: [],
+            orderListPage: 0,
             selectedOrderIndex: null,
-            dialogShow: false
+            dialogShow: false,
+            showLoading: 'hide',
+            loadingEnd: false,
+            isShowUrgeOrder: false,
+            reminderOptions: [],
         }
     },
     computed: {
         formattedOrderList() {
+            //不可改变订单顺序
             return this.orderList.map((order) => {
                 let calcServiceOrderStatus = this.calcServiceOrderStatus(order)
 
                 return Object.assign(order, { calcServiceOrderStatus: calcServiceOrderStatus })
             })
+        },
+        urgeOrderItems() {
+            let result = []
+            if (this.reminderOptions) {
+                result = this.reminderOptions.map((item) => {
+                    return item.serviceRequireName
+                })
+            }
+            return result
         }
     },
     methods: {
+        getOrderList() {
+            let status = []
+            for (let index = 10; index < 35; index++) {
+                status.push(index)
+            }
+            let param = {
+                dispatchOrderStatus: status.join(","),  //派工单状态
+                orderColumn: "contactTime",
+                page: this.orderListPage,
+                resultNum: 10
+            }
+            this.orderListParam = param
+            nativeService.queryserviceorder(this.orderListParam).then((data) => {
+                this.orderList = data.list
+            })
+        },
+        loadmore(event) {
+            this.showLoading = 'show'
+            setTimeout(() => {
+                this.orderListPage++
+                this.orderListParam.page = this.orderListPage
+                nativeService.queryserviceorder(this.orderListParam).then((data) => {
+                    this.showLoading = 'hide'
+                    if (data.list && data.list.length > 0) {
+                        this.orderList = this.orderList.concat(data.list)
+                    } else {
+                        this.loadingEnd = true
+                    }
+                })
+            }, 1500)
+        },
         goToOrderDetail(index) {
             let order = this.orderList[index]
             nativeService.setItem(this.SERVICE_STORAGE_KEYS.order, order, () => {
@@ -65,13 +120,51 @@ export default {
             this.goTo('productSelection', {}, { from: 'orderList' })
         },
         urgeOrder(index) {
-            let oldOrder = this.orderList[index]
+            this.selectedOrderIndex = index
+            let order = this.orderList[this.selectedOrderIndex]
             let param = {
-                serviceOrderNo: oldOrder.serviceOrderNo
+                prodCode: order.serviceUserDemandVOs[0].prodCode,
+                orgCode: order.orgCode,
+                serviceOrderNO: order.serviceOrderNo,
+                serviceMode: ""
             }
-            nativeService.createserviceuserdemand().then(() => {
-                nativeService.toast("催单成功")
+            nativeService.queryReminderOptions(param).then((resp) => {
+                this.reminderOptions = resp.data
+                this.isShowUrgeOrder = true;
+                this.$nextTick(e => {
+                    this.$refs.urgeOrderActionsheet.open();
+                });
             })
+        },
+        closeUrgeOrderActionsheet() {
+            this.isShowUrgeOrder = false
+        },
+        urgeOrdertItemClick(event) {
+            this.isShowUrgeOrder = false
+            let order = this.orderList[this.selectedOrderIndex]
+            let reminderOption = this.reminderOptions[event.index]
+            let param = {
+                orgCode: order.orgCode,
+                serviceOrderNo: order.serviceOrderNo,
+                // serviceRequireTypeCode: reminderOption.serviceRequireCode,
+                // serviceRequireTypeName: reminderOption.serviceRequireName,
+                serviceRequireItem1Code: reminderOption.serviceRequireCode,
+                serviceRequireItem1Name: reminderOption.serviceRequireName,
+                serviceRequireItem2Code: reminderOption.serviceRequireCode,
+                serviceRequireItem2Name: reminderOption.serviceRequireName,
+                serviceMainTypeCode: order.serviceMainTypeCode,
+                serviceMainTypeName: order.serviceMainTypeName,
+                serviceSubTypeCode: order.serviceSubTypeCode,
+                serviceSubTypeName: order.serviceSubTypeName
+            }
+            nativeService.createserviceuserdemand(param).then(() => {
+                nativeService.toast("催单成功")
+            }).catch((error) => {
+                nativeService.toast(nativeService.getCssErrorMessage(error))
+            })
+        },
+        urgeOrderBtnClick() {
+            this.isShowUrgeOrder = false
         },
         renewOrder(index) {
             let order = this.orderList[index]
@@ -90,15 +183,17 @@ export default {
         dialogCancel() {
             this.dialogShow = false
         },
-        dialogConfirm() {
+        cancelOrder() {
             this.dialogShow = false
-            let oldOrder = this.orderList[this.selectedOrderIndex]
+            let order = this.orderList[this.selectedOrderIndex]
             let param = {
-                serviceOrderNo: oldOrder.serviceOrderNo
+                orgCode: order.orgCode,
+                serviceOrderNo: order.serviceOrderNo,
+                operator: nativeService.userInfo.userName
             }
             nativeService.cancelserviceorder(param).then(() => {
-                oldOrder.serviceOrderStatus = '22'
-                this.$set(this.orderList, this.selectedOrderIndex, oldOrder)
+                order.serviceOrderStatus = '22'
+                this.$set(this.orderList, this.selectedOrderIndex, order)
             })
         },
         assessService(index) {
@@ -130,13 +225,7 @@ export default {
         }
     },
     created() {
-        let param = {
-            dispatchOrderStatus: "22",  //派工单状态
-            orderColumn: "pubCreateDate"
-        }
-        nativeService.queryserviceorder(param).then((data) => {
-            this.orderList = data.list
-        })
+        this.getOrderList()
     }
 }
 </script>
@@ -177,5 +266,25 @@ export default {
   color: #ffffff;
   background-color: #267aff;
   border-color: #267aff;
+}
+.loading-end {
+  width: 750px;
+  padding: 30px 0;
+  background-color: #eef4f7;
+  color: #b4c0cb;
+  text-align: center;
+}
+.indicator-loading {
+  width: 750px;
+  height: 120px;
+  color: #0e90ff;
+  font-size: 42px;
+  text-align: center;
+}
+.indicator-text {
+  width: 750px;
+  color: #5f5f5f;
+  font-size: 28px;
+  text-align: center;
 }
 </style>

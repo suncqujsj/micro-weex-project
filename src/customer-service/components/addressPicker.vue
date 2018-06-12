@@ -120,7 +120,7 @@ export default {
             let param = {
                 "regionCode": regionCode
             }
-            nativeService.getAreaList(param).then((data) => {
+            nativeService.getAreaListCache(param).then((data) => {
                 this.areaListObj = data
                 if (data.self) {
                     this.currentRegionLevel = data.self.level

@@ -43,8 +43,11 @@ export default {
             })
         },
         clean() {
-            debugUtil.cleanDebugLog().then(() => { })
+            debugUtil.cleanDebugLog().then(() => {
+                debugUtil.debugInfoDataChannel.postMessage({ key: "cleanDebugLog" })
+            })
             this.content = ''
+
         },
         refresh() {
             this.getLogData()
@@ -91,13 +94,6 @@ export default {
             })
         },
         testfunc() {
-            this.pushDataChannel.postMessage({
-                content: 'pro2base/msg/push;405871;{"applianceId":"1099511629097","pushTips":"这是一个提示信息。","pushTime":"1517469807978","tips":"冰箱已经24小时没有操作。"};2018-02-03 07:23:27',
-                id: 5, isRead: 1
-                // 'content': 'appliance/vital/data/report;1000;{"applianceId":"2000","msg":"dfjdfug2834jslf8Kf834#dfk"};2014-07-10 15:21:52.532',
-                // 'content': 'meiju/fault/push;1000;{"applianceId":"1099511629098","applianceSn":"ddcrser5e5d14344dfdf454d","isRepair": false,"faultCode":"E5","applianceName":"我的家电","productCode":"","faultType":"e643","faultDesc":"我的家电我的家电我的家电"};2017-07-01 11:39:01',
-                // 'isRead': 0
-            })
         }
     },
     created() {

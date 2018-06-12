@@ -63,7 +63,7 @@ export default {
             others.interfaceSourceDesc = order.pubCreatePerson + "接入"
 
             //接入时间
-            others.contactTimeDesc = util.dateFormat(new Date(order.contactTime), "yyyy-MM-dd hh:mm")
+            others.contactTimeDesc = util.dateFormat(new Date(order.contactTime), "yyyy-MM-dd")
 
             //产品图片
             others.imageUrl = './assets/img/product/default.png'

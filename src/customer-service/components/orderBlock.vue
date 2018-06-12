@@ -1,58 +1,58 @@
 <template>
-    <div class="order-block">
-        <div class="order-block-header">
-            <div class="order-block-icon">
-                <image class="order-block-channel-icon" src="./assets/img/logo/OW.png" resize='contain'>
-                </image>
-                <image class="order-block-channel-icon" :src="formattedOrder.interfaceSourceIcon" resize='stretch'>
-                </image>
-            </div>
-            <text class="order-block-channel">{{formattedOrder.interfaceSourceDesc}}</text>
-            <text class="order-block-time">{{formattedOrder.contactTimeDesc}}</text>
-            <text v-if="showStatus" class="order-block-status">{{formattedOrder.isFinished?'':formattedOrder.statusDesc}}</text>
-        </div>
-        <image v-if="showStatus && formattedOrder.isFinished" class="order-block-status-icon" src="./assets/img/service_ic_finish@3x.png" resize='contain'>
+  <div class="order-block">
+    <div class="order-block-header">
+      <div class="order-block-icon">
+        <image class="order-block-channel-icon" src="./assets/img/logo/OW.png" resize='contain'>
         </image>
-        <div class="order-block-body">
-            <image class="order-block-img" :src="formattedOrder.imageUrl" resize='contain'>
-            </image>
-            <div class="order-block-content">
-                <text class="order-block-label">{{formattedOrder.orderDesc}}</text>
-            </div>
-            <text v-if="formattedOrder.price" class="order-block-price">{{formattedOrder.price}}元</text>
-        </div>
-        <slot name="action-bar">
-        </slot>
+        <image class="order-block-channel-icon" :src="formattedOrder.interfaceSourceIcon" resize='stretch'>
+        </image>
+      </div>
+      <text class="order-block-channel">{{formattedOrder.interfaceSourceDesc}}</text>
+      <text class="order-block-time">{{formattedOrder.contactTimeDesc}}</text>
+      <text v-if="showStatus" v-bind:class="['order-block-status', formattedOrder.calcServiceOrderStatus=='3'?'order-block-status-gray':'']">{{formattedOrder.isFinished?'':formattedOrder.statusDesc}}</text>
     </div>
+    <image v-if="showStatus && formattedOrder.isFinished" class="order-block-status-icon" src="./assets/img/service_ic_finish@3x.png" resize='contain'>
+    </image>
+    <div class="order-block-body">
+      <image class="order-block-img" :src="formattedOrder.imageUrl" resize='contain'>
+      </image>
+      <div class="order-block-content">
+        <text class="order-block-label">{{formattedOrder.orderDesc}}</text>
+      </div>
+      <text v-if="formattedOrder.price" class="order-block-price">{{formattedOrder.price}}元</text>
+    </div>
+    <slot name="action-bar">
+    </slot>
+  </div>
 </template>
 
 <script>
 import orderBase from '../order-base'
 
 export default {
-    components: {
+  components: {
+  },
+  mixins: [orderBase],
+  props: {
+    order: {
+      type: Object
     },
-    mixins: [orderBase],
-    props: {
-        order: {
-            type: Object
-        },
-        showStatus: {
-            type: Boolean,
-            default: true
-        }
-    },
-    data() {
-        return {
-        }
-    },
-    computed: {
-    },
-    methods: {
-    },
-    created() {
-
+    showStatus: {
+      type: Boolean,
+      default: true
     }
+  },
+  data() {
+    return {
+    }
+  },
+  computed: {
+  },
+  methods: {
+  },
+  created() {
+
+  }
 }
 </script>
 
@@ -91,7 +91,7 @@ export default {
 .order-block-channel {
   font-family: PingFangSC-Regular;
   font-size: 28px;
-  color: #666666;
+  color: #000000;
   text-align: left;
   margin-right: 32px;
 }
@@ -99,7 +99,7 @@ export default {
   flex: 1;
   font-family: PingFangSC-Regular;
   font-size: 28px;
-  color: #666666;
+  color: #8a8a8f;
   text-align: left;
   margin-right: 8px;
 }
@@ -114,9 +114,12 @@ export default {
   width: 90px;
   font-family: PingFangSC-Regular;
   font-size: 28px;
-  color: #666666;
+  color: #ff8f00;
   text-align: right;
   margin-right: 32px;
+}
+.order-block-status-gray {
+  color: #666666;
 }
 .order-block-body {
   height: 200px;
@@ -157,7 +160,7 @@ export default {
   width: 200px;
   font-size: 32px;
   text-align: right;
-  color: #ff9500;
+  color: #ff8f00;
   margin-right: 32px;
 }
 </style>

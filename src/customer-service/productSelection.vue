@@ -225,7 +225,7 @@ export default {
         },
     },
     created() {
-        nativeService.searchProductType().then((data) => {
+        nativeService.getProdType().then((data) => {
             this.productData = data
         })
 

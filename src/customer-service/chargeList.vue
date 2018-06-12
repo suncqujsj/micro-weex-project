@@ -113,7 +113,7 @@ export default {
         }
     },
     created() {
-        nativeService.getFeePlocy().then((data) => {
+        nativeService.getChargeStandardList().then((data) => {
             this.feePlocy = data
         })
     }

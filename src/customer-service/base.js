@@ -17,7 +17,7 @@ import appConfig from './settings/config'
 import { SERVICE_STORAGE_KEYS } from './settings/globalKeys'
 import nativeService from './settings/nativeService'
 
-import Mock from './settings/mock'  //正式场上线时注释掉
+// import Mock from './settings/mock'  //正式场上线时注释掉
 if (appConfig.isMock) {
     nativeService.Mock = Mock
 }

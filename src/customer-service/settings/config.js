@@ -3,6 +3,6 @@ const appConfig = {
     plugin_name: 'T0xCA',
     default_locale: 'ja',
     enable_debug: true,
-    isMock: true
+    isMock: !true
 }
 export default appConfig

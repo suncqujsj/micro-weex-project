@@ -99,7 +99,19 @@ export default {
         },
         urgeOrder() {
             let param = {
-                serviceOrderNo: this.order.serviceOrderNo
+                orgCode: this.order.orgCode,
+                serviceOrderNo: this.order.serviceOrderNo,
+                serviceRequireTypeCode: this.order.serviceRequireTypeCode,
+                serviceRequireTypeName: this.order.serviceRequireTypeName,
+                serviceRequireItem1Code: this.order.serviceRequireItem1Code,
+                serviceRequireItem1Name: this.order.serviceRequireItem1Name,
+                serviceRequireItem2Code: this.order.serviceRequireItem2Code,
+                serviceRequireItem2Name: this.order.serviceRequireItem2Name,
+                serviceMainTypeCode: this.order.serviceMainTypeCode,
+                serviceMainTypeName: this.order.serviceMainTypeName,
+                serviceSubTypeCode: this.order.serviceSubTypeCode,
+                serviceSubTypeName: this.order.serviceSubTypeName
+
             }
             nativeService.createserviceuserdemand(param).then(() => {
                 nativeService.toast("催单成功")

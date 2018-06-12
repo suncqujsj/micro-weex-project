@@ -72,6 +72,7 @@
 import base from './base'
 import orderBase from './order-base'
 import nativeService from '@/common/services/nativeService'
+import debugUtil from '@/common/util/debugUtil'
 import util from '@/common/util/util'
 
 import { MideaActionsheet, MideaItem } from '@/index'
@@ -158,10 +159,12 @@ export default {
         console.log('beforeCreate:在初始化内部变量，并且添加了事件功能后被触发')
     },
     created() {
+        debugUtil.cleanDebugLog()
         this.resetStorage()
 
         let param = {
-            dispatchOrderStatus: "22",  //派工单状态
+            dispatchOrderStatus: "10,11,12,13,14,15,16",  //派工单状态
+            resultNum: 1,
             orderColumn: "contactTime"
         }
         nativeService.queryserviceorder(param).then((data) => {

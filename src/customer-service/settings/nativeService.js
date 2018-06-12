@@ -3,29 +3,31 @@ import { SERVICE_STORAGE_KEYS } from './globalKeys'
 
 let customizeNativeService = Object.assign(nativeService, {
     serviceList: {
-        createserviceorder: "c-css-ipms/api/wom/order/createserviceorder", //用户报装、报修、洗悦家服务请求
-        queryserviceorder: "c-css-ipms/api/wom/order/queryserviceorder", //用户服务工单列表查询
-        queryserviceuserdemanddispatch: "c-css-ipms/api/wom/order/queryserviceuserdemanddispatch", //用户服务工单详情进度查询
-        createserviceuserdemand: "c-css-ipms/api/wom/order/createserviceuserdemand", //催单CSS信息单
-        cancelserviceorder: "c-css-ipms/api/wom/order/cancelserviceorder", //取消售后工单
-        queryconsumerorderprogress: "c-css-ipms/api/wom/order/queryconsumerorderprogress", //用户服务单服务过程列表查询接口
-        queryservicerequireproduct: "c-css-ipms/api/wom/order/queryservicerequireproduct", //服务请求查询接口
-        querywarrantydescbycodeorsn: "c-css-ipms/api/wom/order/querywarrantydescbycodeorsn", //包修政策查询接口
-        getChargeStandardList: "c-css-ipms/css/api/mmp/insp/getChargeStandardList", //收费标准查询
-        queryunitarchives: "c-css-ipms/api/wom/order/queryunitarchives", //网点查询
-        getProducts: "c-css-ipms/api/dc/getProducts", //产品主数据同步
+        createserviceorder: "http://csuat.midea.com/c-css-ipms/api/wom/order/createserviceorder", //用户报装、报修、洗悦家服务请求
+        queryserviceorder: "http://csuat.midea.com/c-css-ipms/api/wom/order/queryserviceorder", //用户服务工单列表查询
+        queryserviceuserdemanddispatch: "http://csuat.midea.com/c-css-ipms/api/wom/order/queryserviceuserdemanddispatch", //用户服务工单详情进度查询
+        createserviceuserdemand: "http://csuat.midea.com/c-css-ipms/api/wom/order/createserviceuserdemand", //催单CSS信息单
+        queryReminderOptions: "http://weixincs.midea.com/wxgw/css/queryReminderOptions?mpType=MIDEASERVICE", //查询催单原因列表: TODO: url要修改
+        cancelserviceorder: "http://csuat.midea.com/c-css-ipms/api/wom/order/cancelserviceorder", //取消售后工单
+        queryconsumerorderprogress: "http://csuat.midea.com/c-css-ipms/api/wom/order/queryconsumerorderprogress", //用户服务单服务过程列表查询接口
+        queryservicerequireproduct: "http://csuat.midea.com/c-css-ipms/api/wom/order/queryservicerequireproduct", //服务请求查询接口
+        querywarrantydescbycodeorsn: "http://csuat.midea.com/c-css-ipms/api/wom/order/querywarrantydescbycodeorsn", //包修政策查询接口
+        getChargeStandardList: "http://csuat.midea.com/c-css-ipms/css/api/mmp/insp/getChargeStandardList", //收费标准查询
+        queryunitarchives: "http://csuat.midea.com/c-css-ipms/api/wom/order/queryunitarchives", //网点查询
+        getProducts: "http://csuat.midea.com/c-css-ipms/api/dc/getProducts", //产品主数据同步
         searchFaultType: "/wxgw/css/faultType", //故障类型
         searchExcludedFault: "wxgw/css/excludedFault", //故障可能原因查询
-        getFeePlocy: "mideaService/getFeePlocy", //收费标准
 
         //中控消息
-        searchProductType: "pdgw-ap/message/getProdType", //产品列表
-        getAreaList: "cmms/area/list", //服务地区
-        getUserAddrPageList: "ccrm2-core/userAddr/getUserAddrPageList", //地址列表查询
-        userAddrAdd: "ccrm2-core/userAddr/add", //地址新增
-        userAddrUpdate: "ccrm2-core/userAddr/update", //地址修改
-        userAddrDelete: "ccrm2-core/userAddr/delete", //地址删除
+        getProdType: "http://10.16.33.168:8081/pdgw-ap/message/getProdType?version=1.0", //产品列表
+        getUserAddrPageList: "http://10.16.85.47/ccrm2-core/userAddr/getUserAddrPageList", //地址列表查询
+        getAreaList: "http://10.16.85.47/cmms/area/list", //服务地区
+        userAddrAdd: "http://10.16.85.47/ccrm2-core/userAddr/add", //地址新增
+        userAddrUpdate: "http://10.16.85.47/ccrm2-core/userAddr/update", //地址修改
+        userAddrDelete: "http://10.16.85.47/ccrm2-core/userAddr/delete", //地址删除
+        setDefaultAddr: "http://10.16.85.47/ccrm2-core/userAddr/defaultAddr", //设置默认地址
     },
+    userInfo: null,
     getCssErrorMessage(error) {
         let msg = error.errorMsg || "请求失败，请稍后重试。"
         if (error.errorCode) {
@@ -33,9 +35,55 @@ let customizeNativeService = Object.assign(nativeService, {
         }
         return msg
     },
+    getCssRequestCommonParam() {
+        return new Promise((resolve, reject) => {
+            let param = {
+                interfaceSource: "MMJYWX"
+            }
+            if (this.userInfo) {
+                param.webUserCode = "oFtQywGHyqrWbDvjVdRTeR9Ig3m0" //this.userInfo.userId
+                param.webUserPhone = "18614035358" //this.userInfo.mobile
+                resolve(param)
+            } else {
+                this.getUserInfo().then((data) => {
+                    this.userInfo = data || {}
+                    this.getCssRequestCommonParam().then((resp) => {
+                        resolve(resp)
+                    })
+                })
+            }
+        })
+    },
+    sendHttpRequestCssWrapper(params, options = { isShowLoading: true, isValidate: false }) {
+        return new Promise((resolve, reject) => {
+            this.getCssRequestCommonParam().then((commonParam) => {
+                let requestParam = {
+                    url: params.url + "?json=" + JSON.stringify({ "body": Object.assign(commonParam, params.body) }),
+                    method: params.method || "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+                let oldDummy = this.isDummy
+                this.isDummy = false
+                this.sendHttpRequest(requestParam, options).then((resp) => {
+                    this.isDummy = oldDummy
+                    resolve(resp)
+                }).catch((error) => {
+                    this.isDummy = oldDummy
+                    reject(error)
+                })
+            })
+        })
+    },
     createserviceorder(param = {}) {
         return new Promise((resolve, reject) => {
-            this.sendMCloudRequest('createserviceorder', param, { isValidate: false }).then((resp) => {
+            let requestParam = {
+                url: this.serviceList.createserviceorder,
+                method: "POST",
+                body: param
+            }
+            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
                 if (resp.status) {
                     resolve(resp)
                 } else {
@@ -48,10 +96,17 @@ let customizeNativeService = Object.assign(nativeService, {
     },
     queryserviceorder(param = {}) {
         return new Promise((resolve, reject) => {
-            let result
-            this.sendMCloudRequest('queryserviceorder', param, { isValidate: false }).then((resp) => {
-                result = resp
-                resolve(result)
+            let requestParam = {
+                url: this.serviceList.queryserviceorder,
+                method: "POST",
+                body: param
+            }
+            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
+                if (resp.status) {
+                    resolve(resp)
+                } else {
+                    reject(resp)
+                }
             }).catch((error) => {
                 reject(error)
             })
@@ -59,7 +114,12 @@ let customizeNativeService = Object.assign(nativeService, {
     },
     queryserviceuserdemanddispatch(param = {}) {
         return new Promise((resolve, reject) => {
-            this.sendMCloudRequest('queryserviceuserdemanddispatch', param, { isValidate: false }).then((resp) => {
+            let requestParam = {
+                url: this.serviceList.queryserviceuserdemanddispatch,
+                method: "POST",
+                body: param
+            }
+            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
                 if (resp.status) {
                     resolve(resp)
                 } else {
@@ -73,11 +133,11 @@ let customizeNativeService = Object.assign(nativeService, {
     createserviceuserdemand(param = {}) {
         return new Promise((resolve, reject) => {
             let requestParam = {
-                orgCode: '',
-                interfaceSource: 'MJAPP',
-                operator: ''
+                url: this.serviceList.createserviceuserdemand,
+                method: "POST",
+                body: param
             }
-            this.sendMCloudRequest('createserviceuserdemand', param, { isValidate: false }).then((resp) => {
+            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
                 if (resp.status) {
                     resolve(resp)
                 } else {
@@ -88,14 +148,39 @@ let customizeNativeService = Object.assign(nativeService, {
             })
         })
     },
+    queryReminderOptions(param = {}) {
+        return new Promise((resolve, reject) => {
+            let requestParam = {
+                url: this.serviceList.queryReminderOptions,
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: param
+            }
+            let oldDummy = this.isDummy
+            this.isDummy = false
+            this.sendHttpRequest(requestParam).then((resp) => {
+                this.isDummy = oldDummy
+                if (resp.code) {
+                    resolve(resp)
+                } else {
+                    reject(resp)
+                }
+            }).catch((error) => {
+                this.isDummy = oldDummy
+                reject(error)
+            })
+        })
+    },
     cancelserviceorder(param = {}) {
         return new Promise((resolve, reject) => {
             let requestParam = {
-                orgCode: '',
-                interfaceSource: 'MJAPP',
-                operator: ''
+                url: this.serviceList.cancelserviceorder,
+                method: "POST",
+                body: param
             }
-            this.sendMCloudRequest('cancelserviceorder', param, { isValidate: false }).then((resp) => {
+            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
                 if (resp.status) {
                     resolve(resp)
                 } else {
@@ -109,11 +194,11 @@ let customizeNativeService = Object.assign(nativeService, {
     queryconsumerorderprogress(param = {}) {
         return new Promise((resolve, reject) => {
             let requestParam = {
-                orgCode: '',
-                interfaceSource: 'MJAPP',
-                operator: ''
+                url: this.serviceList.queryconsumerorderprogress,
+                method: "POST",
+                body: param
             }
-            this.sendMCloudRequest('queryconsumerorderprogress', param, { isValidate: false }).then((resp) => {
+            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
                 if (resp.status) {
                     resolve(resp)
                 } else {
@@ -154,10 +239,10 @@ let customizeNativeService = Object.assign(nativeService, {
             })
         })
     },
-    getFeePlocy(param = {}) {
+    getChargeStandardList(param = {}) {
         return new Promise((resolve, reject) => {
             let result
-            this.sendMCloudRequest('getFeePlocy', param, { isValidate: false }).then((resp) => {
+            this.sendMCloudRequest('getChargeStandardList', param, { isValidate: false }).then((resp) => {
                 resolve(resp.content)
             }).catch((error) => {
                 reject(error)
@@ -183,7 +268,49 @@ let customizeNativeService = Object.assign(nativeService, {
         })
     },
 
-    searchProductType(param = {}) {
+    //** 中控后台服务 start **/
+    getRequestCommonParam() {
+        return new Promise((resolve, reject) => {
+            let param = {
+                sourceSys: "APP"
+            }
+            if (this.userInfo) {
+                param.uid = "2a58bb9810b3462b80e6d42c142441f8" //this.userInfo.userId
+                resolve(param)
+            } else {
+                this.getUserInfo().then((data) => {
+                    this.userInfo = data || {}
+                    this.getRequestCommonParam().then((resp) => {
+                        resolve(resp)
+                    })
+                })
+            }
+        })
+    },
+    sendHttpRequestWrapper(params, options = { isShowLoading: true, isValidate: false }) {
+        return new Promise((resolve, reject) => {
+            this.getRequestCommonParam().then((commonParam) => {
+                let requestParam = {
+                    url: params.url,
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: Object.assign(commonParam, params.body)
+                }
+                let oldDummy = this.isDummy
+                this.isDummy = false
+                this.sendHttpRequest(requestParam, options).then((resp) => {
+                    this.isDummy = oldDummy
+                    resolve(resp)
+                }).catch((error) => {
+                    this.isDummy = oldDummy
+                    reject(error)
+                })
+            })
+        })
+    },
+    getProdType(param = {}) {
         return new Promise((resolve, reject) => {
             let result
             this.getItem(SERVICE_STORAGE_KEYS.productType, (resp) => {
@@ -192,15 +319,14 @@ let customizeNativeService = Object.assign(nativeService, {
                     resolve(result)
                 } else {
                     let requestParam = {
-                        url: "http://10.16.38.95:8080/pdgw-ap/message/getProdType",
+                        url: this.serviceList.getProdType,
                         method: "GET",
                         body: Object.assign({
                             version: "1.0",
-                            codeType: "0",
-                            sourceSys: "10001"
+                            codeType: "0"
                         }, param)
                     }
-                    this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
+                    this.sendHttpRequestWrapper(requestParam).then((resp) => {
                         result = this.proceedProductData(resp.data)
                         this.setItem(SERVICE_STORAGE_KEYS.productType, JSON.stringify(result), () => {
                             resolve(result)
@@ -230,6 +356,22 @@ let customizeNativeService = Object.assign(nativeService, {
             }
         }
         return result
+    },
+
+    getUserAddrPageList(param = {}) {
+        return new Promise((resolve, reject) => {
+            let requestParam = {
+                url: this.serviceList.getUserAddrPageList + "?appKey=c8c35003cc4c408581043baad45bce5b&secret=0dc6fe93a8154fcaab629353ab800bb4",
+                method: "GET",
+                body: Object.assign({
+                }, param)
+            }
+            this.sendHttpRequestWrapper(requestParam).then((resp) => {
+                resolve(resp)
+            }).catch((error) => {
+                reject(error)
+            })
+        })
     },
 
     getAreaListCache(param = { regionCode: "0" }) {
@@ -262,7 +404,7 @@ let customizeNativeService = Object.assign(nativeService, {
     getAreaList(param = {}) {
         return new Promise((resolve, reject) => {
             let requestParam = {
-                url: "http://10.16.85.47/cmms/area/list",
+                url: this.serviceList.getAreaList,
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -272,7 +414,7 @@ let customizeNativeService = Object.assign(nativeService, {
                 }, param)
             }
             let oldDummy = this.isDummy
-            this.isDummy = !false
+            this.isDummy = false
             this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
                 this.isDummy = oldDummy
                 if (resp.code == 0) {
@@ -287,102 +429,98 @@ let customizeNativeService = Object.assign(nativeService, {
         })
     },
 
-    getUserAddrPageList(param = {}) {
-        return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: "http://10.16.85.47/ccrm2-core/userAddr/getUserAddrPageList",
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: Object.assign({
-                    sourceSys: "10001",
-                    uid: "b986b7612c2d462491bb2462d29cdc34"
-                }, param)
-            }
-            let oldDummy = this.isDummy
-            this.isDummy = !false
-            this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
-                this.isDummy = oldDummy
-                resolve(resp)
-            }).catch((error) => {
-                this.isDummy = oldDummy
-                reject(error)
-            })
-        })
-    },
-
     userAddrAdd(param = {}) {
         return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: "http://10.16.85.47/ccrm2-core/userAddr/add",
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: Object.assign({
-                    sourceSys: "10001",
-                    uid: "b986b7612c2d462491bb2462d29cdc34"
-                }, param)
-            }
-            let oldDummy = this.isDummy
-            this.isDummy = !false
-            this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
-                this.isDummy = oldDummy
-                resolve(resp)
-            }).catch((error) => {
-                this.isDummy = oldDummy
-                reject(error)
+            this.getRequestCommonParam().then((commonParam) => {
+                let requestParam = {
+                    url: this.serviceList.userAddrAdd + "?appKey=c8c35003cc4c408581043baad45bce5b&secret=0dc6fe93a8154fcaab629353ab800bb4",
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: Object.assign(commonParam, param)
+                }
+                let oldDummy = this.isDummy
+                this.isDummy = false
+                this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
+                    this.isDummy = oldDummy
+                    resolve(resp)
+                }).catch((error) => {
+                    this.isDummy = oldDummy
+                    reject(error)
+                })
             })
         })
     },
 
     userAddrUpdate(param = {}) {
         return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: "http://10.16.85.47/ccrm2-core/userAddr/update",
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: Object.assign({
-                    sourceSys: "10001",
-                    uid: "b986b7612c2d462491bb2462d29cdc34"
-                }, param)
-            }
-            let oldDummy = this.isDummy
-            this.isDummy = !false
-            this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
-                this.isDummy = oldDummy
-                resolve(resp)
-            }).catch((error) => {
-                this.isDummy = oldDummy
-                reject(error)
+            this.getRequestCommonParam().then((commonParam) => {
+                let requestParam = {
+                    url: this.serviceList.userAddrUpdate + "?appKey=c8c35003cc4c408581043baad45bce5b&secret=0dc6fe93a8154fcaab629353ab800bb4",
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: Object.assign(commonParam, param)
+                }
+                let oldDummy = this.isDummy
+                this.isDummy = false
+                this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
+                    this.isDummy = oldDummy
+                    resolve(resp)
+                }).catch((error) => {
+                    this.isDummy = oldDummy
+                    reject(error)
+                })
             })
         })
     },
 
     userAddrDelete(param = {}) {
         return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: "http://10.16.85.47/ccrm2-core/userAddr/delete",
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: Object.assign({
-                    sourceSys: "10001",
-                    uid: "b986b7612c2d462491bb2462d29cdc34"
-                }, param)
-            }
-            let oldDummy = this.isDummy
-            this.isDummy = !false
-            this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
-                this.isDummy = oldDummy
-                resolve(resp)
-            }).catch((error) => {
-                this.isDummy = oldDummy
-                reject(error)
+            this.getRequestCommonParam().then((commonParam) => {
+                let requestParam = {
+                    url: this.serviceList.userAddrDelete + "?appKey=c8c35003cc4c408581043baad45bce5b&secret=0dc6fe93a8154fcaab629353ab800bb4",
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: Object.assign(commonParam, param)
+                }
+                let oldDummy = this.isDummy
+                this.isDummy = false
+                this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
+                    this.isDummy = oldDummy
+                    resolve(resp)
+                }).catch((error) => {
+                    this.isDummy = oldDummy
+                    reject(error)
+                })
+            })
+        })
+    },
+
+    setDefaultAddr(param = {}) {
+        return new Promise((resolve, reject) => {
+            this.getRequestCommonParam().then((commonParam) => {
+                let requestParam = {
+                    url: this.serviceList.setDefaultAddr + "?appKey=c8c35003cc4c408581043baad45bce5b&secret=0dc6fe93a8154fcaab629353ab800bb4",
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: Object.assign(commonParam, param)
+                }
+                let oldDummy = this.isDummy
+                this.isDummy = false
+                this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
+                    this.isDummy = oldDummy
+                    resolve(resp)
+                }).catch((error) => {
+                    this.isDummy = oldDummy
+                    reject(error)
+                })
             })
         })
     },

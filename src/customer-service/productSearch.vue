@@ -134,7 +134,7 @@ export default {
                 this.historyKeys = JSON.parse(resp.data) || []
             }
         })
-        nativeService.searchProductType().then((data) => {
+        nativeService.getProdType().then((data) => {
             this.productData = data
         })
     }

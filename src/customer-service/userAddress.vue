@@ -109,16 +109,6 @@ export default {
                     this.back()
                 })
             }
-
-            // if (this.toPage) {
-            //     nativeService.setItem(this.SERVICE_STORAGE_KEYS.userAddress, this.userAddress,
-            //         () => {
-            //             this.goTo(this.toPage, {}, { from: this.fromPage })
-            //         })
-            // } else {
-            //     this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddress", data: this.userAddress })
-            //     this.back()
-            // }
         }
     },
     created() {

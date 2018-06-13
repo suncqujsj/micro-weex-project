@@ -15,8 +15,8 @@ let customizeNativeService = Object.assign(nativeService, {
         getChargeStandardList: "http://csuat.midea.com/c-css-ipms/css/api/mmp/insp/getChargeStandardList", //收费标准查询
         queryunitarchives: "http://csuat.midea.com/c-css-ipms/api/wom/order/queryunitarchives", //网点查询
         getProducts: "http://csuat.midea.com/c-css-ipms/api/dc/getProducts", //产品主数据同步
-        searchFaultType: "/wxgw/css/faultType", //故障类型
-        searchExcludedFault: "wxgw/css/excludedFault", //故障可能原因查询
+        getFaultType: "http://weixincs.midea.com/wxgw/css/faultType?mpType=MIDEASERVICE", //故障类型
+        getExcludedFault: "http://weixincs.midea.com/wxgw/css/excludedFault?mpType=MIDEASERVICE", //故障可能原因查询
 
         //中控消息
         getProdType: "http://10.16.33.168:8081/pdgw-ap/message/getProdType?version=1.0", //产品列表
@@ -209,50 +209,118 @@ let customizeNativeService = Object.assign(nativeService, {
             })
         })
     },
-    searchFaultType(param = {}) {
+    queryservicerequireproduct(param = {}) {
         return new Promise((resolve, reject) => {
-            let result
-            this.getItem(SERVICE_STORAGE_KEYS.faultType, (resp) => {
-                if (resp.result == 'success') {
-                    result = JSON.parse(resp.data)
-                    resolve(result)
+            let requestParam = {
+                url: this.serviceList.queryservicerequireproduct,
+                method: "POST",
+                body: param
+            }
+            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
+                if (resp.status) {
+                    resolve(resp)
                 } else {
-                    this.sendMCloudRequest('searchFaultType', param, { isValidate: false }).then((resp) => {
-                        result = resp.data
-                        this.setItem(SERVICE_STORAGE_KEYS.faultType, JSON.stringify(result), () => {
-                            resolve(result)
-                        })
-                    }).catch((error) => {
-                        reject(error)
-                    })
+                    reject(resp)
                 }
+            }).catch((error) => {
+                reject(error)
             })
         })
     },
-    searchExcludedFault(param = {}) {
+
+    getFaultType(param = {}) {
         return new Promise((resolve, reject) => {
-            let result
-            this.sendMCloudRequest('searchExcludedFault', param, { isValidate: false }).then((resp) => {
-                resolve(resp.data)
+            let requestParam = {
+                url: this.serviceList.getFaultType,
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: param
+            }
+            let oldDummy = this.isDummy
+            this.isDummy = false
+            this.sendHttpRequest(requestParam).then((resp) => {
+                this.isDummy = oldDummy
+                if (resp.code) {
+                    resolve(resp)
+                } else {
+                    reject(resp)
+                }
             }).catch((error) => {
+                this.isDummy = oldDummy
+                reject(error)
+            })
+        })
+    },
+    getExcludedFault(param = {}) {
+        return new Promise((resolve, reject) => {
+            let requestParam = {
+                url: this.serviceList.getExcludedFault,
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: param
+            }
+            let oldDummy = this.isDummy
+            this.isDummy = false
+            this.sendHttpRequest(requestParam).then((resp) => {
+                this.isDummy = oldDummy
+                if (resp.code) {
+                    resolve(resp)
+                } else {
+                    reject(resp)
+                }
+            }).catch((error) => {
+                this.isDummy = oldDummy
                 reject(error)
             })
         })
     },
     getChargeStandardList(param = {}) {
         return new Promise((resolve, reject) => {
-            let result
-            this.sendMCloudRequest('getChargeStandardList', param, { isValidate: false }).then((resp) => {
-                resolve(resp.content)
+            let url = this.serviceList.getChargeStandardList + "?"
+            for (const key in param) {
+                if (param.hasOwnProperty(key)) {
+                    url += key + "=" + param[key] + "&"
+                }
+            }
+            let requestParam = {
+                url: url,
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+            let oldDummy = this.isDummy
+            this.isDummy = false
+            this.sendHttpRequest(requestParam).then((resp) => {
+                this.isDummy = oldDummy
+                if (resp.returnStatus) {
+                    resolve(resp)
+                } else {
+                    reject(resp)
+                }
             }).catch((error) => {
+                this.isDummy = oldDummy
                 reject(error)
             })
         })
     },
     queryunitarchives(param = {}) {
         return new Promise((resolve, reject) => {
-            this.sendMCloudRequest('queryunitarchives', param, { isValidate: false }).then((resp) => {
-                resolve(resp)
+            let requestParam = {
+                url: this.serviceList.queryunitarchives,
+                method: "POST",
+                body: param
+            }
+            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
+                if (resp.status) {
+                    resolve(resp)
+                } else {
+                    reject(resp)
+                }
             }).catch((error) => {
                 reject(error)
             })
@@ -260,8 +328,17 @@ let customizeNativeService = Object.assign(nativeService, {
     },
     querywarrantydescbycodeorsn(param = {}) {
         return new Promise((resolve, reject) => {
-            this.sendMCloudRequest('querywarrantydescbycodeorsn', param, { isValidate: false }).then((resp) => {
-                resolve(resp)
+            let requestParam = {
+                url: this.serviceList.querywarrantydescbycodeorsn,
+                method: "POST",
+                body: param
+            }
+            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
+                if (resp.status) {
+                    resolve(resp)
+                } else {
+                    reject(resp)
+                }
             }).catch((error) => {
                 reject(error)
             })
@@ -345,11 +422,13 @@ let customizeNativeService = Object.assign(nativeService, {
             const brandItem = result[brandIndex]
             if (brandItem.productTypeDTOList) {
                 for (let categaryIndex = 0; categaryIndex < brandItem.productTypeDTOList.length; categaryIndex++) {
-                    const categaryItem = brandItem.productTypeDTOList[categaryIndex]
+                    let categaryItem = brandItem.productTypeDTOList[categaryIndex]
+                    categaryItem.isShowImage = (categaryIndex > 3 ? false : true)
                     if (categaryItem.children) {
                         for (let productIndex = 0; productIndex < categaryItem.children.length; productIndex++) {
                             categaryItem.children[productIndex].brandCode = brandItem.brandCode
                             categaryItem.children[productIndex].brand = brandItem.brand
+                            categaryItem.children[productIndex].imageUrl = './assets/img/product/default.png'
                         }
                     }
                 }

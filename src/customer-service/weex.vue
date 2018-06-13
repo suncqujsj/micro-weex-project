@@ -181,7 +181,7 @@ export default {
   background-color: #f2f2f2;
 }
 .wrapper-gap {
-  height: 120px;
+  height: 250px;
 }
 .service-desc-wrapper {
   flex-direction: column;

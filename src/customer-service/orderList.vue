@@ -9,13 +9,14 @@
                         <text class="action" v-if="[2, 6].indexOf(order.calcServiceOrderStatus)>-1" @click="showDialog(index)">取消工单</text>
                         <text class="action" v-if="order.calcServiceOrderStatus == 2 && checkPassTime(order)" @click="urgeOrder(index)">催办</text>
                         <text class="action" v-if="order.calcServiceOrderStatus == 3" @click="renewOrder(index)">重新报单</text>
-                        <text class="action" v-if="order.calcServiceOrderStatus == 4" @click="assessService(index)">评价有礼</text>
-                        <text class="action primary-action" v-if="order.calcServiceOrderStatus == 5" @click="assessService(index)">查看评价</text>
+                        <text class="action primary-action" v-if="order.calcServiceOrderStatus == 4" @click="assessService(index)">评价有礼</text>
+                        <text class="action" v-if="order.calcServiceOrderStatus == 5" @click="assessService(index)">查看评价</text>
                         <text class="action" v-if="order.calcServiceOrderStatus == 6" @click="callService(index)">联系网点</text>
                     </div>
                 </order-block>
             </div>
-            <text class="indicator-text" v-if="!loadingEnd">加载中...</text>
+
+            <text class="loading-end" v-if="!loadingEnd">加载中...</text>
             <text class="loading-end" v-if="loadingEnd">———— 到底了 ————</text>
             <!-- <loading class="loading" :display="showLoading" v-if="!loadingEnd">
                 <loading-indicator class="indicator"></loading-indicator>
@@ -79,6 +80,20 @@ export default {
         }
     },
     methods: {
+        handlePageData(data) {
+            if (data.page == "orderList") {
+                if (data.key == "cancelOrder") {
+                    let id = data.data.id
+                    if (this.selectedOrderIndex) {
+                        let order = this.orderList[this.selectedOrderIndex]
+                        if (id == order.serviceOrderNo) {
+                            order.serviceOrderStatus = '22'
+                            this.$set(this.orderList, this.selectedOrderIndex, order)
+                        }
+                    }
+                }
+            }
+        },
         getOrderList() {
             let status = []
             for (let index = 10; index < 35; index++) {
@@ -111,6 +126,7 @@ export default {
             }, 1500)
         },
         goToOrderDetail(index) {
+            this.selectedOrderIndex = index
             let order = this.orderList[index]
             nativeService.setItem(this.SERVICE_STORAGE_KEYS.order, order, () => {
                 this.goTo("orderDetail", {}, { from: 'orderList', id: order.serviceOrderNo })
@@ -147,15 +163,8 @@ export default {
                 orgCode: order.orgCode,
                 serviceOrderNo: order.serviceOrderNo,
                 // serviceRequireTypeCode: reminderOption.serviceRequireCode,
-                // serviceRequireTypeName: reminderOption.serviceRequireName,
-                serviceRequireItem1Code: reminderOption.serviceRequireCode,
-                serviceRequireItem1Name: reminderOption.serviceRequireName,
-                serviceRequireItem2Code: reminderOption.serviceRequireCode,
-                serviceRequireItem2Name: reminderOption.serviceRequireName,
-                serviceMainTypeCode: order.serviceMainTypeCode,
-                serviceMainTypeName: order.serviceMainTypeName,
-                serviceSubTypeCode: order.serviceSubTypeCode,
-                serviceSubTypeName: order.serviceSubTypeName
+                reminderReason: reminderOption.serviceRequireName,
+                serviceRequireItem2Code: reminderOption.serviceRequireCode
             }
             nativeService.createserviceuserdemand(param).then(() => {
                 nativeService.toast("催单成功")
@@ -263,16 +272,17 @@ export default {
   border-style: solid;
 }
 .primary-action {
-  color: #ffffff;
-  background-color: #267aff;
-  border-color: #267aff;
+  color: #0078ff;
+  border-color: #0078ff;
 }
 .loading-end {
   width: 750px;
   padding: 30px 0;
-  background-color: #eef4f7;
-  color: #b4c0cb;
+  background-color: #f2f2f2;
+  color: #666666;
   text-align: center;
+  font-family: PingFangSC-Regular;
+  font-size: 24px;
 }
 .indicator-loading {
   width: 750px;

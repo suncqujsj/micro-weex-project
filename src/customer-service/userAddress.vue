@@ -27,7 +27,7 @@
             </div>
             <div class="item-group">
                 <text class="text-label">默认地址</text>
-                <midea-switch :checked="userAddress.defaultAddr" width="70" height="38" slot="value"></midea-switch>
+                <midea-switch :checked="userAddress.defaultAddr" @change="setDefaultAddr" width="70" height="38" slot="value"></midea-switch>
             </div>
         </scroller>
 
@@ -86,8 +86,9 @@ export default {
         servieAddressSelected(event) {
             this.userAddress = Object.assign(this.userAddress, event)
         },
-        mideaChecked() {
-
+        setDefaultAddr(event) {
+            nativeService.toast(event.value)
+            this.userAddress.defaultAddr = event.value
         },
         deleteAddress() {
             nativeService.userAddrDelete({ userAddrId: this.userAddress.userAddrId }).then(() => {

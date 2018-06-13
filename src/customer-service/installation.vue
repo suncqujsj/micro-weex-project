@@ -2,7 +2,7 @@
     <div class="wrapper">
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
             <div slot="customerContent" class="header-right">
-                <text class="header-right-text" @click="goTo('productSelection', {}, { from: 'installation', to:'chargeList' })">收费标准</text>
+                <text class="header-right-text" @click="goTo('productSelection', {}, { from: 'installation', to:'chargeStandardList' })">收费标准</text>
             </div>
         </midea-header>
         <scroller class="content-wrapper">
@@ -64,14 +64,14 @@
                 </div>
 
                 <div class="item-group scan-group">
-                    <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false :value="code" @change="onchange" @input="oninput" />
+                    <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="code" />
 
                     <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
                 </div>
 
                 <div class="item-group info-group">
-                    <textarea class="info-textarea" placeholder="请输入其他备注信息" :value="infoText" rows="5" @input="onInfoInput" maxlength="120"></textarea>
-                    <text class="info-textarea-calc">{{infoText.length}}/120</text>
+                    <textarea class="info-textarea" placeholder="请输入其他备注信息" v-model="order.pubRemark" rows="5" maxlength="120"></textarea>
+                    <text class="info-textarea-calc">{{order.pubRemark.length}}/120</text>
                     <image class="mic-icon" src="./assets/img/service_ic_tape@3x.png" resize='contain'></image>
                 </div>
                 <div class="action-bar">
@@ -95,6 +95,7 @@
 <script>
 import base from './base'
 import nativeService from '@/common/services/nativeService';
+import util from '@/common/util/util'
 
 
 import { MideaCell, MideaGridSelect, MideaButton, MideaActionsheet, MideaPopup, MideaSelect } from '@/index'
@@ -120,11 +121,16 @@ export default {
             selectedProduct: [],
 
             isShowProductUse: false,
-            productUseItems: ['商用', '家用'],
+            productUseOptions: [
+                { value: '11', desc: '商用' },
+                { value: '10', desc: '家用' }
+            ],
 
-            typeSelectedIndex: 0,
             isShowTransportStatus: false,
-            transportStatusItems: ['货已到需要安装', '货未到需要安装'],
+            transportStatusOptions: [
+                { value: '11', desc: '货已到需要安装' },
+                { value: '10', desc: '货未到需要安装' }
+            ],
 
             isShowPeriodPicker: false,
             selectedDateIndex: null,
@@ -139,6 +145,7 @@ export default {
             ],
             userAddress: null,
 
+            typeSelectedIndex: 0,
             types: [
                 {
                     'title': '机身条码',
@@ -168,25 +175,27 @@ export default {
                 requireServiceDate: '',  //用户要求服务时间
                 webUserCode: '',  //APP用户UUID
                 webUserPhone: '',  //APP用户注册手机号
-                serviceMainTypeCode: '',  //业务类型如安装值为10，从选择服务请求项目中带过来
-                serviceMainTypeName: '',  //业务类型如安装值为10，从选择服务请求项目中带过来
-                serviceSubTypeCode: '',  //业务类型如安装值1010，从选择服务请求项目中带过来
-                serviceSubTypeName: '',  //业务类型如安装，从选择服务请求项目中带过来
-                contactOrderSerItemCode: '',  //用户报单请求项目，如需要安装值为BZ01001
-                contactOrderSerItemName: '',  //用户报单请求项目，如需要安装
-                prodBrand: '',  //产品品牌
-                brandName: '',  //产品品牌名称
-                prodCode: '',  //产品品类
-                prodName: '',  //产品品类名称
-                productAmount: '',  //默认填1
-
-                transportStatus: '',
-                productUse: '' //中央空调家用、商用标志
+                pubRemark: '', //备注
+                serviceUserDemandVOs: [{
+                    serviceMainTypeCode: '',  //业务类型如安装值为10，从选择服务请求项目中带过来
+                    serviceMainTypeName: '',  //业务类型如安装值为10，从选择服务请求项目中带过来
+                    serviceSubTypeCode: '',  //业务类型如安装值1010，从选择服务请求项目中带过来
+                    serviceSubTypeName: '',  //业务类型如安装，从选择服务请求项目中带过来
+                    contactOrderSerItemCode: '',  //用户报单请求项目，如需要安装值为BZ01001
+                    contactOrderSerItemName: '',  //用户报单请求项目，如需要安装
+                    prodBrand: '',  //产品品牌
+                    brandName: '',  //产品品牌名称
+                    prodCode: '',  //产品品类
+                    prodName: '',  //产品品类名称
+                    productAmount: '',  //默认填1
+                }],
+                productUse: '', //中央空调家用、商用标志
+                transportStatus: ''
             },
-            infoText: ''
         }
     },
     computed: {
+        //安装产品
         selectedProductDesc() {
             let result = '请选择'
             if (this.selectedProduct && this.selectedProduct.length > 0) {
@@ -197,6 +206,8 @@ export default {
             }
             return result
         },
+
+        //使用场所
         includeU99() {
             let result = false
             if (this.selectedProduct && this.selectedProduct.length > 0) {
@@ -207,12 +218,45 @@ export default {
             }
             return result
         },
+        productUseItems() {
+            return this.productUseOptions.map((item) => {
+                return item.desc
+            })
+        },
         productUseDesc() {
-            return this.order.productUse ? this.order.productUse : '请选择'
+            let result = '请选择'
+            if (this.order.productUse != '') {
+                let matchItem = this.productUseOptions.filter((item) => {
+                    return item.value == this.order.productUse
+                })
+                if (matchItem && matchItem.length > 0) {
+                    result = matchItem[0].desc
+                }
+            }
+            return result
+        },
+
+        //物流状态
+        transportStatusItems() {
+            return this.transportStatusOptions.map((item) => {
+                return item.desc
+            })
         },
         transportStatusDesc() {
-            return this.order.transportStatus ? this.order.transportStatus : '请选择'
+            let result = '请选择'
+            if (this.order.transportStatus != '') {
+                let matchItem = this.transportStatusOptions.filter((item) => {
+                    return item.value == this.order.transportStatus
+                })
+                if (matchItem && matchItem.length > 0) {
+                    result = matchItem[0].desc
+                }
+            }
+            return result
         },
+
+
+        //期望服务时间
         serviePeriodDesc() {
             if (this.serviePeriodDate && this.selectedDateIndex != null && this.serviePeriodTime && this.selectedTimeIndex != null) {
                 return this.serviePeriodDate[this.selectedDateIndex].desc + ' ' + this.serviePeriodTime[this.selectedTimeIndex].desc
@@ -220,6 +264,8 @@ export default {
                 return '请选择'
             }
         },
+
+        //服务地址
         userAddressDesc() {
             let result = '请选择'
             if (this.userAddress) {
@@ -227,16 +273,12 @@ export default {
             }
             return result
         },
+
         isDataReady() {
             return true
         }
     },
     methods: {
-        selectProduct() {
-            nativeService.setItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, JSON.stringify(this.selectedProduct), () => {
-                this.goTo('productSelection', {}, { from: 'installation', isMultiMode: true })
-            })
-        },
         handlePageData(data) {
             if (data.page == "installation") {
                 if (data.key == "selectedProduct") {
@@ -246,7 +288,13 @@ export default {
                 }
             }
         },
-
+        //安装产品
+        selectProduct() {
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, JSON.stringify(this.selectedProduct), () => {
+                this.goTo('productSelection', {}, { from: 'installation', isMultiMode: true })
+            })
+        },
+        //使用场所
         selectProductUse() {
             this.isShowProductUse = true;
             this.$nextTick(e => {
@@ -258,12 +306,13 @@ export default {
         },
         productUsetItemClick(event) {
             this.isShowProductUse = false
-            this.order.productUse = this.productUseItems[event.index]
+            this.order.productUse = this.productUseOptions[event.index].value
         },
         productUseBtnClick() {
             this.isShowProductUse = false
         },
 
+        //物流状态
         selectTransportStatus() {
             this.isShowTransportStatus = true;
             this.$nextTick(e => {
@@ -275,11 +324,13 @@ export default {
         },
         TransportStatustItemClick(event) {
             this.isShowTransportStatus = false
-            this.order.transportStatus = this.transportStatusItems[event.index]
+            this.order.transportStatus = this.transportStatusOptions[event.index].value
         },
         transportStatusBtnClick() {
             this.isShowTransportStatus = false
         },
+
+        //期望服务时间
         initServiePeriod() {
             let today = new Date()
             let weekDesc = {
@@ -296,6 +347,7 @@ export default {
                 let theDateDesc = theDate.getMonth() + '月' + theDate.getDate() + '日'
                 this.serviePeriodDate.push({
                     'index': index,
+                    'value': util.dateFormat(theDate, "yyyy-MM-dd"),
                     'desc': theDateDesc + (index == 0 ? '(今天)' : '(周' + weekDesc[theDate.getDay()] + ')')
                 })
             }
@@ -307,6 +359,8 @@ export default {
             this.selectedDateIndex = event.dateIndex
             this.selectedTimeIndex = event.timeIndex
         },
+
+        //服务地址
         selectAddress() {
             let userAddrId = ''
             if (this.userAddress && this.userAddress.userAddrId) {
@@ -314,15 +368,13 @@ export default {
             }
             this.goTo('userAddressList', {}, { from: 'installation', id: userAddrId })
         },
+
+        //类型选择
         typeSelected(index) {
             this.typeSelectedIndex = index
         },
-        onchange() {
 
-        },
-        oninput(event) {
-            this.code = event.value
-        },
+        //二维码扫描
         scanCode() {
             nativeService.scanCode().then(
                 (resp) => {
@@ -332,23 +384,62 @@ export default {
                 }
             )
         },
-        onInfoInput(event) {
-            this.infoText = event.value
-        },
-        onInfoIChange() {
-
-        },
         submit() {
-            nativeService.createserviceorder().then(() => {
-                if (["orderList", "orderDetail"].indexOf(this.fromPage) > -1) {
-                    //重新报单
-                    this.back({ viewTag: "orderList" })
-                } else {
-                    //安装，维修
-                    this.goTo('orderList', { "replace": true })
+            nativeService.getUserInfo().then((data) => {
+                this.userInfo = data || {}
+                let serviceUserDemandVOs = this.selectedProduct.map((item) => {
+                    let obj = {
+                        serviceMainTypeCode: '',  //业务类型如安装值为10，从选择服务请求项目中带过来
+                        serviceMainTypeName: '',  //业务类型如安装值为10，从选择服务请求项目中带过来
+                        serviceSubTypeCode: '',  //业务类型如安装值1010，从选择服务请求项目中带过来
+                        serviceSubTypeName: '',  //业务类型如安装，从选择服务请求项目中带过来
+                        contactOrderSerItemCode: '',  //用户报单请求项目，如需要安装值为BZ01001
+                        contactOrderSerItemName: '',  //用户报单请求项目，如需要安装
+                        prodBrand: item.brandCode,  //产品品牌
+                        brandName: item.brand,  //产品品牌名称
+                        prodCode: item.prodCode,  //产品品类
+                        prodName: item.prodName,  //产品品类名称
+                        productAmount: 1  //默认填1
+                    }
+                    if (item.userTypeCode == "U99") {
+                        obj.productUse = this.order.productUse //中央空调家用、商用标志
+                    }
+                    return obj
+                })
+                let param = {
+                    customerName: this.userInfo.nickName,   //报单人姓名
+                    customerMobilephone1: this.userInfo.mobile,  //报单人手机号1
+                    areaNum: '',  //报单人所在地区号
+                    customerAddress: this.userAddress.provinceName + ' ' + this.userAddress.cityName + ' ' + this.userAddress.countyName + ' ' + this.userAddress.streetName + ' ' + this.userAddress.addr,  //报单人所在地址
+                    areaCode: this.userAddress.street,  //报单人所在区域编码
+                    areaName: this.userAddress.streetName,  //报单人所在区域名称
+
+                    servCustomerName: this.userAddress.receiverName,  //现场服务用户姓名
+                    servCustomerMobilephone1: this.userAddress.receiverMobile,  //现场服务用户手机号1
+                    servAreaNum: '',  //现场服务用户所在地区号
+                    servCustomerAddress: this.userAddress.provinceName + ' ' + this.userAddress.cityName + ' ' + this.userAddress.countyName + ' ' + this.userAddress.streetName + ' ' + this.userAddress.addr,  //现场服务用户所在地址
+                    servAreaCode: this.userAddress.street,  //现场服务用户所在区域编码
+                    servAreaName: this.userAddress.streetName,  //现场服务用户所在区域名称
+
+                    orderOrigin: '38',  //美居APP则入参为38
+                    requireServiceDate: this.serviePeriodDate[this.selectedDateIndex].value + ' ' + this.serviePeriodTime[this.selectedTimeIndex].desc,  //用户要求服务时间
+                    webUserCode: this.userInfo.userId,  //APP用户UUID
+                    webUserPhone: this.userInfo.mobile,  //APP用户注册手机号
+                    pubRemark: this.order.pubRemark, //备注
+                    serviceUserDemandVOs: serviceUserDemandVOs,
+                    transportStatus: ''
                 }
-            }).catch((error) => {
-                nativeService.toast(nativeService.getCssErrorMessage(error))
+                nativeService.createserviceorder(param).then(() => {
+                    if (["orderList", "orderDetail"].indexOf(this.fromPage) > -1) {
+                        //重新报单
+                        this.back({ viewTag: "orderList" })
+                    } else {
+                        //安装，维修
+                        this.goTo('orderList', { "replace": true })
+                    }
+                }).catch((error) => {
+                    nativeService.toast(nativeService.getCssErrorMessage(error))
+                })
             })
         }
     },

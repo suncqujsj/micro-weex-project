@@ -3,11 +3,11 @@
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller class="scroller">
-            <div class="top-gap">
-            </div>
+            <div class="top-gap"> </div>
             <div class="scroller-item-wrapper" v-for="(item, index) in faultData" @click="selectItem(item)" :key="index">
                 <text class="scroller-item">{{item.serviceRequireName}}</text>
             </div>
+            <div class="bottom-gap"> </div>
         </scroller>
     </div>
 </template>
@@ -23,6 +23,7 @@ export default {
     data() {
         return {
             title: '故障类型',
+            selectedProduct: null,
             faultData: []
         }
     },
@@ -35,8 +36,19 @@ export default {
     beforeCreate: function () {
     },
     created() {
-        nativeService.searchFaultType().then((data) => {
-            this.faultData = data
+        nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, (resp) => {
+            if (resp.result == 'success') {
+                this.selectedProduct = JSON.parse(resp.data)[0] || {}
+                let param = {
+                    depth: 3,
+                    parentServiceRequireCode: "BX",
+                    brandCode: this.selectedProduct.brandCode, //查询品牌
+                    prodCode: this.selectedProduct.prodCode, //查询品类
+                }
+                nativeService.getFaultType(param).then((data) => {
+                    this.faultData = data.data
+                })
+            }
         })
     }
 }
@@ -50,6 +62,10 @@ export default {
 .top-gap {
   background-color: #f2f2f2;
   height: 28px;
+}
+.bottom-gap {
+  background-color: #f2f2f2;
+  height: 128px;
 }
 .scroller-item-wrapper {
   padding-top: 28px;

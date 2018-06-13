@@ -12,7 +12,7 @@
                 </div>
 
                 <div class="item-group scan-group">
-                    <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="code" @input="oninput" />
+                    <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="barcode" @input="oninput" />
 
                     <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
                 </div>
@@ -65,7 +65,7 @@ export default {
                 }
             ],
             typeSelectedIndex: 0,
-            code: '',
+            barcode: '',
             date: null,
             result: null
         }
@@ -84,8 +84,8 @@ export default {
             nativeService.scanCode().then(
                 (resp) => {
                     if (resp.status == 0) {
-                        if (this.code != resp.data) {
-                            this.code = resp.data
+                        if (this.barcode != resp.data) {
+                            this.barcode = resp.data
                             this.date = null
                             this.result = null
                         }
@@ -95,7 +95,7 @@ export default {
         },
 
         pickDate() {
-            if (!this.code) {
+            if (!this.barcode) {
                 nativeService.toast('请输入型号或扫机身条码')
                 return
             }
@@ -106,18 +106,22 @@ export default {
                 'title': '选择日期', //取消和确定中间那标题
                 'cancelTxt': '取消', //取消按钮文字
                 'confirmTxt': '确定', //确定按钮文字,
-                'cancelTxtColor': '#020F13', //取消颜色
-                'confirmTxtColor': '#020F13', //标题颜色
-                'titleColor': '#020F13', //标题颜色
-                'titleBgColor': '#E7EDEF' //标题栏颜色
+                'cancelTxtColor': '#000000', //取消颜色
+                'confirmTxtColor': '#000000', //标题颜色
+                'titleColor': '#000000', //标题颜色
+                'titleBgColor': '#E5E5E8' //标题栏颜色
             }, event => {
                 var result = event.result;
                 if (result == 'success') {
                     this.date = event.data;
                     let param = {
+                        barcode: this.barcode,
+                        purchaseDate: util.dateFormat(new Date(this.date), "yyyy-MM-dd")
                     }
                     nativeService.querywarrantydescbycodeorsn(param).then((data) => {
                         this.result = data
+                    }).catch((error) => {
+                        nativeService.toast(nativeService.getCssErrorMessage(error))
                     })
                 }
             });

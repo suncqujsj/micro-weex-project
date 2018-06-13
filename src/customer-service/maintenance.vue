@@ -2,7 +2,7 @@
     <div class="wrapper">
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
             <div slot="customerContent" class="header-right">
-                <text class="header-right-text" @click="goTo('productSelection', {}, { from: 'maintenance', to:'chargeList' })">收费标准</text>
+                <text class="header-right-text" @click="goTo('productSelection', {}, { from: 'maintenance', to:'chargeStandardList' })">收费标准</text>
             </div>
         </midea-header>
         <scroller class="content-wrapper">
@@ -14,6 +14,15 @@
                     </div>
                     <div slot="rightText">
                         <text class="right-text">{{selectedProductDesc}}</text>
+                    </div>
+                </midea-cell>
+                <midea-cell v-if="includeU99" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectProductUse">
+                    <div slot="title" class="cell-title">
+                        <text class="cell-label">使用场所</text>
+                        <text class="cell-label-star">*</text>
+                    </div>
+                    <div slot="rightText">
+                        <text class="right-text">{{productUseDesc}}</text>
                     </div>
                 </midea-cell>
                 <midea-cell height="80" :hasBottomBorder="!true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectFaultType">
@@ -64,7 +73,7 @@
                 </div>
 
                 <div class="item-group scan-group">
-                    <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false :value="code" @change="onchange" @input="oninput" />
+                    <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="code" />
 
                     <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
                 </div>
@@ -74,14 +83,14 @@
                 </div>
                 <div class="item-group photo-item-group">
                     <div v-for="(item,index) in photoData" :key="index" class="photo-item-detail">
-                        <image :src="item" class="photo-item-img" @click="removePhoto(index)"></image>
+                        <image :src="item.contentStr" class="photo-item-img" @click="removePhoto(index)"></image>
                         <image src="./assets/img/service_ic_delone@3x.png" class="photo-delete-img"></image>
                     </div>
                     <image v-if="photoData.length<3" src="./assets/img/service_ic_carema@3x.png" class="photo-item-add" @click="takePhoto"></image>
                 </div>
                 <div class="item-group info-group">
-                    <textarea class="info-textarea" placeholder="请输入其他备注信息" :value="infoText" rows="5" @input="onInfoInput" maxlength="120"></textarea>
-                    <text class="info-textarea-calc">{{infoText.length}}/120</text>
+                    <textarea class="info-textarea" placeholder="请输入其他备注信息" v-model="order.pubRemark" rows="5" maxlength="120"></textarea>
+                    <text class="info-textarea-calc">{{order.pubRemark.length}}/120</text>
                     <image class="mic-icon" src="./assets/img/service_ic_tape@3x.png" resize='contain'></image>
                 </div>
                 <div class="action-bar">
@@ -90,6 +99,9 @@
                 </div>
             </div>
         </scroller>
+
+        <midea-actionsheet :items="productUseItems" :show="isShowProductUse" @close="closeProductUseActionsheet" @itemClick="productUsetItemClick" @btnClick="productUseBtnClick" ref="productUseActionsheet">
+        </midea-actionsheet>
 
         <midea-actionsheet :items="takePhotoItems" :show="showTakePhotoBar" @close="closeTakePhotoActionsheet" @itemClick="takePhotoItemClick" @btnClick="takePhotoBtnClick" ref="takePhotoActionsheet">
         </midea-actionsheet>
@@ -102,6 +114,7 @@
 <script>
 import base from './base'
 import nativeService from '@/common/services/nativeService';
+import util from '@/common/util/util'
 
 
 import { MideaCell, MideaGridSelect, MideaButton, MideaActionsheet, MideaPopup, MideaSelect } from '@/index'
@@ -126,13 +139,14 @@ export default {
 
             selectedProduct: [],
 
-            typeSelectedIndex: 0,
-            malfunctionIndex: null,
-            malfunctionList: [
-                { value: "故障一", key: 0 },
-                { value: "故障二", key: 1 },
-                { value: "故障三", key: 2 }
+            isShowProductUse: false,
+            productUseOptions: [
+                { value: '11', desc: '商用' },
+                { value: '10', desc: '家用' }
             ],
+
+            selectedFault: null,
+            excludedFault: null,
 
             isShowPeriodPicker: false,
             selectedDateIndex: null,
@@ -146,8 +160,8 @@ export default {
                 { index: 4, desc: "16:00-18:00", disable: false }
             ],
             userAddress: null,
-            selectedFault: null,
-            excludedFault: null,
+
+            typeSelectedIndex: 0,
             types: [
                 {
                     'title': '机身条码',
@@ -163,13 +177,46 @@ export default {
             showTakePhotoBar: false,
             takePhotoItems: ['拍摄', '从手机相册选择'],
             photoData: [],
-            data: {
-                malfunction: ''
+
+            order: {
+                customerName: '',   //报单人姓名
+                customerMobilephone1: '',  //报单人手机号1
+                areaNum: '',  //报单人所在地区号
+                customerAddress: '',  //报单人所在地址
+                areaCode: '',  //报单人所在区域编码
+                areaName: '',  //报单人所在区域名称
+                servCustomerName: '',  //现场服务用户姓名
+                servCustomerMobilephone1: '',  //现场服务用户手机号1
+                servAreaNum: '',  //现场服务用户所在地区号
+                servCustomerAddress: '',  //现场服务用户所在地址
+                servAreaCode: '',  //现场服务用户所在区域编码
+                servAreaName: '',  //现场服务用户所在区域名称
+                orderOrigin: '38',  //38
+                interfaceSource: 'MJAPP',  //MJAPP
+                requireServiceDate: '',  //用户要求服务时间
+                webUserCode: '',  //APP用户UUID
+                webUserPhone: '',  //APP用户注册手机号
+                pubRemark: '', //备注
+                serviceUserDemandVOs: [{
+                    serviceMainTypeCode: '',  //业务类型如安装值为10，从选择服务请求项目中带过来
+                    serviceMainTypeName: '',  //业务类型如安装值为10，从选择服务请求项目中带过来
+                    serviceSubTypeCode: '',  //业务类型如安装值1010，从选择服务请求项目中带过来
+                    serviceSubTypeName: '',  //业务类型如安装，从选择服务请求项目中带过来
+                    contactOrderSerItemCode: '',  //用户报单请求项目，如需要安装值为BZ01001
+                    contactOrderSerItemName: '',  //用户报单请求项目，如需要安装
+                    prodBrand: '',  //产品品牌
+                    brandName: '',  //产品品牌名称
+                    prodCode: '',  //产品品类
+                    prodName: '',  //产品品类名称
+                    productAmount: '',  //默认填1
+                }],
+                productUse: '', //中央空调家用、商用标志
+                transportStatus: ''
             },
-            infoText: ''
         }
     },
     computed: {
+        //维修产品
         selectedProductDesc() {
             let result = '请选择'
             if (this.selectedProduct && this.selectedProduct.length > 0) {
@@ -180,13 +227,47 @@ export default {
             }
             return result
         },
+
+        //使用场所
+        includeU99() {
+            let result = false
+            if (this.selectedProduct && this.selectedProduct.length > 0) {
+                const temp = this.selectedProduct.filter((item) => {
+                    return item.userTypeCode == "U99"
+                })
+                result = temp.length > 0 ? true : false
+            }
+            return result
+        },
+        productUseItems() {
+            return this.productUseOptions.map((item) => {
+                return item.desc
+            })
+        },
+        productUseDesc() {
+            let result = '请选择'
+            if (this.order.productUse != '') {
+                let matchItem = this.productUseOptions.filter((item) => {
+                    return item.value == this.order.productUse
+                })
+                if (matchItem && matchItem.length > 0) {
+                    result = matchItem[0].desc
+                }
+            }
+            return result
+        },
+
+        //故障类型
         faultDesc() {
             let result = '请选择'
-            if (this.selectedFault && this.selectedFault.length > 0) {
+            if (this.selectedFault) {
                 result = this.selectedFault.serviceRequireName
             }
             return result
         },
+
+
+        //期望服务时间
         serviePeriodDesc() {
             if (this.serviePeriodDate && this.selectedDateIndex != null && this.serviePeriodTime && this.selectedTimeIndex != null) {
                 return this.serviePeriodDate[this.selectedDateIndex].desc + ' ' + this.serviePeriodTime[this.selectedTimeIndex].desc
@@ -194,50 +275,86 @@ export default {
                 return '请选择'
             }
         },
+
+        //服务地址
         userAddressDesc() {
             let result = '请选择'
             if (this.userAddress) {
-                result = this.userAddress.customerName + ' ' + this.userAddress.customerMobilephone + '\n' + this.userAddress.customerAddress + '\n' + this.userAddress.customerAddressDetail
+                result = this.userAddress.receiverName + ' ' + this.userAddress.receiverMobile + '\n' + this.userAddress.provinceName + ' ' + this.userAddress.cityName + ' ' + this.userAddress.countyName + ' ' + this.userAddress.streetName + '\n' + this.userAddress.addr
             }
             return result
         },
+
         isDataReady() {
             return true
         }
     },
     methods: {
-        selectProduct() {
-            nativeService.setItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, JSON.stringify(this.selectedProduct), () => {
-                this.goTo('productSelection', {}, { from: 'maintenance' })
-            })
-        },
         handlePageData(data) {
             if (data.page == "maintenance") {
                 if (data.key == "selectedProduct") {
                     this.selectedProduct = data.data
                     //清空故障原因
-                    if (this.selectedFault && this.selectedFault.length > 0) {
-                        this.selectedFault.splice(0, this.selectedFault.length)
-                    }
+                    this.selectedFault = null
                     if (this.excludedFault && this.excludedFault.length > 0) {
                         this.excludedFault.splice(0, this.excludedFault.length)
                     }
-                } else if (data.key == "userAddress") {
+                } else if (data.key == "userAddressList") {
                     this.userAddress = data.data
                 } else if (data.key == "selectedFault") {
                     this.selectedFault = data.data
-                    nativeService.searchExcludedFault().then((data) => {
-                        this.excludedFault = data
+                    let param = {
+                        operator: "mdfw",
+                        operatorUnit: "mdfw",
+                        orgCode: "",
+                        serviceRequireItemCode: this.selectedFault.serviceRequireCode,
+                        brandCode: this.selectedProduct[0].brandCode,
+                        prodCode: this.selectedProduct[0].prodCode
+                    }
+                    nativeService.getExcludedFault(param).then((data) => {
+                        this.excludedFault = data.data
                     })
                 }
             }
         },
+        //维修产品
+        selectProduct() {
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, JSON.stringify(this.selectedProduct), () => {
+                this.goTo('productSelection', {}, { from: 'maintenance' })
+            })
+        },
+        //使用场所
+        selectProductUse() {
+            this.isShowProductUse = true;
+            this.$nextTick(e => {
+                this.$refs.productUseActionsheet.open();
+            });
+        },
+        closeProductUseActionsheet() {
+            this.isShowProductUse = false
+        },
+        productUsetItemClick(event) {
+            this.isShowProductUse = false
+            this.order.productUse = this.productUseOptions[event.index].value
+        },
+        productUseBtnClick() {
+            this.isShowProductUse = false
+        },
+
+        //故障类型
         selectFaultType() {
-            this.goTo('malfunctionList', {}, { from: 'maintenance' })
+            if (this.selectedProduct.length > 0) {
+                nativeService.setItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, JSON.stringify(this.selectedProduct), () => {
+                    this.goTo('faultTypeList', {}, { from: 'maintenance' })
+                })
+            } else {
+                nativeService.toast("请先选择“维修产品”")
+            }
         },
         showExcludedFault(event) {
 
         },
+        //期望服务时间
         initServiePeriod() {
             let today = new Date()
             let weekDesc = {
@@ -254,6 +371,7 @@ export default {
                 let theDateDesc = theDate.getMonth() + '月' + theDate.getDate() + '日'
                 this.serviePeriodDate.push({
                     'index': index,
+                    'value': util.dateFormat(theDate, "yyyy-MM-dd"),
                     'desc': theDateDesc + (index == 0 ? '(今天)' : '(周' + weekDesc[theDate.getDay()] + ')')
                 })
             }
@@ -265,18 +383,22 @@ export default {
             this.selectedDateIndex = event.dateIndex
             this.selectedTimeIndex = event.timeIndex
         },
+
+        //服务地址
         selectAddress() {
-            this.goTo('userAddress', {}, { from: 'maintenance' })
+            let userAddrId = ''
+            if (this.userAddress && this.userAddress.userAddrId) {
+                userAddrId = this.userAddress.userAddrId
+            }
+            this.goTo('userAddressList', {}, { from: 'maintenance', id: userAddrId })
         },
+
+        //类型选择
         typeSelected(index) {
             this.typeSelectedIndex = index
         },
-        onchange() {
 
-        },
-        oninput(event) {
-            this.code = event.value
-        },
+        //二维码扫描
         scanCode() {
             nativeService.scanCode().then(
                 (resp) => {
@@ -310,7 +432,10 @@ export default {
                 //拍照
                 nativeService.takePhoto(messageParam).then(
                     (resp) => {
-                        this.photoData.push(resp.data)
+                        this.photoData.push({
+                            fileName: resp.fileName,
+                            contentStr: resp.data
+                        })
                     }
                 ).catch((error) => {
                     this.result = "error: " + JSON.stringify(error || {})
@@ -319,7 +444,10 @@ export default {
                 //选照片
                 nativeService.choosePhoto(messageParam).then(
                     (resp) => {
-                        this.photoData.push(resp.data)
+                        this.photoData.push({
+                            fileName: resp.fileName,
+                            contentStr: resp.data
+                        })
                     }
                 ).catch((error) => {
                     this.result = "error: " + JSON.stringify(error || {})
@@ -332,28 +460,76 @@ export default {
         removePhoto(index) {
             this.photoData.splice(index, 1)
         },
-        onInfoInput(event) {
-            this.infoText = event.value
-        },
-        onInfoIChange() {
-
-        },
         submit() {
-            nativeService.createserviceorder().then(() => {
-                if (["orderList", "orderDetail"].indexOf(this.fromPage) > -1) {
-                    //重新报单
-                    this.back({ viewTag: "orderList" })
-                } else {
-                    //安装，维修
-                    this.goTo('orderList', { "replace": true })
+            nativeService.getUserInfo().then((data) => {
+                this.userInfo = data || {}
+                let serviceUserDemandVOs = this.selectedProduct.map((item) => {
+                    let obj = {
+                        serviceMainTypeCode: '',  //业务类型如安装值为10，从选择服务请求项目中带过来
+                        serviceMainTypeName: '',  //业务类型如安装值为10，从选择服务请求项目中带过来
+                        serviceSubTypeCode: '',  //业务类型如安装值1010，从选择服务请求项目中带过来
+                        serviceSubTypeName: '',  //业务类型如安装，从选择服务请求项目中带过来
+                        contactOrderSerItemCode: '',  //用户报单请求项目，如需要安装值为BZ01001
+                        contactOrderSerItemName: '',  //用户报单请求项目，如需要安装
+                        prodBrand: item.brandCode,  //产品品牌
+                        brandName: item.brand,  //产品品牌名称
+                        prodCode: item.prodCode,  //产品品类
+                        prodName: item.prodName,  //产品品类名称
+                        productAmount: 1  //默认填1
+                    }
+                    if (item.userTypeCode == "U99") {
+                        obj.productUse = this.order.productUse //中央空调家用、商用标志
+                    }
+                    return obj
+                })
+                let param = {
+                    customerName: this.userInfo.nickName,   //报单人姓名
+                    customerMobilephone1: this.userInfo.mobile,  //报单人手机号1
+                    areaNum: '',  //报单人所在地区号
+                    customerAddress: this.userAddress.provinceName + ' ' + this.userAddress.cityName + ' ' + this.userAddress.countyName + ' ' + this.userAddress.streetName + ' ' + this.userAddress.addr,  //报单人所在地址
+                    areaCode: this.userAddress.street,  //报单人所在区域编码
+                    areaName: this.userAddress.streetName,  //报单人所在区域名称
+
+                    servCustomerName: this.userAddress.receiverName,  //现场服务用户姓名
+                    servCustomerMobilephone1: this.userAddress.receiverMobile,  //现场服务用户手机号1
+                    servAreaNum: '',  //现场服务用户所在地区号
+                    servCustomerAddress: this.userAddress.provinceName + ' ' + this.userAddress.cityName + ' ' + this.userAddress.countyName + ' ' + this.userAddress.streetName + ' ' + this.userAddress.addr,  //现场服务用户所在地址
+                    servAreaCode: this.userAddress.street,  //现场服务用户所在区域编码
+                    servAreaName: this.userAddress.streetName,  //现场服务用户所在区域名称
+
+                    orderOrigin: '38',  //美居APP则入参为38
+                    requireServiceDate: this.serviePeriodDate[this.selectedDateIndex].value + ' ' + this.serviePeriodTime[this.selectedTimeIndex].desc,  //用户要求服务时间
+                    webUserCode: this.userInfo.userId,  //APP用户UUID
+                    webUserPhone: this.userInfo.mobile,  //APP用户注册手机号
+                    pubRemark: this.order.pubRemark, //备注
+                    serviceUserDemandVOs: serviceUserDemandVOs,
+                    transportStatus: ''
                 }
-            }).catch((error) => {
-                nativeService.toast(nativeService.getCssErrorMessage(error))
+                if (this.photoData && this.photoData.length > 0) {
+                    param["fileList"] = this.photoData
+                }
+                nativeService.createserviceorder(param).then(() => {
+                    if (["orderList", "orderDetail"].indexOf(this.fromPage) > -1) {
+                        //重新报单
+                        this.back({ viewTag: "orderList" })
+                    } else {
+                        //安装，维修
+                        this.goTo('orderList', { "replace": true })
+                    }
+                }).catch((error) => {
+                    nativeService.toast(nativeService.getCssErrorMessage(error))
+                })
             })
         }
     },
     created() {
         this.initServiePeriod()
+
+        nativeService.getItem(this.SERVICE_STORAGE_KEYS.order, (resp) => {
+            if (resp.result == 'success') {
+                this.order = JSON.parse(resp.data) || []
+            }
+        })
     }
 }
 </script>

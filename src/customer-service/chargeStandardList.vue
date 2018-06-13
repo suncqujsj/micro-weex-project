@@ -2,11 +2,13 @@
     <div class="wrapper">
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
-        <div class="search-bar">
+        <div class="search-bar" :style="{'height':isIos?'136px':'96px','padding-top':isIos?'40px':'0px'}">
             <div class="search-bar-content">
                 <image class="search-bar-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
-                <text class="search-bar-desc">查询关键字</text>
+                <input class="search-bar-input" placeholder="查询关键字" v-model="queryParam.content" @return="keyBoardsearch" return-key-type="search"></input>
             </div>
+            <text v-if="isIos" class="search-action" @click="back">取消</text>
+            <text v-if="!isIos" class="search-action" @click="search()">搜索</text>
         </div>
         <list>
             <cell v-for="(itemA, indexA) in sortedFreePlocy" :key="indexA">
@@ -46,8 +48,15 @@ export default {
     mixins: [base],
     data() {
         return {
-            title: '家用空调',
-            feePlocy: [],
+            title: '',
+            selectedProduct: null,
+            queryParam: {
+                prodCode: '',
+                content: '',
+                pageSize: 10000,
+                pageNum: 0
+            },
+            chargeStandardList: [],
             expandedAIndex: -1,
             expandedBIndex: -1
         }
@@ -56,9 +65,9 @@ export default {
         sortedFreePlocy() {
             let result = []
             let classACodeIndexs = {}, classBCodeIndexs = {}
-            if (this.feePlocy && this.feePlocy.length > 0) {
-                for (let index = 0; index < this.feePlocy.length; index++) {
-                    const item = this.feePlocy[index];
+            if (this.chargeStandardList && this.chargeStandardList.length > 0) {
+                for (let index = 0; index < this.chargeStandardList.length; index++) {
+                    const item = this.chargeStandardList[index];
                     let Aindex = classACodeIndexs[item.classACode]
                     if (!Aindex) {
                         result.push({
@@ -93,6 +102,11 @@ export default {
         }
     },
     methods: {
+        search() {
+            nativeService.getChargeStandardList(this.queryParam).then((data) => {
+                this.chargeStandardList = data.date
+            })
+        },
         levelAClicked(item, index) {
             if (this.expandedAIndex == index) {
                 this.expandedAIndex = -1
@@ -113,8 +127,13 @@ export default {
         }
     },
     created() {
-        nativeService.getChargeStandardList().then((data) => {
-            this.feePlocy = data
+        nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, (resp) => {
+            if (resp.result == 'success') {
+                this.selectedProduct = JSON.parse(resp.data)[0] || {}
+                this.title = this.selectedProduct.prodName
+                this.queryParam.prodCode = this.selectedProduct.prodCode
+                this.search()
+            }
         })
     }
 }
@@ -129,35 +148,46 @@ export default {
 .search-bar {
   width: 750px;
   height: 96px;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
   padding-top: 16px;
-  padding-left: 32px;
-  padding-right: 32px;
   padding-bottom: 16px;
   border-bottom-color: #e2e2e2;
   border-bottom-width: 1px;
   background-color: #ffffff;
 }
 .search-bar-content {
-  width: 686px;
+  flex: 1;
+  width: 586px;
   height: 64px;
   border-radius: 4px;
   background-color: #f2f2f2;
   flex-direction: row;
-  justify-content: center;
   align-items: center;
+  margin-left: 32px;
 }
 .search-bar-img {
   height: 40px;
   width: 40px;
+  margin-left: 10px;
   margin-right: 10px;
 }
-.search-bar-desc {
+.search-bar-input {
+  flex: 1;
   font-family: PingFangSC-Regular;
   font-size: 28px;
-  color: #c8c7cc;
+  color: #000000;
+  height: 40px;
 }
+.search-action {
+  width: 120px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #000000;
+  text-align: center;
+}
+
 .cell-item {
   padding-left: 32px;
   padding-right: 24px;

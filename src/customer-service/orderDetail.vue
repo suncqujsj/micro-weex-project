@@ -51,12 +51,15 @@
             <text class="action" v-if="[2, 6].indexOf(formattedOrder.calcServiceOrderStatus)>-1" @click="showDialog()">取消工单</text>
             <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 2 && checkPassTime(formattedOrder)" @click="urgeOrder()">催办</text>
             <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 3" @click="renewOrder()">重新报单</text>
-            <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 4" @click="assessService()">评价有礼</text>
-            <text class="action primary-action" v-if="formattedOrder.calcServiceOrderStatus == 5" @click="assessService()">查看评价</text>
+            <text class="action primary-action" v-if="formattedOrder.calcServiceOrderStatus == 4" @click="assessService()">评价有礼</text>
+            <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 5" @click="assessService()">查看评价</text>
             <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 6" @click="callService()">联系网点</text>
         </div>
 
-        <midea-dialog title="要取消此订单？" mainBtnColor="#267AFF" secondBtnColor="#267AFF" :show="dialogShow" cancelText="否" confirmText="是" @mideaDialogCancelBtnClicked="dialogCancel" @mideaDialogConfirmBtnClicked="dialogConfirm">
+        <midea-actionsheet :items="urgeOrderItems" :show="isShowUrgeOrder" @close="closeUrgeOrderActionsheet" @itemClick="urgeOrdertItemClick" @btnClick="urgeOrderBtnClick" ref="urgeOrderActionsheet">
+        </midea-actionsheet>
+
+        <midea-dialog title="要取消此订单？" mainBtnColor="#267AFF" secondBtnColor="#267AFF" :show="dialogShow" cancelText="否" confirmText="是" @mideaDialogCancelBtnClicked="dialogCancel" @mideaDialogConfirmBtnClicked="cancelOrder">
         </midea-dialog>
     </div>
 </template>
@@ -66,13 +69,14 @@ import base from './base'
 import orderBase from './order-base'
 import nativeService from '@/common/services/nativeService'
 import util from '@/common/util/util'
-import { MideaDialog, MideaButton } from '@/index'
+import { MideaDialog, MideaActionsheet } from '@/index'
 
 const clipboard = weex.requireModule('clipboard')
 
 export default {
     components: {
-        MideaDialog
+        MideaDialog,
+        MideaActionsheet
     },
     mixins: [base, orderBase],
     data() {
@@ -81,10 +85,21 @@ export default {
             serviceOrderNo: '',
             progressList: [],
             order: null,
-            dialogShow: false
+            dialogShow: false,
+            isShowUrgeOrder: false,
+            reminderOptions: [],
         }
     },
     computed: {
+        urgeOrderItems() {
+            let result = []
+            if (this.reminderOptions) {
+                result = this.reminderOptions.map((item) => {
+                    return item.serviceRequireName
+                })
+            }
+            return result
+        }
     },
     methods: {
         convertProcessTime(time) {
@@ -97,25 +112,43 @@ export default {
         checkAddress() {
             this.goTo('productSelection', {}, { from: 'orderDetail' })
         },
+
         urgeOrder() {
+            let param = {
+                prodCode: this.order.serviceUserDemandVOs[0].prodCode,
+                orgCode: this.order.orgCode,
+                serviceOrderNO: this.order.serviceOrderNo,
+                serviceMode: ""
+            }
+            nativeService.queryReminderOptions(param).then((resp) => {
+                this.reminderOptions = resp.data
+                this.isShowUrgeOrder = true;
+                this.$nextTick(e => {
+                    this.$refs.urgeOrderActionsheet.open();
+                });
+            })
+        },
+        closeUrgeOrderActionsheet() {
+            this.isShowUrgeOrder = false
+        },
+        urgeOrdertItemClick(event) {
+            this.isShowUrgeOrder = false
+            let reminderOption = this.reminderOptions[event.index]
             let param = {
                 orgCode: this.order.orgCode,
                 serviceOrderNo: this.order.serviceOrderNo,
-                serviceRequireTypeCode: this.order.serviceRequireTypeCode,
-                serviceRequireTypeName: this.order.serviceRequireTypeName,
-                serviceRequireItem1Code: this.order.serviceRequireItem1Code,
-                serviceRequireItem1Name: this.order.serviceRequireItem1Name,
-                serviceRequireItem2Code: this.order.serviceRequireItem2Code,
-                serviceRequireItem2Name: this.order.serviceRequireItem2Name,
-                serviceMainTypeCode: this.order.serviceMainTypeCode,
-                serviceMainTypeName: this.order.serviceMainTypeName,
-                serviceSubTypeCode: this.order.serviceSubTypeCode,
-                serviceSubTypeName: this.order.serviceSubTypeName
-
+                // serviceRequireTypeCode: reminderOption.serviceRequireCode,
+                reminderReason: reminderOption.serviceRequireName,
+                serviceRequireItem2Code: reminderOption.serviceRequireCode
             }
             nativeService.createserviceuserdemand(param).then(() => {
                 nativeService.toast("催单成功")
+            }).catch((error) => {
+                nativeService.toast(nativeService.getCssErrorMessage(error))
             })
+        },
+        urgeOrderBtnClick() {
+            this.isShowUrgeOrder = false
         },
         renewOrder() {
             nativeService.setItem(this.SERVICE_STORAGE_KEYS.order, this.order, () => {
@@ -132,13 +165,16 @@ export default {
         dialogCancel() {
             this.dialogShow = false
         },
-        dialogConfirm() {
+        cancelOrder() {
             this.dialogShow = false
             let param = {
-                serviceOrderNo: this.order.serviceOrderNo
+                orgCode: this.order.orgCode,
+                serviceOrderNo: this.order.serviceOrderNo,
+                operator: nativeService.userInfo.userName
             }
             nativeService.cancelserviceorder(param).then(() => {
                 this.order.serviceOrderStatus = '22'
+                this.appPageDataChannel.postMessage({ page: this.fromPage, key: "cancelOrder", data: { id: this.order.serviceOrderNo } })
             })
         },
         assessService() {
@@ -374,8 +410,7 @@ export default {
   border-style: solid;
 }
 .primary-action {
-  color: #ffffff;
-  background-color: #267aff;
-  border-color: #267aff;
+  color: #0078ff;
+  border-color: #0078ff;
 }
 </style>

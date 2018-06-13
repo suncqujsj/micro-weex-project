@@ -59,7 +59,7 @@ export default {
             {
                 regionDesc: '顺德区'
             }],
-            keyword: '',
+            selectedProduct: null,
             branchList: [],
             currentAddressIndex: 0,
             dialogShow: false
@@ -83,7 +83,7 @@ export default {
                 },
                 {
                     type: 'text',
-                    value: this.keyword,
+                    value: this.selectedProduct ? this.selectedProduct.prodName : '',
                     style: {
                         fontSize: 28,
                         color: '#FF8F00'
@@ -152,15 +152,17 @@ export default {
     created() {
         nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, (resp) => {
             if (resp.result == 'success') {
-                this.keyword = JSON.parse(resp.data)[0].prodName || ''
+                this.selectedProduct = JSON.parse(resp.data)[0] || {}
+
+                let param = {
+                    prodCode: this.selectedProduct.prodCode
+                }
+                nativeService.queryunitarchives(param).then((data) => {
+                    this.branchList = data.list
+                })
             }
         })
 
-        let param = {
-        }
-        nativeService.queryunitarchives(param).then((data) => {
-            this.branchList = data.list
-        })
     }
 }
 </script>

@@ -14,13 +14,13 @@
                     brandIndex==selectedBrandIndex?'product-brand-selected':'']" @click="selectBrand(brandIndex)">{{brandItem.brand}}</text>
             </scroller>
             <scroller class="product-content-right">
-                <div class="product-group" v-for="(categaryItem,index) in selectedBrandProductData" :key="index">
+                <div class="product-group" v-for="(categaryItem,index) in selectedBrandProductData" :key="index" @appear="showImage($event, categaryItem)">
                     <text class="product-group-title">{{categaryItem.prodName}}</text>
                     <div class="product-group-content">
                         <div class="product-appliance-wrapper" v-for="(productItem,productIndex) in categaryItem.children" :key="productIndex" @click="selectProductItem($event, productItem)">
-                            <image class="appliance-img" :src="'./assets/img/product/default.png'" resize="contain"></image>
+                            <image class="appliance-img" :src="categaryItem.isShowImage?productItem.imageUrl:''" resize="contain"></image>
                             <text class="appliance-name">{{productItem.prodName}}</text>
-                            <image v-if="isMultiMode && !checkIsSelected(productItem)" class="appliance-add-img" :src="'./assets/img/service_ic_addone@3x.png'" resize="contain"></image>
+                            <image v-if="isMultiMode && !checkIsSelected(productItem)" class="appliance-add-img" src="./assets/img/service_ic_addone@3x.png" resize="contain"></image>
                         </div>
                     </div>
                 </div>
@@ -103,6 +103,9 @@ export default {
         },
         selectBrand(index) {
             this.selectedBrandIndex = index
+        },
+        showImage(event, item) {
+            item.isShowImage = true
         },
         checkIsSelected(productItem) {
             let result = []

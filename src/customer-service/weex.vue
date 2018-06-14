@@ -257,6 +257,10 @@ export default {
 .order-img {
   height: 120px;
   width: 120px;
+  border-radius: 4px;
+  border-color: #e5e5e8;
+  border-width: 1px;
+  border-style: solid;
   margin-right: 30px;
 }
 .order-content {

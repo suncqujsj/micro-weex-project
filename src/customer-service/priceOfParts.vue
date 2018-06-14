@@ -6,20 +6,19 @@
             <div class="base-group">
                 <div class="item-group">
                     <text class="type-select-label">以下为选填信息，有助于更快更好地为您服务</text>
-
                     <div class="search-history">
                         <text v-for="(item,index) in types" :key="index" v-bind:class="['search-history-item', typeSelectedIndex==index?'search-history-item-selected':'']" @click="typeSelected(index)">{{item.title}}</text>
                     </div>
                 </div>
 
                 <div class="item-group scan-group">
-                    <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false :value="code" @change="onchange" @input="oninput" />
+                    <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="barcode" />
 
                     <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
                 </div>
 
                 <div class="item-group scan-group group-bottom-border">
-                    <input class="scan-input" placeholder="请输入配件名称" :autofocus=false :value="code" @change="onchange" @input="oninput" />
+                    <input class="scan-input" placeholder="请输入配件名称" :autofocus=false v-model="materialName" />
                 </div>
 
                 <div class="action-bar">
@@ -28,10 +27,10 @@
                 </div>
             </div>
 
-            <div class="base-group">
+            <div class="base-group" v-for="(item, index) in materialList" :key="index">
                 <div class="item-group result-header">
-                    <text class="result-title">压缩机ABCS</text>
-                    <text class="result-price">指导价200元</text>
+                    <text class="result-title">{{item.materialName}}</text>
+                    <text class="result-price">指导价{{item.priceCustomer}}元</text>
                 </div>
                 <div class="item-group">
                     <text class="result-desc">若本价格标准高于当地物价部门制定有关标准，请以当地物价部门标准为准</text>
@@ -44,7 +43,8 @@
 
 <script>
 import base from './base'
-import nativeService from '@/common/services/nativeService';
+import nativeService from '@/common/services/nativeService'
+import util from '@/common/util/util'
 
 import { MideaButton } from '@/index'
 
@@ -66,6 +66,9 @@ export default {
                 }
             ],
             typeSelectedIndex: 0,
+            barcode: '',
+            materialName: '',
+            materialList: []
         }
     },
     computed: {
@@ -74,23 +77,31 @@ export default {
         typeSelected(index) {
             this.typeSelectedIndex = index
         },
-        onchange() {
-
-        },
-        oninput(event) {
-            this.code = event.value
-        },
         scanCode() {
             nativeService.scanCode().then(
                 (resp) => {
                     if (resp.status == 0) {
-                        this.code = resp.data
+                        if (this.barcode != resp.data) {
+                            this.barcode = resp.data
+                        }
                     }
                 }
             )
         },
         search() {
+            let param = {
+                pageSize: 1,
+                pageNum: 20,
+                productCode: this.barcode,
+                orgCode: "CS006",
+                materialName: this.materialName
 
+            }
+            nativeService.getChargePriceForMaterial(param).then((data) => {
+                this.materialList = data.date || []
+            }).catch((error) => {
+                nativeService.toast(nativeService.getCssErrorMessage(error))
+            })
         }
     },
     created() {
@@ -120,6 +131,7 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 32px;
   color: #ff3b30;
+  padding-left: 5px;
 }
 .item-group {
   padding-top: 32px;
@@ -158,6 +170,7 @@ export default {
 }
 .scan-group {
   position: relative;
+  padding-bottom: 32px;
 }
 .scan-input {
   font-family: PingFangSC-Regular;

@@ -2,25 +2,31 @@
     <div>
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
         <scroller class="scroller" loadmoreoffset=750 @loadmore="loadmore">
-            <div v-for="(order, index) in formattedOrderList" :key="index" @click="goToOrderDetail(index)">
-                <order-block class="order-block" :order="order">
-                    <div slot="action-bar" class="action-bar">
-                        <text class="action" v-if="order.calcServiceOrderStatus == 1" @click="checkAddress()">查看网点</text>
-                        <text class="action" v-if="[2, 6].indexOf(order.calcServiceOrderStatus)>-1" @click="showDialog(index)">取消工单</text>
-                        <text class="action" v-if="order.calcServiceOrderStatus == 2 && checkPassTime(order)" @click="urgeOrder(index)">催办</text>
-                        <text class="action" v-if="order.calcServiceOrderStatus == 3" @click="renewOrder(index)">重新报单</text>
-                        <text class="action primary-action" v-if="order.calcServiceOrderStatus == 4" @click="assessService(index)">评价有礼</text>
-                        <text class="action" v-if="order.calcServiceOrderStatus == 5" @click="assessService(index)">查看评价</text>
-                        <text class="action" v-if="order.calcServiceOrderStatus == 6" @click="callService(index)">联系网点</text>
-                    </div>
-                </order-block>
+            <div class="empty-page" v-if="isOrderListLoaded && formattedOrderList.length == 0">
+                <image class="empty-page-icon" src="./assets/img/default_ic_nolist@3x.png" resize='contain'>
+                </image>
+                <text class="empty-page-text">暂无订单</text>
             </div>
-
-            <text class="loading-end" v-if="!loadingEnd">加载中...</text>
-            <text class="loading-end" v-if="loadingEnd">———— 到底了 ————</text>
-            <!-- <loading class="loading" :display="showLoading" v-if="!loadingEnd">
+            <div v-else>
+                <div v-for="(order, index) in formattedOrderList" :key="index" @click="goToOrderDetail(index)">
+                    <order-block class="order-block" :order="order">
+                        <div slot="action-bar" class="action-bar">
+                            <text class="action" v-if="order.calcServiceOrderStatus == 1" @click="checkAddress()">查看网点</text>
+                            <text class="action" v-if="[2, 6].indexOf(order.calcServiceOrderStatus)>-1" @click="showDialog(index)">取消工单</text>
+                            <text class="action" v-if="order.calcServiceOrderStatus == 2 && checkPassTime(order)" @click="urgeOrder(index)">催办</text>
+                            <text class="action" v-if="order.calcServiceOrderStatus == 3" @click="renewOrder(index)">重新报单</text>
+                            <text class="action primary-action" v-if="order.calcServiceOrderStatus == 4" @click="assessService(index)">评价有礼</text>
+                            <text class="action" v-if="order.calcServiceOrderStatus == 5" @click="assessService(index)">查看评价</text>
+                            <text class="action" v-if="order.calcServiceOrderStatus == 6" @click="callService(index)">联系网点</text>
+                        </div>
+                    </order-block>
+                </div>
+                <text class="loading-end" v-if="isOrderListLoaded && !loadingEnd">加载中...</text>
+                <text class="loading-end" v-if="isOrderListLoaded && loadingEnd">———— 到底了 ————</text>
+                <!-- <loading class="loading" :display="showLoading" v-if="!loadingEnd">
                 <loading-indicator class="indicator"></loading-indicator>
             </loading> -->
+            </div>
         </scroller>
 
         <midea-actionsheet :items="urgeOrderItems" :show="isShowUrgeOrder" @close="closeUrgeOrderActionsheet" @itemClick="urgeOrdertItemClick" @btnClick="urgeOrderBtnClick" ref="urgeOrderActionsheet">
@@ -52,6 +58,7 @@ export default {
             orderListParam: null,
             orderList: [],
             orderListPage: 0,
+            isOrderListLoaded: false,
             selectedOrderIndex: null,
             dialogShow: false,
             showLoading: 'hide',
@@ -108,6 +115,7 @@ export default {
             this.orderListParam = param
             nativeService.queryserviceorder(this.orderListParam).then((data) => {
                 this.orderList = data.list
+                this.isOrderListLoaded = true
             })
         },
         loadmore(event) {
@@ -296,5 +304,22 @@ export default {
   color: #5f5f5f;
   font-size: 28px;
   text-align: center;
+}
+.empty-page {
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+.empty-page-icon {
+  margin-top: 272px;
+  width: 240px;
+  height: 240px;
+}
+.empty-page-text {
+  padding-top: 36px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #888888;
 }
 </style>

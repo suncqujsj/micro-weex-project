@@ -318,7 +318,7 @@ export default {
         })
     },
     //发送POST网络请求：URL自定义
-    /* options: {
+    /* params: {
         url: url,
         type: 'text',
         method: "POST",
@@ -330,32 +330,32 @@ export default {
     } */
     sendHttpRequest(params, options = { isShowLoading: true, isValidate: true }) {
         return new Promise((resolve, reject) => {
-            let options = JSON.parse(JSON.stringify(params))
+            let requestParams = JSON.parse(JSON.stringify(params))
             var self = this;
             if (this.isDummy != true) {
-                let defaultOption = {
+                let defaultParams = {
                     method: "POST",
                     type: 'json'
                 }
-                options = Object.assign(defaultOption, options)
+                requestParams = Object.assign(defaultParams, requestParams)
 
                 /* body 参数仅支持 string 类型的参数，请勿直接传递 JSON，必须先将其转为字符串。
                 GET 请求不支持 body 方式传递参数，请使用 url 传参。 */
-                if (options.body && options.method == "GET") {
-                    let bodyStr = this.convertRequestBody(options.body)
-                    options.url += "?" + bodyStr
-                    options.body = ""
-                } else if (options.body && options.method == "POST") {
-                    options.body = JSON.stringify(options.body)
+                if (requestParams.body && requestParams.method == "GET") {
+                    let bodyStr = this.convertRequestBody(requestParams.body)
+                    requestParams.url += "?" + bodyStr
+                    requestParams.body = ""
+                } else if (requestParams.body && requestParams.method == "POST") {
+                    requestParams.body = JSON.stringify(requestParams.body)
                 }
-
+                
                 if (options.isShowLoading) {
                     this.showLoading()
                 }
                 let msgid = self.genMessageId()
-                stream.fetch(options,
+                stream.fetch(requestParams,
                     (resData) => {
-                        debugUtil.debugLog(debugLogSeperator, `request(${msgid}): `, options)
+                        debugUtil.debugLog(debugLogSeperator, `request(${msgid}): `, requestParams)
                         debugUtil.debugLog(`response(${msgid}): `, resData, debugLogSeperator)
                         if (options.isShowLoading) {
                             this.hideLoading()

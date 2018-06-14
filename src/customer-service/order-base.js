@@ -66,7 +66,7 @@ export default {
             others.contactTimeDesc = util.dateFormat(new Date(order.contactTime), "yyyy-MM-dd")
 
             //产品图片
-            others.imageUrl = './assets/img/product/default.png'
+            others.imageUrl = 'http://fcmms.midea.com/ccrm-uat/productImg/1000美的家用空调.jpg'//'./assets/img/product/default.png'
             //订单描述
             let prodName
             if (order.serviceUserDemandVOs && order.serviceUserDemandVOs.length > 0) {

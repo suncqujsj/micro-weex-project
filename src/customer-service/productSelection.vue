@@ -28,13 +28,13 @@
         </div>
         <div v-if="isShowAnimation" class="animation-outer" ref="outer">
             <div class="animation-inner" ref="inner" :style="{'left': animationConfig.startX,'top': animationConfig.startY}">
-                <image class="animation-img" :src="'./assets/img/product/default.png'" resize="contain"></image>
+                <image class="animation-img" :src="selectedProductArray[selectedProductArray.length - 1].imageUrl" resize="contain"></image>
             </div>
         </div>
         <div v-if="isMultiMode" class="action-bar">
             <div class="product-selected-items-wrapper">
                 <scroller class="product-selected-items" scroll-direction="horizontal">
-                    <div class="selected-action-wrapper" v-for="(item,index) in selectedProductArray" :key="index" :ref="'selectedProduct'+index" @click="removeSelectedProduct(index)">
+                    <div v-if="selectedProductArray.length>0" class="selected-action-wrapper" v-for="(item,index) in selectedProductArray" :key="index" :ref="'selectedProduct'+index" @click="removeSelectedProduct(index)">
                         <text class="selected-action-desc">{{item.prodName}}</text>
                         <image class="selected-action-img" :src="'./assets/img/service_ic_delone@3x.png'" resize="contain"></image>
                     </div>
@@ -109,7 +109,7 @@ export default {
         },
         checkIsSelected(productItem) {
             let result = []
-            if (this.selectedProductArray) {
+            if (this.selectedProductArray && this.selectedProductArray.length > 0) {
                 result = this.selectedProductArray.filter((item) => {
                     return item.brandCode == productItem.brandCode && item.prodCode == productItem.prodCode
                 })
@@ -126,8 +126,8 @@ export default {
                     if (this.selectedProductArray.length < 5) {
                         this.isProceedingSelection = true
                         if (event && this.enableAnimation) {
+                            this.selectedProductArray.push(productItem)
                             this.showSelectAnimation(event, () => {
-                                this.selectedProductArray.push(productItem)
                                 this.isProceedingSelection = false
                                 this.$nextTick(() => {
                                     const el = this.$refs["selectedProduct" + (this.selectedProductArray.length - 1)][0]
@@ -157,6 +157,7 @@ export default {
             this.animationConfig.startY = event.position.y
 
             this.isShowAnimation = true
+            const duration = 600
             this.$nextTick(() => {
                 //清楚之前的效果
                 var outerEl = this.$refs.outer;
@@ -185,7 +186,7 @@ export default {
                         transform: 'translateX(' + (100 - event.position.x) + 'px)',
                         transformOrigin: 'center center'
                     },
-                    duration: 800, //ms
+                    duration: duration, //ms
                     timingFunction: 'linear',
                     delay: 0 //ms
                 }, function () {
@@ -195,7 +196,7 @@ export default {
                         transform: 'translateY(' + (this.pageHeight - event.position.y - 100) + 'px) scale(0.5)',
                         transformOrigin: 'center center'
                     },
-                    duration: 801, //ms
+                    duration: duration + 1, //ms
                     timingFunction: 'cubic-bezier(.38,-0.93,.66,.74)',
                     delay: 0 //ms
                 }, function () {
@@ -205,7 +206,11 @@ export default {
             })
         },
         removeSelectedProduct(index) {
-            this.selectedProductArray.splice(index, 1)
+            if (this.selectedProductArray.length == 1) {
+                this.selectedProductArray.pop()
+            } else {
+                this.selectedProductArray.splice(index, 1)
+            }
         },
         submit() {
             if (this.selectedProductArray.length <= 0) return

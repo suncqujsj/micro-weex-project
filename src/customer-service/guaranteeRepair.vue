@@ -12,7 +12,7 @@
                 </div>
 
                 <div class="item-group scan-group">
-                    <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="barcode" @input="oninput" />
+                    <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="searchCode" @input="oninput" />
 
                     <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
                 </div>
@@ -42,14 +42,13 @@ import base from './base'
 import nativeService from '@/common/services/nativeService'
 import util from '@/common/util/util'
 
-import { MideaCell, MideaGridSelect } from '@/index'
+import { MideaCell } from '@/index'
 
 const picker = weex.requireModule('picker')
 
 export default {
     components: {
-        MideaCell,
-        MideaGridSelect
+        MideaCell
     },
     mixins: [base],
     data() {
@@ -65,7 +64,7 @@ export default {
                 }
             ],
             typeSelectedIndex: 0,
-            barcode: '',
+            searchCode: '',
             date: null,
             result: null
         }
@@ -84,8 +83,8 @@ export default {
             nativeService.scanCode().then(
                 (resp) => {
                     if (resp.status == 0) {
-                        if (this.barcode != resp.data) {
-                            this.barcode = resp.data
+                        if (this.searchCode != resp.data) {
+                            this.searchCode = resp.data
                             this.date = null
                             this.result = null
                         }
@@ -95,7 +94,7 @@ export default {
         },
 
         pickDate() {
-            if (!this.barcode) {
+            if (!this.searchCode) {
                 nativeService.toast('请输入型号或扫机身条码')
                 return
             }
@@ -115,7 +114,8 @@ export default {
                 if (result == 'success') {
                     this.date = event.data;
                     let param = {
-                        barcode: this.barcode,
+                        barcode: this.typeSelectedIndex == 0 ? this.searchCode : '',
+                        productCode: this.typeSelectedIndex == 1 ? this.searchCode : '',
                         purchaseDate: util.dateFormat(new Date(this.date), "yyyy-MM-dd")
                     }
                     nativeService.querywarrantydescbycodeorsn(param).then((data) => {

@@ -1,35 +1,40 @@
 import nativeService from '@/common/services/nativeService'
 import { SERVICE_STORAGE_KEYS } from './globalKeys'
 
+const HOST_CSS = "http://csuat.midea.com"
+const HOST_CSS_WX = "http://weixincs.midea.com"
+const HOST_CENTER = "http://10.16.85.47"
+
 let customizeNativeService = Object.assign(nativeService, {
     serviceList: {
-        createserviceorder: "http://csuat.midea.com/c-css-ipms/api/wom/order/createserviceorder", //用户报装、报修、洗悦家服务请求
-        queryserviceorder: "http://csuat.midea.com/c-css-ipms/api/wom/order/queryserviceorder", //用户服务工单列表查询
-        queryserviceuserdemanddispatch: "http://csuat.midea.com/c-css-ipms/api/wom/order/queryserviceuserdemanddispatch", //用户服务工单详情进度查询
-        createserviceuserdemand: "http://csuat.midea.com/c-css-ipms/api/wom/order/createserviceuserdemand", //催单CSS信息单
-        queryReminderOptions: "http://weixincs.midea.com/wxgw/css/queryReminderOptions?mpType=MIDEASERVICE", //查询催单原因列表: TODO: url要修改
-        cancelserviceorder: "http://csuat.midea.com/c-css-ipms/api/wom/order/cancelserviceorder", //取消售后工单
-        queryconsumerorderprogress: "http://csuat.midea.com/c-css-ipms/api/wom/order/queryconsumerorderprogress", //用户服务单服务过程列表查询接口
-        queryservicerequireproduct: "http://csuat.midea.com/c-css-ipms/api/wom/order/queryservicerequireproduct", //服务请求查询接口
-        querywarrantydescbycodeorsn: "http://csuat.midea.com/c-css-ipms/api/wom/order/querywarrantydescbycodeorsn", //包修政策查询接口
-        getChargeStandardList: "http://csuat.midea.com/c-css-ipms/css/api/mmp/insp/getChargeStandardList", //收费标准查询
-        queryunitarchives: "http://csuat.midea.com/c-css-ipms/api/wom/order/queryunitarchives", //网点查询
-        getProducts: "http://csuat.midea.com/c-css-ipms/api/dc/getProducts", //产品主数据同步
-        getFaultType: "http://weixincs.midea.com/wxgw/css/faultType?mpType=MIDEASERVICE", //故障类型
-        getExcludedFault: "http://weixincs.midea.com/wxgw/css/excludedFault?mpType=MIDEASERVICE", //故障可能原因查询
+        createserviceorder: HOST_CSS + "/c-css-ipms/api/wom/order/createserviceorder", //用户报装、报修、洗悦家服务请求
+        queryserviceorder: HOST_CSS + "/c-css-ipms/api/wom/order/queryserviceorder", //用户服务工单列表查询
+        queryserviceuserdemanddispatch: HOST_CSS + "/c-css-ipms/api/wom/order/queryserviceuserdemanddispatch", //用户服务工单详情进度查询
+        createserviceuserdemand: HOST_CSS + "/c-css-ipms/api/wom/order/createserviceuserdemand", //催单CSS信息单
+        cancelserviceorder: HOST_CSS + "/c-css-ipms/api/wom/order/cancelserviceorder", //取消售后工单
+        queryconsumerorderprogress: HOST_CSS + "/c-css-ipms/api/wom/order/queryconsumerorderprogress", //用户服务单服务过程列表查询接口
+        queryservicerequireproduct: HOST_CSS + "/c-css-ipms/api/wom/order/queryservicerequireproduct", //服务请求查询接口
+        querywarrantydescbycodeorsn: HOST_CSS + "/c-css-ipms/api/wom/order/querywarrantydescbycodeorsn", //包修政策查询接口
+        getChargeStandardList: HOST_CSS + "/c-css-ipms/css/api/mmp/insp/getChargeStandardList", //收费标准查询
+        getChargePriceForMaterial: HOST_CSS + "/c-css-ipms/css/api/mmp/insp/getChargePriceForMaterial", //配件价格查询
+        queryunitarchives: HOST_CSS + "/c-css-ipms/api/wom/order/queryunitarchives", //网点查询
+
+        getFaultType: HOST_CSS_WX + "/wxgw/css/faultType?mpType=MIDEASERVICE", //故障类型
+        getExcludedFault: HOST_CSS_WX + "/wxgw/css/excludedFault?mpType=MIDEASERVICE", //故障可能原因查询
+        queryReminderOptions: HOST_CSS_WX + "/wxgw/css/queryReminderOptions?mpType=MIDEASERVICE", //查询催单原因列表: TODO: url要修改
 
         //中控消息
         getProdType: "http://10.16.33.168:8081/pdgw-ap/message/getProdType?version=1.0", //产品列表
-        getUserAddrPageList: "http://10.16.85.47/ccrm2-core/userAddr/getUserAddrPageList", //地址列表查询
-        getAreaList: "http://10.16.85.47/cmms/area/list", //服务地区
-        userAddrAdd: "http://10.16.85.47/ccrm2-core/userAddr/add", //地址新增
-        userAddrUpdate: "http://10.16.85.47/ccrm2-core/userAddr/update", //地址修改
-        userAddrDelete: "http://10.16.85.47/ccrm2-core/userAddr/delete", //地址删除
-        setDefaultAddr: "http://10.16.85.47/ccrm2-core/userAddr/defaultAddr", //设置默认地址
+        getUserAddrPageList: HOST_CENTER + "/ccrm2-core/userAddr/getUserAddrPageList", //地址列表查询
+        getAreaList: HOST_CENTER + "/cmms/area/list", //服务地区
+        userAddrAdd: HOST_CENTER + "/ccrm2-core/userAddr/add", //地址新增
+        userAddrUpdate: HOST_CENTER + "/ccrm2-core/userAddr/update", //地址修改
+        userAddrDelete: HOST_CENTER + "/ccrm2-core/userAddr/delete", //地址删除
+        setDefaultAddr: HOST_CENTER + "/ccrm2-core/userAddr/defaultAddr", //设置默认地址
     },
     userInfo: null,
     getCssErrorMessage(error) {
-        let msg = error.errorMsg || "请求失败，请稍后重试。"
+        let msg = error.errorMsg || error.returnMsg || "请求失败，请稍后重试。"
         if (error.errorCode) {
             msg += "(" + error.errorCode + ")"
         }
@@ -38,7 +43,7 @@ let customizeNativeService = Object.assign(nativeService, {
     getCssRequestCommonParam() {
         return new Promise((resolve, reject) => {
             let param = {
-                interfaceSource: "MMJYWX"
+                interfaceSource: "SMART" //MMJYWX
             }
             if (this.userInfo) {
                 param.webUserCode = "oFtQywGHyqrWbDvjVdRTeR9Ig3m0" //this.userInfo.userId
@@ -308,6 +313,37 @@ let customizeNativeService = Object.assign(nativeService, {
             })
         })
     },
+    getChargePriceForMaterial(param = {}) {
+        return new Promise((resolve, reject) => {
+            let url = this.serviceList.getChargePriceForMaterial + "?"
+            for (const key in param) {
+                if (param.hasOwnProperty(key)) {
+                    url += key + "=" + param[key] + "&"
+                }
+            }
+            let requestParam = {
+                url: url,
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+            let oldDummy = this.isDummy
+            this.isDummy = false
+            this.sendHttpRequest(requestParam).then((resp) => {
+                this.isDummy = oldDummy
+                if (resp.returnStatus) {
+                    resolve(resp)
+                } else {
+                    reject(resp)
+                }
+            }).catch((error) => {
+                this.isDummy = oldDummy
+                reject(error)
+            })
+        })
+    },
+
     queryunitarchives(param = {}) {
         return new Promise((resolve, reject) => {
             let requestParam = {
@@ -428,7 +464,7 @@ let customizeNativeService = Object.assign(nativeService, {
                         for (let productIndex = 0; productIndex < categaryItem.children.length; productIndex++) {
                             categaryItem.children[productIndex].brandCode = brandItem.brandCode
                             categaryItem.children[productIndex].brand = brandItem.brand
-                            categaryItem.children[productIndex].imageUrl = './assets/img/product/default.png'
+                            categaryItem.children[productIndex].imageUrl = 'http://fcmms.midea.com/ccrm-uat/productImg/1000美的家用空调.jpg'
                         }
                     }
                 }

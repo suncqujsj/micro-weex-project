@@ -142,7 +142,9 @@ export default {
             this.showBar = false
         },
         goToOrderDetail() {
-            this.goTo("orderDetail", {}, { id: '1234' })
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.order, this.order, () => {
+                this.goTo("orderDetail", {}, { from: 'orderList', id: this.order.serviceOrderNo })
+            })
         },
         resetStorage() {
             //清楚本地缓存数据
@@ -163,9 +165,8 @@ export default {
         this.resetStorage()
 
         let param = {
-            dispatchOrderStatus: "10,11,12,13,14,15,16",  //派工单状态
-            resultNum: 1,
-            orderColumn: "contactTime"
+            serviceOrderStatus: "10;11;12;13;14;15;16",  //派工单状态
+            resultNum: 1
         }
         nativeService.queryserviceorder(param).then((data) => {
             this.orderList = data.list

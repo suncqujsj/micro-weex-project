@@ -67,6 +67,8 @@ export default {
             animated: true/false, - 是否需要跳转动画
             replace: true/false, - 跳转后是否在历史栈保留当前页面
             viewTag: string - 给跳转后的页面设置标识，可用于goBack时指定返回页面
+            transparent: 'true/false', //新页面背景是否透明
+            animatedType: 'slide_bottomToTop' //新页面出现动效类型
         }
     */
     goTo(path, options) {
@@ -149,6 +151,11 @@ export default {
             location.href = location.origin + location.pathname + '?path=' + path
         }
     },
+    /*  
+    options = {
+            animated: 'true',
+            animatedType: 'slide_topToBottom' //页面关闭时动效类型
+    }*/
     goBack(options = {}) {
         var params = Object.assign({
             animated: 'true'
@@ -712,6 +719,36 @@ export default {
         let param = {
             operation: 'getLoginInfo'
         }
+        return this.commandInterfaceWrapper(param)
+    },
+    /* ^5.0.0 打开用户手机地图软件，传入标记地点。（打开地图软件后，用户可以使用地图软件的功能，比如导航等）
+    ios: 如果用户安装了百度地图，则跳转到百度地图app，没有安装，则跳转Safar，使用网页导航
+    android: 如果用户安装了百度地图，则跳转到百度地图app，没有安装，则跳转使用外部浏览器，使用网页导航（用户选择合适的浏览器，原生toast引导，存在选择错误应用的风险） */
+    launchMapApp(params) {
+        /* params =  {
+            from:{ //当前用户地点
+                latitude: string, //纬度
+                longitude: string //经度
+            },
+            to:{ //目的地地点
+                latitude: string, //纬度
+                longitude: string //经度
+            }
+        } */
+        let param = Object.assign(params, {
+            operation: 'launchMapApp'
+        })
+        return this.commandInterfaceWrapper(param)
+    },
+    /* 根据模糊地址，返回地图服务的查询结果数据。 */
+    searchMapAddress(params) {
+        /* params =  {
+            city: "", //需要查询的城市(范围)
+            keyword: "美的" //需要查询的地址
+        } */
+        let param = Object.assign(params, {
+            operation: 'searchMapAddress'
+        })
         return this.commandInterfaceWrapper(param)
     },
     //调用第三方SDK统一接口

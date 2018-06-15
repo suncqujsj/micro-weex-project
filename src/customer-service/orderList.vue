@@ -21,8 +21,10 @@
                         </div>
                     </order-block>
                 </div>
-                <text class="loading-end" v-if="isOrderListLoaded && !loadingEnd">加载中...</text>
-                <text class="loading-end" v-if="isOrderListLoaded && loadingEnd">———— 到底了 ————</text>
+                <div v-if="isOrderListLoaded">
+                    <text class="loading-end" v-if="hasNext && !loadingEnd">加载中...</text>
+                    <text class="loading-end" v-if="loadingEnd">———— 到底了 ————</text>
+                </div>
                 <!-- <loading class="loading" :display="showLoading" v-if="!loadingEnd">
                 <loading-indicator class="indicator"></loading-indicator>
             </loading> -->
@@ -59,6 +61,7 @@ export default {
             orderList: [],
             orderListPage: 0,
             isOrderListLoaded: false,
+            hasNext: false,
             selectedOrderIndex: null,
             dialogShow: false,
             showLoading: 'hide',
@@ -115,6 +118,7 @@ export default {
             this.orderListParam = param
             nativeService.queryserviceorder(this.orderListParam).then((data) => {
                 this.orderList = data.list
+                this.hasNext = data.pageIndex * data.pageSize >= data.total ? false : true
                 this.isOrderListLoaded = true
             })
         },

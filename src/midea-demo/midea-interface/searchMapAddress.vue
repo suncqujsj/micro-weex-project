@@ -1,17 +1,17 @@
 <template>
     <div class="wrapper">
-        <midea-header title="takePhoto拍照" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="searchMapAddress地图地址搜索" :isImmersion="false" @leftImgClick="back"></midea-header>
         <midea-title-bar title="接口参数:"></midea-title-bar>
-        <textarea type="text" placeholder="Input Text" class="textarea" :value="messageParamString" @input="dataChange" rows=2 />
-        <midea-button text="拍照" type="green" @mideaButtonClicked="mideaButtonClicked">
+        <textarea type="text" placeholder="Input Text" class="textarea" v-model="messageParamString" @input="dataChange" rows=2 />
+        <midea-button text="搜索" type="green" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <midea-title-bar title="代码"></midea-title-bar>
-        <text class="display-block"> nativeService.takePhoto(this.messageParam).then( (resp) => { this.result = resp })
+        <text class="display-block">
+            nativeService.searchMapAddress(messageParam).then( (resp) => { this.result = resp } )
         </text>
         <midea-title-bar title="结果"></midea-title-bar>
 
         <scroller>
-            <image :src="result.data" class="photo"></image>
             <text class="display-block">{{result?('返回类型:'+typeof result):''}}</text>
             <text class="display-block">{{result}}</text>
         </scroller>
@@ -24,7 +24,7 @@
   border-color: gray;
   padding-left: 20px;
   padding-right: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 100px;
 }
 .display-block {
   font-size: 30px;
@@ -32,13 +32,6 @@
   padding-right: 10px;
   padding-top: 10px;
   padding-bottom: 10px;
-}
-.photo {
-  margin: 5px;
-  width: 200px;
-  height: 200px;
-  border-color: #e2e2e2;
-  border-width: 1px;
 }
 </style>
 <script>
@@ -54,9 +47,8 @@ module.exports = {
     data() {
         return {
             messageParam: {
-                compressRage: 10,
-                type: 'jpg',
-                isNeedBase64: true
+                city: "", //需要查询的城市(范围)
+                keyword: "美的" //需要查询的地址
             },
             result: ''
         }
@@ -74,9 +66,8 @@ module.exports = {
             }
         },
         mideaButtonClicked() {
-            nativeService.takePhoto(this.messageParam).then(
+            nativeService.searchMapAddress(this.messageParam).then(
                 (resp) => {
-                    nativeService.toast(resp)
                     this.result = resp
                 }
             ).catch((error) => {
@@ -85,6 +76,19 @@ module.exports = {
         }
     },
     created() {
+        this.result = "获取当前地址中..."
+        nativeService.getGPSInfo({
+            desiredAccuracy: "10",  //定位的精确度
+            distanceFilter: "10", //移动多少米回调一次定位信息，
+            alwaysAuthorization: "0" //是否需要一直定位, 0:不一直定位，1：一直定位
+        }).then((resp) => {
+            this.result = "当前位置" + JSON.stringify(resp)
+            this.messageParam.city = resp.city
+        }
+        ).catch((error) => {
+            this.result = error
+            nativeService.toast(error)
+        })
     }
 };
 </script>

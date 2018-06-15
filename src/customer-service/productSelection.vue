@@ -18,7 +18,7 @@
                     <text class="product-group-title">{{categaryItem.prodName}}</text>
                     <div class="product-group-content">
                         <div class="product-appliance-wrapper" v-for="(productItem,productIndex) in categaryItem.children" :key="productIndex" @click="selectProductItem($event, productItem)">
-                            <image class="appliance-img" :src="categaryItem.isShowImage?productItem.imageUrl:''" resize="contain"></image>
+                            <image class="appliance-img" :src="categaryItem.isShowImage?productItem.prodImg:''" resize="contain"></image>
                             <text class="appliance-name">{{productItem.prodName}}</text>
                             <image v-if="isMultiMode && !checkIsSelected(productItem)" class="appliance-add-img" src="./assets/img/service_ic_addone@3x.png" resize="contain"></image>
                         </div>
@@ -28,7 +28,7 @@
         </div>
         <div v-if="isShowAnimation" class="animation-outer" ref="outer">
             <div class="animation-inner" ref="inner" :style="{'left': animationConfig.startX,'top': animationConfig.startY}">
-                <image class="animation-img" :src="selectedProductArray[selectedProductArray.length - 1].imageUrl" resize="contain"></image>
+                <image class="animation-img" :src="selectedProductArray[selectedProductArray.length - 1].prodImg" resize="contain"></image>
             </div>
         </div>
         <div v-if="isMultiMode" class="action-bar">
@@ -233,16 +233,21 @@ export default {
         },
     },
     created() {
-        nativeService.getProdType().then((data) => {
-            this.productData = data
-        })
 
         this.isMultiMode = nativeService.getParameters('isMultiMode')
         if (this.isMultiMode) {
+            //报装
+            nativeService.getProdTypeForInstallation().then((data) => {
+                this.productData = data
+            })
             nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, (resp) => {
                 if (resp.result == 'success') {
                     this.selectedProductArray = JSON.parse(resp.data) || []
                 }
+            })
+        } else {
+            nativeService.getProdType().then((data) => {
+                this.productData = data
             })
         }
     }

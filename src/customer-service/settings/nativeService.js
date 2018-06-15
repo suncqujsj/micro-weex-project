@@ -24,7 +24,8 @@ let customizeNativeService = Object.assign(nativeService, {
         queryReminderOptions: HOST_CSS_WX + "/wxgw/css/queryReminderOptions?mpType=MIDEASERVICE", //查询催单原因列表: TODO: url要修改
 
         //中控消息
-        getProdType: "http://10.16.33.168:8081/pdgw-ap/message/getProdType?version=1.0", //产品列表
+        getProdType: "http://10.16.38.95:8080/pdgw-ap/message/getProdType", //产品列表
+        getProdMessage: "http://10.16.38.95:8080/pdgw-ap/message/getProdMessage", //获取售后产品资料对外服务接口
         getUserAddrPageList: HOST_CENTER + "/ccrm2-core/userAddr/getUserAddrPageList", //地址列表查询
         getAreaList: HOST_CENTER + "/cmms/area/list", //服务地区
         userAddrAdd: HOST_CENTER + "/ccrm2-core/userAddr/add", //地址新增
@@ -46,8 +47,8 @@ let customizeNativeService = Object.assign(nativeService, {
                 interfaceSource: "SMART" //MMJYWX
             }
             if (this.userInfo) {
-                param.webUserCode = "oFtQywGHyqrWbDvjVdRTeR9Ig3m0" //this.userInfo.userId
-                param.webUserPhone = "18614035358" //this.userInfo.mobile
+                param.webUserCode = "oFtQywGHyqrWbDvjVdRTeR9Ig3m0" //this.userInfo.uid
+                param.webUserPhone = this.userInfo.mobile
                 resolve(param)
             } else {
                 this.getUserInfo().then((data) => {
@@ -423,6 +424,38 @@ let customizeNativeService = Object.assign(nativeService, {
             })
         })
     },
+    getProdTypeForInstallation(param = {}) {
+        return new Promise((resolve, reject) => {
+            let result
+            this.getItem(SERVICE_STORAGE_KEYS.productTypeForInstallation, (resp) => {
+                if (resp.result == 'success' && JSON.parse(resp.data).length > 0) {
+                    result = JSON.parse(resp.data)
+                    resolve(result)
+                } else {
+                    let queryStringObj = Object.assign({
+                        sourceSys: "APP",
+                        version: "1.0",
+                        codeType: "bzbx"
+                    }, param)
+                    let queryString = Object.keys(queryStringObj).map(k =>
+                        encodeURIComponent(k) + '=' + encodeURIComponent(queryStringObj[k] || '')
+                    ).join('&')
+                    let requestParam = {
+                        url: this.serviceList.getProdType + '?' + queryString,
+                        method: "GET"
+                    }
+                    this.sendHttpRequestWrapper(requestParam).then((resp) => {
+                        result = this.proceedProductData(resp.data)
+                        this.setItem(SERVICE_STORAGE_KEYS.productTypeForInstallation, JSON.stringify(result), () => {
+                            resolve(result)
+                        })
+                    }).catch((error) => {
+                        reject(error)
+                    })
+                }
+            })
+        })
+    },
     getProdType(param = {}) {
         return new Promise((resolve, reject) => {
             let result
@@ -431,13 +464,17 @@ let customizeNativeService = Object.assign(nativeService, {
                     result = JSON.parse(resp.data)
                     resolve(result)
                 } else {
+                    let queryStringObj = Object.assign({
+                        sourceSys: "APP",
+                        version: "1.0",
+                        codeType: ""
+                    }, param)
+                    let queryString = Object.keys(queryStringObj).map(k =>
+                        encodeURIComponent(k) + '=' + encodeURIComponent(queryStringObj[k] || '')
+                    ).join('&')
                     let requestParam = {
-                        url: this.serviceList.getProdType,
-                        method: "GET",
-                        body: Object.assign({
-                            version: "1.0",
-                            codeType: "0"
-                        }, param)
+                        url: this.serviceList.getProdType + '?' + queryString,
+                        method: "GET"
                     }
                     this.sendHttpRequestWrapper(requestParam).then((resp) => {
                         result = this.proceedProductData(resp.data)
@@ -464,7 +501,6 @@ let customizeNativeService = Object.assign(nativeService, {
                         for (let productIndex = 0; productIndex < categaryItem.children.length; productIndex++) {
                             categaryItem.children[productIndex].brandCode = brandItem.brandCode
                             categaryItem.children[productIndex].brand = brandItem.brand
-                            categaryItem.children[productIndex].imageUrl = 'http://fcmms.midea.com/ccrm-uat/productImg/1000美的家用空调.jpg'
                         }
                     }
                 }
@@ -473,6 +509,32 @@ let customizeNativeService = Object.assign(nativeService, {
         return result
     },
 
+    getProdMessage(param = {}) {
+        return new Promise((resolve, reject) => {
+            this.getRequestCommonParam().then((commonParam) => {
+                let requestParam = {
+                    url: this.serviceList.getProdMessage,
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: Object.assign(commonParam, {
+                        version: "3.0",
+                        sourceTag: "3"
+                    }, param)
+                }
+                let oldDummy = this.isDummy
+                this.isDummy = false
+                this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
+                    this.isDummy = oldDummy
+                    resolve(resp)
+                }).catch((error) => {
+                    this.isDummy = oldDummy
+                    reject(error)
+                })
+            })
+        })
+    },
     getUserAddrPageList(param = {}) {
         return new Promise((resolve, reject) => {
             let requestParam = {

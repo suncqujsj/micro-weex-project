@@ -448,11 +448,10 @@ export default {
         submit() {
             nativeService.getUserInfo().then((data) => {
                 this.userInfo = data || {}
-                nativeService.toast(0)
                 let param = {
                     serviceOrderVO: {
                         interfaceSource: "SMART",
-                        webUserCode: "oFtQywGHyqrWbDvjVdRTeR9Ig3m0", //this.userInfo.userId
+                        webUserCode: "oFtQywGHyqrWbDvjVdRTeR9Ig3m0", //this.userInfo.uid
                         webUserPhone: this.userInfo.mobile,
 
                         customerName: this.userAddress.receiverName,   //报单人姓名
@@ -467,12 +466,11 @@ export default {
                         servCustomerAddress: this.userAddress.provinceName + ' ' + this.userAddress.cityName + ' ' + this.userAddress.countyName + ' ' + this.userAddress.streetName + ' ' + this.userAddress.addr,  //现场服务用户所在地址
                         servAreaCode: this.userAddress.street,  //现场服务用户所在区域编码
                         servAreaName: this.userAddress.streetName,  //现场服务用户所在区域名称
+
                         orderOrigin: '38',  //美居APP则入参为38
                         // interfaceSource: 'MJAPP', //通用参数已经包含
-                        requireServiceDate: this.serviePeriodDate[this.selectedDateIndex].value + ' ' + this.serviePeriodTime[this.selectedTimeIndex].desc,  //用户要求服务时间:'',
+                        requireServiceDate: this.serviePeriodDate[this.selectedDateIndex].value + ' ' + this.serviePeriodTime[this.selectedTimeIndex].desc,  //用户要求服务时间,
                         requireUnitCode: '',
-                        webUserCode: this.userInfo.userId,  //APP用户UUID
-                        webUserPhone: this.userInfo.mobile,  //APP用户注册手机号
                         pubRemark: this.order.pubRemark //备注
                     }
                 }

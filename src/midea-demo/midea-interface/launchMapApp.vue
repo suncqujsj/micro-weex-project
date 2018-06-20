@@ -52,8 +52,8 @@ module.exports = {
                     longitude: "" //经度
                 },
                 to: { //目的地地点
-                    latitude: "113.234", //纬度
-                    longitude: "23.23" //经度
+                    latitude: "", //纬度
+                    longitude: "" //经度
                 }
             },
             result: ''
@@ -91,6 +91,8 @@ module.exports = {
             this.result = "当前位置" + JSON.stringify(resp)
             this.messageParam.from.latitude = resp.latitude
             this.messageParam.from.longitude = resp.longitude
+            this.messageParam.to.latitude = resp.latitude + 0.01
+            this.messageParam.to.longitude = resp.longitude + 0.01
         }
         ).catch((error) => {
             this.result = error

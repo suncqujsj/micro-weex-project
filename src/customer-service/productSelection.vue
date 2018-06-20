@@ -47,7 +47,7 @@
 
 <script>
 import base from './base'
-import nativeService from '@/common/services/nativeService'
+import nativeService from './settings/nativeService'
 import { MideaDialog } from '@/index'
 
 const animation = weex.requireModule('animation')
@@ -239,6 +239,8 @@ export default {
             //报装
             nativeService.getProdTypeForInstallation().then((data) => {
                 this.productData = data
+            }).catch((error) => {
+                nativeService.toast(nativeService.getCssErrorMessage(error))
             })
             nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, (resp) => {
                 if (resp.result == 'success') {
@@ -248,6 +250,8 @@ export default {
         } else {
             nativeService.getProdType().then((data) => {
                 this.productData = data
+            }).catch((error) => {
+                nativeService.toast(nativeService.getCssErrorMessage(error))
             })
         }
     }

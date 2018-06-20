@@ -7,7 +7,7 @@
             <div class="branch-block-content">
                 <text v-bind:class="['branch-block-desc',ellipsis?'ellipsis-line':'']" lines="1">业务范围：{{data.businessScope}}</text>
                 <div class="address-bar">
-                    <text class="address-distance">2.6km</text>
+                    <text class="address-distance">{{data.distanceDesc}}</text>
                     <text v-bind:class="['address-detail',ellipsis?'ellipsis-line':'']" lines="1">{{data.unitAddress}}</text>
                 </div>
             </div>
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import nativeService from '@/common/services/nativeService';
+import nativeService from '../settings/nativeService';
 
 
 export default {
@@ -62,8 +62,7 @@ export default {
             )
         },
         navigate(item) {
-            // item.nuitLongitude //"113.20373899999998",
-            // item.unitLatitude //"22.928629",
+            this.$emit('navigate')
         }
     },
     created() {

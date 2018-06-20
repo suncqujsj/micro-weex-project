@@ -94,7 +94,7 @@
 
 <script>
 import base from './base'
-import nativeService from '@/common/services/nativeService';
+import nativeService from './settings/nativeService';
 import util from '@/common/util/util'
 
 
@@ -117,7 +117,7 @@ export default {
     data() {
         return {
             title: '安装服务',
-
+            isRenew: false,
             selectedProduct: [],
 
             isShowProductUse: false,
@@ -223,6 +223,7 @@ export default {
                     'isSelected': false
                 }
             ],
+            codeType: '',
             code: '',
             order: {
                 customerName: '',   //报单人姓名
@@ -343,7 +344,7 @@ export default {
         handlePageData(data) {
             if (data.page == "installation") {
                 if (data.key == "selectedProduct") {
-                    this.selectedProduct = data.data
+                    this.selectedProduct.splice(0, this.selectedProduct.length, ...(data.data))
                 } else if (data.key == "userAddressList") {
                     this.userAddress = data.data
                 }
@@ -440,10 +441,86 @@ export default {
             nativeService.scanCode().then(
                 (resp) => {
                     if (resp.status == 0) {
-                        this.code = resp.data
+                        let scanResult = resp.data || resp.code
+
+                        if (scanResult.indexOf(",") != -1) {
+                            // 扫条形码，可能会带'ITF,xxxxxxx', 截取后半部
+                            this.codeType = '60'
+                            let tmp = scanResult.split(",")
+                            this.code = tmp.length === 1 ? tmp[0] : tmp[1]
+                        } else if (util.getParameters(scanResult, "tsn")) {
+                            //二维码
+                            this.codeType = '0'
+                            this.code = util.getParameters(scanResult, "tsn")
+                        } else {
+                            this.codeType = '60'
+                            this.code = scanResult
+                        }
+                        this.getProductFromCode()
                     }
                 }
             )
+        },
+        getProductFromCode() {
+            let param = {
+                codeType: this.codeType,
+                code: this.code,
+                version: "3.0",
+                sourceTag: "3"
+            }
+            nativeService.getProdMessage(param).then((data) => {
+
+            })
+        },
+        renewOrder(order) {
+            //安装产品
+            this.selectedProduct.push({
+                brandCode: order.serviceUserDemandVOs[0].brandCode,  //产品品牌
+                brand: order.serviceUserDemandVOs[0].brandName,  //产品品牌名称
+                prodCode: order.serviceUserDemandVOs[0].prodCode,  //产品品类
+                prodName: order.serviceUserDemandVOs[0].prodName  //产品品类名称
+            })
+            //物流状态
+            if (order.serviceRequireItemCode == this.transportStatusOptions[0].serviceRequireItemCode) {
+                this.transportStatusIndex = 0
+            } else {
+                this.transportStatusIndex = 1
+            }
+            //期望服务时间
+            let temp = order.requireServiceDate.split(" ")
+            let matchDateItem = this.serviePeriodDate.find((item) => {
+                return item.value == temp[0]
+            })
+            if (matchDateItem) {
+                this.selectedDateIndex = matchDateItem.index
+            } else {
+                this.selectedDateIndex = 1
+            }
+            let matchTimeItem = this.serviePeriodTime.find((item) => {
+                return item.desc == temp[1]
+            })
+            if (matchTimeItem) {
+                this.selectedTimeIndex = matchTimeItem.index
+            }
+
+            //服务地址
+            let customerAddressArray = order.customerAddress.split(" ")
+            this.userAddress = {
+                receiverName: order.customerName,
+                receiverMobile: order.customerMobilephone1,
+                province: '',
+                provinceName: customerAddressArray[0],
+                city: '',
+                cityName: customerAddressArray[1],
+                county: '',
+                countyName: customerAddressArray[2],
+                street: order.areaCode,
+                streetName: order.areaName,
+                addr: customerAddressArray[3],
+            }
+
+            this.order.pubRemark = order.serviceOrderVO[0].pubRemark
+
         },
         submit() {
             nativeService.getUserInfo().then((data) => {
@@ -498,7 +575,8 @@ export default {
                 param["serviceUserDemandVOs"] = serviceUserDemandVOs
 
                 nativeService.createserviceorder(param).then(() => {
-                    if (["orderList", "orderDetail"].indexOf(this.fromPage) > -1) {
+                    this.appPageDataChannel.postMessage({ page: "installation", key: "createOrder" })
+                    if (this.isRenew) {
                         //重新报单
                         this.back({ viewTag: "orderList" })
                     } else {
@@ -514,11 +592,15 @@ export default {
     created() {
         this.initServiePeriod()
 
-        nativeService.getItem(this.SERVICE_STORAGE_KEYS.order, (resp) => {
-            if (resp.result == 'success') {
-                this.order = JSON.parse(resp.data) || []
-            }
-        })
+        this.isRenew = nativeService.getParameters('isRenew') || false
+        if (this.isRenew) {
+            //重新下单
+            nativeService.getItem(this.SERVICE_STORAGE_KEYS.currentOrder, (resp) => {
+                if (resp.result == 'success') {
+                    this.renewOrder(JSON.parse(resp.data))
+                }
+            })
+        }
     }
 }
 </script>
@@ -620,7 +702,7 @@ export default {
   border-width: 1px;
   height: 72px;
   padding-left: 22px;
-  padding-right: 50px;
+  padding-right: 60px;
   background-color: #fafafa;
 }
 .scan-icon {

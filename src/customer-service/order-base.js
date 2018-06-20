@@ -1,22 +1,13 @@
 
-import nativeService from '@/common/services/nativeService';
 import util from '@/common/util/util'
 export default {
     data: () => ({
 
     }),
     computed: {
-        formattedOrder() {
-            let result
-            if (this.order) {
-                result = this.formatOrder(this.order)
-            }
-
-            return result
-        }
     },
     methods: {
-        calcServiceOrderStatus(order) {
+        convertServiceOrderStatus(order) {
             let status = order.serviceOrderStatus
 
             if (10 <= status && status <= 15) {
@@ -56,6 +47,7 @@ export default {
                 imageUrl: '',
                 isFinished: false,
                 statusIcon: '',
+                calcServiceOrderStatus: 0,
                 statusDesc: ''
             }
             //接入图标及渠道
@@ -75,9 +67,8 @@ export default {
             others.orderDesc = order.serviceSubTypeName + prodName
 
             //订单状态
-            let calcServiceOrderStatus = this.calcServiceOrderStatus(order)
-            others.calcServiceOrderStatus = calcServiceOrderStatus
-            switch (calcServiceOrderStatus) {
+            others.calcServiceOrderStatus = this.convertServiceOrderStatus(order)
+            switch (others.calcServiceOrderStatus) {
                 case 1:
                     //已接单-送修
                     others.statusDesc = "已接单"
@@ -110,8 +101,6 @@ export default {
                     others.statusDesc = "待服务"
                     others.statusIcon = "./assets/img/service_ic_order_new@3x.png"
                     break;
-                default:
-                    others.statusDesc = calcServiceOrderStatus
             }
 
 

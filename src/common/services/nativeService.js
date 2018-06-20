@@ -25,6 +25,7 @@ if (platform == 'Web') {
     isDummy = true
 }
 console.log("isDummy:" + isDummy)
+var isRemote = weex.config.bundleUrl.indexOf("http") > -1 ? true : false
 
 export default {
     serviceList: {
@@ -73,8 +74,8 @@ export default {
     */
     goTo(path, options) {
         var url
-        // mm.toast({ message: isDummy, duration: 2 })
-        if (this.isDummy != true) {
+        // mm.toast({ message: isRemote, duration: 2 })
+        if (this.isDummy != true && !isRemote) {
             //手机本地页面跳转
             this.getPath((weexPath) => {
                 //weexPath为插件包地址，比如：files:///..../MideaHome/T0x99/
@@ -181,13 +182,14 @@ export default {
         storage.getItem(key, callback)
     },
     setItem(key, value, callback) {
+        let temp
         if (typeof value == 'object') {
-            value = JSON.stringify(value);
+            temp = JSON.stringify(value);
         }
         let defaultCallback = event => {
             console.log('set success')
         }
-        storage.setItem(key, value, callback || defaultCallback)
+        storage.setItem(key, temp || value, callback || defaultCallback)
     },
     removeItem(key, callback) {
         storage.removeItem(key, () => {
@@ -355,7 +357,7 @@ export default {
                 } else if (requestParams.body && requestParams.method == "POST") {
                     requestParams.body = JSON.stringify(requestParams.body)
                 }
-                
+
                 if (options.isShowLoading) {
                     this.showLoading()
                 }

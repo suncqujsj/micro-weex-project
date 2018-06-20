@@ -71,7 +71,7 @@
 <script>
 import base from './base'
 import orderBase from './order-base'
-import nativeService from '@/common/services/nativeService'
+import nativeService from './settings/nativeService'
 import debugUtil from '@/common/util/debugUtil'
 import util from '@/common/util/util'
 
@@ -103,19 +103,35 @@ export default {
             showBar: false,
             actionsheetItems: ['美的：400-899-935', '小天鹅：400-822-8228'],
             actionsheetItemsValue: ['400899935', '4008228228'],
-            orderList: []
+            order: null
         }
     },
     computed: {
-        order() {
+        formattedOrder() {
             let result
-            if (this.orderList && this.orderList.length > 0) {
-                result = this.orderList[0]
+            if (this.order) {
+                result = this.formatOrder(this.order)
             }
             return result
         }
     },
     methods: {
+        handlePageData(data) {
+            if (data.key == "createOrder") {
+                this.getOrderList()
+            }
+        },
+        getOrderList() {
+            let param = {
+                serviceOrderStatus: "10;11;12;13;14;15;16",  //派工单状态
+                resultNum: 1
+            }
+            nativeService.queryserviceorder(param).then((data) => {
+                if (data.list && data.list.length > 0) {
+                    this.order = data.list[0]
+                }
+            })
+        },
         itemClicked(item) {
             this.goTo(item.page)
         },
@@ -142,7 +158,7 @@ export default {
             this.showBar = false
         },
         goToOrderDetail() {
-            nativeService.setItem(this.SERVICE_STORAGE_KEYS.order, this.order, () => {
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, this.order, () => {
                 this.goTo("orderDetail", {}, { from: 'orderList', id: this.order.serviceOrderNo })
             })
         },
@@ -163,14 +179,7 @@ export default {
     created() {
         debugUtil.cleanDebugLog()
         this.resetStorage()
-
-        let param = {
-            serviceOrderStatus: "10;11;12;13;14;15;16",  //派工单状态
-            resultNum: 1
-        }
-        nativeService.queryserviceorder(param).then((data) => {
-            this.orderList = data.list
-        })
+        this.getOrderList()
     }
 }
 </script>

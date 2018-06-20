@@ -6,25 +6,25 @@
             </div>
         </midea-header>
         <div class="info-bar">
-            <text class="info-address" @click="changeArea">{{areaDesc}}</text>
+            <text class="info-address" @click="changeArea">{{gpsInfo?(areaObject.provinceName+ ' '+areaObject.cityName+ ' '+areaObject.countyName):'请选择位置'}}</text>
             <image class="arraw-down-icon" src="./assets/img/service_ic_hide@3x.png" resize='contain' @click="changeArea">
             </image>
-            <div class="info-product">
+            <div class="info-product" @click="switchMode">
                 <midea-rich-text class="search-result-desc" :hasTextMargin="false" :config-list="richDesc"></midea-rich-text>
             </div>
         </div>
         <scroller v-if="isListMode" class="scroller">
             <div v-for="(branch, index) in sortedBranchList" :key="index">
-                <branch-block class="branch-block" :data="branch" :index="index">
+                <branch-block class="branch-block" :data="branch" :index="index" @navigate="navigate(branch)">
                 </branch-block>
             </div>
             <div class="gap-bottom"></div>
         </scroller>
         <div v-else class="map-scroller">
-            <web class="map" :src="mapSrc"></web>
+            <midea-map-view class="map" :data="mapData"></midea-map-view>
             <slider class="slider" :index="currentAddressIndex" @change="changeBranch" interval="3000" auto-play="false">
                 <div v-for="(branch, index) in sortedBranchList" :key="index">
-                    <branch-block class="branch-slider-block" ellipsis=true :data="branch" :index="index">
+                    <branch-block class="branch-slider-block" ellipsis=true :data="branch" :index="index" @navigate="navigate(branch)">
                     </branch-block>
                 </div>
             </slider>
@@ -34,7 +34,7 @@
 
 <script>
 import base from './base'
-import nativeService from '@/common/services/nativeService'
+import nativeService from './settings/nativeService'
 import BranchBlock from '@/customer-service/components/branchBlock.vue'
 
 import { MideaDialog, MideaRichText } from '@/index'
@@ -50,15 +50,15 @@ export default {
         return {
             title: '网点查询',
             isListMode: true,
-            areaList: [{
-                regionDesc: '广东'
+            gpsInfo: null,
+            areaObject: {
+                province: '',
+                provinceName: '',
+                city: '',
+                cityName: '',
+                county: '',
+                countyName: '',
             },
-            {
-                regionDesc: '佛山市'
-            },
-            {
-                regionDesc: '顺德区'
-            }],
             selectedProduct: null,
             branchList: [],
             currentAddressIndex: 0,
@@ -66,11 +66,6 @@ export default {
         }
     },
     computed: {
-        areaDesc() {
-            return this.areaList.map((item) => {
-                return item.regionDesc
-            }).join(' ')
-        },
         richDesc() {
             return [
                 {
@@ -100,32 +95,65 @@ export default {
             ]
         },
         sortedBranchList() {
-            return this.branchList.map((item) => {
-                return Object.assign({}, item)
+            let result = this.branchList.map((item) => {
+                let distance = 0, distanceDesc = ''
+                if (this.gpsInfo && this.gpsInfo.longitude && this.gpsInfo.latitude && item.nuitLongitude && item.unitLatitude) {
+                    distance = nativeService.distanceByLnglat(this.gpsInfo.longitude, this.gpsInfo.latitude, item.nuitLongitude, item.unitLatitude) //单位：米
+                    if (distance >= 1000) {
+                        distanceDesc = Math.round(distance / 1000 * 100) / 100 + "km"
+                    } else {
+                        distanceDesc = distance + "m"
+                    }
+                }
+                return Object.assign({
+                    'distance': distance,
+                    'distanceDesc': distanceDesc
+                }, item)
+            })
+            return result.sort(function (a, b) {
+                return a.distance - b.distance
             })
         },
-        addressPoint() {
-            let result = {
-                desc: '',
-                x: '12604424.88',
-                y: '2608019.27'
-            }
-            if (this.branchList && this.currentAddressIndex > -1) {
-                result.desc = encodeURIComponent(this.branchList[this.currentAddressIndex].label)
-                result.x = this.branchList[this.currentAddressIndex].x
-                result.y = this.branchList[this.currentAddressIndex].y
-            }
-            return result
-        },
-        mapSrc() {
-            let result = "http://www.baidu.com"
-            if (this.addressPoint) {
-                result = 'https://map.baidu.com/mobile/webapp/place/detail/qt=ninf&wd=' + this.addressPoint.desc + '&c=138&searchFlag=bigBox&version=5&exptype=dep&src_from=webapp_all_bigbox&sug_forward=&src=0&nb_x=' + this.addressPoint.x + '&nb_y=' + this.addressPoint.y + '&center_rank=1&uid=7db1a57b62a5bfe11d580018&industry=enterprise&qid=2807510703245347137/showall=1&pos=0&da_ref=listclk&da_qrtp=36&vt=map'
+        mapData() {
+            let result
+            if (this.sortedBranchList && this.currentAddressIndex > -1) {
+                let unitLatitude = this.sortedBranchList[this.currentAddressIndex].unitLatitude
+                let nuitLongitude = this.sortedBranchList[this.currentAddressIndex].nuitLongitude
+                result = {
+                    center: {
+                        latitude: unitLatitude,
+                        longitude: nuitLongitude,
+                        zoom: 18 //地图显示范围 4-21级 （最大是21级）,非必选
+                    },
+                    markers: [
+                        {
+                            icon: {
+                                normal: "./assets/img/service_ic_pin@3x.png",//正常的图片地址
+                                click: "./assets/img/service_ic_pin@3x.png" //点击高亮的图片地址
+                            },
+                            list: [
+                                { latitude: unitLatitude, longitude: nuitLongitude, id: 1 }
+                            ]
+                        }
+                    ]
+                }
             }
             return result
         }
     },
     methods: {
+        handlePageData(data) {
+            if (data.page == "branchList") {
+                if (data.key == "addressList") {
+                    nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedAreaObject, (resp) => {
+                        if (resp.result == 'success') {
+                            this.areaObject = JSON.parse(resp.data) || {}
+                            this.getUnitList()
+                        }
+                    })
+                }
+            }
+        },
         switchMode() {
             this.isListMode = !this.isListMode
         },
@@ -147,20 +175,90 @@ export default {
             let oldOrder = this.orderList[this.selectedOrderIndex]
             oldOrder.status = 3
             this.$set(this.orderList, this.selectedOrderIndex, oldOrder)
+        },
+        getAreaCodeByName(province, city, county) {
+            let provinceObj, cityObj, countyObj
+            return new Promise((resolve, reject) => {
+                let param = {
+                    regionCode: 0
+                }
+                nativeService.getAreaList(param).then((data) => {
+                    provinceObj = data.children.filter((provinceItem) => {
+                        return province == provinceItem.regionName
+                    })[0]
+                    nativeService.getAreaList({
+                        regionCode: provinceObj.regionCode
+                    }).then((data) => {
+                        cityObj = data.children.filter((cityItem) => {
+                            return city == cityItem.regionName
+                        })[0]
+                        nativeService.getAreaList({
+                            regionCode: cityObj.regionCode
+                        }).then((data) => {
+                            countyObj = data.children.filter((countyItem) => {
+                                return county == countyItem.regionName
+                            })[0]
+                            resolve({
+                                province: provinceObj.regionCode,
+                                provinceName: provinceObj.regionName,
+                                city: cityObj.regionCode,
+                                cityName: cityObj.regionName,
+                                county: countyObj.regionCode,
+                                countyName: countyObj.regionName,
+                            })
+                        })
+                    })
+                })
+            })
+        },
+        getUnitList() {
+            let param = {
+                prodCode: this.selectedProduct.prodCode,
+                areaCode: this.areaObject.county
+            }
+            nativeService.queryunitarchives(param).then((data) => {
+                this.branchList = data.list
+            }).catch((error) => {
+                nativeService.toast(nativeService.getCssErrorMessage(error))
+            })
+        },
+        navigate(item) {
+            let param = {
+                from: { //当前用户地点
+                    latitude: this.gpsInfo.latitude, //纬度
+                    longitude: this.gpsInfo.longitude //经度
+                },
+                to: { //目的地地点
+                    latitude: item.unitLatitude, //纬度
+                    longitude: item.nuitLongitude //经度
+                }
+            }
+            nativeService.launchMapApp(param).then((resp) => { }
+            ).catch((error) => { })
         }
     },
     created() {
-        nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, (resp) => {
-            if (resp.result == 'success') {
-                this.selectedProduct = JSON.parse(resp.data)[0] || {}
-
-                let param = {
-                    prodCode: this.selectedProduct.prodCode
+        let gpsParam = {
+            desiredAccuracy: "10",  //定位的精确度，单位：米
+            alwaysAuthorization: "0",  //是否开启实时定位功能，0: 只返回一次GPS信息（默认），1:APP在前台时，每移动distanceFilter的距离返回一次回调。2:无论APP在前后台，每移动distanceFilter的距离返回一次回调（注意耗电）
+            distanceFilter: "10", //alwaysAuthorization为1或2时有效，每移动多少米回调一次定位信息
+        }
+        nativeService.showLoadingWithMsg("正在获取位置信息...")
+        nativeService.getGPSInfo(gpsParam).then((data) => {
+            nativeService.hideLoadingWithMsg()
+            this.gpsInfo = data
+            nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, (resp) => {
+                if (resp.result == 'success') {
+                    this.selectedProduct = JSON.parse(resp.data)[0] || {}
+                    this.getAreaCodeByName(this.gpsInfo.province, this.gpsInfo.city, this.gpsInfo.district).then((areaResp) => {
+                        this.areaObject = areaResp
+                        this.getUnitList()
+                    })
                 }
-                nativeService.queryunitarchives(param).then((data) => {
-                    this.branchList = data.list
-                })
-            }
+            })
+        }).catch(() => {
+            nativeService.toast("定位失败")
+            nativeService.hideLoadingWithMsg()
         })
 
     }

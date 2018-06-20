@@ -70,7 +70,7 @@
         methods: {
             goTo: function(page){
                 console.log(1)
-                var path = 'midea-oven/' + page + '.js'
+                var path = page + '.js'
                 nativeService.goTo(path)
             },
             leftImgClick: function(){

@@ -25,6 +25,7 @@ if (platform == 'Web') {
     isDummy = true
 }
 console.log("isDummy:" + isDummy)
+var mockArray = [];
 
 export default {
     serviceList: {
@@ -168,6 +169,13 @@ export default {
     },
     //**********页面跳转接口***************END
 
+
+    //parker
+    initMockData(jsonObj) {
+        for (var key in jsonObj) {
+            mockArray[key] = jsonObj[key];
+        }
+    },
 
     //**********非APP业务接口***************START
     genMessageId() {
@@ -429,7 +437,9 @@ export default {
             }
             bridgeModule.startCmdProcess(JSON.stringify(param), finalCallBack, finalCallbackFail);
         } else {
-            callback(this.Mock.getMock(name).messageBody);
+            // parker 这里用二进制指令
+            // callback(this.Mock.getMock(name).messageBody);
+            callback(mockArray[name].messageBody);
         }
     },
 

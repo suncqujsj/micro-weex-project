@@ -352,10 +352,14 @@ export default {
                 GET 请求不支持 body 方式传递参数，请使用 url 传参。 */
                 if (requestParams.body && requestParams.method == "GET") {
                     let bodyStr = this.convertRequestBody(requestParams.body)
-                    requestParams.url += "?" + bodyStr
+                    if (requestParams.url.indexOf("?") > -1) {
+                        requestParams.url += "&" + bodyStr
+                    } else {
+                        requestParams.url += "?" + bodyStr
+                    }
                     requestParams.body = ""
                 } else if (requestParams.body && requestParams.method == "POST") {
-                    requestParams.body = JSON.stringify(requestParams.body)
+                    requestParams.body = requestParams.body
                 }
 
                 if (options.isShowLoading) {

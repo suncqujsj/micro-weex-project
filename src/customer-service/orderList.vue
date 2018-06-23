@@ -15,8 +15,8 @@
                             <text class="action" v-if="[2, 6].indexOf(order.calcServiceOrderStatus)>-1" @click="showDialog(index)">取消工单</text>
                             <text class="action" v-if="order.calcServiceOrderStatus == 2 && checkPassTime(order)" @click="urgeOrder(index)">催办</text>
                             <text class="action" v-if="order.calcServiceOrderStatus == 3" @click="renewOrder(index)">重新报单</text>
-                            <text class="action primary-action" v-if="order.calcServiceOrderStatus == 4" @click="assessService(index)">评价有礼</text>
-                            <text class="action" v-if="order.calcServiceOrderStatus == 5" @click="assessService(index)">查看评价</text>
+                            <text class="action primary-action" v-if="order.allowCallbackWX == 'Y'" @click="assessService(index)">评价有礼</text>
+                            <text class="action" v-if="order.callbackStatus == 12" @click="assessService(index)">查看评价</text>
                             <text class="action" v-if="order.calcServiceOrderStatus == 6" @click="callService(index)">联系网点</text>
                         </div>
                     </order-block>
@@ -94,6 +94,7 @@ export default {
     methods: {
         handlePageData(data) {
             if (data.key == "createOrder") {
+                this.orderListPage = 0
                 this.getOrderList()
                 this.$nextTick(() => {
                     const el = this.$refs['order0'][0]
@@ -112,6 +113,7 @@ export default {
                 }
             }
         },
+        //获取订单列表
         getOrderList() {
             let status = []
             for (let index = 10; index < 35; index++) {
@@ -119,7 +121,6 @@ export default {
             }
             let param = {
                 dispatchOrderStatus: status.join(","),  //派工单状态
-                orderColumn: "contactTime",
                 page: this.orderListPage,
                 resultNum: 10
             }
@@ -132,6 +133,7 @@ export default {
                 nativeService.toast(nativeService.getCssErrorMessage(error))
             })
         },
+        //加载更多
         loadmore(event) {
             if (!this.hasNext) return
             this.showLoading = 'show'
@@ -150,6 +152,7 @@ export default {
                 })
             }, 1500)
         },
+        //查看详情
         goToOrderDetail(index) {
             this.selectedOrderIndex = index
             let order = this.orderList[index]
@@ -159,6 +162,15 @@ export default {
         },
         checkAddress() {
             this.goTo('productSelection', {}, { from: 'orderList' })
+        },
+        //催单
+        checkPassTime(order) {
+            let result = false
+            let now = new Date()
+            if (order.contactTime && new Date(order.contactTime) < now.setHours(now.getHours() - 1)) {
+                result = true
+            }
+            return result
         },
         urgeOrder(index) {
             this.selectedOrderIndex = index
@@ -201,6 +213,8 @@ export default {
         urgeOrderBtnClick() {
             this.isShowUrgeOrder = false
         },
+
+        //重新下单
         renewOrder(index) {
             let order = this.orderList[index]
             nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, order, () => {
@@ -211,6 +225,8 @@ export default {
                 }
             })
         },
+
+        //取消工单
         showDialog(index) {
             this.dialogShow = true
             this.selectedOrderIndex = index
@@ -231,6 +247,8 @@ export default {
                 this.$set(this.orderList, this.selectedOrderIndex, order)
             })
         },
+
+        //评价有礼
         assessService(index) {
             let order = this.orderList[index]
             nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, order,
@@ -238,6 +256,8 @@ export default {
                     this.goTo("callbackInfo", {}, { from: 'orderList', id: order.serviceOrderNo })
                 })
         },
+
+        //联系网点
         callService(index) {
             let order = this.orderList[index]
             nativeService.callTel({
@@ -249,14 +269,6 @@ export default {
             ).catch((error) => {
                 nativeService.toast(error)
             })
-        },
-        checkPassTime(order) {
-            let result = false
-            let now = new Date()
-            if (order.contactTime && new Date(order.contactTime) < now.setHours(now.getHours() - 1)) {
-                result = true
-            }
-            return result
         }
     },
     created() {

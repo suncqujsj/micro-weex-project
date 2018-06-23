@@ -10,16 +10,31 @@
         </div>
         <div class="product-content">
             <scroller class="product-content-left">
-                <text v-for="(brandItem,brandIndex) in productData" :key="brandIndex" v-bind:class="['product-brand',
+                <text v-if="fromPage == 'maintenance'" v-bind:class="['product-brand',
+                    selectedBrandIndex==-1?'product-brand-selected':'']" @click="selectBrand(-1)">我的家电</text>
+                <text v-for="(brandItem,brandIndex) in productList" :key="brandIndex" v-bind:class="['product-brand',
                     brandIndex==selectedBrandIndex?'product-brand-selected':'']" @click="selectBrand(brandIndex)">{{brandItem.brand}}</text>
             </scroller>
             <scroller class="product-content-right">
-                <div class="product-group" v-for="(categaryItem,index) in selectedBrandProductData" :key="index" @appear="showImage($event, categaryItem)">
+                <div v-if="selectedBrandIndex==-1" class="product-group">
+                    <text class="product-group-title">我的家电</text>
+                    <div class="product-group-content">
+                        <div class="product-appliance-wrapper" v-for="(myProductItem,myProductIndex) in convertedMyProductList" :key="myProductIndex" @click="selectProductItem($event, myProductItem)">
+                            <div class="product-appliance">
+                                <image class="appliance-img" :src="myProductItem.productImgUrl" resize="contain"></image>
+                                <text class="appliance-name">{{myProductItem.productName}}</text>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-group" v-for="(categaryItem,categaryIndex) in selectedBrandProductList" :key="categaryIndex" @appear="showImage($event, categaryItem)">
                     <text class="product-group-title">{{categaryItem.prodName}}</text>
                     <div class="product-group-content">
                         <div class="product-appliance-wrapper" v-for="(productItem,productIndex) in categaryItem.children" :key="productIndex" @click="selectProductItem($event, productItem)">
-                            <image class="appliance-img" :src="categaryItem.isShowImage?productItem.prodImg:''" resize="contain"></image>
-                            <text class="appliance-name">{{productItem.prodName}}</text>
+                            <div class="product-appliance">
+                                <image class="appliance-img" :src="categaryItem.isShowImage?productItem.prodImg:''" resize="contain"></image>
+                                <text class="appliance-name">{{productItem.prodName}}</text>
+                            </div>
                             <image v-if="isMultiMode && !checkIsSelected(productItem)" class="appliance-add-img" src="./assets/img/service_ic_addone@3x.png" resize="contain"></image>
                         </div>
                     </div>
@@ -28,13 +43,13 @@
         </div>
         <div v-if="isShowAnimation" class="animation-outer" ref="outer">
             <div class="animation-inner" ref="inner" :style="{'left': animationConfig.startX,'top': animationConfig.startY}">
-                <image class="animation-img" :src="selectedProductArray[selectedProductArray.length - 1].prodImg" resize="contain"></image>
+                <image class="animation-img" :src="selectedProductArray[selectedProductArray.length - 1].prodImg || './assets/img/product/default.png'" resize="contain"></image>
             </div>
         </div>
         <div v-if="isMultiMode" class="action-bar">
             <div class="product-selected-items-wrapper">
                 <scroller class="product-selected-items" scroll-direction="horizontal">
-                    <div v-if="selectedProductArray.length>0" class="selected-action-wrapper" v-for="(item,index) in selectedProductArray" :key="index" :ref="'selectedProduct'+index" @click="removeSelectedProduct(index)">
+                    <div v-if="selectedProductArray" class="selected-action-wrapper" v-for="(item,index) in selectedProductArray" :key="index" :ref="'selectedProduct'+index" @click="removeSelectedProduct(index)">
                         <text class="selected-action-desc">{{item.prodName}}</text>
                         <image class="selected-action-img" :src="'./assets/img/service_ic_delone@3x.png'" resize="contain"></image>
                     </div>
@@ -61,7 +76,8 @@ export default {
     data() {
         return {
             title: '选择需服务产品',
-            productData: [],
+            myProductList: [],
+            productList: [],
             selectedBrandIndex: 0,
             dialogShow: false,
             isMultiMode: false,
@@ -76,10 +92,25 @@ export default {
         }
     },
     computed: {
-        selectedBrandProductData() {
+        convertedMyProductList() {
             let result
-            if (this.productData && this.productData.length > 0) {
-                result = this.productData[this.selectedBrandIndex].productTypeDTOList
+            if (this.myProductList && this.myProductList.length > 0) {
+                result = this.myProductList.map((item) => {
+                    return Object.assign(item, {
+                        brandCode: item.brandCode,
+                        brand: item.productBrand,
+                        prodCode: item.productCode,
+                        prodName: item.productName,
+                        userTypeCode: item.userTypeCode
+                    })
+                })
+            }
+            return result
+        },
+        selectedBrandProductList() {
+            let result
+            if (this.selectedBrandIndex > -1 && this.productList && this.productList.length > 0) {
+                result = this.productList[this.selectedBrandIndex].productTypeDTOList
             }
             return result
         }
@@ -236,20 +267,44 @@ export default {
 
         this.isMultiMode = nativeService.getParameters('isMultiMode')
         if (this.isMultiMode) {
-            //报装
-            nativeService.getProdTypeForInstallation().then((data) => {
-                this.productData = data
+            //报装 - 支持安装的产品品类列表
+            let param = {
+                version: "1.0",
+                codeType: "bzbx"
+            }
+            nativeService.getProdTypeForInstallation(param).then((data) => {
+                this.productList = data
             }).catch((error) => {
                 nativeService.toast(nativeService.getCssErrorMessage(error))
             })
+            //反选之前选中的
             nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, (resp) => {
                 if (resp.result == 'success') {
                     this.selectedProductArray = JSON.parse(resp.data) || []
                 }
             })
         } else {
-            nativeService.getProdType().then((data) => {
-                this.productData = data
+            if (this.fromPage == "maintenance") {
+                this.selectedBrandIndex = -1
+                //我的家电
+                let param = {
+                    pageIndex: 1,
+                    pageSize: 100
+
+                }
+                nativeService.getUserProductPageList(param).then((data) => {
+                    this.myProductList = data.data.list
+                }).catch((error) => {
+                    nativeService.toast(nativeService.getCssErrorMessage(error))
+                })
+            }
+            //所有产品品类列表
+            let param = {
+                version: "1.0",
+                codeType: ""
+            }
+            nativeService.getProdType(param).then((data) => {
+                this.productList = data
             }).catch((error) => {
                 nativeService.toast(nativeService.getCssErrorMessage(error))
             })
@@ -342,18 +397,22 @@ export default {
   flex-direction: row;
   justify-content: flex-start;
   align-items: stretch;
+  align-content: stretch;
   flex-wrap: wrap;
 }
 .product-appliance-wrapper {
-  width: 144px;
+  align-items: centecr;
+  margin-right: 24px;
+  margin-bottom: 24px;
+  padding: 6px;
+}
+.product-appliance {
+  width: 134px;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   border-color: #f2f2f2;
   border-width: 4px;
-  margin-right: 24px;
-  margin-bottom: 24px;
-  padding: 10px;
 }
 .appliance-img {
   height: 124px;
@@ -372,6 +431,7 @@ export default {
   color: #666666;
   text-align: center;
   padding-top: 5px;
+  padding-bottom: 5px;
 }
 .action-bar {
   flex-direction: row;
@@ -390,6 +450,8 @@ export default {
   padding-right: 32px;
 }
 .product-selected-items {
+  flex: 1;
+  height: 96px;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
@@ -453,5 +515,9 @@ export default {
 .animation-img {
   height: 124px;
   width: 124px;
+  border-radius: 4px;
+  border-color: #e2e2e2;
+  border-width: 1px;
+  background-color: #e2e2e2;
 }
 </style>

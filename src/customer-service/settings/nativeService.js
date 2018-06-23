@@ -26,22 +26,28 @@ let customizeNativeService = Object.assign(nativeService, {
         getexcludedfaultlist: HOST_CSS + "/c-css-ipms/cssmobile/api/wom/getexcludedfaultlist", //故障可能原因查询
         appexcludedfaulttraces: HOST_CSS + "/c-css-ipms/cssmobile/api/wom/appexcludedfaulttraces", //假性故障有帮助没帮助标识接口
 
-        queryReminderOptions: HOST_CSS_WX + "/wxgw/css/queryReminderOptions?mpType=MIDEASERVICE", //查询催单原因列表
 
         //中控消息
         getProdType: HOST_CENTER_APP + "/pdgw-ap/message/getProdType", //产品列表
         getProdMessage: HOST_CENTER_APP + "/pdgw-ap/message/getProdMessage", //获取售后产品资料对外服务接口
 
-        getUserAddrPageList: HOST_CENTER + "/ccrm2-core/userAddr/getUserAddrPageList", //地址列表查询
+        getUserProductPageList: HOST_CENTER + "/ccrm2-core/userProduct/getUserProductPageList", //获取家电列表
         getAreaList: HOST_CENTER + "/cmms/area/list", //服务地区
+        getUserAddrPageList: HOST_CENTER + "/ccrm2-core/userAddr/getUserAddrPageList", //地址列表查询
+        getDefaultAddr: HOST_CENTER + "/ccrm2-core/userAddr/getDefaultAddr", //获取默认地址
         userAddrAdd: HOST_CENTER + "/ccrm2-core/userAddr/add", //地址新增
         userAddrUpdate: HOST_CENTER + "/ccrm2-core/userAddr/update", //地址修改
         userAddrDelete: HOST_CENTER + "/ccrm2-core/userAddr/delete", //地址删除
         setDefaultAddr: HOST_CENTER + "/ccrm2-core/userAddr/defaultAddr", //设置默认地址
     },
     userInfo: null,
+    objectToQuery(obj) {
+        return Object.keys(obj).map(k =>
+            encodeURIComponent(k) + '=' + encodeURIComponent(obj[k] || '')
+        ).join('&')
+    },
     getCssErrorMessage(error) {
-        let msg = error.errorMsg || error.returnMsg || "请求失败，请稍后重试。"
+        let msg = error.errorMsg || error.returnMsg || error || "请求失败，请稍后重试。"
         if (error.errorCode) {
             msg += "(" + error.errorCode + ")"
         }
@@ -50,7 +56,7 @@ let customizeNativeService = Object.assign(nativeService, {
     getCssRequestCommonParam() {
         return new Promise((resolve, reject) => {
             let param = {
-                interfaceSource: "SMART" //MMJYWX
+                interfaceSource: "SMART"
             }
             if (this.userInfo) {
                 param.webUserCode = "oFtQywGHyqrWbDvjVdRTeR9Ig3m0" //this.userInfo.uid
@@ -66,21 +72,25 @@ let customizeNativeService = Object.assign(nativeService, {
             }
         })
     },
-    sendHttpRequestCssWrapper(params, options = { isShowLoading: true, isValidate: false }) {
+    sendCssHttpRequestWrapper(url, params, options) {
+        let requestOption = Object.assign({ method: "POST", isShowLoading: true, isValidate: false }, options)
         return new Promise((resolve, reject) => {
             this.getCssRequestCommonParam().then((commonParam) => {
                 let requestParam = {
-                    // url: params.url + "?json=" + JSON.stringify({ "body": Object.assign(commonParam, params.body) }),
-                    url: params.url + "?json=" +
-                        encodeURIComponent(JSON.stringify({ "body": Object.assign(commonParam, params.body) })),
-                    method: params.method || "POST",
+                    url: url,
+                    type: 'json',
+                    method: requestOption.method || "POST",
                     headers: {
-                        "Content-Type": "application/json;charset=utf-8"
+                        "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"
                     },
-                    body: {}
+                    body: "json=" + JSON.stringify({ "body": Object.assign({}, commonParam, params) })
                 }
-                this.sendHttpRequest(requestParam, options).then((resp) => {
-                    resolve(resp)
+                this.sendHttpRequest(requestParam, requestOption).then((resp) => {
+                    if (resp.status) {
+                        resolve(resp)
+                    } else {
+                        reject(resp)
+                    }
                 }).catch((error) => {
                     reject(error)
                 })
@@ -88,225 +98,47 @@ let customizeNativeService = Object.assign(nativeService, {
         })
     },
     queryserviceorder(param = {}) {
-        return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: this.serviceList.queryserviceorder,
-                method: "POST",
-                body: param
-            }
-            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
-                if (resp.status) {
-                    resolve(resp)
-                } else {
-                    reject(resp)
-                }
-            }).catch((error) => {
-                reject(error)
-            })
-        })
+        return this.sendCssHttpRequestWrapper(this.serviceList.queryserviceorder, param)
     },
     createserviceorder(param = {}) {
-        return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: this.serviceList.createserviceorder,
-                method: "POST",
-                body: param
-            }
-            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
-                if (resp.status) {
-                    resolve(resp)
-                } else {
-                    reject(resp)
-                }
-            }).catch((error) => {
-                reject(error)
-            })
-        })
+        return this.sendCssHttpRequestWrapper(this.serviceList.createserviceorder, param)
     },
     queryserviceuserdemanddispatch(param = {}) {
-        return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: this.serviceList.queryserviceuserdemanddispatch,
-                method: "POST",
-                body: param
-            }
-            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
-                if (resp.status) {
-                    resolve(resp)
-                } else {
-                    reject(resp)
-                }
-            }).catch((error) => {
-                reject(error)
-            })
-        })
+        return this.sendCssHttpRequestWrapper(this.serviceList.queryserviceuserdemanddispatch, param)
     },
     createserviceuserdemand(param = {}) {
-        return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: this.serviceList.createserviceuserdemand,
-                method: "POST",
-                body: param
-            }
-            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
-                if (resp.status) {
-                    resolve(resp)
-                } else {
-                    reject(resp)
-                }
-            }).catch((error) => {
-                reject(error)
-            })
-        })
-    },
-    queryReminderOptions(param = {}) {
-        return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: this.serviceList.queryReminderOptions,
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: param
-            }
-            this.sendHttpRequest(requestParam).then((resp) => {
-                if (resp.code) {
-                    resolve(resp)
-                } else {
-                    reject(resp)
-                }
-            }).catch((error) => {
-                reject(error)
-            })
-        })
+        return this.sendCssHttpRequestWrapper(this.serviceList.createserviceuserdemand, param)
     },
     cancelserviceorder(param = {}) {
-        return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: this.serviceList.cancelserviceorder,
-                method: "POST",
-                body: param
-            }
-            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
-                if (resp.status) {
-                    resolve(resp)
-                } else {
-                    reject(resp)
-                }
-            }).catch((error) => {
-                reject(error)
-            })
-        })
+        return this.sendCssHttpRequestWrapper(this.serviceList.cancelserviceorder, param)
     },
     extractcallbackitem(param = {}) {
-        return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: this.serviceList.extractcallbackitem,
-                method: "POST",
-                body: param
-            }
-            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
-                if (resp.status) {
-                    resolve(resp)
-                } else {
-                    reject(resp)
-                }
-            }).catch((error) => {
-                reject(error)
-            })
-        })
+        return this.sendCssHttpRequestWrapper(this.serviceList.extractcallbackitem, param)
     },
     createcallbackinfo(param = {}) {
-        return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: this.serviceList.createcallbackinfo,
-                method: "POST",
-                body: param
-            }
-            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
-                if (resp.status) {
-                    resolve(resp)
-                } else {
-                    reject(resp)
-                }
-            }).catch((error) => {
-                reject(error)
-            })
-        })
+        return this.sendCssHttpRequestWrapper(this.serviceList.createcallbackinfo, param)
     },
     queryconsumerorderprogress(param = {}) {
-        return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: this.serviceList.queryconsumerorderprogress,
-                method: "POST",
-                body: param
-            }
-            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
-                if (resp.status) {
-                    resolve(resp)
-                } else {
-                    reject(resp)
-                }
-            }).catch((error) => {
-                reject(error)
-            })
-        })
+        return this.sendCssHttpRequestWrapper(this.serviceList.queryconsumerorderprogress, param)
     },
     queryservicerequireproduct(param = {}) {
-        return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: this.serviceList.queryservicerequireproduct,
-                method: "POST",
-                body: param
-            }
-            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
-                if (resp.status) {
-                    resolve(resp)
-                } else {
-                    reject(resp)
-                }
-            }).catch((error) => {
-                reject(error)
-            })
-        })
+        return this.sendCssHttpRequestWrapper(this.serviceList.queryservicerequireproduct, param)
     },
 
     getexcludedfaultlist(param = {}) {
-        return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: this.serviceList.getexcludedfaultlist,
-                method: "POST",
-                body: param
-            }
-            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
-                if (resp.status) {
-                    resolve(resp)
-                } else {
-                    reject(resp)
-                }
-            }).catch((error) => {
-                reject(error)
-            })
-        })
+        return this.sendCssHttpRequestWrapper(this.serviceList.getexcludedfaultlist, param)
     },
     appexcludedfaulttraces(param = {}) {
-        return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: this.serviceList.appexcludedfaulttraces,
-                method: "POST",
-                body: param
-            }
-            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
-                if (resp.status) {
-                    resolve(resp)
-                } else {
-                    reject(resp)
-                }
-            }).catch((error) => {
-                reject(error)
-            })
-        })
+        return this.sendCssHttpRequestWrapper(this.serviceList.appexcludedfaulttraces, param)
     },
+
+    queryunitarchives(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.queryunitarchives, param)
+    },
+    querywarrantydescbycodeorsn(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.querywarrantydescbycodeorsn, param)
+    },
+
     getChargeStandardList(param = {}) {
         return new Promise((resolve, reject) => {
             let url = this.serviceList.getChargeStandardList + "?"
@@ -333,6 +165,7 @@ let customizeNativeService = Object.assign(nativeService, {
             })
         })
     },
+
     getChargePriceForMaterial(param = {}) {
         return new Promise((resolve, reject) => {
             let url = this.serviceList.getChargePriceForMaterial + "?"
@@ -350,43 +183,6 @@ let customizeNativeService = Object.assign(nativeService, {
             }
             this.sendHttpRequest(requestParam).then((resp) => {
                 if (resp.returnStatus) {
-                    resolve(resp)
-                } else {
-                    reject(resp)
-                }
-            }).catch((error) => {
-                reject(error)
-            })
-        })
-    },
-
-    queryunitarchives(param = {}) {
-        return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: this.serviceList.queryunitarchives,
-                method: "POST",
-                body: param
-            }
-            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
-                if (resp.status) {
-                    resolve(resp)
-                } else {
-                    reject(resp)
-                }
-            }).catch((error) => {
-                reject(error)
-            })
-        })
-    },
-    querywarrantydescbycodeorsn(param = {}) {
-        return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: this.serviceList.querywarrantydescbycodeorsn,
-                method: "POST",
-                body: param
-            }
-            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
-                if (resp.status) {
                     resolve(resp)
                 } else {
                     reject(resp)
@@ -416,86 +212,23 @@ let customizeNativeService = Object.assign(nativeService, {
             }
         })
     },
-    sendHttpRequestWrapper(params, options = { isShowLoading: true, isValidate: false }) {
+    sendControlHttpRequestWrapper(url, params, options) {
+        let requestOption = Object.assign({ method: "POST", isShowLoading: true, isValidate: false }, options)
         return new Promise((resolve, reject) => {
             this.getRequestCommonParam().then((commonParam) => {
                 let requestParam = {
-                    url: params.url,
-                    method: "POST",
+                    url: url + (url.indexOf("?") > -1 ? "&" : "?") + "appKey=c8c35003cc4c408581043baad45bce5b&secret=0dc6fe93a8154fcaab629353ab800bb4",
+                    method: requestOption.method || "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: Object.assign(commonParam, params.body)
+                    body: Object.assign(commonParam, params)
                 }
-                this.sendHttpRequest(requestParam, options).then((resp) => {
+                this.sendHttpRequest(requestParam, requestOption).then((resp) => {
                     resolve(resp)
                 }).catch((error) => {
                     reject(error)
                 })
-            })
-        })
-    },
-    getProdTypeForInstallation(param = {}) {
-        return new Promise((resolve, reject) => {
-            let result
-            this.getItem(SERVICE_STORAGE_KEYS.productTypeForInstallation, (resp) => {
-                if (resp.result == 'success' && JSON.parse(resp.data).length > 0) {
-                    result = JSON.parse(resp.data)
-                    resolve(result)
-                } else {
-                    let queryStringObj = Object.assign({
-                        sourceSys: "APP",
-                        version: "1.0",
-                        codeType: "bzbx"
-                    }, param)
-                    let queryString = Object.keys(queryStringObj).map(k =>
-                        encodeURIComponent(k) + '=' + encodeURIComponent(queryStringObj[k] || '')
-                    ).join('&')
-                    let requestParam = {
-                        url: this.serviceList.getProdType + '?' + queryString,
-                        method: "GET"
-                    }
-                    this.sendHttpRequestWrapper(requestParam).then((resp) => {
-                        result = this.proceedProductData(resp.data)
-                        this.setItem(SERVICE_STORAGE_KEYS.productTypeForInstallation, JSON.stringify(result), () => {
-                            resolve(result)
-                        })
-                    }).catch((error) => {
-                        reject(error)
-                    })
-                }
-            })
-        })
-    },
-    getProdType(param = {}) {
-        return new Promise((resolve, reject) => {
-            let result
-            this.getItem(SERVICE_STORAGE_KEYS.productType, (resp) => {
-                if (resp.result == 'success' && JSON.parse(resp.data).length > 0) {
-                    result = JSON.parse(resp.data)
-                    resolve(result)
-                } else {
-                    let queryStringObj = Object.assign({
-                        sourceSys: "APP",
-                        version: "1.0",
-                        codeType: ""
-                    }, param)
-                    let queryString = Object.keys(queryStringObj).map(k =>
-                        encodeURIComponent(k) + '=' + encodeURIComponent(queryStringObj[k] || '')
-                    ).join('&')
-                    let requestParam = {
-                        url: this.serviceList.getProdType + '?' + queryString,
-                        method: "GET"
-                    }
-                    this.sendHttpRequestWrapper(requestParam).then((resp) => {
-                        result = this.proceedProductData(resp.data)
-                        this.setItem(SERVICE_STORAGE_KEYS.productType, JSON.stringify(result), () => {
-                            resolve(result)
-                        })
-                    }).catch((error) => {
-                        reject(error)
-                    })
-                }
             })
         })
     },
@@ -519,64 +252,19 @@ let customizeNativeService = Object.assign(nativeService, {
         }
         return result
     },
-
-    getProdMessage(param = {}) {
-        return new Promise((resolve, reject) => {
-            this.getRequestCommonParam().then((commonParam) => {
-                let queryStringObj = Object.assign({
-                    sourceSys: "APP"
-                }, param)
-                let queryString = Object.keys(queryStringObj).map(k =>
-                    encodeURIComponent(k) + '=' + encodeURIComponent(queryStringObj[k] || '')
-                ).join('&')
-                let requestParam = {
-                    url: this.serviceList.getProdMessage + '?' + queryString,
-                    method: "GET"
-                }
-
-                this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
-                    resolve(resp)
-                }).catch((error) => {
-                    reject(error)
-                })
-            })
-        })
-    },
-    getUserAddrPageList(param = {}) {
-        return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: this.serviceList.getUserAddrPageList + "?appKey=c8c35003cc4c408581043baad45bce5b&secret=0dc6fe93a8154fcaab629353ab800bb4",
-                method: "GET",
-                body: Object.assign({
-                }, param)
-            }
-            this.sendHttpRequestWrapper(requestParam).then((resp) => {
-                resolve(resp)
-            }).catch((error) => {
-                reject(error)
-            })
-        })
-    },
-
-    getAreaListCache(param = { regionCode: "0" }) {
+    getProdTypeForInstallation(param = {}) {
         return new Promise((resolve, reject) => {
             let result
-            this.getItem(SERVICE_STORAGE_KEYS.areaList, (data) => {
-                let cacheObj = {}
-                if (data.result == 'success' && data.data) {
-                    try {
-                        cacheObj = JSON.parse(data.data)
-                        result = cacheObj[param.regionCode]
-                    } catch (error) { }
-                }
-
-                if (result) {
+            this.getItem(SERVICE_STORAGE_KEYS.productTypeForInstallation, (resp) => {
+                if (resp.result == 'success' && JSON.parse(resp.data).length > 0) {
+                    result = JSON.parse(resp.data)
                     resolve(result)
                 } else {
-                    this.getAreaList(param).then((resp) => {
-                        cacheObj[param.regionCode] = resp
-                        this.setItem(SERVICE_STORAGE_KEYS.areaList, JSON.stringify(cacheObj), () => {
-                            resolve(resp)
+                    let url = this.serviceList.getProdType + '?' + this.objectToQuery(param)
+                    this.sendControlHttpRequestWrapper(url, {}).then((resp) => {
+                        result = this.proceedProductData(resp.data)
+                        this.setItem(SERVICE_STORAGE_KEYS.productTypeForInstallation, JSON.stringify(result), () => {
+                            resolve(result)
                         })
                     }).catch((error) => {
                         reject(error)
@@ -585,108 +273,68 @@ let customizeNativeService = Object.assign(nativeService, {
             })
         })
     },
-    getAreaList(param = {}) {
+    getProdType(param = {}) {
         return new Promise((resolve, reject) => {
-            let requestParam = {
-                url: this.serviceList.getAreaList,
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: Object.assign({
-                    regionCode: "0"
-                }, param)
-            }
-            this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
-                if (resp.code == 0) {
-                    resolve(resp.content)
+            let result
+            this.getItem(SERVICE_STORAGE_KEYS.productType, (resp) => {
+                if (resp.result == 'success' && JSON.parse(resp.data).length > 0) {
+                    result = JSON.parse(resp.data)
+                    resolve(result)
                 } else {
-                    reject(resp)
+                    let url = this.serviceList.getProdType + '?' + this.objectToQuery(param)
+                    this.sendControlHttpRequestWrapper(url, {}).then((resp) => {
+                        result = this.proceedProductData(resp.data)
+                        this.setItem(SERVICE_STORAGE_KEYS.productType, JSON.stringify(result), () => {
+                            resolve(result)
+                        })
+                    }).catch((error) => {
+                        reject(error)
+                    })
                 }
+            })
+        })
+    },
+
+    getProdMessage(param = {}) {
+        return new Promise((resolve, reject) => {
+            let url = this.serviceList.getProdMessage + '?' + this.objectToQuery(param)
+            this.sendControlHttpRequestWrapper(url, {}).then((resp) => {
+                resolve(resp)
             }).catch((error) => {
                 reject(error)
             })
         })
     },
+    getUserProductPageList(param = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.getUserProductPageList, param)
+    },
+
+    getUserAddrPageList(param = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.getUserAddrPageList, param)
+    },
+
+    getDefaultAddr(param = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.getDefaultAddr, param)
+    },
+
+    getAreaList(param = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.getAreaList, param, { method: "GET" })
+    },
 
     userAddrAdd(param = {}) {
-        return new Promise((resolve, reject) => {
-            this.getRequestCommonParam().then((commonParam) => {
-                let requestParam = {
-                    url: this.serviceList.userAddrAdd + "?appKey=c8c35003cc4c408581043baad45bce5b&secret=0dc6fe93a8154fcaab629353ab800bb4",
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: Object.assign(commonParam, param)
-                }
-                this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
-                    resolve(resp)
-                }).catch((error) => {
-                    reject(error)
-                })
-            })
-        })
+        return this.sendControlHttpRequestWrapper(this.serviceList.userAddrAdd, param)
     },
 
     userAddrUpdate(param = {}) {
-        return new Promise((resolve, reject) => {
-            this.getRequestCommonParam().then((commonParam) => {
-                let requestParam = {
-                    url: this.serviceList.userAddrUpdate + "?appKey=c8c35003cc4c408581043baad45bce5b&secret=0dc6fe93a8154fcaab629353ab800bb4",
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: Object.assign(commonParam, param)
-                }
-                this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
-                    resolve(resp)
-                }).catch((error) => {
-                    reject(error)
-                })
-            })
-        })
+        return this.sendControlHttpRequestWrapper(this.serviceList.userAddrUpdate, param)
     },
 
     userAddrDelete(param = {}) {
-        return new Promise((resolve, reject) => {
-            this.getRequestCommonParam().then((commonParam) => {
-                let requestParam = {
-                    url: this.serviceList.userAddrDelete + "?appKey=c8c35003cc4c408581043baad45bce5b&secret=0dc6fe93a8154fcaab629353ab800bb4",
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: Object.assign(commonParam, param)
-                }
-                this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
-                    resolve(resp)
-                }).catch((error) => {
-                    reject(error)
-                })
-            })
-        })
+        return this.sendControlHttpRequestWrapper(this.serviceList.userAddrDelete, param)
     },
 
     setDefaultAddr(param = {}) {
-        return new Promise((resolve, reject) => {
-            this.getRequestCommonParam().then((commonParam) => {
-                let requestParam = {
-                    url: this.serviceList.setDefaultAddr + "?appKey=c8c35003cc4c408581043baad45bce5b&secret=0dc6fe93a8154fcaab629353ab800bb4",
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: Object.assign(commonParam, param)
-                }
-                this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
-                    resolve(resp)
-                }).catch((error) => {
-                    reject(error)
-                })
-            })
-        })
+        return this.sendControlHttpRequestWrapper(this.serviceList.setDefaultAddr, param)
     },
 
     //防伪

@@ -3,7 +3,7 @@
         <midea-mask @click="layoutClick"></midea-mask>
         <div ref="dialog" class="dialog-box" :style="{top:dialogTop+'px'}">
             <div class="dialog-content">
-                <image class="dialog-close-icon" src="./assets/img/service_ic_cancel@3x.png" resize='contain'></image>
+                <image class="dialog-close-icon" src="./assets/img/service_ic_cancel@3x.png" resize='contain' @click="layoutClick"></image>
                 <slider class="fault-dialog" :index="currentIndex" @change="changeIndex">
                     <div v-for="(item,index) in data" :key="index">
                         <div class="fault-dialog-solution">
@@ -32,7 +32,7 @@
                             </div>
                         </div>
                     </div>
-                    <indicator class="indicator"></indicator>
+                    <indicator v-if="data.length>1" class="indicator"></indicator>
                 </slider>
             </div>
         </div>
@@ -73,8 +73,8 @@
   height: 40px;
   width: 40px;
   position: absolute;
-  right: 10px;
-  top: 10px;
+  right: 15px;
+  top: 15px;
 }
 .content-title {
   color: #333333;
@@ -88,6 +88,17 @@
   font-size: 26px;
   line-height: 36px;
   text-align: center;
+}
+
+.indicator {
+  position: absolute;
+  width: 558px;
+  height: 30px;
+  item-color: #c7c7cc;
+  item-selected-color: #267aff;
+  item-size: 10px;
+  bottom: 60px;
+  left: 0px;
 }
 
 .dialog-footer {
@@ -144,6 +155,7 @@
 }
 
 .fault-dialog {
+  position: relative;
   width: 558px;
   height: 530px;
   padding-left: 20px;
@@ -183,20 +195,11 @@
   padding-bottom: 16px;
 }
 .fault-dialog-desc {
+  width: 518px;
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #666666;
   text-align: left;
-}
-.indicator {
-  width: 558px;
-  height: 530px;
-  item-color: green;
-  item-selected-color: red;
-  item-size: 10px;
-  position: absolute;
-  bottom: 440px;
-  left: 0px;
 }
 </style>
 

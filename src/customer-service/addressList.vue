@@ -76,8 +76,10 @@ export default {
             let param = {
                 regionCode: this.regionCode
             }
-            nativeService.getAreaListCache(param).then((data) => {
+            nativeService.getAreaList(param).then((data) => {
                 this.areaList = data.children
+            }).catch((error) => {
+                nativeService.toast(nativeService.getCssErrorMessage(error))
             })
         })
     }

@@ -104,7 +104,7 @@ export default {
             }
 
 
-            return Object.assign(order, others)
+            return Object.assign({}, order, others)
         }
     },
     created() {

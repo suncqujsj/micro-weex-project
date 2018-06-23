@@ -14,7 +14,9 @@
                     </div>
                     <text class="text-desc">{{item.provinceName}} {{item.cityName}} {{item.countyName}} {{item.streetName}} {{item.addr}}</text>
                 </div>
-                <image class="edit-img" src="./assets/img/service_ic_edit@3x.png" resize='contain' @click="goToAddressDetail(item)"></image>
+                <div class="edit-block">
+                    <image class="edit-img" src="./assets/img/service_ic_edit@3x.png" resize='contain' @click="goToAddressDetail(item)"></image>
+                </div>
             </div>
             <text class="loading-end" v-if="!loadingEnd">加载中...</text>
             <text class="loading-end" v-if="loadingEnd">———— 到底了 ————</text>
@@ -168,6 +170,12 @@ export default {
   color: #8a8a8f;
   text-align: left;
   padding-top: 12px;
+}
+.edit-block {
+  align-self: stretch;
+  padding: 25px;
+  flex-direction: row;
+  align-items: center;
 }
 .edit-img {
   width: 40px;

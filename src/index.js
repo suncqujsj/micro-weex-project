@@ -27,7 +27,7 @@ import MideaOperationModal from '@/midea-component/operation-modal.vue'
 import MideaOverlay from '@/midea-component/overlay.vue'
 import MideaPopup from '@/midea-component/popup.vue'
 import MideaSlider from '@/midea-component/slider.vue'
-import MideaSwitch from '@/midea-component/switch.vue'
+import MideaSwitch2 from '@/midea-component/switch.vue'
 import MideaTitleBar from '@/midea-component/title-bar.vue'
 
 import MideaSearchbar from '@/midea-component/mSearchbar.vue'
@@ -65,7 +65,7 @@ export {
   MideaOverlay,
   MideaPopup,
   MideaSlider,
-  MideaSwitch,
+  MideaSwitch2,
   MideaTitleBar,
   MideaSearchbar,
   MideaVote,

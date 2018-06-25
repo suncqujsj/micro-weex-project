@@ -41,8 +41,9 @@
       }
     },
     methods: {
-     onchange (event) {
+     onchange (e) {
         this.checked = !this.checked;
+        this.$emit('onchange', e)
       },
     }
   }

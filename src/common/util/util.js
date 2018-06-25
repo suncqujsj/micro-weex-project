@@ -27,6 +27,30 @@ const util = {
         for (var k in o)
             if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
         return fmt;
+    },
+    getParameters(key) {
+        let theRequest = new Object();
+        let bundleUrl = weex.config.bundleUrl
+        let queryString = ''
+        if (bundleUrl.indexOf("?") != -1) {
+            queryString = bundleUrl.substr(bundleUrl.indexOf("?") + 1);
+            let strs = queryString.split("&");
+            for (let i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+            }
+        }
+        return key ? theRequest[key] : theRequest
+    },
+    convertToJson(str) {
+        let result = str
+        if (typeof str == 'string') {
+            try {
+                result = JSON.parse(str)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+        return result
     }
 }
 

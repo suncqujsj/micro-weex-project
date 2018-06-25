@@ -179,7 +179,7 @@ export default {
         }
     },
     created() {
-
+        nativeService.alert(weex.config.bundleUrl)
     }
 }
 </script>

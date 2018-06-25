@@ -5,8 +5,10 @@ const storage = weex.requireModule('storage');
 const bridgeModule = weex.requireModule('bridgeModule');
 const globalEvent = weex.requireModule("globalEvent");
 
+
 const isIos = weex.config.env.platform == "iOS" ? true : false;
 import debugUtil from '../util/debugUtil'
+import util from '../util/util'
 
 var dummy = false;
 // import Mock from './mock'  //正式场上线时注释掉
@@ -624,6 +626,17 @@ export default {
         } */
         let param = Object.assign(params, {
             operation: 'jumpNativePage'
+        })
+        return this.commandInterfaceWrapper(param)
+    },
+    //跳转到h5页面
+    weexBundleToWeb(params) {
+        /* params =  {
+            url: "xxxx", //跳转的目标页面
+            titel: "h5标题"
+        } */
+        let param = Object.assign(params, {
+            operation: 'weexBundleToWeb',
         })
         return this.commandInterfaceWrapper(param)
     },

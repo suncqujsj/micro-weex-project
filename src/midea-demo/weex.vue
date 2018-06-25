@@ -121,6 +121,7 @@ module.exports = {
             { title: 'showSharePanel打开分享界面', link: "showSharePanel" },
             { title: 'takePhoto照相', link: "takePhoto" },
             { title: 'updateDeviceInfo更新当前设备信息', link: "updateDeviceInfo" },
+            { title: 'weexBundleToWeb跳转web页面', link: "weexBundleToWeb" },
             { title: 'weex环境变量', link: "weexEnv" }
         ]
     }),

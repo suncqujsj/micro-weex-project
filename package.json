@@ -5,9 +5,10 @@
   "version": "0.1.0",
   "scripts": {
     "build": "webpack",
-    "dev": "webpack --watch", 
+    "dev": "webpack --watch",
     "dev_demo": "webpack --watch --env=midea-demo",
     "dev_customer": "webpack --watch --env=customer-service",
+    "dev_rooms": "webpack --watch --env=midea-rooms",
     "serve": "serve -p 8080",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,7 +16,7 @@
   "keywords": [
     "weex",
     "vue",
-    "demo" 
+    "demo"
   ],
   "author": "Hanks <zhanghan.me@gmail.com>",
   "contributors": [],
@@ -53,6 +54,7 @@
     "weex-vue-loader": "~0.4.2"
   },
   "dependencies": {
+    "echarts": "^4.1.0",
     "vue": "^2.1.10",
     "weex-html5": "^0.4.1",
     "weex-marquee": "^1.1.2",

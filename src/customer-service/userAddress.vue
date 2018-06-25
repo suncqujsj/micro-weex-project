@@ -27,7 +27,7 @@
             </div>
             <div class="item-group">
                 <text class="text-label">默认地址</text>
-                <midea-switch :checked="userAddress.defaultAddr" @change="setDefaultAddr" width="70" height="38" slot="value"></midea-switch>
+                <midea-switch2 :checked="userAddress.defaultAddr" @change="changeDefaultAddr" width="70" height="38"></midea-switch2>
             </div>
         </scroller>
 
@@ -45,7 +45,7 @@
 import base from './base'
 import nativeService from './settings/nativeService';
 
-import { MideaButton, MideaSwitch } from '@/index'
+import { MideaButton, MideaSwitch2 } from '@/index'
 
 import AddressPicker from './components/addressPicker.vue'
 
@@ -53,7 +53,7 @@ export default {
     components: {
         MideaButton,
         AddressPicker,
-        MideaSwitch
+        MideaSwitch2
     },
     mixins: [base],
     data() {
@@ -86,9 +86,15 @@ export default {
         servieAddressSelected(event) {
             this.userAddress = Object.assign(this.userAddress, event)
         },
-        setDefaultAddr(event) {
-            nativeService.toast(event.value)
+        changeDefaultAddr(event) {
             this.userAddress.defaultAddr = event.value
+        },
+        submitDefaultAddr(userAddrId, isDefault) {
+            let param = {
+                "userAddrId": userAddrId,
+                "defaultAddr": isDefault
+            }
+            return nativeService.setDefaultAddr(param)
         },
         deleteAddress() {
             nativeService.userAddrDelete({ userAddrId: this.userAddress.userAddrId }).then(() => {

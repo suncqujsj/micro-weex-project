@@ -122,8 +122,13 @@ export default {
             }
         },
         getOrderList() {
+            let status = []
+            for (let index = 10; index < 17; index++) {
+                status.push(index)
+            }
             let param = {
-                serviceOrderStatus: "10;11;12;13;14;15;16",  //派工单状态
+                dispatchOrderStatus: "10;11;12;13;14;15;16",  //在途工单派工单状态
+                page: 0,
                 resultNum: 1
             }
             nativeService.queryserviceorder(param).then((data) => {

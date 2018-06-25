@@ -7150,8 +7150,216 @@ export const all = [
         }
     },
     {
-        path: "",
-        data: {}
+        path: ".*/c-css-ipms/api/wom/order/extractcallbackitem",
+        data: {
+            "status": true,
+            "errorCode": null,
+            "errorMsg": null,
+            "pageIndex": null,
+            "pageSize": null,
+            "pageCount": null,
+            "total": 3,
+            "list": [
+                {
+                    "ccCallbackItemAndCtrlVO": {
+                        "callbackTypeCode": "FM",
+                        "callbackTypeName": "服务满意度",
+                        "callbackItemId": "305",
+                        "callbackItemCode": "W111",
+                        "callbackItemName": "您对本次服务满意吗？"
+                    },
+                    "ccCallbackResultAndCtrlVOList": [
+                        {
+                            "callbackResultId": "1067",
+                            "callbackResultCode": "W11101",
+                            "callbackResultName": "满意",
+                            "callbackResultScore": 1,
+                            "callbackIsFakeOrder": "N",
+                            "oiCallbackResultUnsatisfyReasonVOList": [
+                                {
+                                    "unsatisfyReasonId": "1000002573",
+                                    "customerLable": "有礼貌会说话"
+                                },
+                                {
+                                    "unsatisfyReasonId": "1000002572",
+                                    "customerLable": "微笑迷人态度好"
+                                },
+                                {
+                                    "unsatisfyReasonId": "1000002580",
+                                    "customerLable": "主动讲解产品用法"
+                                },
+                                {
+                                    "unsatisfyReasonId": "1000002582",
+                                    "customerLable": "安装位置好"
+                                },
+                                {
+                                    "unsatisfyReasonId": "1000002581",
+                                    "customerLable": "主动清洁卫生"
+                                },
+                                {
+                                    "unsatisfyReasonId": "1000002578",
+                                    "customerLable": "问题处理干净利索"
+                                }
+                            ]
+                        },
+                        {
+                            "callbackResultId": "1068",
+                            "callbackResultCode": "W11102",
+                            "callbackResultName": "一般",
+                            "callbackResultScore": 0,
+                            "callbackIsFakeOrder": "N",
+                            "oiCallbackResultUnsatisfyReasonVOList": [
+                                {
+                                    "unsatisfyReasonId": "1000002575",
+                                    "customerLable": "服务态度差"
+                                },
+                                {
+                                    "unsatisfyReasonId": "1000002574",
+                                    "customerLable": "衣着不整、形象差"
+                                },
+                                {
+                                    "unsatisfyReasonId": "1000002576",
+                                    "customerLable": "不够懂礼貌"
+                                },
+                                {
+                                    "unsatisfyReasonId": "1000002584",
+                                    "customerLable": "处理慢、技术差"
+                                }
+                            ]
+                        },
+                        {
+                            "callbackResultId": "1069",
+                            "callbackResultCode": "W11103",
+                            "callbackResultName": "不满意",
+                            "callbackResultScore": -2,
+                            "callbackIsFakeOrder": "N",
+                            "oiCallbackResultUnsatisfyReasonVOList": [
+                                {
+                                    "unsatisfyReasonId": "1000002575",
+                                    "customerLable": "服务态度差"
+                                },
+                                {
+                                    "unsatisfyReasonId": "1000002574",
+                                    "customerLable": "衣着不整、形象差"
+                                },
+                                {
+                                    "unsatisfyReasonId": "1000002576",
+                                    "customerLable": "不够懂礼貌"
+                                },
+                                {
+                                    "unsatisfyReasonId": "1000002584",
+                                    "customerLable": "处理慢、技术差"
+                                }
+                            ]
+                        },
+                        {
+                            "callbackResultId": "1070",
+                            "callbackResultCode": "W11104",
+                            "callbackResultName": "机器已修好，已通知我接机",
+                            "callbackResultScore": null,
+                            "callbackIsFakeOrder": "N",
+                            "oiCallbackResultUnsatisfyReasonVOList": []
+                        },
+                        {
+                            "callbackResultId": "1071",
+                            "callbackResultCode": "W11105",
+                            "callbackResultName": "无人联系过",
+                            "callbackResultScore": null,
+                            "callbackIsFakeOrder": "Y",
+                            "oiCallbackResultUnsatisfyReasonVOList": []
+                        },
+                        {
+                            "callbackResultId": "1072",
+                            "callbackResultCode": "W11106",
+                            "callbackResultName": "处理中，还未处理好",
+                            "callbackResultScore": null,
+                            "callbackIsFakeOrder": "Y",
+                            "oiCallbackResultUnsatisfyReasonVOList": []
+                        }
+                    ]
+                },
+                {
+                    "ccCallbackItemAndCtrlVO": {
+                        "callbackTypeCode": "BZ",
+                        "callbackTypeName": "标准化",
+                        "callbackItemId": "245",
+                        "callbackItemCode": "B206",
+                        "callbackItemName": "请问师傅上门的时候是否出示工作证？"
+                    },
+                    "ccCallbackResultAndCtrlVOList": [
+                        {
+                            "callbackResultId": "746",
+                            "callbackResultCode": "B20116",
+                            "callbackResultName": "是",
+                            "callbackResultScore": 0,
+                            "callbackIsFakeOrder": null,
+                            "oiCallbackResultUnsatisfyReasonVOList": []
+                        },
+                        {
+                            "callbackResultId": "747",
+                            "callbackResultCode": "B20117",
+                            "callbackResultName": "否",
+                            "callbackResultScore": -2,
+                            "callbackIsFakeOrder": null,
+                            "oiCallbackResultUnsatisfyReasonVOList": [
+                                {
+                                    "unsatisfyReasonId": "1000002600",
+                                    "customerLable": "没出示工作证"
+                                }
+                            ]
+                        },
+                        {
+                            "callbackResultId": "748",
+                            "callbackResultCode": "B20118",
+                            "callbackResultName": "不清楚",
+                            "callbackResultScore": null,
+                            "callbackIsFakeOrder": null,
+                            "oiCallbackResultUnsatisfyReasonVOList": []
+                        }
+                    ]
+                },
+                {
+                    "ccCallbackItemAndCtrlVO": {
+                        "callbackTypeCode": "BZ",
+                        "callbackTypeName": "标准化",
+                        "callbackItemId": "248",
+                        "callbackItemCode": "B209",
+                        "callbackItemName": "请问师傅服务完毕后，是否清理干净现场？"
+                    },
+                    "ccCallbackResultAndCtrlVOList": [
+                        {
+                            "callbackResultId": "755",
+                            "callbackResultCode": "B20125",
+                            "callbackResultName": "是",
+                            "callbackResultScore": 0,
+                            "callbackIsFakeOrder": null,
+                            "oiCallbackResultUnsatisfyReasonVOList": []
+                        },
+                        {
+                            "callbackResultId": "756",
+                            "callbackResultCode": "B20126",
+                            "callbackResultName": "否",
+                            "callbackResultScore": -2,
+                            "callbackIsFakeOrder": null,
+                            "oiCallbackResultUnsatisfyReasonVOList": [
+                                {
+                                    "unsatisfyReasonId": "1000002605",
+                                    "customerLable": "没清理干净现场"
+                                }
+                            ]
+                        },
+                        {
+                            "callbackResultId": "757",
+                            "callbackResultCode": "B20127",
+                            "callbackResultName": "不清楚",
+                            "callbackResultScore": null,
+                            "callbackIsFakeOrder": null,
+                            "oiCallbackResultUnsatisfyReasonVOList": []
+                        }
+                    ]
+                }
+            ]
+        }
     },
     {
         path: "",

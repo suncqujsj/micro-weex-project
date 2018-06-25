@@ -51,7 +51,7 @@
             <text class="action" v-if="[2, 6].indexOf(formattedOrder.calcServiceOrderStatus)>-1" @click="showDialog()">取消工单</text>
             <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 2 && checkPassTime(formattedOrder)" @click="urgeOrder()">催办</text>
             <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 3" @click="renewOrder()">重新报单</text>
-            <text class="action primary-action" v-if="formattedOrder.calcServiceOrderStatus == 4" @click="assessService()">评价有礼</text>
+            <text class="action primary-action" v-if="formattedOrder.allowCallbackWX == 'Y'" @click="assessService()">评价有礼</text>
             <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 5" @click="assessService()">查看评价</text>
             <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 6" @click="callService()">联系网点</text>
         </div>
@@ -103,7 +103,7 @@ export default {
             let result = []
             if (this.reminderOptions) {
                 result = this.reminderOptions.map((item) => {
-                    return item.serviceRequireName
+                    return item.serviceRequireItemName
                 })
             }
             return result
@@ -122,14 +122,17 @@ export default {
         },
 
         urgeOrder() {
+            let order = this.order
             let param = {
-                prodCode: this.order.serviceUserDemandVOs[0].prodCode,
-                orgCode: this.order.orgCode,
-                serviceOrderNO: this.order.serviceOrderNo,
-                serviceMode: ""
+                brandCode: order.serviceUserDemandVOs[0].brandCode,
+                depth: "3",
+                orgCode: order.orgCode,
+                interfaceSource: "SMART",
+                parentServiceRequireCode: "CD",
+                prodCode: order.serviceUserDemandVOs[0].prodCode
             }
-            nativeService.queryReminderOptions(param).then((resp) => {
-                this.reminderOptions = resp.data
+            nativeService.queryservicerequireproduct(param).then((resp) => {
+                this.reminderOptions = resp.list
                 this.isShowUrgeOrder = true;
                 this.$nextTick(e => {
                     this.$refs.urgeOrderActionsheet.open();
@@ -141,13 +144,13 @@ export default {
         },
         urgeOrdertItemClick(event) {
             this.isShowUrgeOrder = false
+            let order = this.order
             let reminderOption = this.reminderOptions[event.index]
             let param = {
-                orgCode: this.order.orgCode,
-                serviceOrderNo: this.order.serviceOrderNo,
-                // serviceRequireTypeCode: reminderOption.serviceRequireCode,
-                reminderReason: reminderOption.serviceRequireName,
-                serviceRequireItem2Code: reminderOption.serviceRequireCode
+                orgCode: order.orgCode,
+                serviceOrderNo: order.serviceOrderNo,
+                reminderReason: reminderOption.serviceRequireItemName,
+                serviceRequireItem2Code: reminderOption.serviceRequireItemCode
             }
             nativeService.createserviceuserdemand(param).then(() => {
                 nativeService.toast("催单成功")

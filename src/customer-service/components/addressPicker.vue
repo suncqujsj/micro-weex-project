@@ -120,16 +120,20 @@ export default {
             let param = {
                 "regionCode": regionCode
             }
-            nativeService.getAreaListCache(param).then((data) => {
-                this.areaListObj = data
-                if (data.self) {
-                    this.currentRegionLevel = data.self.level
+            nativeService.getAreaList(param).then((data) => {
+                this.areaListObj = data.content
+                if (this.areaListObj.self) {
+                    this.currentRegionLevel = this.areaListObj.self.level
                 } else {
                     this.currentRegionLevel = 0
                 }
                 this.currentregionCode = regionCode
-                const el = this.$refs['area0'][0]
-                dom.scrollToElement(el)
+                this.$nextTick(() => {
+                    const el = this.$refs['area0'][0]
+                    dom.scrollToElement(el)
+                })
+            }).catch((error) => {
+                nativeService.toast(nativeService.getCssErrorMessage(error))
             })
         },
         selectItem(item) {

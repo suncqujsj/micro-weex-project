@@ -27,7 +27,19 @@ const util = {
         for (var k in o)
             if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
         return fmt;
-    }
+    },
+
+    getParameters(url, key) {
+        let theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            let queryString = url.substr(url.indexOf("?") + 1);
+            let strs = queryString.split("&");
+            for (let i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+            }
+        }
+        return key ? theRequest[key] : theRequest
+    },
 }
 
 export default util

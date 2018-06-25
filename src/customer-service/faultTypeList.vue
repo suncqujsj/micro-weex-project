@@ -4,8 +4,8 @@
         </midea-header>
         <scroller class="scroller">
             <div class="top-gap"> </div>
-            <div class="scroller-item-wrapper" v-for="(item, index) in faultData" @click="selectItem(item)" :key="index">
-                <text class="scroller-item">{{item.serviceRequireName}}</text>
+            <div class="scroller-item-wrapper" v-for="(item, index) in faultList" @click="selectItem(item)" :key="index">
+                <text class="scroller-item">{{item.serviceRequireItemName}}</text>
             </div>
             <div class="bottom-gap"> </div>
         </scroller>
@@ -14,7 +14,7 @@
 
 <script>
 import base from './base'
-import nativeService from '@/common/services/nativeService'
+import nativeService from './settings/nativeService'
 
 export default {
     components: {
@@ -24,7 +24,7 @@ export default {
         return {
             title: '故障类型',
             selectedProduct: null,
-            faultData: []
+            faultList: []
         }
     },
     methods: {
@@ -32,8 +32,6 @@ export default {
             this.appPageDataChannel.postMessage({ page: this.fromPage, key: "selectedFault", data: item })
             this.back()
         }
-    },
-    beforeCreate: function () {
     },
     created() {
         nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, (resp) => {
@@ -45,8 +43,10 @@ export default {
                     brandCode: this.selectedProduct.brandCode, //查询品牌
                     prodCode: this.selectedProduct.prodCode, //查询品类
                 }
-                nativeService.getFaultType(param).then((data) => {
-                    this.faultData = data.data
+                nativeService.queryservicerequireproduct(param).then((data) => {
+                    this.faultList = data.list
+                }).catch((error) => {
+                    nativeService.toast(nativeService.getCssErrorMessage(error))
                 })
             }
         })

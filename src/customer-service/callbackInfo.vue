@@ -48,7 +48,7 @@
 <script>
 import base from './base'
 import orderBase from './order-base'
-import nativeService from '@/common/services/nativeService'
+import nativeService from './settings/nativeService'
 import util from '@/common/util/util'
 import OrderBlock from '@/customer-service/components/orderBlock.vue'
 import { MideaDialog, MideaButton } from '@/index'
@@ -239,9 +239,15 @@ export default {
     created() {
         this.serviceOrderNo = nativeService.getParameters('id') || null
 
-        nativeService.getItem(this.SERVICE_STORAGE_KEYS.order, (resp) => {
+        nativeService.getItem(this.SERVICE_STORAGE_KEYS.currentOrder, (resp) => {
             if (resp.result == 'success') {
                 this.order = JSON.parse(resp.data) || []
+
+                let param = {
+                    serviceOrderNo: this.order.serviceOrderNo,
+                    orgCode: this.order.orgCode
+                }
+                this.extractcallbackitem(param)
             }
         })
     }

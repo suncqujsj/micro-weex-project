@@ -46,7 +46,7 @@
                 </div>
             </div>
         </scroller>
-        <div class="action-bar">
+        <div class="action-bar" v-if="formattedOrder">
             <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 1" @click="checkAddress()">查看网点</text>
             <text class="action" v-if="[2, 6].indexOf(formattedOrder.calcServiceOrderStatus)>-1" @click="showDialog()">取消工单</text>
             <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 2 && checkPassTime(formattedOrder)" @click="urgeOrder()">催办</text>
@@ -91,6 +91,14 @@ export default {
         }
     },
     computed: {
+        formattedOrder() {
+            let result
+            if (this.order) {
+                result = this.formatOrder(this.order)
+            }
+
+            return result
+        },
         urgeOrderItems() {
             let result = []
             if (this.reminderOptions) {
@@ -151,11 +159,11 @@ export default {
             this.isShowUrgeOrder = false
         },
         renewOrder() {
-            nativeService.setItem(this.SERVICE_STORAGE_KEYS.order, this.order, () => {
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, this.order, () => {
                 if (this.order.serviceSubTypeCode == 1111) {
-                    this.goTo("maintenance", {}, { from: "orderDetail", id: this.order.serviceOrderNo })
+                    this.goTo("maintenance", {}, { from: "orderList", isRenew: true })
                 } else {
-                    this.goTo("installation", {}, { from: "orderDetail", id: this.order.serviceOrderNo })
+                    this.goTo("installation", {}, { from: "orderList", isRenew: true })
                 }
             })
         },
@@ -178,9 +186,9 @@ export default {
             })
         },
         assessService() {
-            nativeService.setItem(this.SERVICE_STORAGE_KEYS.order, this.order,
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, this.order,
                 () => {
-                    this.goTo("serviceAssessment", {}, { from: 'orderList', id: this.order.serviceOrderNo })
+                    this.goTo("callbackInfo", {}, { from: 'orderList', id: this.order.serviceOrderNo })
                 })
         },
         callService() {
@@ -214,7 +222,7 @@ export default {
         })
 
         if (this.fromPage == "orderList") {
-            nativeService.getItem(this.SERVICE_STORAGE_KEYS.order, (resp) => {
+            nativeService.getItem(this.SERVICE_STORAGE_KEYS.currentOrder, (resp) => {
                 if (resp.result == 'success') {
                     this.order = JSON.parse(resp.data) || []
                 }

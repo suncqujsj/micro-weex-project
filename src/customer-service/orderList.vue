@@ -9,7 +9,7 @@
             </div>
             <div v-else>
                 <div v-for="(order, index) in formattedOrderList" :key="index" @click="goToOrderDetail(index)">
-                    <order-block class="order-block" :order="order">
+                    <order-block class="order-block" :order="order" :ref="'order'+index">
                         <div slot="action-bar" class="action-bar">
                             <text class="action" v-if="order.calcServiceOrderStatus == 1" @click="checkAddress()">查看网点</text>
                             <text class="action" v-if="[2, 6].indexOf(order.calcServiceOrderStatus)>-1" @click="showDialog(index)">取消工单</text>
@@ -21,7 +21,7 @@
                         </div>
                     </order-block>
                 </div>
-                <div v-if="isOrderListLoaded">
+                <div class="list-end" v-if="isOrderListLoaded">
                     <text class="loading-end" v-if="hasNext && !loadingEnd">加载中...</text>
                     <text class="loading-end" v-if="loadingEnd">———— 到底了 ————</text>
                 </div>
@@ -42,8 +42,10 @@
 <script>
 import base from './base'
 import orderBase from './order-base'
-import nativeService from '@/common/services/nativeService'
+import nativeService from './settings/nativeService'
 import OrderBlock from '@/customer-service/components/orderBlock.vue'
+
+const dom = weex.requireModule('dom')
 
 import { MideaDialog, MideaActionsheet } from '@/index'
 
@@ -74,16 +76,16 @@ export default {
         formattedOrderList() {
             //不可改变订单顺序
             return this.orderList.map((order) => {
-                let calcServiceOrderStatus = this.calcServiceOrderStatus(order)
-
-                return Object.assign(order, { calcServiceOrderStatus: calcServiceOrderStatus })
+                return this.formatOrder(order)
+                // let calcServiceOrderStatus = this.formatOrder(order)
+                // return Object.assign(order, { calcServiceOrderStatus: calcServiceOrderStatus })
             })
         },
         urgeOrderItems() {
             let result = []
             if (this.reminderOptions) {
                 result = this.reminderOptions.map((item) => {
-                    return item.serviceRequireName
+                    return item.serviceRequireItemName
                 })
             }
             return result
@@ -91,7 +93,13 @@ export default {
     },
     methods: {
         handlePageData(data) {
-            if (data.page == "orderList") {
+            if (data.key == "createOrder") {
+                this.getOrderList()
+                this.$nextTick(() => {
+                    const el = this.$refs['order0'][0]
+                    dom.scrollToElement(el, { offset: -24 })
+                })
+            } else if (data.page == "orderList") {
                 if (data.key == "cancelOrder") {
                     let id = data.data.id
                     if (this.selectedOrderIndex) {
@@ -120,9 +128,12 @@ export default {
                 this.orderList = data.list
                 this.hasNext = data.pageIndex * data.pageSize >= data.total ? false : true
                 this.isOrderListLoaded = true
+            }).catch((error) => {
+                nativeService.toast(nativeService.getCssErrorMessage(error))
             })
         },
         loadmore(event) {
+            if (!this.hasNext) return
             this.showLoading = 'show'
             setTimeout(() => {
                 this.orderListPage++
@@ -130,8 +141,10 @@ export default {
                 nativeService.queryserviceorder(this.orderListParam).then((data) => {
                     this.showLoading = 'hide'
                     if (data.list && data.list.length > 0) {
+                        this.hasNext = data.pageIndex * data.pageSize >= data.total ? false : true
                         this.orderList = this.orderList.concat(data.list)
                     } else {
+                        this.hasNext = false
                         this.loadingEnd = true
                     }
                 })
@@ -140,7 +153,7 @@ export default {
         goToOrderDetail(index) {
             this.selectedOrderIndex = index
             let order = this.orderList[index]
-            nativeService.setItem(this.SERVICE_STORAGE_KEYS.order, order, () => {
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, order, () => {
                 this.goTo("orderDetail", {}, { from: 'orderList', id: order.serviceOrderNo })
             })
         },
@@ -151,13 +164,15 @@ export default {
             this.selectedOrderIndex = index
             let order = this.orderList[this.selectedOrderIndex]
             let param = {
-                prodCode: order.serviceUserDemandVOs[0].prodCode,
+                brandCode: order.serviceUserDemandVOs[0].brandCode,
+                depth: "3",
                 orgCode: order.orgCode,
-                serviceOrderNO: order.serviceOrderNo,
-                serviceMode: ""
+                interfaceSource: "SMART",
+                parentServiceRequireCode: "CD",
+                prodCode: order.serviceUserDemandVOs[0].prodCode
             }
-            nativeService.queryReminderOptions(param).then((resp) => {
-                this.reminderOptions = resp.data
+            nativeService.queryservicerequireproduct(param).then((resp) => {
+                this.reminderOptions = resp.list
                 this.isShowUrgeOrder = true;
                 this.$nextTick(e => {
                     this.$refs.urgeOrderActionsheet.open();
@@ -174,9 +189,8 @@ export default {
             let param = {
                 orgCode: order.orgCode,
                 serviceOrderNo: order.serviceOrderNo,
-                // serviceRequireTypeCode: reminderOption.serviceRequireCode,
-                reminderReason: reminderOption.serviceRequireName,
-                serviceRequireItem2Code: reminderOption.serviceRequireCode
+                reminderReason: reminderOption.serviceRequireItemName,
+                serviceRequireItem2Code: reminderOption.serviceRequireItemCode
             }
             nativeService.createserviceuserdemand(param).then(() => {
                 nativeService.toast("催单成功")
@@ -189,11 +203,11 @@ export default {
         },
         renewOrder(index) {
             let order = this.orderList[index]
-            nativeService.setItem(this.SERVICE_STORAGE_KEYS.order, order, () => {
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, order, () => {
                 if (order.serviceSubTypeCode == 1111) {
-                    this.goTo("maintenance", {}, { from: "orderList", id: order.serviceOrderNo })
+                    this.goTo("maintenance", {}, { from: "orderList", isRenew: true })
                 } else {
-                    this.goTo("installation", {}, { from: "orderList", id: order.serviceOrderNo })
+                    this.goTo("installation", {}, { from: "orderList", isRenew: true })
                 }
             })
         },
@@ -219,9 +233,9 @@ export default {
         },
         assessService(index) {
             let order = this.orderList[index]
-            nativeService.setItem(this.SERVICE_STORAGE_KEYS.order, order,
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, order,
                 () => {
-                    this.goTo("serviceAssessment", {}, { from: 'orderList', id: order.serviceOrderNo })
+                    this.goTo("callbackInfo", {}, { from: 'orderList', id: order.serviceOrderNo })
                 })
         },
         callService(index) {
@@ -286,6 +300,10 @@ export default {
 .primary-action {
   color: #0078ff;
   border-color: #0078ff;
+}
+.list-end {
+  margin-top: 20px;
+  margin-bottom: 100px;
 }
 .loading-end {
   width: 750px;

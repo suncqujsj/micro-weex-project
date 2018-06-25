@@ -84,9 +84,11 @@
                 <div class="item-group photo-item-group">
                     <div v-for="(item,index) in photoData" :key="index" class="photo-item-detail">
                         <image :src="item.contentStr" class="photo-item-img" @click="removePhoto(index)"></image>
-                        <image src="./assets/img/service_ic_delone@3x.png" class="photo-delete-img"></image>
+                        <image src="./assets/img/service_ic_delone@3x.png" class="photo-delete-img" resize='contain'></image>
                     </div>
-                    <image v-if="photoData.length<3" src="./assets/img/service_ic_carema@3x.png" class="photo-item-add" @click="takePhoto"></image>
+                    <div v-if="photoData.length<3" class="photo-item-detail">
+                        <image src="./assets/img/service_ic_carema@3x.png" class="photo-item-add" resize='contain' @click="takePhoto"></image>
+                    </div>
                 </div>
                 <div class="item-group info-group">
                     <textarea class="info-textarea" placeholder="请输入其他备注信息" v-model="order.pubRemark" rows="5" maxlength="120"></textarea>
@@ -108,18 +110,22 @@
 
         <period-picker :isShow="isShowPeriodPicker" :dates="serviePeriodDate" :dateIndex="selectedDateIndex" :times="serviePeriodTime" :timeIndex="selectedTimeIndex" @oncancel="isShowPeriodPicker=false" @onchanged="serviePeriodSelected">
         </period-picker>
+
+        <service-dialog :show="showExcludedFaultInfo" :data="excludedFault" @close="excludedFaultInfoClose" @dialogConfirm="excludedFaultInfoConfirm" @dialogCancel="excludedFaultInfoCancel">
+        </service-dialog>
     </div>
 </template>
 
 <script>
 import base from './base'
-import nativeService from '@/common/services/nativeService';
+import nativeService from './settings/nativeService';
 import util from '@/common/util/util'
 
 
 import { MideaCell, MideaGridSelect, MideaButton, MideaActionsheet, MideaPopup, MideaSelect } from '@/index'
 
 import PeriodPicker from './components/periodPicker.vue'
+import ServiceDialog from './components/dialog.vue'
 
 export default {
     components: {
@@ -130,12 +136,14 @@ export default {
         MideaPopup,
         MideaSelect,
 
-        PeriodPicker
+        PeriodPicker,
+        ServiceDialog
     },
     mixins: [base],
     data() {
         return {
             title: '维修服务',
+            isRenew: false,
 
             selectedProduct: [],
 
@@ -147,6 +155,7 @@ export default {
 
             selectedFault: null,
             excludedFault: null,
+            showExcludedFaultInfo: false,
 
             isShowPeriodPicker: false,
             selectedDateIndex: null,
@@ -172,6 +181,7 @@ export default {
                     'isSelected': false
                 }
             ],
+            codeType: '',
             code: '',
 
             showTakePhotoBar: false,
@@ -260,7 +270,7 @@ export default {
         faultDesc() {
             let result = '请选择'
             if (this.selectedFault) {
-                result = this.selectedFault.serviceRequireName
+                result = this.selectedFault.serviceRequireItemName
             }
             return result
         },
@@ -302,16 +312,20 @@ export default {
                     this.userAddress = data.data
                 } else if (data.key == "selectedFault") {
                     this.selectedFault = data.data
-                    let param = {
-                        operator: "mdfw",
-                        operatorUnit: "mdfw",
-                        orgCode: "",
-                        serviceRequireItemCode: this.selectedFault.serviceRequireCode,
-                        brandCode: this.selectedProduct[0].brandCode,
-                        prodCode: this.selectedProduct[0].prodCode
-                    }
-                    nativeService.getExcludedFault(param).then((data) => {
-                        this.excludedFault = data.data
+                    nativeService.getUserInfo().then((data) => {
+                        let param = {
+                            operator: data.nickName,
+                            operatorUnit: "operatorUnit",
+                            orgCode: this.selectedFault.orgCode,
+                            depth: "3",
+                            serviceRequireItemCode: this.selectedFault.serviceRequireItemCode,
+                            brandCode: this.selectedProduct[0].brandCode,
+                            prodCode: this.selectedProduct[0].prodCode,
+                            parentServiceRequireCode: "BX"
+                        }
+                        nativeService.getexcludedfaultlist(param).then((data) => {
+                            this.excludedFault = data.excludedFaultVOList
+                        })
                     })
                 }
             }
@@ -351,9 +365,33 @@ export default {
             }
         },
         showExcludedFault(event) {
-
+            this.showExcludedFaultInfo = true
         },
-
+        updateExcludedFaultInfo(index, isHelpful) {
+            let param = {
+                "orgCode": this.selectedFault.orgCode,
+                "serviceRequireItemCode": this.selectedFault.serviceRequireItemCode,
+                "serviceRequireItemName": this.selectedFault.serviceRequireItemName,
+                "excludedFaultId": this.excludedFault[index].excludedFaultId,
+                "excludedFaultCode": this.excludedFault[index].excludedFaultCode,
+                "excludedFaultName": this.excludedFault[index].excludedFaultName,
+                "prodCode": this.selectedProduct[0].prodCode,
+                "isHelpful": isHelpful,
+                "prodName": this.selectedProduct[0].prodName
+            }
+            nativeService.appexcludedfaulttraces(param).then(() => {
+                this.showExcludedFaultInfo = false
+            })
+        },
+        excludedFaultInfoClose(event) {
+            this.showExcludedFaultInfo = false
+        },
+        excludedFaultInfoConfirm(event) {
+            this.updateExcludedFaultInfo(event.index, "Y")
+        },
+        excludedFaultInfoCancel(event) {
+            this.updateExcludedFaultInfo(event.index, "N")
+        },
         //期望服务时间
         initServiePeriod() {
             let today = new Date()
@@ -403,10 +441,36 @@ export default {
             nativeService.scanCode().then(
                 (resp) => {
                     if (resp.status == 0) {
-                        this.code = resp.data
+                        let scanResult = resp.data || resp.code
+
+                        if (scanResult.indexOf(",") != -1) {
+                            // 扫条形码，可能会带'ITF,xxxxxxx', 截取后半部
+                            this.codeType = '60'
+                            let tmp = scanResult.split(",")
+                            this.code = tmp.length === 1 ? tmp[0] : tmp[1]
+                        } else if (util.getParameters(scanResult, "tsn")) {
+                            //二维码
+                            this.codeType = '0'
+                            this.code = util.getParameters(scanResult, "tsn")
+                        } else {
+                            this.codeType = '60'
+                            this.code = scanResult
+                        }
+                        this.getProductFromCode()
                     }
                 }
             )
+        },
+        getProductFromCode() {
+            let param = {
+                codeType: this.codeType,
+                code: this.code,
+                version: "3.0",
+                sourceTag: "3"
+            }
+            nativeService.getProdMessage(param).then((data) => {
+
+            })
         },
 
         //现场图片
@@ -440,7 +504,7 @@ export default {
                         })
                     }
                 ).catch((error) => {
-                    this.result = "error: " + JSON.stringify(error || {})
+                    nativeService.toast(JSON.stringify(error || {}))
                 })
             } else {
                 //选照片
@@ -452,7 +516,7 @@ export default {
                         })
                     }
                 ).catch((error) => {
-                    this.result = "error: " + JSON.stringify(error || {})
+                    nativeService.toast(JSON.stringify(error || {}))
                 })
             }
         },
@@ -461,6 +525,53 @@ export default {
         },
         removePhoto(index) {
             this.photoData.splice(index, 1)
+        },
+        renewOrder(order) {
+            //安装产品
+            this.selectedProduct.push({
+                brandCode: order.serviceUserDemandVOs[0].brandCode,  //产品品牌
+                brand: order.serviceUserDemandVOs[0].brandName,  //产品品牌名称
+                prodCode: order.serviceUserDemandVOs[0].prodCode,  //产品品类
+                prodName: order.serviceUserDemandVOs[0].prodName  //产品品类名称
+            })
+            //故障类型
+            // selectedFault
+
+            //期望服务时间
+            let temp = order.requireServiceDate.split(" ")
+            let matchDateItem = this.serviePeriodDate.find((item) => {
+                return item.value == temp[0]
+            })
+            if (matchDateItem) {
+                this.selectedDateIndex = matchDateItem.index
+            } else {
+                this.selectedDateIndex = 1
+            }
+            let matchTimeItem = this.serviePeriodTime.find((item) => {
+                return item.desc == temp[1]
+            })
+            if (matchTimeItem) {
+                this.selectedTimeIndex = matchTimeItem.index
+            }
+
+            //服务地址
+            let customerAddressArray = order.customerAddress.split(" ")
+            this.userAddress = {
+                receiverName: order.customerName,
+                receiverMobile: order.customerMobilephone1,
+                province: '',
+                provinceName: customerAddressArray[0],
+                city: '',
+                cityName: customerAddressArray[1],
+                county: '',
+                countyName: customerAddressArray[2],
+                street: order.areaCode,
+                streetName: order.areaName,
+                addr: customerAddressArray[3],
+            }
+
+            this.order.pubRemark = order.serviceOrderVO[0].pubRemark
+
         },
 
         submit() {
@@ -497,7 +608,7 @@ export default {
                 }
 
                 //用户诉求从表  
-                const product = this.selectedProduct[0];
+                const product = this.selectedProduct[0]
                 let serviceParam = {
                     brandCode: product.brandCode,
                     depth: "3",
@@ -530,7 +641,8 @@ export default {
                     param["serviceUserDemandVOs"] = serviceUserDemandVOs
 
                     nativeService.createserviceorder(param).then(() => {
-                        if (["orderList", "orderDetail"].indexOf(this.fromPage) > -1) {
+                        this.appPageDataChannel.postMessage({ page: "maintenance", key: "createOrder" })
+                        if (this.isRenew) {
                             //重新报单
                             this.back({ viewTag: "orderList" })
                         } else {
@@ -547,11 +659,15 @@ export default {
     created() {
         this.initServiePeriod()
 
-        nativeService.getItem(this.SERVICE_STORAGE_KEYS.order, (resp) => {
-            if (resp.result == 'success') {
-                this.order = JSON.parse(resp.data) || []
-            }
-        })
+        this.isRenew = nativeService.getParameters('isRenew') || false
+        if (this.isRenew) {
+            //重新下单
+            nativeService.getItem(this.SERVICE_STORAGE_KEYS.currentOrder, (resp) => {
+                if (resp.result == 'success') {
+                    this.renewOrder(JSON.parse(resp.data))
+                }
+            })
+        }
     }
 }
 </script>
@@ -733,10 +849,6 @@ export default {
   color: #666666;
   text-align: left;
 }
-.photo-icon {
-  height: 40px;
-  width: 40px;
-}
 .photo-item-group {
   width: 750px;
   padding-left: 24px;
@@ -745,25 +857,27 @@ export default {
 }
 .photo-item-detail {
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 128px;
+  height: 128px;
+  background-color: #f2f2f2;
+  margin-right: 24px;
 }
 .photo-item-img {
   width: 128px;
   height: 128px;
-  margin-top: 20px;
-  margin-right: 32px;
+  margin: 20px;
 }
 .photo-item-add {
-  width: 128px;
-  height: 128px;
-  margin-top: 20px;
-  margin-right: 32px;
-  padding: 34px;
-  background-color: #f2f2f2;
+  width: 60px;
+  height: 60px;
+  margin: 20px;
 }
 .photo-delete-img {
   position: absolute;
-  right: 20px;
-  top: 10px;
+  right: 0px;
+  top: 0px;
   width: 30px;
   height: 30px;
 }

@@ -37,8 +37,8 @@ export default {
         return {
             mapData: {
                 center: {
-                    latitude: 113.54,
-                    longitude: 23.13,
+                    latitude: 23.54,
+                    longitude: 113.13,
                     zoom: 10 //地图显示范围 4-21级 （最大是21级）,非必选
                 },
                 markers: [
@@ -48,8 +48,8 @@ export default {
                             click: "./assets/img/service_ic_pin@3x.png" //点击高亮的图片地址
                         },
                         list: [
-                            { latitude: 113.54, longitude: 23.13, id: 1 },
-                            { latitude: 153.54, longitude: 23.13, id: 2 }
+                            { latitude: 23.14, longitude: 113.3, id: 1 },
+                            { latitude: 23.74, longitude: 113.73, id: 2 }
                         ]
                     },
                     { //第二组坐标，可换不同坐标
@@ -58,8 +58,8 @@ export default {
                             click: "./assets/img/service_ic_pin@3x.png" //点击高亮的图片地址
                         },
                         list: [
-                            { latitude: 173.54, longitude: 23.13, id: 3 },
-                            { latitude: 193.54, longitude: 23.13, id: 4 }
+                            { latitude: 23.24, longitude: 113.53, id: 3 },
+                            { latitude: 23.4, longitude: 113.93, id: 4 }
                         ]
                     }
                 ]
@@ -77,11 +77,11 @@ export default {
         pointPick(item) {
             /* item: {
                 status: 0, //0获取成功
-                    platform: baidu  //默认是百度地图返回的信息，非必选
+                platform: baidu  //默认是百度地图返回的信息，非必选
                 province: 省名字，
                 city: 城市名字，
                 cityCode: 城市编号,
-                    district: 区域名字
+                district: 区域名字
                 latitude: string， //纬度
                 longitude: string， //经度
             } */

@@ -14,7 +14,7 @@
 
 <script>
 import base from './base'
-import nativeService from '@/common/services/nativeService';
+import nativeService from './settings/nativeService';
 
 import mideaNavList from '@/midea-component/mNavList.vue'
 import mideaItem from '@/midea-component/item.vue'

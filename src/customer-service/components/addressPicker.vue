@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import nativeService from '@/common/services/nativeService';
+import nativeService from '../settings/nativeService';
 
 const dom = weex.requireModule('dom')
 

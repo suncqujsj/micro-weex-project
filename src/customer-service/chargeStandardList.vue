@@ -40,7 +40,7 @@
 
 <script>
 import base from './base'
-import nativeService from '@/common/services/nativeService';
+import nativeService from './settings/nativeService';
 
 export default {
     components: {

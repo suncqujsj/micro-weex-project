@@ -13,27 +13,33 @@
         <scroller class="info-box">
             <text class="note">{{content}}</text>
         </scroller>
+
+        <midea-select :show="isShow" title="选择key" :items="list" @close="isShow=false" @itemClick="itemClick"></midea-select>
     </div>
 </template>
 <script>
 
 import base from './base'
 import appConfig from './settings/config'
-import nativeService from '@/common/services/nativeService'
+import nativeService from './settings/nativeService'
 import debugUtil from '@/common/util/debugUtil'
+import mideaSelect from "@/midea-component/mSelect.vue";
 const storage = weex.requireModule('storage');
 const clipboard = weex.requireModule('clipboard')
 const BUILD_TIME = process.env.BUILD_TIME
 
 export default {
     components: {
+        mideaSelect
     },
     mixins: [base],
     data() {
         return {
             plugin_version: appConfig.plugin_version,
             content: '',
-            buildTime: BUILD_TIME
+            buildTime: BUILD_TIME,
+            isShow: false,
+            list: []
         }
     },
     methods: {
@@ -87,10 +93,20 @@ export default {
         showAppData() {
             storage.getAllKeys(event => {
                 if (event.result === 'success') {
-                    this.getItemsSync(event.data, /.*(debugInfo|photoBase64)+$/).then((data) => {
-                        nativeService.alert(JSON.stringify(data, null, 4))
+                    this.list = event.data.map((key) => {
+                        return { "value": key, "key": key }
                     })
+                    this.isShow = true
+
+                    // this.getItemsSync(event.data, /.*(debugInfo|photoBase64)+$/).then((data) => {
+                    //     nativeService.alert(JSON.stringify(data, null, 4))
+                    // })
                 }
+            })
+        },
+        itemClick(event) {
+            this.getItemsSync([event.key], /.*(debugInfo|photoBase64)+$/).then((data) => {
+                nativeService.alert(JSON.stringify(data, null, 4))
             })
         },
         testfunc() {

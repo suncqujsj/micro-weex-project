@@ -47,6 +47,14 @@ export default {
         }
     },
     computed: {
+        formattedOrder() {
+            let result
+            if (this.order) {
+                result = this.formatOrder(this.order)
+            }
+
+            return result
+        },
     },
     methods: {
     },

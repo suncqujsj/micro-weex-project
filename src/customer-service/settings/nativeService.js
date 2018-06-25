@@ -3,29 +3,35 @@ import { SERVICE_STORAGE_KEYS } from './globalKeys'
 
 const HOST_CSS = "http://csuat.midea.com"
 const HOST_CSS_WX = "http://weixincs.midea.com"
+const HOST_CENTER_APP = "http://10.16.38.95:8080"
 const HOST_CENTER = "http://10.16.85.47"
 
 let customizeNativeService = Object.assign(nativeService, {
+    isDummy: false,
     serviceList: {
-        createserviceorder: HOST_CSS + "/c-css-ipms/api/wom/order/createserviceorder", //用户报装、报修、洗悦家服务请求
+        //CSS 客服消息
         queryserviceorder: HOST_CSS + "/c-css-ipms/api/wom/order/queryserviceorder", //用户服务工单列表查询
+        createserviceorder: HOST_CSS + "/c-css-ipms/api/wom/order/createserviceorder", //用户报装、报修、洗悦家服务请求
         queryserviceuserdemanddispatch: HOST_CSS + "/c-css-ipms/api/wom/order/queryserviceuserdemanddispatch", //用户服务工单详情进度查询
         createserviceuserdemand: HOST_CSS + "/c-css-ipms/api/wom/order/createserviceuserdemand", //催单CSS信息单
         cancelserviceorder: HOST_CSS + "/c-css-ipms/api/wom/order/cancelserviceorder", //取消售后工单
+        extractcallbackitem: HOST_CSS + "/c-css-ipms/api/wom/order/extractcallbackitem", //回访问卷抽取
+        createcallbackinfo: HOST_CSS + "/c-css-ipms/api/wom/order/createcallbackinfo", //回访结果提交
         queryconsumerorderprogress: HOST_CSS + "/c-css-ipms/api/wom/order/queryconsumerorderprogress", //用户服务单服务过程列表查询接口
         queryservicerequireproduct: HOST_CSS + "/c-css-ipms/api/wom/order/queryservicerequireproduct", //服务请求查询接口
         querywarrantydescbycodeorsn: HOST_CSS + "/c-css-ipms/api/wom/order/querywarrantydescbycodeorsn", //包修政策查询接口
         getChargeStandardList: HOST_CSS + "/c-css-ipms/css/api/mmp/insp/getChargeStandardList", //收费标准查询
         getChargePriceForMaterial: HOST_CSS + "/c-css-ipms/css/api/mmp/insp/getChargePriceForMaterial", //配件价格查询
         queryunitarchives: HOST_CSS + "/c-css-ipms/api/wom/order/queryunitarchives", //网点查询
+        getexcludedfaultlist: HOST_CSS + "/c-css-ipms/cssmobile/api/wom/getexcludedfaultlist", //故障可能原因查询
+        appexcludedfaulttraces: HOST_CSS + "/c-css-ipms/cssmobile/api/wom/appexcludedfaulttraces", //假性故障有帮助没帮助标识接口
 
-        getFaultType: HOST_CSS_WX + "/wxgw/css/faultType?mpType=MIDEASERVICE", //故障类型
-        getExcludedFault: HOST_CSS_WX + "/wxgw/css/excludedFault?mpType=MIDEASERVICE", //故障可能原因查询
-        queryReminderOptions: HOST_CSS_WX + "/wxgw/css/queryReminderOptions?mpType=MIDEASERVICE", //查询催单原因列表: TODO: url要修改
+        queryReminderOptions: HOST_CSS_WX + "/wxgw/css/queryReminderOptions?mpType=MIDEASERVICE", //查询催单原因列表
 
         //中控消息
-        getProdType: "http://10.16.38.95:8080/pdgw-ap/message/getProdType", //产品列表
-        getProdMessage: "http://10.16.38.95:8080/pdgw-ap/message/getProdMessage", //获取售后产品资料对外服务接口
+        getProdType: HOST_CENTER_APP + "/pdgw-ap/message/getProdType", //产品列表
+        getProdMessage: HOST_CENTER_APP + "/pdgw-ap/message/getProdMessage", //获取售后产品资料对外服务接口
+
         getUserAddrPageList: HOST_CENTER + "/ccrm2-core/userAddr/getUserAddrPageList", //地址列表查询
         getAreaList: HOST_CENTER + "/cmms/area/list", //服务地区
         userAddrAdd: HOST_CENTER + "/ccrm2-core/userAddr/add", //地址新增
@@ -64,28 +70,27 @@ let customizeNativeService = Object.assign(nativeService, {
         return new Promise((resolve, reject) => {
             this.getCssRequestCommonParam().then((commonParam) => {
                 let requestParam = {
-                    url: params.url + "?json=" + JSON.stringify({ "body": Object.assign(commonParam, params.body) }),
+                    // url: params.url + "?json=" + JSON.stringify({ "body": Object.assign(commonParam, params.body) }),
+                    url: params.url + "?json=" +
+                        encodeURIComponent(JSON.stringify({ "body": Object.assign(commonParam, params.body) })),
                     method: params.method || "POST",
                     headers: {
-                        "Content-Type": "application/json"
-                    }
+                        "Content-Type": "application/json;charset=utf-8"
+                    },
+                    body: {}
                 }
-                let oldDummy = this.isDummy
-                this.isDummy = false
                 this.sendHttpRequest(requestParam, options).then((resp) => {
-                    this.isDummy = oldDummy
                     resolve(resp)
                 }).catch((error) => {
-                    this.isDummy = oldDummy
                     reject(error)
                 })
             })
         })
     },
-    createserviceorder(param = {}) {
+    queryserviceorder(param = {}) {
         return new Promise((resolve, reject) => {
             let requestParam = {
-                url: this.serviceList.createserviceorder,
+                url: this.serviceList.queryserviceorder,
                 method: "POST",
                 body: param
             }
@@ -100,10 +105,10 @@ let customizeNativeService = Object.assign(nativeService, {
             })
         })
     },
-    queryserviceorder(param = {}) {
+    createserviceorder(param = {}) {
         return new Promise((resolve, reject) => {
             let requestParam = {
-                url: this.serviceList.queryserviceorder,
+                url: this.serviceList.createserviceorder,
                 method: "POST",
                 body: param
             }
@@ -164,17 +169,13 @@ let customizeNativeService = Object.assign(nativeService, {
                 },
                 body: param
             }
-            let oldDummy = this.isDummy
-            this.isDummy = false
             this.sendHttpRequest(requestParam).then((resp) => {
-                this.isDummy = oldDummy
                 if (resp.code) {
                     resolve(resp)
                 } else {
                     reject(resp)
                 }
             }).catch((error) => {
-                this.isDummy = oldDummy
                 reject(error)
             })
         })
@@ -183,6 +184,42 @@ let customizeNativeService = Object.assign(nativeService, {
         return new Promise((resolve, reject) => {
             let requestParam = {
                 url: this.serviceList.cancelserviceorder,
+                method: "POST",
+                body: param
+            }
+            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
+                if (resp.status) {
+                    resolve(resp)
+                } else {
+                    reject(resp)
+                }
+            }).catch((error) => {
+                reject(error)
+            })
+        })
+    },
+    extractcallbackitem(param = {}) {
+        return new Promise((resolve, reject) => {
+            let requestParam = {
+                url: this.serviceList.extractcallbackitem,
+                method: "POST",
+                body: param
+            }
+            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
+                if (resp.status) {
+                    resolve(resp)
+                } else {
+                    reject(resp)
+                }
+            }).catch((error) => {
+                reject(error)
+            })
+        })
+    },
+    createcallbackinfo(param = {}) {
+        return new Promise((resolve, reject) => {
+            let requestParam = {
+                url: this.serviceList.createcallbackinfo,
                 method: "POST",
                 body: param
             }
@@ -234,52 +271,38 @@ let customizeNativeService = Object.assign(nativeService, {
         })
     },
 
-    getFaultType(param = {}) {
+    getexcludedfaultlist(param = {}) {
         return new Promise((resolve, reject) => {
             let requestParam = {
-                url: this.serviceList.getFaultType,
+                url: this.serviceList.getexcludedfaultlist,
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
                 body: param
             }
-            let oldDummy = this.isDummy
-            this.isDummy = false
-            this.sendHttpRequest(requestParam).then((resp) => {
-                this.isDummy = oldDummy
-                if (resp.code) {
+            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
+                if (resp.status) {
                     resolve(resp)
                 } else {
                     reject(resp)
                 }
             }).catch((error) => {
-                this.isDummy = oldDummy
                 reject(error)
             })
         })
     },
-    getExcludedFault(param = {}) {
+    appexcludedfaulttraces(param = {}) {
         return new Promise((resolve, reject) => {
             let requestParam = {
-                url: this.serviceList.getExcludedFault,
+                url: this.serviceList.appexcludedfaulttraces,
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
                 body: param
             }
-            let oldDummy = this.isDummy
-            this.isDummy = false
-            this.sendHttpRequest(requestParam).then((resp) => {
-                this.isDummy = oldDummy
-                if (resp.code) {
+            this.sendHttpRequestCssWrapper(requestParam).then((resp) => {
+                if (resp.status) {
                     resolve(resp)
                 } else {
                     reject(resp)
                 }
             }).catch((error) => {
-                this.isDummy = oldDummy
                 reject(error)
             })
         })
@@ -299,17 +322,13 @@ let customizeNativeService = Object.assign(nativeService, {
                     "Content-Type": "application/json"
                 }
             }
-            let oldDummy = this.isDummy
-            this.isDummy = false
             this.sendHttpRequest(requestParam).then((resp) => {
-                this.isDummy = oldDummy
                 if (resp.returnStatus) {
                     resolve(resp)
                 } else {
                     reject(resp)
                 }
             }).catch((error) => {
-                this.isDummy = oldDummy
                 reject(error)
             })
         })
@@ -329,17 +348,13 @@ let customizeNativeService = Object.assign(nativeService, {
                     "Content-Type": "application/json"
                 }
             }
-            let oldDummy = this.isDummy
-            this.isDummy = false
             this.sendHttpRequest(requestParam).then((resp) => {
-                this.isDummy = oldDummy
                 if (resp.returnStatus) {
                     resolve(resp)
                 } else {
                     reject(resp)
                 }
             }).catch((error) => {
-                this.isDummy = oldDummy
                 reject(error)
             })
         })
@@ -389,7 +404,7 @@ let customizeNativeService = Object.assign(nativeService, {
                 sourceSys: "APP"
             }
             if (this.userInfo) {
-                param.uid = "2a58bb9810b3462b80e6d42c142441f8" //this.userInfo.userId
+                param.uid = "2a58bb9810b3462b80e6d42c142441f8" //this.userInfo.uid
                 resolve(param)
             } else {
                 this.getUserInfo().then((data) => {
@@ -412,13 +427,9 @@ let customizeNativeService = Object.assign(nativeService, {
                     },
                     body: Object.assign(commonParam, params.body)
                 }
-                let oldDummy = this.isDummy
-                this.isDummy = false
                 this.sendHttpRequest(requestParam, options).then((resp) => {
-                    this.isDummy = oldDummy
                     resolve(resp)
                 }).catch((error) => {
-                    this.isDummy = oldDummy
                     reject(error)
                 })
             })
@@ -512,24 +523,20 @@ let customizeNativeService = Object.assign(nativeService, {
     getProdMessage(param = {}) {
         return new Promise((resolve, reject) => {
             this.getRequestCommonParam().then((commonParam) => {
+                let queryStringObj = Object.assign({
+                    sourceSys: "APP"
+                }, param)
+                let queryString = Object.keys(queryStringObj).map(k =>
+                    encodeURIComponent(k) + '=' + encodeURIComponent(queryStringObj[k] || '')
+                ).join('&')
                 let requestParam = {
-                    url: this.serviceList.getProdMessage,
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: Object.assign(commonParam, {
-                        version: "3.0",
-                        sourceTag: "3"
-                    }, param)
+                    url: this.serviceList.getProdMessage + '?' + queryString,
+                    method: "GET"
                 }
-                let oldDummy = this.isDummy
-                this.isDummy = false
+
                 this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
-                    this.isDummy = oldDummy
                     resolve(resp)
                 }).catch((error) => {
-                    this.isDummy = oldDummy
                     reject(error)
                 })
             })
@@ -590,17 +597,13 @@ let customizeNativeService = Object.assign(nativeService, {
                     regionCode: "0"
                 }, param)
             }
-            let oldDummy = this.isDummy
-            this.isDummy = false
             this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
-                this.isDummy = oldDummy
                 if (resp.code == 0) {
                     resolve(resp.content)
                 } else {
                     reject(resp)
                 }
             }).catch((error) => {
-                this.isDummy = oldDummy
                 reject(error)
             })
         })
@@ -617,13 +620,9 @@ let customizeNativeService = Object.assign(nativeService, {
                     },
                     body: Object.assign(commonParam, param)
                 }
-                let oldDummy = this.isDummy
-                this.isDummy = false
                 this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
-                    this.isDummy = oldDummy
                     resolve(resp)
                 }).catch((error) => {
-                    this.isDummy = oldDummy
                     reject(error)
                 })
             })
@@ -641,13 +640,9 @@ let customizeNativeService = Object.assign(nativeService, {
                     },
                     body: Object.assign(commonParam, param)
                 }
-                let oldDummy = this.isDummy
-                this.isDummy = false
                 this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
-                    this.isDummy = oldDummy
                     resolve(resp)
                 }).catch((error) => {
-                    this.isDummy = oldDummy
                     reject(error)
                 })
             })
@@ -665,13 +660,9 @@ let customizeNativeService = Object.assign(nativeService, {
                     },
                     body: Object.assign(commonParam, param)
                 }
-                let oldDummy = this.isDummy
-                this.isDummy = false
                 this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
-                    this.isDummy = oldDummy
                     resolve(resp)
                 }).catch((error) => {
-                    this.isDummy = oldDummy
                     reject(error)
                 })
             })
@@ -689,13 +680,9 @@ let customizeNativeService = Object.assign(nativeService, {
                     },
                     body: Object.assign(commonParam, param)
                 }
-                let oldDummy = this.isDummy
-                this.isDummy = false
                 this.sendHttpRequest(requestParam, { isValidate: false }).then((resp) => {
-                    this.isDummy = oldDummy
                     resolve(resp)
                 }).catch((error) => {
-                    this.isDummy = oldDummy
                     reject(error)
                 })
             })
@@ -712,18 +699,33 @@ let customizeNativeService = Object.assign(nativeService, {
                 type: 'jsonp',
                 headers: { 'Content-Type': 'application/json' }
             }
-            let oldDummy = this.isDummy
-            this.isDummy = false
             nativeService.sendHttpRequest(param).then(
                 (resp) => {
-                    this.isDummy = oldDummy
                     resolve(resp)
                 }
             ).catch((error) => {
-                this.isDummy = oldDummy
                 reject(error)
             })
         })
+    },
+    //根据经纬度计算距离
+    Rad(d) {
+        return d * Math.PI / 180.0;
+    },
+
+    distanceByLnglat(lng1, lat1, lng2, lat2) {
+        var radLat1 = this.Rad(lat1);
+        var radLat2 = this.Rad(lat2);
+        var a = radLat1 - radLat2;
+        var b = this.Rad(lng1) - this.Rad(lng2);
+        var s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
+        s = s * 6378137.0;// 取WGS84标准参考椭球中的地球长半径(单位:m)
+        // s = Math.round(s * 10000) / 10000;
+        s = Math.round(s)
+        return s
+        // //下面为两点间空间距离（非球面体）
+        // var value= Math.pow(Math.pow(lng1-lng2,2)+Math.pow(lat1-lat2,2),1/2);
+        // alert(value);
     }
 })
 

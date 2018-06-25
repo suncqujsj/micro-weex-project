@@ -31,7 +31,7 @@
 
 <script>
 import base from './base'
-import nativeService from '@/common/services/nativeService'
+import nativeService from './settings/nativeService'
 
 import { MideaDialog, MideaGridSelect, MideaRichText } from '@/index'
 
@@ -109,7 +109,7 @@ export default {
                 return
             }
             this.keyWord = value
-
+    
             this.searchKeyWord = this.keyWord
             if (this.historyKeys.indexOf(this.searchKeyWord) < 0) {
                 this.historyKeys.push(this.searchKeyWord)

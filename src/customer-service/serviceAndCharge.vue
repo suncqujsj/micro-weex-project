@@ -1,9 +1,9 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <list class="list-item">
-            <midea-item height="160" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('productSelection', {}, { from: 'serviceAndCharge', to:'chargeList'})">
+            <midea-item height="160" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('productSelection', {}, { from: 'serviceAndCharge', to:'chargeStandardList'})">
                 <image slot="itemImg" src="./assets/img/service_ic_shoufei@3x.png" class="service-item-img" resize='contain'>
                 </image>
                 <text slot="title" class="service-item-title">收费标准</text>
@@ -28,7 +28,7 @@
 
 <script>
 import base from './base'
-import nativeService from '@/common/services/nativeService';
+import nativeService from './settings/nativeService';
 
 import mideaItem from '@/midea-component/item.vue'
 

@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import nativeService from '@/common/services/nativeService';
+import nativeService from '../settings/nativeService';
 
 import { MideaPopup } from '@/index'
 
@@ -251,7 +251,7 @@ export default {
   background-color: #ffffff;
 }
 .period-content-wrapper {
-  flex: 1;
+  width: 375px;
   align-content: center;
   align-items: center;
 }

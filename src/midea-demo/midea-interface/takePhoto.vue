@@ -54,7 +54,7 @@ module.exports = {
     data() {
         return {
             messageParam: {
-                compressRage: 60,
+                compressRage: 10,
                 type: 'jpg',
                 isNeedBase64: true
             },
@@ -76,6 +76,7 @@ module.exports = {
         mideaButtonClicked() {
             nativeService.takePhoto(this.messageParam).then(
                 (resp) => {
+                    nativeService.toast(resp)
                     this.result = resp
                 }
             ).catch((error) => {

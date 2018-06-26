@@ -1,22 +1,22 @@
 <template>
     <div class="branch-block">
         <div class="branch-block-header">
-            <text class="branch-block-label">{{data.label}}</text>
+            <text class="branch-block-label">{{index+1}}.{{data.unitName}}</text>
         </div>
         <div class="branch-block-body">
             <div class="branch-block-content">
-                <text class="branch-block-desc">{{data.desc}}</text>
+                <text v-bind:class="['branch-block-desc',ellipsis?'ellipsis-line':'']" lines="1">业务范围：{{data.businessScope}}</text>
                 <div class="address-bar">
-                    <text class="address-distance">2.6km</text>
-                    <text class="address-detail">{{data.address}}</text>
+                    <text class="address-distance">{{data.distanceDesc}}</text>
+                    <text v-bind:class="['address-detail',ellipsis?'ellipsis-line':'']" lines="1">{{data.unitAddress}}</text>
                 </div>
             </div>
-            <div class="branch-tel-wrapper" @click="makeCall">
+            <div class="branch-tel-wrapper" @click="makeCall()">
                 <image class="branch-tel-img" src="./assets/img/service_ic_phone@3x.png" resize='contain'>
                 </image>
                 <text class="branch-tel-desc">电话</text>
             </div>
-            <div class="branch-tel-wrapper" @click="navigate">
+            <div class="branch-tel-wrapper" @click="navigate()">
                 <image class="branch-map-img" src="./assets/img/service_ic_go@3x.png" resize='contain'>
                 </image>
                 <text class="branch-map-desc">到这去</text>
@@ -28,15 +28,22 @@
 </template>
 
 <script>
-import nativeService from '@/common/services/nativeService';
+import nativeService from '../settings/nativeService';
 
 
 export default {
     components: {
     },
     props: {
+        ellipsis: {
+            type: Boolean,
+            default: false
+        },
         data: {
             type: Object
+        },
+        index: {
+            type: Number
         }
     },
     data() {
@@ -44,39 +51,18 @@ export default {
         }
     },
     computed: {
-        channelIconSrc() {
-            let result = './assets/img/service_ic_JD@3x.png'
-            switch (this.data.id) {
-                case '1':
-                    return './assets/img/service_ic_JD@3x.png'
-                    break;
-                case '2':
-                    return './assets/img/service_ic_taobao@3x.png'
-                    break;
-                case '3':
-                    return './assets/img/service_ic_call400@3x.png'
-                    break;
-                case '4':
-                    return './assets/img/service_ic_meiju@3x.png'
-                    break;
-                case '5':
-                    return './assets/img/service_midea@3x.png'
-                    break;
-            }
-            return result
-        }
     },
     methods: {
         makeCall() {
             nativeService.callTel({
-                tel: "10086",
+                tel: this.data.deliverTel,
                 title: '服务热线'
             }).then(
                 (resp) => { }
             )
         },
-        navigate() {
-
+        navigate(item) {
+            this.$emit('navigate')
         }
     },
     created() {
@@ -87,6 +73,7 @@ export default {
 
 <style>
 .branch-block {
+  width: 750px;
   background-color: #ffffff;
   padding: 32px;
 }
@@ -102,6 +89,9 @@ export default {
   flex: 1;
   justify-content: center;
 }
+.ellipsis-line {
+  lines: 1;
+}
 .branch-block-label {
   font-family: PingFangSC-Medium;
   font-weight: 600;
@@ -113,6 +103,7 @@ export default {
   font-size: 24px;
   color: #8a8a8f;
   margin-top: 16px;
+  text-overflow: ellipsis;
 }
 .address-bar {
   margin-top: 32px;
@@ -127,12 +118,14 @@ export default {
   margin-right: 10px;
 }
 .address-detail {
+  flex: 1;
   font-family: PingFangSC-Regular;
   font-size: 24px;
   color: #8a8a8f;
   border-left-color: #e2e2e2;
   border-left-width: 1px;
   padding-left: 10px;
+  text-overflow: ellipsis;
 }
 .branch-tel-wrapper {
   flex-direction: column;

@@ -1,11 +1,11 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <list>
             <cell class="top-gap"></cell>
-            <midea-item v-for="(item, index) in searchResult" :key="index" height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="back">
-                <text slot="title" class="address-item-title">{{item.desc}}</text>
+            <midea-item v-for="(item, index) in areaList" :key="index" height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectItem(item)">
+                <text slot="title" class="address-item-title">{{item.regionName}}</text>
             </midea-item>
         </list>
     </div>
@@ -13,7 +13,7 @@
 
 <script>
 import base from './base'
-import nativeService from '@/common/services/nativeService'
+import nativeService from './settings/nativeService'
 import { MideaItem } from '@/index'
 
 export default {
@@ -24,52 +24,64 @@ export default {
     data() {
         return {
             title: '选择地址',
-            searchResult: null
+            regionCode: '',
+            selectedAreaObject: {},
+            areaList: []
         }
     },
     methods: {
-        getAddressList(event) {
-            this.searchResult = [
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-                { id: 1, desc: "北京" },
-                { id: 1, desc: "上海" },
-                { id: 1, desc: "广东" },
-            ]
-        },
         selectItem(item) {
-            this.back()
+            let regionData = {
+                regionCode: item.regionCode,
+                regionName: item.regionName
+            }
+            if (item.level == 3) {
+                this.selectedAreaObject = Object.assign(this.selectedAreaObject, {
+                    county: item.regionCode,
+                    countyName: item.regionName
+                })
+                nativeService.setItem(this.SERVICE_STORAGE_KEYS.selectedAreaObject, this.selectedAreaObject,
+                    () => {
+                        this.appPageDataChannel.postMessage({ page: this.fromPage, key: "addressList", data: "" })
+                        this.back({ viewTag: 'branchList' })
+                    })
+            } else if (item.level == 2) {
+                this.selectedAreaObject = Object.assign(this.selectedAreaObject, {
+                    city: item.regionCode,
+                    cityName: item.regionName
+                })
+                nativeService.setItem(this.SERVICE_STORAGE_KEYS.selectedAreaObject, this.selectedAreaObject,
+                    () => {
+                        this.goTo('addressList', {}, { from: 'branchList', regionCode: item.regionCode })
+                    })
+            } else if (item.level == 1) {
+                this.selectedAreaObject = {
+                    province: item.regionCode,
+                    provinceName: item.regionName
+                }
+                nativeService.setItem(this.SERVICE_STORAGE_KEYS.selectedAreaObject, this.selectedAreaObject,
+                    () => {
+                        this.goTo('addressList', {}, { from: 'branchList', regionCode: item.regionCode })
+                    })
+            }
         }
     },
-    beforeCreate: function () {
-    },
     created() {
-        this.getAddressList()
+        nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedAreaObject, (resp) => {
+            if (resp.result == 'success') {
+                this.selectedAreaObject = JSON.parse(resp.data) || {}
+            }
+
+            this.regionCode = nativeService.getParameters('regionCode') || "0"
+            let param = {
+                regionCode: this.regionCode
+            }
+            nativeService.getAreaList(param).then((data) => {
+                this.areaList = data.children
+            }).catch((error) => {
+                nativeService.toast(nativeService.getCssErrorMessage(error))
+            })
+        })
     }
 }
 </script>

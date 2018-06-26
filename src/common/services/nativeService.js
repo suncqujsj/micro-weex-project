@@ -10,7 +10,7 @@ const isIos = weex.config.env.platform == "iOS" ? true : false;
 import debugUtil from '../util/debugUtil'
 import util from '../util/util'
 
-var dummy = false;
+var isDummy = false;
 // import Mock from './mock'  //正式场上线时注释掉
 
 const debugLogSeperator = "**************************************\n"
@@ -20,19 +20,21 @@ var ipParam = weex.config.bundleUrl.match(new RegExp("[\?\&]ip=([^\&]+)", "i"));
 if (ipParam && ipParam.length > 1) {
     ipParam = ipParam[1]
     // 测试
-    dummy = true
+    isDummy = true
 }
 const platform = weex.config.env.platform;
 if (platform == 'Web') {
-    dummy = true
+    isDummy = true
 }
-console.log("dummy:" + dummy)
+console.log("isDummy:" + isDummy)
+var isRemote = weex.config.bundleUrl.indexOf("http") > -1 ? true : false
 
 export default {
     serviceList: {
         test: "commonservice"
     },
     Mock: {},
+    isDummy: isDummy,
     //**********Util方法***************START
     convertToJson(str) {
         let result = str
@@ -68,12 +70,14 @@ export default {
             animated: true/false, - 是否需要跳转动画
             replace: true/false, - 跳转后是否在历史栈保留当前页面
             viewTag: string - 给跳转后的页面设置标识，可用于goBack时指定返回页面
+            transparent: 'true/false', //新页面背景是否透明
+            animatedType: 'slide_bottomToTop' //新页面出现动效类型
         }
     */
     goTo(path, options) {
         var url
-        // mm.toast({ message: dummy, duration: 2 })
-        if (dummy != true) {
+        // mm.toast({ message: isRemote, duration: 2 })
+        if (this.isDummy != true && !isRemote) {
             //手机本地页面跳转
             this.getPath((weexPath) => {
                 //weexPath为插件包地址，比如：files:///..../MideaHome/T0x99/
@@ -127,7 +131,7 @@ export default {
         取得当前weex页面的根路径
     */
     getPath(callBack) {
-        if (dummy != true) {
+        if (this.isDummy != true) {
             bridgeModule.getWeexPath(function (resData) {
                 var jsonData = JSON.parse(resData);
                 var weexPath = jsonData.weexPath;
@@ -150,6 +154,11 @@ export default {
             location.href = location.origin + location.pathname + '?path=' + path
         }
     },
+    /*  
+    options = {
+            animated: 'true',
+            animatedType: 'slide_topToBottom' //页面关闭时动效类型
+    }*/
     goBack(options = {}) {
         var params = Object.assign({
             animated: 'true'
@@ -175,13 +184,14 @@ export default {
         storage.getItem(key, callback)
     },
     setItem(key, value, callback) {
+        let temp
         if (typeof value == 'object') {
-            value = JSON.stringify(value);
+            temp = JSON.stringify(value);
         }
         let defaultCallback = event => {
             console.log('set success')
         }
-        storage.setItem(key, value, callback || defaultCallback)
+        storage.setItem(key, temp || value, callback || defaultCallback)
     },
     removeItem(key, callback) {
         storage.removeItem(key, () => {
@@ -219,17 +229,17 @@ export default {
         });
     },
     showLoading() {
-        if (dummy != true) {
+        if (this.isDummy != true) {
             bridgeModule.showLoading();
         }
     },
     hideLoading() {
-        if (dummy != true) {
+        if (this.isDummy != true) {
             bridgeModule.hideLoading();
         }
     },
     showLoadingWithMsg(option) {
-        if (dummy != true) {
+        if (this.isDummy != true) {
             let params = option
             if (typeof option == 'string') {
                 params = {
@@ -240,7 +250,7 @@ export default {
         }
     },
     hideLoadingWithMsg() {
-        if (dummy != true) {
+        if (this.isDummy != true) {
             bridgeModule.hideLoadingWithMsg();
         }
     },
@@ -251,7 +261,7 @@ export default {
     sendMCloudRequest(name, params, options = { isShowLoading: true, isValidate: true }) {
         return new Promise((resolve, reject) => {
             var self = this;
-            if (dummy != true) {
+            if (this.isDummy != true) {
                 this.getItem("masterId", (resdata) => {
                     let msgid = self.genMessageId()
                     var masterId = resdata.data
@@ -319,7 +329,7 @@ export default {
         })
     },
     //发送POST网络请求：URL自定义
-    /* options: {
+    /* params: {
         url: url,
         type: 'text',
         method: "POST",
@@ -329,26 +339,40 @@ export default {
             'format': 'base64'
         }
     } */
-    sendHttpRequest(params, isShowLoading = true) {
+    sendHttpRequest(params, options = { isShowLoading: true, isValidate: true }) {
         return new Promise((resolve, reject) => {
-            let options = JSON.parse(JSON.stringify(params))
+            let requestParams = JSON.parse(JSON.stringify(params))
             var self = this;
-            if (true || dummy != true) {
-                let defaultOption = {
+            if (this.isDummy != true) {
+                let defaultParams = {
                     method: "POST",
                     type: 'json'
                 }
-                if (options.body) {
-                    options.body = this.convertRequestBody(options.body)
-                }
-                options = Object.assign(defaultOption, options)
+                requestParams = Object.assign(defaultParams, requestParams)
 
-                if (isShowLoading) {
+                /* body 参数仅支持 string 类型的参数，请勿直接传递 JSON，必须先将其转为字符串。
+                GET 请求不支持 body 方式传递参数，请使用 url 传参。 */
+                if (requestParams.body && requestParams.method == "GET") {
+                    let bodyStr = this.convertRequestBody(requestParams.body)
+                    if (requestParams.url.indexOf("?") > -1) {
+                        requestParams.url += "&" + bodyStr
+                    } else {
+                        requestParams.url += "?" + bodyStr
+                    }
+                    requestParams.body = ""
+                } else if (requestParams.body && requestParams.method == "POST") {
+                    requestParams.body = requestParams.body
+                }
+
+                if (options.isShowLoading) {
                     this.showLoading()
                 }
-                stream.fetch(options,
+                let msgid = self.genMessageId()
+                stream.fetch(requestParams,
                     (resData) => {
-                        if (isShowLoading) {
+                        debugUtil.debugLog(debugLogSeperator, `request(${msgid}): `, requestParams)
+                        debugUtil.debugLog(`response(${msgid}): `, resData, debugLogSeperator)
+                        if (options.isShowLoading) {
                             this.hideLoading()
                         }
                         if (!resData.ok) {
@@ -367,9 +391,7 @@ export default {
                 )
             } else {
                 let resData = this.Mock.getMock(params.url)
-                if (resData.errorCode == 0) {
-                    resolve(resData);
-                }
+                resolve(resData);
             }
         })
     },
@@ -407,7 +429,7 @@ export default {
             }
             callbackFail(resData);
         }
-        if (dummy != true) {
+        if (this.isDummy != true) {
             if (isIos) {
                 this.createCallbackFunctionListener();
                 this.callbackFunctions[commandId] = finalCallBack;
@@ -459,7 +481,7 @@ export default {
             var param = {};
             param.operation = params.operation || "luaControl";//luaQuery or luaControl
             param.params = params.data || {};
-            if (dummy != true) {
+            if (this.isDummy != true) {
                 if (isShowLoading) {
                     this.showLoading()
                 }
@@ -513,7 +535,7 @@ export default {
             showLeftBtn: showLeftBtn,
             showRightBtn: showRightBtn
         }
-        if (dummy != true) {
+        if (this.isDummy != true) {
             bridgeModule.updateTitle(JSON.stringify(params));
         }
     },
@@ -716,6 +738,36 @@ export default {
         let param = {
             operation: 'getLoginInfo'
         }
+        return this.commandInterfaceWrapper(param)
+    },
+    /* ^5.0.0 打开用户手机地图软件，传入标记地点。（打开地图软件后，用户可以使用地图软件的功能，比如导航等）
+    ios: 如果用户安装了百度地图，则跳转到百度地图app，没有安装，则跳转Safar，使用网页导航
+    android: 如果用户安装了百度地图，则跳转到百度地图app，没有安装，则跳转使用外部浏览器，使用网页导航（用户选择合适的浏览器，原生toast引导，存在选择错误应用的风险） */
+    launchMapApp(params) {
+        /* params =  {
+            from:{ //当前用户地点
+                latitude: string, //纬度
+                longitude: string //经度
+            },
+            to:{ //目的地地点
+                latitude: string, //纬度
+                longitude: string //经度
+            }
+        } */
+        let param = Object.assign(params, {
+            operation: 'launchMapApp'
+        })
+        return this.commandInterfaceWrapper(param)
+    },
+    /* 根据模糊地址，返回地图服务的查询结果数据。 */
+    searchMapAddress(params) {
+        /* params =  {
+            city: "", //需要查询的城市(范围)
+            keyword: "美的" //需要查询的地址
+        } */
+        let param = Object.assign(params, {
+            operation: 'searchMapAddress'
+        })
         return this.commandInterfaceWrapper(param)
     },
     //调用第三方SDK统一接口

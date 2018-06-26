@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="" bgColor="#ffffff" :isImmersion="isipx?false:true" :showLeftImg="false" :showRightImg="true" rightImg="./assets/img/service_ic_call@3x.png" @rightImgClick="showHotLine">
+        <midea-header title="" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" :showLeftImg="false" :showRightImg="true" rightImg="./assets/img/service_ic_call@3x.png" @rightImgClick="showHotLine">
         </midea-header>
         <list>
             <cell>
@@ -20,19 +20,18 @@
                     </div>
                 </div>
             </cell>
-            <template v-if="currentOrder">
+            <template v-if="formattedOrder">
                 <cell>
                     <div class="arraw-line">
                         <div class="arraw-triangle"></div>
                     </div>
                 </cell>
                 <midea-item height="150" :hasArrow="true" :clickActivied="true" @mideaCellClick="goToOrderDetail">
-                    <image slot="itemImg" class="order-img" src="./assets/img/service_midea@3x.png" resize='contain'>
+                    <image slot="itemImg" class="order-img" :src="formattedOrder.imageUrl" resize='contain'>
                     </image>
                     <div slot="title" class="order-content">
-                        <text class="order-title">{{currentOrder.serviceMainTypeName + currentOrder.serviceUserDemandVOs[0].prodName}}</text>
-                        <text class="order-desc">{{currentOrder.statusDesc}}</text>
-                        <text class="order-time">{{currentOrder.pubCreateDate}}</text>
+                        <text class="order-title">{{formattedOrder.orderDesc}}</text>
+                        <text class="order-time">{{formattedOrder.contactTimeDesc}}</text>
                     </div>
                 </midea-item>
             </template>
@@ -71,7 +70,9 @@
 
 <script>
 import base from './base'
-import nativeService from '@/common/services/nativeService';
+import orderBase from './order-base'
+import nativeService from './settings/nativeService'
+import debugUtil from '@/common/util/debugUtil'
 import util from '@/common/util/util'
 
 import { MideaActionsheet, MideaItem } from '@/index'
@@ -81,7 +82,7 @@ export default {
         MideaActionsheet,
         MideaItem
     },
-    mixins: [base],
+    mixins: [base, orderBase],
     data() {
         return {
             title: '服务',
@@ -102,28 +103,39 @@ export default {
             showBar: false,
             actionsheetItems: ['美的：400-899-935', '小天鹅：400-822-8228'],
             actionsheetItemsValue: ['400899935', '4008228228'],
-            orderList: []
+            order: null
         }
     },
     computed: {
-        currentOrder() {
-            let order
-            if (this.orderList && this.orderList.length > 0) {
-                order = this.orderList[0]
-                switch (order.serviceOrderStatus) {
-                    case '22':
-                        order.statusDesc = "待工程师上门服务"
-                        break;
-                }
-                order.pubCreateDate = util.dateFormat(new Date(order.pubCreateDate), "yyyy-MM-dd hh:mm")
+        formattedOrder() {
+            let result
+            if (this.order) {
+                result = this.formatOrder(this.order)
             }
-
-            return order
+            return result
         }
     },
     methods: {
-        compare(a, b) {
-            return a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1
+        handlePageData(data) {
+            if (data.key == "createOrder") {
+                this.getOrderList()
+            }
+        },
+        getOrderList() {
+            let status = []
+            for (let index = 10; index < 17; index++) {
+                status.push(index)
+            }
+            let param = {
+                dispatchOrderStatus: "10;11;12;13;14;15;16",  //在途工单派工单状态
+                page: 0,
+                resultNum: 1
+            }
+            nativeService.queryserviceorder(param).then((data) => {
+                if (data.list && data.list.length > 0) {
+                    this.order = data.list[0]
+                }
+            })
         },
         itemClicked(item) {
             this.goTo(item.page)
@@ -151,17 +163,28 @@ export default {
             this.showBar = false
         },
         goToOrderDetail() {
-            this.goTo("orderDetail", {}, { id: '1234' })
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, this.order, () => {
+                this.goTo("orderDetail", {}, { from: 'orderList', id: this.order.serviceOrderNo })
+            })
+        },
+        resetStorage() {
+            //清楚本地缓存数据
+            for (const key in this.SERVICE_STORAGE_KEYS) {
+                if (this.SERVICE_STORAGE_KEYS.hasOwnProperty(key)) {
+                    if (['historyKeys'].indexOf(key) < 0) {
+                        nativeService.removeItem(this.SERVICE_STORAGE_KEYS[key])
+                    }
+                }
+            }
         }
     },
+    beforeCreate() {
+        console.log('beforeCreate:在初始化内部变量，并且添加了事件功能后被触发')
+    },
     created() {
-        let param = {
-            dispatchOrderStatus: "22",  //派工单状态
-            orderColumn: "pubCreateDate"
-        }
-        nativeService.sendMCloudRequest('queryserviceorder', param).then((data) => {
-            this.orderList = data.list
-        })
+        debugUtil.cleanDebugLog()
+        this.resetStorage()
+        this.getOrderList()
     }
 }
 </script>
@@ -173,7 +196,7 @@ export default {
   background-color: #f2f2f2;
 }
 .wrapper-gap {
-  height: 120px;
+  height: 250px;
 }
 .service-desc-wrapper {
   flex-direction: column;
@@ -200,7 +223,6 @@ export default {
   margin-top: 38px;
   align-items: center;
   width: 686px;
-  opacity: 0.5;
 }
 .service-desc-img {
   width: 686px;
@@ -250,6 +272,10 @@ export default {
 .order-img {
   height: 120px;
   width: 120px;
+  border-radius: 4px;
+  border-color: #e5e5e8;
+  border-width: 1px;
+  border-style: solid;
   margin-right: 30px;
 }
 .order-content {

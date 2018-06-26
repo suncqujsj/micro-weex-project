@@ -1,172 +1,200 @@
 <template>
     <div>
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
-        <scroller class="scroller">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
+        <scroller class="scroller" v-if="formattedOrder">
             <div class="order-detail-header">
                 <div class="order-detail-background"></div>
-                <image class="order-detail-img" :src="statusObj.icon" resize='cover'>
+                <image class="order-detail-img" :src="formattedOrder.statusIcon" resize='cover'>
                 </image>
                 <div class="order-detail-content">
-                    <text class="order-detail-label">{{statusObj.desc}}</text>
-                    <text class="order-detail-desc">订单已经收到，即将分配</text>
+                    <text class="order-detail-label">{{formattedOrder.statusDesc}}{{'('+formattedOrder.serviceSubTypeName+')'}}</text>
                 </div>
             </div>
             <div class="order-detail-step">
-                <div class="order-detail-step-row">
-                    <text class="order-step-label">2018-12-12{{'\n'}}12:11:10</text>
+                <div class="order-detail-step-row" v-for="(item, index) in progressList" :key="index">
+                    <text class="order-step-label">{{convertProcessTime(item.processTime)}}</text>
                     <div class="order-detail-step-flow">
-                        <div class="order-detail-step-line first-step-line"></div>
-                        <div class="order-detail-step-dot current-step-dot"></div>
+                        <div v-bind:class="['order-detail-step-line', index==0?'first-step-line':(index==progressList.length -1?'last-step-line':'')]"></div>
+                        <div v-bind:class="['order-detail-step-dot', index==0?'current-step-dot':'']"></div>
                     </div>
-                    <text class="order-step-desc current-step">服务已经成功接收，服务已经成功接收，服务已经成功接收，服务已经成功接收，服务已经成功接收</text>
-                </div>
-                <div class="order-detail-step-row">
-                    <text class="order-step-label">2018-12-12{{'\n'}}12:11:10</text>
-                    <div class="order-detail-step-flow">
-                        <div class="order-detail-step-line"></div>
-                        <div class="order-detail-step-dot"></div>
-                    </div>
-                    <text class="order-step-desc">服务等待分配</text>
-                </div>
-                <div class="order-detail-step-row">
-                    <text class="order-step-label">2018-12-12{{'\n'}}12:11:10</text>
-                    <div class="order-detail-step-flow">
-                        <div class="order-detail-step-line last-step-line"></div>
-                        <div class="order-detail-step-dot"></div>
-                    </div>
-                    <text class="order-step-desc">服务等待分配</text>
+                    <text v-bind:class="['order-step-desc', index==0?'current-step':'']">{{item.processDesc}}</text>
                 </div>
             </div>
             <div class="order-detail-body">
                 <div class="order-detail-body-row">
                     <text class="order-body-label">服务内容：</text>
-                    <text class="order-body-desc">安装空调</text>
+                    <text class="order-body-desc">{{formattedOrder.orderDesc}}</text>
                 </div>
                 <div class="order-detail-body-row">
                     <text class="order-body-label">服务单号：</text>
                     <div class="order-copy-group">
-                        <text class="order-body-desc">FW123456789</text>
-                        <text class="order-copy" @click="copyOrder('FW123456789')">复制</text>
+                        <text class="order-body-desc">{{serviceOrderNo}}</text>
+                        <text class="order-copy" @click="copyOrder(serviceOrderNo)">复制</text>
                     </div>
                 </div>
                 <div class="order-detail-body-row">
                     <text class="order-body-label">下单渠道：</text>
-                    <text class="order-body-desc">400客服</text>
+                    <text class="order-body-desc">{{formattedOrder.interfaceSourceDesc}}</text>
                 </div>
                 <div class="order-detail-body-row">
                     <text class="order-body-label">下单时间：</text>
-                    <text class="order-body-desc">2018-12-12 10:12</text>
+                    <text class="order-body-desc">{{formattedOrder.contactTimeDesc}}</text>
                 </div>
                 <div class="order-detail-body-row">
                     <text class="order-body-label">服务地址：</text>
-                    <text class="order-body-desc">广东阿斯蒂芬法师打发阿斯顿发阿斯顿发阿斯顿发阿斯顿发啊实打实啊{{'\n'}}张三 13512341234</text>
+                    <text class="order-body-desc">{{formattedOrder.servCustomerAddress}}{{'\n'}}{{formattedOrder.servCustomerName}} {{formattedOrder.servCustomerMobilephone1}}</text>
                 </div>
             </div>
         </scroller>
-        <div class="action-bar">
-            <text class="action" v-if="order.status == 1" @click="checkAddress()">查看网点</text>
-            <text class="action" v-if="order.status == 2 || order.status == 6" @click="showDialog()">取消工单</text>
-            <text class="action" v-if="order.status == 2" @click="urgeOrder()">催办</text>
-            <text class="action" v-if="order.status == 3" @click="renewOrder()">重新报单</text>
-            <text class="action" v-if="order.status == 4">评价有礼</text>
-            <text class="action" v-if="order.status == 5">查看评价</text>
-            <text class="action" v-if="order.status == 6" @click="callService()">联系网点</text>
+        <div class="action-bar" v-if="formattedOrder">
+            <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 1" @click="checkAddress()">查看网点</text>
+            <text class="action" v-if="[2, 6].indexOf(formattedOrder.calcServiceOrderStatus)>-1" @click="showDialog()">取消工单</text>
+            <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 2 && checkPassTime(formattedOrder)" @click="urgeOrder()">催办</text>
+            <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 3" @click="renewOrder()">重新报单</text>
+            <text class="action primary-action" v-if="formattedOrder.allowCallbackWX == 'Y'" @click="assessService()">评价有礼</text>
+            <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 5" @click="assessService()">查看评价</text>
+            <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 6" @click="callService()">联系网点</text>
         </div>
 
-        <midea-dialog title="要取消此订单？" mainBtnColor="#267AFF" secondBtnColor="#267AFF" :show="dialogShow" cancelText="否" confirmText="是" @mideaDialogCancelBtnClicked="dialogCancel" @mideaDialogConfirmBtnClicked="dialogConfirm">
+        <midea-actionsheet :items="urgeOrderItems" :show="isShowUrgeOrder" @close="closeUrgeOrderActionsheet" @itemClick="urgeOrdertItemClick" @btnClick="urgeOrderBtnClick" ref="urgeOrderActionsheet">
+        </midea-actionsheet>
+
+        <midea-dialog title="要取消此订单？" mainBtnColor="#267AFF" secondBtnColor="#267AFF" :show="dialogShow" cancelText="否" confirmText="是" @mideaDialogCancelBtnClicked="dialogCancel" @mideaDialogConfirmBtnClicked="cancelOrder">
         </midea-dialog>
     </div>
 </template>
 
 <script>
 import base from './base'
+import orderBase from './order-base'
 import nativeService from '@/common/services/nativeService'
-import { MideaDialog, MideaButton } from '@/index'
+import util from '@/common/util/util'
+import { MideaDialog, MideaActionsheet } from '@/index'
 
 const clipboard = weex.requireModule('clipboard')
 
 export default {
     components: {
-        MideaDialog
+        MideaDialog,
+        MideaActionsheet
     },
-    mixins: [base],
+    mixins: [base, orderBase],
     data() {
         return {
             title: '订单详情',
-            order: {
-                time: '2018-05-11',
-                type: '京东接入',
-                status: 6,
-                statusDesc: '待服务',
-                label: '维修净水器',
-                desc: '工程师即将上门为您服务',
-                price: '',
-                imageUrl: './assets/img/service_midea@3x.png'
-            },
-            dialogShow: false
+            serviceOrderNo: '',
+            progressList: [],
+            order: null,
+            dialogShow: false,
+            isShowUrgeOrder: false,
+            reminderOptions: [],
         }
     },
     computed: {
-        statusObj() {
-            let result = ""
-            switch (this.order.status) {
-                case 1:
-                    //待接单
-                    result = { desc: "待接单", icon: "./assets/img/service_ic_order_new@3x.png" }
-                    break;
-                case 2:
-                    //已接单 - 上门
-                    result = { desc: "待工程师上门", icon: "./assets/img/service_ic_order_ongoing@3x.png" }
-                    break;
-                case 3:
-                    //已取消
-                    result = { desc: "(已取消)" + this.order.label, icon: "./assets/img/service_ic_order_cancel@3x.png" }
-                    break;
-                case 4:
-                    //已完成 - 待评价
-                    result = { desc: "(已完成)" + this.order.label, icon: "./assets/img/service_ic_order_finish@3x.png" }
-                    break;
-                case 5:
-                    //已完成 - 已评价
-                    result = { desc: "(已完成)" + this.order.label, icon: "./assets/img/service_ic_order_finish@3x.png" }
-                    break;
-                case 6:
-                    //待服务
-                    result = { desc: "待接单", icon: "./assets/img/service_ic_order_new@3x.png" }
-                    break;
+        formattedOrder() {
+            let result
+            if (this.order) {
+                result = this.formatOrder(this.order)
+            }
+
+            return result
+        },
+        urgeOrderItems() {
+            let result = []
+            if (this.reminderOptions) {
+                result = this.reminderOptions.map((item) => {
+                    return item.serviceRequireItemName
+                })
             }
             return result
         }
     },
     methods: {
+        convertProcessTime(time) {
+            return util.dateFormat(new Date(time), "yyyy-MM-dd hh:mm")
+        },
         copyOrder(orderNo) {
             clipboard.setString(orderNo)
             nativeService.toast("复制单号成功")
         },
         checkAddress() {
-            this.goTo('productSelection', {}, { from: 'orderList', to: 'branchList' })
+            this.goTo('productSelection', {}, { from: 'orderDetail' })
         },
-        urgeOrder(index) {
-            nativeService.toast("催单成功")
-        },
-        renewOrder(index) {
-            if (this.order.orderType == 1) {
-                this.goTo("maintenance", {}, { from: "orderDetail", id: this.order.id })
-            } else {
-                this.goTo("installation", {}, { from: "orderDetail", id: this.order.id })
+
+        urgeOrder() {
+            let order = this.order
+            let param = {
+                brandCode: order.serviceUserDemandVOs[0].brandCode,
+                depth: "3",
+                orgCode: order.orgCode,
+                interfaceSource: "SMART",
+                parentServiceRequireCode: "CD",
+                prodCode: order.serviceUserDemandVOs[0].prodCode
             }
+            nativeService.queryservicerequireproduct(param).then((resp) => {
+                this.reminderOptions = resp.list
+                this.isShowUrgeOrder = true;
+                this.$nextTick(e => {
+                    this.$refs.urgeOrderActionsheet.open();
+                });
+            })
         },
-        showDialog(index) {
+        closeUrgeOrderActionsheet() {
+            this.isShowUrgeOrder = false
+        },
+        urgeOrdertItemClick(event) {
+            this.isShowUrgeOrder = false
+            let order = this.order
+            let reminderOption = this.reminderOptions[event.index]
+            let param = {
+                orgCode: order.orgCode,
+                serviceOrderNo: order.serviceOrderNo,
+                reminderReason: reminderOption.serviceRequireItemName,
+                serviceRequireItem2Code: reminderOption.serviceRequireItemCode
+            }
+            nativeService.createserviceuserdemand(param).then(() => {
+                nativeService.toast("催单成功")
+            }).catch((error) => {
+                nativeService.toast(nativeService.getCssErrorMessage(error))
+            })
+        },
+        urgeOrderBtnClick() {
+            this.isShowUrgeOrder = false
+        },
+        renewOrder() {
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, this.order, () => {
+                if (this.order.serviceSubTypeCode == 1111) {
+                    this.goTo("maintenance", {}, { from: "orderList", isRenew: true })
+                } else {
+                    this.goTo("installation", {}, { from: "orderList", isRenew: true })
+                }
+            })
+        },
+        showDialog() {
             this.dialogShow = true
         },
         dialogCancel() {
             this.dialogShow = false
         },
-        dialogConfirm() {
+        cancelOrder() {
             this.dialogShow = false
-            this.order.status = 3
+            let param = {
+                orgCode: this.order.orgCode,
+                serviceOrderNo: this.order.serviceOrderNo,
+                operator: nativeService.userInfo.userName
+            }
+            nativeService.cancelserviceorder(param).then(() => {
+                this.order.serviceOrderStatus = '22'
+                this.appPageDataChannel.postMessage({ page: this.fromPage, key: "cancelOrder", data: { id: this.order.serviceOrderNo } })
+            })
         },
-        callService(index) {
+        assessService() {
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, this.order,
+                () => {
+                    this.goTo("callbackInfo", {}, { from: 'orderList', id: this.order.serviceOrderNo })
+                })
+        },
+        callService() {
             nativeService.callTel({
                 tel: this.order.tel,
                 title: '网点客户服务',
@@ -176,10 +204,44 @@ export default {
             ).catch((error) => {
                 nativeService.toast(error)
             })
+        },
+        checkPassTime(order) {
+            let result = false
+            let now = new Date()
+            if (order.contactTime && new Date(order.contactTime) < now.setHours(now.getHours() - 1)) {
+                result = true
+            }
+            return result
         }
     },
     created() {
+<<<<<<< HEAD
         nativeService.alert(weex.config.bundleUrl)
+=======
+        this.serviceOrderNo = nativeService.getParameters('id') || null
+
+        let param = {
+            serviceOrderCode: this.serviceOrderNo
+        }
+        nativeService.queryconsumerorderprogress(param).then((resp) => {
+            this.progressList = resp.oiqueryConsumerOrderProgressVOList
+        })
+
+        if (this.fromPage == "orderList") {
+            nativeService.getItem(this.SERVICE_STORAGE_KEYS.currentOrder, (resp) => {
+                if (resp.result == 'success') {
+                    this.order = JSON.parse(resp.data) || []
+                }
+            })
+        } else {
+            param = {
+                serviceOrderCode: this.serviceOrderNo
+            }
+            nativeService.queryserviceorder(param).then((data) => {
+                this.order = data.list[0]
+            })
+        }
+>>>>>>> 8abc499f07a19d3de5954d2085ff9e2cba5e8dee
     }
 }
 </script>
@@ -194,7 +256,7 @@ export default {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding-left: 50px;
+  padding-left: 48px;
   margin-top: 22px;
 }
 .order-detail-content {
@@ -206,7 +268,6 @@ export default {
   font-weight: 600;
   font-size: 56px;
   color: #ffffff;
-  margin-bottom: 24px;
 }
 .order-detail-desc {
   font-family: PingFangSC-Regular;
@@ -364,8 +425,7 @@ export default {
   border-style: solid;
 }
 .primary-action {
-  color: #ffffff;
-  background-color: #267aff;
-  border-color: #267aff;
+  color: #0078ff;
+  border-color: #0078ff;
 }
 </style>

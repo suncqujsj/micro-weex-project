@@ -1,161 +1,232 @@
 <template>
     <div>
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
-        <scroller class="scroller">
-            <div v-for="(order, index) in orderList" :key="index" @click="goToOrderDetail(order)">
-                <order-block class="order-block" :data="order">
-                    <div slot="action-bar" class="action-bar">
-                        <text class="action" v-if="order.status == 1" @click="checkAddress()">查看网点</text>
-                        <text class="action" v-if="order.status == 2 || order.status == 6" @click="showDialog(index)">取消工单</text>
-                        <text class="action" v-if="order.status == 2 && checkPassTime(order)" @click="urgeOrder(index)">催办</text>
-                        <text class="action" v-if="order.status == 3" @click="renewOrder(index)">重新报单</text>
-                        <text class="action" v-if="order.status == 4" @click="assessService(index)">评价有礼</text>
-                        <text class="action primary-action" v-if="order.status == 5" @click="checkAssess(index)">查看评价</text>
-                        <text class="action" v-if="order.status == 6" @click="callService(index)">联系网点</text>
-                    </div>
-                </order-block>
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
+        <scroller class="scroller" loadmoreoffset=750 @loadmore="loadmore">
+            <div class="empty-page" v-if="isOrderListLoaded && formattedOrderList.length == 0">
+                <image class="empty-page-icon" src="./assets/img/default_ic_nolist@3x.png" resize='contain'>
+                </image>
+                <text class="empty-page-text">暂无订单</text>
             </div>
-            <div class="gap-bottom"></div>
+            <div v-else>
+                <div v-for="(order, index) in formattedOrderList" :key="index" @click="goToOrderDetail(index)">
+                    <order-block class="order-block" :order="order" :ref="'order'+index">
+                        <div slot="action-bar" class="action-bar">
+                            <text class="action" v-if="order.calcServiceOrderStatus == 1" @click="checkAddress()">查看网点</text>
+                            <text class="action" v-if="[2, 6].indexOf(order.calcServiceOrderStatus)>-1" @click="showDialog(index)">取消工单</text>
+                            <text class="action" v-if="order.calcServiceOrderStatus == 2 && checkPassTime(order)" @click="urgeOrder(index)">催办</text>
+                            <text class="action" v-if="order.calcServiceOrderStatus == 3" @click="renewOrder(index)">重新报单</text>
+                            <text class="action primary-action" v-if="order.allowCallbackWX == 'Y'" @click="assessService(index)">评价有礼</text>
+                            <text class="action" v-if="order.callbackStatus == 12" @click="assessService(index)">查看评价</text>
+                            <text class="action" v-if="order.calcServiceOrderStatus == 6" @click="callService(index)">联系网点</text>
+                        </div>
+                    </order-block>
+                </div>
+                <div class="list-end" v-if="isOrderListLoaded">
+                    <text class="loading-end" v-if="hasNext && !loadingEnd">加载中...</text>
+                    <text class="loading-end" v-if="loadingEnd">———— 到底了 ————</text>
+                </div>
+                <!-- <loading class="loading" :display="showLoading" v-if="!loadingEnd">
+                <loading-indicator class="indicator"></loading-indicator>
+            </loading> -->
+            </div>
         </scroller>
 
-        <midea-dialog title="要取消此订单？" mainBtnColor="#267AFF" secondBtnColor="#267AFF" :show="dialogShow" cancelText="否" confirmText="是" @mideaDialogCancelBtnClicked="dialogCancel" @mideaDialogConfirmBtnClicked="dialogConfirm">
+        <midea-actionsheet :items="urgeOrderItems" :show="isShowUrgeOrder" @close="closeUrgeOrderActionsheet" @itemClick="urgeOrdertItemClick" @btnClick="urgeOrderBtnClick" ref="urgeOrderActionsheet">
+        </midea-actionsheet>
+
+        <midea-dialog title="要取消此订单？" mainBtnColor="#267AFF" secondBtnColor="#267AFF" :show="dialogShow" cancelText="否" confirmText="是" @mideaDialogCancelBtnClicked="dialogCancel" @mideaDialogConfirmBtnClicked="cancelOrder">
         </midea-dialog>
     </div>
 </template>
 
 <script>
 import base from './base'
-import nativeService from '@/common/services/nativeService'
+import orderBase from './order-base'
+import nativeService from './settings/nativeService'
 import OrderBlock from '@/customer-service/components/orderBlock.vue'
 
-import { MideaDialog } from '@/index'
+const dom = weex.requireModule('dom')
+
+import { MideaDialog, MideaActionsheet } from '@/index'
 
 export default {
     components: {
         OrderBlock,
-        MideaDialog
+        MideaDialog,
+        MideaActionsheet
     },
-    mixins: [base],
+    mixins: [base, orderBase],
     data() {
         return {
             title: '进度查询',
-            orderList: [
-                {
-                    id: '1',
-                    orderType: 1,
-                    time: '2018-05-11',
-                    type: '京东接入',
-                    status: 1,
-                    statusDesc: '已接单',
-                    label: '维修净水器',
-                    desc: '工程师即将上门为您服务',
-                    price: '',
-                    imageUrl: './assets/img/service_midea@3x.png'
-                },
-
-                {
-                    id: '2',
-                    orderType: 0,
-                    time: '8888-88-88',
-                    type: '美的服务',
-                    status: 2,
-                    statusDesc: '已接单',
-                    label: '安装家用空调',
-                    desc: '工程师即将上门为您服务工程师即将上门为您服务工程师即将上门为您服务工程师即将上门',
-                    price: '',
-                    imageUrl: './assets/img/service_midea@3x.png',
-                    createTime: '2017-12-12'
-                },
-
-                {
-                    id: '3',
-                    orderType: 0,
-                    time: '2018-05-11',
-                    type: '美的APP',
-                    status: 3,
-                    statusDesc: '已取消',
-                    label: '安装家用空调',
-                    desc: '工程师即将上门为您服务',
-                    price: '',
-                    imageUrl: './assets/img/service_midea@3x.png'
-                },
-
-
-                {
-                    id: '3',
-                    orderType: 1,
-                    time: '2018-05-11',
-                    type: '京东接入',
-                    status: 3,
-                    statusDesc: '已取消',
-                    label: '维修家用空调',
-                    desc: '工程师即将上门为您服务',
-                    price: '',
-                    imageUrl: './assets/img/service_midea@3x.png'
-                },
-
-                {
-                    id: '4',
-                    orderType: 3,
-                    time: '2018-05-11',
-                    type: '京东接入',
-                    status: 4,
-                    statusDesc: '待评价',
-                    label: '清洗家用空调',
-                    desc: '工程师即将上门为您服务',
-                    price: '120.00',
-                    imageUrl: './assets/img/service_midea@3x.png'
-                },
-
-                {
-                    id: '5',
-                    orderType: 1,
-                    time: '2018-05-11',
-                    type: '京东接入',
-                    status: 5,
-                    statusDesc: '已完成',
-                    label: '维修净水器',
-                    desc: '工程师即将上门为您服务',
-                    price: '',
-                    imageUrl: './assets/img/service_midea@3x.png'
-                },
-
-                {
-                    id: '6',
-                    orderType: 1,
-                    time: '2018-05-11',
-                    type: '京东接入',
-                    status: 6,
-                    statusDesc: '待服务',
-                    label: '维修净水器',
-                    desc: '工程师即将上门为您服务',
-                    price: '',
-                    imageUrl: './assets/img/service_midea@3x.png',
-                    tel: '4008228228'
-                }
-            ],
+            orderListParam: null,
+            orderList: [],
+            orderListPage: 0,
+            isOrderListLoaded: false,
+            hasNext: false,
             selectedOrderIndex: null,
-            dialogShow: false
+            dialogShow: false,
+            showLoading: 'hide',
+            loadingEnd: false,
+            isShowUrgeOrder: false,
+            reminderOptions: [],
+        }
+    },
+    computed: {
+        formattedOrderList() {
+            //不可改变订单顺序
+            return this.orderList.map((order) => {
+                return this.formatOrder(order)
+                // let calcServiceOrderStatus = this.formatOrder(order)
+                // return Object.assign(order, { calcServiceOrderStatus: calcServiceOrderStatus })
+            })
+        },
+        urgeOrderItems() {
+            let result = []
+            if (this.reminderOptions) {
+                result = this.reminderOptions.map((item) => {
+                    return item.serviceRequireItemName
+                })
+            }
+            return result
         }
     },
     methods: {
-        goToOrderDetail(order) {
-            this.goTo("orderDetail", {}, { id: order.id })
+        handlePageData(data) {
+            if (data.key == "createOrder") {
+                this.orderListPage = 0
+                this.getOrderList()
+                this.$nextTick(() => {
+                    const el = this.$refs['order0'][0]
+                    dom.scrollToElement(el, { offset: -24 })
+                })
+            } else if (data.page == "orderList") {
+                if (data.key == "cancelOrder") {
+                    let id = data.data.id
+                    if (this.selectedOrderIndex) {
+                        let order = this.orderList[this.selectedOrderIndex]
+                        if (id == order.serviceOrderNo) {
+                            order.serviceOrderStatus = '22'
+                            this.$set(this.orderList, this.selectedOrderIndex, order)
+                        }
+                    }
+                }
+            }
+        },
+        //获取订单列表
+        getOrderList() {
+            let status = []
+            for (let index = 10; index < 35; index++) {
+                status.push(index)
+            }
+            let param = {
+                dispatchOrderStatus: status.join(","),  //派工单状态
+                page: this.orderListPage,
+                resultNum: 10
+            }
+            this.orderListParam = param
+            nativeService.queryserviceorder(this.orderListParam).then((data) => {
+                this.orderList = data.list
+                this.hasNext = data.pageIndex * data.pageSize >= data.total ? false : true
+                this.isOrderListLoaded = true
+            }).catch((error) => {
+                nativeService.toast(nativeService.getCssErrorMessage(error))
+            })
+        },
+        //加载更多
+        loadmore(event) {
+            if (!this.hasNext) return
+            this.showLoading = 'show'
+            setTimeout(() => {
+                this.orderListPage++
+                this.orderListParam.page = this.orderListPage
+                nativeService.queryserviceorder(this.orderListParam).then((data) => {
+                    this.showLoading = 'hide'
+                    if (data.list && data.list.length > 0) {
+                        this.hasNext = data.pageIndex * data.pageSize >= data.total ? false : true
+                        this.orderList = this.orderList.concat(data.list)
+                    } else {
+                        this.hasNext = false
+                        this.loadingEnd = true
+                    }
+                })
+            }, 1500)
+        },
+        //查看详情
+        goToOrderDetail(index) {
+            this.selectedOrderIndex = index
+            let order = this.orderList[index]
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, order, () => {
+                this.goTo("orderDetail", {}, { from: 'orderList', id: order.serviceOrderNo })
+            })
         },
         checkAddress() {
             this.goTo('productSelection', {}, { from: 'orderList' })
         },
-        urgeOrder(index) {
-            nativeService.toast("催单成功")
+        //催单
+        checkPassTime(order) {
+            let result = false
+            let now = new Date()
+            if (order.contactTime && new Date(order.contactTime) < now.setHours(now.getHours() - 1)) {
+                result = true
+            }
+            return result
         },
+        urgeOrder(index) {
+            this.selectedOrderIndex = index
+            let order = this.orderList[this.selectedOrderIndex]
+            let param = {
+                brandCode: order.serviceUserDemandVOs[0].brandCode,
+                depth: "3",
+                orgCode: order.orgCode,
+                interfaceSource: "SMART",
+                parentServiceRequireCode: "CD",
+                prodCode: order.serviceUserDemandVOs[0].prodCode
+            }
+            nativeService.queryservicerequireproduct(param).then((resp) => {
+                this.reminderOptions = resp.list
+                this.isShowUrgeOrder = true;
+                this.$nextTick(e => {
+                    this.$refs.urgeOrderActionsheet.open();
+                });
+            })
+        },
+        closeUrgeOrderActionsheet() {
+            this.isShowUrgeOrder = false
+        },
+        urgeOrdertItemClick(event) {
+            this.isShowUrgeOrder = false
+            let order = this.orderList[this.selectedOrderIndex]
+            let reminderOption = this.reminderOptions[event.index]
+            let param = {
+                orgCode: order.orgCode,
+                serviceOrderNo: order.serviceOrderNo,
+                reminderReason: reminderOption.serviceRequireItemName,
+                serviceRequireItem2Code: reminderOption.serviceRequireItemCode
+            }
+            nativeService.createserviceuserdemand(param).then(() => {
+                nativeService.toast("催单成功")
+            }).catch((error) => {
+                nativeService.toast(nativeService.getCssErrorMessage(error))
+            })
+        },
+        urgeOrderBtnClick() {
+            this.isShowUrgeOrder = false
+        },
+
+        //重新下单
         renewOrder(index) {
             let order = this.orderList[index]
-            if (order.orderType == 1) {
-                this.goTo("maintenance", {}, { from: "orderList", id: order.id })
-            } else {
-                this.goTo("installation", {}, { from: "orderList", id: order.id })
-            }
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, order, () => {
+                if (order.serviceSubTypeCode == 1111) {
+                    this.goTo("maintenance", {}, { from: "orderList", isRenew: true })
+                } else {
+                    this.goTo("installation", {}, { from: "orderList", isRenew: true })
+                }
+            })
         },
+
+        //取消工单
         showDialog(index) {
             this.dialogShow = true
             this.selectedOrderIndex = index
@@ -163,49 +234,45 @@ export default {
         dialogCancel() {
             this.dialogShow = false
         },
-        dialogConfirm() {
+        cancelOrder() {
             this.dialogShow = false
-            let oldOrder = this.orderList[this.selectedOrderIndex]
-            oldOrder.status = 3
-            this.$set(this.orderList, this.selectedOrderIndex, oldOrder)
+            let order = this.orderList[this.selectedOrderIndex]
+            let param = {
+                orgCode: order.orgCode,
+                serviceOrderNo: order.serviceOrderNo,
+                operator: nativeService.userInfo.userName
+            }
+            nativeService.cancelserviceorder(param).then(() => {
+                order.serviceOrderStatus = '22'
+                this.$set(this.orderList, this.selectedOrderIndex, order)
+            })
         },
+
+        //评价有礼
         assessService(index) {
             let order = this.orderList[index]
-            this.goTo("serviceAssessment", {}, { id: order.id })
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, order,
+                () => {
+                    this.goTo("callbackInfo", {}, { from: 'orderList', id: order.serviceOrderNo })
+                })
         },
-        checkAssess(index) {
-            let order = this.orderList[index]
-            this.goTo("serviceAssessment", {}, { id: order.id })
-        },
+
+        //联系网点
         callService(index) {
             let order = this.orderList[index]
             nativeService.callTel({
-                tel: order.tel,
+                tel: order.unitTel,
                 title: '网点客户服务',
-                desc: '拨打网点热线电话：' + order.tel
+                desc: '拨打网点热线电话：' + order.unitTel
             }).then(
                 (resp) => { }
             ).catch((error) => {
                 nativeService.toast(error)
             })
-        },
-        checkPassTime(order) {
-            let result = false
-            let now = new Date()
-            if (order.createTime && new Date(order.createTime) < now.setHours(now.getHours() - 1)) {
-                result = true
-            }
-            return result
         }
     },
     created() {
-        let param = {
-            dispatchOrderStatus: "22",  //派工单状态
-            orderColumn: "pubCreateDate"
-        }
-        nativeService.sendMCloudRequest('queryserviceorder', param).then((data) => {
-            // this.orderList = data.list
-        })
+        this.getOrderList()
     }
 }
 </script>
@@ -243,8 +310,50 @@ export default {
   border-style: solid;
 }
 .primary-action {
-  color: #ffffff;
-  background-color: #267aff;
-  border-color: #267aff;
+  color: #0078ff;
+  border-color: #0078ff;
+}
+.list-end {
+  margin-top: 20px;
+  margin-bottom: 100px;
+}
+.loading-end {
+  width: 750px;
+  padding: 30px 0;
+  background-color: #f2f2f2;
+  color: #666666;
+  text-align: center;
+  font-family: PingFangSC-Regular;
+  font-size: 24px;
+}
+.indicator-loading {
+  width: 750px;
+  height: 120px;
+  color: #0e90ff;
+  font-size: 42px;
+  text-align: center;
+}
+.indicator-text {
+  width: 750px;
+  color: #5f5f5f;
+  font-size: 28px;
+  text-align: center;
+}
+.empty-page {
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+.empty-page-icon {
+  margin-top: 272px;
+  width: 240px;
+  height: 240px;
+}
+.empty-page-text {
+  padding-top: 36px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #888888;
 }
 </style>

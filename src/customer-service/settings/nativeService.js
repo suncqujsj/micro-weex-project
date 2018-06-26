@@ -1,34 +1,269 @@
 import nativeService from '@/common/services/nativeService'
+import { SERVICE_STORAGE_KEYS } from './globalKeys'
+
+const HOST_CSS = "http://csuat.midea.com"
+const HOST_CSS_WX = "http://weixincs.midea.com"
+const HOST_CENTER_APP = "http://10.16.38.95:8080"
+const HOST_CENTER = "http://10.16.85.47"
 
 let customizeNativeService = Object.assign(nativeService, {
+    isDummy: false,
     serviceList: {
-        createserviceorder: "c-css-ipms/api/wom/order/createserviceorder", //用户报装、报修、洗悦家服务请求
-        queryserviceorder: "c-css-ipms/api/wom/order/queryserviceorder", //用户服务工单列表查询
-        queryserviceuserdemanddispatch: "c-css-ipms/api/wom/order/queryserviceuserdemanddispatch", //用户服务工单详情进度查询
-        createserviceuserdemand: "c-css-ipms/api/wom/order/createserviceuserdemand",
-        cancelserviceorder: "c-css-ipms/api/wom/order/cancelserviceorder", //取消售后工单
-        queryconsumerorderprogress: "c-css-ipms/api/wom/order/queryconsumerorderprogress", //用户服务单服务过程列表查询接口
-        queryservicerequireproduct: "c-css-ipms/api/wom/order/queryservicerequireproduct", //服务请求查询接口
-        querywarrantydescbycodeorsn: "c-css-ipms/api/wom/order/querywarrantydescbycodeorsn", //包修政策查询接口
-        getChargeStandardList: "c-css-ipms/css/api/mmp/insp/getChargeStandardList", //收费标准查询
-        queryunitarchives: "c-css-ipms/api/wom/order/queryunitarchives", //网点查询
-        getProducts: "c-css-ipms/api/dc/getProducts", //产品主数据同步
-        searchProductType: "wxgw/myproduct/searchProductType", //产品列表
-        searchFaultType: "/wxgw/css/faultType", //故障类型
-        searchExcludedFault: "wxgw/css/excludedFault", //故障可能原因查询
-        getFeePlocy: "mideaService/getFeePlocy" //收费标准
+        //CSS 客服消息
+        queryserviceorder: HOST_CSS + "/c-css-ipms/api/wom/order/queryserviceorder", //用户服务工单列表查询
+        createserviceorder: HOST_CSS + "/c-css-ipms/api/wom/order/createserviceorder", //用户报装、报修、洗悦家服务请求
+        queryserviceuserdemanddispatch: HOST_CSS + "/c-css-ipms/api/wom/order/queryserviceuserdemanddispatch", //用户服务工单详情进度查询
+        createserviceuserdemand: HOST_CSS + "/c-css-ipms/api/wom/order/createserviceuserdemand", //催单CSS信息单
+        cancelserviceorder: HOST_CSS + "/c-css-ipms/api/wom/order/cancelserviceorder", //取消售后工单
+        extractcallbackitem: HOST_CSS + "/c-css-ipms/api/wom/order/extractcallbackitem", //回访问卷抽取
+        createcallbackinfo: HOST_CSS + "/c-css-ipms/api/wom/order/createcallbackinfo", //回访结果提交
+        queryconsumerorderprogress: HOST_CSS + "/c-css-ipms/api/wom/order/queryconsumerorderprogress", //用户服务单服务过程列表查询接口
+        queryservicerequireproduct: HOST_CSS + "/c-css-ipms/api/wom/order/queryservicerequireproduct", //服务请求查询接口
+        querywarrantydescbycodeorsn: HOST_CSS + "/c-css-ipms/api/wom/order/querywarrantydescbycodeorsn", //包修政策查询接口
+        getChargeStandardList: HOST_CSS + "/c-css-ipms/css/api/mmp/insp/getChargeStandardList", //收费标准查询
+        getChargePriceForMaterial: HOST_CSS + "/c-css-ipms/css/api/mmp/insp/getChargePriceForMaterial", //配件价格查询
+        queryunitarchives: HOST_CSS + "/c-css-ipms/api/wom/order/queryunitarchives", //网点查询
+        getexcludedfaultlist: HOST_CSS + "/c-css-ipms/cssmobile/api/wom/getexcludedfaultlist", //故障可能原因查询
+        appexcludedfaulttraces: HOST_CSS + "/c-css-ipms/cssmobile/api/wom/appexcludedfaulttraces", //假性故障有帮助没帮助标识接口
+
+
+        //中控消息
+        getProdType: HOST_CENTER_APP + "/pdgw-ap/message/getProdType", //产品列表
+        getProdMessage: HOST_CENTER_APP + "/pdgw-ap/message/getProdMessage", //获取售后产品资料对外服务接口
+
+        getUserProductPageList: HOST_CENTER + "/ccrm2-core/userProduct/getUserProductPageList", //获取家电列表
+        getAreaList: HOST_CENTER + "/cmms/area/list", //服务地区
+        getUserAddrPageList: HOST_CENTER + "/ccrm2-core/userAddr/getUserAddrPageList", //地址列表查询
+        getDefaultAddr: HOST_CENTER + "/ccrm2-core/userAddr/getDefaultAddr", //获取默认地址
+        userAddrAdd: HOST_CENTER + "/ccrm2-core/userAddr/add", //地址新增
+        userAddrUpdate: HOST_CENTER + "/ccrm2-core/userAddr/update", //地址修改
+        userAddrDelete: HOST_CENTER + "/ccrm2-core/userAddr/delete", //地址删除
+        setDefaultAddr: HOST_CENTER + "/ccrm2-core/userAddr/defaultAddr", //设置默认地址
     },
-    searchProductType(param = {}) {
+    userInfo: null,
+    objectToQuery(obj) {
+        return Object.keys(obj).map(k =>
+            encodeURIComponent(k) + '=' + encodeURIComponent(obj[k] || '')
+        ).join('&')
+    },
+    getCssErrorMessage(error) {
+        let msg = error.errorMsg || error.returnMsg || error || "请求失败，请稍后重试。"
+        if (error.errorCode) {
+            msg += "(" + error.errorCode + ")"
+        }
+        return msg
+    },
+    getCssRequestCommonParam() {
+        return new Promise((resolve, reject) => {
+            let param = {
+                interfaceSource: "SMART"
+            }
+            if (this.userInfo) {
+                param.webUserCode = "oFtQywGHyqrWbDvjVdRTeR9Ig3m0" //this.userInfo.uid
+                param.webUserPhone = this.userInfo.mobile
+                resolve(param)
+            } else {
+                this.getUserInfo().then((data) => {
+                    this.userInfo = data || {}
+                    this.getCssRequestCommonParam().then((resp) => {
+                        resolve(resp)
+                    })
+                })
+            }
+        })
+    },
+    sendCssHttpRequestWrapper(url, params, options) {
+        let requestOption = Object.assign({ method: "POST", isShowLoading: true, isValidate: false }, options)
+        return new Promise((resolve, reject) => {
+            this.getCssRequestCommonParam().then((commonParam) => {
+                let requestParam = {
+                    url: url,
+                    type: 'json',
+                    method: requestOption.method || "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"
+                    },
+                    body: "json=" + JSON.stringify({ "body": Object.assign({}, commonParam, params) })
+                }
+                this.sendHttpRequest(requestParam, requestOption).then((resp) => {
+                    if (resp.status) {
+                        resolve(resp)
+                    } else {
+                        reject(resp)
+                    }
+                }).catch((error) => {
+                    reject(error)
+                })
+            })
+        })
+    },
+    queryserviceorder(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.queryserviceorder, param)
+    },
+    createserviceorder(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.createserviceorder, param)
+    },
+    queryserviceuserdemanddispatch(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.queryserviceuserdemanddispatch, param)
+    },
+    createserviceuserdemand(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.createserviceuserdemand, param)
+    },
+    cancelserviceorder(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.cancelserviceorder, param)
+    },
+    extractcallbackitem(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.extractcallbackitem, param)
+    },
+    createcallbackinfo(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.createcallbackinfo, param)
+    },
+    queryconsumerorderprogress(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.queryconsumerorderprogress, param)
+    },
+    queryservicerequireproduct(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.queryservicerequireproduct, param)
+    },
+
+    getexcludedfaultlist(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.getexcludedfaultlist, param)
+    },
+    appexcludedfaulttraces(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.appexcludedfaulttraces, param)
+    },
+
+    queryunitarchives(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.queryunitarchives, param)
+    },
+    querywarrantydescbycodeorsn(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.querywarrantydescbycodeorsn, param)
+    },
+
+    getChargeStandardList(param = {}) {
+        return new Promise((resolve, reject) => {
+            let url = this.serviceList.getChargeStandardList + "?"
+            for (const key in param) {
+                if (param.hasOwnProperty(key)) {
+                    url += key + "=" + param[key] + "&"
+                }
+            }
+            let requestParam = {
+                url: url,
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+            this.sendHttpRequest(requestParam).then((resp) => {
+                if (resp.returnStatus) {
+                    resolve(resp)
+                } else {
+                    reject(resp)
+                }
+            }).catch((error) => {
+                reject(error)
+            })
+        })
+    },
+
+    getChargePriceForMaterial(param = {}) {
+        return new Promise((resolve, reject) => {
+            let url = this.serviceList.getChargePriceForMaterial + "?"
+            for (const key in param) {
+                if (param.hasOwnProperty(key)) {
+                    url += key + "=" + param[key] + "&"
+                }
+            }
+            let requestParam = {
+                url: url,
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+            this.sendHttpRequest(requestParam).then((resp) => {
+                if (resp.returnStatus) {
+                    resolve(resp)
+                } else {
+                    reject(resp)
+                }
+            }).catch((error) => {
+                reject(error)
+            })
+        })
+    },
+
+    //** 中控后台服务 start **/
+    getRequestCommonParam() {
+        return new Promise((resolve, reject) => {
+            let param = {
+                sourceSys: "APP"
+            }
+            if (this.userInfo) {
+                param.uid = "2a58bb9810b3462b80e6d42c142441f8" //this.userInfo.uid
+                resolve(param)
+            } else {
+                this.getUserInfo().then((data) => {
+                    this.userInfo = data || {}
+                    this.getRequestCommonParam().then((resp) => {
+                        resolve(resp)
+                    })
+                })
+            }
+        })
+    },
+    sendControlHttpRequestWrapper(url, params, options) {
+        let requestOption = Object.assign({ method: "POST", isShowLoading: true, isValidate: false }, options)
+        return new Promise((resolve, reject) => {
+            this.getRequestCommonParam().then((commonParam) => {
+                let requestParam = {
+                    url: url + (url.indexOf("?") > -1 ? "&" : "?") + "appKey=c8c35003cc4c408581043baad45bce5b&secret=0dc6fe93a8154fcaab629353ab800bb4",
+                    method: requestOption.method || "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: Object.assign(commonParam, params)
+                }
+                this.sendHttpRequest(requestParam, requestOption).then((resp) => {
+                    resolve(resp)
+                }).catch((error) => {
+                    reject(error)
+                })
+            })
+        })
+    },
+    proceedProductData(productData) {
+        //把品牌信息写入产品Object, 以便做唯一匹配
+        let result = productData
+        for (let brandIndex = 0; brandIndex < result.length; brandIndex++) {
+            const brandItem = result[brandIndex]
+            if (brandItem.productTypeDTOList) {
+                for (let categaryIndex = 0; categaryIndex < brandItem.productTypeDTOList.length; categaryIndex++) {
+                    let categaryItem = brandItem.productTypeDTOList[categaryIndex]
+                    categaryItem.isShowImage = (categaryIndex > 3 ? false : true)
+                    if (categaryItem.children) {
+                        for (let productIndex = 0; productIndex < categaryItem.children.length; productIndex++) {
+                            categaryItem.children[productIndex].brandCode = brandItem.brandCode
+                            categaryItem.children[productIndex].brand = brandItem.brand
+                        }
+                    }
+                }
+            }
+        }
+        return result
+    },
+    getProdTypeForInstallation(param = {}) {
         return new Promise((resolve, reject) => {
             let result
-            this.getItem("SERVICE_STORAGE_productType", (resp) => {
-                if (resp.result == 'success') {
+            this.getItem(SERVICE_STORAGE_KEYS.productTypeForInstallation, (resp) => {
+                if (resp.result == 'success' && JSON.parse(resp.data).length > 0) {
                     result = JSON.parse(resp.data)
                     resolve(result)
                 } else {
-                    this.sendMCloudRequest('searchProductType', param, { isValidate: false }).then((resp) => {
-                        result = resp.data
-                        this.setItem("SERVICE_STORAGE_productType", JSON.stringify(result), () => {
+                    let url = this.serviceList.getProdType + '?' + this.objectToQuery(param)
+                    this.sendControlHttpRequestWrapper(url, {}).then((resp) => {
+                        result = this.proceedProductData(resp.data)
+                        this.setItem(SERVICE_STORAGE_KEYS.productTypeForInstallation, JSON.stringify(result), () => {
                             resolve(result)
                         })
                     }).catch((error) => {
@@ -38,17 +273,18 @@ let customizeNativeService = Object.assign(nativeService, {
             })
         })
     },
-    searchFaultType(param = {}) {
+    getProdType(param = {}) {
         return new Promise((resolve, reject) => {
             let result
-            this.getItem("SERVICE_STORAGE_faultType", (resp) => {
-                if (resp.result == 'success') {
+            this.getItem(SERVICE_STORAGE_KEYS.productType, (resp) => {
+                if (resp.result == 'success' && JSON.parse(resp.data).length > 0) {
                     result = JSON.parse(resp.data)
                     resolve(result)
                 } else {
-                    this.sendMCloudRequest('searchFaultType', param, { isValidate: false }).then((resp) => {
-                        result = resp.data
-                        this.setItem("SERVICE_STORAGE_faultType", JSON.stringify(result), () => {
+                    let url = this.serviceList.getProdType + '?' + this.objectToQuery(param)
+                    this.sendControlHttpRequestWrapper(url, {}).then((resp) => {
+                        result = this.proceedProductData(resp.data)
+                        this.setItem(SERVICE_STORAGE_KEYS.productType, JSON.stringify(result), () => {
                             resolve(result)
                         })
                     }).catch((error) => {
@@ -58,25 +294,86 @@ let customizeNativeService = Object.assign(nativeService, {
             })
         })
     },
-    searchExcludedFault(param = {}) {
+
+    getProdMessage(param = {}) {
         return new Promise((resolve, reject) => {
-            let result
-            this.sendMCloudRequest('searchExcludedFault', param, { isValidate: false }).then((resp) => {
-                resolve(resp.data)
+            let url = this.serviceList.getProdMessage + '?' + this.objectToQuery(param)
+            this.sendControlHttpRequestWrapper(url, {}).then((resp) => {
+                resolve(resp)
             }).catch((error) => {
                 reject(error)
             })
         })
     },
-    getFeePlocy(param = {}) {
+    getUserProductPageList(param = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.getUserProductPageList, param)
+    },
+
+    getUserAddrPageList(param = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.getUserAddrPageList, param)
+    },
+
+    getDefaultAddr(param = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.getDefaultAddr, param)
+    },
+
+    getAreaList(param = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.getAreaList, param, { method: "GET" })
+    },
+
+    userAddrAdd(param = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.userAddrAdd, param)
+    },
+
+    userAddrUpdate(param = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.userAddrUpdate, param)
+    },
+
+    userAddrDelete(param = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.userAddrDelete, param)
+    },
+
+    setDefaultAddr(param = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.setDefaultAddr, param)
+    },
+
+    //防伪
+    antiFakeQuery(param = {}) {
         return new Promise((resolve, reject) => {
-            let result
-            this.sendMCloudRequest('getFeePlocy', param, { isValidate: false }).then((resp) => {
-                resolve(resp.content)
-            }).catch((error) => {
+            let url = "http://wap.cjm.so/Common/DataService.ashx?function=AntiFakeQuery&CorpID=14500&Code=" + param.code + param.validCode + "&QueryType=2"
+            let param = {
+                method: 'GET',
+                url: url,
+                type: 'jsonp',
+                headers: { 'Content-Type': 'application/json' }
+            }
+            nativeService.sendHttpRequest(param).then(
+                (resp) => {
+                    resolve(resp)
+                }
+            ).catch((error) => {
                 reject(error)
             })
         })
+    },
+    //根据经纬度计算距离
+    Rad(d) {
+        return d * Math.PI / 180.0;
+    },
+
+    distanceByLnglat(lng1, lat1, lng2, lat2) {
+        var radLat1 = this.Rad(lat1);
+        var radLat2 = this.Rad(lat2);
+        var a = radLat1 - radLat2;
+        var b = this.Rad(lng1) - this.Rad(lng2);
+        var s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
+        s = s * 6378137.0;// 取WGS84标准参考椭球中的地球长半径(单位:m)
+        // s = Math.round(s * 10000) / 10000;
+        s = Math.round(s)
+        return s
+        // //下面为两点间空间距离（非球面体）
+        // var value= Math.pow(Math.pow(lng1-lng2,2)+Math.pow(lat1-lat2,2),1/2);
+        // alert(value);
     }
 })
 

@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller class="scroller">
             <div class="base-group">
@@ -48,7 +48,7 @@
 
 <script>
 import base from './base'
-import nativeService from '@/common/services/nativeService'
+import nativeService from './settings/nativeService'
 import { MideaDialog, MideaButton } from '@/index'
 
 const clipboard = weex.requireModule('clipboard')
@@ -88,7 +88,7 @@ export default {
         }
     },
     created() {
-        nativeService.getItem("SERVICE_STORAGE_antifakeResult", (resp) => {
+        nativeService.getItem(this.SERVICE_STORAGE_KEYS.antifakeResult, (resp) => {
             this.result = JSON.parse(resp.data)
             this.showDialog()
         })

@@ -14,9 +14,10 @@ const storage = weex.requireModule('storage')
 import debugUtil from '@/common/util/debugUtil'
 
 import appConfig from './settings/config'
+import { SERVICE_STORAGE_KEYS } from './settings/globalKeys'
 import nativeService from './settings/nativeService'
 
-import Mock from './settings/mock'  //正式场上线时注释掉
+// import Mock from './settings/mock'  //正式场上线时注释掉
 if (appConfig.isMock) {
     nativeService.Mock = Mock
 }
@@ -27,6 +28,7 @@ const appPageDataChannel = new BroadcastChannel('appPageData')
 
 import mideaHeader from '@/midea-component/header.vue'
 
+var handler = null, headerClickCount = 0
 export default {
     components: {
         mideaHeader
@@ -47,7 +49,8 @@ export default {
 
         appData: appDataTemplate,
         fromPage: '',
-        toPage: ''
+        toPage: '',
+        SERVICE_STORAGE_KEYS: SERVICE_STORAGE_KEYS
     }),
     computed: {
         pageHeight() {
@@ -81,7 +84,7 @@ export default {
                     var path = pageName + ".js";
                     if (params) {
                         path += '?' + Object.keys(params).map(k =>
-                            encodeURIComponent(k) + '=' + encodeURIComponent(params[k])
+                            encodeURIComponent(k) + '=' + encodeURIComponent(params[k] || '')
                         ).join('&')
                     }
                     options.viewTag = pageName
@@ -140,17 +143,32 @@ export default {
         },
         handlePageData(data) {
             //处理页面传递的信息
+        },
+        headerClick() {
+            if (!appConfig.enable_debug) return
+
+            if (handler) {
+                clearTimeout(handler);
+            }
+            handler = setTimeout(function () {
+                headerClickCount = 0
+            }, 500)
+            headerClickCount++
+            if (headerClickCount == 3) {
+                headerClickCount = 0
+                this.goTo('debugInfo')
+            }
         }
     },
     created() {
         console.log("created")
-        this.fromPage = nativeService.getParameters('from')
-        this.toPage = nativeService.getParameters('to')
+        this.fromPage = nativeService.getParameters('from') || null
+        this.toPage = nativeService.getParameters('to') || null
         //若isMixinCreated为false, 则不继承
         if (!this.isMixinCreated) return
 
         //Debug Log相关信息
-        debugUtil.isEnableDebugInfo = false //开启关闭debuglog功能
+        debugUtil.isEnableDebugInfo = appConfig.enable_debug || false //开启关闭debuglog功能
         debugUtil.debugLog("@@@@@@ " + this.title + "(" + plugin_name + "-" + srcFileName + ") @@@@@@")
 
         //监听全局推送(native->weex)

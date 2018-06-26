@@ -4,7 +4,7 @@
             <div class="header-left-image-wrapper" @click="leftImgClick">
                 <image v-if="showLeftImg" class="header-left-image" :src="leftImg"></image>
             </div>
-            <div>
+            <div @click="headerClick">
                 <text :style="{color:titleText, fontSize:fontSize+'px'}">{{title}}</text>
             </div>
             <div class="header-right-image-wrapper" @click="rightImgClick">
@@ -115,6 +115,9 @@ export default {
                 return;
             }
             this.$emit('rightImgClick')
+        },
+        headerClick() {
+            this.$emit('headerClick')
         }
     },
 };

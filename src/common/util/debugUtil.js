@@ -1,9 +1,11 @@
 // ************ debug 相关 *************
 const storage = weex.requireModule('storage');
 const mm = weex.requireModule('modal');
+const debugInfoDataChannel = new BroadcastChannel('debugInfoDataChannel')
 const debugUtil = {
     isEnableDebugInfo: true,
     debugInfoKey: 'debugInfo',
+    debugInfoDataChannel: debugInfoDataChannel,
     debugInfoExist: '',
     debugInfo: '',
     debugLog(...messages) {
@@ -73,6 +75,11 @@ const debugUtil = {
     removeItem(key, callback) {
         storage.removeItem(key, callback)
     }
+}
+
+
+debugInfoDataChannel.onmessage = (event) => {
+    debugUtil.cleanDebugLog()
 }
 
 export default debugUtil

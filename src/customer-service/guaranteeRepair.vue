@@ -1,19 +1,18 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller class="content-wrapper">
             <div class="base-group">
                 <div class="item-group">
                     <text class="type-select-label">以下为选填信息，有助于更快更好地为您服务</text>
-
                     <div class="search-history">
                         <text v-for="(item,index) in types" :key="index" v-bind:class="['search-history-item', typeSelectedIndex==index?'search-history-item-selected':'']" @click="typeSelected(index)">{{item.title}}</text>
                     </div>
                 </div>
 
                 <div class="item-group scan-group">
-                    <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false :value="code" @change="onchange" @input="oninput" />
+                    <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="searchCode" @input="oninput" />
 
                     <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
                 </div>
@@ -28,10 +27,10 @@
                 </midea-cell>
             </div>
 
-            <div class="base-group">
+            <div v-if="result" class="base-group">
                 <div class="item-group">
-                    <text class="result-title">家用净水器（整机三年）</text>
-                    <text class="result-desc">整机包修3年，电路板，水泵包修5年</text>
+                    <text class="result-title">{{result.warrantyStandardName}}</text>
+                    <text class="result-desc">{{result.warrantyStandardDesc}}</text>
                 </div>
             </div>
         </scroller>
@@ -40,21 +39,21 @@
 
 <script>
 import base from './base'
-import nativeService from '@/common/services/nativeService';
+import nativeService from './settings/nativeService'
+import util from '@/common/util/util'
 
-import { MideaCell, MideaGridSelect } from '@/index'
+import { MideaCell } from '@/index'
 
 const picker = weex.requireModule('picker')
 
 export default {
     components: {
-        MideaCell,
-        MideaGridSelect
+        MideaCell
     },
     mixins: [base],
     data() {
         return {
-            title: '包修服务',
+            title: '包修政策',
             types: [
                 {
                     'title': '机身条码',
@@ -65,7 +64,9 @@ export default {
                 }
             ],
             typeSelectedIndex: 0,
-            date: null
+            searchCode: '',
+            date: null,
+            result: null
         }
     },
     computed: {
@@ -74,46 +75,59 @@ export default {
         typeSelected(index) {
             this.typeSelectedIndex = index
         },
-        onchange() {
-
-        },
         oninput(event) {
-            this.code = event.value
+            this.date = null
+            this.result = null
         },
         scanCode() {
             nativeService.scanCode().then(
                 (resp) => {
                     if (resp.status == 0) {
-                        this.code = resp.data
+                        if (this.searchCode != resp.data) {
+                            this.searchCode = resp.data
+                            this.date = null
+                            this.result = null
+                        }
                     }
                 }
             )
         },
 
         pickDate() {
+            if (!this.searchCode) {
+                nativeService.toast('请输入型号或扫机身条码')
+                return
+            }
             picker.pickDate({
                 'value': this.date,
-                'max': '2029-11-28',
+                'max': util.dateFormat(new Date(), "yyyy-MM-dd"),
                 'min': '2015-11-28',
                 'title': '选择日期', //取消和确定中间那标题
                 'cancelTxt': '取消', //取消按钮文字
                 'confirmTxt': '确定', //确定按钮文字,
-                'cancelTxtColor': '#020F13', //取消颜色
-                'confirmTxtColor': '#020F13', //标题颜色
-                'titleColor': '#020F13', //标题颜色
-                'titleBgColor': '#E7EDEF' //标题栏颜色
-
+                'cancelTxtColor': '#000000', //取消颜色
+                'confirmTxtColor': '#000000', //标题颜色
+                'titleColor': '#000000', //标题颜色
+                'titleBgColor': '#E5E5E8' //标题栏颜色
             }, event => {
                 var result = event.result;
                 if (result == 'success') {
                     this.date = event.data;
+                    let param = {
+                        barcode: this.typeSelectedIndex == 0 ? this.searchCode : '',
+                        productCode: this.typeSelectedIndex == 1 ? this.searchCode : '',
+                        purchaseDate: util.dateFormat(new Date(this.date), "yyyy-MM-dd")
+                    }
+                    nativeService.querywarrantydescbycodeorsn(param).then((data) => {
+                        this.result = data
+                    }).catch((error) => {
+                        nativeService.toast(nativeService.getCssErrorMessage(error))
+                    })
                 }
             });
         },
     },
     created() {
-        this.initServiePeriod()
-        this.initProductData()
     }
 }
 </script>

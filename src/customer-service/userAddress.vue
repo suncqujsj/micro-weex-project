@@ -1,76 +1,135 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+            <div slot="customerContent" class="header-right">
+                <text class="header-right-text" @click="deleteAddress">删除</text>
+            </div>
         </midea-header>
         <scroller>
             <cell class="group-gap-top"></cell>
             <div class="item-group">
-                <text class="text-label">联系人</text>
-                <input class="text-input" type="text" placeholder="请输入联系人" v-model="userAddress.customerName" />
+                <text class="text-label">姓名</text>
+                <input class="text-input" type="text" placeholder="请输入姓名" v-model="userAddress.receiverName" />
+                <image class="text-img" src="./assets/img/me_ic_addresslist@3x.png" resize='contain'></image>
             </div>
             <div class="item-group">
-                <text class="text-label">联系电话</text>
-                <input class="text-input" type="tel" placeholder="请输入联系电话" v-model="userAddress.customerMobilephone" />
+                <text class="text-label">手机号码</text>
+                <input class="text-input" type="tel" placeholder="请输入手机号码" v-model="userAddress.receiverMobile" />
             </div>
             <div class="item-group">
-                <text class="text-label">服务地址</text>
-                <input class="text-input" type="text" placeholder="请输入服务地址" v-model="userAddress.customerAddress" />
+                <text class="text-label">所在区域</text>
+                <text class="text-desc" @click="isShowAddressPicker=true">{{areaDesc}}</text>
+                <image class="text-img" src="./assets/img/me_ic_area@3x.png" resize='contain'></image>
             </div>
             <div class="item-group">
                 <text class="text-label">详细地址</text>
-                <textarea class="info-textarea" placeholder="请输入详细地址" v-model="userAddress.customerAddressDetail" rows="5" maxlength="120"></textarea>
+                <input class="text-input" type="text" placeholder="请输入详细地址" v-model="userAddress.addr" />
             </div>
-
-            <div class="action-bar">
-                <midea-button text="提交" type="green" :btnStyle="{'background-color': '#267AFF','border-radius': '4px'}" @mideaButtonClicked="submit">
-                </midea-button>
+            <div class="item-group">
+                <text class="text-label">默认地址</text>
+                <midea-switch2 :checked="userAddress.defaultAddr" @change="changeDefaultAddr" width="70" height="38"></midea-switch2>
             </div>
         </scroller>
+
+        <div class="action-bar">
+            <midea-button :text="isCreate?'新增':'保存'" type="green" :btnStyle="{'background-color': '#267AFF','border-radius': '4px'}" @mideaButtonClicked="submit">
+            </midea-button>
+        </div>
+
+        <address-picker :isShow="isShowAddressPicker" :data="userAddress" @oncancel="isShowAddressPicker=false" @onchanged="servieAddressSelected">
+        </address-picker>
     </div>
 </template>
 
 <script>
 import base from './base'
-import nativeService from '@/common/services/nativeService';
+import nativeService from './settings/nativeService';
 
-import { MideaButton } from '@/index'
+import { MideaButton, MideaSwitch2 } from '@/index'
+
+import AddressPicker from './components/addressPicker.vue'
 
 export default {
     components: {
-        MideaButton
+        MideaButton,
+        AddressPicker,
+        MideaSwitch2
     },
     mixins: [base],
     data() {
         return {
-            title: '服务地址',
+            title: '我的地址',
+            isCreate: true,
             userAddress: {
-                customerName: '',
-                customerMobilephone: '',
-                customerAddress: '',
-                customerAddressDetail: ''
-            }
+                receiverName: '',
+                receiverMobile: '',
+                province: '',
+                provinceName: '',
+                city: '',
+                cityName: '',
+                county: '',
+                countyName: '',
+                street: '',
+                streetName: '',
+                addr: '',
+                defaultAddr: false
+            },
+            isShowAddressPicker: false
+        }
+    },
+    computed: {
+        areaDesc() {
+            return this.userAddress.province ? (this.userAddress.provinceName + ' ' + this.userAddress.cityName + ' ' + this.userAddress.countyName + ' ' + this.userAddress.streetName) : '请选中所在区域'
         }
     },
     methods: {
-        submit() {
-            debugger
-            if (this.toPage) {
-                nativeService.setItem("SERVICE_STORAGE_userAddress", this.userAddress,
-                    () => {
-                        this.goTo(this.toPage, {}, { from: this.fromPage })
-                    })
-            } else {
-                this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddress", data: this.userAddress })
+        servieAddressSelected(event) {
+            this.userAddress = Object.assign(this.userAddress, event)
+        },
+        changeDefaultAddr(event) {
+            this.userAddress.defaultAddr = event.value
+        },
+        submitDefaultAddr(userAddrId, isDefault) {
+            let param = {
+                "userAddrId": userAddrId,
+                "defaultAddr": isDefault
+            }
+            return nativeService.setDefaultAddr(param)
+        },
+        deleteAddress() {
+            nativeService.userAddrDelete({ userAddrId: this.userAddress.userAddrId }).then(() => {
+                this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddress" })
                 this.back()
+            })
+        },
+        submit() {
+            if (this.userAddress.userAddrId) {
+                //地址修改
+                nativeService.userAddrUpdate(this.userAddress).then(() => {
+                    this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddress" })
+                    this.back()
+                })
+            } else {
+                //地址新增
+                nativeService.userAddrAdd(this.userAddress).then(() => {
+                    this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddress" })
+                    this.back()
+                })
             }
         }
     },
     created() {
-        nativeService.getItem("SERVICE_STORAGE_userAddress", (resp) => {
-            if (resp.result == 'success') {
-                this.userAddress = Object.assign(this.userAddress, JSON.parse(resp.data) || {})
-            }
-        })
+        this.userAddress.userAddrId = nativeService.getParameters('id') || null
+
+        if (this.userAddress.userAddrId) {
+            //地址修改
+            this.isCreate = false
+            nativeService.getItem(this.SERVICE_STORAGE_KEYS.userAddress, (resp) => {
+                if (resp.result == 'success') {
+                    this.userAddress = JSON.parse(resp.data)
+                }
+            })
+        }
     }
 }
 </script>
@@ -80,50 +139,72 @@ export default {
   background-color: #f2f2f2;
   position: relative;
 }
+.header-right {
+  position: absolute;
+  right: 0px;
+  width: 160px;
+  height: 88px;
+  display: flex;
+  justify-content: center;
+}
+.header-right-text {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #666666;
+  padding-left: 20px;
+  padding-right: 20px;
+  text-align: right;
+}
 .group-gap-top {
   height: 24px;
 }
 .item-group {
-  padding-top: 32px;
+  padding-top: 30px;
   padding-left: 32px;
   padding-right: 32px;
+  padding-bottom: 30px;
   background-color: #ffffff;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 .text-label {
   font-family: PingFangSC-Regular;
-  font-size: 28px;
-  color: #666666;
-  padding-bottom: 16px;
+  font-size: 32px;
+  color: #000000;
+  width: 130px;
 }
 .text-input {
+  flex: 1;
   font-family: PingFangSC-Regular;
   font-size: 28px;
-  color: #000000;
-  border-radius: 4px;
-  border-color: #e5e5e8;
-  border-width: 1px;
+  color: #333333;
   height: 72px;
   padding-left: 22px;
   padding-right: 50px;
-  background-color: #fafafa;
 }
-
+.text-desc {
+  flex: 1;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #333333;
+  padding-left: 22px;
+  padding-right: 50px;
+}
+.text-img {
+  height: 40px;
+  width: 40px;
+}
 .info-textarea {
   font-family: PingFangSC-Regular;
   font-size: 28px;
-  color: #000000;
-  border-radius: 4px;
-  border-color: #e5e5e8;
-  border-width: 1px;
-  padding-top: 10px;
-  padding-left: 22px;
-  padding-right: 50px;
-  background-color: #fafafa;
+  color: #333333;
 }
 .action-bar {
-  background-color: #ffffff;
+  position: fixed;
+  bottom: 0px;
   width: 750px;
   text-align: center;
-  padding-bottom: 50px;
+  padding-bottom: 20px;
 }
 </style>

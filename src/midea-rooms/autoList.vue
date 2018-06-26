@@ -206,16 +206,16 @@
                 nativeService.goTo('addAuto.js')
             },
             editAuto(auto){
-                this.goTo("editAuto", {}, { sceneType: auto.sceneType })
+                this.goTo("autoEdit", {}, { sceneType: auto.sceneType })
             },
         },
         created(){
-            // this.getItem('userAutos', (res)=>{
-            //     nativeService.alert(res)
-            //     if ( res.result == 'success') {
-            //         this.autoList = res.data
-            //     }
-            // })
+            this.getItem('userAutos', (res)=>{
+                nativeService.alert(1111)
+                if ( res.result == 'success') {
+                    this.autoList = res.data
+                }
+            })
         }
     }
 </script>

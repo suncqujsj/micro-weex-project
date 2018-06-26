@@ -4,17 +4,17 @@
         <div>
             <div class="hd row-sb">
                 <text class="hd-name">快捷操作</text>
-                <text class="hd-btn" @click="goTo('autoList')">编辑</text>
+                <text class="hd-btn" @click="goAddAuto">添加</text>
             </div>
             <scroller class="scroller" scroll-direction="horizontal" :show-scrollbar="false">
                 <div v-for="col in colList">
-                    <div v-for="item in col" class="quick row-sb" @click="executeAuto(item.autoId)">
+                    <div v-for="item in col" class="quick row-sb"  @click="editAuto(item)">
                         <div class="row-s">
                             <image class="icon" :src="icon.auto[item.type]"></image>
                             <text class="quick-name">{{item.name}}</text>
                             <text v-if="item.desc" class="quick-desc">{{item.desc}}</text>
                         </div>
-                        <image class="auto-btn" v-if="item.enable==0" :src="icon.autoBtn">
+                        <image class="auto-btn" :src="icon.autoBtn[item.enable]"  @click="executeAuto(item.autoId)">
                     </div>
                 </div>
             </scroller>
@@ -56,7 +56,7 @@
     .hd-btn{ font-size: 24px; color: #666; padding: 10px;}
     .scroller{ flex-direction: row; }
     .icon { width: 82px; height: 82px; margin-right: 20px; }
-    .auto-btn{ width: 38px; height: 38px; }
+    .auto-btn{ width: 50px; height: 50px; }
     .quick{
         width: 320px;
         height: 122px;
@@ -110,7 +110,11 @@
                         4: 'assets/img/slhome.png',
                         5: 'assets/img/slweather.png'
                     },
-                    autoBtn: 'assets/img/auto_btn.png'
+                    autoBtn:{
+                        0: 'assets/img/auto_btn.png',
+                        1: 'assets/img/autooo.png',
+
+                    }
                 },
                 sceneImg: {
                     1: 'assets/img/parlour.png',
@@ -286,8 +290,14 @@
             goScene(scene){
                 this.goTo("scene", {}, { sceneType:scene.type, sceneId: scene.sceneId })
             },
+            editAuto(auto){
+                this.goTo("autoEdit", {}, { sceneType: auto.sceneType })
+            },
             executeAuto(autoId){
-                nativeService.toast('executeAuto')
+                nativeService.alert('executeAuto')
+            },
+            goAddAuto(){
+                nativeService.goTo('addAuto.js')
             },
             getAutoList(){
                 let reqUrl = url.auto.list

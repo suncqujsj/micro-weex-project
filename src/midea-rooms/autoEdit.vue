@@ -6,13 +6,16 @@
             <text class="hd-text font-grey"  @click="save">保存</text>
         </div>
         <div class="content">
-            <div v-if="type != 'manual'">
-                <midea-cell title="启用" @mideaCellClick="turnOn" :cellStyle="{paddingLeft: '30px'}">
-                    <midea-switch></midea-switch>
-                </midea-cell>
+            <div v-if="sceneType != 2">
+                <div class="row-sb floor">
+                    <text>启用</text>
+                    <div style="margin-top:10px">
+                        <switch-bar :checked="isAutoOpen" @change="openAuto"></switch-bar>
+                    </div>
+                </div>
                 <div>
                     <text class="sub-hd">当如下条件满足时</text>
-                    <midea-cell :title="auto.name" height="146" :hasArrow="true" :clickActivied="true" :itemImg="auto.image" @mideaCellClick="goAutoTriggers" :cellStyle="{paddingLeft: '30px'}"></midea-cell>
+                    <midea-cell :title="auto.name" height="146" :hasArrow="true" :clickActivied="true" :itemImg="auto.image" @mideaCellClick="goAutoTypeSelect" :cellStyle="{paddingLeft: '30px'}"></midea-cell>
                 </div>
             </div>
             <div>
@@ -49,6 +52,7 @@
         padding-right: 30px;
     }
     .hd-text{ font-size: 32px; }
+    .floor{ background-color: #fff; padding: 25px;}
     .font-grey {
         color: #666;
     }
@@ -126,9 +130,9 @@
     import MideaHeader from '@/midea-component/header.vue'
     import MideaCell from '@/midea-component/cell.vue'
     import mideaList from '@/midea-rooms/components/list.vue'
-    import mideaSwitch from '@/midea-rooms/components/switch.vue'
+	import switchBar from '@/midea-rooms/components/switch.vue'
     export default {
-        components:{ MideaHeader, MideaCell, mideaList, mideaSwitch },
+        components:{ MideaHeader, MideaCell, mideaList, switchBar },
         mixins: [base],
         data(){
             return {
@@ -184,7 +188,8 @@
                         img: 'assets/img/stop_on.png',
                         status: 'check'
                     }
-                ]
+                ],
+                isAutoOpen: false
             }
         },
         computed: {
@@ -200,16 +205,13 @@
         },
         methods: {
             initData(){
-                this.type = nativeService.getParameters('type')
+                this.sceneType = nativeService.getParameters('sceneType')
             },
             goBack(){
                 nativeService.goBack()
             },
             save(){
                 
-            },
-            turnOn(){
-
             },
             checkOn(device, index){
                 let tmp = {
@@ -221,14 +223,17 @@
             goSelect(){
                 this.goTo('selectDevice')
             },
-            goAutoTriggers(){
-                this.goTo('autoTriggers', {}, {type: this.type})
+            goAutoTypeSelect(){
+                this.goTo('autoTypeSelect', {}, {type: this.type})
             },
             deleteQuickStart(){
                 nativeService.toast('delete')
             },
             setDevice(device){
                 this.goTo('setDevice')
+            },
+            openAuto(){
+
             }
         },
         created(){

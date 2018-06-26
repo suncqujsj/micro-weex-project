@@ -1,5 +1,5 @@
 <template>
-    <div class="wrap" :style="wrapHeight">
+    <div class="wrap" :style="wrapStyle">
         <div class="select-area"></div>
         <scroller class="scroller" show-scrollbar=false @scroll="scroll" @scrollend="scrollEnd">
             <div v-for="(item, index) in listArray" :key="index" ref="item">
@@ -37,14 +37,19 @@ export default {
         wrapHeight: {
             type: Number,
             default: 350
+        },
+        wrapWidth: {
+            type: Number,
+            default: 750
         }
     },
     computed: {
         wrapStyle(){
             return {
+                width: this.wrapWidth,
                 height: this.wrapHeight
             }
-        }
+        },
     },
     data() {
         return {
@@ -75,8 +80,6 @@ export default {
 
 <style>
 .wrap {
-  width: 750px;
-  height: 350px;
   flex-direction: row;
   background-color: #ffffff;
 }
@@ -124,10 +127,7 @@ export default {
   position: absolute;
   top: 136px;
   left: 0px;
-  width: 750px;
   height: 72px;
-  padding-left: 120px;
-  padding-right: 120px;
   border-top-color: #e2e2e2;
   border-top-width: 1px;
   border-bottom-color: #e2e2e2;

@@ -7,7 +7,7 @@
         </div>
         <div class="content">
              <midea-list style="background-color:#fff" v-for="(item,idx) in conditions" :idx="idx" :hasWrapBorder="false" leftMargin="25px">
-                <midea-cell title="到达某地时" height="146" :hasArrow="true" :clickActivied="true" :itemImg="condition.icon" @mideaCellClick="goAutoTriggers" :cellStyle="{paddingLeft: '30px'}"></midea-cell>
+                <midea-cell title="到达某地时" height="146" :hasArrow="true" :clickActivied="true" :itemImg="condition.icon" @mideaCellClick="goAutoTypeSelect" :cellStyle="{paddingLeft: '30px'}"></midea-cell>
             </midea-list>
         </div>
    </div>

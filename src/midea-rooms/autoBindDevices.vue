@@ -187,8 +187,8 @@
                 }
                 this.devices[index].status = tmp[device.status]
             },
-            goAutoTriggers(){
-                this.goTo('autoTriggers', {}, {type: this.type})
+            goAutoTypeSelect(){
+                this.goTo('autoTypeSelect', {}, {type: this.type})
             },
             deleteQuickStart(){
                 nativeService.toast('delete')

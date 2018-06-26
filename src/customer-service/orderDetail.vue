@@ -215,9 +215,6 @@ export default {
         }
     },
     created() {
-<<<<<<< HEAD
-        nativeService.alert(weex.config.bundleUrl)
-=======
         this.serviceOrderNo = nativeService.getParameters('id') || null
 
         let param = {
@@ -241,7 +238,6 @@ export default {
                 this.order = data.list[0]
             })
         }
->>>>>>> 8abc499f07a19d3de5954d2085ff9e2cba5e8dee
     }
 }
 </script>

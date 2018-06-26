@@ -131,10 +131,9 @@
                 if (this.autos[this.activeTypeIndex].sceneType == 2){
                     this.goTo('autoBindDevices')
                 }else if ( this.autos[this.activeTypeIndex].sceneType == 3){
-                    nativeService.alert(111)
-                    this.goTo('autoTriggers', {}, { sceneType: this.autos[this.activeTypeIndex].sceneType, direction: this.autos[this.activeTypeIndex].direction })
+                    this.goTo('autoTypeSelect', {}, { sceneType: this.autos[this.activeTypeIndex].sceneType, direction: this.autos[this.activeTypeIndex].direction })
                 }else{
-                    this.goTo('autoTriggers', {}, { sceneType: this.autos[this.activeTypeIndex].sceneType })
+                    this.goTo('autoTypeSelect', {}, { sceneType: this.autos[this.activeTypeIndex].sceneType })
                 }
             }
         },

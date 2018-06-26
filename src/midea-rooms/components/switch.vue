@@ -25,11 +25,11 @@
       // 是否选中
       iconOn: {
         type: String,
-        default: './assets/img/smart_ic_switch_l@2x.png'
+        default: 'assets/img/smart_ic_switch_l@2x.png'
       },
       iconOff: {
         type: String,
-        default: './assets/img/smart_ic_switch_l@2x.png'
+        default: 'assets/img/smart_ic_switch_l@2x.png'
       },
       width: {
         type: String,

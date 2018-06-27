@@ -66,13 +66,15 @@
                 <div class="item-group scan-group">
                     <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="code" />
 
-                    <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
+                    <image v-if="typeSelectedIndex==0" class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
                 </div>
 
                 <div class="item-group info-group">
                     <textarea class="info-textarea" placeholder="请输入其他备注信息" v-model="order.pubRemark" rows="5" maxlength="120"></textarea>
                     <text class="info-textarea-calc">{{order.pubRemark.length}}/120</text>
-                    <image class="mic-icon" src="./assets/img/service_ic_tape@3x.png" resize='contain'></image>
+                    <div class="mic-icon-wrapper" @click="startRecordAudio">
+                        <image class="mic-icon" src="./assets/img/service_ic_tape@3x.png" resize='contain'></image>
+                    </div>
                 </div>
                 <div class="action-bar">
                     <midea-button text="提交" type="green" :btnStyle="{'background-color': '#267AFF','opacity':dataReadyStatus.status?'1':'0.2','border-radius': '4px'}" @mideaButtonClicked="submit">
@@ -98,7 +100,7 @@ import nativeService from './settings/nativeService';
 import util from '@/common/util/util'
 
 
-import { MideaCell, MideaGridSelect, MideaButton, MideaActionsheet, MideaPopup, MideaSelect } from '@/index'
+import { MideaCell, MideaGridSelect, MideaButton, MideaActionsheet, MideaPopup } from '@/index'
 
 import PeriodPicker from './components/periodPicker.vue'
 
@@ -110,7 +112,6 @@ export default {
         MideaButton,
         MideaActionsheet,
         MideaPopup,
-        MideaSelect,
 
         PeriodPicker
     },
@@ -392,7 +393,7 @@ export default {
                 6: "六",
             }
             for (let index = 0; index < 31; index++) {
-                let theDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + index)
+                let theDate = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate() + index)
                 let theDateDesc = theDate.getMonth() + '月' + theDate.getDate() + '日'
                 this.serviePeriodDate.push({
                     'index': index,
@@ -425,22 +426,9 @@ export default {
 
         //二维码扫描
         scanCode() {
-            nativeService.scanCode().then(
-                (resp) => {
-                    if (resp.status == 0) {
-                        let scanResult = resp.data || resp.code
-
-                        if (scanResult.indexOf(",") != -1) {
-                            // 扫条形码，可能会带'ITF,xxxxxxx', 截取后半部
-                            let tmp = scanResult.split(",")
-                            this.code = tmp.length === 1 ? tmp[0] : tmp[1]
-                        } else if (util.getParameters(scanResult, "tsn")) {
-                            //二维码
-                            this.code = util.getParameters(scanResult, "tsn")
-                        } else {
-                            this.code = scanResult
-                        }
-                    }
+            nativeService.scanServiceCode().then(
+                (result) => {
+                    this.code = result.code
                 }
             )
         },
@@ -488,7 +476,7 @@ export default {
                 cityName: customerAddressArray[1] || '',
                 county: '',
                 countyName: customerAddressArray[2] || '',
-                street: '',
+                street: order.areaCode,
                 streetName: customerAddressArray[3] || '',
                 addr: customerAddressArray[4] || ''
             }
@@ -505,7 +493,7 @@ export default {
                 let param = {
                     serviceOrderVO: {
                         interfaceSource: "SMART",
-                        webUserCode: "oFtQywGHyqrWbDvjVdRTeR9Ig3m0", //this.userInfo.uid
+                        webUserCode: this.userInfo.uid, //"oFtQywGHyqrWbDvjVdRTeR9Ig3m0"
                         webUserPhone: this.userInfo.mobile,
 
                         customerName: this.userAddress.receiverName,   //报单人姓名
@@ -563,7 +551,7 @@ export default {
                         this.goTo('orderList', { "replace": true })
                     }
                 }).catch((error) => {
-                    nativeService.toast(nativeService.getCssErrorMessage(error))
+                    nativeService.toast(nativeService.getErrorMessage(error))
                 })
             })
         }
@@ -738,10 +726,14 @@ export default {
   height: 40px;
   font-size: 24px;
 }
-.mic-icon {
+.mic-icon-wrapper {
   position: absolute;
-  bottom: 35px;
-  right: 50px;
+  right: 20px;
+  bottom: 20px;
+  padding-right: 30px;
+  padding-bottom: 15px;
+}
+.mic-icon {
   height: 40px;
   width: 40px;
 }

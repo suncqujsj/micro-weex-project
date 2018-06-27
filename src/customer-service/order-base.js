@@ -12,10 +12,10 @@ export default {
 
             if (10 <= status && status <= 15) {
                 // 已接单
-                if (order.serviceMethodCode == 11) {  //TODO: 需要CSS确认serviceMethodCode字段
+                if (order.serviceMethodCode == 11) {
                     //送修
                     status = 1
-                } else {
+                } else if (order.serviceMethodCode == 10) {
                     //上门
                     status = 2
                 }
@@ -101,6 +101,14 @@ export default {
                     others.statusDesc = "待服务"
                     others.statusIcon = "./assets/img/service_ic_order_new@3x.png"
                     break;
+                default:
+                    let status = order.serviceOrderStatus
+
+                    if (10 <= status && status <= 15) {
+                        // 已接单
+                        others.statusDesc = "已接单"
+                        others.statusIcon = "./assets/img/service_ic_order_ongoing@3x.png"
+                    }
             }
 
 

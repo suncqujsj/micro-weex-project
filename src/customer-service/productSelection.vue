@@ -275,7 +275,7 @@ export default {
             nativeService.getProdTypeForInstallation(param).then((data) => {
                 this.productList = data
             }).catch((error) => {
-                nativeService.toast(nativeService.getCssErrorMessage(error))
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
             //反选之前选中的
             nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, (resp) => {
@@ -295,7 +295,7 @@ export default {
                 nativeService.getUserProductPageList(param).then((data) => {
                     this.myProductList = data.data.list
                 }).catch((error) => {
-                    nativeService.toast(nativeService.getCssErrorMessage(error))
+                    nativeService.toast(nativeService.getErrorMessage(error))
                 })
             }
             //所有产品品类列表
@@ -306,7 +306,7 @@ export default {
             nativeService.getProdType(param).then((data) => {
                 this.productList = data
             }).catch((error) => {
-                nativeService.toast(nativeService.getCssErrorMessage(error))
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         }
     }

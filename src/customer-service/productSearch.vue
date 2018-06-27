@@ -6,6 +6,7 @@
             <div class="search-bar-content">
                 <image class="search-bar-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
                 <input class="search-bar-input" placeholder="请输入产品品类，如空调、洗衣机" v-model="keyWord" @return="keyBoardsearch" return-key-type="search"></input>
+                <image v-if="keyWord.length>0" class="search-bar-close" :src="'./assets/img/service_ic_cancel@3x.png'" resize="contain" @click="keyWord=''"></image>
             </div>
             <text v-if="isIos" class="search-action" @click="back">取消</text>
             <text v-if="!isIos" class="search-action" @click="searchProduct(keyWord)">搜索</text>
@@ -109,7 +110,7 @@ export default {
                 return
             }
             this.keyWord = value
-    
+
             this.searchKeyWord = this.keyWord
             if (this.historyKeys.indexOf(this.searchKeyWord) < 0) {
                 this.historyKeys.push(this.searchKeyWord)
@@ -176,6 +177,12 @@ export default {
   font-size: 28px;
   color: #000000;
   height: 40px;
+}
+.search-bar-close {
+  height: 40px;
+  width: 40px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 .search-action {
   width: 120px;

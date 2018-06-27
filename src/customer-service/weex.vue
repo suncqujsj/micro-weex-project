@@ -138,7 +138,16 @@ export default {
             })
         },
         itemClicked(item) {
-            this.goTo(item.page)
+            nativeService.getUserInfo().then((data) => {
+                if (data.uid) {
+                    this.goTo(item.page)
+                } else {
+                    nativeService.jumpNativePage({
+                        "pageName": "login", //跳转到登录界面
+                        "data": {}
+                    })
+                }
+            })
         },
         showHotLine() {
             this.showBar = true;

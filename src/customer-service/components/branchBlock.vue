@@ -7,11 +7,11 @@
             <div class="branch-block-content">
                 <text v-bind:class="['branch-block-desc',ellipsis?'ellipsis-line':'']" lines="1">业务范围：{{data.businessScope}}</text>
                 <div class="address-bar">
-                    <text class="address-distance">{{data.distanceDesc}}</text>
+                    <text v-if="data.distanceDesc" class="address-distance">{{data.distanceDesc}}</text>
                     <text v-bind:class="['address-detail',ellipsis?'ellipsis-line':'']" lines="1">{{data.unitAddress}}</text>
                 </div>
             </div>
-            <div class="branch-tel-wrapper" @click="makeCall()">
+            <div v-if="data.deliverTel" class="branch-tel-wrapper" @click="makeCall(data.deliverTel)">
                 <image class="branch-tel-img" src="./assets/img/service_ic_phone@3x.png" resize='contain'>
                 </image>
                 <text class="branch-tel-desc">电话</text>
@@ -53,9 +53,9 @@ export default {
     computed: {
     },
     methods: {
-        makeCall() {
+        makeCall(telNo) {
             nativeService.callTel({
-                tel: this.data.deliverTel,
+                tel: telNo,
                 title: '服务热线'
             }).then(
                 (resp) => { }
@@ -116,15 +116,15 @@ export default {
   font-size: 24px;
   color: #000000;
   margin-right: 10px;
+  padding-right: 10px;
+  border-right-color: #e2e2e2;
+  border-right-width: 1px;
 }
 .address-detail {
   flex: 1;
   font-family: PingFangSC-Regular;
   font-size: 24px;
   color: #8a8a8f;
-  border-left-color: #e2e2e2;
-  border-left-width: 1px;
-  padding-left: 10px;
   text-overflow: ellipsis;
 }
 .branch-tel-wrapper {

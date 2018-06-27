@@ -3,7 +3,7 @@
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller>
-            <image class="advertisement" src="./assets/img/servie_pic_banner03@3x.png" resize='contain'></image>
+            <image class="advertisement" src="./assets/img/service_img_gangwei@3x.png" resize='contain'></image>
 
             <div class="item-group">
                 <text class="info-title">滤芯防伪查询</text>
@@ -23,7 +23,7 @@
             </div>
 
             <div class="action-bar">
-                <midea-button text="提交" type="green" :btnStyle="{'background-color': '#267AFF','border-radius': '4px'}" @mideaButtonClicked="submit">
+                <midea-button text="提交" type="green" :btnStyle="{'background-color': '#267AFF','opacity':isDataReady?'1':'0.2','border-radius': '4px'}" @mideaButtonClicked="submit">
                 </midea-button>
             </div>
         </scroller>
@@ -55,6 +55,11 @@ export default {
             dialogShow: false
         }
     },
+    computed: {
+        isDataReady() {
+            return this.code && this.validCode
+        }
+    },
     methods: {
         oninput(event) {
             this.code = event.value
@@ -72,7 +77,12 @@ export default {
             this.validCode = event.value
         },
         submit() {
-            nativeService.antiFakeQuery({ code: this.code, validCode: this.validCode }).then(
+            if (!this.isDataReady) return
+
+            let param = {
+                Code: this.code + this.validCode
+            }
+            nativeService.antiFakeQuery(param).then(
                 (resp) => {
                     this.result = resp
                     if (resp.success && resp.result.ResultID) {
@@ -84,7 +94,7 @@ export default {
                     }
                 }
             ).catch((error) => {
-                this.result.message = "请求失败，请稍后重试。"
+                this.result.message = error || "请求失败，请稍后重试。"
                 this.dialogShow = true
             })
         },
@@ -113,9 +123,7 @@ export default {
   background-color: #f2f2f2;
 }
 .item-group {
-  padding-top: 32px;
-  padding-left: 32px;
-  padding-right: 32px;
+  padding: 24px;
   background-color: #ffffff;
 }
 .info-title {
@@ -125,9 +133,10 @@ export default {
   color: #000000;
 }
 .scan-group {
-  position: relative;
+  flex-direction: row;
 }
 .scan-input {
+  flex: 1;
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #000000;
@@ -136,7 +145,7 @@ export default {
   border-width: 1px;
   height: 72px;
   padding-left: 22px;
-  padding-right: 50px;
+  padding-right: 60px;
   background-color: #fafafa;
 }
 .scan-icon {

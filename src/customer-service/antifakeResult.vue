@@ -108,6 +108,7 @@ export default {
 }
 .base-group {
   padding-top: 24px;
+  padding-bottom: 24px;
   background-color: #f2f2f2;
 }
 .item-group {

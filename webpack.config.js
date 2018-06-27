@@ -67,7 +67,7 @@ new Vue({
   `
 }
 //默认编译T0x和midea-开关的文件夹, 目标文件夹如需要编译可添加到includeFiles
-var includeFiles = ['midea-demo'];
+var includeFiles = ['midea-demo', 'midea-rooms'];
 function walk() {
     if (argv.env) {
         runWalk(argv.env)

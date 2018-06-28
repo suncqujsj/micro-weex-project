@@ -1,8 +1,9 @@
 import nativeService from '@/common/services/nativeService'
 import util from '@/common/util/util'
 import { SERVICE_STORAGE_KEYS } from './globalKeys'
+const cssRrequestSendWithApp = true
 const requestSendWithApp = true
-const HOST_CSS = requestSendWithApp ? '' : "http://csuat.midea.com"
+const HOST_CSS = cssRrequestSendWithApp ? '' : "http://csuat.midea.com"
 const HOST_CENTER_APP = requestSendWithApp ? '' : "http://10.16.38.95:8080"
 const HOST_CENTER = requestSendWithApp ? '' : "http://10.16.85.47"
 const HOST_antiFake = "http://wap.cjm.so/Common/DataService.ashx"
@@ -28,6 +29,10 @@ let customizeNativeService = Object.assign(nativeService, {
         querywarrantydescbycodeorsn: HOST_CSS + "/c-css-ipms/api/wom/order/querywarrantydescbycodeorsn", //客服-CSS-包修政策查询接口
         getChargePriceForMaterial: HOST_CSS + "/c-css-ipms/css/api/mmp/insp/getChargePriceForMaterial", //客服-CSS-配件价格查询
 
+        createchargeinfo: HOST_CSS + "/c-css-ipms/api/mmp/createchargeinfo", //客服-CSS-收费信息接收接口
+        dochargecomfirm: HOST_CSS + "/c-css-ipms/api/wom/order/dochargecomfirm", //客服-CSS-服务号收费确认
+        querychargedetails: HOST_CSS + "/c-css-ipms/api/wom/order/querychargedetails", //客服-CSS-服务号收费报告查看
+        querychargestatus: HOST_CSS + "/c-css-ipms/mideapay/charge/querychargestatus", //客服-CSS-收费状态查询
 
         //中控消息
         getProdType: HOST_CENTER_APP + "/pdgw-ap/message/getProdType", //客服-中控-产品列表
@@ -85,7 +90,7 @@ let customizeNativeService = Object.assign(nativeService, {
     sendCssHttpRequestWrapper(url, params, options) {
         return new Promise((resolve, reject) => {
             this.getCssRequestCommonParam().then((commonParam) => {
-                if (requestSendWithApp) {
+                if (cssRrequestSendWithApp) {
                     let requestOption = Object.assign({ method: "POST", isShowLoading: !true }, options)
                     let requestParam = {
                         method: requestOption.method || "POST",
@@ -110,9 +115,9 @@ let customizeNativeService = Object.assign(nativeService, {
                         type: 'json',
                         method: requestOption.method || "POST",
                         headers: {
-                            "Content-Type": "application/json;charset=utf-8"
+                            "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"
                         },
-                        body: { "json": Object.assign({}, commonParam, params) }
+                        body: "json=" + JSON.stringify({ "body": Object.assign({}, commonParam, params) })
                     }
                     this.sendHttpRequest(requestParam, requestOption).then((resp) => {
                         if (resp.status) {
@@ -169,7 +174,18 @@ let customizeNativeService = Object.assign(nativeService, {
     querywarrantydescbycodeorsn(param = {}) {
         return this.sendCssHttpRequestWrapper(this.serviceList.querywarrantydescbycodeorsn, param)
     },
-
+    createchargeinfo(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.createchargeinfo, param)
+    },
+    dochargecomfirm(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.dochargecomfirm, param)
+    },
+    querychargedetails(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.querychargedetails, param)
+    },
+    querychargestatus(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.querychargestatus, param)
+    },
     // CSS 接口： 技术组提供
     sendCssTechHttpRequestWrapper(url, params, options) {
         return new Promise((resolve, reject) => {
@@ -215,12 +231,12 @@ let customizeNativeService = Object.assign(nativeService, {
         })
     },
     getChargeStandardList(param = {}) {
-        let url = this.serviceList.getChargeStandardList + "?" + this.objectToQuery(param)
+        let url = this.serviceList.getChargeStandardList + (requestSendWithApp ? '&' : '?') + this.objectToQuery(param)
         return this.sendCssTechHttpRequestWrapper(url)
     },
 
     getChargePriceForMaterial(param = {}) {
-        let url = this.serviceList.getChargePriceForMaterial + "?" + this.objectToQuery(param)
+        let url = this.serviceList.getChargePriceForMaterial + (requestSendWithApp ? '&' : '?') + this.objectToQuery(param)
         return this.sendCssTechHttpRequestWrapper(url)
     },
 
@@ -256,14 +272,18 @@ let customizeNativeService = Object.assign(nativeService, {
                         data: Object.assign({}, commonParam, params)
                     }
                     this.sendCentralCloundRequest(url, requestParam, requestOption).then((resp) => {
-                        resolve(resp)
+                        if (resp.code == 0) {
+                            resolve(resp)
+                        } else {
+                            reject(resp)
+                        }
                     }).catch((error) => {
                         reject(error)
                     })
                 } else {
                     let requestOption = Object.assign({ method: "POST", isShowLoading: true, isValidate: false }, options)
                     let requestParam = {
-                        url: url + (url.indexOf("?") > -1 ? "&" : "?") + "appKey=c8c35003cc4c408581043baad45bce5b&secret=0dc6fe93a8154fcaab629353ab800bb4",
+                        url: url + (url.indexOf("?") > -1 ? "&" : "?") + "appKey=e13fd74579ef4ab4a77218e787812096&secret=068bd15122f648e58e360c2271892220",
                         method: requestOption.method || "POST",
                         headers: {
                             "Content-Type": "application/json"
@@ -271,7 +291,11 @@ let customizeNativeService = Object.assign(nativeService, {
                         body: Object.assign({}, commonParam, params)
                     }
                     this.sendHttpRequest(requestParam, requestOption).then((resp) => {
-                        resolve(resp)
+                        if (resp.code == 0) {
+                            resolve(resp)
+                        } else {
+                            reject(resp)
+                        }
                     }).catch((error) => {
                         reject(error)
                     })
@@ -406,7 +430,6 @@ let customizeNativeService = Object.assign(nativeService, {
         return new Promise((resolve, reject) => {
             nativeService.scanCode().then(
                 (resp) => {
-                    this.toast(resp)
                     if (resp.status == 0) {
                         let scanResult = resp.data || resp.code
                         let scanResultObj = {

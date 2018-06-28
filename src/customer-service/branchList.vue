@@ -13,14 +13,21 @@
                 <midea-rich-text class="search-result-desc" :hasTextMargin="false" :config-list="richDesc"></midea-rich-text>
             </div>
         </div>
-        <scroller v-if="isListMode" class="scroller">
+
+        <div class="empty-page" v-if="isLoaded && sortedBranchList.length == 0">
+            <image class="empty-page-icon" src="./assets/img/default_ic_nobranch@3x.png" resize='contain'>
+            </image>
+            <text class="empty-page-text">抱歉，亲查询的网点不存在{{'\n'}}您可以拨打24小时服务热线咨询</text>
+            <text class="empty-page-text phone" @click="makeCall(4008899315)">400-8899-315</text>
+        </div>
+        <scroller v-if="isListMode && sortedBranchList.length >0" class="scroller">
             <div v-for="(branch, index) in sortedBranchList" :key="index">
                 <branch-block class="branch-block" :data="branch" :index="index" @navigate="navigate(branch)">
                 </branch-block>
             </div>
             <div class="gap-bottom"></div>
         </scroller>
-        <div v-else class="map-scroller">
+        <div v-if="!isListMode && sortedBranchList.length >0" class="map-scroller">
             <midea-map-view class="map" :data="mapData"></midea-map-view>
             <slider class="slider" :index="currentAddressIndex" @change="changeBranch" auto-play="false">
                 <div v-for="(branch, index) in sortedBranchList" :key="index">
@@ -63,6 +70,7 @@ export default {
             order: null,
             selectedProduct: null,
             branchList: [],
+            isLoaded: false,
             currentAddressIndex: 0,
             dialogShow: false
         }
@@ -97,24 +105,28 @@ export default {
             ]
         },
         sortedBranchList() {
-            let result = this.branchList.map((item) => {
-                let distance = 0, distanceDesc = ''
-                if (this.gpsInfo && this.gpsInfo.longitude && this.gpsInfo.latitude && item.nuitLongitude && item.unitLatitude) {
-                    distance = nativeService.distanceByLnglat(this.gpsInfo.longitude, this.gpsInfo.latitude, item.nuitLongitude, item.unitLatitude) //单位：米
-                    if (distance >= 1000) {
-                        distanceDesc = Math.round(distance / 1000 * 100) / 100 + "km"
-                    } else {
-                        distanceDesc = distance + "m"
+            let result
+            if (this.branchList) {
+                result = this.branchList.map((item) => {
+                    let distance = 0, distanceDesc = ''
+                    if (this.gpsInfo && this.gpsInfo.longitude && this.gpsInfo.latitude && item.nuitLongitude && item.unitLatitude) {
+                        distance = nativeService.distanceByLnglat(this.gpsInfo.longitude, this.gpsInfo.latitude, item.nuitLongitude, item.unitLatitude) //单位：米
+                        if (distance >= 1000) {
+                            distanceDesc = Math.round(distance / 1000 * 100) / 100 + "km"
+                        } else {
+                            distanceDesc = distance + "m"
+                        }
                     }
-                }
-                return Object.assign({
-                    'distance': distance,
-                    'distanceDesc': distanceDesc
-                }, item)
-            })
-            return result.sort(function (a, b) {
-                return a.distance - b.distance
-            })
+                    return Object.assign({
+                        'distance': distance,
+                        'distanceDesc': distanceDesc
+                    }, item)
+                })
+                result = result.sort(function (a, b) {
+                    return a.distance - b.distance
+                })
+            }
+            return result
         },
         mapData() {
             let result
@@ -195,10 +207,11 @@ export default {
                 nativeService.getGPSInfo(gpsParam).then((data) => {
                     nativeService.hideLoadingWithMsg()
                     this.gpsInfo = data
-
-                }).catch(() => {
+                    resolve(data)
+                }).catch((error) => {
                     nativeService.toast("定位失败")
                     nativeService.hideLoadingWithMsg()
+                    reject(error)
                 })
             })
         },
@@ -239,7 +252,9 @@ export default {
         },
         getUnitList(param) {
             nativeService.queryunitarchives(param).then((data) => {
-                this.branchList = data.list
+                this.branchList = data.list || []
+                this.currentAddressIndex = 0
+                this.isLoaded = true
             }).catch((error) => {
                 nativeService.toast(nativeService.getErrorMessage(error))
             })
@@ -265,6 +280,14 @@ export default {
             } else {
                 nativeService.toast("没有当前定位信息")
             }
+        },
+        makeCall(telNo) {
+            nativeService.callTel({
+                tel: telNo,
+                title: '服务热线'
+            }).then(
+                (resp) => { }
+            )
         }
     },
     created() {
@@ -383,5 +406,28 @@ export default {
 }
 .branch-slider-block {
   width: 750px;
+}
+
+.empty-page {
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 272px;
+}
+.empty-page-icon {
+  width: 240px;
+  height: 240px;
+}
+.empty-page-text {
+  padding-top: 36px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #888888;
+  text-align: center;
+}
+.phone {
+  margin-top: 100px;
+  color: #267aff;
 }
 </style>

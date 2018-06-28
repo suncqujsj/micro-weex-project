@@ -14,7 +14,9 @@
                 <div class="item-group scan-group">
                     <input v-if="typeSelectedIndex==1" class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="productCode" />
                     <input v-if="typeSelectedIndex==0" class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="barCode" />
-                    <image v-if="typeSelectedIndex==0" class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
+                    <div v-if="typeSelectedIndex==0" class="scan-icon-wrapper">
+                        <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
+                    </div>
                 </div>
 
                 <div class="item-group scan-group group-bottom-border">
@@ -35,6 +37,11 @@
                 <div class="item-group">
                     <text class="result-desc">若本价格标准高于当地物价部门制定有关标准，请以当地物价部门标准为准</text>
                 </div>
+            </div>
+            <div class="empty-page" v-if="isLoaded && materialList.length == 0">
+                <image class="empty-page-icon" src="./assets/img/default_ic_noresult@3x.png" resize='contain'>
+                </image>
+                <text class="empty-page-text">抱歉，没有找到相应的配件价格{{'\n'}}请重新搜索</text>
             </div>
         </scroller>
 
@@ -74,7 +81,8 @@ export default {
             isShowProductList: false,
             selectedProduct: '',
             materialName: '',
-            materialList: []
+            materialList: [],
+            isLoaded: false
         }
     },
     computed: {
@@ -128,21 +136,19 @@ export default {
                     pageSize: "1000"
                 }
                 nativeService.getProdMessage(param).then((resp) => {
-                    if (resp.code == 0) {
-                        this.productList = resp.data.filter((item) => {
-                            return item.product.orgCode
-                        })
-                        if (this.productList) {
-                            if (this.productList.length == 1) {
-                                this.selectedProduct = {
-                                    salesCode: this.productList[0].product.salesCode,
-                                    crmEntCode: this.productList[0].product.crmEntCode
-                                }
-
-                                this.getCharge()
-                            } else if (this.productList.length > 1) {
-                                this.isShowProductList = true
+                    this.productList = resp.data.filter((item) => {
+                        return item.product.orgCode
+                    })
+                    if (this.productList) {
+                        if (this.productList.length == 1) {
+                            this.selectedProduct = {
+                                salesCode: this.productList[0].product.salesCode,
+                                crmEntCode: this.productList[0].product.crmEntCode
                             }
+
+                            this.getCharge()
+                        } else if (this.productList.length > 1) {
+                            this.isShowProductList = true
                         }
                     }
                 }).catch((error) => {
@@ -168,6 +174,7 @@ export default {
             }
             nativeService.getChargePriceForMaterial(param).then((data) => {
                 this.materialList = data.date || []
+                this.isLoaded = true
             }).catch((error) => {
                 nativeService.toast(nativeService.getErrorMessage(error))
             })
@@ -251,10 +258,13 @@ export default {
   padding-right: 50px;
   background-color: #fafafa;
 }
-.scan-icon {
+.scan-icon-wrapper {
   position: absolute;
-  top: 40px;
-  right: 50px;
+  top: 24px;
+  right: 24px;
+  padding: 16px;
+}
+.scan-icon {
   height: 40px;
   width: 40px;
 }
@@ -284,5 +294,26 @@ export default {
   font-size: 28px;
   color: #666666;
   padding-bottom: 32px;
+}
+.empty-page {
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #ffffff;
+  margin-top: 24px;
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+.empty-page-icon {
+  width: 240px;
+  height: 240px;
+}
+.empty-page-text {
+  padding-top: 36px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #888888;
+  text-align: center;
 }
 </style>

@@ -66,7 +66,9 @@
                 <div class="item-group scan-group">
                     <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="code" />
 
-                    <image v-if="typeSelectedIndex==0" class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
+                    <div v-if="typeSelectedIndex==0" class="scan-icon-wrapper">
+                        <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
+                    </div>
                 </div>
 
                 <div class="item-group info-group">
@@ -696,10 +698,13 @@ export default {
   padding-right: 60px;
   background-color: #fafafa;
 }
-.scan-icon {
+.scan-icon-wrapper {
   position: absolute;
-  top: 40px;
-  right: 50px;
+  top: 24px;
+  right: 24px;
+  padding: 16px;
+}
+.scan-icon {
   height: 40px;
   width: 40px;
 }

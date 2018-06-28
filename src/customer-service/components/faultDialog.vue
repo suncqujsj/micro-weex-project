@@ -21,14 +21,16 @@
                             </div>
                             <text class="fault-dialog-desc">{{item.faultReason}}</text>
                         </div>
-                        <div class="dialog-footer">
-                            <div class="footer-btn cancel" @click="secondaryClicked">
-                                <image class="fault-dialog-icon" src="./assets/img/service_ic_warming@3x.png" resize='contain'></image>
-                                <text class="btn-text" :style="{ color: secondBtnColor }">没帮助</text>
+                        <div class="fault-dialog-footer">
+                            <div class="footer-btn" @click="secondaryClicked">
+                                <div v-bind:class="['footer-btn-bg', item.helpfulChecked=='N'?'btn-checked':'']"></div>
+                                <image class="fault-dialog-icon" :src="'./assets/img/service_ic_nohelp_'+(item.helpfulChecked=='N'?'on':'off')+'@3x.png'" resize='contain'></image>
+                                <text v-bind:class="['btn-text', item.helpfulChecked=='N'?'btn-checked-text':'']">没帮助</text>
                             </div>
-                            <div class="footer-btn confirm" @click="primaryClicked">
-                                <image class="fault-dialog-icon" src="./assets/img/service_ic_warming@3x.png" resize='contain'></image>
-                                <text class="btn-text" :style="{ color: mainBtnColor }">有帮助</text>
+                            <div class="footer-btn" @click="primaryClicked">
+                                <div v-bind:class="['footer-btn-bg', item.helpfulChecked=='Y'?'btn-checked':'']"></div>
+                                <image class="fault-dialog-icon" :src="'./assets/img/service_ic_helpful_'+(item.helpfulChecked=='Y'?'on':'off')+'@3x.png'" resize='contain'></image>
+                                <text v-bind:class="['btn-text', item.helpfulChecked=='Y'?'btn-checked-text':'']">有帮助</text>
                             </div>
                         </div>
                     </div>
@@ -64,116 +66,35 @@
 }
 
 .dialog-content {
-  padding-top: 36px;
   padding-bottom: 36px;
-  /* padding-left: 36px;
-  padding-right: 36px; */
 }
 .dialog-close-icon {
   height: 40px;
   width: 40px;
   position: absolute;
-  right: 15px;
-  top: 15px;
-}
-.content-title {
-  color: #333333;
-  font-size: 36px;
-  text-align: center;
-  margin-bottom: 24px;
-}
-
-.content-subtext {
-  color: #666666;
-  font-size: 26px;
-  line-height: 36px;
-  text-align: center;
-}
-
-.indicator {
-  position: absolute;
-  width: 558px;
-  height: 30px;
-  item-color: #c7c7cc;
-  item-selected-color: #267aff;
-  item-size: 10px;
-  bottom: 60px;
-  left: 0px;
-}
-
-.dialog-footer {
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-}
-
-.footer-btn {
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  /* height: 90px; */
-  margin-top: 18px;
-  padding: 15px;
-  border-radius: 4px;
-}
-
-.cancel {
-  flex-direction: row;
-  align-items: center;
-  border-color: #f3f3f3;
-  border-width: 1px;
-}
-.confirm {
-  flex-direction: row;
-  align-items: center;
-  border-color: #f3f3f3;
-  border-width: 1px;
-}
-.btn-text {
-  font-family: PingFangSC-Regular;
-  font-size: 32px;
-  color: #666666;
-}
-
-.no-prompt {
-  width: 486px;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  margin-top: 24px;
-}
-
-.no-prompt-icon {
-  width: 24px;
-  height: 24px;
-  margin-right: 12px;
-}
-
-.no-prompt-text {
-  font-size: 24px;
-  color: #a5a5a5;
+  right: 20px;
+  top: 20px;
 }
 
 .fault-dialog {
   position: relative;
   width: 558px;
-  height: 530px;
+  height: 620px;
+  margin-top: 70px;
   padding-left: 20px;
   padding-right: 20px;
 }
 .fault-dialog-solution {
-  height: 220px;
+  height: 250px;
   border-bottom-color: #e5e5e8;
   border-bottom-width: 1px;
   border-bottom-style: solid;
   padding-left: 36px;
   padding-right: 36px;
+  margin-bottom: 16px;
 }
 .fault-dialog-reason {
-  height: 220px;
-  border-bottom-color: #e5e5e8;
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
+  height: 250px;
   padding-left: 36px;
   padding-right: 36px;
 }
@@ -188,11 +109,10 @@
 }
 .fault-dialog-title {
   font-family: PingFangSC-Regular;
-  font-size: 28px;
+  font-size: 32px;
   color: #000000;
   text-align: left;
-  padding-top: 16px;
-  padding-bottom: 16px;
+  padding-left: 8px;
 }
 .fault-dialog-desc {
   width: 518px;
@@ -200,6 +120,60 @@
   font-size: 28px;
   color: #666666;
   text-align: left;
+  padding-top: 36px;
+}
+.indicator {
+  position: absolute;
+  width: 558px;
+  height: 30px;
+  item-color: #c7c7cc;
+  item-selected-color: #267aff;
+  item-size: 10px;
+  bottom: 65px;
+  left: 0px;
+}
+
+.fault-dialog-footer {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 558px;
+  padding-left: 36px;
+  padding-right: 36px;
+  margin-top: 50px;
+  margin-bottom: 18px;
+}
+
+.footer-btn {
+  position: relative;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 222px;
+  height: 56px;
+  border-radius: 4px;
+}
+.footer-btn-bg {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 222px;
+  height: 56px;
+  background-color: #e5e5e8;
+}
+.btn-checked {
+  opacity: 0.2;
+  background-color: #267aff;
+}
+.btn-checked-text {
+  color: #267aff;
+}
+
+.btn-text {
+  font-family: PingFangSC-Regular;
+  font-size: 24px;
+  color: #666666;
+  padding: 10px;
 }
 </style>
 

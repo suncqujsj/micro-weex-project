@@ -26,6 +26,11 @@
                     <text class="search-history-item" v-for="(item,index) in historyKeys" :key="index" @click="searchProduct(item)">{{item}}</text>
                 </div>
             </div>
+            <div class="empty-page" v-if="isLoaded && convertedProductData.length == 0">
+                <image class="empty-page-icon" src="./assets/img/default_ic_noresult@3x.png" resize='contain'>
+                </image>
+                <text class="empty-page-text">抱歉 {{'\n'}}没有找到“{{searchKeyWord}}”相关的产品</text>
+            </div>
         </scroller>
     </div>
 </template>
@@ -112,6 +117,7 @@ export default {
             this.keyWord = value
 
             this.searchKeyWord = this.keyWord
+            this.isLoaded = true
             if (this.historyKeys.indexOf(this.searchKeyWord) < 0) {
                 this.historyKeys.push(this.searchKeyWord)
                 nativeService.setItem(this.SERVICE_STORAGE_KEYS.historyKeys, this.historyKeys, () => { })
@@ -242,5 +248,23 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #000000;
+}
+.empty-page {
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 160px;
+}
+.empty-page-icon {
+  width: 240px;
+  height: 240px;
+}
+.empty-page-text {
+  padding-top: 36px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #888888;
+  text-align: center;
 }
 </style>

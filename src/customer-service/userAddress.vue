@@ -148,8 +148,6 @@ export default {
         },
         getAddressBookPerson() {
             nativeService.getAddressBookPerson().then((resp) => {
-
-                nativeService.alert(resp)
                 if (resp.status == 0) {
                     let name = ""
                     if (resp.lastname || resp.firstname) {
@@ -182,15 +180,19 @@ export default {
         submit() {
             if (this.userAddress.userAddrId) {
                 //地址修改
-                nativeService.userAddrUpdate(this.userAddress).then(() => {
+                nativeService.userAddrUpdate(this.userAddress).then((resp) => {
                     this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddress" })
                     this.back()
+                }).catch((error) => {
+                    nativeService.toast(nativeService.getErrorMessage(error))
                 })
             } else {
                 //地址新增
                 nativeService.userAddrAdd(this.userAddress).then(() => {
                     this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddress" })
                     this.back()
+                }).catch((error) => {
+                    nativeService.toast(nativeService.getErrorMessage(error))
                 })
             }
         }

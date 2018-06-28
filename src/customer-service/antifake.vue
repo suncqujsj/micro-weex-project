@@ -12,7 +12,9 @@
             <div class="item-group scan-group">
                 <input class="scan-input" type="text" placeholder="请输入编号或扫描二维码" :autofocus=false :value="code" @input="oninput" />
 
-                <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
+                <div class="scan-icon-wrapper">
+                    <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
+                </div>
             </div>
 
             <div class="item-group scan-group">
@@ -23,7 +25,7 @@
             </div>
 
             <div class="action-bar">
-                <midea-button text="提交" type="green" :btnStyle="{'background-color': '#267AFF','opacity':isDataReady?'1':'0.2','border-radius': '4px'}" @mideaButtonClicked="submit">
+                <midea-button text="查询" type="green" :btnStyle="{'background-color': '#267AFF','opacity':isDataReady?'1':'0.2','border-radius': '4px'}" @mideaButtonClicked="submit">
                 </midea-button>
             </div>
         </scroller>
@@ -148,10 +150,13 @@ export default {
   padding-right: 60px;
   background-color: #fafafa;
 }
-.scan-icon {
+.scan-icon-wrapper {
   position: absolute;
-  top: 40px;
-  right: 50px;
+  top: 24px;
+  right: 24px;
+  padding: 16px;
+}
+.scan-icon {
   height: 40px;
   width: 40px;
 }

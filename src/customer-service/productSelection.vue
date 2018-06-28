@@ -9,16 +9,23 @@
             </div>
         </div>
         <div class="product-content">
-            <scroller class="product-content-left">
-                <text v-if="fromPage == 'maintenance'" v-bind:class="['product-brand',
+            <div class="product-content-left">
+                <scroller class="product-content-left-scroller">
+                    <text v-if="fromPage == 'maintenance'" v-bind:class="['product-brand',
                     selectedBrandIndex==-1?'product-brand-selected':'']" @click="selectBrand(-1)">我的家电</text>
-                <text v-for="(brandItem,brandIndex) in productList" :key="brandIndex" v-bind:class="['product-brand',
+                    <text v-for="(brandItem,brandIndex) in productList" :key="brandIndex" v-bind:class="['product-brand',
                     brandIndex==selectedBrandIndex?'product-brand-selected':'']" @click="selectBrand(brandIndex)">{{brandItem.brand}}</text>
-            </scroller>
+                </scroller>
+            </div>
             <scroller class="product-content-right">
                 <div v-if="selectedBrandIndex==-1" class="product-group">
                     <text class="product-group-title">我的家电</text>
                     <div class="product-group-content">
+                        <div class="empty-page" v-if="isLoaded && convertedMyProductList.length == 0">
+                            <image class="empty-page-icon" src="./assets/img/default_ic_noequitmentlight@3x.png" resize='contain'>
+                            </image>
+                            <text class="empty-page-text">您还没有家电</text>
+                        </div>
                         <div class="product-appliance-wrapper" v-for="(myProductItem,myProductIndex) in convertedMyProductList" :key="myProductIndex" @click="selectProductItem($event, myProductItem)">
                             <div class="product-appliance">
                                 <image class="appliance-img" :src="myProductItem.productImgUrl" resize="contain"></image>
@@ -77,6 +84,7 @@ export default {
         return {
             title: '选择需服务产品',
             myProductList: [],
+            isLoaded: false,
             productList: [],
             selectedBrandIndex: 0,
             dialogShow: false,
@@ -93,7 +101,7 @@ export default {
     },
     computed: {
         convertedMyProductList() {
-            let result
+            let result = []
             if (this.myProductList && this.myProductList.length > 0) {
                 result = this.myProductList.map((item) => {
                     return Object.assign(item, {
@@ -294,6 +302,7 @@ export default {
                 }
                 nativeService.getUserProductPageList(param).then((data) => {
                     this.myProductList = data.data.list
+                    this.isLoaded = true
                 }).catch((error) => {
                     nativeService.toast(nativeService.getErrorMessage(error))
                 })
@@ -349,13 +358,16 @@ export default {
 .product-content {
   flex: 1;
   flex-direction: row;
+  justify-content: flex-start;
 }
 .product-content-left {
-  flex: 1;
-  align-content: center;
-  align-items: center;
+  width: 200px;
   border-right-color: #e5e5e8;
   border-right-width: 2px;
+}
+.product-content-left-scroller {
+  align-content: center;
+  align-items: center;
 }
 .product-brand {
   width: 200px;
@@ -377,7 +389,7 @@ export default {
   background-color: #f2f2f2;
 }
 .product-content-right {
-  flex: 2.75;
+  flex: 1;
   justify-content: flex-start;
   align-items: center;
 }
@@ -519,5 +531,24 @@ export default {
   border-color: #e2e2e2;
   border-width: 1px;
   background-color: #e2e2e2;
+}
+
+.empty-page {
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 164px;
+}
+.empty-page-icon {
+  width: 240px;
+  height: 240px;
+}
+.empty-page-text {
+  padding-top: 36px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #888888;
+  text-align: center;
 }
 </style>

@@ -21,58 +21,46 @@ export const all = [
         data: {
             "errorCode": 0,
 		    "params": {
-		        "power": "on",
-		        "mode": "cool",
-		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "mode": "keep_warm",
+		        "work_status":"schedule",
+		        "order_time_hour":"1",
+		        "order_time_min":"20",
+		        "left_time_hour":"2",
+		        "left_time_min":"30",
+		        "warm_time_hour":"3",
+		        "warm_time_min":"40"
 		    }
         }
     },
     {
-        path: 'poweroff',
+        path: 'start',
         data: {
             "errorCode": 0,
 		    "params": {
-		        "power": "off",
-		        "mode": "auto",
-		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "mode": "fast_cook_rice",
+		        "work_status":"cooking",
+		        "order_time_hour":"1",
+		        "order_time_min":"20",
+		        "left_time_hour":"2",
+		        "left_time_min":"30",
+		        "warm_time_hour":"3",
+		        "warm_time_min":"40"
 		    }
         }
     },
     {
-        path: 'temperatureControl',
+        path: 'pause',
         data: {
             "errorCode": 0,
 		    "params": {
-		        "power": "on",
-		        "mode": "fan",
-		        "temperature": "26",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
-		    }
-        }
-    },
-    {
-        path: 'poweron',
-        data: {
-            "errorCode": 0,
-		    "params": {
-		        "power": "on",
-		        "mode": "auto",
-		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		       "mode": "cook_rice ",
+		        "work_status":"schedule",
+		        "order_time_hour":"1",
+		        "order_time_min":"20",
+		        "left_time_hour":"2",
+		        "left_time_min":"30",
+		        "warm_time_hour":"3",
+		        "warm_time_min":"40"
 		    }
         }
     },
@@ -103,15 +91,12 @@ export const all = [
         data: {
             "msg": "",
             "result": {
-                "deviceID": "1099511629098",
-                "deviceSSID": "",
-                "deviceName": "冰箱541F",
-                "deviceType": "0xCA",
+                "deviceId": "1099511629098",
+                "deviceName": "空调541F",
+                "deviceType": "0xAC",
                 "deviceSubType": "0",
-                "online": "1",
-                "deviceDescription": "",
-                "activated": "",
-                "isDeviceOwner": "1"
+                "isOnline": "1",
+                "deviceSn": "",
             },
             "errorCode": "0"
         }

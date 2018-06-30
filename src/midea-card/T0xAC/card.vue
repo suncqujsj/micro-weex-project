@@ -2,33 +2,57 @@
 	<scroller class="content" show-scrollbar="false">
 	    <div class="box" >
 	        <div>
-		    	 <div v-if="onlineStatus == 'online'">
-			    	 <div class="card" :class="[mode =='heat'?'card-hot':''] " v-if="onoff == 'on'">
-			        	<div class="card-left">
-		        			<div class="main-status-div">
-		        				<text class="main-status">{{temperature}}</text>
-		        				<text class="danwei">°</text>
-		        			</div>
-		        			<text class="main-status-second">设定温度</text>
-			        		<div class="card-status-detail">
-			        			<image class="card-status-detail-img" :src="statusImg"></image>
-			        			<text class="main-status-third">{{currentMode}}</text>
-			        		</div>
-			        		<div class="card-control-temp-div">
-			        			<image @click="temperatureControl(-1)" class="cart-control-temp-img" src="./assets/img/smart_ic_reduce_huge@2x.png"></image>
-			        			<image @click="temperatureControl(1)" class="cart-control-temp-img cart-control-temp-img-right" src="./assets/img/smart_ic_increase_huge@2x.png"></image>
-			        		</div>
-			        	</div>
-			        	<div class="card-right">
-			        		<div class="card-control" >
-			        			<image class="card-control-img" :src="powerIcon" @click="poweronoff(0)"></image>
-			        		</div>
-			        		<div class="card-icon">
-			        			<image class="card-icon-img" :src="deviceIcon"></image>
-			        		</div>
-			        		<div></div>
-			        	</div>
-			        	<div class="card-right-margin"></div>
+		    	 <div v-if="onlineStatus == '1'">
+		    	 	<div v-if="onoff == 'on'">
+				    	 <div class="card" :class="[mode =='heat'?'card-hot':''] " v-if="PD004 != 0">
+				        	<div class="card-left">
+			        			<div class="main-status-div">
+			        				<text class="main-status">{{temperature}}</text>
+			        				<text class="danwei">{{danwei}}</text>
+			        			</div>
+			        			<text class="main-status-second">设定温度</text>
+				        		<div class="card-status-detail">
+				        			<image class="card-status-detail-img" :src="statusImg"></image>
+				        			<text class="main-status-third">{{currentMode}}</text>
+				        		</div>
+				        		<div class="card-control-temp-div">
+				        			<image @click="temperatureControl(-1)" class="cart-control-temp-img" src="./assets/img/smart_ic_reduce_huge@2x.png"></image>
+				        			<image @click="temperatureControl(1)" class="cart-control-temp-img cart-control-temp-img-right" src="./assets/img/smart_ic_increase_huge@2x.png"></image>
+				        		</div>
+				        	</div>
+				        	<div class="card-right">
+				        		<div class="card-control" >
+				        			<image class="card-control-img" :src="powerIcon" @click="poweronoff(0)"></image>
+				        		</div>
+				        		<div class="card-icon" @click="showControlPanelPage">
+				        			<image class="card-icon-img" :src="deviceIcon"></image>
+				        		</div>
+				        		<div></div>
+				        	</div>
+				        	<div class="card-right-margin"></div>
+				        </div>
+				        <div class="card" :class="[mode =='heat'?'card-hot':''] " v-else @click="showControlPanelPage">
+				        	<div class="card-left card-left-simple">
+			        			<div class="main-status-div">
+			        				<text class="main-status-simple">设备在线</text>
+			        			</div>
+				        		<div class="card-status-detail card-status-detail-simple">
+				        			<text class="main-status-third-simple">进入详情</text>
+				        			<image class="main-status-detail" src="./assets/img/smart_ic_arrow_forward@2x.png"></image>
+				        		</div>
+				        		<div class="card-control-temp-div">
+				        		</div>
+				        	</div>
+				        	<div class="card-right">
+				        		<div class="card-control" >
+				        		</div>
+				        		<div class="card-icon">
+				        			<image class="card-icon-img" :src="deviceIcon"></image>
+				        		</div>
+				        		<div></div>
+				        	</div>
+				        	<div class="card-right-margin"></div>
+				        </div>
 			        </div>
 			        <div class="card-power-off" v-else>
 			        	<div class="control-div-offline">
@@ -41,17 +65,26 @@
 			        </div>
 			    </div>
 			    <div class="card-power-off" v-else>
-			        	<div class="control-div-offline">
-			        		<image class="card-control-img" :src="powerIcon_offline"></image>
-			        		<text class="text-offline">重连</text>
-			        	</div>
-			        	<div>
-			        		<image class="icon-offline" :src="deviceIcon"></image>
-			        	</div>
-			        </div>
-		        <div class="scroller-bar" v-if="1==2">
-		        	<scroller-bar :max="30" :min="17"></scroller-bar>
+		        	<div class="control-div-offline" @click="reload">
+		        		<image class="card-control-img" :src="powerIcon_offline"></image>
+		        		<text class="text-offline">重连</text>
+		        	</div>
+		        	<div>
+		        		<image class="icon-offline" :src="deviceIcon"></image>
+		        	</div>
+		        	<text class="text-offline-center">已离线</text>
 		        </div>
+		        <!--<div class="mark" v-if="ismark">
+					<text class="wrapper" v-if="isloading">{{loadingText}}</text>
+					<div v-if="!isloading">
+						<text class="text_download">功能组件更新(约4M)</text>
+		        		<text class="text_wifi" v-if="!iswifi">您正在使用非WiFi网络</text>
+		        		<div class="btn_download">
+		        			<div class="btn_giveup" @click="giveup()"><text class="giveup_text">忽略</text></div>
+		        			<midea-button :btnStyle="{width: '200px',height: '80px',borderRadius: '7px'}" text="下载" type="green" @mideaButtonClicked="downloading()"></midea-button>
+		        		</div>
+					</div>
+	        	</div>-->
 	        </div>
 	        <div class="smart">
 		        <div class="smart-title">
@@ -70,41 +103,51 @@
     import nativeService from '@/common/services/nativeService.js'
 	import mideaSwitch from '@/midea-component/switch.vue'
 	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
-	import scrollerBar from '@/midea-card/T0xAC/components/scroller-bar.vue'
 	import mideaItem from '@/midea-component/item.vue'
+	import mideaButton from '@/midea-component/button.vue';
 	
 	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
 	var stream = weex.requireModule('stream');
+	const globalEvent = weex.requireModule('globalEvent');
+	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
             mideaSwitch,
             mideaSmart,
             mideaItem,
-            scrollerBar
+            mideaButton
         },
         data() {
             return {
+            	deviceId:"",
+            	deviceName: "",
+            	deviceType: "",
+            	deviceSubType: "",
+            	deviceSn: "",
+            	onlineStatus:"",
+            	
+            	pushKey: "receiveMessage",
+            	pushKeyOnline: "receiveMessageFromApp",
                 mideaChecked: true,
                 mideaChecked2: false,
-                //currentTemperture:19,
-                power:"off",
-                currentStatus:"auto",
-                onlineStatus:"online",
                 
+//              loadingText: '下载中...',
+//              loadinging: true,
+//          	isloading: false,
+//          	ismark: true,
+//          	isupdata: true,
+//          	iswifi: false,
+            	
                 PD004: -1, //0表示PD004，1表示非PD004。PD004（一拖多）
-	            queryLoading: false,
-	            controlLoading: 0, //0、无loading  1、“开关”loading  2、“温度+”loading  3、“温度-”loading
-	            first: true,
-	            deviceName: "",
-	            deviceTip: "",
-	            promptStr:"",
-	            onoff: "",//localStorage.getItem("AConoff") || "on", //当前设备开关机状态
+	            promptStr:"",//蜂鸣声,需要从控制页的localStorage里拿
+	            onoff: "on",//localStorage.getItem("AConoff") || "on", //当前设备开关机状态
 	            mode: "",//localStorage.getItem("ACmode") || "",
 	            temperature: "",//parseInt(localStorage.getItem("ACtemperature")),
 	            indoorTemperature: "",//localStorage.getItem("ACindoorTemperature"),
 	            outdoorTemperature: "",//localStorage.getItem("ACoutdoorTemperature"),
+	            danwei: "°",
             
                 powerIcon: "./assets/img/smart_ic_off@3x.png",
                 powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
@@ -132,15 +175,6 @@
              onMideachange2(event) {
             		//modal.toast({ 'message': event.value, 'duration': 2 });
             },
-            changeTemperture(event) {
-	            	let currentSetTemperture = Math.ceil(event.contentOffset.x/52) +29;
-	            	if(currentSetTemperture <= 17) {
-	            		currentSetTemperture = 17;
-	            	} else if (currentSetTemperture >= 30) {
-	            		currentSetTemperture = 30;
-	            	}
-	            	this.currentTemperture = currentSetTemperture;
-            },
             temperatureControl (value) {// -1 or 1
 	            if(this.onoff == 'off') {
 	                modal.toast({ 'message': "关机状态无法设置温度", 'duration': 2 });
@@ -163,7 +197,7 @@
 	            let me = this;
 	            this.temperature += value;
                 let params = {
-                	"operation":"luaQuery",
+                	"operation":"luaControl",
         			"name":"temperatureControl",
         			"data":{
         				temperature: me.temperature,
@@ -189,12 +223,8 @@
             },
             updateUI(data) {
             	let self = this;
-	            this.queryLock = false;
-	            this.queryLoading = false;
-	            this.controlLoading = 0;
 	            if(data.errorCode == 0) {
 	                let params = data.params;
-	                let errorCode = parseInt(params.error_code);
 	                this.onoff = params.power;
 	                this.mode = params.mode;
 	                // this.temperature = parseInt(params.temperature) + parseFloat(params.small_temperature);
@@ -209,17 +239,30 @@
 	                if(params.outdoor_temperature == 0) {
 	                	this.outdoorTemperature = 0;
 	                }
-	                //this.deviceTip = tipsService[errorCode] || "";
-//	                localStorage.setItem('AConoff',this.onoff);
-//	                localStorage.setItem('ACmode',this.mode);
-//	                localStorage.setItem('ACtemperature',this.currentTemperture);
-//	                localStorage.setItem('ACindoorTemperature',this.indoorTemperature);
-//	                localStorage.setItem('ACoutdoorTemperature',this.outdoorTemperature);
-
 	            }else {
 	                this.temperature = this.tmpTemperatureValue; //记录临时温度值
 	                modal.toast({ 'message': "连接设备超时", 'duration': 2 });
 	            }
+            },
+            updateDeviceInfo(data) {
+            	this.deviceId = data.deviceId;
+            	this.deviceName = data.deviceName;
+            	this.deviceType = data.deviceType;
+            	this.deviceSubType = data.deviceSubType;
+            	this.deviceSn = data.deviceSn;
+            	this.onlineStatus = data.isOnline;
+            	
+            	let deviceBarCode = "";
+            	if (this.deviceSn.length == '32') {
+                    deviceBarCode = this.deviceSn.substring(12, 17);
+                } else if (this.deviceSn.length == '22') {
+                    deviceBarCode = this.deviceSn.substring(6, 11);
+                }
+                if(deviceBarCode.toUpperCase() == "PD004") {
+                    this.PD004 = 0;
+                } else {
+                    this.PD004 = 1;
+                }
             },
             poweronoff(flag) {
 		        let self = this;
@@ -238,50 +281,185 @@
             	},function(error) {
             		console.log("error");
             	});
-            }
+            },
+            handleNotification() {
+            	console.log("handleNotification Yoram");
+            	let me = this;
+            	globalEvent.addEventListener(this.pushKey, (data) => {
+            		me.queryStatus();
+		        });
+		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
+            		if(data && data.messageType == "deviceOnlineStatus") {
+            			if(data.messageBody && data.messageBody.onlineStatus == "online") {
+            				me.onlineStatus = "1";
+            			} else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+            				me.onlineStatus = "0";
+            			} else {
+            				me.onlineStatus = "0";
+            			}
+            		}
+		        });
+            },
+            showControlPanelPage() {
+            	let params = {
+            		controlPanelName:"controlPanel.html"
+            	};
+            	bridgeModule.showControlPanelPage(params);
+            },
+            reload() {
+            	let params = {};
+            	bridgeModule.reload(params,function(result) {
+            		//successful
+            	},function(error) {
+            		//fail
+            	});
+            },
+//          mideaClose(){
+//      		this.showDialog = false;
+//      		let that = this;
+//      		let testEl = that.$refs.test;
+//      		let i = 50;
+//      		timer();
+//      		testEl.style.top = '50px';
+//      		function timer() {
+//      			setTimeout(() => {
+//      				i = i + 50;
+//      				testEl.style.top = i + 'px';
+////      				nativeService.toast(i);
+//      				if (i < 500) {
+//      					timer();
+//      				}
+//      			},200)
+//      		}
+//      	},
+//      	giveup() {
+//      		this.ismark = false;
+//      	},
+//      	downloading() {
+//      		this.isloading = true;
+////      		nativeService.showLoading();
+//      		this.downLoadDevicePlugin();
+//      	},
+//      	getDevicePluginInfo(){
+//          	nativeService.getDevicePluginInfo(this.deviceId).then(
+//	                (res) => {
+//						if(parseInt(res.needUpdate) == 1){
+//							this.ismark = true;
+//						}else{
+//							this.ismark = false;
+//						}
+//	                }
+//	            ).catch((error) => {
+//	            	this.ismark = false;
+//	            })
+//          },
+//          getNetworkStatus(){
+//          	nativeService.getNetworkStatus().then(
+//	                (resp) => {
+////	                    this.result = resp;
+//	                    if(parseInt(resp.type) == 1){
+//	                    	this.iswifi = true;
+//	                    }else{
+//	                    	this.iswifi = false;
+//	                    }
+//	                    this.getDevicePluginInfo();
+//	                }
+//	            ).catch((error) => {
+//	            	this.iswifi = false;
+//	            })
+//          },
+//          downLoadDevicePlugin(){
+//          	nativeService.downLoadDevicePlugin(this.deviceId,(resp) => {
+//          		let res = resp;
+//          		let status = parseInt(res.status);
+//          		switch (status){
+//          			case 0:
+//          			    this.loadingText = '等待下载'
+//          				break;
+//          			case 1:
+//          			    this.loadingText = '下载中...'
+//          				break;
+//          			case 2:
+//          			    this.loadingText = '暂停'
+//          				break;
+//          			case 3:
+//          			    this.loadingText = '下载失败'
+//          				break;
+//          			case 4:
+//          			    this.loadingText = '下载成功'
+//          				break;
+//          			case 5:
+//          			    this.loadingText = '解压中...'
+//          				break;
+//          			case 6:
+//          			    this.loadingText = '解压失败'
+//          				break;
+//          			case 7:
+//          			    this.loadingText = '解压成功'
+//          				break;
+//          		}
+//          		let progress = parseInt(res.progress);
+//          		if (progress == 100) {
+//          			nativeService.toast('下载成功');
+//          			this.ismark = false;
+//          			this.isloading = false;
+//          		}
+//	            },(error) => {
+//	                nativeService.toast(error)
+//	            })
+//          }
         },
         computed: {
-				powerOnoffImg () {
-		            let img = "./assets/img/smart_ic_power@2x.png";
-		            return img;
-		        },
-	        	statusImg() {
-		        		let img = "./assets/img/smart_ic_smart@2x.png";
-		        		if(this.mode == 'cool') {
-		        			img = "./assets/img/smart_ic_smart@2x.png";
-		        		} else if(this.mode == 'heat') {
-		        			img = "./assets/img/smart_ic_warmmode@2x";
-		        		} else if(this.mode == 'auto') {
-		        			img = "./assets/img/smart_ic_smart@2x.png";
-		        		} else if(this.mode == 'dry') {
-		        			img = "./assets/img/smart_ic_smart@2x.png";
-		        		} else if(this.mode == 'fan') {
-		        			img = "./assets/img/smart_ic_smart@2x.png";
-		        		} else {
-		        			img = "./assets/img/smart_ic_smart@2x.png";
-		        		}
-		        		return img;
-	        	},
-	        	currentMode() {
-	        		let status = "";
+			powerOnoffImg () {
+	            let img = "./assets/img/smart_ic_power@2x.png";
+	            return img;
+	        },
+        	statusImg() {
+	        		let img = "./assets/img/smart_ic_smart@2x.png";
 	        		if(this.mode == 'cool') {
-	        			status = "制冷";
+	        			img = "./assets/img/smart_ic_smart@2x.png";
 	        		} else if(this.mode == 'heat') {
-	        			status = "制热";
+	        			img = "./assets/img/smart_ic_warmmode@2x";
 	        		} else if(this.mode == 'auto') {
-	        			status = "自动";
+	        			img = "./assets/img/auto@2x.png";
 	        		} else if(this.mode == 'dry') {
-	        			status = "抽湿"
+	        			img = "./assets/img/wet@2x.png";
 	        		} else if(this.mode == 'fan') {
-	        			status = "送风";
+	        			img = "./assets/img/wind@2x.png";
 	        		} else {
-	        			status = "";
+	        			img = "./assets/img/smart_ic_smart@2x.png";
 	        		}
-	        		return status;
-	        	}
+	        		return img;
+        	},
+        	currentMode() {
+        		let status = "";
+        		if(this.mode == 'cool') {
+        			status = "制冷";
+        		} else if(this.mode == 'heat') {
+        			status = "制热";
+        		} else if(this.mode == 'auto') {
+        			status = "自动";
+        		} else if(this.mode == 'dry') {
+        			status = "抽湿"
+        		} else if(this.mode == 'fan') {
+        			status = "送风";
+        		} else {
+        			status = "";
+        		}
+        		return status;
+        	}
         },
         mounted() {
-            this.queryStatus();
+        	let self = this;
+            nativeService.getDeviceInfo().then(function(data) {
+            	self.updateDeviceInfo(data.result);
+            	self.handleNotification();
+            	if(data.result.isOnline == 1) {
+            		self.queryStatus();
+            	}
+            },function(error) {
+            	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+            })
         }
     }
 </script>
@@ -324,6 +502,12 @@
 		letter-spacing: 0;
 		text-align: center;
 	}
+	.text-offline-center {
+		position: absolute;
+		right:295px;
+		top:170px;
+		align-items: center;
+	}
 	.control-div-offline {
 		position: absolute;
 		right:32px;
@@ -333,6 +517,7 @@
 	.icon-offline {
 		width: 534px;
 		height: 248px;
+		opacity: 0.3;
 	}
 	.card-hot {
 		background-color: #FFBD00;
@@ -357,13 +542,17 @@
 		flex-direction: row;
 		justify-content: center;
 	}
+	.card-status-detail-simple {
+		margin-top: 60px;
+		margin-left:60px;
+	}
 	.card-status-detail-img {
 		width:56px;
 		height:56px;
 	}
 	.card-control-img {
-		width:48px;
-		height:50px
+		width:60px;
+		height:60px
 	}
 	.card-icon {
 		align-items: flex-start;
@@ -382,6 +571,14 @@
 	.main-status {
 		font-size: 128px;
 		color: #FFFFFF;
+	}
+	.main-status-simple {
+		font-family: PingFangSC-Medium;
+		font-size: 36px;
+		color: #FFFFFF;
+		letter-spacing: 0;
+		text-align: center;
+		line-height: 18px;
 	}
 	.danwei {
 		font-family: PingFangSC-Light;
@@ -402,12 +599,30 @@
 		margin-top:8px;
 		color: #FFFFFF;
 	}
+	.main-status-third-simple {
+		opacity: 0.6;
+		font-family: PingFangSC-Regular;
+		font-size: 24px;
+		color: #FFFFFF;
+		letter-spacing: 0;
+		text-align: center;
+		line-height: 24px;
+	}
+	.main-status-detail {
+		width: 30px;
+		height: 30px;
+		opacity: 0.6;
+		margin-left: 10px;
+	}
 	.card-left {
 		flex-direction: column;
 		width:343px;
 		height:392px;
 		align-items: center;
 		justify-content: space-around;
+	}
+	.card-left-simple {
+		justify-content: center;
 	}
 	.card-right {
 		flex-direction: column;
@@ -465,57 +680,58 @@
 		color: #8A8A8F;
 		letter-spacing: 0;
 	}
-	
-	.scroller-bar {
-		margin-top:-72px;
-		font-family: PingFangSC-Light;
+	.mark{
+		position: absolute;
+        top: 28px;
+		left: 28px;
+		width:694px;
+		height:392px;
+     	background-color: #000;
+     	opacity: 0.8;
+     	align-items: center;
+	}
+	.wrapper {
+		margin-top: 160px;
+		width: 694px;
 		color: #FFFFFF;
-		letter-spacing: -4px;
+		text-align: center;
 	}
-	.scroller {
-		height:120px;
+	.text_download{
+		color: #FFFFFF;
+		margin-top: 120px;
+		font-size: 28PX;
+		text-align: center;
 	}
-	.scroller-div {
-		width:1372px;
+	.indicator {
+	    margin-top: 16px;
+	    height: 40px;
+	    width: 40px;
+	    color: #FFFFFF;
+	  }
+	.text_wifi{
+		text-align: center;
+		color: #FFFFFF;
+		font-size: 28PX;
+	}
+	.btn_giveup{
+		width: 200px;
+		height: 80px;
+		margin-top: 20px;
+		margin-right: 30px;
+		margin-bottom: 20px;
+		border-radius: 7px;
+		border-style:solid;
+		border-width: 1px;
+		border-color: #CCCCCC;
+	}
+	.giveup_text{
+		color: #FFFFFF;
+		line-height: 76px;
+		text-align: center;
+	}
+	.btn_download{
+		margin-top: 20px;
+		justify-content:space-between;
 		flex-direction: row;
-		justify-content: space-between;
-	}
-	.scroller-left {
-		width:350px;
-	}
-	.scroller-main {
-		width:233px;
-		flex-direction: column;
-	}
-	.scroller-main-div {
-		margin-left:102px;
-		flex-direction: column;
-	}
-	.scroller-main-content {
-		font-size: 24px;
-		color: #FFFFFF;
-	}
-	.temp-danwei {
-		font-family: PingFangSC-Medium;
-		font-size: 12px;
-		color: #FFFFFF;
-	}
-	.scroller-main-separate {
-		font-size:16px;
-		margin-left:14px;
-		color: #FFFFFF;
-	}
-	.scroller-main-img-first {
-		width:233px;
-		height: 30px;
-	}
-	.scroller-main-img-second {
-		width:32px;
-		height: 32px;
-		margin-left:100px;
-		margin-top:-20px;
-	}
-	.scroller-right {
-		width:350px;
 	}
 </style>

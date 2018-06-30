@@ -558,8 +558,12 @@ export default {
             } else {
                 let resData
 
-                if (params['operation']) {
-                    resData = this.Mock.getMock(params['operation'])
+                if (params['operation'] || params['name']) {
+                	if(params['name']) {
+                		resData = Mock.getMock(params['name'])
+                	} else {
+                		resData = Mock.getMock(params['operation'])	
+                	}
                 }
                 debugUtil.debugLog("Mock: ", resData)
                 resolve(resData);
@@ -673,7 +677,18 @@ export default {
         let param = {
             operation: 'getDeviceInfo'
         }
-        return this.commandInterfaceWrapper(param)
+        if(this.isDummy == true) {
+        	 return new Promise((resolve, reject) => {
+	        	let resData = Mock.getMock(param.operation);
+	            if (resData.errorCode == 0) {
+	                resolve(resData);
+	            } else {
+	                reject(resData)
+	            }
+	        });
+        } else {
+        	return this.commandInterfaceWrapper(param)
+        }
     },
     //更新当前设备信息
     updateDeviceInfo(params) {

@@ -10,7 +10,7 @@
             <div class="item-group">
                 <text class="text-label">姓名</text>
                 <input class="text-input" type="text" placeholder="请输入姓名" v-model="userAddress.receiverName" />
-                <image class="text-img" src="./assets/img/me_ic_addresslist@3x.png" resize='contain'></image>
+                <image class="text-img" src="./assets/img/me_ic_addresslist@3x.png" resize='contain' @click="getAddressBookPerson"></image>
             </div>
             <div class="item-group">
                 <text class="text-label">手机号码</text>
@@ -19,7 +19,7 @@
             <div class="item-group">
                 <text class="text-label">所在区域</text>
                 <text class="text-desc" @click="isShowAddressPicker=true">{{areaDesc}}</text>
-                <image class="text-img" src="./assets/img/me_ic_area@3x.png" resize='contain'></image>
+                <image class="text-img" src="./assets/img/me_ic_area@3x.png" resize='contain' @click="getPosition"></image>
             </div>
             <div class="item-group">
                 <text class="text-label">详细地址</text>
@@ -36,7 +36,7 @@
             </midea-button>
         </div>
 
-        <address-picker :isShow="isShowAddressPicker" :data="userAddress" @oncancel="isShowAddressPicker=false" @onchanged="servieAddressSelected">
+        <address-picker :isShow="isShowAddressPicker" :data="gpsAddress || userAddress" @oncancel="servieAddressCancel" @onchanged="servieAddressSelected">
         </address-picker>
     </div>
 </template>
@@ -74,6 +74,16 @@ export default {
                 addr: '',
                 defaultAddr: false
             },
+            gpsAddress: {
+                province: '',
+                provinceName: '',
+                city: '',
+                cityName: '',
+                county: '',
+                countyName: '',
+                street: '',
+                streetName: ''
+            },
             isShowAddressPicker: false
         }
     },
@@ -83,18 +93,83 @@ export default {
         }
     },
     methods: {
+        getPosition() {
+            nativeService.showLoadingWithMsg("正在获取位置信息...")
+            let gpsParam = {
+                desiredAccuracy: "10",  //定位的精确度，单位：米
+                alwaysAuthorization: "0",  //是否开启实时定位功能，0: 只返回一次GPS信息（默认），1:APP在前台时，每移动distanceFilter的距离返回一次回调。2:无论APP在前后台，每移动distanceFilter的距离返回一次回调（注意耗电）
+                distanceFilter: "10", //alwaysAuthorization为1或2时有效，每移动多少米回调一次定位信息
+            }
+            nativeService.getGPSInfo(gpsParam).then((data) => {
+                nativeService.hideLoadingWithMsg()
+                this.getAreaCodeByName(data.province, data.city, data.district).then((areaResp) => {
+                    this.gpsAddress = areaResp
+                    this.isShowAddressPicker = true
+                })
+            }).catch(() => {
+                nativeService.toast("定位失败")
+                nativeService.hideLoadingWithMsg()
+            })
+        },
+        getAreaCodeByName(province, city, county) {
+            let provinceObj, cityObj, countyObj
+            return new Promise((resolve, reject) => {
+                let param = {
+                    regionCode: 0
+                }
+                nativeService.getAreaList(param).then((data) => {
+                    provinceObj = data.content.children.filter((provinceItem) => {
+                        return province == provinceItem.regionName
+                    })[0]
+                    nativeService.getAreaList({
+                        regionCode: provinceObj.regionCode
+                    }).then((data) => {
+                        cityObj = data.content.children.filter((cityItem) => {
+                            return city == cityItem.regionName
+                        })[0]
+                        nativeService.getAreaList({
+                            regionCode: cityObj.regionCode
+                        }).then((data) => {
+                            countyObj = data.content.children.filter((countyItem) => {
+                                return county == countyItem.regionName
+                            })[0]
+                            resolve({
+                                province: provinceObj.regionCode,
+                                provinceName: provinceObj.regionName,
+                                city: cityObj.regionCode,
+                                cityName: cityObj.regionName,
+                                county: countyObj.regionCode,
+                                countyName: countyObj.regionName,
+                            })
+                        })
+                    })
+                })
+            })
+        },
+        getAddressBookPerson() {
+            nativeService.getAddressBookPerson().then((resp) => {
+                if (resp.status == 0) {
+                    let name = ""
+                    if (resp.lastname || resp.firstname) {
+                        name = (resp.lastname || "") + (resp.firstname || "")
+                    } else {
+                        name = resp.fullname || ""
+                    }
+                    this.userAddress.receiverName = name
+                    this.userAddress.receiverMobile = resp.phone.replace(/[^0-9]/g, "")
+                }
+            })
+        },
+        servieAddressCancel(event) {
+            this.isShowAddressPicker = false
+            this.gpsAddress = null
+        },
         servieAddressSelected(event) {
-            this.userAddress = Object.assign(this.userAddress, event)
+            this.userAddress = Object.assign({}, this.userAddress, event)
+            this.gpsAddress = null
         },
         changeDefaultAddr(event) {
             this.userAddress.defaultAddr = event.value
-        },
-        submitDefaultAddr(userAddrId, isDefault) {
-            let param = {
-                "userAddrId": userAddrId,
-                "defaultAddr": isDefault
-            }
-            return nativeService.setDefaultAddr(param)
         },
         deleteAddress() {
             nativeService.userAddrDelete({ userAddrId: this.userAddress.userAddrId }).then(() => {
@@ -105,15 +180,19 @@ export default {
         submit() {
             if (this.userAddress.userAddrId) {
                 //地址修改
-                nativeService.userAddrUpdate(this.userAddress).then(() => {
+                nativeService.userAddrUpdate(this.userAddress).then((resp) => {
                     this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddress" })
                     this.back()
+                }).catch((error) => {
+                    nativeService.toast(nativeService.getErrorMessage(error))
                 })
             } else {
                 //地址新增
                 nativeService.userAddrAdd(this.userAddress).then(() => {
                     this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddress" })
                     this.back()
+                }).catch((error) => {
+                    nativeService.toast(nativeService.getErrorMessage(error))
                 })
             }
         }

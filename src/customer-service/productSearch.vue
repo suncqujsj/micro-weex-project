@@ -6,6 +6,7 @@
             <div class="search-bar-content">
                 <image class="search-bar-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
                 <input class="search-bar-input" placeholder="请输入产品品类，如空调、洗衣机" v-model="keyWord" @return="keyBoardsearch" return-key-type="search"></input>
+                <image v-if="keyWord.length>0" class="search-bar-close" :src="'./assets/img/service_ic_cancel@3x.png'" resize="contain" @click="keyWord=''"></image>
             </div>
             <text v-if="isIos" class="search-action" @click="back">取消</text>
             <text v-if="!isIos" class="search-action" @click="searchProduct(keyWord)">搜索</text>
@@ -24,6 +25,11 @@
                 <div class="search-history">
                     <text class="search-history-item" v-for="(item,index) in historyKeys" :key="index" @click="searchProduct(item)">{{item}}</text>
                 </div>
+            </div>
+            <div class="empty-page" v-if="isLoaded && convertedProductData.length == 0">
+                <image class="empty-page-icon" src="./assets/img/default_ic_noresult@3x.png" resize='contain'>
+                </image>
+                <text class="empty-page-text">抱歉 {{'\n'}}没有找到“{{searchKeyWord}}”相关的产品</text>
             </div>
         </scroller>
     </div>
@@ -109,8 +115,9 @@ export default {
                 return
             }
             this.keyWord = value
-    
+
             this.searchKeyWord = this.keyWord
+            this.isLoaded = true
             if (this.historyKeys.indexOf(this.searchKeyWord) < 0) {
                 this.historyKeys.push(this.searchKeyWord)
                 nativeService.setItem(this.SERVICE_STORAGE_KEYS.historyKeys, this.historyKeys, () => { })
@@ -177,6 +184,12 @@ export default {
   color: #000000;
   height: 40px;
 }
+.search-bar-close {
+  height: 40px;
+  width: 40px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
 .search-action {
   width: 120px;
   font-family: PingFangSC-Regular;
@@ -235,5 +248,23 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #000000;
+}
+.empty-page {
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 160px;
+}
+.empty-page-icon {
+  width: 240px;
+  height: 240px;
+}
+.empty-page-text {
+  padding-top: 36px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #888888;
+  text-align: center;
 }
 </style>

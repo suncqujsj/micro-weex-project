@@ -21,7 +21,7 @@
                     <text class="antifake-result-label">企业名称:</text>
                     <text class="antifake-result-desc">美的集团股份有限公司</text>
                 </div>
-                <div class="item-group antifake-result-body-row">
+                <div class="item-group antifake-result-body-row last-row">
                     <text class="antifake-result-label">品牌名称:</text>
                     <text class="antifake-result-desc">美的</text>
                 </div>
@@ -32,7 +32,7 @@
                     <text class="info-title">综合停伪技术</text>
                 </div>
                 <div class="item-group">
-                    <image class="antifake-footer-img" src="./assets/img/servie_pic_banner03@3x.png" resize='contain'>
+                    <image class="antifake-footer-img" src="./assets/img/servie_pic_service@3x.png" resize='contain'>
                     </image>
                 </div>
                 <div class="item-group">
@@ -108,6 +108,7 @@ export default {
 }
 .base-group {
   padding-top: 24px;
+  padding-bottom: 24px;
   background-color: #f2f2f2;
 }
 .item-group {
@@ -130,6 +131,9 @@ export default {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+}
+.last-row {
+  padding-bottom: 32px;
 }
 .group-bottom-border {
   border-bottom-color: #e2e2e2;
@@ -161,5 +165,6 @@ export default {
   color: #000000;
   width: 686px;
   text-align: center;
+  padding-bottom: 32px;
 }
 </style>

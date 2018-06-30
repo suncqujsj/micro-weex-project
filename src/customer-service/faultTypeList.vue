@@ -46,7 +46,7 @@ export default {
                 nativeService.queryservicerequireproduct(param).then((data) => {
                     this.faultList = data.list
                 }).catch((error) => {
-                    nativeService.toast(nativeService.getCssErrorMessage(error))
+                    nativeService.toast(nativeService.getErrorMessage(error))
                 })
             }
         })

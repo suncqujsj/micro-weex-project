@@ -80,6 +80,11 @@ export default {
                         this.currentRegionLevel = 4
                         this.currentregionCode = this.areaObj.county
                         this.getAreaList(this.areaObj.county)
+                    } else if (this.areaObj.county && !this.areaObj.street) {
+                        //定位选址
+                        this.currentRegionLevel = 4
+                        this.currentregionCode = this.areaObj.county
+                        this.getAreaList(this.areaObj.county)
                     } else {
                         //新选
                         this.getAreaList()
@@ -133,7 +138,7 @@ export default {
                     dom.scrollToElement(el)
                 })
             }).catch((error) => {
-                nativeService.toast(nativeService.getCssErrorMessage(error))
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         },
         selectItem(item) {

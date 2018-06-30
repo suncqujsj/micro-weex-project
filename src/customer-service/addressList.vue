@@ -77,9 +77,9 @@ export default {
                 regionCode: this.regionCode
             }
             nativeService.getAreaList(param).then((data) => {
-                this.areaList = data.children
+                this.areaList = data.content.children
             }).catch((error) => {
-                nativeService.toast(nativeService.getCssErrorMessage(error))
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         })
     }

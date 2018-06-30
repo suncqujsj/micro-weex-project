@@ -77,7 +77,9 @@
                 <div class="item-group scan-group">
                     <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="code" />
 
-                    <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
+                    <div v-if="typeSelectedIndex==0" class="scan-icon-wrapper">
+                        <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
+                    </div>
                 </div>
                 <div class="item-group photo-group">
                     <text class="photo-label">现场图片</text>
@@ -124,9 +126,9 @@
 import base from './base'
 import nativeService from './settings/nativeService';
 import util from '@/common/util/util'
+const globalEvent = weex.requireModule('globalEvent')
 
-
-import { MideaCell, MideaGridSelect, MideaButton, MideaActionsheet, MideaPopup, MideaSelect } from '@/index'
+import { MideaCell, MideaGridSelect, MideaButton, MideaActionsheet, MideaPopup } from '@/index'
 
 import PeriodPicker from './components/periodPicker.vue'
 import FaultDialog from './components/faultDialog.vue'
@@ -139,7 +141,6 @@ export default {
         MideaButton,
         MideaActionsheet,
         MideaPopup,
-        MideaSelect,
 
         PeriodPicker,
         FaultDialog
@@ -404,7 +405,9 @@ export default {
                     parentServiceRequireCode: "BX"
                 }
                 nativeService.getexcludedfaultlist(param).then((data) => {
-                    this.excludedFault = data.excludedFaultVOList
+                    this.excludedFault = data.excludedFaultVOList.map((item) => {
+                        return Object.assign({ helpfulChecked: "" }, item)
+                    })
                 })
             })
         },
@@ -424,7 +427,8 @@ export default {
                 "prodName": this.selectedProduct[0].prodName
             }
             nativeService.appexcludedfaulttraces(param).then(() => {
-                this.showExcludedFaultInfo = false
+                // this.showExcludedFaultInfo = false
+                this.excludedFault[index].helpfulChecked = isHelpful
             })
         },
         excludedFaultInfoClose(event) {
@@ -450,7 +454,7 @@ export default {
                 6: "六",
             }
             for (let index = 0; index < 31; index++) {
-                let theDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + index)
+                let theDate = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate() + index)
                 let theDateDesc = theDate.getMonth() + '月' + theDate.getDate() + '日'
                 this.serviePeriodDate.push({
                     'index': index,
@@ -483,22 +487,9 @@ export default {
 
         //二维码扫描
         scanCode() {
-            nativeService.scanCode().then(
-                (resp) => {
-                    if (resp.status == 0) {
-                        let scanResult = resp.data || resp.code
-
-                        if (scanResult.indexOf(",") != -1) {
-                            // 扫条形码，可能会带'ITF,xxxxxxx', 截取后半部
-                            let tmp = scanResult.split(",")
-                            this.code = tmp.length === 1 ? tmp[0] : tmp[1]
-                        } else if (util.getParameters(scanResult, "tsn")) {
-                            //二维码
-                            this.code = util.getParameters(scanResult, "tsn")
-                        } else {
-                            this.code = scanResult
-                        }
-                    }
+            nativeService.scanServiceCode().then(
+                (result) => {
+                    this.code = result.code
                 }
             )
         },
@@ -626,7 +617,7 @@ export default {
                 cityName: customerAddressArray[1] || '',
                 county: '',
                 countyName: customerAddressArray[2] || '',
-                street: '',
+                street: order.areaCode,
                 streetName: customerAddressArray[3] || '',
                 addr: customerAddressArray[4] || ''
             }
@@ -643,7 +634,7 @@ export default {
                 let param = {
                     serviceOrderVO: {
                         interfaceSource: "SMART",
-                        webUserCode: "oFtQywGHyqrWbDvjVdRTeR9Ig3m0", //this.userInfo.uid
+                        webUserCode: this.userInfo.uid, //"oFtQywGHyqrWbDvjVdRTeR9Ig3m0"
                         webUserPhone: this.userInfo.mobile,
 
                         customerName: this.userAddress.receiverName,   //报单人姓名
@@ -702,7 +693,7 @@ export default {
                         this.goTo('orderList', { "replace": true })
                     }
                 }).catch((error) => {
-                    nativeService.toast(nativeService.getCssErrorMessage(error))
+                    nativeService.toast(nativeService.getErrorMessage(error))
                 })
             })
         }
@@ -897,10 +888,13 @@ export default {
   padding-right: 60px;
   background-color: #fafafa;
 }
-.scan-icon {
+.scan-icon-wrapper {
   position: absolute;
-  top: 40px;
-  right: 50px;
+  top: 24px;
+  right: 24px;
+  padding: 16px;
+}
+.scan-icon {
   height: 40px;
   width: 40px;
 }
@@ -933,7 +927,6 @@ export default {
   bottom: 20px;
   padding-right: 30px;
   padding-bottom: 15px;
-  background-color: #fafafa;
 }
 .mic-icon {
   height: 40px;

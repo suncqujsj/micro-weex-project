@@ -328,6 +328,48 @@ export default {
             }
         })
     },
+
+    //^5.0.0发送中台网络请求：此接口固定Post到中台https地址及端口
+    sendCentralCloundRequest(name, params, options = { isShowLoading: true }) {
+        return new Promise((resolve, reject) => {
+            if (this.isDummy != true) {
+                let msgid = this.genMessageId()
+                var sendData = params || {}
+                sendData.url = this.serviceList[name] ? this.serviceList[name] : name
+                if (options.isShowLoading) {
+                    this.showLoading()
+                }
+                bridgeModule.sendCentralCloundRequest(sendData,
+                    (resData) => {
+                        debugUtil.debugLog(debugLogSeperator, `request(${msgid}): `, sendData)
+                        debugUtil.debugLog(`response(${msgid}): `, resData, debugLogSeperator)
+                        if (typeof resData == 'string') {
+                            resData = JSON.parse(resData)
+                        }
+                        if (options.isShowLoading) {
+                            this.hideLoading()
+                        }
+
+                        resolve(resData)
+                    },
+                    (error) => {
+                        debugUtil.debugLog(debugLogSeperator, `request(${msgid}): `, sendData)
+                        debugUtil.debugLog(`=======> error(${msgid}): `, error, debugLogSeperator)
+                        if (options.isShowLoading) {
+                            this.hideLoading()
+                        }
+                        if (typeof error == 'string') {
+                            error = JSON.parse(error)
+                        }
+                        reject(error);
+                    }
+                )
+            } else {
+                let resData = this.Mock.getMock(this.serviceList[name] ? this.serviceList[name] : name)
+                resolve(resData)
+            }
+        })
+    },
     //发送POST网络请求：URL自定义
     /* params: {
         url: url,
@@ -516,8 +558,12 @@ export default {
             } else {
                 let resData
 
-                if (params['operation']) {
-                    resData = this.Mock.getMock(params['operation'])
+                if (params['operation'] || params['name']) {
+                	if(params['name']) {
+                		resData = Mock.getMock(params['name'])
+                	} else {
+                		resData = Mock.getMock(params['operation'])	
+                	}
                 }
                 debugUtil.debugLog("Mock: ", resData)
                 resolve(resData);
@@ -631,7 +677,18 @@ export default {
         let param = {
             operation: 'getDeviceInfo'
         }
-        return this.commandInterfaceWrapper(param)
+        if(this.isDummy == true) {
+        	 return new Promise((resolve, reject) => {
+	        	let resData = Mock.getMock(param.operation);
+	            if (resData.errorCode == 0) {
+	                resolve(resData);
+	            } else {
+	                reject(resData)
+	            }
+	        });
+        } else {
+        	return this.commandInterfaceWrapper(param)
+        }
     },
     //更新当前设备信息
     updateDeviceInfo(params) {
@@ -774,6 +831,13 @@ export default {
         let param = Object.assign(params, {
             operation: 'searchMapAddress'
         })
+        return this.commandInterfaceWrapper(param)
+    },
+    /* 选择通讯录的好友，可以获取电话号码，好友信息 */
+    getAddressBookPerson() {
+        let param = {
+            operation: 'getAddressBookPerson'
+        }
         return this.commandInterfaceWrapper(param)
     },
     //调用第三方SDK统一接口

@@ -5,24 +5,31 @@
                 <text class="header-right-text" @click="switchMode">{{isListMode?'地图模式':'列表模式'}}</text>
             </div>
         </midea-header>
-        <div class="info-bar">
-            <text class="info-address" @click="changeArea">{{gpsInfo?(areaObject.provinceName+ ' '+areaObject.cityName+ ' '+areaObject.countyName):'请选择位置'}}</text>
+        <div v-if="!serviceOrderNo" class="info-bar">
+            <text class="info-address" @click="changeArea">{{areaObject.county?(areaObject.provinceName+ ' '+areaObject.cityName+ ' '+areaObject.countyName):'请选择位置'}}</text>
             <image class="arraw-down-icon" src="./assets/img/service_ic_hide@3x.png" resize='contain' @click="changeArea">
             </image>
             <div class="info-product" @click="switchMode">
                 <midea-rich-text class="search-result-desc" :hasTextMargin="false" :config-list="richDesc"></midea-rich-text>
             </div>
         </div>
-        <scroller v-if="isListMode" class="scroller">
+
+        <div class="empty-page" v-if="isLoaded && sortedBranchList.length == 0">
+            <image class="empty-page-icon" src="./assets/img/default_ic_nobranch@3x.png" resize='contain'>
+            </image>
+            <text class="empty-page-text">抱歉，亲查询的网点不存在{{'\n'}}您可以拨打24小时服务热线咨询</text>
+            <text class="empty-page-text phone" @click="makeCall(4008899315)">400-8899-315</text>
+        </div>
+        <scroller v-if="isListMode && sortedBranchList.length >0" class="scroller">
             <div v-for="(branch, index) in sortedBranchList" :key="index">
                 <branch-block class="branch-block" :data="branch" :index="index" @navigate="navigate(branch)">
                 </branch-block>
             </div>
             <div class="gap-bottom"></div>
         </scroller>
-        <div v-else class="map-scroller">
+        <div v-if="!isListMode && sortedBranchList.length >0" class="map-scroller">
             <midea-map-view class="map" :data="mapData"></midea-map-view>
-            <slider class="slider" :index="currentAddressIndex" @change="changeBranch" interval="3000" auto-play="false">
+            <slider class="slider" :index="currentAddressIndex" @change="changeBranch" auto-play="false">
                 <div v-for="(branch, index) in sortedBranchList" :key="index">
                     <branch-block class="branch-slider-block" ellipsis=true :data="branch" :index="index" @navigate="navigate(branch)">
                     </branch-block>
@@ -59,8 +66,11 @@ export default {
                 county: '',
                 countyName: '',
             },
+            serviceOrderNo: null,
+            order: null,
             selectedProduct: null,
             branchList: [],
+            isLoaded: false,
             currentAddressIndex: 0,
             dialogShow: false
         }
@@ -95,24 +105,28 @@ export default {
             ]
         },
         sortedBranchList() {
-            let result = this.branchList.map((item) => {
-                let distance = 0, distanceDesc = ''
-                if (this.gpsInfo && this.gpsInfo.longitude && this.gpsInfo.latitude && item.nuitLongitude && item.unitLatitude) {
-                    distance = nativeService.distanceByLnglat(this.gpsInfo.longitude, this.gpsInfo.latitude, item.nuitLongitude, item.unitLatitude) //单位：米
-                    if (distance >= 1000) {
-                        distanceDesc = Math.round(distance / 1000 * 100) / 100 + "km"
-                    } else {
-                        distanceDesc = distance + "m"
+            let result
+            if (this.branchList) {
+                result = this.branchList.map((item) => {
+                    let distance = 0, distanceDesc = ''
+                    if (this.gpsInfo && this.gpsInfo.longitude && this.gpsInfo.latitude && item.nuitLongitude && item.unitLatitude) {
+                        distance = nativeService.distanceByLnglat(this.gpsInfo.longitude, this.gpsInfo.latitude, item.nuitLongitude, item.unitLatitude) //单位：米
+                        if (distance >= 1000) {
+                            distanceDesc = Math.round(distance / 1000 * 100) / 100 + "km"
+                        } else {
+                            distanceDesc = distance + "m"
+                        }
                     }
-                }
-                return Object.assign({
-                    'distance': distance,
-                    'distanceDesc': distanceDesc
-                }, item)
-            })
-            return result.sort(function (a, b) {
-                return a.distance - b.distance
-            })
+                    return Object.assign({
+                        'distance': distance,
+                        'distanceDesc': distanceDesc
+                    }, item)
+                })
+                result = result.sort(function (a, b) {
+                    return a.distance - b.distance
+                })
+            }
+            return result
         },
         mapData() {
             let result
@@ -145,10 +159,16 @@ export default {
         handlePageData(data) {
             if (data.page == "branchList") {
                 if (data.key == "addressList") {
+                    //改变地区后刷新列表
                     nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedAreaObject, (resp) => {
                         if (resp.result == 'success') {
                             this.areaObject = JSON.parse(resp.data) || {}
-                            this.getUnitList()
+
+                            let param = {
+                                prodCode: this.selectedProduct.prodCode,
+                                areaCode: this.areaObject.county
+                            }
+                            this.getUnitList(param)
                         }
                     })
                 }
@@ -176,6 +196,25 @@ export default {
             oldOrder.status = 3
             this.$set(this.orderList, this.selectedOrderIndex, oldOrder)
         },
+        getGPSInfo() {
+            return new Promise((resolve, reject) => {
+                let gpsParam = {
+                    desiredAccuracy: "10",  //定位的精确度，单位：米
+                    alwaysAuthorization: "0",  //是否开启实时定位功能，0: 只返回一次GPS信息（默认），1:APP在前台时，每移动distanceFilter的距离返回一次回调。2:无论APP在前后台，每移动distanceFilter的距离返回一次回调（注意耗电）
+                    distanceFilter: "10", //alwaysAuthorization为1或2时有效，每移动多少米回调一次定位信息
+                }
+                nativeService.showLoadingWithMsg("正在获取位置信息...")
+                nativeService.getGPSInfo(gpsParam).then((data) => {
+                    nativeService.hideLoadingWithMsg()
+                    this.gpsInfo = data
+                    resolve(data)
+                }).catch((error) => {
+                    nativeService.toast("定位失败")
+                    nativeService.hideLoadingWithMsg()
+                    reject(error)
+                })
+            })
+        },
         getAreaCodeByName(province, city, county) {
             let provinceObj, cityObj, countyObj
             return new Promise((resolve, reject) => {
@@ -183,19 +222,19 @@ export default {
                     regionCode: 0
                 }
                 nativeService.getAreaList(param).then((data) => {
-                    provinceObj = data.children.filter((provinceItem) => {
+                    provinceObj = data.content.children.filter((provinceItem) => {
                         return province == provinceItem.regionName
                     })[0]
                     nativeService.getAreaList({
                         regionCode: provinceObj.regionCode
                     }).then((data) => {
-                        cityObj = data.children.filter((cityItem) => {
+                        cityObj = data.content.children.filter((cityItem) => {
                             return city == cityItem.regionName
                         })[0]
                         nativeService.getAreaList({
                             regionCode: cityObj.regionCode
                         }).then((data) => {
-                            countyObj = data.children.filter((countyItem) => {
+                            countyObj = data.content.children.filter((countyItem) => {
                                 return county == countyItem.regionName
                             })[0]
                             resolve({
@@ -211,56 +250,82 @@ export default {
                 })
             })
         },
-        getUnitList() {
-            let param = {
-                prodCode: this.selectedProduct.prodCode,
-                areaCode: this.areaObject.county
-            }
+        getUnitList(param) {
             nativeService.queryunitarchives(param).then((data) => {
-                this.branchList = data.list
+                this.branchList = data.list || []
+                this.currentAddressIndex = 0
+                this.isLoaded = true
             }).catch((error) => {
-                nativeService.toast(nativeService.getCssErrorMessage(error))
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         },
         navigate(item) {
-            let param = {
-                from: { //当前用户地点
-                    latitude: this.gpsInfo.latitude, //纬度
-                    longitude: this.gpsInfo.longitude //经度
-                },
-                to: { //目的地地点
-                    latitude: item.unitLatitude, //纬度
-                    longitude: item.nuitLongitude //经度
+            if (this.gpsInfo) {
+                let param = {
+                    from: { //当前用户地点
+                        latitude: this.gpsInfo.latitude, //纬度
+                        longitude: this.gpsInfo.longitude //经度
+                    },
+                    to: { //目的地地点
+                        latitude: item.unitLatitude, //纬度
+                        longitude: item.nuitLongitude //经度
+                    }
                 }
+                nativeService.launchMapApp(param).then((resp) => { }
+                ).catch((error) => {
+                    if (error.errorCode == -1) {
+                        nativeService.toast("没有打开地图权限")
+                    }
+                })
+            } else {
+                nativeService.toast("没有当前定位信息")
             }
-            nativeService.launchMapApp(param).then((resp) => { }
-            ).catch((error) => { })
+        },
+        makeCall(telNo) {
+            nativeService.callTel({
+                tel: telNo,
+                title: '服务热线'
+            }).then(
+                (resp) => { }
+            )
         }
     },
     created() {
-        let gpsParam = {
-            desiredAccuracy: "10",  //定位的精确度，单位：米
-            alwaysAuthorization: "0",  //是否开启实时定位功能，0: 只返回一次GPS信息（默认），1:APP在前台时，每移动distanceFilter的距离返回一次回调。2:无论APP在前后台，每移动distanceFilter的距离返回一次回调（注意耗电）
-            distanceFilter: "10", //alwaysAuthorization为1或2时有效，每移动多少米回调一次定位信息
-        }
-        nativeService.showLoadingWithMsg("正在获取位置信息...")
-        nativeService.getGPSInfo(gpsParam).then((data) => {
-            nativeService.hideLoadingWithMsg()
-            this.gpsInfo = data
+        this.serviceOrderNo = nativeService.getParameters('id') || null
+        if (this.serviceOrderNo) {
+            this.getGPSInfo().then(() => { })
+            //订单中查看网点
+            nativeService.getItem(this.SERVICE_STORAGE_KEYS.currentOrder, (resp) => {
+                if (resp.result == 'success') {
+                    this.order = JSON.parse(resp.data) || {}
+
+                    let param = {
+                        prodCode: this.order.serviceUserDemandVOs[0].prodCode,
+                        branchCode: this.order.branchCode,
+                        unitCode: this.order.unitCode
+                    }
+                    this.getUnitList(param)
+                }
+            })
+        } else {
+            //首页网点查询
             nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, (resp) => {
                 if (resp.result == 'success') {
                     this.selectedProduct = JSON.parse(resp.data)[0] || {}
-                    this.getAreaCodeByName(this.gpsInfo.province, this.gpsInfo.city, this.gpsInfo.district).then((areaResp) => {
-                        this.areaObject = areaResp
-                        this.getUnitList()
+                    this.getGPSInfo().then(() => {
+                        this.getAreaCodeByName(this.gpsInfo.province, this.gpsInfo.city, this.gpsInfo.district).then((areaResp) => {
+                            this.areaObject = areaResp
+
+                            let param = {
+                                prodCode: this.selectedProduct.prodCode,
+                                areaCode: this.areaObject.county
+                            }
+                            this.getUnitList(param)
+                        })
                     })
                 }
             })
-        }).catch(() => {
-            nativeService.toast("定位失败")
-            nativeService.hideLoadingWithMsg()
-        })
-
+        }
     }
 }
 </script>
@@ -335,11 +400,34 @@ export default {
 .slider {
   position: absolute;
   width: 750px;
-  height: 200px;
+  height: 210px;
   bottom: 0px;
   left: 0px;
 }
 .branch-slider-block {
   width: 750px;
+}
+
+.empty-page {
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 272px;
+}
+.empty-page-icon {
+  width: 240px;
+  height: 240px;
+}
+.empty-page-text {
+  padding-top: 36px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #888888;
+  text-align: center;
+}
+.phone {
+  margin-top: 100px;
+  color: #267aff;
 }
 </style>

@@ -40,10 +40,11 @@
                         <text v-for="(item,index) in normalOtherList" :key="index" v-bind:class="['callback-item', item.isSelected?'callback-item-selected':'']" @click="selectNormalOtherCallback(index)">{{item.customerLable}}</text>
                     </div>
                     <div v-if="serviceLevel" class="remark-group">
-                        <textarea class="remark-textarea" placeholder="还想说点，将匿名并延迟告诉工程师" rows="4" v-model="remark"></textarea>
+                        <text v-if="isReadOnly" class="remark-text" :value="remark||' '"></text>
+                        <textarea v-else class="remark-textarea" placeholder="还想说点，将匿名并延迟告诉工程师" rows="4" v-model="remark"></textarea>
                     </div>
                 </template>
-                <text v-if="isDataReady" class="action-button" @click="submit">提交</text>
+                <text v-if="!isReadOnly && isDataReady" class="action-button" @click="submit">提交</text>
             </div>
         </scroller>
 
@@ -72,7 +73,9 @@ export default {
             title: '评价服务',
             userInfo: null,
             order: null,
-            serviceStatus: 1,
+            isReadOnly: false,
+            callbackItemList: null,
+            serviceStatus: null,
             serviceLevel: null,
             callbackLevelList: [{
                 title: '不满意',
@@ -112,6 +115,7 @@ export default {
     },
     methods: {
         convertCallbackList() {
+            //评价有礼
             for (let groupIndex = 0; groupIndex < this.callbackItemList.length; groupIndex++) {
                 let groupItem = this.callbackItemList[groupIndex]
                 let groupItemObj = {
@@ -132,7 +136,7 @@ export default {
                         "callbackResultName": resultItem.callbackResultName,
                     }
                     let reasonItemList = resultItem.oiCallbackResultUnsatisfyReasonVOList
-                    if (callbackTypeCode == "FM" && resultItem.callbackResultScore == null) {
+                    if (callbackTypeCode == "FM" && ["W11101", "W11102", "W11103"].indexOf(resultItem.callbackResultCode) < 0) {
                         let reasonObj = Object.assign({}, groupItemObj, resultItemObj)
                         //未完成的评价
                         this.uncompletedList.push(reasonObj)
@@ -166,11 +170,79 @@ export default {
 
             }
         },
+        convertViewCallbackList() {
+            //查看评价
+
+            let oiCallbackDetailVOList = this.callbackItemList[0].oiCallbackDetailVOList
+            for (let groupIndex = 0; groupIndex < oiCallbackDetailVOList.length; groupIndex++) {
+                let callbackItem = oiCallbackDetailVOList[groupIndex]
+                let groupItemObj = {
+                    "callbackTypeCode": callbackItem.callbackTypeCode,
+                    "callbackTypeName": callbackItem.callbackTypeName,
+                    "callbackItemId": callbackItem.callbackItemId,
+                    "callbackItemCode": callbackItem.callbackItemCode,
+                    "callbackItemName": callbackItem.callbackItemName,
+                    isSelected: true
+                }
+                let resultItemObj = {
+                    "callbackResultId": callbackItem.callbackResultId,
+                    "callbackResultCode": callbackItem.callbackResultCode,
+                    "callbackResultName": callbackItem.callbackResultName
+                }
+                if (callbackItem.callbackTypeCode == "FM" && ["W11101", "W11102", "W11103"].indexOf(callbackItem.callbackResultCode) < 0) {
+                    //未完成的评价
+                    this.serviceStatus = 0
+                    this.uncompletedList.push(Object.assign({}, groupItemObj, resultItemObj))
+                } else if (callbackItem.callbackTypeCode == "FM") {
+                    this.serviceStatus = 1
+                    if (callbackItem.callbackResultCode == "W11101") {
+                        //满意
+                        this.serviceLevel = "satisfy"
+                    } else if (callbackItem.callbackResultCode == "W11102") {
+                        //一般
+                        this.serviceLevel = "normal"
+                    } else if (callbackItem.callbackResultCode == "W11103") {
+                        //不满意
+                        this.serviceLevel = "unSatisfy"
+                    }
+                    let reasonItemList = callbackItem.oiCallbackResultUnsatisfyReasonVOList
+                    for (let reasonIndex = 0; reasonItemList && reasonIndex < reasonItemList.length; reasonIndex++) {
+                        let reasonItem = reasonItemList[reasonIndex]
+                        let reasonObj = Object.assign({}, groupItemObj, resultItemObj, {
+                            "unsatisfyReasonId": reasonItem.unsatisfyReasonId,
+                            "customerLable": reasonItem.customerLable
+                        })
+                        if (callbackItem.callbackResultCode == "W11101") {
+                            //满意
+                            this.satisfyList.push(reasonObj)
+                        } else if (callbackItem.callbackResultCode == "W11102") {
+                            //一般
+                            this.normalList.push(reasonObj)
+                        } else if (callbackItem.callbackResultCode == "W11103") {
+                            //不满意
+                            this.unSatisfyList.push(reasonObj)
+                        }
+                    }
+                } else if (callbackItem.callbackTypeCode == "BZ") {
+                    this.serviceStatus = 1
+                    //一般和不满意的其他行为
+                    // this.normalOtherList.push(reasonObj)
+                    // this.unSatisfyOtherList.push(reasonObj)
+                }
+
+            }
+
+            this.remark = this.callbackItemList[0].oiCallbackVO.remark
+        },
         switchServiceStatus(type) {
+            if (this.isReadOnly) return
+
             this.serviceStatus = type
             this.resetIsSelected()
         },
         selectLeve(item) {
+            if (this.isReadOnly) return
+
             this.serviceLevel = item.level
             this.resetIsSelected()
         },
@@ -183,6 +255,8 @@ export default {
             this.uncompletedList.forEach(item => { item.isSelected = false })
         },
         selectCallback(serviceLevel, index) {
+            if (this.isReadOnly) return
+
             let targetList
             if (serviceLevel == 'satisfy') {
                 targetList = this.satisfyList
@@ -198,16 +272,22 @@ export default {
             }
         },
         selectNormalOtherCallback(index) {
+            if (this.isReadOnly) return
+
             let item = this.normalOtherList[index]
             item.isSelected = !item.isSelected
             this.$set(this.normalOtherList, index, item)
         },
         selectUnSatisfyOtherCallback(index) {
+            if (this.isReadOnly) return
+
             let item = this.unSatisfyOtherList[index]
             item.isSelected = !item.isSelected
             this.$set(this.unSatisfyOtherList, index, item)
         },
         selectUncompletedItem(index) {
+            if (this.isReadOnly) return
+
             let item = this.uncompletedList[index]
             item.isSelected = !item.isSelected
             this.$set(this.uncompletedList, index, item)
@@ -219,16 +299,16 @@ export default {
                 oiCallbackInfoVO: {
                     serviceOrderNo: this.order.serviceOrderNo,
                     remark: this.remark,
-                    webUserCode: "oFtQywGHyqrWbDvjVdRTeR9Ig3m0" //this.userInfo.uid
+                    webUserCode: this.userInfo.uid //"oFtQywGHyqrWbDvjVdRTeR9Ig3m0"
                 }
             }
             if (this.serviceStatus == 0) {
                 //未完成的评价
-                let selectedUncompletedList = this.uncompletedList.filter((item) => {
+                let selectedList = this.uncompletedList.filter((item) => {
                     return item.isSelected
                 })
-                for (let index = 0; index < selectedUncompletedList.length; index++) {
-                    const uncompletedItem = selectedUncompletedList[index];
+                for (let index = 0; index < selectedList.length; index++) {
+                    const uncompletedItem = selectedList[index]
                     param.oiCallbackDetailVOList.push({
                         callbackItemCode: uncompletedItem.callbackItemCode,
                         callbackItemId: uncompletedItem.callbackItemId,
@@ -246,7 +326,9 @@ export default {
                     })
                 }
             } else {
-                let targetList
+                let targetList = []
+
+                //一般标签
                 if (this.serviceLevel == 'satisfy') {
                     //满意
                     targetList = this.satisfyList
@@ -258,38 +340,79 @@ export default {
                     targetList = this.unSatisfyList
                 }
 
-                let selectedSatisfyList = targetList.filter((item) => {
+                let selectedList = targetList.filter((item) => {
                     return item.isSelected
                 })
-                let selectedSatisfyObj = {
-                    callbackItemCode: selectedSatisfyList[0].callbackItemCode,
-                    callbackItemId: selectedSatisfyList[0].callbackItemId,
-                    callbackItemName: selectedSatisfyList[0].callbackItemName,
-                    callbackTypeCode: selectedSatisfyList[0].callbackTypeCode,
-                    callbackTypeName: selectedSatisfyList[0].callbackTypeName,
-                    callbackResultId: selectedSatisfyList[0].callbackResultId,
-                    callbackResultCode: selectedSatisfyList[0].callbackResultCode,
-                    callbackResultName: selectedSatisfyList[0].callbackResultName,
-                    brandCode: "",
-                    brandName: "",
-                    prodCode: "",
-                    prodName: "",
-                    oiCallbackResultUnsatisfyReasonVOList: []
+                if (selectedList && selectedList.length > 0) {
+                    let selectedObj = {
+                        callbackItemCode: selectedList[0].callbackItemCode,
+                        callbackItemId: selectedList[0].callbackItemId,
+                        callbackItemName: selectedList[0].callbackItemName,
+                        callbackTypeCode: selectedList[0].callbackTypeCode,
+                        callbackTypeName: selectedList[0].callbackTypeName,
+                        callbackResultId: selectedList[0].callbackResultId,
+                        callbackResultCode: selectedList[0].callbackResultCode,
+                        callbackResultName: selectedList[0].callbackResultName,
+                        brandCode: "",
+                        brandName: "",
+                        prodCode: "",
+                        prodName: "",
+                        oiCallbackResultUnsatisfyReasonVOList: []
+                    }
+                    for (let index = 0; index < selectedList.length; index++) {
+                        const satisfyItem = selectedList[index];
+                        selectedObj.oiCallbackResultUnsatisfyReasonVOList.push({
+                            unsatisfyReasonId: satisfyItem.unsatisfyReasonId,
+                            customerLable: satisfyItem.customerLable
+                        })
+                    }
+                    param.oiCallbackDetailVOList.push(selectedObj)
                 }
-                for (let index = 0; index < selectedSatisfyList.length; index++) {
-                    const satisfyItem = selectedSatisfyList[index];
-                    selectedSatisfyObj.oiCallbackResultUnsatisfyReasonVOList.push({
-                        unsatisfyReasonId: satisfyItem.unsatisfyReasonId,
-                        customerLable: satisfyItem.customerLable
-                    })
+
+                //其他行为标签（标准化标签）
+                let targetOtherList = []
+                if (this.serviceLevel == 'normal') {
+                    //一般
+                    targetOtherList = this.normalOtherList
+                } else if (this.serviceLevel == 'unSatisfy') {
+                    //不满意
+                    targetOtherList = this.unSatisfyOtherList
                 }
-                param.oiCallbackDetailVOList.push(selectedSatisfyObj)
+                let selectedOtherList = targetOtherList.filter((item) => {
+                    return item.isSelected
+                })
+                if (selectedOtherList && selectedOtherList.length > 0) {
+                    for (let index = 0; index < selectedOtherList.length; index++) {
+                        const satisfyItem = selectedOtherList[index];
+                        let selectedObj = {
+                            callbackItemCode: satisfyItem.callbackItemCode,
+                            callbackItemId: satisfyItem.callbackItemId,
+                            callbackItemName: satisfyItem.callbackItemName,
+                            callbackTypeCode: satisfyItem.callbackTypeCode,
+                            callbackTypeName: satisfyItem.callbackTypeName,
+                            callbackResultId: satisfyItem.callbackResultId,
+                            callbackResultCode: satisfyItem.callbackResultCode,
+                            callbackResultName: satisfyItem.callbackResultName,
+                            brandCode: "",
+                            brandName: "",
+                            prodCode: "",
+                            prodName: "",
+                            oiCallbackResultUnsatisfyReasonVOList: []
+                        }
+                        selectedObj.oiCallbackResultUnsatisfyReasonVOList.push({
+                            unsatisfyReasonId: satisfyItem.unsatisfyReasonId,
+                            customerLable: satisfyItem.customerLable
+                        })
+                        param.oiCallbackDetailVOList.push(selectedObj)
+                    }
+                }
             }
 
             nativeService.createcallbackinfo(param).then((data) => {
-                this.back()
+                this.appPageDataChannel.postMessage({ page: this.fromPage, key: "createcallback", data: {} })
+                this.back({ viewTag: "orderList" })
             }).catch((error) => {
-                nativeService.toast(nativeService.getCssErrorMessage(error))
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         }
     },
@@ -298,16 +421,34 @@ export default {
             if (resp.result == 'success') {
                 this.order = JSON.parse(resp.data) || {}
 
-                let param = {
-                    serviceOrderNo: this.order.serviceOrderNo,
-                    orgCode: this.order.orgCode
+                if (this.order.allowCallbackWX == "Y") {
+                    //评价有礼
+                    let param = {
+                        serviceOrderNo: this.order.serviceOrderNo,
+                        orgCode: this.order.orgCode
+                    }
+                    nativeService.extractcallbackitem(param).then((data) => {
+                        this.callbackItemList = data.list
+                        this.convertCallbackList()
+                    }).catch((error) => {
+                        nativeService.toast(nativeService.getErrorMessage(error))
+                    })
+                } else if (this.order.callbackStatus == "12") {
+                    this.isReadOnly = true
+                    //查看评价
+                    let param = {
+                        serviceOrderNo: this.order.serviceOrderNo,
+                        orgCode: this.order.orgCode,
+                        customerPhone: this.order.customerMobilephone1
+                    }
+                    nativeService.queryserviceuserdemanddispatch(param).then((data) => {
+                        this.callbackItemList = data.callbackDetailInfoVOList
+                        this.convertViewCallbackList()
+                    }).catch((error) => {
+                        nativeService.toast(nativeService.getErrorMessage(error))
+                    })
+
                 }
-                nativeService.extractcallbackitem(param).then((data) => {
-                    this.callbackItemList = data.list
-                    this.convertCallbackList()
-                }).catch((error) => {
-                    nativeService.toast(nativeService.getCssErrorMessage(error))
-                })
             }
         })
         nativeService.getUserInfo().then((data) => {
@@ -436,6 +577,17 @@ export default {
   padding-left: 32px;
   padding-bottom: 48px;
   background-color: #ffffff;
+}
+.remark-text {
+  flex: 1;
+  height: 150px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  border-radius: 6px;
+  border-color: #e5e5e8;
+  border-width: 1px;
+  padding: 8px;
+  background-color: #fafafa;
 }
 .remark-textarea {
   flex: 1;

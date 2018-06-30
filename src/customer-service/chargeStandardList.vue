@@ -5,10 +5,10 @@
         <div class="search-bar" :style="{'height':isIos?'136px':'96px','padding-top':isIos?'40px':'0px'}">
             <div class="search-bar-content">
                 <image class="search-bar-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
-                <input class="search-bar-input" placeholder="查询关键字" v-model="queryParam.content" @return="keyBoardsearch" return-key-type="search"></input>
+                <input class="search-bar-input" placeholder="查询关键字" v-model="queryParam.content" @return="search" return-key-type="search"></input>
             </div>
             <text v-if="isIos" class="search-action" @click="back">取消</text>
-            <text v-if="!isIos" class="search-action" @click="search()">搜索</text>
+            <text v-if="!isIos" class="search-action" @click="search">搜索</text>
         </div>
         <list>
             <cell v-for="(itemA, indexA) in sortedFreePlocy" :key="indexA">

@@ -12,17 +12,22 @@
                 </div>
 
                 <div class="item-group scan-group">
-                    <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="searchCode" @input="oninput" />
-
-                    <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
+                    <input v-if="typeSelectedIndex==1" class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="productCode" @input="resetData" />
+                    <input v-if="typeSelectedIndex==0" class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="barCode" @input="resetData" />
+                    <div v-if="typeSelectedIndex==0" class="scan-icon-wrapper">
+                        <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
+                    </div>
                 </div>
             </div>
 
             <div class="base-group">
-                <midea-cell title="" :rightText="date?date:'请选择'" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="pickDate">
+                <midea-cell title="" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="pickDate">
                     <div slot="title" class="cell-title">
                         <text class="cell-label">购买产品时间</text>
                         <text class="cell-label-star">*</text>
+                    </div>
+                    <div slot="rightText">
+                        <text class="right-text">{{date?date:'请选择'}}</text>
                     </div>
                 </midea-cell>
             </div>
@@ -64,8 +69,10 @@ export default {
                 }
             ],
             typeSelectedIndex: 0,
-            searchCode: '',
+            barCode: '',
+            productCode: '',
             date: null,
+            productList: null,
             result: null
         }
     },
@@ -74,27 +81,24 @@ export default {
     methods: {
         typeSelected(index) {
             this.typeSelectedIndex = index
+            this.resetData()
         },
-        oninput(event) {
+        resetData(event) {
             this.date = null
             this.result = null
         },
         scanCode() {
-            nativeService.scanCode().then(
-                (resp) => {
-                    if (resp.status == 0) {
-                        if (this.searchCode != resp.data) {
-                            this.searchCode = resp.data
-                            this.date = null
-                            this.result = null
-                        }
-                    }
+            nativeService.scanServiceCode().then(
+                (result) => {
+                    this.barCode = result.code
+                    this.date = null
+                    this.result = null
                 }
             )
         },
 
         pickDate() {
-            if (!this.searchCode) {
+            if ((this.typeSelectedIndex == 0 && !this.barCode) || (this.typeSelectedIndex == 1 && !this.productCode)) {
                 nativeService.toast('请输入型号或扫机身条码')
                 return
             }
@@ -113,16 +117,34 @@ export default {
                 var result = event.result;
                 if (result == 'success') {
                     this.date = event.data;
-                    let param = {
-                        barcode: this.typeSelectedIndex == 0 ? this.searchCode : '',
-                        productCode: this.typeSelectedIndex == 1 ? this.searchCode : '',
-                        purchaseDate: util.dateFormat(new Date(this.date), "yyyy-MM-dd")
+                    if (this.typeSelectedIndex == 0) {
+                        //条码
+                        let param = {
+                            barcode: this.typeSelectedIndex == 0 ? this.barCode : '',
+                            productCode: this.typeSelectedIndex == 1 ? this.barCode : '',
+                            purchaseDate: util.dateFormat(new Date(this.date), "yyyy-MM-dd")
+                        }
+                        nativeService.querywarrantydescbycodeorsn(param).then((data) => {
+                            this.result = data
+                        }).catch((error) => {
+                            nativeService.toast(nativeService.getErrorMessage(error))
+                        })
+                    } else {
+                        //产品型号模糊查询
+                        let param = {
+                            version: "1.0",
+                            code: this.barCode,
+                            codeType: "10",
+                            sourceTag: "3",
+                            pageIndex: "1",
+                            pageSize: "1000"
+                        }
+                        nativeService.getProdMessage(param).then((resp) => {
+                            this.productList = resp.data.filter((item) => {
+                                return item.product.orgCode
+                            })
+                        })
                     }
-                    nativeService.querywarrantydescbycodeorsn(param).then((data) => {
-                        this.result = data
-                    }).catch((error) => {
-                        nativeService.toast(nativeService.getCssErrorMessage(error))
-                    })
                 }
             });
         },
@@ -156,10 +178,16 @@ export default {
   color: #ff3b30;
   padding-left: 5px;
 }
+.right-text {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #666666;
+  padding-right: 24px;
+  text-align: right;
+  width: 480px;
+}
 .item-group {
-  padding-top: 32px;
-  padding-left: 32px;
-  padding-right: 32px;
+  padding: 24px;
   background-color: #ffffff;
 }
 
@@ -204,13 +232,16 @@ export default {
   border-width: 1px;
   height: 72px;
   padding-left: 22px;
-  padding-right: 50px;
+  padding-right: 60px;
   background-color: #fafafa;
 }
-.scan-icon {
+.scan-icon-wrapper {
   position: absolute;
-  top: 40px;
-  right: 50px;
+  top: 24px;
+  right: 24px;
+  padding: 16px;
+}
+.scan-icon {
   height: 40px;
   width: 40px;
 }

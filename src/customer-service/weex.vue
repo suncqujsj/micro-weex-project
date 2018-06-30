@@ -8,7 +8,7 @@
                     <text class="service-title">服务</text>
                     <text class="service-desc">在线客服，随时为您提供服务</text>
                     <div class="service-desc-img-wrapper">
-                        <image class="service-desc-img" src="./assets/img/servie_pic_banner03@3x.png" resize='contain'></image>
+                        <image class="service-desc-img" src="./assets/img/servie_pic_service@3x.png" resize='contain'></image>
                     </div>
                 </div>
                 <div class="navigation-list">
@@ -138,7 +138,16 @@ export default {
             })
         },
         itemClicked(item) {
-            this.goTo(item.page)
+            nativeService.getUserInfo().then((data) => {
+                if (true || data.uid) {
+                    this.goTo(item.page)
+                } else {
+                    nativeService.jumpNativePage({
+                        "pageName": "login", //跳转到登录界面
+                        "data": {}
+                    })
+                }
+            })
         },
         showHotLine() {
             this.showBar = true;

@@ -32,6 +32,21 @@ export const all = [
         }
     },
     {
+        path: 'getDeviceInfo',
+        data: {
+           "msg": "",
+            "result": {
+                "deviceId": "1099511629098",
+                "deviceName": "空调541F",
+                "deviceType": "0xAC",
+                "deviceSubType": "0",
+                "isOnline": "1",
+                "deviceSn": "1000000PD00400000000000",
+            },
+            "errorCode": "0"
+        }
+    },
+    {
         path: 'poweroff',
         data: {
             "errorCode": 0,
@@ -96,24 +111,6 @@ export const all = [
                 "watchModePush": '@pick([0, 1])',
                 "defrost60MinPush": '@pick([0, 1])'
             }
-        }
-    },
-    {
-        path: 'getDeviceInfo',
-        data: {
-            "msg": "",
-            "result": {
-                "deviceID": "1099511629098",
-                "deviceSSID": "",
-                "deviceName": "冰箱541F",
-                "deviceType": "0xCA",
-                "deviceSubType": "0",
-                "online": "1",
-                "deviceDescription": "",
-                "activated": "",
-                "isDeviceOwner": "1"
-            },
-            "errorCode": "0"
         }
     }
 ]

@@ -36,6 +36,10 @@
 	        type: String,
 	        default: '19'
 	    },
+	    offsetStep: {
+	    	type: String,
+	    	default: '1'
+	    }
     },
     computed: {
     },
@@ -43,7 +47,7 @@
     	return {
 			selected:"selected",
     		unselected:"unselected" ,
-    		offset: Math.floor(676/(this.max - this.min))
+    		offset: Math.floor(622/(this.max - this.min))
     	}
     },
     methods: {
@@ -54,8 +58,10 @@
         	} else if (currentSetTemperture >= this.max) {
         		currentSetTemperture = this.max;
         	}
-        	this.currentTemperture = currentSetTemperture;
-        	this.$emit('scrollerBarScroll', { value: this.currentTemperture});
+        	if((this.currentTemperture - currentSetTemperture) % this.offsetStep == 0) {
+        		this.currentTemperture = currentSetTemperture;	
+        		this.$emit('scrollerBarScroll', { value: this.currentTemperture});
+        	}
     	}
     },
      mounted() {

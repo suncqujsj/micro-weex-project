@@ -1,6 +1,6 @@
 <template>
 <div class="box" :style="styles.box">
-    <m-nav-list :list="navList" :cols="cols" @itemClicked="itemClicked">
+    <m-nav-list :list="navList" :cols="cols" @itemClicked="itemClicked" :disableClick="disabled">
     </m-nav-list>
 </div>
 </template>

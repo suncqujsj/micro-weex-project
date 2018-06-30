@@ -43,12 +43,12 @@
                 <text class="hd">天气</text>
                 <div>
                      <midea-list style="background-color:#fff" v-for="(item,i) in weather.data" :idx="i" :hasWrapBorder="false" leftMargin="25px">
-                        <check-item :title="item.title" @itemClick="selectWeather(i)" :status="weather.activeTypeIndex==i" mode="radio"></check-item>
+                        <check-item :title="item" @itemClick="selectWeather(i)" :status="weather.activeTypeIndex==i" mode="radio"></check-item>
                     </midea-list>
                 </div>
                 <div class="box">
                     <midea-cell title="气温" :hasArrow="true" @mideaCellClick="setWeatherSwitch" :cellStyle="{paddingLeft: '30px'}" :rightText="switchs[weather.activeSwitch]"></midea-cell>
-                    <scroll-picker :wrapWidth="750" :listArray="weatherTemperature" @onChange="setActiveWeatherTemperature"></scroll-picker>
+                    <scroll-picker :wrapWidth="750" :wrapHeight="320" :listArray="weatherTemperature" @onChange="setActiveWeatherTemperature"></scroll-picker>
                 </div>
             </div>
             <div class="repeat">
@@ -57,11 +57,10 @@
                     <text :class="['week', item.repeat==1?'week-active':'']" v-for="(item,i) in week" @click="setRepeat(i)">{{item.title}}</text>
                 </div>
             </div>
-            
         </div>
-        <scroller class="map-result" v-if="sceneType== 3 && showMapSearchResult">
+        <scroller v-if="sceneType== 3 && showMapSearchResult" class="map-result">
             <div v-if="mapSearchResult.length > 0">
-                <div v-for="(item,i) in mapSearchResult" >
+                <div v-for="(item,i) in mapSearchResult" @click="goNext(item)">
                     <text :class="['map-result-item', i==0?'noborder':'']">{{item.key}}-{{item.district}} </text>
                 </div>
                 <text class="no-more">没有更多了...</text>
@@ -70,7 +69,7 @@
                 <text>什么都没有搜到呢，换个关键词试试吧</text>
             </div>
         </scroller>
-        <image class="map-icon" v-if="sceneType==3" :src="icon.map" @click="goCurrentLocation"></image>
+        <image v-if="sceneType==3" class="map-icon" :src="icon.map" @click="goCurrentLocation"></image>
         <div class="modal">
             <!-- 天气弹窗 -->
             <midea-dialog  :show="weather.showDialog" @close="closeDialog('weather')" @mideaDialogCancelBtnClicked="dialogCancel('weather')" @mideaDialogConfirmBtnClicked="weatherDialogConfirm" >
@@ -92,6 +91,7 @@
         top: 30px;
     }
     .next-text{
+        padding: 10px;
         font-size: 32px;
     }
     .hd{
@@ -243,36 +243,20 @@
                     rightImg: 'assets/img/b.png'
                 },
                 sceneType: '',
+                direction: '',
                 hours: [],
                 minutes: [],
                 week: [
                     { title: '一', value: 'Monday', repeat: 0 },
-                    { title: '二', value: 'Tuesday', repeat: 1 },
+                    { title: '二', value: 'Tuesday', repeat: 0 },
                     { title: '三', value: 'Wednesday', repeat: 0 },
                     { title: '四', value: 'Thursday', repeat: 0 },
-                    { title: '五', value: 'Friday', repeat: 1 },
-                    { title: '六', value: 'Saturday', repeat: 1 },
+                    { title: '五', value: 'Friday', repeat: 0 },
+                    { title: '六', value: 'Saturday', repeat: 0 },
                     { title: '日', value: 'Sunday', repeat: 0 }
                 ],
                 weather: {
-                    data: [
-                        {
-                            title: '晴',
-                            value: 'sunny'
-                        },
-                        {
-                            title: '阴天',
-                            value: 'cloudy'
-                        },
-                        {
-                            title: '下雨',
-                            value: 'rainy'
-                        },
-                        {
-                            title: '下雪',
-                            value: 'snow'
-                        },
-                    ],
+                    data: ['晴','阴天','下雨','下雪'],
                     activeTypeIndex: 0,
                     activeSwitch: 'min',
                     showDialog: false
@@ -286,7 +270,9 @@
                     max: 'min'
                 },
                 activeHour: '',
-                activeMinute: '',
+                activeMinute: '00',
+                activeWeatherTemperature: '',
+                activeWeatherStatus: '',
                 gpsInfo: {},
                 showMapSearchResult: false,
                 mapSearchResult: [],
@@ -337,20 +323,12 @@
                     }else if (this.direction == 2) {
                         this.title = '离开某地'
                     }
-                    nativeService.getGPSInfo({
-                        desiredAccuracy: "10",
-                        distanceFilter: "10",
-                        alwaysAuthorization: "0" 
-                    }).then( (res) => {
-                        this.gpsInfo = res
-                    }).catch((error) => {
-                        nativeService.alert('获取不到当前城市，请开启定位权限')
-                    })
+                   
                 }
                 if (this.sceneType == 4){
                     this.title = '在某个时间'
-                    this.hours = this.generateListArray(0,24)
-                    this.minutes = this.generateListArray(0,60)
+                    this.hours = this.generateListArray(0,23)
+                    this.minutes = this.generateListArray(0,59)
                 }
                 if (this.sceneType == 6){
                     this.title = '天气变化'
@@ -361,18 +339,18 @@
             goBack(){
                 nativeService.goBack()
             },
-            goNext(){
-                this.goTo('selectDevice', {}, {type: this.type})
-            },
             setRepeat(i){
-                this.week[i].repeat = !this.week[i].repeat
+                let tmp = {
+                    0: 1,
+                    1: 0
+                }
+                this.week[i].repeat = tmp[this.week[i].repeat]
             },
             generateListArray(min, max){
                 let tmp = []
                 let len  = max-min+1
                 for (let i=0; i<len; i++){
-                    tmp[i] = { index: i, value: (i+min)>9?(i+min):'0'+(i+min)}
-                    
+                    tmp[i] = { index: i, value: ( (i+min)<9 && (i+min)>=0 )?'0'+(i+min):(i+min) }
                 }
                 return tmp
             },
@@ -401,10 +379,10 @@
             */
             // 时间 start
             setActiveHour(hour){
-                this.activeHour = hour
+                this.activeHour = hour.value
             },
             setActiveMinute(minute){
-                this.activeMinute = minute
+                this.activeMinute = minute.value
             },
             // 时间 end
             // 地图部分 start
@@ -424,7 +402,6 @@
                 }
 
                 nativeService.searchMapAddress(searchParam).then( (res) => {
-                    nativeService.alert(111)
                     if (res.status == 0) {
                         this.mapSearchResult = res.resultList
                         this.showMapSearchResult = true
@@ -480,7 +457,46 @@
                 this.weather.showDialog = false
             },
             setActiveWeatherTemperature(wTemp){
-                this.activeWeatherTemperature = wTemp
+                this.activeWeatherTemperature = wTemp.value
+            },
+            goNext(destination){
+                let weeklyString = ''
+                for (let i=0; i<this.week.length; i++) {
+                    weeklyString += this.week[i].repeat
+                }
+                let params = {
+                    sceneType: this.sceneType,
+                    weekly: weeklyString
+                }
+                if (this.sceneType == 3) {
+                    let tmp = []
+                    Object.keys(destination).map(function(x){
+                        tmp.push( x + '='+ encodeURIComponent(destination[x]))
+                    })
+                    destination = tmp.join('&')
+
+                    params.destination = destination
+                    params.direction = this.direction
+                }
+                if (this.sceneType == 4) {
+                    if ( !this.activeHour ) {
+                        nativeService.alert('还没有设置启动时间哦')
+                        return
+                    }
+                    params.startTimeHour = this.activeHour
+                    params.startTimeMinute = this.activeMinute
+                }
+                if (this.sceneType == 6 ) {
+                    if ( !this.activeWeatherTemperature ) {
+                        nativeService.alert('还没有设定温度哦')
+                        return
+                    }
+                    params.weatherTemperature = this.activeWeatherTemperature
+                    params.weatherStatus = encodeURIComponent(this.weather.data[this.weather.activeTypeIndex])
+                    let logical = this.weather.activeSwitch=='低于'?'<':'>'
+                    params.logical = logical
+                }
+                this.goTo('autoBindDevices', {}, params )
             }
         },
         created(){

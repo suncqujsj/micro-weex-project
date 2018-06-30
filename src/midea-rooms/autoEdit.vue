@@ -2,47 +2,57 @@
    <div class="wrap" :style="wrapStyle">
         <div class="row-sb hd">
             <text class="hd-text font-grey" @click="goBack">取消</text>
-            <text class="hd-text">{{auto.name}}</text>
+            <text class="hd-text">{{autoDetail.name}}</text>
             <text class="hd-text font-grey"  @click="save">保存</text>
         </div>
         <div class="content">
             <div v-if="sceneType != 2">
-                <div class="row-sb floor">
-                    <text>启用</text>
-                    <div style="margin-top:10px">
-                        <switch-bar :checked="isAutoOpen" @change="openAuto"></switch-bar>
+                <div style="background-color:#fff">
+                    <div class="row-sb auto-name-floor">
+                        <text>名称</text>
+                        <input class="auto-name" type="text" placeholder="" :value="autoDetail.name" @change="editAutoName" @return="editAutoName"/>
+                    </div>
+                    <div class="row-sb floor auto-switch-floor">
+                        <text>启用</text>
+                        <div>
+                            <switch-bar :checked="autoDetail.enable" @change="openAuto"></switch-bar>
+                        </div>
                     </div>
                 </div>
                 <div>
                     <text class="sub-hd">当如下条件满足时</text>
-                    <midea-cell :title="auto.name" height="146" :hasArrow="true" :clickActivied="true" :itemImg="auto.image" @mideaCellClick="goAutoTypeSelect" :cellStyle="{paddingLeft: '30px'}"></midea-cell>
+                    <div @click="goAutoTypeSet" class="row-sb floor">
+                        <div class="row-s">
+                            <image class="icon" :src="autoDetail.image"></image>
+                            <text v-if="sceneType==3">在{{weekDesc}}时</text>
+                            <!-- <text v-if="sceneType==4">在{{autoDetail.location.direction}} {{autoDetail.location.address}}时</text>
+                            <text v-if="sceneType==6">在天气{{autoDetail.weather.weatherStatus}},气温{{autoDetail.weather.temperature}} 时</text> -->
+                        </div>
+                        <image class="icon-next" :src="icon.next"></image>
+                    </div>
                 </div>
             </div>
             <div>
                 <text class="sub-hd">设备</text>
                 <div class="device-box row-sb"> 
-                    <div class="device" v-for="(device, idx) in devices">
-                        <div @click="setDevice(device)">
-                            <image class="device-img" :src="device.img"></image>
-                            <text class="device-name">{{device.name}}</text>
-                            <text class="device-desc">{{device.desc}}</text>
+                    <div class="device" v-for="(item, idx) in autoDetail.task">
+                        <div @click="setDevice(item)">
+                            <!-- <image class="device-img" :src=""></image> -->
+                            <text class="device-name">{{devices[item.applianceCode].name}}</text>
                         </div>
-                        <image class="check-icon" :src="icon[device.status]" @click="checkOn(device, idx)"></image>
+                        <!-- <image class="check-icon" :src="icon[devices[item.applianceCode].status]" @click="checkOn(item, idx)"></image> -->
                     </div>
                 </div>
                 <text class="select-btn" @click="goSelect">选择设备</text>
             </div>
         </div>
-        <text class="delete" @click="deleteQuickStart">删除快捷操作</text>
+        <div class="delete" :style="deleteStyle"><text class="delete-text"  @click="deleteAuto">删除快捷操作</text></div>
    </div>
 </template>
 
 <style>
-    .row-sb{
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-     }
+    .row-sb{ flex-direction: row; align-items: center; justify-content: space-between; }
+    .row-s{ flex-direction: row; align-items: center; justify-content: flex-start; }
     .wrap{ background-color: #f2f2f2; }
     .hd{
         background-color: #fff;
@@ -52,7 +62,13 @@
         padding-right: 30px;
     }
     .hd-text{ font-size: 32px; }
-    .floor{ background-color: #fff; padding: 25px;}
+    .floor{ 
+        background-color: #fff; 
+        padding-left: 25px;
+        padding-right: 25px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
     .font-grey {
         color: #666;
     }
@@ -65,6 +81,20 @@
         margin-top: 33px;
         margin-left:30px;
         margin-bottom: 14px;
+    }
+    .auto-name{
+        width: 200px;
+        height: 70px;
+        margin-left: 100px;
+    }
+    .auto-name-floor{
+        margin-left: 25px;
+        padding-right: 25px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        border-bottom-color: #e5e5e5;
+        border-bottom-style: solid;
+        border-bottom-width: 2px;
     }
     .device-box{
         padding-left: 32.25px;
@@ -113,19 +143,27 @@
     }
     .delete{
         width: 750px;
-        position: fixed;
-        bottom: 48px;
-        padding: 27px;
-        background-color: #fff;
         position: absolute;
+        left:0;
+        right:0;
+        background-color: #fff;
+    }
+    .delete-text{
         color: #FF3B30;
+        padding: 27px;
         text-align: center;
         font-size: 32px;
+    }
+    .icon-next{
+        width: 12px;
+        height: 24px;
     }
 </style>
 
 <script>
+    import { url } from './config/config.js'
     import base from './base'
+
     import nativeService from '@/common/services/nativeService.js'
     import MideaHeader from '@/midea-component/header.vue'
     import MideaCell from '@/midea-component/cell.vue'
@@ -138,7 +176,8 @@
             return {
                 icon: {
                     check:  'assets/img/check_on.png',
-                    uncheck: 'assets/img/check_off.png'
+                    uncheck: 'assets/img/check_off.png',
+                    next: 'assets/img/more.png'
                 },
                 header: {
                     title: '设置',
@@ -147,49 +186,52 @@
                     leftImg: 'assets/img/b.png',
                     rightImg: 'assets/img/b.png'
                 },
-                auto: {
-                    "sceneId":"31025465",
-                    "name":"回家",
-                    "homegroupId":"1452652",
-                    "enable":"1",
-                    "startTime":" 08:00",
-                    "weekly":" 1111111",
-                    "timeZone":" 00:00-10:30",
-                    "location":{
-                        "address":"A8音乐大厦",
-                        "distance":"500",
-                        "latitude":"23.56",
-                        "longitude":"105.65",
-                        "direction":"1",
-                        "directionName":"接近位置"
-                    },
-                    "sceneType":"1",
-                    "task": [{
-                        " applianceCode":"4565215",
-                        " applianceType":"0xAC",
-                        " modelNum":"456",
-                        " command":{
-                        " mode ":" auto ",
-                        " power ":" on ",
-                        " wind_speed":" 20 "
-                        }
-                    }]
-                },
-                devices: [
-                    {
-                        name: '空调',
-                        desc: '开机 制冷 26℃',
-                        img: 'assets/img/stop_on.png',
-                        status: 'uncheck'
-                    },
-                    {
-                        name: '空调',
-                        desc: '开机 制冷 26℃',
-                        img: 'assets/img/stop_on.png',
+                auto: {},
+                devices: {
+                    '111111': {
+                        name: 'name1',
                         status: 'check'
-                    }
-                ],
-                isAutoOpen: false
+                    },
+                    '2222222': {
+                        name: 'name2',
+                        status: 'check'
+                    },
+                },
+                autoDetail: {
+                 "image": "assets/img/location.png",
+                    "task": [
+                        {
+                            "applianceCode": null,
+                            "command": {
+                                "mode": "",
+                                "power": ""
+                            }
+                        }
+                    ],
+                    "sceneType": null,
+                    "createTime": "",
+                    "enable": null,
+                    "sceneId": null,
+                    "name": "",
+                    "weather": "",
+                    "updateTime": "",
+                    "location": {
+                        "address": "",
+                        "distance": "",
+                        "latitude": "",
+                        "directionName": "",
+                        "longitude": "",
+                        "direction": "",
+                    },
+                    "homegroupId": null,
+                    "weekly": "",
+                },
+                weekDesc: '',
+                conditionName: null,
+                directionText: {
+                    1: '到达',
+                    2: '离开'
+                }
             }
         },
         computed: {
@@ -199,46 +241,119 @@
                 }
                 return tmp
             },
-            condition(){
-                return this.options[this.type] || ''
+            deleteStyle(){
+                let tmp = {
+                    top: this.pageHeight-200+'px'
+                }
+                return tmp
             }
         },
         methods: {
-            initData(){
-                this.sceneType = nativeService.getParameters('sceneType')
-            },
             goBack(){
                 nativeService.goBack()
+            },
+            initData(){
+                this.sceneType = nativeService.getParameters('sceneType')
+                this.sceneId = nativeService.getParameters('sceneId')
+                nativeService.getItem('uid', (res)=>{
+                    if (res.result == 'success'){
+                        this.uid = res.data
+                        nativeService.getItem('homegroupId',(res)=>{
+                            if (res.result == 'success'){
+                                this.homegroupId = res.data
+                                this.getAutoDetail()
+                            }
+                        })
+                    }
+                })
+            },
+            getAutoDetail(){
+                let reqUrl = url.auto.detail
+                let reqParams = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    sceneId: this.sceneId
+                }
+                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                    if (rtnData.code == 0) {
+                        this.autoDetail = rtnData.data
+                        let weekText = {
+                            1: '周一',
+                            2: '周二',
+                            3: '周三',
+                            4: '周四',
+                            5: '周五',
+                            6: '周六',
+                            7: '周日',
+                        }
+                        let weekTmp = []
+                        let week =  this.autoDetail.weekly.split('')
+                        for (let i=0; i<week.length; i++) {
+                            if (week[i] == '1' ) {
+                                weekTmp.push(weekText[i])
+                            }
+                        }
+                        weekTmp = weekTmp.join('、')
+                        this.weekDesc = weekTmp
+                    }
+                }).catch( (error )=>{
+                    
+                })
+
             },
             save(){
                 
             },
-            checkOn(device, index){
+            checkOn(item, index){
                 let tmp = {
                     check: 'uncheck',
                     uncheck: 'check'
                 }
-                this.devices[index].status = tmp[device.status]
+                this.devices[item.applianceCode].status = tmp[this.devices[item.applianceCode].status]
             },
             goSelect(){
                 this.goTo('selectDevice')
             },
-            goAutoTypeSelect(){
-                this.goTo('autoTypeSelect', {}, {type: this.type})
+            goAutoTypeSet(){
+                this.goTo('autoTypeSet', {}, {type: this.type})
             },
-            deleteQuickStart(){
-                nativeService.toast('delete')
+            deleteAuto(){
+                let reqUrl = url.auto.delete
+                let reqParams = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    sceneId: this.sceneId,
+                    enable: '2'
+                }
+                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                    if (rtnData.code == 0) {
+                        nativeService.alert('删除成功!', function(){
+                            nativeService.goTo('weex.js')
+                        })
+                    }
+                }).catch( (error )=>{
+                    
+                })
             },
             setDevice(device){
-                this.goTo('setDevice')
+                let params = {}
+                params.addOrEdit = 'edit'
+                params.sceneId = this.autoDetail.sceneId
+                this.goTo('setDevice', {}, params)
             },
             openAuto(){
-
+                let tmp = {
+                    '1': '0',
+                    '0': '1'
+                }
+                this.autoDetail.enable = tmp[this.autoDetail.enable]
+            },
+            editAutoName(value){
             }
         },
         created(){
-            
             this.initData()
+           
         }
     }
 </script>

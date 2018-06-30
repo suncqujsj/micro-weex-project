@@ -733,6 +733,12 @@ export default {
         })
         return this.commandInterfaceWrapper(param)
     },
+    getCityInfo(params){
+         let param = Object.assign(params, {
+             operation: 'getCityInfo'
+         })
+         return this.commandInterfaceWrapper(param)
+    },
     //获取登录态信息
     getLoginInfo() {
         let param = {

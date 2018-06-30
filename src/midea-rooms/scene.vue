@@ -5,13 +5,13 @@
             <div class="setting" @click="goSetting()">
                 <text class="setting-text white">设置</text>
             </div>
-            <div v-if="scene.type=='1' || scene.type=='2' || scene.type=='3' " class="up-block" >
+            <div v-if="scene.roomType=='1' || scene.roomType=='2' || scene.roomType=='3' " class="up-block" >
                 <div class="up-desc">
                     <text class="desc white">{{temperatureStatus}} {{pm25Status}}</text>
                     <midea-vote :defaulSelectd="Number(scene.indicator.level)" :disabled="true" :styles="style.vote" :imgPath="voteImg"></midea-vote>
                     <text class="improve white">一键优化</text>
                 </div>
-                <div class="up-status row-sa" v-if="scene.type=='1' || scene.type=='2'">
+                <div class="up-status row-sa" v-if="scene.roomType=='1' || scene.roomType=='2'">
                     <div>
                         <text class="info-text font14 white">温度</text>
                         <div class="row-c status-value">
@@ -36,7 +36,7 @@
                         <text class="info-text font12 white">{{pm25Status}}</text>
                     </div>
                 </div>
-                <div class="up-status row-sa" v-if="scene.type=='3'">
+                <div class="up-status row-sa" v-if="scene.roomType=='3'">
                     <div>
                         <text class="info-text font14 white">{{scene.indicator.work_stats}}</text>
                         <div class="row-c status-value">
@@ -51,7 +51,7 @@
                             <text class="font16 white mgb-10">%</text>
                         </div>
                     </div>  
-                     <div v-if="scene.type=='3' ">
+                     <div v-if="scene.roomType=='3' ">
                         <text class="info-text font14 white">还需加热</text>
                         <div class="row-c status-value">
                             <text class="font36 white">{{scene.indicator.remain_time}}</text>
@@ -60,7 +60,7 @@
                     </div>
                 </div>
             </div>
-            <div v-if="scene.type=='4'" class="up-block balcony-block">
+            <div v-if="scene.roomType=='4'" class="up-block balcony-block">
                 <text class="weather white font12">todo 无法获取天气，请在系统设置中打开定位服务</text>
                 <slider>
                     <div class="barchart">
@@ -71,7 +71,7 @@
                     </div>
                 </slider>
             </div>
-            <div v-if="scene.type=='4'" class="wash-list wash-item row-sb" @click="buyShampoo">
+            <div v-if="scene.roomType=='4'" class="wash-list wash-item row-sb" @click="buyShampoo">
                 <text class="font16 white">购买洗涤剂</text>
                 <image class="next" :src="icon.next"></image>
             </div>
@@ -79,7 +79,7 @@
     
         <div class="down-block row-sa">
             <div v-for="mode in scene.modeList" @click="changeMode(mode.modeId)">
-                <image class="down-icon" :src="icon.actions[mode.modelId][mode.action[0].command.power]"></image>
+                <image class="down-icon" :src="icon.actions[mode.modelId]"></image>
                 <text class="down-text">{{mode.modelName}}</text>
             </div>
         </div>
@@ -308,7 +308,7 @@
             },
             wrapStyle(){
                 return { 
-                    backgroundImage: this.style.linearBg[this.scene.type],
+                    backgroundImage: this.style.linearBg[this.scene.roomType],
                     height: this.pageHeight*0.75 + 'px',
                     position: 'relative',
                     overflow: 'hidden'
@@ -387,61 +387,21 @@
                     fail: '',
                     hanging: '',
                     actions: {
-                        '1001': {
-                            on: 'assets/img/home_on.png',
-                            off: 'assets/img/home_off.png'
-                        },
-                        '1002': {
-                            on: 'assets/img/comfort_on.png',
-                            off: 'assets/img/comfort_off.png'
-                        },
-                        '1003': {
-                            on: 'assets/img/eco_on.png',
-                            off: 'assets/img/eco_off.png'
-                        },
-                        '1004': {
-                            on: 'assets/img/shut_on.png',
-                            off: 'assets/img/shut_off.png'
-                        },
-                        '1005': {
-                            on: 'assets/img/home_on.png',
-                            off: 'assets/img/home_off.png'
-                        },
-                        '1006': {
-                            on: 'assets/img/comfort_on.png',
-                            off: 'assets/img/comfort_off.png'
-                        },
-                        '1007': {
-                            on: 'assets/img/eco_on.png',
-                            off: 'assets/img/eco_off.png'
-                        },
-                        '1008': {
-                            on: 'assets/img/shut_on.png',
-                            off: 'assets/img/shut_off.png'
-                        },
-                        '1009': {
-                            on: 'assets/img/comfort_on.png',
-                            off: 'assets/img/comfort_off.png'
-                        },
-                        '1010': {
-                            on: 'assets/img/eco_on.png',
-                            off: 'assets/img/eco_off.png'
-                        },
-                        '1011': {
-                            on: 'assets/img/stop_on.png',
-                            off: 'assets/img/stop_off.png'
-                        },
+                        '1001': 'assets/img/home_on.png',
+                        '1002': 'assets/img/comfort_on.png',
+                        '1003': 'assets/img/eco_on.png',
+                        '1004': 'assets/img/shut_on.png',
+                        '1005': 'assets/img/home_on.png',
+                        '1006': 'assets/img/comfort_on.png',
+                        '1007': 'assets/img/eco_on.png',
+                        '1008': 'assets/img/shut_on.png',
+                        '1009': 'assets/img/comfort_on.png',
+                        '1010': 'assets/img/eco_on.png',
+                        '1011': 'assets/img/stop_on.png',
                         '1012': 'assets/img/power_on.png',
                         '1013': 'assets/img/power_off.png',
-                        '1014': {
-                            on: 'assets/img/alarm_on.png',
-                            off: 'assets/img/alarm_off.png'
-                        },
-                        '1015': {
-                            on: 'assets/img/start_on.png',
-                            off: 'assets/img/start_off.png'
-                        },
-
+                        '1014': 'assets/img/alarm_on.png',
+                        '1015': 'assets/img/start_on.png',
                     }
                 },
                 style: {
@@ -512,7 +472,7 @@
                 nativeService.goBack()
             },
             goSetting(){
-                this.goTo('setting', {}, {sceneType: this.sceneType, sceneId: this.sceneId})
+                this.goTo('setting', {}, {roomType: this.roomType, sceneId: this.sceneId})
             },
             changeMode(mode){
                 this.activeModeDevices = mode
@@ -591,7 +551,7 @@
             },
             executeModeCheck(){
                 return new Promise((resolve, reject)=>{
-                    let reqUrl = url.scene.status
+                    let reqUrl = url.scene.modeExecute
                     let reqParams = {
                         uid: this.uid,
                         homegroupId: this.homegroupId,
@@ -613,7 +573,7 @@
         },
         created(){
             this.sceneId = nativeService.getParameters('sceneId')
-            this.sceneType = nativeService.getParameters('sceneType')
+            this.roomType = nativeService.getParameters('roomType')
       
             nativeService.getItem('uid', (res)=>{
                 if (res.result == 'success'){

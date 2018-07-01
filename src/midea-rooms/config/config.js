@@ -1,7 +1,7 @@
 export const domain = 'http://iot-dev.smartmidea.net'
 export const url = {
     scene: {
-        applianceAdd: domain +'/v1/scene/appliance/add',
+        applianceAdd: domain + '/v1/scene/appliance/add',
         applianceDelete: domain + '/v1/scene/appliance/delete',
         list: domain + '/v1/scene/list',
         detail: domain + '/v1/scene/detail',
@@ -341,7 +341,7 @@ export const applianceActions = {
     },
     "0x10": {
         "name": "插座",
-        "actions":{
+        "actions": {
             "power": {
                 "type": "switch",
                 "value": {

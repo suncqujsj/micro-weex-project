@@ -10,7 +10,7 @@
                 <div v-for="col in colList">
                     <div v-for="item in col" class="auto row-sb"  @click="editAuto(item)">
                         <div class="row-s">
-                            <image class="icon" :src="autoIcon[item.sceneType]"></image>
+                            <image class="icon" :src="item.image"></image>
                             <text class="auto-name">{{item.name}}</text>
                         </div>
                         <image class="auto-btn" :src="icon.autoBtn[item.enable]"  @click="executeAuto(item.autoId)">
@@ -107,13 +107,6 @@
                         1: 'assets/img/autooo.png',
                     }
                 },
-                autoIcon: {
-                    1: 'assets/img/slhome.png',
-                    2: 'assets/img/slsleep.png',
-                    3: 'assets/img/slweather.png',
-                    4: 'assets/img/slhome.png',
-                    5: 'assets/img/slweather.png'
-                },
                 sceneImg: {
                     1: 'assets/img/parlour.png',
                     2: 'assets/img/bed.png',
@@ -126,9 +119,40 @@
                     4: '加热中',
                     5: '热水充足'
                 },
-                autoList: [],
+                autoList: [
+                    {
+                        "image": "assets/img/hand.png",
+                        "task": [
+                            {
+                                "applianceCode": 111111,
+                                "command": {
+                                    "mode": "auto",
+                                    "power": "true"
+                                }
+                            },
+                            {
+                                "applianceCode": 2222222,
+                                "command": {
+                                    "mode": "auto",
+                                    "power": "false"
+                                }
+                            }
+                        ],
+                        "sceneType": 2,
+                        "createTime": "2018-07-01 18:16:33",
+                        "enable": 1,
+                        "sceneId": 103,
+                        "name": "手动",
+                        "weather": "",
+                        "updateTime": "2018-07-01 18:16:33",
+                        "location": "",
+                        "homegroupId": 150366,
+                        "weekly": "1111111"
+                    }
+                ],
                 sceneList: null,
-                user: null
+                user: null,
+                autoTemplate: {}
             }
         },
         methods: {  
@@ -143,11 +167,15 @@
                 
             },
             editAuto(auto){
-                let params = {
-                    sceneType: auto.sceneType,
-                    sceneId: auto.sceneId
+                if (auto.isAdd){                    
+                    this.goTo('autoTypeSet',{}, {sceneType: auto.sceneType})
+                }else{
+                    let params = {
+                        sceneType: auto.sceneType,
+                        sceneId: auto.sceneId
+                    }
+                    this.goTo("autoEdit", {}, params)
                 }
-                this.goTo("autoEdit", {}, params)
             },
             executeAuto(autoId){
                 nativeService.alert('executeAuto')
@@ -164,7 +192,52 @@
                 this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                     if (rtnData.code == 0) {
                         this.autoList = rtnData.data.list
-                        nativeService.setItem('userAutos', JSON.stringify(rtnData.data.list))
+                        let basicTemplate = {
+                            '2': {
+                                isAdd: true,
+                                image: 'assets/img/hand.png',
+                                sceneType: 2,
+                                name: '手动'
+                            },
+                            '3.1':{
+                                isAdd: true,
+                                image: 'assets/img/location.png',
+                                sceneType: 3,
+                                direction: 1,
+                                name: '到达某地'
+                            },
+                            '3.2': {
+                                isAdd: true,
+                                image: 'assets/img/location.png',
+                                sceneType: 3,
+                                direction: 2,
+                                name: '离开某地'
+                            },
+                            '4': {
+                                isAdd: true,
+                                image: 'assets/img/clock.png',
+                                sceneType: 4,
+                                name: '在某个时间'
+                            },
+                            '6': {
+                                image: 'assets/img/slweather.png',
+                                sceneType: 6,
+                                name: '在某个时间'
+                            }
+                        }
+                        let templateName = ['2', '3.1', '3.2', '4', '6'], tmpTemp =  []
+                        for (var i in this.autoList) {
+                            let sType = String(this.autoList[i].sceneType)
+                            if (sType == '3') {
+                                sType = sType + '.' +this.autoList[i].location.direction
+                            }
+                            templateName.splice(templateName.indexOf(sType), 1)
+                        }
+                        for (var x in templateName) {
+                            tmpTemp.push(basicTemplate[templateName[x]])
+                        }
+                        this.autoList = this.autoList.concat(tmpTemp)
+                        
                     }
                 }).catch( (error )=>{
                 })
@@ -200,17 +273,10 @@
             nativeService.setItem('homegroupId', this.homegroupId)
 
             this.getAutoList()
-            this.getSceneList()
+            // this.getSceneList()
             
-            nativeService.getCurrentHomeInfo().then( (res)=>{
-                nativeService.setItem('home', JSON.stringify(res))
-            }).catch((err)=>{
-                nativeService.toast(err)
-            })
-
-            
-            // nativeService.getCityInfo({cityName: '深圳'}).then((res)=>{
-            //     nativeService.alert(res)
+            // nativeService.getCurrentHomeInfo().then( (res)=>{
+            //     nativeService.setItem('home', JSON.stringify(res))
             // }).catch((err)=>{
             //     nativeService.toast(err)
             // })

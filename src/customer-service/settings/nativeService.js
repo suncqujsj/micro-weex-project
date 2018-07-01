@@ -2,7 +2,7 @@ import nativeService from '@/common/services/nativeService'
 import util from '@/common/util/util'
 import { SERVICE_STORAGE_KEYS } from './globalKeys'
 const cssRrequestSendWithApp = !true
-const requestSendWithApp = !true
+const requestSendWithApp = true
 const HOST_CSS = cssRrequestSendWithApp ? '' : "http://csuat.midea.com"
 const HOST_CENTER_APP = requestSendWithApp ? '' : "http://cmms2.midea.com"
 const HOST_CENTER = requestSendWithApp ? '' : "http://cmms2.midea.com"

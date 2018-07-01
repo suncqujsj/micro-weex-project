@@ -245,8 +245,14 @@ export default {
                                 county: countyObj.regionCode,
                                 countyName: countyObj.regionName,
                             })
+                        }).catch((error) => {
+                            nativeService.toast(nativeService.getErrorMessage(error))
                         })
+                    }).catch((error) => {
+                        nativeService.toast(nativeService.getErrorMessage(error))
                     })
+                }).catch((error) => {
+                    nativeService.toast(nativeService.getErrorMessage(error))
                 })
             })
         },

@@ -102,6 +102,8 @@ export default {
                             this.loadingEnd = true
                         });
                     }
+                }).catch((error) => {
+                    nativeService.toast(nativeService.getErrorMessage(error))
                 })
             }, 1500)
         },

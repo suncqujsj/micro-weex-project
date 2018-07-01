@@ -152,6 +152,8 @@ export default {
                         this.hasNext = false
                         this.loadingEnd = true
                     }
+                }).catch((error) => {
+                    nativeService.toast(nativeService.getErrorMessage(error))
                 })
             }, 1500)
         },
@@ -208,6 +210,8 @@ export default {
                 this.$nextTick(e => {
                     this.$refs.urgeOrderActionsheet.open();
                 });
+            }).catch((error) => {
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         },
         closeUrgeOrderActionsheet() {
@@ -264,6 +268,8 @@ export default {
             nativeService.cancelserviceorder(param).then(() => {
                 order.serviceOrderStatus = '22'
                 this.$set(this.orderList, this.selectedOrderIndex, order)
+            }).catch((error) => {
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         },
 

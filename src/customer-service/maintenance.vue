@@ -42,7 +42,7 @@
                         <image class="fault-reason-icon" src="./assets/img/service_ic_warming@3x.png" resize='contain'></image>
                         <text class="fault-reason-label">{{excludedFault[0].faultServiceDesc}}</text>
                         <text class="right-text fault-reason-right-text">可能原因</text>
-                        <image class="arrow-icon" src="../img/arrow_right.png" resize='contain'></image>
+                        <image class="arrow-icon" src="./img/arrow_right.png" resize='contain'></image>
                     </div>
                 </div>
                 <midea-cell :hasBottomBorder="true" :hasTopBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectServiePeriod">
@@ -60,7 +60,7 @@
                         <text class="cell-label">服务地址</text>
                         <text class="cell-label-star">*</text>
                         <text class="right-text address-text">{{userAddressDesc}}</text>
-                        <image class="arrow-icon" src="../img/arrow_right.png" resize='contain'></image>
+                        <image class="arrow-icon" src="./img/arrow_right.png" resize='contain'></image>
                     </div>
                 </div>
             </div>
@@ -444,6 +444,8 @@ export default {
             nativeService.appexcludedfaulttraces(param).then(() => {
                 // this.showExcludedFaultInfo = false
                 this.excludedFault[index].helpfulChecked = isHelpful
+            }).catch((error) => {
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         },
         excludedFaultInfoClose(event) {

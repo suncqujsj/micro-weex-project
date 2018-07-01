@@ -185,7 +185,7 @@
     },
     data: () => ({
       //arrowIcon: icon.arrowIcon
-      arrowIcon:"../img/arrow_right.png"
+      arrowIcon:"./img/arrow_right.png"
     }),
     methods: {
       cellClicked (e) {

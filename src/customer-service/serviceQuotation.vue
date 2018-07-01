@@ -106,6 +106,8 @@ export default {
                 nativeService.dochargecomfirm(param).then((resp) => {
                     nativeService.toast("确认成功")
                     this.isConfirmed = true
+                }).catch((error) => {
+                    nativeService.toast(nativeService.getErrorMessage(error))
                 })
             })
         },
@@ -134,8 +136,12 @@ export default {
                     if (this.chargeList && this.chargeList.length > 0 && this.chargeList[0].chargeStatus == "11") {
                         this.isNeedCharge = true
                     }
+                }).catch((error) => {
+                    nativeService.toast(nativeService.getErrorMessage(error))
                 })
             }
+        }).catch((error) => {
+            nativeService.toast(nativeService.getErrorMessage(error))
         })
     }
 }

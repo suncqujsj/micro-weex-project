@@ -175,6 +175,8 @@ export default {
             nativeService.userAddrDelete({ userAddrId: this.userAddress.userAddrId }).then(() => {
                 this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddress" })
                 this.back()
+            }).catch((error) => {
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         },
         submit() {

@@ -22,12 +22,19 @@ export const all = [
             "errorCode": 0,
 		    "params": {
 		        "power": "on",
-		        "mode": "cool",
-		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "work_status": "1",
+		        "error_code": "0",
+		        "temperature": "30",
+		        "time_reserve_setting_hr":"12",
+		        "time_reserve_setting_min":"12",
+		        "time_reserve_hr": "4",
+		        "time_reserve_min": "50",
+		        "time_warm_hr": "1",
+		        "time_warm_min": "20",
+		        "time_work_hr": "1",
+		        "time_work_min": "20",
+		        "time_pressurize_hr": "1",
+		        "time_pressurize_min": "1"
 		    }
         }
     },
@@ -103,15 +110,12 @@ export const all = [
         data: {
             "msg": "",
             "result": {
-                "deviceID": "1099511629098",
-                "deviceSSID": "",
-                "deviceName": "冰箱541F",
-                "deviceType": "0xCA",
+                 "deviceId": "1099511629098",
+                "deviceName": "空调541F",
+                "deviceType": "0xAC",
                 "deviceSubType": "0",
-                "online": "1",
-                "deviceDescription": "",
-                "activated": "",
-                "isDeviceOwner": "1"
+                "isOnline": "1",
+                "deviceSn": "",
             },
             "errorCode": "0"
         }

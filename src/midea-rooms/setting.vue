@@ -11,7 +11,7 @@
                     </midea-list>
                 </div>
             </div>
-            <div class="block" v-if="sceneType == 1 || sceneType == 2">
+            <div class="block" v-if="roomType == 1 || roomType == 2">
                 <div class="range-block">
                     <div class="row-sb range-hd">
                         <text class="text">适宜温度</text>
@@ -31,14 +31,14 @@
                     </div>
                 </div>
             </div>
-            <div class="block" v-if="sceneType == 3">
+            <div class="block" v-if="roomType == 3">
                 <midea-list style="background-color:#fff" v-for="(prop,i) in scenePropFormat" :idx="i" :hasWrapBorder="false" leftMargin="25px">
                     <midea-cell :title="sceneName[prop.key]" :rightText="prop.value" :hasArrow="true" :clickActivied="true" @mideaCellClick="showPropPop(prop.key)" :hasBottomBorder="false" :cellStyle="{paddingLeft: '0'}"></midea-cell>
                 </midea-list>
             </div>
         </sroller>
         <!-- 客厅/卧室场景指标弹窗 -->
-        <div v-if="sceneType == 1 || sceneType == 2">
+        <div v-if="roomType == 1 || roomType == 2">
             <midea-popup :show="show.temperatureMin" :height="400" @mideaPopupOverlayClicked="closePropPop('temperatureMin')">
                 <div class="row-sb pop-hd">
                     <text class="pop-text" @click="cancelProp('temperatureMin')">取消</text>
@@ -73,7 +73,7 @@
             </midea-popup>
         </div>
         <!-- 卫浴场景指标弹窗 -->
-        <div v-if="sceneType == 3">
+        <div v-if="roomType == 3">
             <midea-popup :show="show.comfortable" :height="400" @mideaPopupOverlayClicked="closePropPop('comfortable')">
                 <div class="row-sb pop-hd">
                     <text class="pop-text" @click="cancelProp('comfortable')">取消</text>
@@ -105,7 +105,7 @@
     .row-sb{ flex-direction: row; align-items: center; justify-content: space-between; }
     .row-sa{ flex-direction: row; align-items: center; justify-content: space-around; }
     .row-e { flex-direction: row; align-items: center; justify-content: flex-end; }
-    .scroller{ background-color: #F2F2F2; }
+    .scroller{ background-color: #F2F2F2; height: 1500px;}
     .block{ margin-bottom: 25px; }
     .range-block{ background-color: #fff; }
     .hd{ padding: 40px; font-size: 28px; color: #777;}
@@ -221,7 +221,17 @@
                     save: '',
                     use: '',  
                 },
-                activeGroupDevice: {}
+                activeGroupDevice: {},
+                userDevices: [
+                    {
+                        "deviceId": "xxxxx", 
+                        "deviceName": "xxxxxx",
+                        "deviceType": "0xAC",
+                        "deviceSubType": "xxxxx", 
+                        "deviceSn": "xxxxxxxxx",
+                        "isOnline": 1
+                    }
+                ],
             }
         },
         methods: {
@@ -259,39 +269,39 @@
                     })
                 })
             },
-            formatUserSupportDevices(applianceList){
-            // formatUserSupportDevices(){
-                // let applianceList = [
-                //     {
-                //         "applianceName": "test设备FA xxxxxxx",
-                //         "applianceType": "0xFA",
-                //         "applianceCode": 21990232670864,
-                //         "isRelation": 1
-                //     },
-                //     {
-                //         "applianceName": "test设备FA xxssxxxxx",
-                //         "applianceType": "0xFA",
-                //         "applianceCode": 21990232670864,
-                //         "isRelation": 2
-                //     },
-                //     {
-                //         "applianceType": "0xAC",
-                //         "applianceCode": 21990232670962,
-                //         "isRelation": 1
-                //     },
-                //     {
-                //         "applianceName": "加湿器0008",
-                //         "applianceType": "0xFD",
-                //         "applianceCode": 1099511810436,
-                //         "isRelation": 1
-                //     },
-                //     {
-                //         "applianceName": "净化器0513",
-                //         "applianceType": "0xFC",
-                //         "applianceCode": 1099511810483,
-                //         "isRelation": 1
-                //     }
-                // ]
+            // formatUserSupportDevices(applianceList){
+            formatUserSupportDevices(){
+                let applianceList = [
+                    {
+                        "applianceName": "test设备FA xxxxxxx",
+                        "applianceType": "0xFA",
+                        "applianceCode": 21990232670864,
+                        "isRelation": 1
+                    },
+                    {
+                        "applianceName": "test设备FA xxssxxxxx",
+                        "applianceType": "0xFA",
+                        "applianceCode": 21990232670864,
+                        "isRelation": 2
+                    },
+                    {
+                        "applianceType": "0xAC",
+                        "applianceCode": 21990232670962,
+                        "isRelation": 1
+                    },
+                    {
+                        "applianceName": "加湿器0008",
+                        "applianceType": "0xFD",
+                        "applianceCode": 1099511810436,
+                        "isRelation": 1
+                    },
+                    {
+                        "applianceName": "净化器0513",
+                        "applianceType": "0xFC",
+                        "applianceCode": 1099511810483,
+                        "isRelation": 1
+                    }
+                ]
                 let typeArray = [], typeObj = {}, tmp = []
                 for (let i=0;i<applianceList.length; i++){
                     let typeName = applianceList[i].applianceType
@@ -357,7 +367,6 @@
                         let tmp = this.userSupportDevices[groupIdx][0]
                         tmp.isRelation = 2
                         Vue.set( this.userSupportDevices[groupIdx], 0, tmp)
-                        nativeService.alert(this.userSupportDevices)
                     }).catch((err)=>{
                         nativeService.alert(err)
                     })
@@ -366,7 +375,6 @@
                         let tmp = this.userSupportDevices[groupIdx][0]
                         tmp.isRelation = 1
                         Vue.set( this.userSupportDevices[groupIdx], 0, tmp)
-                        nativeService.alert(this.userSupportDevices)
                     }).catch((err)=>{
                         nativeService.alert(err)
                     })
@@ -386,6 +394,17 @@
                         if (res.code == 0) {
                             resolve(res)
                         }else{
+                            let codeMsg = {
+                                1000: '未知系统错误',
+                                1002: '参数为空',
+                                1105: '账户不存在',
+                                1200: '用户不在家庭',
+                                1202: '用户不是家庭的管理员',
+                                1212: '房间不在家庭里面',
+                                1300: '设备不存在',
+                                1305: '用户不是设备的管理员'
+                            }
+                            nativeService.alert(codeMsg)
                             reject()
                         }
                     }).catch( (err )=>{
@@ -430,7 +449,7 @@
                     homegroupId: this.homegroupId,
                     sceneId: this.sceneId
                 }
-                if (this.sceneType == 1 || this.sceneType == 2) {
+                if (this.roomType == 1 || this.roomType == 2) {
                     switch(propType) {
                         case 'temperatureMin':
                             this.temperatureRange.min = this.activeProp[propType]
@@ -459,7 +478,7 @@
                         temperature: tmpTemp.min + ',' + tmpTemp.max,
                         humidity: tmpHumid.min + ',' + tmpHumid.max
                     })
-                }else if( this.sceneType == 3 ){
+                }else if( this.roomType == 3 ){
                     this.sceneProp[propType] = this.activeProp[propType]
 
                     reqParams.prop = JSON.stringify({
@@ -505,9 +524,10 @@
         },
         created(){
             this.sceneId = nativeService.getParameters('sceneId')
-            this.sceneType = nativeService.getParameters('sceneType')
- 
+            this.roomType = nativeService.getParameters('roomType')
+
             nativeService.getItem('uid', (res)=>{
+                
                 if (res.result == 'success'){
                     this.uid = res.data
 
@@ -517,14 +537,13 @@
 
                             nativeService.getItem('home', (res)=>{
                                 let data = JSON.parse(res.data)
-                                this.userDevices = data.deviceList
+                                // this.userDevices = data.deviceList
 
                                 this.getSupportDevices().then((res)=>{
-                                    // this.userSupportDevices = this.filttAllowedDevices(res.typeList)
                                     this.userSupportDevices = this.formatUserSupportDevices(res.applianceList)
                                     this.scenePropFormat = this.jsonToArray(res.prop)
                                     this.sceneProp = res.prop
-                                    if ( this.sceneType == 1 || this.sceneType == 2 ){
+                                    if ( this.roomType == 1 || this.roomType == 2 ){
                                         this.temperatureRange = {
                                             min: res.prop.temperature.split(',')[0],
                                             max: res.prop.temperature.split(',')[1]

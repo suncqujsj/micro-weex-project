@@ -129,11 +129,16 @@
             },
             goNext(){
                 if (this.autos[this.activeTypeIndex].sceneType == 2){
-                    this.goTo('autoBindDevices')
+                    this.goTo('autoBindDevices', {}, {
+                        sceneType: this.autos[this.activeTypeIndex].sceneType
+                    })
                 }else if ( this.autos[this.activeTypeIndex].sceneType == 3){
-                    this.goTo('autoTypeSelect', {}, { sceneType: this.autos[this.activeTypeIndex].sceneType, direction: this.autos[this.activeTypeIndex].direction })
+                    this.goTo('autoTypeSet', {}, {
+                        sceneType: this.autos[this.activeTypeIndex].sceneType,
+                        direction: this.autos[this.activeTypeIndex].direction
+                    })
                 }else{
-                    this.goTo('autoTypeSelect', {}, { sceneType: this.autos[this.activeTypeIndex].sceneType })
+                    this.goTo('autoTypeSet', {}, { sceneType: this.autos[this.activeTypeIndex].sceneType })
                 }
             }
         },

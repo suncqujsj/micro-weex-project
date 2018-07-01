@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="item-wrapper" :class="[type=='spaceBetween'?'item-wrapper-sb':'']" v-for="(row, i) in dList" :key="i">
-            <div class="item-inner-wrapper" :class="[activeClass(i*cols+index)]" :style="innerStyle" v-for="(item,index) in row" :key="index" @click="itemClicked(i*cols+index)" @touchstart="touchIndex=(i*cols+index)" @touchend="touchIndex=null" @touchleave="touchIndex=null" >
+            <div class="item-inner-wrapper" :class="[disableClick? '' : activeClass(i*cols+index)]" :style="innerStyle" v-for="(item,index) in row" :key="index" @click="itemClicked(i*cols+index)" @touchstart="touchIndex=(i*cols+index)" @touchend="touchIndex=null" @touchleave="touchIndex=null" >
                 <image :class="[direction=='v'?'item-img-v':'item-img-h']" :src="(touchIndex==i*cols+index)?(item.img_actived||item.img):item.img" :style="imgStyle"></image>
                 <text v-if="item.title" :class="[direction=='v'?'item-txt-v':'item-txt-h']" :style="titleStyle">{{item.title}}</text>
                 <image style="height:0px;width:0;" :src="item.img_actived"></image>
@@ -49,6 +49,10 @@ export default {
         customStyles: {
             type: Object,
             default: () => ({})
+        },
+        disableClick: {
+            type: Boolean,
+            default: false
         }
     },
     data: () => ({

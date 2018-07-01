@@ -6,7 +6,7 @@
                 <text class="done-text white">下一步</text>
             </div>
             <div class="content">
-                <text class="hd">当设备处于如下状态时</text>
+                <text class="hd">要控制的电器</text>
                 <text class="sub-hd">请选择电器，点击更改状态</text>
                 <div class="device-box row-sb">
                     <div class="device" v-for="(device, idx) in devices">

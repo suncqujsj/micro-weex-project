@@ -34,7 +34,6 @@ export default {
         appDataChannel: appDataChannel,
         pushKey: 'receiveMessage',
         pushDataChannel: pushDataChannel,
-
         appData: appDataTemplate
     }),
     computed: {

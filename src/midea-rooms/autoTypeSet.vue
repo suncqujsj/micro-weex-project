@@ -1,8 +1,14 @@
 <template>
    <div class="wrap" :style="wrapStyle">
-        <midea-header :title="title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
-        <div  class="next" @click="goNext()">
+        <div v-if="isEdit=0" class="row-sb head">
+            <image class="back" :src="header.leftImg" @click="goBack"></image>
+            <text class="head-text">{{title}}</text>
             <text v-if="sceneType != 3" class="next-text white">下一步</text>
+        </div>
+        <div v-if="isEdit=1" class="row-sb head">
+            <text class="head-text font-grey" @click="goBack">取消</text>
+            <text class="head-text">{{title}}</text>
+            <text class="head-text font-grey"  @click="saveChange">确定</text>
         </div>
         <div class="content">
             <!-- <div v-if="type==1">
@@ -60,7 +66,7 @@
         </div>
         <scroller v-if="sceneType== 3 && showMapSearchResult" class="map-result">
             <div v-if="mapSearchResult.length > 0">
-                <div v-for="(item,i) in mapSearchResult" @click="goNext(item)">
+                <div v-for="(item,i) in mapSearchResult" @click="selectMapSearchResult(item)">
                     <text :class="['map-result-item', i==0?'noborder':'']">{{item.key}}-{{item.district}} </text>
                 </div>
                 <text class="no-more">没有更多了...</text>
@@ -85,15 +91,22 @@
     .wrap{
         background-color: #f2f2f2;
     }
-    .next{
-        position:fixed;
-        right: 10px;
-        top: 30px;
+    .back{
+        width: 12px;
+        height: 24px;;
     }
     .next-text{
         padding: 10px;
         font-size: 32px;
     }
+     .head{
+        background-color: #fff;
+        width: 750px;
+        height: 88px;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+    .head-text{ font-size: 32px; }
     .hd{
         padding-top: 34px;
         padding-left: 25px;
@@ -279,9 +292,11 @@
                 mapCenter: {
                     latitude: 22.93,
                     longitude: 113.2,
-                    zoom: 10 //地图显示范围 4-21级 （最大是21级）,非必选
+                    zoom: 11 //地图显示范围 4-21级 （最大是21级）,非必选
                 },
-                mapMarkers: []
+                mapMarkers: [],
+                isEdit: 0, // 0：新增自动化，1：编辑已有自动化,
+                editParams: {}
             }
         },
         computed: {
@@ -316,6 +331,27 @@
         methods: {
             initData(){
                 this.sceneType = nativeService.getParameters('sceneType')
+                this.isEdit = nativeService.getParameters('isEdit') || 0
+                if (this.isEdit == 1) {
+                    // let tmpWeekly = nativeService.getParameters('weekly') || '1111111'
+                    // for (var x in tmpWeekly){
+                    //     this.week[x].repeat = tmpWeekly[x]
+                    // }
+                    if (this.sceneType == 3) {
+                        this.mapCenter.latitude = nativeService.getParameters('locationLatitude')
+                        this.mapCenter.longitude = nativeService.getParameters('locationLongitude')
+                    }
+                    if (this.sceneType == 4) {}
+                    if (this.sceneType == 6) {
+                        let tmpWeatherStatus = decodeURIComponent(nativeService.getParameters('weatherStatus'))
+                        for (var w in this.weather.data) {
+                            if (this.weather.data[w] == tmpWeatherStatus) {
+                                this.weather.activeTypeIndex = w
+                            }
+                        }
+                    }
+                }
+
                 if (this.sceneType == 3) {
                     this.direction = nativeService.getParameters('direction')
                     if (this.direction == 1) {
@@ -323,7 +359,6 @@
                     }else if (this.direction == 2) {
                         this.title = '离开某地'
                     }
-                   
                 }
                 if (this.sceneType == 4){
                     this.title = '在某个时间'
@@ -345,6 +380,14 @@
                     1: 0
                 }
                 this.week[i].repeat = tmp[this.week[i].repeat]
+
+                if (this.isEdit == 1) {
+                    let weeklyString = ''
+                    for (let i=0; i<this.week.length; i++) {
+                        weeklyString += this.week[i].repeat
+                    }
+                    this.editParams.weekly = 'weekly'
+                }
             },
             generateListArray(min, max){
                 let tmp = []
@@ -380,9 +423,15 @@
             // 时间 start
             setActiveHour(hour){
                 this.activeHour = hour.value
+                if (this.isEdit == 1) {
+                    this.editParams.hour = this.activeHour
+                }
             },
             setActiveMinute(minute){
                 this.activeMinute = minute.value
+                if (this.isEdit == 1) {
+                    this.editParams.minute = this.activeMinute
+                }
             },
             // 时间 end
             // 地图部分 start
@@ -424,6 +473,19 @@
                 this.showMapSearchResult = false
                 this.mapSearchResult = []
             },
+            selectMapSearchResult(destination){
+                let tmp = []
+                Object.keys(destination).map(function(x){
+                    tmp.push( x + '='+ encodeURIComponent(destination[x]))
+                })
+                destination = tmp.join('&')
+
+                if (this.isEdit == 1) {
+                    this.editParams.destination = destination
+                }else{
+                    this.goNext(destination)
+                }
+            },
             searchInputBlur(e){
                 this.searchLocation(e.value)
             },
@@ -448,6 +510,10 @@
             // 天气 start
             selectWeather(index){
                 this.weather.activeTypeIndex = index
+                
+                if (this.isEdit == 1) {
+                    this.editParams.weatherStatus = encodeURIComponent(this.weather.data[this.weather.activeTypeIndex])
+                }
             },
             setWeatherSwitch(){
                 this.weather.showDialog = true
@@ -455,10 +521,19 @@
             weatherDialogConfirm(){
                 this.weather.activeSwitch = this.switchTo[this.weather.activeSwitch]
                 this.weather.showDialog = false
+                
+                if (this.isEdit == 1) {
+                    this.editParams.logical =  this.weather.activeSwitch=='低于'?'<':'>'
+                }
             },
             setActiveWeatherTemperature(wTemp){
                 this.activeWeatherTemperature = wTemp.value
+                
+                if (this.isEdit == 1) {
+                    this.editParams.weatherTemperature = this.activeWeatherTemperature
+                }
             },
+            // 天气 end
             goNext(destination){
                 let weeklyString = ''
                 for (let i=0; i<this.week.length; i++) {
@@ -469,12 +544,6 @@
                     weekly: weeklyString
                 }
                 if (this.sceneType == 3) {
-                    let tmp = []
-                    Object.keys(destination).map(function(x){
-                        tmp.push( x + '='+ encodeURIComponent(destination[x]))
-                    })
-                    destination = tmp.join('&')
-
                     params.destination = destination
                     params.direction = this.direction
                 }
@@ -497,6 +566,18 @@
                     params.logical = logical
                 }
                 this.goTo('autoBindDevices', {}, params )
+            },
+            saveChange(){
+                if ( Object.keys(this.editParams).length === 0 ){
+                    nativeService.alert('没有改动哦')
+                    return
+                }
+                let params = {
+                    sceneType: this.sceneType,
+                    sceneId: nativeService.getParameters('editSceneId'),
+                    editConditionItems: JSON.stringify(this.editParams)
+                }
+                this.goTo('autoEdit', {}, params)
             }
         },
         created(){

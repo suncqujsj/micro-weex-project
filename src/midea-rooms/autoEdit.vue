@@ -1,21 +1,21 @@
 <template>
    <div class="wrap" :style="wrapStyle">
         <div class="row-sb hd">
-            <text class="hd-text font-grey" @click="goBack">取消</text>
+            <text class="hd-text font-grey" @click="goHomePage">取消</text>
             <text class="hd-text">{{autoDetail.name}}</text>
-            <text class="hd-text font-grey"  @click="save">保存</text>
+            <text class="hd-text font-grey"  @click="sendAutoEdit">保存</text>
         </div>
         <div class="content">
             <div v-if="sceneType != 2">
                 <div style="background-color:#fff">
                     <div class="row-sb auto-name-floor">
                         <text>名称</text>
-                        <input class="auto-name" type="text" placeholder="" :value="autoDetail.name" @change="editAutoName" @return="editAutoName"/>
+                        <input class="auto-name" type="text" placeholder="" :value="inputAutoName" @change="editAutoName" @return="editAutoName"/>
                     </div>
                     <div class="row-sb floor auto-switch-floor">
                         <text>启用</text>
                         <div>
-                            <switch-bar :checked="autoDetail.enable" @change="openAuto"></switch-bar>
+                            <switch-bar :checked="autoEnable" @change="openAuto"></switch-bar>
                         </div>
                     </div>
                 </div>
@@ -24,9 +24,9 @@
                     <div @click="goAutoTypeSet" class="row-sb floor">
                         <div class="row-s">
                             <image class="icon" :src="autoDetail.image"></image>
-                            <text v-if="sceneType==3">在{{weekDesc}}时</text>
-                            <!-- <text v-if="sceneType==4">在{{autoDetail.location.direction}} {{autoDetail.location.address}}时</text>
-                            <text v-if="sceneType==6">在天气{{autoDetail.weather.weatherStatus}},气温{{autoDetail.weather.temperature}} 时</text> -->
+                            <text v-if="sceneType==3">在{{weekDesc}} {{directionText[autoDetail.location.direction]}} {{autoDetail.location.address}}时</text>
+                            <text v-if="sceneType==4">在{{weekDesc}} {{autoDetail.startTime}}时</text>
+                            <text v-if="sceneType==6"> 在{{weekDesc}} 天气{{autoDetail.weather.weatherStatus}}, 气温{{temperatureLoginText[autoDetail.weather.logical]}} {{autoDetail.weather.temperature}}℃ 时</text>
                         </div>
                         <image class="icon-next" :src="icon.next"></image>
                     </div>
@@ -37,16 +37,33 @@
                 <div class="device-box row-sb"> 
                     <div class="device" v-for="(item, idx) in autoDetail.task">
                         <div @click="setDevice(item)">
-                            <!-- <image class="device-img" :src=""></image> -->
+                            <image class="device-img" :src="imgPath[devices[item.applianceCode].deviceType]"></image>
                             <text class="device-name">{{devices[item.applianceCode].name}}</text>
                         </div>
-                        <!-- <image class="check-icon" :src="icon[devices[item.applianceCode].status]" @click="checkOn(item, idx)"></image> -->
+                        <image class="check-icon" :src="icon[devices[item.applianceCode].status]" @click="checkOn(item, idx)"></image>
                     </div>
                 </div>
-                <text class="select-btn" @click="goSelect">选择设备</text>
+                <text class="select-btn" v-if="showDevicePop" @click="openDevicePop">选择设备</text>
             </div>
         </div>
         <div class="delete" :style="deleteStyle"><text class="delete-text"  @click="deleteAuto">删除快捷操作</text></div>
+        <div v-if="showDevicePop" class="devices-pop">
+            <div class="row-sb device-pop-hd">
+                <text class="hd-text font-grey" @click="closeDevicePop">取消</text>
+                <text class="hd-text">{{autoDetail.name}}</text>
+                <text class="hd-text font-grey"  @click="confirmDevicePop">保存</text>
+            </div>
+            <text class="sub-hd device-pop-sub-hd">选择要控制的电器，点击更改具体控制</text>
+            <div class="device-box row-sb">
+                <div class="device" v-for="(item, idx) in userUnbindDevices">
+                    <div @click="goSetDevice(item)">
+                        <image class="device-img" :src="imgPath[item.deviceType]"></image>
+                        <text class="device-name">{{item.deviceName}}</text>
+                    </div>
+                    <image class="check-icon" :src="icon[item.status]" @click="addDeviceToTask(item, idx)"></image>
+                </div>
+            </div>
+        </div>
    </div>
 </template>
 
@@ -109,10 +126,9 @@
         border-radius: 4px;
     }
     .device-img{
-        width:82px;
-        height: 82px;
+        width:100px;
+        height: 100px;
         margin-bottom: 12px;
-        position: relative;
     }
     .device-name{
         font-size: 32px;
@@ -126,8 +142,8 @@
         position: absolute;
         top: 14px;
         right:14px;
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
     }
     .select-btn{
         width: 686px;
@@ -158,10 +174,26 @@
         width: 12px;
         height: 24px;
     }
+    .devices-pop{
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: #f2f2f2;
+    }
+    .device-pop-hd{
+        background-color: #fff;
+        padding: 25px;
+    }
+    .device-pop-sub-hd{
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
 </style>
 
 <script>
-    import { url } from './config/config.js'
+    import { url, applianceActions } from './config/config.js'
     import base from './base'
 
     import nativeService from '@/common/services/nativeService.js'
@@ -179,6 +211,20 @@
                     uncheck: 'assets/img/check_off.png',
                     next: 'assets/img/more.png'
                 },
+                imgPath: {
+                    "0xAC": "assets/img/0xAC.png",
+                    "0xB8": "assets/img/0xB8.png",
+                    "0xFB": "assets/img/0xFB.png",
+                    "0xB6": "assets/img/0xB6.png",
+                    "0xE1": "assets/img/0xE1.png",
+                    "0xFA": "assets/img/0xFA.png",
+                    "0xE3": "assets/img/0xE3.png",
+                    "0xFD": "assets/img/0xFD.png",
+                    "0xA1": "assets/img/0xA1.png",
+                    "0xCC": "assets/img/0xCC.png",
+                    "0x10": "assets/img/0x10.png",
+                    "0x13": "assets/img/0x13.png",
+                },
                 header: {
                     title: '设置',
                     bgColor: '#fff',
@@ -189,16 +235,24 @@
                 auto: {},
                 devices: {
                     '111111': {
-                        name: 'name1',
-                        status: 'check'
+                        deviceId: "111111", 
+                        deviceName: "name1",
+                        deviceType: "0xAC",
+                        deviceSubType: "xxxxx", 
+                        deviceSn: "16584",
+                        isOnline: 1,
+                        status: 'uncheck'
                     },
                     '2222222': {
                         name: 'name2',
+                        deviceType: '0xAC',
                         status: 'check'
                     },
                 },
                 autoDetail: {
-                 "image": "assets/img/location.png",
+                    "image": "assets/img/location.png",
+                    "homegroupId": null,
+                    "weekly": "",
                     "task": [
                         {
                             "applianceCode": null,
@@ -222,16 +276,69 @@
                         "directionName": "",
                         "longitude": "",
                         "direction": "",
-                    },
-                    "homegroupId": null,
-                    "weekly": "",
+                    }
                 },
+                inputAutoName: '',
+                autoEnable: null,
                 weekDesc: '',
                 conditionName: null,
+                temperatureLoginText: {
+                    '>': '高于',
+                    '<': '低于'
+                },
                 directionText: {
                     1: '到达',
                     2: '离开'
-                }
+                },
+                applianceActions: {
+                    '0xAC': {
+                        name: '空调',
+                        actions: [
+                            {
+                                property: 'power',
+                                propertyName: '电源',
+                                action: {
+                                    off: "关机",
+                                    on: "开机"
+                                },
+                            },
+                           {
+                                property: 'mode',
+                                propertyName: '模式',
+                                action: {
+                                    auto: "自动",
+                                    fan: "送风",
+                                    cool: "制冷",
+                                    heat: "制热",
+                                    dry: "抽湿"
+                                }
+                            }
+                        ]
+                    }
+                },
+                userUnbindDevices: [
+                    {
+                        deviceId: "333", 
+                        deviceName: "name3",
+                        deviceType: "0xAC",
+                        deviceSubType: "xxxxx", 
+                        deviceSn: "16584",
+                        isOnline: 1,
+                        status: 'uncheck'
+                    },
+                    {
+                        deviceId: "777", 
+                        deviceName: "name7",
+                        deviceType: "0xAC",
+                        deviceSubType: "xxxxx", 
+                        deviceSn: "165854",
+                        isOnline: 1,
+                        status: 'uncheck'
+                    }
+                ],
+                showDevicePop: false,
+                task: [],
+                tmpAddTaskList: []
             }
         },
         computed: {
@@ -252,6 +359,9 @@
             goBack(){
                 nativeService.goBack()
             },
+            goHomePage(){
+                this.goTo('weex')
+            },
             initData(){
                 this.sceneType = nativeService.getParameters('sceneType')
                 this.sceneId = nativeService.getParameters('sceneId')
@@ -267,6 +377,28 @@
                     }
                 })
             },
+            generateWeek(){
+                let weekText = {
+                    0: '周一',
+                    1: '周二',
+                    2: '周三',
+                    3: '周四',
+                    4: '周五',
+                    5: '周六',
+                    6: '周日',
+                }
+                let weekTmp = []
+                
+                let week =  this.autoDetail.weekly.split('')
+                for (var x in week) {
+                    if (week[x] == '1') {
+                        weekTmp.push(weekText[x])
+                    }
+                }
+                weekTmp = weekTmp.join('、')
+                this.weekDesc = weekTmp
+                
+            },
             getAutoDetail(){
                 let reqUrl = url.auto.detail
                 let reqParams = {
@@ -277,45 +409,45 @@
                 this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                     if (rtnData.code == 0) {
                         this.autoDetail = rtnData.data
-                        let weekText = {
-                            1: '周一',
-                            2: '周二',
-                            3: '周三',
-                            4: '周四',
-                            5: '周五',
-                            6: '周六',
-                            7: '周日',
-                        }
-                        let weekTmp = []
-                        let week =  this.autoDetail.weekly.split('')
-                        for (let i=0; i<week.length; i++) {
-                            if (week[i] == '1' ) {
-                                weekTmp.push(weekText[i])
-                            }
-                        }
-                        weekTmp = weekTmp.join('、')
-                        this.weekDesc = weekTmp
+                        this.inputAutoName = this.autoDetail.name
+                        this.autoEnable = this.autoDetail.enable
+                        this.task = this.autoDetail.task
+                        this.generateWeek()
                     }
                 }).catch( (error )=>{
-                    
                 })
-
             },
-            save(){
-                
-            },
-            checkOn(item, index){
+            openAuto(){
                 let tmp = {
-                    check: 'uncheck',
-                    uncheck: 'check'
+                    '1': '0',
+                    '0': '1'
                 }
-                this.devices[item.applianceCode].status = tmp[this.devices[item.applianceCode].status]
+                this.autoEnable = tmp[this.autoEnable]
             },
             goSelect(){
                 this.goTo('selectDevice')
             },
             goAutoTypeSet(){
-                this.goTo('autoTypeSet', {}, {type: this.type})
+                let params = {}
+                params.sceneType = this.sceneType
+                if (this.sceneType == 3) {
+                    params.direction = this.autoDetail.location.direction
+                }
+                params.isEdit = 1
+                params.weekly = this.autoDetail.weekly
+                params.editSceneId = this.autoDetail.sceneId
+                
+                if (this.sceneType == 3){
+                    params.locationLongitude = this.autoDetail.location.longitude
+                    params.locationLatitude = this.autoDetail.location.latitude
+                }
+                if (this.sceneType == 4){
+                }
+                if (this.sceneType == 6){
+                    params.weatherStatus = encodeURIComponent(this.autoDetail.weather.weatherStatus)
+
+                }
+                this.goTo('autoTypeSet', {}, params)
             },
             deleteAuto(){
                 let reqUrl = url.auto.delete
@@ -341,19 +473,122 @@
                 params.sceneId = this.autoDetail.sceneId
                 this.goTo('setDevice', {}, params)
             },
-            openAuto(){
-                let tmp = {
-                    '1': '0',
-                    '0': '1'
+            checkOn(item, index){
+                let tmpStatus = {
+                    check: 'uncheck',
+                    uncheck: 'check'
                 }
-                this.autoDetail.enable = tmp[this.autoDetail.enable]
+                this.devices[item.applianceCode].status = tmpStatus[this.devices[item.applianceCode].status]
+
+                let basicTask = {}, tmpTask = []
+                for (var task in this.autoDetail.task){
+                    basicTask[this.autoDetail.task[task].applianceCode] = this.autoDetail.task[task]
+                }
+               
+                for (var x in this.devices) {
+                    if (this.devices[x].status == 'check') {
+                        tmpTask.push(basicTask[x])
+                    }
+                }
+                this.task = tmpTask
             },
-            editAutoName(value){
+            addDeviceToTask(item, idx){
+                let tmpStatus = {
+                    check: 'uncheck',
+                    uncheck: 'check'
+                }
+                this.userUnbindDevices[item.applianceCode].status = tmpStatus[this.userUnbindDevices[item.applianceCode].status]
+
+                let basicTask = {}, tmpTask = []
+                
+                for (x in userUnbindDevices){
+                    basicTask[userUnbindDevices[x].deviceId] = {
+                        applianceCode: userUnbindDevices[x].deviceId,
+                        command: { power: 'off' }
+                    }
+                }
+            
+                nativeService.alert(basicTask)
+
+            },
+            openDevicePop(){
+                this.showDevicePop = true
+            },
+            closeDevicePop(){
+                this.showDevicePop = false
+            },
+            confirmDevicePop(){
+                this.showDevicePop = false
+            },
+            sendAutoEdit(){
+                let reqUrl = url.auto.update
+                let reqParams = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    sceneType: this.sceneType,
+                    sceneId: this.sceneId,
+                    image: this.autoDetail.image,
+                    name: this.inputAutoName,
+                    enable: this.autoEnable
+                }
+
+                let editConditionItems = JSON.parse(nativeService.getParameters('editConditionItems'))
+                
+                for (var x in editConditionItems) {
+                    if (x == 'weatherStatus') {
+                        editConditionItems[x] = decodeURIComponent(editConditionItems[x])
+                    }
+                }
+
+                if (this.sceneType == 2) {
+                    reqParams.weekly = '1111111'
+                }
+                if (this.sceneType == 3) {
+                    let tmpLocation = {}
+                    if ( editConditionItems.destination ) {
+                        tmpLocation = {
+                            address: editConditionItems.destination.key,
+                            latitude: editConditionItems.destination.latitude,
+                            longitude: editConditionItems.destination.longitude,
+                        }
+                    }
+                    reqParams.location = JSON.stringify(Object.assign(this.autoDetail.location, tmpLocation))
+                }
+                if (this.sceneType == 4) {
+                    reqParams.startTime = editConditionItems.hour + ':' + editConditionItems.minute || this.autoDetail.startTime
+                }
+                if (this.sceneType == 6) {
+                    let tmpWeather = {}
+                    if (editConditionItems.weatherStatus) {
+                        tmpWeather.weatherStatus = editConditionItems.weatherStatus
+                    }
+                    if (editConditionItems.logical) {
+                        tmpWeather.logical = editConditionItems.logical
+                    }
+                    if (editConditionItems.weatherTemperature) {
+                        tmpWeather.temperature = editConditionItems.weatherTemperature
+                    }
+                    reqParams.weather =  JSON.stringify(Object.assign(this.autoDetail.weather, tmpWeather))
+
+    
+                    this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                        nativeService.alert(rtnData)
+                        if (rtnData.code == 0) {
+                            nativeService.alert('修改成功', function(){
+                                nativeService.goTo('weex.js')
+                            })
+                        }
+                    }).catch( (error )=>{
+
+                    })
+                }
+            },
+            editAutoName(input){
+                this.inputAutoName = input.value
             }
         },
         created(){
             this.initData()
-           
         }
     }
 </script>

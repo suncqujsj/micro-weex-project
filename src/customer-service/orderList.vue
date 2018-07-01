@@ -41,7 +41,7 @@
 
 <script>
 import base from './base'
-import orderBase from './order-base'
+import orderBase from './orderBase'
 import nativeService from './settings/nativeService'
 import OrderBlock from '@/customer-service/components/orderBlock.vue'
 
@@ -272,7 +272,7 @@ export default {
             let order = this.orderList[index]
             nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, order,
                 () => {
-                    this.goTo("callbackInfo", {}, { from: 'orderList', id: order.serviceOrderNo })
+                    this.goTo("orderCallback", {}, { from: 'orderList', id: order.serviceOrderNo })
                 })
         },
 

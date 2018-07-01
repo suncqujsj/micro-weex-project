@@ -297,7 +297,6 @@ export default {
             })
         } else {
             if (this.fromPage == "maintenance") {
-                this.selectedBrandIndex = -1
                 //我的家电
                 let param = {
                     pageIndex: 1,
@@ -306,6 +305,11 @@ export default {
                 }
                 nativeService.getUserProductPageList(param).then((data) => {
                     this.myProductList = data.data.list
+                    if (this.myProductList && this.myProductList.length > 0) {
+                        this.selectedBrandIndex = -1
+                    } else {
+                        this.selectedBrandIndex = 0
+                    }
                     this.isLoaded = true
                 }).catch((error) => {
                     nativeService.toast(nativeService.getErrorMessage(error))

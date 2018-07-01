@@ -5,41 +5,46 @@
         <scroller v-if="!isSearchMode" class="content-wrapper">
             <div class="base-group">
                 <div class="item-group">
-                    <text class="type-select-label">以下为选填信息，有助于更快更好地为您服务{{orgCode}}</text>
+                    <text class="type-select-label">以下为选填信息，有助于更快更好地为您服务 {{barCode}}
+                    </text>
                 </div>
                 <div class="item-group">
-                    <input class="scan-input" placeholder="请输入或扫机身条码" :autofocus=false v-model="barCode" @input="resetData" />
-                    <div class="scan-icon-wrapper">
-                        <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
-                    </div>
+                    <scan-input placeholder="请输入或扫机身条码" v-model="barCode" @scanCode="scanCode"></scan-input>
                 </div>
                 <div class="item-group">
-                    <input class="scan-input" placeholder="请输入型号" :autofocus=false v-model="productModel" @focus="isSearchMode=true" />
+                    <input class="item-input" placeholder="请输入型号" :autofocus=false v-model="productModel" @focus="isSearchMode=true" />
                 </div>
-            </div>
-            <div class="base-group">
-                <midea-cell title="" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="pickDate">
-                    <div slot="title" class="cell-title">
-                        <text class="cell-label">购买产品时间</text>
-                        <text class="cell-label-star">*</text>
-                    </div>
-                    <div slot="rightText">
-                        <text class="right-text">{{date?date:'请选择'}}</text>
-                    </div>
-                </midea-cell>
+
+                <div class="item-group scan-group group-bottom-border">
+                    <input class="item-input" placeholder="请输入配件名称" :autofocus=false v-model="materialName" />
+                </div>
+
+                <div class="action-bar">
+                    <midea-button text="查询" type="green" :btnStyle="{'background-color': '#267AFF','opacity':isDataReady?'1':'0.2','border-radius': '4px'}" @mideaButtonClicked="search">
+                    </midea-button>
+                </div>
             </div>
 
-            <div v-if="result" class="base-group">
+            <div class="base-group" v-for="(item, index) in materialList" :key="index">
+                <div class="item-group result-header">
+                    <text class="result-title">{{item.materialName}}</text>
+                    <text class="result-price">指导价{{item.priceCustomer}}元</text>
+                </div>
                 <div class="item-group">
-                    <text class="result-title">{{result.warrantyStandardName}}</text>
-                    <text class="result-desc">{{result.warrantyStandardDesc}}</text>
+                    <text class="result-desc">若本价格标准高于当地物价部门制定有关标准，请以当地物价部门标准为准</text>
                 </div>
             </div>
+            <div class="empty-page" v-if="isLoaded && materialList.length == 0">
+                <image class="empty-page-icon" src="./assets/img/default_ic_noresult@3x.png" resize='contain'>
+                </image>
+                <text class="empty-page-text">抱歉，没有找到相应的配件价格{{'\n'}}请重新搜索</text>
+            </div>
         </scroller>
-        <div class="search-mode" v-if="isSearchMode">
+
+        <div v-if="isSearchMode">
             <div class="base-group">
                 <div class="item-group">
-                    <input class="scan-input" placeholder="请输入型号" return-key-type="search" :autofocus=true v-model="searchModelKeyWord" @input="searchproductModel" />
+                    <input class="item-input" placeholder="请输入型号" :autofocus=true v-model="searchModelKeyWord" @input="searchproductModel" />
                 </div>
             </div>
 
@@ -57,46 +62,47 @@ import base from './base'
 import nativeService from './settings/nativeService'
 import util from '@/common/util/util'
 
-import { MideaCell } from '@/index'
-
-const picker = weex.requireModule('picker')
+import { MideaButton, MideaSelect } from '@/index'
+import ScanInput from '@/customer-service/components/scanInput.vue'
 
 export default {
     components: {
-        MideaCell
+        MideaButton,
+        MideaSelect,
+        ScanInput
     },
     mixins: [base],
     data() {
         return {
-            title: '包修政策',
-            barCode: '',
+            title: '配件价格',
+            typeSelectedIndex: 0,
+            barcode: '',
             productCode: '',
-            orgCode: "",
             productModel: '',
             timeoutHandler: null,
             searchModelKeyWord: '',
             isSearchMode: false,
             searchPageIndex: 0,
-            date: null,
             productList: null,
-            result: null
+            selectedProduct: '',
+            materialName: '',
+            materialList: [],
+            isLoaded: false
         }
     },
     computed: {
+        isDataReady() {
+            let result = false
+            if (this.productModel && this.materialName) {
+                result = true
+            }
+
+            return result
+        }
     },
     methods: {
-        resetData(event) {
-            this.date = null
-            this.result = null
-            this.searchPageIndex = 0
-        },
-        scanCode() {
-            nativeService.scanServiceCode().then(
-                (result) => {
-                    this.barCode = result.code
-                    this.resetData()
-                }
-            )
+        scanCode(result) {
+            this.barCode = nativeService.convertScanResult(result).code
         },
 
         searchproductModel(event) {
@@ -132,7 +138,7 @@ export default {
                     }
                     nativeService.getProdMessage(param).then((resp) => {
                         let result = resp.data.list.filter((item) => {
-                            return item.prodType.orgCode && item.prodType.orgCode.length > 0
+                            return item.prodType && item.prodType.orgCode && item.prodType.orgCode.length > 0
                         })
                         resolve(result)
                     }).catch((error) => {
@@ -146,43 +152,25 @@ export default {
             this.productModel = product.product.productModel
             this.productCode = product.product.salesCode
             this.orgCode = product.prodType.orgCode
-            this.resetData()
         },
-        pickDate() {
-            if (!this.barCode && !this.productModel) {
-                nativeService.toast('请输入型号或扫机身条码')
-                return
+        search() {
+            if (!this.isDataReady) return
+
+            let param = {
+                pageSize: 1,
+                pageNum: 100,
+                productCode: this.productCode,
+                orgCode: this.orgCode,
+                materialName: this.materialName
+
             }
-            picker.pickDate({
-                'value': this.date,
-                'max': util.dateFormat(new Date(), "yyyy-MM-dd"),
-                'min': '2000-01-01',
-                'title': '选择日期', //取消和确定中间那标题
-                'cancelTxt': '取消', //取消按钮文字
-                'confirmTxt': '确定', //确定按钮文字,
-                'cancelTxtColor': '#000000', //取消颜色
-                'confirmTxtColor': '#000000', //标题颜色
-                'titleColor': '#000000', //标题颜色
-                'titleBgColor': '#E5E5E8' //标题栏颜色
-            }, event => {
-                var result = event.result;
-                if (result == 'success') {
-                    this.date = event.data;
-                    //条码
-                    let param = {
-                        barcode: this.barCode,
-                        productCode: this.productCode,
-                        orgCode: this.orgCode,
-                        purchaseDate: util.dateFormat(new Date(this.date), "yyyy-MM-dd")
-                    }
-                    nativeService.querywarrantydescbycodeorsn(param).then((data) => {
-                        this.result = data
-                    }).catch((error) => {
-                        nativeService.toast(nativeService.getErrorMessage(error))
-                    })
-                }
-            });
-        },
+            nativeService.getChargePriceForMaterial(param).then((data) => {
+                this.materialList = data.date || []
+                this.isLoaded = true
+            }).catch((error) => {
+                nativeService.toast(nativeService.getErrorMessage(error))
+            })
+        }
     },
     created() {
     }
@@ -193,9 +181,6 @@ export default {
 .wrapper {
   background-color: #f2f2f2;
   position: relative;
-}
-.content-wrapper {
-  flex-direction: column;
 }
 .base-group {
   padding-top: 24px;
@@ -215,14 +200,6 @@ export default {
   font-size: 32px;
   color: #ff3b30;
   padding-left: 5px;
-}
-.right-text {
-  font-family: PingFangSC-Regular;
-  font-size: 28px;
-  color: #666666;
-  padding-right: 24px;
-  text-align: right;
-  width: 480px;
 }
 .item-group {
   padding: 24px;
@@ -256,8 +233,7 @@ export default {
   background-color: #e8f1ff;
   color: #267aff;
 }
-
-.scan-input {
+.item-input {
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #000000;
@@ -266,25 +242,12 @@ export default {
   border-width: 1px;
   height: 72px;
   padding-left: 22px;
-  padding-right: 60px;
+  padding-right: 50px;
   background-color: #fafafa;
-}
-.scan-icon-wrapper {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  padding: 16px;
-}
-.scan-icon {
-  height: 40px;
-  width: 40px;
-}
-.search-mode {
-  flex: 1;
-  flex-direction: column;
 }
 .scroller {
   flex: 1;
+  height: 1000px;
 }
 .scroller-item-wrapper {
   padding-top: 28px;
@@ -299,6 +262,15 @@ export default {
   font-size: 32px;
   color: #000000;
 }
+.action-bar {
+  background-color: #ffffff;
+  width: 750px;
+  text-align: center;
+}
+.result-header {
+  flex-direction: row;
+  justify-content: space-between;
+}
 .result-title {
   font-family: PingFangSC-Medium;
   font-weight: 600;
@@ -306,10 +278,36 @@ export default {
   color: #000000;
   padding-bottom: 24px;
 }
+.result-price {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #ff9500;
+}
 .result-desc {
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #666666;
   padding-bottom: 32px;
+}
+.empty-page {
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #ffffff;
+  margin-top: 24px;
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+.empty-page-icon {
+  width: 240px;
+  height: 240px;
+}
+.empty-page-text {
+  padding-top: 36px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #888888;
+  text-align: center;
 }
 </style>

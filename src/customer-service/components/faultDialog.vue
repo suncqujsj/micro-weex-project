@@ -79,24 +79,21 @@
 .fault-dialog {
   position: relative;
   width: 558px;
-  height: 620px;
   margin-top: 70px;
   padding-left: 20px;
   padding-right: 20px;
 }
 .fault-dialog-solution {
   height: 250px;
+  padding-left: 36px;
   border-bottom-color: #e5e5e8;
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  padding-left: 36px;
-  padding-right: 36px;
   margin-bottom: 16px;
 }
 .fault-dialog-reason {
-  height: 250px;
+  height: 210px;
   padding-left: 36px;
-  padding-right: 36px;
 }
 .fault-dialog-row {
   flex-direction: row;
@@ -120,7 +117,8 @@
   font-size: 28px;
   color: #666666;
   text-align: left;
-  padding-top: 36px;
+  padding-top: 32px;
+  padding-right: 36px;
 }
 .indicator {
   position: absolute;
@@ -141,7 +139,6 @@
   padding-left: 36px;
   padding-right: 36px;
   margin-top: 50px;
-  margin-bottom: 18px;
 }
 
 .footer-btn {

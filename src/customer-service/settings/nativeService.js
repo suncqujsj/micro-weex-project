@@ -1,11 +1,11 @@
 import nativeService from '@/common/services/nativeService'
 import util from '@/common/util/util'
 import { SERVICE_STORAGE_KEYS } from './globalKeys'
-const cssRrequestSendWithApp = true
-const requestSendWithApp = true
+const cssRrequestSendWithApp = !true
+const requestSendWithApp = !true
 const HOST_CSS = cssRrequestSendWithApp ? '' : "http://csuat.midea.com"
-const HOST_CENTER_APP = requestSendWithApp ? '' : "http://10.16.38.95:8080"
-const HOST_CENTER = requestSendWithApp ? '' : "http://10.16.85.47"
+const HOST_CENTER_APP = requestSendWithApp ? '' : "http://cmms2.midea.com"
+const HOST_CENTER = requestSendWithApp ? '' : "http://cmms2.midea.com"
 const HOST_antiFake = "http://wap.cjm.so/Common/DataService.ashx"
 
 let customizeNativeService = Object.assign(nativeService, {
@@ -93,7 +93,7 @@ let customizeNativeService = Object.assign(nativeService, {
                 if (cssRrequestSendWithApp) {
                     let requestOption = Object.assign({ method: "POST", isShowLoading: !true }, options)
                     let requestParam = {
-                        method: requestOption.method || "POST",
+                        method: requestOption.method,
                         headers: {
                             "Content-Type": "application/json;charset=utf-8"
                         },
@@ -113,7 +113,7 @@ let customizeNativeService = Object.assign(nativeService, {
                     let requestParam = {
                         url: url,
                         type: 'json',
-                        method: requestOption.method || "POST",
+                        method: requestOption.method,
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"
                         },
@@ -189,7 +189,7 @@ let customizeNativeService = Object.assign(nativeService, {
     // CSS 接口： 技术组提供
     sendCssTechHttpRequestWrapper(url, params, options) {
         return new Promise((resolve, reject) => {
-            if (requestSendWithApp) {
+            if (cssRrequestSendWithApp) {
                 let requestOption = Object.assign({ method: "POST", isShowLoading: true }, options)
                 let requestParam = {
                     method: requestOption.method || "POST",
@@ -231,12 +231,12 @@ let customizeNativeService = Object.assign(nativeService, {
         })
     },
     getChargeStandardList(param = {}) {
-        let url = this.serviceList.getChargeStandardList + (requestSendWithApp ? '&' : '?') + this.objectToQuery(param)
+        let url = this.serviceList.getChargeStandardList + (cssRrequestSendWithApp ? '&' : '?') + this.objectToQuery(param)
         return this.sendCssTechHttpRequestWrapper(url)
     },
 
     getChargePriceForMaterial(param = {}) {
-        let url = this.serviceList.getChargePriceForMaterial + (requestSendWithApp ? '&' : '?') + this.objectToQuery(param)
+        let url = this.serviceList.getChargePriceForMaterial + (cssRrequestSendWithApp ? '&' : '?') + this.objectToQuery(param)
         return this.sendCssTechHttpRequestWrapper(url)
     },
 
@@ -265,11 +265,15 @@ let customizeNativeService = Object.assign(nativeService, {
                 if (requestSendWithApp) {
                     let requestOption = Object.assign({ method: "POST", isShowLoading: true }, options)
                     let requestParam = {
-                        method: requestOption.method || "POST",
+                        method: requestOption.method,
                         headers: {
                             "Content-Type": "application/json;charset=utf-8"
-                        },
-                        data: Object.assign({}, commonParam, params)
+                        }
+                    }
+                    if (requestOption.method != "GET") {
+                        requestParam.data = Object.assign({}, commonParam, params)
+                    } else {
+                        requestParam.data = {}
                     }
                     this.sendCentralCloundRequest(url, requestParam, requestOption).then((resp) => {
                         if (resp.code == 0) {
@@ -388,7 +392,8 @@ let customizeNativeService = Object.assign(nativeService, {
         return this.sendControlHttpRequestWrapper(this.serviceList.getDefaultAddr, param)
     },
     getAreaList(param = {}) {
-        return this.sendControlHttpRequestWrapper(this.serviceList.getAreaList, param, { method: "GET" })
+        let url = this.serviceList.getAreaList + (requestSendWithApp ? '&' : '?') + this.objectToQuery(param)
+        return this.sendControlHttpRequestWrapper(url, {}, { method: "GET" })
     },
     userAddrAdd(param = {}) {
         return this.sendControlHttpRequestWrapper(this.serviceList.userAddrAdd, param)
@@ -426,35 +431,43 @@ let customizeNativeService = Object.assign(nativeService, {
 
 
     //扫描条形/二维码
-    scanServiceCode() {
-        return new Promise((resolve, reject) => {
-            nativeService.scanCode().then(
-                (resp) => {
-                    if (resp.status == 0) {
-                        let scanResult = resp.data || resp.code
-                        let scanResultObj = {
-                            code: '',
-                            type: ''
-                        }
-                        if (scanResult.indexOf(",") != -1) {
-                            // 扫条形码，可能会带'ITF,xxxxxxx', 截取后半部
-                            let tmp = scanResult.split(",")
-                            scanResultObj.code = tmp.length === 1 ? tmp[0] : tmp[1]
-                            scanResultObj.type = '60'
-                        } else if (util.getParameters(scanResult, "tsn")) {
-                            //二维码
-                            scanResultObj.code = util.getParameters(scanResult, "tsn")
-                            scanResultObj.type = '0'
-                        } else {
-                            // 扫条形码
-                            scanResultObj.code = scanResult
-                            scanResultObj.type = '60'
-                        }
-                        resolve(scanResultObj)
-                    }
-                }
-            )
-        })
+    convertScanResult(scanResult) {
+        let scanResultObj = {
+            code: '',
+            type: ''
+        }
+        if (scanResult.indexOf(",") != -1) {
+            // 扫条形码，可能会带'ITF,xxxxxxx', 截取后半部
+            let tmp = scanResult.split(",")
+            scanResultObj.code = tmp.length === 1 ? tmp[0] : tmp[1]
+            scanResultObj.type = '60'
+        } else if (util.getParameters(scanResult, "tsn")) {
+            //二维码
+            scanResultObj.code = util.getParameters(scanResult, "tsn")
+            scanResultObj.type = '0'
+        } else {
+            // 扫条形码
+            scanResultObj.code = scanResult
+            scanResultObj.type = '60'
+        }
+        return scanResultObj
+    },
+    /* 
+    高德、腾讯、图灵、阿里地图等都是 GCJ - 02坐标系（也称火星坐标系）,而百度则使用BD-09坐标系。
+    */
+    //GCJ-02(火星)转BD-09（百度地图）
+    mapabcEncryptToBdmap(gg_lat, gg_lon) {
+        var point = new Object();
+        var x_pi = 3.14159265358979324 * 3000.0 / 180.0;
+        var x = new Number(gg_lon);
+        var y = new Number(gg_lat);
+        var z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * x_pi);
+        var theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * x_pi);
+        var bd_lon = z * Math.cos(theta) + 0.0065;
+        var bd_lat = z * Math.sin(theta) + 0.006;
+        point.lng = bd_lon;
+        point.lat = bd_lat;
+        return point;
     },
     //根据经纬度计算距离
     Rad(d) {

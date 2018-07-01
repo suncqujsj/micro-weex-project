@@ -53,7 +53,7 @@
 
 <script>
 import base from './base'
-import orderBase from './order-base'
+import orderBase from './orderBase'
 import nativeService from './settings/nativeService'
 import util from '@/common/util/util'
 import OrderBlock from '@/customer-service/components/orderBlock.vue'

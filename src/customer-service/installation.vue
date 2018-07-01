@@ -2,7 +2,7 @@
     <div class="wrapper">
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
             <div slot="customerContent" class="header-right">
-                <text class="header-right-text" @click="goTo('productSelection', {}, { from: 'installation', to:'chargeStandardList' })">收费标准</text>
+                <text class="header-right-text" @click="goTo('productSelection', {}, { from: 'installation', to:'serviceCharge' })">收费标准</text>
             </div>
         </midea-header>
         <scroller class="content-wrapper">
@@ -63,18 +63,14 @@
                     </div>
                 </div>
 
-                <div class="item-group scan-group">
-                    <input class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="code" />
-
-                    <div v-if="typeSelectedIndex==0" class="scan-icon-wrapper">
-                        <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
-                    </div>
+                <div class="item-group">
+                    <scan-input placeholder="请输入型号或扫机身条码" v-model="code" :scan="typeSelectedIndex==0" @scanCode="scanCode"></scan-input>
                 </div>
 
                 <div class="item-group info-group">
                     <textarea class="info-textarea" placeholder="请输入其他备注信息" v-model="order.pubRemark" rows="5" maxlength="120"></textarea>
                     <text class="info-textarea-calc">{{order.pubRemark.length}}/120</text>
-                    <div class="mic-icon-wrapper" @click="startRecordAudio">
+                    <div class="mic-icon-wrapper" @click="isMicPanelShow=true">
                         <image class="mic-icon" src="./assets/img/service_ic_tape@3x.png" resize='contain'></image>
                     </div>
                 </div>
@@ -93,18 +89,34 @@
 
         <midea-actionsheet :items="transportStatusItems" :show="isShowTransportStatus" @close="closeTransportStatusActionsheet" @itemClick="transportStatustItemClick" @btnClick="transportStatusBtnClick" ref="transportStatusActionsheet">
         </midea-actionsheet>
+
+        <midea-popup :show="isMicPanelShow" @mideaPopupOverlayClicked="closeMicPannel" pos="bottom" height="700">
+            <image class="mic-close-icon" src="./assets/img/service_ic_cancel@3x.png" resize='contain' @click="closeMicPannel"></image>
+            <text class="mic-result">{{micResult}}</text>
+            <div class="mic-record-wrapper">
+                <text v-if="micResult" class="mic-result-clean" @click="micResult=''">清空</text>
+                <div class="mic-record-icon-wrapper" @touchstart="startRecordAudio" @touchend="stopRecordAudio">
+                    <image v-if="!isRecording" class="mic-record-icon" src="./assets/img/voice@3x.png" resize='contain'></image>
+                    <image v-if="isRecording" class="mic-record-on-icon" src="./assets/img/voice_on@3x.png" resize='contain'></image>
+                </div>
+                <text v-if="micResult" class="mic-result-confirm" @click="confirmMicResult">确定</text>
+            </div>
+            <text class="mic-result-desc">按住说话</text>
+        </midea-popup>
     </div>
 </template>
 
 <script>
 import base from './base'
-import nativeService from './settings/nativeService';
+import nativeService from './settings/nativeService'
 import util from '@/common/util/util'
 
+const globalEvent = weex.requireModule('globalEvent')
 
 import { MideaCell, MideaGridSelect, MideaButton, MideaActionsheet, MideaPopup } from '@/index'
 
 import PeriodPicker from './components/periodPicker.vue'
+import ScanInput from '@/customer-service/components/scanInput.vue'
 
 const PLEASE_SELECT = "请选择"
 export default {
@@ -115,7 +127,8 @@ export default {
         MideaActionsheet,
         MideaPopup,
 
-        PeriodPicker
+        PeriodPicker,
+        ScanInput
     },
     mixins: [base],
     data() {
@@ -210,6 +223,9 @@ export default {
                 }],
                 productUse: '', //中央空调家用、商用标志
             },
+            isMicPanelShow: false,
+            isRecording: false,
+            micResult: ""
         }
     },
     computed: {
@@ -427,13 +443,50 @@ export default {
         },
 
         //二维码扫描
-        scanCode() {
-            nativeService.scanServiceCode().then(
-                (result) => {
-                    this.code = result.code
-                }
-            )
+        scanCode(result) {
+            this.code = nativeService.convertScanResult(result).code
         },
+
+        //录音
+        closeMicPannel() {
+            this.isMicPanelShow = false
+            this.isRecording = false
+            this.stopRecordAudio()
+            this.micResult = ''
+        },
+        startRecordAudio() {
+            this.isRecording = true
+            nativeService.startRecordAudio({
+                max: 30, //最长录音时间, 单位为秒
+                isSave: false, //是否保存语音录音文件
+                isTransform: true, //是否需要转换语音成文字
+            }).then(
+                (resp) => {
+                    if (resp.status == 0) {
+                    }
+                }
+            ).catch((error) => {
+            })
+        },
+        stopRecordAudio() {
+            if (!this.isRecording) return
+
+            nativeService.stopRecordAudio().then(
+                (resp) => {
+                    this.isRecording = false
+                    if (this.isMicPanelShow) {
+                        this.micResult += resp.data
+                    }
+                }
+            ).catch((error) => {
+            })
+        },
+        confirmMicResult() {
+            this.order.pubRemark += this.micResult
+            this.closeMicPannel()
+        },
+
+        //重新下单
         renewOrder(order) {
             let serviceUserDemandVO = order.serviceUserDemandVOs[0]
             //安装产品
@@ -574,6 +627,12 @@ export default {
                 this.userAddress = data.data
             })
         }
+
+        globalEvent.addEventListener("receiveMessageFromApp", (data) => {
+            if (data.messageType == "stopRecordAudio") {
+                this.stopRecordAudio()
+            }
+        })
     }
 }
 </script>
@@ -683,31 +742,6 @@ export default {
   background-color: #e8f1ff;
   color: #267aff;
 }
-.scan-group {
-  position: relative;
-}
-.scan-input {
-  font-family: PingFangSC-Regular;
-  font-size: 28px;
-  color: #000000;
-  border-radius: 4px;
-  border-color: #e5e5e8;
-  border-width: 1px;
-  height: 72px;
-  padding-left: 22px;
-  padding-right: 60px;
-  background-color: #fafafa;
-}
-.scan-icon-wrapper {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  padding: 16px;
-}
-.scan-icon {
-  height: 40px;
-  width: 40px;
-}
 .info-group {
   position: relative;
 }
@@ -747,5 +781,64 @@ export default {
   width: 750px;
   text-align: center;
   padding-bottom: 50px;
+}
+
+.mic-close-icon {
+  height: 40px;
+  width: 40px;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+.mic-result {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #000000;
+  height: 400px;
+  margin-top: 60px;
+  padding-left: 36px;
+  padding-right: 36px;
+}
+.mic-record-wrapper {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 160px;
+}
+.mic-result-clean {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #666666;
+  padding: 20px;
+}
+.mic-record-icon-wrapper {
+  height: 160px;
+  width: 160px;
+  margin-left: 110px;
+  margin-right: 110px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.mic-record-icon {
+  height: 120px;
+  width: 120px;
+}
+.mic-record-on-icon {
+  height: 160px;
+  width: 160px;
+}
+.mic-result-confirm {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #267aff;
+  padding: 20px;
+}
+.mic-result-desc {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #666666;
+  text-align: center;
+  padding-top: 10px;
 }
 </style>

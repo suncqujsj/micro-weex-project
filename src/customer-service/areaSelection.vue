@@ -42,8 +42,8 @@ export default {
                 })
                 nativeService.setItem(this.SERVICE_STORAGE_KEYS.selectedAreaObject, this.selectedAreaObject,
                     () => {
-                        this.appPageDataChannel.postMessage({ page: this.fromPage, key: "addressList", data: "" })
-                        this.back({ viewTag: 'branchList' })
+                        this.appPageDataChannel.postMessage({ page: this.fromPage, key: "areaSelection", data: "" })
+                        this.back({ viewTag: this.fromPage })
                     })
             } else if (item.level == 2) {
                 this.selectedAreaObject = Object.assign(this.selectedAreaObject, {
@@ -52,7 +52,7 @@ export default {
                 })
                 nativeService.setItem(this.SERVICE_STORAGE_KEYS.selectedAreaObject, this.selectedAreaObject,
                     () => {
-                        this.goTo('addressList', {}, { from: 'branchList', regionCode: item.regionCode })
+                        this.goTo('areaSelection', {}, { from: this.fromPage, regionCode: item.regionCode })
                     })
             } else if (item.level == 1) {
                 this.selectedAreaObject = {
@@ -61,7 +61,7 @@ export default {
                 }
                 nativeService.setItem(this.SERVICE_STORAGE_KEYS.selectedAreaObject, this.selectedAreaObject,
                     () => {
-                        this.goTo('addressList', {}, { from: 'branchList', regionCode: item.regionCode })
+                        this.goTo('areaSelection', {}, { from: this.fromPage, regionCode: item.regionCode })
                     })
             }
         }

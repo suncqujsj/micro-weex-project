@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import orderBase from '../order-base'
+import orderBase from '../orderBase'
 
 export default {
     components: {

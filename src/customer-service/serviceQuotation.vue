@@ -1,9 +1,6 @@
 <template>
     <div>
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
-            <div slot="customerContent" class="header-right">
-                <text class="header-right-text" @click="reset">清空</text>
-            </div>
         </midea-header>
         <scroller class="scroller">
             <div class="charge-detail-header">
@@ -17,15 +14,17 @@
                     <text class="charge-detail-desc">美的集团官方收费标准</text>
                 </div>
 
-                <div v-if="chargeItemList">
-                    <div class="charge-detail-item" v-for="(item, index) in chargeItemList" :key="index">
-                        <text class="charge-detail-label">{{item.title}}</text>
-                        <div class="charge-detail-row-wrapper">
-                            <text class="charge-detail-item-desc">{{item.title}}</text>
-                            <text class="charge-detail-item-price">{{item.title}}</text>
+                <div v-if="chargeList">
+                    <div class="charge-detail-item" v-for="(item, index) in chargeList" :key="index">
+                        <div v-for="(detailItem, detailIndex) in item" :key="detailIndex">
+                            <text class="charge-detail-label">{{detailItem.chargeCProject}}</text>
+                            <div class="charge-detail-row-wrapper">
+                                <text class="charge-detail-item-desc">{{detailItem.pubRemark}}</text>
+                                <text class="charge-detail-item-price">{{detailItem.chargeStandard}}{{detailItem.chargeUnit}}</text>
+                            </div>
                         </div>
+                        <text class="charge-detail-item-sum">总价：{{item.chargeFee}}元</text>
                     </div>
-                    <text class="charge-detail-item-sum">总价：102元</text>
                 </div>
             </div>
             <div class="charge-detail-body">
@@ -37,16 +36,21 @@
                 </div>
                 <div class="charge-detail-body-row">
                     <text class="order-body-label">请求时间：</text>
-                    <text class="order-body-desc">{{formattedOrder.contactTimeDesc}}</text>
+                    <text class="order-body-desc">{{convertTimeDesc(formattedOrder.contactTime)}}</text>
+                </div>
+                <div class="charge-detail-body-row top-line">
+                    <text class="order-customer">{{formattedOrder.servCustomerName}} {{formattedOrder.servCustomerMobilephone1}}</text>
                 </div>
                 <div class="charge-detail-body-row">
-                    <text class="order-body-desc">{{formattedOrder.servCustomerName}} {{formattedOrder.servCustomerMobilephone1}}{{'\n'}}{{formattedOrder.servCustomerAddress}}</text>
+                    <text class="order-address">{{formattedOrder.servCustomerAddress}}</text>
                 </div>
             </div>
             <text class="order-footer-label">未出现在报价单里的收费项，您有权拒绝付款</text>
 
             <div class="action-bar">
-                <midea-button text="我确认收费内容和报价" type="green" :btnStyle="{'background-color': '#267AFF','border-radius': '4px'}" @mideaButtonClicked="search">
+                <midea-button v-if="isNeedCharge && !isConfirmed" text="我确认收费内容和报价" type="green" :btnStyle="{'background-color': '#267AFF','border-radius': '4px'}" @mideaButtonClicked="submit">
+                </midea-button>
+                <midea-button v-if="isConfirmed" text="查看工单详情" type="green" :btnStyle="{'background-color': '#267AFF','border-radius': '4px'}" @mideaButtonClicked="goToOrderDetail">
                 </midea-button>
             </div>
         </scroller>
@@ -55,7 +59,7 @@
 
 <script>
 import base from './base'
-import orderBase from './order-base'
+import orderBase from './orderBase'
 import nativeService from '@/common/services/nativeService'
 import util from '@/common/util/util'
 
@@ -71,17 +75,9 @@ export default {
             title: '服务报价单',
             serviceOrderNo: '',
             order: null,
-            chargeItemList: [
-                {
-                    title: "测试测试测试测试"
-                },
-                {
-                    title: "测试测试测试测试"
-                },
-                {
-                    title: "测试测试测试测试"
-                }
-            ]
+            chargeList: [],
+            isNeedCharge: false,
+            isConfirmed: false
         }
     },
     computed: {
@@ -95,15 +91,52 @@ export default {
         }
     },
     methods: {
-        convertProcessTime(time) {
-            return util.dateFormat(new Date(time), "yyyy-MM-dd hh:mm")
+        convertTimeDesc(time) {
+            return util.dateFormat(new Date(time), "yyyy年MM月dd日 hh:mm")
         },
-        reset() {
-
+        submit() {
+            nativeService.getUserInfo().then((userInfo) => {
+                let param = {
+                    "webConfirmNo": "1234567", //外部确认号码???this.userInfo.uid
+                    "confirmIphone": userInfo.mobile,
+                    "archivesNo": this.chargeList[0].archivesNo,
+                    "serviceOrderNo": this.order.serviceOrderNo,
+                    "orgCode": this.order.orgCode
+                }
+                nativeService.dochargecomfirm(param).then((resp) => {
+                    nativeService.toast("确认成功")
+                    this.isConfirmed = true
+                })
+            })
+        },
+        goToOrderDetail() {
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, this.order, () => {
+                this.goTo("orderDetail", {}, { from: 'serviceQuotation', id: this.order.serviceOrderNo })
+            })
         }
     },
     created() {
         this.serviceOrderNo = nativeService.getParameters('id') || null
+        let param = {
+            filterOrderNos: this.serviceOrderNo,
+            page: 0,
+            resultNum: 1
+        }
+        nativeService.queryserviceorder(param).then((data) => {
+            if (data.list && data.list.length > 0) {
+                this.order = data.list[0]
+                let chargeDetailParam = {
+                    "serviceOrderNo": this.order.serviceOrderNo,
+                    "orgCode": this.order.orgCode
+                }
+                nativeService.querychargedetails(chargeDetailParam).then((resp) => {
+                    this.chargeList = resp.chargeList
+                    if (this.chargeList && this.chargeList.length > 0 && this.chargeList[0].chargeStatus == "11") {
+                        this.isNeedCharge = true
+                    }
+                })
+            }
+        })
     }
 }
 </script>
@@ -142,6 +175,7 @@ export default {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  margin-bottom: 16px;
 }
 .charge-detail-title {
   font-family: PingFangSC-Medium;
@@ -149,7 +183,6 @@ export default {
   font-size: 32px;
   color: #000000;
   margin-left: 128px;
-  margin-bottom: 16px;
 }
 .text-tag {
   margin-left: 15px;
@@ -176,6 +209,12 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding-top: 16px;
+}
+
+.top-line {
+  border-top-color: #e5e5e8;
+  border-top-width: 1px;
+  border-top-style: solid;
 }
 .charge-detail-label {
   font-family: PingFangSC-Regular;
@@ -228,15 +267,25 @@ export default {
   padding-bottom: 32px;
 }
 .order-body-label {
-  width: 160px;
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #666666;
-  text-align: right;
+  text-align: left;
   margin-right: 15px;
 }
 .order-body-desc {
   flex: 1;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #000000;
+}
+.order-customer {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #000000;
+  padding-top: 32px;
+}
+.order-address {
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #000000;

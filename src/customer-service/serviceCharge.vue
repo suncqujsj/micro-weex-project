@@ -2,7 +2,7 @@
     <div class="wrapper">
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
-        <div class="search-bar" :style="{'height':isIos?'136px':'96px','padding-top':isIos?'40px':'0px'}">
+        <div class="search-bar">
             <div class="search-bar-content">
                 <image class="search-bar-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
                 <input class="search-bar-input" placeholder="查询关键字" v-model="queryParam.content" @return="search" return-key-type="search"></input>

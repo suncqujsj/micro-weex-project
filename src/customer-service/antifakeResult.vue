@@ -10,8 +10,8 @@
 
                 <div class="item-group antifake-result-body-row">
                     <text class="antifake-result-label">总共查询次数:</text>
-                    <text class="antifake-result-desc result-count">{{result.result.QueryCount}}</text>
-                    <text class="antifake-result-desc">次{{result.result.QueryCount>1?' (该码已被查询过，请谨防假冒)':''}}</text>
+                    <text class="antifake-result-desc result-count">{{result.QueryCount}}</text>
+                    <text class="antifake-result-desc">次{{result.QueryCount>1?' (该码已被查询过，请谨防假冒)':''}}</text>
                 </div>
                 <div class="item-group antifake-result-body-row">
                     <text class="antifake-result-label">首次查询时间:</text>
@@ -41,40 +41,57 @@
             </div>
         </scroller>
 
-        <midea-dialog :title="resultMessage" mainBtnColor="#267AFF" secondBtnColor="#267AFF" :show="dialogShow" cancelText="否" confirmText="我知道了" @mideaDialogCancelBtnClicked="dialogConfirm" @mideaDialogConfirmBtnClicked="dialogConfirm" single=true>
-        </midea-dialog>
+        <empty-dialog :show="dialogShow">
+            <div slot="content">
+                <div class="dialog-result group-bottom-border">
+                    <div class="dialog-result-row">
+                        <text class="dialog-result-count">{{result.QueryCount}}</text>
+                        <text class="dialog-result-count-desc">次</text>
+                    </div>
+                    <text class="dialog-result-count-title">{{result.QueryCount>1?' (该码已被查询过，请谨防假冒)':''}}</text>
+                    <text class="dialog-result-desc">尊敬的客户你好，您所查询的是</text>
+                    <text class="dialog-result-desc">{{code}}</text>
+                </div>
+                <div class="dialog-result-footer" @click="dialogShow=false">
+                    <text class="dialog-result-btn">确认</text>
+                </div>
+            </div>
+        </empty-dialog>
+
     </div>
 </template>
 
 <script>
 import base from './base'
 import nativeService from './settings/nativeService'
-import { MideaDialog, MideaButton } from '@/index'
+import { MideaButton } from '@/index'
+import EmptyDialog from '@/customer-service/components/emptyDialog.vue'
 
 const clipboard = weex.requireModule('clipboard')
 
 export default {
     components: {
-        MideaDialog
+        EmptyDialog
     },
     mixins: [base],
     data() {
         return {
             title: '滤芯防伪',
             dialogShow: false,
+            code: '',
             result: {}
         }
     },
     computed: {
         firstQueryTimeDesc() {
-            let firstQueryTime = this.result.result.FirstQueryTime
+            let firstQueryTime = this.result.FirstQueryTime
             let timeObj = new Date(firstQueryTime)
             return timeObj.getFullYear() + '年' + (timeObj.getMonth() + 1) + '月' + timeObj.getDate() + '日 ' + timeObj.getHours() + ':' + timeObj.getMinutes()
         },
         resultMessage() {
-            if (this.result.result.QueryCount == 1) {
+            if (this.result.QueryCount == 1) {
                 return "该码第一次被查询，是美的正品。"
-            } else if (this.result.result.QueryCount > 1) {
+            } else if (this.result.QueryCount > 1) {
                 return "该码已被查询过，请谨防假冒。"
             }
         }
@@ -89,7 +106,9 @@ export default {
     },
     created() {
         nativeService.getItem(this.SERVICE_STORAGE_KEYS.antifakeResult, (resp) => {
-            this.result = JSON.parse(resp.data)
+            let result = JSON.parse(resp.data)
+            this.result = result.result
+            this.code = result.code
             this.showDialog()
         })
     }
@@ -166,5 +185,51 @@ export default {
   width: 686px;
   text-align: center;
   padding-bottom: 32px;
+}
+.dialog-result {
+  padding: 32px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.dialog-result-row {
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+}
+.dialog-result-count {
+  font-family: PingFangSC-Regular;
+  font-size: 48px;
+  color: #ff3b30;
+}
+.dialog-result-count-desc {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #000000;
+  padding-bottom: 10px;
+}
+.dialog-result-count-title {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #000000;
+  text-align: center;
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+.dialog-result-desc {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #666666;
+}
+.dialog-result-footer {
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  height: 89px;
+}
+.dialog-result-btn {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #267aff;
 }
 </style>

@@ -66,7 +66,7 @@
 
 <script>
 import base from './base'
-import orderBase from './order-base'
+import orderBase from './orderBase'
 import nativeService from '@/common/services/nativeService'
 import util from '@/common/util/util'
 import { MideaDialog, MideaActionsheet } from '@/index'
@@ -205,7 +205,7 @@ export default {
         assessService() {
             nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, this.order,
                 () => {
-                    this.goTo("callbackInfo", {}, { from: 'orderList', id: this.order.serviceOrderNo })
+                    this.goTo("orderCallback", {}, { from: 'orderList', id: this.order.serviceOrderNo })
                 })
         },
         callService() {

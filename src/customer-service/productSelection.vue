@@ -48,7 +48,7 @@
                 </div>
             </scroller>
         </div>
-        <div v-if="isShowAnimation" class="animation-outer" ref="outer">
+        <div v-if="isShowingAnimation" class="animation-outer" ref="outer">
             <div class="animation-inner" ref="inner" :style="{'left': animationConfig.startX,'top': animationConfig.startY}">
                 <image class="animation-img" :src="selectedProductArray[selectedProductArray.length - 1].prodImg || './assets/img/product/default.png'" resize="contain"></image>
             </div>
@@ -90,7 +90,7 @@ export default {
             dialogShow: false,
             isMultiMode: false,
             enableAnimation: true,
-            isShowAnimation: false,
+            isShowingAnimation: false,
             isProceedingSelection: false,
             animationConfig: {
                 startX: 0,
@@ -168,17 +168,19 @@ export default {
                             this.selectedProductArray.push(productItem)
                             this.showSelectAnimation(event, () => {
                                 this.isProceedingSelection = false
-                                this.$nextTick(() => {
+                                if (this.selectedProductArray.length > 3) {
                                     const el = this.$refs["selectedProduct" + (this.selectedProductArray.length - 1)][0]
                                     dom.scrollToElement(el, {})
-                                })
+                                }
                             })
                         } else {
                             this.selectedProductArray.push(productItem)
                             this.isProceedingSelection = false
                             this.$nextTick(() => {
-                                const el = this.$refs["selectedProduct" + (this.selectedProductArray.length - 1)][0]
-                                dom.scrollToElement(el, {})
+                                if (this.selectedProductArray.length > 3) {
+                                    const el = this.$refs["selectedProduct" + (this.selectedProductArray.length - 1)][0]
+                                    dom.scrollToElement(el, {})
+                                }
                             })
                         }
                     } else {
@@ -194,8 +196,7 @@ export default {
         showSelectAnimation(event, callback) {
             this.animationConfig.startX = event.position.x
             this.animationConfig.startY = event.position.y
-
-            this.isShowAnimation = true
+            this.isShowingAnimation = true
             const duration = 600
             this.$nextTick(() => {
                 //清楚之前的效果
@@ -208,39 +209,42 @@ export default {
                     duration: 0, //ms
                     timingFunction: 'linear',
                     delay: 0 //ms
-                })
-                var innerEl = this.$refs.inner;
-                animation.transition(innerEl, {
-                    styles: {
-                        transform: 'translateY(0px)',
-                        transformOrigin: 'center center'
-                    },
-                    duration: 0, //ms
-                    timingFunction: 'linear',
-                    delay: 0 //ms
-                })
-                //执行动画
-                animation.transition(outerEl, {
-                    styles: {
-                        transform: 'translateX(' + (100 - event.position.x) + 'px)',
-                        transformOrigin: 'center center'
-                    },
-                    duration: duration, //ms
-                    timingFunction: 'linear',
-                    delay: 0 //ms
-                }, function () {
-                })
-                animation.transition(innerEl, {
-                    styles: {
-                        transform: 'translateY(' + (this.pageHeight - event.position.y - 100) + 'px) scale(0.5)',
-                        transformOrigin: 'center center'
-                    },
-                    duration: duration + 1, //ms
-                    timingFunction: 'cubic-bezier(.38,-0.93,.66,.74)',
-                    delay: 0 //ms
-                }, function () {
-                    callback()
-                    this.isShowAnimation = false
+                }, () => {
+                    var innerEl = this.$refs.inner;
+                    animation.transition(innerEl, {
+                        styles: {
+                            transform: 'translateY(0px)',
+                            transformOrigin: 'center center'
+                        },
+                        duration: 0, //ms
+                        timingFunction: 'linear',
+                        delay: 0 //ms
+                    }, () => {
+                        //执行动画
+                        animation.transition(outerEl, {
+                            styles: {
+                                transform: 'translateX(' + (100 - event.position.x) + 'px)',
+                                transformOrigin: 'center center'
+                            },
+                            duration: duration, //ms
+                            timingFunction: 'linear',
+                            delay: 0 //ms
+                        }, () => {
+                            this.isShowingAnimation = false
+                        })
+                        animation.transition(innerEl, {
+                            styles: {
+                                transform: 'translateY(' + (this.pageHeight - event.position.y - 100) + 'px) scale(0.5)',
+                                transformOrigin: 'center center'
+                            },
+                            duration: duration + 1, //ms
+                            timingFunction: 'cubic-bezier(.38,-0.93,.66,.74)',
+                            delay: 0 //ms
+                        }, () => {
+                            this.isShowingAnimation = false
+                            callback()
+                        })
+                    })
                 })
             })
         },
@@ -293,7 +297,6 @@ export default {
             })
         } else {
             if (this.fromPage == "maintenance") {
-                this.selectedBrandIndex = -1
                 //我的家电
                 let param = {
                     pageIndex: 1,
@@ -302,6 +305,11 @@ export default {
                 }
                 nativeService.getUserProductPageList(param).then((data) => {
                     this.myProductList = data.data.list
+                    if (this.myProductList && this.myProductList.length > 0) {
+                        this.selectedBrandIndex = -1
+                    } else {
+                        this.selectedBrandIndex = 0
+                    }
                     this.isLoaded = true
                 }).catch((error) => {
                     nativeService.toast(nativeService.getErrorMessage(error))

@@ -41,7 +41,7 @@
                 </image>
                 <text slot="title" class="service-item-title">网点查询</text>
             </midea-item>
-            <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('serviceAndCharge')">
+            <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('serviceList')">
                 <image slot="itemImg" src="./assets/img/service_ic_policy@3x.png" class="service-item-img" resize='contain'>
                 </image>
                 <text slot="title" class="service-item-title">服务与收费政策</text>
@@ -55,7 +55,7 @@
             <cell class="wrapper-gap"></cell>
         </list>
 
-        <midea-actionsheet :items="actionsheetItems" :show="showBar" @close="closeActionsheet" @itemClick="actionsheetItemClick" @btnClick="actionsheetBtnClick" ref="actionsheet">
+        <midea-actionsheet class="actionsheet-popup" :items="actionsheetItems" button="取消" :show="showBar" @close="closeActionsheet" @itemClick="actionsheetItemClick" @btnClick="actionsheetBtnClick" ref="actionsheet">
             <div slot="item-0" class="actionsheet-item">
                 <text class="actionsheet-item-label">美的：</text>
                 <text class="actionsheet-item-desc">400-889-9315</text>
@@ -70,7 +70,7 @@
 
 <script>
 import base from './base'
-import orderBase from './order-base'
+import orderBase from './orderBase'
 import nativeService from './settings/nativeService'
 import debugUtil from '@/common/util/debugUtil'
 import util from '@/common/util/util'
@@ -324,6 +324,9 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 32px;
   color: #000000;
+}
+.actionsheet-popup {
+  /* margin-bottom: 98px; */
 }
 .actionsheet-item {
   flex-direction: row;

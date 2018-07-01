@@ -47,19 +47,17 @@
 }
 </style>
 <script>
-import mideaHeader from '@/midea-component/header.vue'
-import mideaTitleBar from '@/component/title-bar.vue'
-import mideaButton from '@/midea-component/button.vue'
 import nativeService from '@/common/services/nativeService'
+
+import { MideaHeader, MideaTitleBar, MideaButton } from '@/index'
 
 module.exports = {
     components: {
-        mideaHeader,
-        mideaTitleBar,
-        mideaButton
+        MideaHeader,
+        MideaTitleBar,
+        MideaButton
     },
     data: () => ({
-        // url: "http://10.8.81.38:8080/dist/midea-demo/weex.js?root=midea-demo&ip=10.8.81.38",
         url: "http://10.8.81.45:8080/dist/midea-demo/weex.js?root=midea-demo&ip=10.8.81.45",
         history: []
     }),

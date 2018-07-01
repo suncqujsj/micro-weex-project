@@ -158,7 +158,7 @@ export default {
     methods: {
         handlePageData(data) {
             if (data.page == "branchList") {
-                if (data.key == "addressList") {
+                if (data.key == "areaSelection") {
                     //改变地区后刷新列表
                     nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedAreaObject, (resp) => {
                         if (resp.result == 'success') {
@@ -178,7 +178,7 @@ export default {
             this.isListMode = !this.isListMode
         },
         changeArea() {
-            this.goTo('addressList', {}, { from: 'branchList' })
+            this.goTo('areaSelection', {}, { from: 'branchList' })
         },
         changeBranch(event) {
             this.currentAddressIndex = event.index
@@ -219,7 +219,7 @@ export default {
             let provinceObj, cityObj, countyObj
             return new Promise((resolve, reject) => {
                 let param = {
-                    regionCode: 0
+                    regionCode: '0'
                 }
                 nativeService.getAreaList(param).then((data) => {
                     provinceObj = data.content.children.filter((provinceItem) => {
@@ -252,7 +252,18 @@ export default {
         },
         getUnitList(param) {
             nativeService.queryunitarchives(param).then((data) => {
-                this.branchList = data.list || []
+                let result = data.list || []
+                this.branchList = result
+                //GCJ-02(火星)转BD-09（百度地图）
+                // this.branchList = result.map((item) => {
+                //     if (item.unitLatitude && item.nuitLongitude) {
+                //         let point = nativeService.mapabcEncryptToBdmap(item.unitLatitude, item.nuitLongitude)
+                //         item.unitLatitude = point.lat
+                //         item.nuitLongitude = point.lng
+                //     }
+                //     return item
+                // })
+
                 this.currentAddressIndex = 0
                 this.isLoaded = true
             }).catch((error) => {

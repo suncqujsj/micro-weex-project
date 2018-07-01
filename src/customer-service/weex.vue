@@ -55,7 +55,7 @@
             <cell class="wrapper-gap"></cell>
         </list>
 
-        <midea-actionsheet :items="actionsheetItems" :show="showBar" @close="closeActionsheet" @itemClick="actionsheetItemClick" @btnClick="actionsheetBtnClick" ref="actionsheet">
+        <midea-actionsheet class="actionsheet-popup" :items="actionsheetItems" :show="showBar" @close="closeActionsheet" @itemClick="actionsheetItemClick" @btnClick="actionsheetBtnClick" ref="actionsheet">
             <div slot="item-0" class="actionsheet-item">
                 <text class="actionsheet-item-label">美的：</text>
                 <text class="actionsheet-item-desc">400-889-9315</text>
@@ -324,6 +324,9 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 32px;
   color: #000000;
+}
+.actionsheet-popup {
+  /* margin-bottom: 98px; */
 }
 .actionsheet-item {
   flex-direction: row;

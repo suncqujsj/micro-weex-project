@@ -2,21 +2,19 @@
     <div class="wrapper">
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
-        <scroller class="content-wrapper">
+        <scroller v-if="!isSearchMode" class="content-wrapper">
             <div class="base-group">
                 <div class="item-group">
                     <text class="type-select-label">以下为选填信息，有助于更快更好地为您服务</text>
-                    <div class="search-history">
-                        <text v-for="(item,index) in types" :key="index" v-bind:class="['search-history-item', typeSelectedIndex==index?'search-history-item-selected':'']" @click="typeSelected(index)">{{item.title}}</text>
-                    </div>
                 </div>
-
-                <div class="item-group scan-group">
-                    <input v-if="typeSelectedIndex==1" class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="productCode" />
-                    <input v-if="typeSelectedIndex==0" class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="barCode" />
-                    <div v-if="typeSelectedIndex==0" class="scan-icon-wrapper">
+                <div class="item-group">
+                    <input class="scan-input" placeholder="请输入或扫机身条码" :autofocus=false v-model="barCode" @input="resetData" />
+                    <div class="scan-icon-wrapper">
                         <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
                     </div>
+                </div>
+                <div class="item-group">
+                    <input class="scan-input" placeholder="请输入型号" :autofocus=false v-model="productModel" @focus="isSearchMode=true" />
                 </div>
 
                 <div class="item-group scan-group group-bottom-border">
@@ -45,7 +43,19 @@
             </div>
         </scroller>
 
-        <midea-select :show="isShowProductList" title="选择产品" :items="formattedProductList" :index="0" @close="isShowProductList=false" @itemClick="selectProduct" :hideOnMask="false"></midea-select>
+        <div v-if="isSearchMode">
+            <div class="base-group">
+                <div class="item-group">
+                    <input class="scan-input" placeholder="请输入型号" :autofocus=true v-model="searchModelKeyWord" @input="searchproductModel" />
+                </div>
+            </div>
+
+            <scroller class="scroller" loadmoreoffset=50 @loadmore="loadmore">
+                <div class="scroller-item-wrapper" v-for="(item, index) in productList" @click="selectProduct(item)" :key="index">
+                    <text class="scroller-item">{{item.product.productModel}}</text>
+                </div>
+            </scroller>
+        </div>
     </div>
 </template>
 
@@ -65,20 +75,15 @@ export default {
     data() {
         return {
             title: '配件价格',
-            types: [
-                {
-                    'title': '机身条码',
-                    'checked': true
-                },
-                {
-                    'title': '产品型号'
-                }
-            ],
             typeSelectedIndex: 0,
             barcode: '',
             productCode: '',
+            productModel: '',
+            timeoutHandler: null,
+            searchModelKeyWord: '',
+            isSearchMode: false,
+            searchPageIndex: 0,
             productList: null,
-            isShowProductList: false,
             selectedProduct: '',
             materialName: '',
             materialList: [],
@@ -86,23 +91,9 @@ export default {
         }
     },
     computed: {
-        formattedProductList() {
-            let result
-            if (this.productList) {
-                result = this.productList.map((item) => {
-                    return {
-                        key: item.product.salesCode,
-                        value: item.product.productModel,
-                        orgCode: item.product.crmEntCode
-                    }
-                })
-            }
-
-            return result
-        },
         isDataReady() {
             let result = false
-            if (((this.typeSelectedIndex == 0 && this.barCode) || (this.typeSelectedIndex == 1 && this.productCode)) && this.materialName) {
+            if (this.productModel && this.materialName) {
                 result = true
             }
 
@@ -110,9 +101,6 @@ export default {
         }
     },
     methods: {
-        typeSelected(index) {
-            this.typeSelectedIndex = index
-        },
         scanCode() {
             nativeService.scanServiceCode().then(
                 (result) => {
@@ -120,55 +108,63 @@ export default {
                 }
             )
         },
-        search() {
-            if (!this.isDataReady) return
 
-            if (this.typeSelectedIndex == 0) {
-                //条码
-            } else {
-                //产品型号
-                let param = {
-                    version: "1.0",
-                    code: this.barcode,
-                    codeType: 10,
-                    sourceTag: "3",
-                    pageIndex: "1",
-                    pageSize: "1000"
-                }
-                nativeService.getProdMessage(param).then((resp) => {
-                    this.productList = resp.data.filter((item) => {
-                        return item.product.orgCode
-                    })
-                    if (this.productList) {
-                        if (this.productList.length == 1) {
-                            this.selectedProduct = {
-                                salesCode: this.productList[0].product.salesCode,
-                                crmEntCode: this.productList[0].product.crmEntCode
-                            }
-
-                            this.getCharge()
-                        } else if (this.productList.length > 1) {
-                            this.isShowProductList = true
-                        }
-                    }
-                }).catch((error) => {
-                    nativeService.toast(nativeService.getErrorMessage(error))
+        searchproductModel(event) {
+            //产品型号模糊查询
+            if (this.timeoutHandler) {
+                clearTimeout(this.timeoutHandler)
+            }
+            this.timeoutHandler = setTimeout(() => {
+                this.getProductList().then((list) => {
+                    this.productList = list
+                })
+            }, 200)
+        },
+        loadmore() {
+            if (this.searchModelKeyWord) {
+                this.searchPageIndex++
+                this.getProductList().then((list) => {
+                    this.productList = this.productList.concat(this.productList, list)
                 })
             }
         },
-        selectProduct(event) {
-            this.selectedProduct = {
-                salesCode: event.key,
-                crmEntCode: event.crmEntCode
-            }
-            this.getCharge()
+        getProductList() {
+            return new Promise((resolve, reject) => {
+                //产品型号模糊查询
+                if (this.searchModelKeyWord) {
+                    let param = {
+                        version: "4.0",
+                        code: this.searchModelKeyWord,
+                        codeType: "10",
+                        // dataSource: "CSS",
+                        pageIndex: this.searchPageIndex + '',
+                        pageSize: "20"
+                    }
+                    nativeService.getProdMessage(param).then((resp) => {
+                        let result = resp.data.list.filter((item) => {
+                            return item.prodType && item.prodType.orgCode && item.prodType.orgCode.length > 0
+                        })
+                        resolve(result)
+                    }).catch((error) => {
+                        nativeService.toast(nativeService.getErrorMessage(error))
+                    })
+                }
+            })
         },
-        getCharge() {
+        selectProduct(product) {
+            this.isSearchMode = false
+            this.productModel = product.product.productModel
+            this.productCode = product.product.salesCode
+            this.orgCode = product.prodType.orgCode
+        },
+        search() {
+            if (!this.isDataReady) return
+
             let param = {
                 pageSize: 1,
                 pageNum: 100,
-                productCode: this.selectedProduct.productCode,
-                orgCode: this.selectedProduct.crmEntCode,
+                productCode: this.productCode,
+                orgCode: this.orgCode,
                 materialName: this.materialName
 
             }
@@ -218,7 +214,6 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #666666;
-  padding-bottom: 32px;
 }
 .search-history {
   flex-direction: row;
@@ -267,6 +262,23 @@ export default {
 .scan-icon {
   height: 40px;
   width: 40px;
+}
+.scroller {
+  flex: 1;
+  height: 1000px;
+}
+.scroller-item-wrapper {
+  padding-top: 28px;
+  padding-left: 32px;
+  padding-bottom: 28px;
+  border-bottom-color: #e5e5e8;
+  border-bottom-width: 1px;
+  background-color: #ffffff;
+}
+.scroller-item {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #000000;
 }
 .action-bar {
   background-color: #ffffff;

@@ -2,24 +2,21 @@
     <div class="wrapper">
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
-        <scroller class="content-wrapper">
+        <scroller v-if="!isSearchMode" class="content-wrapper">
             <div class="base-group">
                 <div class="item-group">
-                    <text class="type-select-label">以下为选填信息，有助于更快更好地为您服务</text>
-                    <div class="search-history">
-                        <text v-for="(item,index) in types" :key="index" v-bind:class="['search-history-item', typeSelectedIndex==index?'search-history-item-selected':'']" @click="typeSelected(index)">{{item.title}}</text>
-                    </div>
+                    <text class="type-select-label">以下为选填信息，有助于更快更好地为您服务{{orgCode}}</text>
                 </div>
-
-                <div class="item-group scan-group">
-                    <input v-if="typeSelectedIndex==1" class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="productCode" @input="resetData" />
-                    <input v-if="typeSelectedIndex==0" class="scan-input" placeholder="请输入型号或扫机身条码" :autofocus=false v-model="barCode" @input="resetData" />
-                    <div v-if="typeSelectedIndex==0" class="scan-icon-wrapper">
+                <div class="item-group">
+                    <input class="scan-input" placeholder="请输入或扫机身条码" :autofocus=false v-model="barCode" @input="resetData" />
+                    <div class="scan-icon-wrapper">
                         <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
                     </div>
                 </div>
+                <div class="item-group">
+                    <input class="scan-input" placeholder="请输入型号" :autofocus=false v-model="productModel" @focus="isSearchMode=true" />
+                </div>
             </div>
-
             <div class="base-group">
                 <midea-cell title="" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="pickDate">
                     <div slot="title" class="cell-title">
@@ -39,6 +36,19 @@
                 </div>
             </div>
         </scroller>
+        <div class="search-mode" v-if="isSearchMode">
+            <div class="base-group">
+                <div class="item-group">
+                    <input class="scan-input" placeholder="请输入型号" return-key-type="search" :autofocus=true v-model="searchModelKeyWord" @input="searchproductModel" />
+                </div>
+            </div>
+
+            <scroller class="scroller" loadmoreoffset=50 @loadmore="loadmore">
+                <div class="scroller-item-wrapper" v-for="(item, index) in productList" @click="selectProduct(item)" :key="index">
+                    <text class="scroller-item">{{item.product.productModel}}</text>
+                </div>
+            </scroller>
+        </div>
     </div>
 </template>
 
@@ -59,18 +69,14 @@ export default {
     data() {
         return {
             title: '包修政策',
-            types: [
-                {
-                    'title': '机身条码',
-                    'checked': true
-                },
-                {
-                    'title': '产品型号'
-                }
-            ],
-            typeSelectedIndex: 0,
             barCode: '',
             productCode: '',
+            orgCode: "",
+            productModel: '',
+            timeoutHandler: null,
+            searchModelKeyWord: '',
+            isSearchMode: false,
+            searchPageIndex: 0,
             date: null,
             productList: null,
             result: null
@@ -79,33 +85,78 @@ export default {
     computed: {
     },
     methods: {
-        typeSelected(index) {
-            this.typeSelectedIndex = index
-            this.resetData()
-        },
         resetData(event) {
             this.date = null
             this.result = null
+            this.searchPageIndex = 0
         },
         scanCode() {
             nativeService.scanServiceCode().then(
                 (result) => {
                     this.barCode = result.code
-                    this.date = null
-                    this.result = null
+                    this.resetData()
                 }
             )
         },
 
+        searchproductModel(event) {
+            //产品型号模糊查询
+            if (this.timeoutHandler) {
+                clearTimeout(this.timeoutHandler)
+            }
+            this.timeoutHandler = setTimeout(() => {
+                this.getProductList().then((list) => {
+                    this.productList = list
+                })
+            }, 200)
+        },
+        loadmore() {
+            if (this.searchModelKeyWord) {
+                this.searchPageIndex++
+                this.getProductList().then((list) => {
+                    this.productList = this.productList.concat(this.productList, list)
+                })
+            }
+        },
+        getProductList() {
+            return new Promise((resolve, reject) => {
+                //产品型号模糊查询
+                if (this.searchModelKeyWord) {
+                    let param = {
+                        version: "4.0",
+                        code: this.searchModelKeyWord,
+                        codeType: "10",
+                        // dataSource: "CSS",
+                        pageIndex: this.searchPageIndex + '',
+                        pageSize: "20"
+                    }
+                    nativeService.getProdMessage(param).then((resp) => {
+                        let result = resp.data.list.filter((item) => {
+                            return item.prodType.orgCode && item.prodType.orgCode.length > 0
+                        })
+                        resolve(result)
+                    }).catch((error) => {
+                        nativeService.toast(nativeService.getErrorMessage(error))
+                    })
+                }
+            })
+        },
+        selectProduct(product) {
+            this.isSearchMode = false
+            this.productModel = product.product.productModel
+            this.productCode = product.product.salesCode
+            this.orgCode = product.prodType.orgCode
+            this.resetData()
+        },
         pickDate() {
-            if ((this.typeSelectedIndex == 0 && !this.barCode) || (this.typeSelectedIndex == 1 && !this.productCode)) {
+            if (!this.barCode && !this.productModel) {
                 nativeService.toast('请输入型号或扫机身条码')
                 return
             }
             picker.pickDate({
                 'value': this.date,
                 'max': util.dateFormat(new Date(), "yyyy-MM-dd"),
-                'min': '2015-11-28',
+                'min': '2000-01-01',
                 'title': '选择日期', //取消和确定中间那标题
                 'cancelTxt': '取消', //取消按钮文字
                 'confirmTxt': '确定', //确定按钮文字,
@@ -117,34 +168,18 @@ export default {
                 var result = event.result;
                 if (result == 'success') {
                     this.date = event.data;
-                    if (this.typeSelectedIndex == 0) {
-                        //条码
-                        let param = {
-                            barcode: this.typeSelectedIndex == 0 ? this.barCode : '',
-                            productCode: this.typeSelectedIndex == 1 ? this.barCode : '',
-                            purchaseDate: util.dateFormat(new Date(this.date), "yyyy-MM-dd")
-                        }
-                        nativeService.querywarrantydescbycodeorsn(param).then((data) => {
-                            this.result = data
-                        }).catch((error) => {
-                            nativeService.toast(nativeService.getErrorMessage(error))
-                        })
-                    } else {
-                        //产品型号模糊查询
-                        let param = {
-                            version: "1.0",
-                            code: this.barCode,
-                            codeType: "10",
-                            sourceTag: "3",
-                            pageIndex: "1",
-                            pageSize: "1000"
-                        }
-                        nativeService.getProdMessage(param).then((resp) => {
-                            this.productList = resp.data.filter((item) => {
-                                return item.product.orgCode
-                            })
-                        })
+                    //条码
+                    let param = {
+                        barcode: this.barCode,
+                        productCode: this.productCode,
+                        orgCode: this.orgCode,
+                        purchaseDate: util.dateFormat(new Date(this.date), "yyyy-MM-dd")
                     }
+                    nativeService.querywarrantydescbycodeorsn(param).then((data) => {
+                        this.result = data
+                    }).catch((error) => {
+                        nativeService.toast(nativeService.getErrorMessage(error))
+                    })
                 }
             });
         },
@@ -158,6 +193,9 @@ export default {
 .wrapper {
   background-color: #f2f2f2;
   position: relative;
+}
+.content-wrapper {
+  flex-direction: column;
 }
 .base-group {
   padding-top: 24px;
@@ -195,7 +233,6 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #666666;
-  padding-bottom: 32px;
 }
 .search-history {
   flex-direction: row;
@@ -219,10 +256,7 @@ export default {
   background-color: #e8f1ff;
   color: #267aff;
 }
-.scan-group {
-  position: relative;
-  padding-bottom: 32px;
-}
+
 .scan-input {
   font-family: PingFangSC-Regular;
   font-size: 28px;
@@ -244,6 +278,26 @@ export default {
 .scan-icon {
   height: 40px;
   width: 40px;
+}
+.search-mode {
+  flex: 1;
+  flex-direction: column;
+}
+.scroller {
+  flex: 1;
+}
+.scroller-item-wrapper {
+  padding-top: 28px;
+  padding-left: 32px;
+  padding-bottom: 28px;
+  border-bottom-color: #e5e5e8;
+  border-bottom-width: 1px;
+  background-color: #ffffff;
+}
+.scroller-item {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #000000;
 }
 .result-title {
   font-family: PingFangSC-Medium;

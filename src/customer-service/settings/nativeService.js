@@ -1,11 +1,11 @@
 import nativeService from '@/common/services/nativeService'
 import util from '@/common/util/util'
 import { SERVICE_STORAGE_KEYS } from './globalKeys'
-const cssRrequestSendWithApp = true
+const cssRrequestSendWithApp = !true
 const requestSendWithApp = true
 const HOST_CSS = cssRrequestSendWithApp ? '' : "http://csuat.midea.com"
-const HOST_CENTER_APP = requestSendWithApp ? '' : "http://10.16.38.95:8080"
-const HOST_CENTER = requestSendWithApp ? '' : "http://10.16.85.47"
+const HOST_CENTER_APP = requestSendWithApp ? '' : "http://cmms2.midea.com"
+const HOST_CENTER = requestSendWithApp ? '' : "http://cmms2.midea.com"
 const HOST_antiFake = "http://wap.cjm.so/Common/DataService.ashx"
 
 let customizeNativeService = Object.assign(nativeService, {
@@ -189,7 +189,7 @@ let customizeNativeService = Object.assign(nativeService, {
     // CSS 接口： 技术组提供
     sendCssTechHttpRequestWrapper(url, params, options) {
         return new Promise((resolve, reject) => {
-            if (requestSendWithApp) {
+            if (cssRrequestSendWithApp) {
                 let requestOption = Object.assign({ method: "POST", isShowLoading: true }, options)
                 let requestParam = {
                     method: requestOption.method || "POST",
@@ -231,12 +231,12 @@ let customizeNativeService = Object.assign(nativeService, {
         })
     },
     getChargeStandardList(param = {}) {
-        let url = this.serviceList.getChargeStandardList + (requestSendWithApp ? '&' : '?') + this.objectToQuery(param)
+        let url = this.serviceList.getChargeStandardList + (cssRrequestSendWithApp ? '&' : '?') + this.objectToQuery(param)
         return this.sendCssTechHttpRequestWrapper(url)
     },
 
     getChargePriceForMaterial(param = {}) {
-        let url = this.serviceList.getChargePriceForMaterial + (requestSendWithApp ? '&' : '?') + this.objectToQuery(param)
+        let url = this.serviceList.getChargePriceForMaterial + (cssRrequestSendWithApp ? '&' : '?') + this.objectToQuery(param)
         return this.sendCssTechHttpRequestWrapper(url)
     },
 

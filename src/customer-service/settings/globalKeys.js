@@ -7,5 +7,6 @@ export const SERVICE_STORAGE_KEYS = {
   historyKeys: "SERVICE_STORAGE_historyKeys",
   productType: "SERVICE_STORAGE_productType",
   productTypeForInstallation: "SERVICE_STORAGE_productTypeForInstallation",
-  antifakeResult: "SERVICE_STORAGE_antifakeResult"
+  antifakeResult: "SERVICE_STORAGE_antifakeResult",
+  machineList: "SERVICE_STORAGE_machineList"
 }

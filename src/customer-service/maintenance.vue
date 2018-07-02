@@ -2,7 +2,7 @@
     <div class="wrapper">
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
             <div slot="customerContent" class="header-right">
-                <text class="header-right-text" @click="goTo('productSelection', {}, { from: 'maintenance', to:'serviceCharge' })">收费标准</text>
+                <text class="header-right-text" @click="goToServiceCharge">收费标准</text>
             </div>
         </midea-header>
         <scroller class="content-wrapper">
@@ -363,7 +363,17 @@ export default {
                 }
             }
         },
-        //维修产品
+        //收费标准
+        goToServiceCharge() {
+            if (this.selectedProduct && this.selectedProduct.length > 0) {
+                nativeService.setItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, JSON.stringify(this.selectedProduct), () => {
+                    this.goTo('serviceCharge', {}, { from: 'maintenance' })
+                })
+            } else {
+                this.goTo('productSelection', {}, { from: 'maintenance', to: 'serviceCharge' })
+            }
+        },        
+	//维修产品
         selectProduct() {
             nativeService.setItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, JSON.stringify(this.selectedProduct), () => {
                 this.goTo('productSelection', {}, { from: 'maintenance' })

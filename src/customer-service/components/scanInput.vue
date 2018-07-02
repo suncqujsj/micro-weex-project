@@ -1,6 +1,6 @@
 <template>
     <div class="scan-block">
-        <input class="scan-input" type="text" :placeholder="placeholder" :autofocus=false :value="value" @input="oninput" />
+        <input class="scan-input" type="text" :placeholder="placeholder" :autofocus=false :value="value" @input="oninput" @blur="onblur" />
 
         <div v-if="scan" class="scan-icon-wrapper" @click="scanCode">
             <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain'></image>
@@ -35,6 +35,9 @@ export default {
     methods: {
         oninput(event) {
             this.$emit('input', event.value)
+        },
+        onblur(event) {
+            this.$emit('blur', event)
         },
         scanCode() {
             nativeService.scanCode().then(

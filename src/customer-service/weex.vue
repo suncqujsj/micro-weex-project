@@ -135,6 +135,8 @@ export default {
                 if (data.list && data.list.length > 0) {
                     this.order = data.list[0]
                 }
+            }).catch((error) => {
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         },
         itemClicked(item) {

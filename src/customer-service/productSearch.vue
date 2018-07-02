@@ -143,6 +143,8 @@ export default {
         })
         nativeService.getProdType().then((data) => {
             this.productData = data
+        }).catch((error) => {
+            nativeService.toast(nativeService.getErrorMessage(error))
         })
     }
 }

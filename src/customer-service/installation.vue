@@ -49,7 +49,7 @@
                         <text class="cell-label">服务地址</text>
                         <text class="cell-label-star">*</text>
                         <text class="right-text address-text">{{userAddressDesc}}</text>
-                        <image class="arrow-icon" src="../img/arrow_right.png" resize='contain'></image>
+                        <image class="arrow-icon" src="./img/arrow_right.png" resize='contain'></image>
                     </div>
                 </div>
             </div>

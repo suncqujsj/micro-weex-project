@@ -151,6 +151,8 @@ export default {
                 this.$nextTick(e => {
                     this.$refs.urgeOrderActionsheet.open();
                 });
+            }).catch((error) => {
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         },
         closeUrgeOrderActionsheet() {
@@ -200,6 +202,8 @@ export default {
             nativeService.cancelserviceorder(param).then(() => {
                 this.order.serviceOrderStatus = '22'
                 this.appPageDataChannel.postMessage({ page: this.fromPage, key: "cancelOrder", data: { id: this.order.serviceOrderNo } })
+            }).catch((error) => {
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         },
         assessService() {
@@ -249,6 +253,8 @@ export default {
         }
         nativeService.queryconsumerorderprogress(param).then((resp) => {
             this.progressList = resp.oiqueryConsumerOrderProgressVOList
+        }).catch((error) => {
+            nativeService.toast(nativeService.getErrorMessage(error))
         })
 
         if (this.fromPage == "orderList") {
@@ -263,6 +269,8 @@ export default {
             }
             nativeService.queryserviceorder(param).then((data) => {
                 this.order = data.list[0]
+            }).catch((error) => {
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         }
     }

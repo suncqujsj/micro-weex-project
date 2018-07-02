@@ -1,18 +1,16 @@
 <template>
    <div class="wrap" :style="wrapStyle">
-        <div v-if="isEdit=0" class="row-sb head">
+        <div v-if="from=='addAuto'" class="row-sb head">
             <image class="back" :src="header.leftImg" @click="goBack"></image>
             <text class="head-text">{{title}}</text>
-            <text v-if="sceneType != 3" class="next-text white">下一步</text>
+            <text v-if="sceneType != 3" class="next-text white"  @click="goNext">下一步</text>
         </div>
-        <div v-if="isEdit=1" class="row-sb head">
+        <div v-if="from=='editAuto'" class="row-sb head">
             <text class="head-text font-grey" @click="goBack">取消</text>
             <text class="head-text">{{title}}</text>
             <text class="head-text font-grey"  @click="saveChange">确定</text>
         </div>
         <div class="content">
-            <!-- <div v-if="type==1">
-            </div> -->
             <div style="background-color: #fff" v-if="sceneType == 3">
                 <wxc-searchbar ref="wxc-searchbar" returnKeyType="search"
                     @wxcSearchbarCancelClicked="searchCancel"
@@ -31,20 +29,6 @@
                     <scroll-picker :wrapWidth="375" :listArray="minutes" @onChange="setActiveMinute"></scroll-picker>
                 </div>
             </div>
-            <!-- <div v-if="sceneType==5">
-                <text class="hd">选择条件</text>
-                <div>
-                    <div v-for="(item,idx) in indoor.items">
-                        <midea-cell :title="item.title" :cellStyle="{paddingLeft: '30px'}">
-                             <midea-switch2 :checked="item.showSwitch" @onchange="onOffIndoorSwitch(item, idx)" width="70" height="38" slot="value"></midea-switch2>
-                        </midea-cell>
-                        <div v-if="item.showSwitch" class="indoor-value-panel">
-                            <midea-cell :title="switchs[item.switchStatus]"  :hasArrow="true" @mideaCellClick="setIndoorSubConditionSwitch(item, idx)" :cellStyle="{paddingLeft: '30px'}"></midea-cell>
-                            <scroll-picker :listArray="item.valueList" @onChange="setIndoorSubConditionValue"></scroll-picker>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
             <div v-if="sceneType==6">
                 <text class="hd">天气</text>
                 <div>
@@ -227,6 +211,8 @@
     import scrollPicker from '@/midea-rooms/components/scrollPicker.vue'
     import WxcSearchbar from '@/midea-rooms/components/WxcSearchbar.vue'
     
+    const channelAutoTypeSet = new BroadcastChannel('autoBroadcast')
+    
     export default {
         components:{
             MideaHeader, MideaCell, mideaDialog, WxcSearchbar,
@@ -295,8 +281,8 @@
                     zoom: 11 //地图显示范围 4-21级 （最大是21级）,非必选
                 },
                 mapMarkers: [],
-                isEdit: 0, // 0：新增自动化，1：编辑已有自动化,
-                editParams: {}
+                from: '', // 页面来源于编辑还是新增
+                editParams: {},
             }
         },
         computed: {
@@ -330,13 +316,10 @@
         },
         methods: {
             initData(){
+                this.from = nativeService.getParameters('from')
                 this.sceneType = nativeService.getParameters('sceneType')
-                this.isEdit = nativeService.getParameters('isEdit') || 0
-                if (this.isEdit == 1) {
-                    // let tmpWeekly = nativeService.getParameters('weekly') || '1111111'
-                    // for (var x in tmpWeekly){
-                    //     this.week[x].repeat = tmpWeekly[x]
-                    // }
+                nativeService.alert(this.from)
+                if (this.from == 'editAuto') {
                     if (this.sceneType == 3) {
                         this.mapCenter.latitude = nativeService.getParameters('locationLatitude')
                         this.mapCenter.longitude = nativeService.getParameters('locationLongitude')
@@ -380,8 +363,8 @@
                     1: 0
                 }
                 this.week[i].repeat = tmp[this.week[i].repeat]
-
-                if (this.isEdit == 1) {
+                
+                if (this.from == 'editAuto') {
                     let weeklyString = ''
                     for (let i=0; i<this.week.length; i++) {
                         weeklyString += this.week[i].repeat
@@ -423,14 +406,16 @@
             // 时间 start
             setActiveHour(hour){
                 this.activeHour = hour.value
-                if (this.isEdit == 1) {
+                if (this.from == 'editAuto') {
                     this.editParams.hour = this.activeHour
+                    channelAutoTypeSet.postMessage(this.editParams)
                 }
             },
             setActiveMinute(minute){
                 this.activeMinute = minute.value
-                if (this.isEdit == 1) {
+                if (this.from == 'editAuto') {
                     this.editParams.minute = this.activeMinute
+                    channelAutoTypeSet.postMessage(this.editParams)
                 }
             },
             // 时间 end
@@ -480,7 +465,7 @@
                 })
                 destination = tmp.join('&')
 
-                if (this.isEdit == 1) {
+                if (this.from == 'editAuto') {
                     this.editParams.destination = destination
                 }else{
                     this.goNext(destination)
@@ -510,9 +495,9 @@
             // 天气 start
             selectWeather(index){
                 this.weather.activeTypeIndex = index
-                
-                if (this.isEdit == 1) {
+                if (this.from == 'editAuto') {
                     this.editParams.weatherStatus = encodeURIComponent(this.weather.data[this.weather.activeTypeIndex])
+                    channelAutoTypeSet.postMessage(this.editParams)
                 }
             },
             setWeatherSwitch(){
@@ -522,15 +507,17 @@
                 this.weather.activeSwitch = this.switchTo[this.weather.activeSwitch]
                 this.weather.showDialog = false
                 
-                if (this.isEdit == 1) {
+                if (this.from == 'editAuto') {
                     this.editParams.logical =  this.weather.activeSwitch=='低于'?'<':'>'
+                    channelAutoTypeSet.postMessage(this.editParams)
                 }
             },
             setActiveWeatherTemperature(wTemp){
                 this.activeWeatherTemperature = wTemp.value
                 
-                if (this.isEdit == 1) {
+                if (this.from == 'editAuto') {
                     this.editParams.weatherTemperature = this.activeWeatherTemperature
+                    channelAutoTypeSet.postMessage(this.editParams)
                 }
             },
             // 天气 end
@@ -572,12 +559,7 @@
                     nativeService.alert('没有改动哦')
                     return
                 }
-                let params = {
-                    sceneType: this.sceneType,
-                    sceneId: nativeService.getParameters('editSceneId'),
-                    editConditionItems: JSON.stringify(this.editParams)
-                }
-                this.goTo('autoEdit', {}, params)
+                this.goBack()
             }
         },
         created(){

@@ -1,7 +1,7 @@
 export const domain = 'http://iot-dev.smartmidea.net'
 export const url = {
     scene: {
-        applianceAdd: domain +'/v1/scene/appliance/add',
+        applianceAdd: domain + '/v1/scene/appliance/add',
         applianceDelete: domain + '/v1/scene/appliance/delete',
         list: domain + '/v1/scene/list',
         detail: domain + '/v1/scene/detail',
@@ -341,7 +341,7 @@ export const applianceActions = {
     },
     "0x10": {
         "name": "插座",
-        "actions":{
+        "actions": {
             "power": {
                 "type": "switch",
                 "value": {
@@ -365,4 +365,19 @@ export const applianceActions = {
             }
         }
     }
+}
+
+export const applianceImgPath = {
+    "0xAC": "assets/img/0xAC.png",
+    "0xB8": "assets/img/0xB8.png",
+    "0xFB": "assets/img/0xFB.png",
+    "0xB6": "assets/img/0xB6.png",
+    "0xE1": "assets/img/0xE1.png",
+    "0xFA": "assets/img/0xFA.png",
+    "0xE3": "assets/img/0xE3.png",
+    "0xFD": "assets/img/0xFD.png",
+    "0xA1": "assets/img/0xA1.png",
+    "0xCC": "assets/img/0xCC.png",
+    "0x10": "assets/img/0x10.png",
+    "0x13": "assets/img/0x13.png"
 }

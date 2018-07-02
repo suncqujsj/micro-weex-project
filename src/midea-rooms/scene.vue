@@ -496,7 +496,7 @@
                     if (res.code == '0') {
                         this.scene = res.data
                     }else{
-                        // nativeService.toast(rtnData.msg)
+                        nativeService.toast(rtnData.msg)
                     }
                 }).catch( (error )=>{
                     nativeService.alert(error)
@@ -537,9 +537,7 @@
                         modeId: modeId
                     }
                     this.webRequest(reqUrl, reqParams).then((res)=>{
-                        nativeService.alert(res)
                         if (res.code == 0) {
-                            nativeService.alert(res)
                             resolve(res.data)
                         }else{
                             reject(res.msg)
@@ -572,35 +570,11 @@
             }
         },
         created(){
+            this.uid = nativeService.getParameters('uid')
+            this.homegroupId = nativeService.getParameters('homegroupId')
             this.sceneId = nativeService.getParameters('sceneId')
             this.roomType = nativeService.getParameters('roomType')
-      
-            nativeService.getItem('uid', (res)=>{
-                if (res.result == 'success'){
-                    this.uid = res.data
-                    nativeService.getItem('homegroupId',(res)=>{
-                        if (res.result == 'success'){
-                            this.homegroupId = res.data
-                            this.getSceneDetail()
-
-                            /*
-                                nativeService.getItem('home', (res)=>{
-                                    let data = JSON.parse(res.data)
-                                    this.userDevices = data.deviceList   
-                                    this.getDevices().then((res)=>{
-                                        this.userSupportDevices = this.filttAllowedDevices(res.typeList)    
-                                    })
-                                })
-                            */
-                        }else{
-                            nativeService.toast('获取用户家庭失败')
-                        }
-                    })
-                }else{
-                    nativeService.toast('获取用户身份失败')
-                }
-            })
-            
+            this.getSceneDetail()
         }
     }
 </script>

@@ -272,7 +272,7 @@
                 this.checkedDevices[device.deviceId] = true
             },
             goAutoTypeSet(){
-                this.goTo('autoTypeSet', {}, {sceneType: this.sceneType})
+                this.goTo('autoTypeSet', {}, { sceneType: this.sceneType })
             },
             deleteQuickStart(){
                 nativeService.toast('delete')

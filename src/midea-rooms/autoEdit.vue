@@ -15,18 +15,18 @@
                     <div class="row-sb floor auto-switch-floor">
                         <text>启用</text>
                         <div>
-                            <switch-bar :checked="autoEnable" @change="openAuto"></switch-bar>
+                            <switch-bar :checked="autoDetail.enable" @change="openAuto"></switch-bar>
                         </div>
                     </div>
                 </div>
                 <div>
                     <text class="sub-hd">当如下条件满足时</text>
                     <div @click="goAutoTypeSet" class="row-sb floor">
-                        <div class="row-s">
+                        <div class="row-s ">
                             <image class="icon" :src="autoDetail.image"></image>
-                            <text v-if="sceneType==3">在{{weekDesc}} {{directionText[autoDetail.location.direction]}} {{autoDetail.location.address}}时</text>
-                            <text v-if="sceneType==4">在{{weekDesc}} {{autoDetail.startTime}}时</text>
-                            <text v-if="sceneType==6"> 在{{weekDesc}} 天气{{autoDetail.weather.weatherStatus}}, 气温{{temperatureLoginText[autoDetail.weather.logical]}} {{autoDetail.weather.temperature}}℃ 时</text>
+                            <text class="condition-desc" v-if="sceneType==3">在{{weekDesc}} {{directionText[autoDetail.location.direction]}} {{autoDetail.location.address}}时</text>
+                            <text class="condition-desc" v-if="sceneType==4">在{{weekDesc}} {{autoDetail.startTime}}时</text>
+                            <text class="condition-desc" v-if="sceneType==6"> 在{{weekDesc}} 天气{{autoDetail.weather.weatherStatus}}, 气温{{temperatureLoginText[autoDetail.weather.logical]}} {{autoDetail.weather.temperature}}℃ 时</text>
                         </div>
                         <image class="icon-next" :src="icon.next"></image>
                     </div>
@@ -37,17 +37,17 @@
                 <div class="device-box row-sb"> 
                     <div class="device" v-for="(item, idx) in autoDetail.task">
                         <div @click="setDevice(item)">
-                            <image class="device-img" :src="imgPath[devices[item.applianceCode].deviceType]"></image>
-                            <text class="device-name">{{devices[item.applianceCode].name}}</text>
+                            <image class="device-img" :src="applianceImgPath[autoBindDevices[item.applianceCode].deviceType]"></image>
+                            <text class="device-name">{{autoBindDevices[item.applianceCode].deviceName}}</text>
                         </div>
-                        <image class="check-icon" :src="icon[devices[item.applianceCode].status]" @click="checkOn(item, idx)"></image>
+                        <image class="check-icon" :src="icon[autoBindDevices[item.applianceCode].isCheck]" @click="checkOn(item, idx)"></image>
                     </div>
                 </div>
                 <text class="select-btn" v-if="showDevicePop" @click="openDevicePop">选择设备</text>
             </div>
         </div>
         <div class="delete" :style="deleteStyle"><text class="delete-text"  @click="deleteAuto">删除快捷操作</text></div>
-        <div v-if="showDevicePop" class="devices-pop">
+        <!-- <div v-if="showDevicePop" class="devices-pop">
             <div class="row-sb device-pop-hd">
                 <text class="hd-text font-grey" @click="closeDevicePop">取消</text>
                 <text class="hd-text">{{autoDetail.name}}</text>
@@ -63,7 +63,7 @@
                     <image class="check-icon" :src="icon[item.status]" @click="addDeviceToTask(item, idx)"></image>
                 </div>
             </div>
-        </div>
+        </div> -->
    </div>
 </template>
 
@@ -190,10 +190,14 @@
         padding-top: 20px;
         padding-bottom: 20px;
     }
+    .condition-desc{
+        width: 600px;
+        text-overflow: ellipsis
+    }
 </style>
 
 <script>
-    import { url, applianceActions } from './config/config.js'
+    import { url, applianceActions, applianceImgPath } from './config/config.js'
     import base from './base'
 
     import nativeService from '@/common/services/nativeService.js'
@@ -201,6 +205,9 @@
     import MideaCell from '@/midea-component/cell.vue'
     import mideaList from '@/midea-rooms/components/list.vue'
 	import switchBar from '@/midea-rooms/components/switch.vue'
+
+    const channelAutoEdit = new BroadcastChannel('autoBroadcast')
+
     export default {
         components:{ MideaHeader, MideaCell, mideaList, switchBar },
         mixins: [base],
@@ -211,20 +218,7 @@
                     uncheck: 'assets/img/check_off.png',
                     next: 'assets/img/more.png'
                 },
-                imgPath: {
-                    "0xAC": "assets/img/0xAC.png",
-                    "0xB8": "assets/img/0xB8.png",
-                    "0xFB": "assets/img/0xFB.png",
-                    "0xB6": "assets/img/0xB6.png",
-                    "0xE1": "assets/img/0xE1.png",
-                    "0xFA": "assets/img/0xFA.png",
-                    "0xE3": "assets/img/0xE3.png",
-                    "0xFD": "assets/img/0xFD.png",
-                    "0xA1": "assets/img/0xA1.png",
-                    "0xCC": "assets/img/0xCC.png",
-                    "0x10": "assets/img/0x10.png",
-                    "0x13": "assets/img/0x13.png",
-                },
+                applianceImgPath: applianceImgPath,
                 header: {
                     title: '设置',
                     bgColor: '#fff',
@@ -232,7 +226,6 @@
                     leftImg: 'assets/img/b.png',
                     rightImg: 'assets/img/b.png'
                 },
-                auto: {},
                 devices: {
                     '111111': {
                         deviceId: "111111", 
@@ -249,37 +242,8 @@
                         status: 'check'
                     },
                 },
-                autoDetail: {
-                    "image": "assets/img/location.png",
-                    "homegroupId": null,
-                    "weekly": "",
-                    "task": [
-                        {
-                            "applianceCode": null,
-                            "command": {
-                                "mode": "",
-                                "power": ""
-                            }
-                        }
-                    ],
-                    "sceneType": null,
-                    "createTime": "",
-                    "enable": null,
-                    "sceneId": null,
-                    "name": "",
-                    "weather": "",
-                    "updateTime": "",
-                    "location": {
-                        "address": "",
-                        "distance": "",
-                        "latitude": "",
-                        "directionName": "",
-                        "longitude": "",
-                        "direction": "",
-                    }
-                },
+                autoDetail: {},
                 inputAutoName: '',
-                autoEnable: null,
                 weekDesc: '',
                 conditionName: null,
                 temperatureLoginText: {
@@ -338,7 +302,9 @@
                 ],
                 showDevicePop: false,
                 task: [],
-                tmpAddTaskList: []
+                tmpAddTaskList: [],
+                userDevices: {},
+                autoBindDevices: {}
             }
         },
         computed: {
@@ -363,18 +329,40 @@
                 this.goTo('weex')
             },
             initData(){
+                this.uid = nativeService.getParameters('uid')
+                this.homegroupId = nativeService.getParameters('homegroupId')
                 this.sceneType = nativeService.getParameters('sceneType')
                 this.sceneId = nativeService.getParameters('sceneId')
-                nativeService.getItem('uid', (res)=>{
-                    if (res.result == 'success'){
-                        this.uid = res.data
-                        nativeService.getItem('homegroupId',(res)=>{
-                            if (res.result == 'success'){
-                                this.homegroupId = res.data
-                                this.getAutoDetail()
-                            }
-                        })
+                let tmpUserDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
+                        
+                for (var i in tmpUserDevices) {
+                    this.userDevices[tmpUserDevices[i].deviceId] = tmpUserDevices[i]
+                }
+                this.getAutoDetail()
+            },
+            getAutoDetail(){
+                let reqUrl = url.auto.detail
+                let reqParams = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    sceneId: this.sceneId
+                }
+                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                    if (rtnData.code == 0) {
+                        this.autoDetail = Object.assign({}, this.autoDetail, rtnData.data)
+                        
+                        this.inputAutoName = this.autoDetail.name
+                        this.autoEnable = this.autoDetail.enable
+                        this.task = this.autoDetail.task
+
+                        let tmpAutoBindDevices = {}
+                        for (var i in this.task) {
+                            tmpAutoBindDevices[this.task[i].applianceCode] = Object.assign({isCheck:'check'},this.userDevices[this.task[i].applianceCode])
+                        }
+                        this.autoBindDevices  = Object.assign({}, this.autoBindDevices, tmpAutoBindDevices)
+                        this.generateWeek()
                     }
+                }).catch( (error )=>{
                 })
             },
             generateWeek(){
@@ -399,42 +387,25 @@
                 this.weekDesc = weekTmp
                 
             },
-            getAutoDetail(){
-                let reqUrl = url.auto.detail
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneId: this.sceneId
-                }
-                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
-                    if (rtnData.code == 0) {
-                        this.autoDetail = rtnData.data
-                        this.inputAutoName = this.autoDetail.name
-                        this.autoEnable = this.autoDetail.enable
-                        this.task = this.autoDetail.task
-                        this.generateWeek()
-                    }
-                }).catch( (error )=>{
-                })
-            },
             openAuto(){
-                let tmp = {
-                    '1': '0',
-                    '0': '1'
+                if (this.autoDetail.enable == 1) {
+                    this.autoDetail.enable = 0
+                }else if (this.autoDetail.enable == 0) {
+                    this.autoDetail.enable = 1
                 }
-                this.autoEnable = tmp[this.autoEnable]
             },
             goSelect(){
                 this.goTo('selectDevice')
             },
             goAutoTypeSet(){
-                let params = {}
-                params.sceneType = this.sceneType
+                let params = {
+                    from: 'editAuto',
+                    sceneType: this.sceneType,
+                    weekly: this.autoDetail.weekly
+                }
                 if (this.sceneType == 3) {
                     params.direction = this.autoDetail.location.direction
                 }
-                params.isEdit = 1
-                params.weekly = this.autoDetail.weekly
                 params.editSceneId = this.autoDetail.sceneId
                 
                 if (this.sceneType == 3){
@@ -442,6 +413,7 @@
                     params.locationLatitude = this.autoDetail.location.latitude
                 }
                 if (this.sceneType == 4){
+                    params.startTime = this.autoDetail.startTime
                 }
                 if (this.sceneType == 6){
                     params.weatherStatus = encodeURIComponent(this.autoDetail.weather.weatherStatus)
@@ -478,19 +450,19 @@
                     check: 'uncheck',
                     uncheck: 'check'
                 }
-                this.devices[item.applianceCode].status = tmpStatus[this.devices[item.applianceCode].status]
+                this.autoBindDevices[item.applianceCode].isCheck = tmpStatus[this.autoBindDevices[item.applianceCode].isCheck]
 
-                let basicTask = {}, tmpTask = []
-                for (var task in this.autoDetail.task){
-                    basicTask[this.autoDetail.task[task].applianceCode] = this.autoDetail.task[task]
-                }
+                // let basicTask = {}, tmpTask = []
+                // for (var task in this.autoDetail.task){
+                //     basicTask[this.autoDetail.task[task].applianceCode] = this.autoDetail.task[task]
+                // }
                
-                for (var x in this.devices) {
-                    if (this.devices[x].status == 'check') {
-                        tmpTask.push(basicTask[x])
-                    }
-                }
-                this.task = tmpTask
+                // for (var x in this.devices) {
+                //     if (this.devices[x].status == 'check') {
+                //         tmpTask.push(basicTask[x])
+                //     }
+                // }
+                // this.task = tmpTask
             },
             addDeviceToTask(item, idx){
                 let tmpStatus = {
@@ -589,8 +561,10 @@
         },
         created(){
             this.initData()
+            channelAutoEdit.onmessage = function(e){
+                nativeService.alert(e)
+            }
         }
     }
 </script>
-
 

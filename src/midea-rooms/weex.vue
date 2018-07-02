@@ -10,7 +10,7 @@
                 <div v-for="col in colList">
                     <div v-for="item in col" class="auto row-sb"  @click="editAuto(item)">
                         <div class="row-s">
-                            <image class="icon" :src="autoIcon[item.sceneType]"></image>
+                            <image class="icon" :src="item.image"></image>
                             <text class="auto-name">{{item.name}}</text>
                         </div>
                         <image class="auto-btn" :src="icon.autoBtn[item.enable]"  @click="executeAuto(item.autoId)">
@@ -98,21 +98,14 @@
         mixins: [base],
         data(){
             return {
-                uid: 'ac70d2636c0c4dd5b86bc97bbc8166c6',
-                homegroupId: '150366',
+                uid: '',
+                homegroupId: '',
                 icon: {
                     next: 'assets/img/more_w.png',
                     autoBtn:{
                         0: 'assets/img/auto_btn.png',
                         1: 'assets/img/autooo.png',
                     }
-                },
-                autoIcon: {
-                    1: 'assets/img/slhome.png',
-                    2: 'assets/img/slsleep.png',
-                    3: 'assets/img/slweather.png',
-                    4: 'assets/img/slhome.png',
-                    5: 'assets/img/slweather.png'
                 },
                 sceneImg: {
                     1: 'assets/img/parlour.png',
@@ -126,34 +119,86 @@
                     4: '加热中',
                     5: '热水充足'
                 },
-                autoList: [],
+                autoList: [
+                    {
+                        "image": "assets/img/hand.png",
+                        "task": [
+                            {
+                                "applianceCode": 111111,
+                                "command": {
+                                    "mode": "auto",
+                                    "power": "true"
+                                }
+                            },
+                            {
+                                "applianceCode": 2222222,
+                                "command": {
+                                    "mode": "auto",
+                                    "power": "false"
+                                }
+                            }
+                        ],
+                        "sceneType": 2,
+                        "createTime": "2018-07-01 18:16:33",
+                        "enable": 1,
+                        "sceneId": 103,
+                        "name": "手动",
+                        "weather": "",
+                        "updateTime": "2018-07-01 18:16:33",
+                        "location": "",
+                        "homegroupId": 150366,
+                        "weekly": "1111111"
+                    }
+                ],
                 sceneList: null,
-                user: null
+                user: null,
+                autoTemplate: {}
             }
         },
-        methods: {  
-            itemClicked(){
-            },
+        methods: { 
             goScene(scene){
                 if (scene.applianceCount <= 0 ) {
                     nativeService.toast('您在该场景下没有设备，请关联设备')
                     return
                 }
-                this.goTo("scene", {}, { roomType:scene.roomType, sceneId: scene.sceneId })
+                let params = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    roomType:scene.roomType,
+                    sceneId: scene.sceneId
+                }             
+                this.goTo("scene", {}, params)
                 
             },
             editAuto(auto){
-                let params = {
-                    sceneType: auto.sceneType,
-                    sceneId: auto.sceneId
+                if (auto.isAdd){
+                    let params = {
+                        uid: this.uid,
+                        homegroupId: this.homegroupId,
+                        sceneType: auto.sceneType,
+                        userDevices: this.userDevices
+                    }                 
+                    this.goTo('autoTypeSet',{}, params)
+                }else{
+                    let params = {
+                        uid: this.uid,
+                        homegroupId: this.homegroupId,
+                        sceneType: auto.sceneType,
+                        sceneId: auto.sceneId,
+                        userDevices: this.userDevices
+                    }
+                    this.goTo("autoEdit", {}, params)
                 }
-                this.goTo("autoEdit", {}, params)
             },
             executeAuto(autoId){
                 nativeService.alert('executeAuto')
             },
             goAddAuto(){
-                nativeService.goTo('addAuto.js')
+                let params = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                }
+                this.goTo('addAuto', {}, params)
             },
             getAutoList(){
                 let reqUrl = url.auto.list
@@ -164,7 +209,52 @@
                 this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                     if (rtnData.code == 0) {
                         this.autoList = rtnData.data.list
-                        nativeService.setItem('userAutos', JSON.stringify(rtnData.data.list))
+                        let basicTemplate = {
+                            '2': {
+                                isAdd: true,
+                                image: 'assets/img/man.png',
+                                sceneType: 2,
+                                name: '手动（新增）'
+                            },
+                            '3.1':{
+                                isAdd: true,
+                                image: 'assets/img/arrive.png',
+                                sceneType: 3,
+                                direction: 1,
+                                name: '到达某地（新增）'
+                            },
+                            '3.2': {
+                                isAdd: true,
+                                image: 'assets/img/arrive.png',
+                                sceneType: 3,
+                                direction: 2,
+                                name: '离开某地（新增）'
+                            },
+                            '4': {
+                                isAdd: true,
+                                image: 'assets/img/clock.png',
+                                sceneType: 4,
+                                name: '在某个时间（新增）'
+                            },
+                            '6': {
+                                image: 'assets/img/slweather.png',
+                                sceneType: 6,
+                                name: '在某个天气（新增）'
+                            }
+                        }
+                        let templateName = ['2', '3.1', '3.2', '4', '6'], tmpTemp =  []
+                        for (var i in this.autoList) {
+                            let sType = String(this.autoList[i].sceneType)
+                            if (sType == '3') {
+                                sType = sType + '.' +this.autoList[i].location.direction
+                            }
+                            templateName.splice(templateName.indexOf(sType), 1)
+                        }
+                        for (var x in templateName) {
+                            tmpTemp.push(basicTemplate[templateName[x]])
+                        }
+                        this.autoList = this.autoList.concat(tmpTemp)
+                        
                     }
                 }).catch( (error )=>{
                 })
@@ -187,34 +277,36 @@
             },
         },
         created(){
-            /*
-                获取用户信息-> 获取家庭id-> 获取自动化列表->获取场景列表
-            */
-            let that = this
+            /* 获取用户信息-> 获取家庭id-> 获取自动化列表->获取场景列表 */
             nativeService.getUserInfo().then((res)=>{
-                that.user = res
-                nativeService.setItem('user', res)
-            })
-        
-            nativeService.setItem('uid', this.uid)
-            nativeService.setItem('homegroupId', this.homegroupId)
+                // this.uid = res.uid
 
-            this.getAutoList()
-            this.getSceneList()
-            
-            nativeService.getCurrentHomeInfo().then( (res)=>{
-                nativeService.setItem('home', JSON.stringify(res))
-            }).catch((err)=>{
-                nativeService.toast(err)
-            })
+                // nativeService.getCurrentHomeInfo().then( (res)=>{
+                    // this.homegroupId = res.homeId
+                    //  this.userDevices = JSON.stringify(res.deviceList)
 
-            
-            // nativeService.getCityInfo({cityName: '深圳'}).then((res)=>{
-            //     nativeService.alert(res)
-            // }).catch((err)=>{
-            //     nativeService.toast(err)
-            // })
-            
+                    this.uid = 'ac70d2636c0c4dd5b86bc97bbc8166c6'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
+                    this.homegroupId = '150366'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
+                    this.userDevices = encodeURIComponent(JSON.stringify([// 这里用的是模拟数据,等他调好bug后再改回真实数据
+                        {
+                            deviceId: '2222222',
+                            deviceName: '设备二',
+                            deviceType: '0xFD',
+                            isOnline: 1
+                        },{
+                            deviceId: '111111',
+                            deviceName: '设备一',
+                            deviceType: '0xAC',
+                            isOnline: 1
+                        }
+                    ]))
+
+                    this.getAutoList()
+                    this.getSceneList()
+                // }).catch((err)=>{
+                //     nativeService.toast(err)
+                // })
+            })
         }
     }
 </script>

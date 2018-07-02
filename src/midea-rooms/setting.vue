@@ -523,46 +523,32 @@
             }
         },
         created(){
+            this.uid = nativeService.getParameters('uid')
+            this.homegroupId = nativeService.getParameters('homegroupId')
             this.sceneId = nativeService.getParameters('sceneId')
             this.roomType = nativeService.getParameters('roomType')
 
-            nativeService.getItem('uid', (res)=>{
-                
-                if (res.result == 'success'){
-                    this.uid = res.data
 
-                    nativeService.getItem('homegroupId',(res)=>{
-                        if (res.result == 'success'){
-                            this.homegroupId = res.data
+            nativeService.getItem('userDevice', (res)=>{
+                this.userDevices = res.data
 
-                            nativeService.getItem('home', (res)=>{
-                                let data = JSON.parse(res.data)
-                                // this.userDevices = data.deviceList
-
-                                this.getSupportDevices().then((res)=>{
-                                    this.userSupportDevices = this.formatUserSupportDevices(res.applianceList)
-                                    this.scenePropFormat = this.jsonToArray(res.prop)
-                                    this.sceneProp = res.prop
-                                    if ( this.roomType == 1 || this.roomType == 2 ){
-                                        this.temperatureRange = {
-                                            min: res.prop.temperature.split(',')[0],
-                                            max: res.prop.temperature.split(',')[1]
-                                        }
-                                        this.humidityRange = {
-                                            min: res.prop.humidity.split(',')[0],
-                                            max: res.prop.humidity.split(',')[1]
-                                        }
-                                    }
-                                })
-                            })
-                        }else{
-                            nativeService.toast('获取用户家庭失败')
+                this.getSupportDevices().then((res)=>{
+                    this.userSupportDevices = this.formatUserSupportDevices(res.applianceList)
+                    this.scenePropFormat = this.jsonToArray(res.prop)
+                    this.sceneProp = res.prop
+                    if ( this.roomType == 1 || this.roomType == 2 ){
+                        this.temperatureRange = {
+                            min: res.prop.temperature.split(',')[0],
+                            max: res.prop.temperature.split(',')[1]
                         }
-                    })
-                }else{
-                    nativeService.toast('获取用户身份失败')
-                }
+                        this.humidityRange = {
+                            min: res.prop.humidity.split(',')[0],
+                            max: res.prop.humidity.split(',')[1]
+                        }
+                    }
+                })
             })
+                      
                                     
             this.userSupportDevices = this.formatUserSupportDevices()
 

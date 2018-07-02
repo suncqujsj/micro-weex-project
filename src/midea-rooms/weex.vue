@@ -98,8 +98,8 @@
         mixins: [base],
         data(){
             return {
-                uid: 'ac70d2636c0c4dd5b86bc97bbc8166c6',
-                homegroupId: '150366',
+                uid: '',
+                homegroupId: '',
                 icon: {
                     next: 'assets/img/more_w.png',
                     autoBtn:{
@@ -155,22 +155,33 @@
                 autoTemplate: {}
             }
         },
-        methods: {  
-            itemClicked(){
-            },
+        methods: { 
             goScene(scene){
                 if (scene.applianceCount <= 0 ) {
                     nativeService.toast('您在该场景下没有设备，请关联设备')
                     return
                 }
-                this.goTo("scene", {}, { roomType:scene.roomType, sceneId: scene.sceneId })
+                let params = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    roomType:scene.roomType,
+                    sceneId: scene.sceneId
+                }             
+                this.goTo("scene", {}, params)
                 
             },
             editAuto(auto){
-                if (auto.isAdd){                    
-                    this.goTo('autoTypeSet',{}, {sceneType: auto.sceneType})
+                if (auto.isAdd){
+                    let params = {
+                        uid: this.uid,
+                        homegroupId: this.homegroupId,
+                        sceneType: auto.sceneType
+                    }                 
+                    this.goTo('autoTypeSet',{}, params)
                 }else{
                     let params = {
+                        uid: this.uid,
+                        homegroupId: this.homegroupId,
                         sceneType: auto.sceneType,
                         sceneId: auto.sceneId
                     }
@@ -181,7 +192,11 @@
                 nativeService.alert('executeAuto')
             },
             goAddAuto(){
-                nativeService.goTo('addAuto.js')
+                let params = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                }
+                this.goTo('addAuto', {}, params)
             },
             getAutoList(){
                 let reqUrl = url.auto.list
@@ -197,32 +212,32 @@
                                 isAdd: true,
                                 image: 'assets/img/hand.png',
                                 sceneType: 2,
-                                name: '手动'
+                                name: '手动（新增）'
                             },
                             '3.1':{
                                 isAdd: true,
                                 image: 'assets/img/location.png',
                                 sceneType: 3,
                                 direction: 1,
-                                name: '到达某地'
+                                name: '到达某地（新增）'
                             },
                             '3.2': {
                                 isAdd: true,
                                 image: 'assets/img/location.png',
                                 sceneType: 3,
                                 direction: 2,
-                                name: '离开某地'
+                                name: '离开某地（新增）'
                             },
                             '4': {
                                 isAdd: true,
                                 image: 'assets/img/clock.png',
                                 sceneType: 4,
-                                name: '在某个时间'
+                                name: '在某个时间（新增）'
                             },
                             '6': {
                                 image: 'assets/img/slweather.png',
                                 sceneType: 6,
-                                name: '在某个时间'
+                                name: '在某个天气（新增）'
                             }
                         }
                         let templateName = ['2', '3.1', '3.2', '4', '6'], tmpTemp =  []
@@ -260,26 +275,28 @@
             },
         },
         created(){
-            /*
-                获取用户信息-> 获取家庭id-> 获取自动化列表->获取场景列表
-            */
-            let that = this
+            /* 获取用户信息-> 获取家庭id-> 获取自动化列表->获取场景列表 */
             nativeService.getUserInfo().then((res)=>{
-                that.user = res
-                nativeService.setItem('user', res)
-            })
-        
-            nativeService.setItem('uid', this.uid)
-            nativeService.setItem('homegroupId', this.homegroupId)
+                // this.uid = res.uid
 
-            this.getAutoList()
-            // this.getSceneList()
+                // 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
+                // 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
+                this.uid = 'ac70d2636c0c4dd5b86bc97bbc8166c6'
+                this.homegroupId = '150366'
+                // 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
+                // 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
+  
+                nativeService.getCurrentHomeInfo().then( (res)=>{
+                    // this.homegroupId = res.homeId
+                        
+                    this.getAutoList()
+                    this.getSceneList()
+                    nativeService.setItem('userDevice', JSON.stringify(res.deviceList))
+                }).catch((err)=>{
+                    nativeService.toast(err)
+                })
+            })
             
-            // nativeService.getCurrentHomeInfo().then( (res)=>{
-            //     nativeService.setItem('home', JSON.stringify(res))
-            // }).catch((err)=>{
-            //     nativeService.toast(err)
-            // })
             
         }
     }

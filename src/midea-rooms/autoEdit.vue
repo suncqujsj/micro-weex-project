@@ -363,19 +363,11 @@
                 this.goTo('weex')
             },
             initData(){
+                this.uid = nativeService.getParameters('uid')
+                this.homegroupId = nativeService.getParameters('homegroupId')
                 this.sceneType = nativeService.getParameters('sceneType')
                 this.sceneId = nativeService.getParameters('sceneId')
-                nativeService.getItem('uid', (res)=>{
-                    if (res.result == 'success'){
-                        this.uid = res.data
-                        nativeService.getItem('homegroupId',(res)=>{
-                            if (res.result == 'success'){
-                                this.homegroupId = res.data
-                                this.getAutoDetail()
-                            }
-                        })
-                    }
-                })
+                this.getAutoDetail()
             },
             generateWeek(){
                 let weekText = {

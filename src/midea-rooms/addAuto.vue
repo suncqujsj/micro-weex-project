@@ -45,6 +45,10 @@
     import MideaCell from '@/midea-component/cell.vue'
     import mideaList from '@/midea-rooms/components/list.vue'
     import checkItem from '@/midea-rooms/components/checkItem.vue'
+
+
+    const channelAddAuto = new BroadcastChannel('autoBroadcast')
+
     export default {
         components:{ MideaHeader, MideaCell, mideaList, checkItem },
         computed:{
@@ -103,7 +107,6 @@
                     //     desc: '例如室内PM2.5高于40时打开净化器',
                     //     icon: 'assets/img/slsleep.png',
                     //     sceneType: 5,
-                    
                     // },
                     // {
                     //     title: '设备状态变化时',
@@ -128,17 +131,17 @@
                 this.activeTypeIndex = index
             },
             goNext(){
+                let params = {
+                    from: 'addAuto',
+                    sceneType: this.autos[this.activeTypeIndex].sceneType
+                }
                 if (this.autos[this.activeTypeIndex].sceneType == 2){
-                    this.goTo('autoBindDevices', {}, {
-                        sceneType: this.autos[this.activeTypeIndex].sceneType
-                    })
+                    this.goTo('autoBindDevices', {}, params)
                 }else if ( this.autos[this.activeTypeIndex].sceneType == 3){
-                    this.goTo('autoTypeSet', {}, {
-                        sceneType: this.autos[this.activeTypeIndex].sceneType,
-                        direction: this.autos[this.activeTypeIndex].direction
-                    })
+                    params.direction = this.autos[this.activeTypeIndex].direction
+                    this.goTo('autoTypeSet', {}, params)
                 }else{
-                    this.goTo('autoTypeSet', {}, { sceneType: this.autos[this.activeTypeIndex].sceneType })
+                    this.goTo('autoTypeSet', {}, params)
                 }
             }
         },

@@ -175,7 +175,8 @@
                     let params = {
                         uid: this.uid,
                         homegroupId: this.homegroupId,
-                        sceneType: auto.sceneType
+                        sceneType: auto.sceneType,
+                        userDevices: this.userDevices
                     }                 
                     this.goTo('autoTypeSet',{}, params)
                 }else{
@@ -183,7 +184,8 @@
                         uid: this.uid,
                         homegroupId: this.homegroupId,
                         sceneType: auto.sceneType,
-                        sceneId: auto.sceneId
+                        sceneId: auto.sceneId,
+                        userDevices: this.userDevices
                     }
                     this.goTo("autoEdit", {}, params)
                 }
@@ -210,20 +212,20 @@
                         let basicTemplate = {
                             '2': {
                                 isAdd: true,
-                                image: 'assets/img/hand.png',
+                                image: 'assets/img/man.png',
                                 sceneType: 2,
                                 name: '手动（新增）'
                             },
                             '3.1':{
                                 isAdd: true,
-                                image: 'assets/img/location.png',
+                                image: 'assets/img/arrive.png',
                                 sceneType: 3,
                                 direction: 1,
                                 name: '到达某地（新增）'
                             },
                             '3.2': {
                                 isAdd: true,
-                                image: 'assets/img/location.png',
+                                image: 'assets/img/arrive.png',
                                 sceneType: 3,
                                 direction: 2,
                                 name: '离开某地（新增）'
@@ -279,25 +281,32 @@
             nativeService.getUserInfo().then((res)=>{
                 // this.uid = res.uid
 
-                // 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
-                // 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
-                this.uid = 'ac70d2636c0c4dd5b86bc97bbc8166c6'
-                this.homegroupId = '150366'
-                // 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
-                // 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
-  
-                nativeService.getCurrentHomeInfo().then( (res)=>{
+                // nativeService.getCurrentHomeInfo().then( (res)=>{
                     // this.homegroupId = res.homeId
-                        
+                    //  this.userDevices = JSON.stringify(res.deviceList)
+
+                    this.uid = 'ac70d2636c0c4dd5b86bc97bbc8166c6'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
+                    this.homegroupId = '150366'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
+                    this.userDevices = encodeURIComponent(JSON.stringify([// 这里用的是模拟数据,等他调好bug后再改回真实数据
+                        {
+                            deviceId: '2222222',
+                            deviceName: '设备二',
+                            deviceType: '0xFD',
+                            isOnline: 1
+                        },{
+                            deviceId: '111111',
+                            deviceName: '设备一',
+                            deviceType: '0xAC',
+                            isOnline: 1
+                        }
+                    ]))
+
                     this.getAutoList()
                     this.getSceneList()
-                    nativeService.setItem('userDevice', JSON.stringify(res.deviceList))
-                }).catch((err)=>{
-                    nativeService.toast(err)
-                })
+                // }).catch((err)=>{
+                //     nativeService.toast(err)
+                // })
             })
-            
-            
         }
     }
 </script>

@@ -366,3 +366,18 @@ export const applianceActions = {
         }
     }
 }
+
+export const applianceImgPath = {
+    "0xAC": "assets/img/0xAC.png",
+    "0xB8": "assets/img/0xB8.png",
+    "0xFB": "assets/img/0xFB.png",
+    "0xB6": "assets/img/0xB6.png",
+    "0xE1": "assets/img/0xE1.png",
+    "0xFA": "assets/img/0xFA.png",
+    "0xE3": "assets/img/0xE3.png",
+    "0xFD": "assets/img/0xFD.png",
+    "0xA1": "assets/img/0xA1.png",
+    "0xCC": "assets/img/0xCC.png",
+    "0x10": "assets/img/0x10.png",
+    "0x13": "assets/img/0x13.png"
+}

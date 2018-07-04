@@ -1,7 +1,7 @@
 <template>
    <div class="wrap" :style="wrapStyle">
         <div class="row-sb hd">
-            <text class="hd-text font-grey" @click="goHomePage">取消</text>
+            <text class="hd-text font-grey" @click="goBack">取消</text>
             <text class="hd-text">{{autoDetail.name}}</text>
             <text class="hd-text font-grey"  @click="sendAutoEdit">保存</text>
         </div>
@@ -34,36 +34,23 @@
             </div>
             <div>
                 <text class="sub-hd">设备</text>
-                <div class="device-box row-sb"> 
-                    <div class="device" v-for="(item, idx) in autoDetail.task">
-                        <div @click="setDevice(item)">
-                            <image class="device-img" :src="applianceImgPath[autoBindDevices[item.applianceCode].deviceType]"></image>
-                            <text class="device-name">{{autoBindDevices[item.applianceCode].deviceName}}</text>
+                <div class="device-box row-sb">
+                    <div class="device" v-for="(item, key) in autoBindDevices">
+                        <div @click="setDevice(key)">
+                            <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
+                            <text class="device-name">{{item.deviceName}}</text>
                         </div>
-                        <image class="check-icon" :src="icon[autoBindDevices[item.applianceCode].isCheck]" @click="checkOn(item, idx)"></image>
+                        <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, key)"></image>
                     </div>
                 </div>
-                <text class="select-btn" v-if="showDevicePop" @click="openDevicePop">选择设备</text>
+                <text class="select-btn" @click="goBindNewDevice">选择设备</text>
             </div>
         </div>
-        <div class="delete" :style="deleteStyle"><text class="delete-text"  @click="deleteAuto">删除快捷操作</text></div>
-        <!-- <div v-if="showDevicePop" class="devices-pop">
-            <div class="row-sb device-pop-hd">
-                <text class="hd-text font-grey" @click="closeDevicePop">取消</text>
-                <text class="hd-text">{{autoDetail.name}}</text>
-                <text class="hd-text font-grey"  @click="confirmDevicePop">保存</text>
-            </div>
-            <text class="sub-hd device-pop-sub-hd">选择要控制的电器，点击更改具体控制</text>
-            <div class="device-box row-sb">
-                <div class="device" v-for="(item, idx) in userUnbindDevices">
-                    <div @click="goSetDevice(item)">
-                        <image class="device-img" :src="imgPath[item.deviceType]"></image>
-                        <text class="device-name">{{item.deviceName}}</text>
-                    </div>
-                    <image class="check-icon" :src="icon[item.status]" @click="addDeviceToTask(item, idx)"></image>
-                </div>
-            </div>
-        </div> -->
+        <div class="delete" :style="deleteStyle"><text class="delete-text"  @click="showDialog('delete')">删除快捷操作</text></div>
+        <!-- 删除自动化弹窗提示 -->
+        <midea-dialog  :show="show.delete" @close="closeDialog('delete')" @mideaDialogCancelBtnClicked="closeDialog('delete')" @mideaDialogConfirmBtnClicked="deleteAuto" >
+            <text slot="content">确定要删除此快捷操作？</text>
+        </midea-dialog>
    </div>
 </template>
 
@@ -100,9 +87,10 @@
         margin-bottom: 14px;
     }
     .auto-name{
-        width: 200px;
+        width: 400px;
         height: 70px;
         margin-left: 100px;
+        text-align: right;
     }
     .auto-name-floor{
         margin-left: 25px;
@@ -197,19 +185,20 @@
 </style>
 
 <script>
-    import { url, applianceActions, applianceImgPath } from './config/config.js'
+    import { url, applianceActions, applianceImgPath, autoSupportActions } from './config/config.js'
     import base from './base'
 
     import nativeService from '@/common/services/nativeService.js'
     import MideaHeader from '@/midea-component/header.vue'
     import MideaCell from '@/midea-component/cell.vue'
+    import mideaDialog from '@/midea-component/dialog.vue'
     import mideaList from '@/midea-rooms/components/list.vue'
 	import switchBar from '@/midea-rooms/components/switch.vue'
 
     const channelAutoEdit = new BroadcastChannel('autoBroadcast')
 
     export default {
-        components:{ MideaHeader, MideaCell, mideaList, switchBar },
+        components:{ MideaHeader, mideaDialog, MideaCell, mideaList, switchBar },
         mixins: [base],
         data(){
             return {
@@ -226,25 +215,8 @@
                     leftImg: 'assets/img/b.png',
                     rightImg: 'assets/img/b.png'
                 },
-                devices: {
-                    '111111': {
-                        deviceId: "111111", 
-                        deviceName: "name1",
-                        deviceType: "0xAC",
-                        deviceSubType: "xxxxx", 
-                        deviceSn: "16584",
-                        isOnline: 1,
-                        status: 'uncheck'
-                    },
-                    '2222222': {
-                        name: 'name2',
-                        deviceType: '0xAC',
-                        status: 'check'
-                    },
-                },
                 autoDetail: {},
                 inputAutoName: '',
-                weekDesc: '',
                 conditionName: null,
                 temperatureLoginText: {
                     '>': '高于',
@@ -254,57 +226,18 @@
                     1: '到达',
                     2: '离开'
                 },
-                applianceActions: {
-                    '0xAC': {
-                        name: '空调',
-                        actions: [
-                            {
-                                property: 'power',
-                                propertyName: '电源',
-                                action: {
-                                    off: "关机",
-                                    on: "开机"
-                                },
-                            },
-                           {
-                                property: 'mode',
-                                propertyName: '模式',
-                                action: {
-                                    auto: "自动",
-                                    fan: "送风",
-                                    cool: "制冷",
-                                    heat: "制热",
-                                    dry: "抽湿"
-                                }
-                            }
-                        ]
-                    }
+                show: {
+                    delete: false
                 },
-                userUnbindDevices: [
-                    {
-                        deviceId: "333", 
-                        deviceName: "name3",
-                        deviceType: "0xAC",
-                        deviceSubType: "xxxxx", 
-                        deviceSn: "16584",
-                        isOnline: 1,
-                        status: 'uncheck'
-                    },
-                    {
-                        deviceId: "777", 
-                        deviceName: "name7",
-                        deviceType: "0xAC",
-                        deviceSubType: "xxxxx", 
-                        deviceSn: "165854",
-                        isOnline: 1,
-                        status: 'uncheck'
-                    }
-                ],
-                showDevicePop: false,
-                task: [],
-                tmpAddTaskList: [],
+                active: [],
                 userDevices: {},
-                autoBindDevices: {}
+                autoBindDevices: {},
+                autoSupportActions: {},
+                editParams: {},
+                userSetActions: {},
+                unbindDevices: {},
+                unbindDevicesActions: {},
+                bindDeviceActions: {}
             }
         },
         computed: {
@@ -319,53 +252,8 @@
                     top: this.pageHeight-200+'px'
                 }
                 return tmp
-            }
-        },
-        methods: {
-            goBack(){
-                nativeService.goBack()
             },
-            goHomePage(){
-                this.goTo('weex')
-            },
-            initData(){
-                this.uid = nativeService.getParameters('uid')
-                this.homegroupId = nativeService.getParameters('homegroupId')
-                this.sceneType = nativeService.getParameters('sceneType')
-                this.sceneId = nativeService.getParameters('sceneId')
-                let tmpUserDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
-                        
-                for (var i in tmpUserDevices) {
-                    this.userDevices[tmpUserDevices[i].deviceId] = tmpUserDevices[i]
-                }
-                this.getAutoDetail()
-            },
-            getAutoDetail(){
-                let reqUrl = url.auto.detail
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneId: this.sceneId
-                }
-                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
-                    if (rtnData.code == 0) {
-                        this.autoDetail = Object.assign({}, this.autoDetail, rtnData.data)
-                        
-                        this.inputAutoName = this.autoDetail.name
-                        this.autoEnable = this.autoDetail.enable
-                        this.task = this.autoDetail.task
-
-                        let tmpAutoBindDevices = {}
-                        for (var i in this.task) {
-                            tmpAutoBindDevices[this.task[i].applianceCode] = Object.assign({isCheck:'check'},this.userDevices[this.task[i].applianceCode])
-                        }
-                        this.autoBindDevices  = Object.assign({}, this.autoBindDevices, tmpAutoBindDevices)
-                        this.generateWeek()
-                    }
-                }).catch( (error )=>{
-                })
-            },
-            generateWeek(){
+            weekDesc(){
                 let weekText = {
                     0: '周一',
                     1: '周二',
@@ -384,18 +272,105 @@
                     }
                 }
                 weekTmp = weekTmp.join('、')
-                this.weekDesc = weekTmp
+                return weekTmp
+            }
+        },
+        methods: {
+            goBack(){
+                nativeService.goBack()
+            },
+            showDialog(dialogType){
+                this.show[dialogType] = true
+            },
+            closeDialog(dialogType){
+                this.show[dialogType] = false
+            },
+            goHomePage(){
+                this.goTo('weex')
+            },
+            initData(){
+                this.uid = nativeService.getParameters('uid')
+                this.homegroupId = nativeService.getParameters('homegroupId')
+                this.sceneType = nativeService.getParameters('sceneType')
+                this.sceneId = nativeService.getParameters('sceneId')
+                this.autoSupportActions = autoSupportActions[this.sceneType]
+                let tmpUserDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
+                for (var i in tmpUserDevices) {
+                    this.userDevices[tmpUserDevices[i].deviceId] = tmpUserDevices[i]
+                }
                 
+                this.getAutoDetail()
+            },
+            getAutoDetail(){
+                let reqUrl = url.auto.detail
+                let reqParams = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    sceneId: this.sceneId
+                }
+                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                    if (rtnData.code == 0) {
+                        this.autoDetail = Object.assign({}, this.autoDetail, rtnData.data)
+                        
+                        this.inputAutoName = this.autoDetail.name
+                        this.autoEnable = this.autoDetail.enable
+                        this.task = this.autoDetail.task
+
+                        this.generateBindDevices()
+                        this.generateBindDeviceActions()
+                        this.generateUnbindDevices()
+                        this.generateWeek()
+                     
+                    }
+                }).catch( (error )=>{
+                })
+            },
+            generateBindDevices(){//生成已绑定设备列表
+                let tmpAutoBindDevices = {}
+                for (var i in this.task) {
+                    tmpAutoBindDevices[this.task[i].applianceCode] = Object.assign({isCheck:'check'},this.userDevices[this.task[i].applianceCode])
+                }
+                this.autoBindDevices  = Object.assign({}, this.autoBindDevices, tmpAutoBindDevices)
+            },
+            generateUnbindDevices(){//生成未绑定设备列表
+                let bindApplianceCode = [],  tmpUnbindDevices = {},  tmpUnbindDevicesAction = {}
+                for (var x in this.autoBindDevices) {
+                    bindApplianceCode.push(x)
+                }
+                for (var i in this.userDevices) {
+                    if ( bindApplianceCode.indexOf(this.userDevices[i].deviceId) == -1 ){
+                        tmpUnbindDevices[this.userDevices[i].deviceId] =  Object.assign(this.userDevices[i], {isCheck: 'uncheck'})
+                        tmpUnbindDevicesAction[i] = this.autoSupportActions[tmpUnbindDevices[i].deviceType].actions
+                    }
+                }
+                this.unbindDevices = {} 
+                this.unbindDevicesActions = {}
+                this.unbindDevices = Object.assign({}, this.unbindDevices, tmpUnbindDevices)
+                this.unbindDevicesActions = Object.assign({}, this.unbindDevicesActions, tmpUnbindDevicesAction)
+            },
+            generateBindDeviceActions(){//生成已绑定设备的actions
+                let tmpBindDeviceActions = {}
+                for (var x in this.autoBindDevices) {
+                    if (this.userSetActions[x]) {
+                        tmpBindDeviceActions[x] = Object.assign({}, tmpBindDeviceActions[x], this.userSetActions[x])
+                    }else{
+                        tmpBindDeviceActions[x] = this.autoSupportActions[this.autoBindDevices[x].deviceType].actions
+                    }
+                }
+                this.bindDeviceActions =  Object.assign({}, this.bindDeviceActions, tmpBindDeviceActions)
             },
             openAuto(){
                 if (this.autoDetail.enable == 1) {
                     this.autoDetail.enable = 0
+                    this.editParams.enable = 0
                 }else if (this.autoDetail.enable == 0) {
                     this.autoDetail.enable = 1
+                    this.editParams.enable = 1
                 }
             },
-            goSelect(){
-                this.goTo('selectDevice')
+            editAutoName(input){
+                this.inputAutoName = input.value
+                this.editParams.name = input.value
             },
             goAutoTypeSet(){
                 let params = {
@@ -422,6 +397,7 @@
                 this.goTo('autoTypeSet', {}, params)
             },
             deleteAuto(){
+                this.closeDialog('delete')
                 let reqUrl = url.auto.delete
                 let reqParams = {
                     uid: this.uid,
@@ -435,14 +411,28 @@
                             nativeService.goTo('weex.js')
                         })
                     }
-                }).catch( (error )=>{
-                    
+                }).catch( (err)=>{
+                    nativeService.alert(err)
                 })
             },
-            setDevice(device){
-                let params = {}
-                params.addOrEdit = 'edit'
-                params.sceneId = this.autoDetail.sceneId
+            setDevice(deviceId){
+                let tmpTask = {}
+                for (var i in this.autoDetail.task) {
+                    if (this.autoDetail.task[i].applianceCode == deviceId) {
+                        tmpTask = this.autoDetail.task[i].command
+                    }
+                }
+                tmpTask = JSON.stringify(tmpTask)
+                
+                let params = {
+                    from: 'editAuto',
+                    sceneId: this.autoDetail.sceneId,
+                    sceneType: this.autoDetail.sceneType,
+                    deviceId: deviceId,
+                    deviceType: this.userDevices[deviceId].deviceType,
+                    deviceTask: tmpTask,
+                    deviceName: encodeURIComponent(this.autoBindDevices[deviceId].deviceName)
+                }
                 this.goTo('setDevice', {}, params)
             },
             checkOn(item, index){
@@ -452,45 +442,33 @@
                 }
                 this.autoBindDevices[item.applianceCode].isCheck = tmpStatus[this.autoBindDevices[item.applianceCode].isCheck]
 
-                // let basicTask = {}, tmpTask = []
-                // for (var task in this.autoDetail.task){
-                //     basicTask[this.autoDetail.task[task].applianceCode] = this.autoDetail.task[task]
-                // }
-               
-                // for (var x in this.devices) {
-                //     if (this.devices[x].status == 'check') {
-                //         tmpTask.push(basicTask[x])
-                //     }
-                // }
-                // this.task = tmpTask
+                this.updateTask()//勾选或取消时需要更新task数据
             },
-            addDeviceToTask(item, idx){
-                let tmpStatus = {
-                    check: 'uncheck',
-                    uncheck: 'check'
-                }
-                this.userUnbindDevices[item.applianceCode].status = tmpStatus[this.userUnbindDevices[item.applianceCode].status]
-
-                let basicTask = {}, tmpTask = []
-                
-                for (x in userUnbindDevices){
-                    basicTask[userUnbindDevices[x].deviceId] = {
-                        applianceCode: userUnbindDevices[x].deviceId,
-                        command: { power: 'off' }
+            updateTask(){
+                let tmpTask = []
+                for (var i in this.autoBindDevices) {
+                    if (this.autoBindDevices[i].isCheck == 'check') {
+                        tmpTask.push(this.autoDetail.task[i])
                     }
                 }
-            
-                nativeService.alert(basicTask)
-
+                this.editParams.task = JSON.stringify(tmpTask)
             },
-            openDevicePop(){
-                this.showDevicePop = true
-            },
-            closeDevicePop(){
-                this.showDevicePop = false
-            },
-            confirmDevicePop(){
-                this.showDevicePop = false
+            goBindNewDevice(){
+                if (Object.keys(this.unbindDevices).length > 0) {
+                    let params = {
+                        from: 'editAuto',
+                        uid: this.uid,
+                        homegroupId: this.homegroupId,
+                        sceneType: this.sceneType,
+                        userDevices: nativeService.getParameters('userDevices'),
+                        unbindDevices: encodeURIComponent(JSON.stringify(this.unbindDevices)),
+                        unbindDevicesActions:  encodeURIComponent(JSON.stringify(this.unbindDevicesActions))
+                    }
+                    this.goTo('autoBindDevices', {}, params)
+                }else{
+                    nativeService.alert('此快捷操作已经绑定了所有设备哦')
+                }
+                
             },
             sendAutoEdit(){
                 let reqUrl = url.auto.update
@@ -500,71 +478,108 @@
                     sceneType: this.sceneType,
                     sceneId: this.sceneId,
                     image: this.autoDetail.image,
-                    name: this.inputAutoName,
-                    enable: this.autoEnable
                 }
 
-                let editConditionItems = JSON.parse(nativeService.getParameters('editConditionItems'))
-                
-                for (var x in editConditionItems) {
-                    if (x == 'weatherStatus') {
-                        editConditionItems[x] = decodeURIComponent(editConditionItems[x])
-                    }
+                if (Object.keys(this.editParams).length === 0) {
+                    nativeService.alert('没有改动哦')
+                    return
                 }
-
-                if (this.sceneType == 2) {
-                    reqParams.weekly = '1111111'
-                }
+                reqParams.name = this.editParams.name || this.autoDetail.name
+                reqParams.enable = this.editParams.enable || this.autoDetail.enable
+                reqParams.weekly = this.editParams.weekly || this.autoDetail.weekly
+               
                 if (this.sceneType == 3) {
-                    let tmpLocation = {}
-                    if ( editConditionItems.destination ) {
-                        tmpLocation = {
-                            address: editConditionItems.destination.key,
-                            latitude: editConditionItems.destination.latitude,
-                            longitude: editConditionItems.destination.longitude,
-                        }
+                    let tmpLocation = {
+                        address: this.editParams.locationAddress || this.autoDetail.location.address,
+                        latitude: this.editParams.locationLatitude || this.autoDetail.location.latitude,
+                        longitude: this.editParams.locationLongitude || this.autoDetail.location.longitude,
+                        distance: this.autoDetail.location.distance,
+                        direction: this.autoDetail.location.direction,
+                        directionName: this.autoDetail.location.directionName,
                     }
-                    reqParams.location = JSON.stringify(Object.assign(this.autoDetail.location, tmpLocation))
+                    reqParams.location = JSON.stringify(tmpLocation)
                 }
                 if (this.sceneType == 4) {
-                    reqParams.startTime = editConditionItems.hour + ':' + editConditionItems.minute || this.autoDetail.startTime
+                    reqParams.startTime = this.editParams.startTime || this.autoDetail.startTime
                 }
                 if (this.sceneType == 6) {
-                    let tmpWeather = {}
-                    if (editConditionItems.weatherStatus) {
-                        tmpWeather.weatherStatus = editConditionItems.weatherStatus
+                    let tmpWeather = {
+                        cityNo: this.autoDetail.weather.cityNo,
+                        latitude: this.autoDetail.weather.latitude,
+                        longitude: this.autoDetail.weather.longitude,
+                        weatherStatus: this.editParams.weatherStatus || this.autoDetail.weather.weatherStatus,
+                        temperature: this.editParams.weatherTemperature || this.autoDetail.weather.temperature,
+                        logical: this.editParams.logical || this.autoDetail.weather.logical,
                     }
-                    if (editConditionItems.logical) {
-                        tmpWeather.logical = editConditionItems.logical
+                    reqParams.weather = JSON.stringify(tmpWeather)
+                }
+                let tmpTask = []
+                for (var x in this.bindDeviceActions) {
+                    let tmpCommand = {}
+                    for (var i in this.bindDeviceActions[x]) {
+                        tmpCommand[this.bindDeviceActions[x][i].property] = this.bindDeviceActions[x][i].currentStatus
                     }
-                    if (editConditionItems.weatherTemperature) {
-                        tmpWeather.temperature = editConditionItems.weatherTemperature
-                    }
-                    reqParams.weather =  JSON.stringify(Object.assign(this.autoDetail.weather, tmpWeather))
-
-    
-                    this.webRequest(reqUrl, reqParams).then((rtnData)=>{
-                        nativeService.alert(rtnData)
-                        if (rtnData.code == 0) {
-                            nativeService.alert('修改成功', function(){
-                                nativeService.goTo('weex.js')
-                            })
-                        }
-                    }).catch( (error )=>{
-
+                    tmpTask.push({
+                        applianceCode: x,
+                        command: tmpCommand
                     })
                 }
-            },
-            editAutoName(input){
-                this.inputAutoName = input.value
+                reqParams.task = tmpTask || this.autoDetail.task
+
+
+                nativeService.alert(reqParams)
+
+                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                    nativeService.alert(rtnData)
+                    
+                    if (rtnData.code == 0) {
+                        nativeService.alert('修改成功', function(){
+                            nativeService.goTo('weex.js')
+                        })
+                    }
+                }).catch( (error )=>{
+
+                })
             }
         },
         created(){
+            let that = this
             this.initData()
-            channelAutoEdit.onmessage = function(e){
-                nativeService.alert(e)
+            channelAutoEdit.onmessage = function(e) {
+                if (e.data.page == 'setDevice') {
+                    nativeService.alert(e)
+                    that.userSetActions = Object.assign({}, that.userSetActions, e.data.actions)
+                }
+                if (e.data.page == 'autoBindDevices') {
+                    that.autoBindDevices = Object.assign({}, that.autoBindDevices, e.data.newDevices)
+                    that.generateUnbindDevices()
+                    that.generateBindDeviceActions()
+                }
+                if (e.data.page == 'setCondition') {
+                    that.editParams = Object.assign({}, that.editParams,  e.data.editParams)
+                    
+                    if ( e.data.editParams.locationAddress) {
+                        that.autoDetail.location.address =  e.data.editParams.locationAddress
+                    }
+                    if ( e.data.editParams.weekly) {
+                        that.autoDetail.weekly = e.data.editParams.weekly
+                    }
+                    if ( e.data.editParams.hour) {
+                        let tmpMinute = e.data.editParams.minute || '00'
+                        that.autoDetail.startTime = e.data.editParams + ':' + tmpMinute
+                    }
+                    if ( e.data.editParams.weatherStatus) {
+                        that.autoDetail.weather.weatherStatus = e.data.editParams.weatherStatus
+                    }
+                    if ( e.data.editParams.weatherTemperature) {
+                        that.autoDetail.weather.temperature = e.data.editParams.weatherTemperature
+                    }
+                    if ( e.data.editParams.weatherTemperature) {
+                        that.autoDetail.weather.logical = e.data.editParams.logical
+                    }
+                    nativeService.alert(that.editParams)
+                }
             }
         }
     }
 </script>
-

@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" @viewappear="viewappear" @viewdisappear="viewdisappear">
-        <midea-header :title="'Debug信息'+buildTime" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="'Debug信息'+buildTime" bgColor="#0e90ff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <div class="header-action">
             <text class="action" @click="clean">清空</text>
@@ -8,7 +8,7 @@
             <text class="action" @click="copyLog">拷贝日志</text>
             <text class="action" @click="getConfig">信息({{plugin_version}})</text>
             <text class="action" @click="showAppData">全局数据</text>
-            <text class="action" @click="testfunc">测试</text>
+            <text class="action" @click="testfunc">是否iphoneX:{{isipx}}</text>
         </div>
         <scroller class="info-box">
             <text class="note">{{content}}</text>

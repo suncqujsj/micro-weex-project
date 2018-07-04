@@ -42,7 +42,7 @@
                                 <image class="appliance-img" :src="categaryItem.isShowImage?productItem.prodImg:''" resize="contain"></image>
                                 <text class="appliance-name">{{productItem.prodName}}</text>
                             </div>
-                            <image v-if="isMultiMode && !checkIsSelected(productItem)" class="appliance-add-img" src="./assets/img/service_ic_addone@3x.png" resize="contain"></image>
+                            <image v-if="isMultiMode" class="appliance-add-img" src="./assets/img/service_ic_addone@3x.png" resize="contain"></image>
                         </div>
                     </div>
                 </div>
@@ -50,17 +50,20 @@
         </div>
         <div v-if="isShowingAnimation" class="animation-outer" ref="outer">
             <div class="animation-inner" ref="inner" :style="{'left': animationConfig.startX,'top': animationConfig.startY}">
-                <image class="animation-img" :src="selectedProductArray[selectedProductArray.length - 1].prodImg || './assets/img/product/default.png'" resize="contain"></image>
+                <image class="animation-img" :src="animationImage" resize="contain"></image>
             </div>
         </div>
         <div v-if="isMultiMode" class="action-bar">
             <div class="product-selected-items-wrapper">
-                <scroller class="product-selected-items" scroll-direction="horizontal">
-                    <div v-if="selectedProductArray" class="selected-action-wrapper" v-for="(item,index) in selectedProductArray" :key="index" :ref="'selectedProduct'+index" @click="removeSelectedProduct(index)">
+                <scroller v-if="selectedProductArray && selectedProductArray.length>0" class="product-selected-items" scroll-direction="horizontal">
+                    <div class="selected-action-wrapper" v-for="(item,index) in selectedProductArray" :key="index" :ref="'selectedProduct'+index" @click="removeSelectedProduct(index)">
                         <text class="selected-action-desc">{{item.prodName}}</text>
                         <image class="selected-action-img" :src="'./assets/img/service_ic_delone@3x.png'" resize="contain"></image>
                     </div>
                 </scroller>
+                <div v-else>
+                    <text class="selected-selected-desc">选择需安装的产品</text>
+                </div>
             </div>
             <text v-bind:class="['action-btn',selectedProductArray.length>0?'':'disable-btn']" @click="submit">完成</text>
         </div>
@@ -91,6 +94,7 @@ export default {
             isMultiMode: false,
             enableAnimation: true,
             isShowingAnimation: false,
+            animationImage: '',
             isProceedingSelection: false,
             animationConfig: {
                 startX: 0,
@@ -146,46 +150,36 @@ export default {
         showImage(event, item) {
             item.isShowImage = true
         },
-        checkIsSelected(productItem) {
-            let result = []
-            if (this.selectedProductArray && this.selectedProductArray.length > 0) {
-                result = this.selectedProductArray.filter((item) => {
-                    return item.brandCode == productItem.brandCode && item.prodCode == productItem.prodCode
-                })
-            }
-            return result.length > 0 ? true : false
-        },
         selectProductItem(event, productItem) {
             if (this.isProceedingSelection) return
 
             if (this.isMultiMode) {
                 //多选模式
-                if (!this.checkIsSelected(productItem)) {
-                    //之前未被选中
-                    if (this.selectedProductArray.length < 5) {
-                        this.isProceedingSelection = true
+                if (this.selectedProductArray.length < 6) {
+                    this.isProceedingSelection = true
+                    this.selectedProductArray.push(productItem)
+                    if (event && this.enableAnimation) {
+                        this.animationImage = productItem.prodImg
+                        this.isShowingAnimation = true
+                    }
+                    this.$nextTick(() => {
                         if (event && this.enableAnimation) {
-                            this.selectedProductArray.push(productItem)
                             this.showSelectAnimation(event, () => {
+                                this.animationImage = ''
+                                this.isShowingAnimation = false
                                 this.isProceedingSelection = false
-                                if (this.selectedProductArray.length > 3) {
-                                    const el = this.$refs["selectedProduct" + (this.selectedProductArray.length - 1)][0]
-                                    dom.scrollToElement(el, {})
-                                }
                             })
                         } else {
-                            this.selectedProductArray.push(productItem)
                             this.isProceedingSelection = false
-                            this.$nextTick(() => {
-                                if (this.selectedProductArray.length > 3) {
-                                    const el = this.$refs["selectedProduct" + (this.selectedProductArray.length - 1)][0]
-                                    dom.scrollToElement(el, {})
-                                }
-                            })
                         }
-                    } else {
-                        nativeService.toast("最多只能选5个")
-                    }
+                        if (this.selectedProductArray.length > 3) {
+                            const el = this.$refs["selectedProduct" + (this.selectedProductArray.length - 1)][0]
+                            dom.scrollToElement(el, { offset: 0, animated: true })
+                        }
+                    })
+
+                } else {
+                    nativeService.toast("最多只能选6个")
                 }
             } else {
                 this.selectedProductArray.splice(0, this.selectedProductArray.length, productItem)
@@ -196,7 +190,6 @@ export default {
         showSelectAnimation(event, callback) {
             this.animationConfig.startX = event.position.x
             this.animationConfig.startY = event.position.y
-            this.isShowingAnimation = true
             const duration = 600
             this.$nextTick(() => {
                 //清楚之前的效果
@@ -230,7 +223,6 @@ export default {
                             timingFunction: 'linear',
                             delay: 0 //ms
                         }, () => {
-                            this.isShowingAnimation = false
                         })
                         animation.transition(innerEl, {
                             styles: {
@@ -241,7 +233,6 @@ export default {
                             timingFunction: 'cubic-bezier(.38,-0.93,.66,.74)',
                             delay: 0 //ms
                         }, () => {
-                            this.isShowingAnimation = false
                             callback()
                         })
                     })
@@ -300,8 +291,9 @@ export default {
                 //我的家电
                 let param = {
                     pageIndex: 1,
-                    pageSize: 100
-
+                    pageSize: 100,
+                    selectType: 1,
+                    isIntelligent: 1
                 }
                 nativeService.getUserProductPageList(param).then((data) => {
                     this.myProductList = data.data.list
@@ -470,7 +462,7 @@ export default {
   padding-right: 32px;
 }
 .product-selected-items {
-  flex: 1;
+  width: 530px;
   height: 96px;
   flex-direction: row;
   justify-content: flex-start;
@@ -501,6 +493,11 @@ export default {
   right: 0px;
   height: 24px;
   width: 24px;
+}
+.selected-selected-desc {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #000000;
 }
 .action-btn {
   width: 120px;

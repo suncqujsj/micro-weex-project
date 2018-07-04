@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper" @viewappear="refreshPage">
         <midea-header title="" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" :showLeftImg="false" :showRightImg="true" rightImg="./assets/img/service_ic_call@3x.png" @rightImgClick="showHotLine">
         </midea-header>
         <list>
@@ -116,10 +116,13 @@ export default {
         }
     },
     methods: {
-        handlePageData(data) {
-            if (data.key == "createOrder") {
-                this.getOrderList()
-            }
+        refreshPage() {
+            this.order = null
+            nativeService.getUserInfo().then((data) => {
+                if (data.uid) {
+                    this.getOrderList()
+                }
+            })
         },
         getOrderList() {
             let status = []
@@ -141,9 +144,11 @@ export default {
         },
         itemClicked(item) {
             nativeService.getUserInfo().then((data) => {
-                if (true || data.uid) {
+                if (data.uid) {
+                    //已经登录
                     this.goTo(item.page)
                 } else {
+                    //未登录
                     nativeService.jumpNativePage({
                         "pageName": "login", //跳转到登录界面
                         "data": {}

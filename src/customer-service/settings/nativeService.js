@@ -1,43 +1,45 @@
 import nativeService from '@/common/services/nativeService'
 import util from '@/common/util/util'
 import { SERVICE_STORAGE_KEYS } from './globalKeys'
-const cssRrequestSendWithApp = !true
+const cssRrequestSendWithApp = true
 const requestSendWithApp = true
 const HOST_CSS = cssRrequestSendWithApp ? '' : "http://csuat.midea.com"
-const HOST_CENTER_APP = requestSendWithApp ? '' : "http://cmms2.midea.com"
 const HOST_CENTER = requestSendWithApp ? '' : "http://cmms2.midea.com"
 const HOST_antiFake = "http://wap.cjm.so/Common/DataService.ashx"
 
 let customizeNativeService = Object.assign(nativeService, {
     isDummy: false,
     serviceList: {
-        //CSS 客服消息
-        queryserviceorder: HOST_CSS + "/c-css-ipms/api/wom/order/queryserviceorder", //客服-CSS-用户服务工单列表查询
-        createserviceorder: HOST_CSS + "/c-css-ipms/api/wom/order/createserviceorder", //客服-CSS-用户报装、报修、洗悦家服务请求
-        queryserviceuserdemanddispatch: HOST_CSS + "/c-css-ipms/api/wom/order/queryserviceuserdemanddispatch", //客服-CSS-用户服务工单详情进度查询
-        queryservicereqsrvprod: HOST_CSS + "/c-css-ipms/api/wom/order/queryservicereqsrvprod", //客服-CSS-催单原因列表接口
-        createserviceuserdemand: HOST_CSS + "/c-css-ipms/api/wom/order/createserviceuserdemand", //客服-CSS-催单CSS信息单
-        cancelserviceorder: HOST_CSS + "/c-css-ipms/api/wom/order/cancelserviceorder", //客服-CSS-取消售后工单
-        extractcallbackitem: HOST_CSS + "/c-css-ipms/api/wom/order/extractcallbackitem", //客服-CSS-回访问卷抽取
-        createcallbackinfo: HOST_CSS + "/c-css-ipms/api/wom/order/createcallbackinfo", //客服-CSS-回访结果提交
-        queryconsumerorderprogress: HOST_CSS + "/c-css-ipms/api/wom/order/queryconsumerorderprogress", //客服-CSS-用户服务单服务过程列表查询接口
-        queryservicerequireproduct: HOST_CSS + "/c-css-ipms/api/wom/order/queryservicerequireproduct", //客服-CSS-服务请求查询接口
-        getexcludedfaultlist: HOST_CSS + "/c-css-ipms/cssmobile/api/wom/getexcludedfaultlist", //客服-CSS-故障可能原因查询
-        appexcludedfaulttraces: HOST_CSS + "/c-css-ipms/cssmobile/api/wom/appexcludedfaulttraces", //客服-CSS-假性故障有帮助没帮助标识接口
-        queryunitarchives: HOST_CSS + "/c-css-ipms/api/wom/order/queryunitarchives", //客服-CSS-网点查询
-        getChargeStandardList: HOST_CSS + "/c-css-ipms/css/api/mmp/insp/getChargeStandardList", //客服-CSS-收费标准查询
-        querywarrantydescbycodeorsn: HOST_CSS + "/c-css-ipms/api/wom/order/querywarrantydescbycodeorsn", //客服-CSS-包修政策查询接口
-        getChargePriceForMaterial: HOST_CSS + "/c-css-ipms/css/api/mmp/insp/getChargePriceForMaterial", //客服-CSS-配件价格查询
+        //CSS 客服接口
+        queryserviceorder: HOST_CSS + "/c-css-ipms/oi/api/wom/order/queryserviceorder", //客服-CSS-用户服务工单列表查询
+        createserviceorder: HOST_CSS + "/c-css-ipms/oi/api/wom/order/createserviceorder", //客服-CSS-用户报装、报修、洗悦家服务请求
+        queryserviceuserdemanddispatch: HOST_CSS + "/c-css-ipms/oi/api/wom/order/queryserviceuserdemanddispatch", //客服-CSS-用户服务工单详情进度查询
+        queryservicereqsrvprod: HOST_CSS + "/c-css-ipms/oi/api/wom/order/queryservicereqsrvprod", //客服-CSS-催单原因列表接口
+        createserviceuserdemand: HOST_CSS + "/c-css-ipms/oi/api/wom/order/createserviceuserdemand", //客服-CSS-催单CSS信息单
+        cancelserviceorder: HOST_CSS + "/c-css-ipms/oi/api/wom/order/cancelserviceorder", //客服-CSS-取消售后工单
+        extractcallbackitem: HOST_CSS + "/c-css-ipms/oi/api/wom/order/extractcallbackitem", //客服-CSS-回访问卷抽取
+        createcallbackinfo: HOST_CSS + "/c-css-ipms/oi/api/wom/order/createcallbackinfo", //客服-CSS-回访结果提交
+        queryconsumerorderprogress: HOST_CSS + "/c-css-ipms/oi/api/wom/order/queryconsumerorderprogress", //客服-CSS-用户服务单服务过程列表查询接口
+        queryservicerequireproduct: HOST_CSS + "/c-css-ipms/oi/api/wom/order/queryservicerequireproduct", //客服-CSS-服务请求查询接口 (故障类型)
+        getexcludedfaultlist: HOST_CSS + "/c-css-ipms/oi/api/wom/getexcludedfaultlist", //客服-CSS-故障可能原因查询
+        appexcludedfaulttraces: HOST_CSS + "/c-css-ipms/oi/api/wom/appexcludedfaulttraces", //客服-CSS-假性故障有帮助没帮助标识接口
+        queryunitarchives: HOST_CSS + "/c-css-ipms/oi/api/wom/order/queryunitarchives", //客服-CSS-网点查询
+        querywarrantydescbycodeorsn: HOST_CSS + "/c-css-ipms/oi/api/wom/order/querywarrantydescbycodeorsn", //客服-CSS-包修政策查询接口
+        createchargeinfo: HOST_CSS + "/c-css-ipms/oi/api/mmp/createchargeinfo", //客服-CSS-收费信息接收接口
+        dochargecomfirm: HOST_CSS + "/c-css-ipms/oi/api/wom/order/dochargecomfirm", //客服-CSS-服务号收费确认
+        querychargedetails: HOST_CSS + "/c-css-ipms/oi/api/wom/order/querychargedetails", //客服-CSS-服务号收费报告查看
+        querychargestatus: HOST_CSS + "/c-css-ipms/oi/mideapay/charge/querychargestatus", //客服-CSS-收费状态查询
+        queryproductinfobysn: HOST_CSS + "/c-css-ipms/oi/api/wom/queryproductinfobysn", //客服-CSS-条码解析接口
 
-        createchargeinfo: HOST_CSS + "/c-css-ipms/api/mmp/createchargeinfo", //客服-CSS-收费信息接收接口
-        dochargecomfirm: HOST_CSS + "/c-css-ipms/api/wom/order/dochargecomfirm", //客服-CSS-服务号收费确认
-        querychargedetails: HOST_CSS + "/c-css-ipms/api/wom/order/querychargedetails", //客服-CSS-服务号收费报告查看
-        querychargestatus: HOST_CSS + "/c-css-ipms/mideapay/charge/querychargestatus", //客服-CSS-收费状态查询
+        // CSS客服 - 技术组接口
+        getChargeStandardList: HOST_CSS + "/c-css-ipms/api/insp/getChargeStandardList", //客服-CSS-收费标准查询
+        getChargePriceForMaterial: HOST_CSS + "/c-css-ipms/api/insp/getChargePriceForMaterial", //客服-CSS-配件价格查询
 
         //中控消息
-        getProdType: HOST_CENTER_APP + "/pdgw-ap/message/getProdType", //客服-中控-产品列表
-        getProdMessage: HOST_CENTER_APP + "/pdgw-ap/message/getProdMessage", //客服-中控-获取售后产品资料对外服务接口
+        getProdType: HOST_CENTER + "/pdgw-ap/message/getProdType", //客服-中控-产品列表
+        getProdMessage: HOST_CENTER + "/pdgw-ap/message/getProdMessage", //客服-中控-获取售后产品资料对外服务接口
 
+        //中控-用户消息
         getUserProductPageList: HOST_CENTER + "/ccrm2-core/userProduct/getUserProductPageList", //客服-中控-获取家电列表
         getAreaList: HOST_CENTER + "/cmms/area/list", //客服-中控-服务地区
         getUserAddrPageList: HOST_CENTER + "/ccrm2-core/userAddr/getUserAddrPageList", //客服-中控-地址列表查询
@@ -46,10 +48,14 @@ let customizeNativeService = Object.assign(nativeService, {
         userAddrUpdate: HOST_CENTER + "/ccrm2-core/userAddr/update", //客服-中控-地址修改
         userAddrDelete: HOST_CENTER + "/ccrm2-core/userAddr/delete", //客服-中控-地址删除
     },
-    userInfo: null,
     objectToQuery(obj) {
         return Object.keys(obj).map(k =>
-            encodeURIComponent(k) + '=' + encodeURIComponent(obj[k] || '')
+            k + '=' + obj[k]
+        ).join('&')
+    },
+    objectToQueryWithEncode(obj) {
+        return Object.keys(obj).map(k =>
+            encodeURIComponent(k) + '=' + encodeURIComponent(obj[k])
         ).join('&')
     },
     getErrorMessage(error) {
@@ -73,34 +79,31 @@ let customizeNativeService = Object.assign(nativeService, {
             let param = {
                 interfaceSource: "SMART"
             }
-            if (this.userInfo) {
-                param.webUserCode = this.userInfo.uid //"oFtQywGHyqrWbDvjVdRTeR9Ig3m0"
-                param.webUserPhone = this.userInfo.mobile
+            this.getUserInfo().then((data) => {
+                param.webUserCode = data.uid //"oFtQywGHyqrWbDvjVdRTeR9Ig3m0"
+                param.webUserPhone = data.mobile
                 resolve(param)
-            } else {
-                this.getUserInfo().then((data) => {
-                    this.userInfo = data || {}
-                    this.getCssRequestCommonParam().then((resp) => {
-                        resolve(resp)
-                    })
-                })
-            }
+            }).catch((error) => {
+                reject(error)
+            })
         })
     },
     sendCssHttpRequestWrapper(url, params, options) {
         return new Promise((resolve, reject) => {
             this.getCssRequestCommonParam().then((commonParam) => {
+                let requestBody = Object.assign({}, commonParam, params)
                 if (cssRrequestSendWithApp) {
-                    let requestOption = Object.assign({ method: "POST", isShowLoading: !true }, options)
+                    let requestOption = Object.assign({ method: "POST", isShowLoading: true, isWrapWithBody: true }, options)
                     let requestParam = {
                         method: requestOption.method,
                         headers: {
                             "Content-Type": "application/json;charset=utf-8"
                         },
-                        data: { json: JSON.stringify({ "body": Object.assign({}, commonParam, params) }) }
+                        data: requestOption.isWrapWithBody ? { "body": requestBody } : requestBody
                     }
                     this.sendCentralCloundRequest(url, requestParam, requestOption).then((resp) => {
-                        if (resp.status) {
+                        //CSS成功：resp.status ， CSS技术组成功：resp.code
+                        if (resp.status || resp.code == 0) {
                             resolve(resp)
                         } else {
                             reject(resp)
@@ -109,18 +112,19 @@ let customizeNativeService = Object.assign(nativeService, {
                         reject(error)
                     })
                 } else {
-                    let requestOption = Object.assign({ method: "POST", isShowLoading: true }, options)
+                    let requestOption = Object.assign({ method: "POST", isShowLoading: true, isWrapWithBody: true }, options)
                     let requestParam = {
                         url: url,
                         type: 'json',
                         method: requestOption.method,
                         headers: {
-                            "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"
+                            "Content-Type": "application/json;charset=utf-8"
                         },
-                        body: "json=" + JSON.stringify({ "body": Object.assign({}, commonParam, params) })
+                        body: JSON.stringify(requestOption.isWrapWithBody ? { "body": requestBody } : requestBody)
                     }
                     this.sendHttpRequest(requestParam, requestOption).then((resp) => {
-                        if (resp.status) {
+                        //CSS成功：resp.status ， CSS技术组成功：resp.code
+                        if (resp.status || resp.code == 0) {
                             resolve(resp)
                         } else {
                             reject(resp)
@@ -129,6 +133,8 @@ let customizeNativeService = Object.assign(nativeService, {
                         reject(error)
                     })
                 }
+            }).catch((error) => {
+                reject(error)
             })
         })
     },
@@ -186,77 +192,31 @@ let customizeNativeService = Object.assign(nativeService, {
     querychargestatus(param = {}) {
         return this.sendCssHttpRequestWrapper(this.serviceList.querychargestatus, param)
     },
-    // CSS 接口： 技术组提供
-    sendCssTechHttpRequestWrapper(url, params, options) {
-        return new Promise((resolve, reject) => {
-            if (cssRrequestSendWithApp) {
-                let requestOption = Object.assign({ method: "POST", isShowLoading: true }, options)
-                let requestParam = {
-                    method: requestOption.method || "POST",
-                    headers: {
-                        "Content-Type": "application/json;charset=utf-8"
-                    },
-                    data: params
-                }
-                this.sendCentralCloundRequest(url, requestParam, requestOption).then((resp) => {
-                    if (resp.status) {
-                        resolve(resp)
-                    } else {
-                        reject(resp)
-                    }
-                }).catch((error) => {
-                    reject(error)
-                })
-            } else {
-                let requestOption = Object.assign({ method: "POST", isShowLoading: true, isValidate: false }, options)
-                let requestParam = {
-                    url: url,
-                    type: 'json',
-                    method: requestOption.method || "POST",
-                    headers: {
-                        "Content-Type": "application/json;charset=utf-8"
-                    },
-                    body: JSON.stringify(params)
-                }
-                this.sendHttpRequest(requestParam, requestOption).then((resp) => {
-                    if (resp.returnStatus) {
-                        resolve(resp)
-                    } else {
-                        reject(resp)
-                    }
-                }).catch((error) => {
-                    reject(error)
-                })
-            }
-        })
-    },
-    getChargeStandardList(param = {}) {
-        let url = this.serviceList.getChargeStandardList + (cssRrequestSendWithApp ? '&' : '?') + this.objectToQuery(param)
-        return this.sendCssTechHttpRequestWrapper(url)
+    queryproductinfobysn(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.queryproductinfobysn, param)
     },
 
+    // CSS 接口： 技术组提供
+    getChargeStandardList(param = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.getChargeStandardList, param)
+    },
     getChargePriceForMaterial(param = {}) {
-        let url = this.serviceList.getChargePriceForMaterial + (cssRrequestSendWithApp ? '&' : '?') + this.objectToQuery(param)
-        return this.sendCssTechHttpRequestWrapper(url)
+        return this.sendCssHttpRequestWrapper(this.serviceList.getChargePriceForMaterial, param)
     },
 
     //** 中控后台服务 start **/
     getRequestCommonParam() {
         return new Promise((resolve, reject) => {
             let param = {
-                sourceSys: "APP"
+                sourceSys: "APP",
+                tm: Math.round(new Date().getTime() / 1000) //时间戳
             }
-            if (this.userInfo) {
-                param.uid = this.userInfo.uid //"2a58bb9810b3462b80e6d42c142441f8"
+            this.getUserInfo().then((data) => {
+                param.uid = data.uid //"2a58bb9810b3462b80e6d42c142441f8"
                 resolve(param)
-            } else {
-                this.getUserInfo().then((data) => {
-                    this.userInfo = data || {}
-                    this.getRequestCommonParam().then((resp) => {
-                        resolve(resp)
-                    })
-                })
-            }
+            }).catch((error) => {
+                reject(error)
+            })
         })
     },
     sendControlHttpRequestWrapper(url, params, options) {
@@ -304,6 +264,8 @@ let customizeNativeService = Object.assign(nativeService, {
                         reject(error)
                     })
                 }
+            }).catch((error) => {
+                reject(error)
             })
         })
     },
@@ -408,7 +370,7 @@ let customizeNativeService = Object.assign(nativeService, {
     //防伪
     antiFakeQuery(param = {}) {
         return new Promise((resolve, reject) => {
-            let url = HOST_antiFake + "?" + this.objectToQuery(Object.assign({
+            let url = HOST_antiFake + "?" + this.objectToQueryWithEncode(Object.assign({
                 "function": "AntiFakeQuery",
                 "CorpID": 14500,
                 "QueryType": 2

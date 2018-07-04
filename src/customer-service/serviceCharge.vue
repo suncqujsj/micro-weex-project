@@ -48,13 +48,16 @@ export default {
     mixins: [base],
     data() {
         return {
-            title: '',
+            title: '', //收费政策
             selectedProduct: null,
             queryParam: {
                 prodCode: '',
                 content: '',
                 pageSize: 10000,
-                pageNum: 0
+                pageNum: 1,
+                classA: '',
+                classB: '',
+                classC: ''
             },
             chargeStandardList: [],
             expandedAIndex: -1,
@@ -104,7 +107,7 @@ export default {
     methods: {
         search() {
             nativeService.getChargeStandardList(this.queryParam).then((data) => {
-                this.chargeStandardList = data.date
+                this.chargeStandardList = data.data
             }).catch((error) => {
                 nativeService.toast(nativeService.getErrorMessage(error))
             })

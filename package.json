@@ -8,6 +8,7 @@
     "dev": "webpack --watch",
     "dev_demo": "webpack --watch --env=midea-demo",
     "dev_customer": "webpack --watch --env=customer-service",
+    "dev_helpcenter": "webpack --watch --env=help-center",
     "dev_rooms": "webpack --watch --env=midea-rooms",
     "serve": "serve -p 8080",
     "test": "echo \"Error: no test specified\" && exit 1"

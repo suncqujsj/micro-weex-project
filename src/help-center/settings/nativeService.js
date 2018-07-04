@@ -3,9 +3,8 @@ import util from '@/common/util/util'
 import { SERVICE_STORAGE_KEYS } from './globalKeys'
 const cssRrequestSendWithApp = true
 const requestSendWithApp = true
-const withoutAPPWithMAS = true
-const HOST_CSS = cssRrequestSendWithApp ? '' : withoutAPPWithMAS ? "http://mp-sit.smartmidea.net/mas/v5/app/proxy?alias=" : "http://csuat.midea.com"
-const HOST_CENTER = requestSendWithApp ? '' : withoutAPPWithMAS ? "http://mp-sit.smartmidea.net/mas/v5/app/proxy?alias=" : "http://cmms2.midea.com"
+const HOST_CSS = cssRrequestSendWithApp ? '' : "http://csuat.midea.com"
+const HOST_CENTER = requestSendWithApp ? '' : "http://cmms2.midea.com"
 const HOST_antiFake = "http://wap.cjm.so/Common/DataService.ashx"
 
 let customizeNativeService = Object.assign(nativeService, {
@@ -247,11 +246,8 @@ let customizeNativeService = Object.assign(nativeService, {
                     })
                 } else {
                     let requestOption = Object.assign({ method: "POST", isShowLoading: true, isValidate: false }, options)
-                    if (!withoutAPPWithMAS) {
-                        url = url + (url.indexOf("?") > -1 ? "&" : "?") + "appKey=e13fd74579ef4ab4a77218e787812096&secret=068bd15122f648e58e360c2271892220"
-                    }
                     let requestParam = {
-                        url: url,
+                        url: url + (url.indexOf("?") > -1 ? "&" : "?") + "appKey=e13fd74579ef4ab4a77218e787812096&secret=068bd15122f648e58e360c2271892220",
                         method: requestOption.method || "POST",
                         headers: {
                             "Content-Type": "application/json"
@@ -301,7 +297,7 @@ let customizeNativeService = Object.assign(nativeService, {
                     result = JSON.parse(resp.data)
                     resolve(result)
                 } else {
-                    let url = this.serviceList.getProdType + (requestSendWithApp || withoutAPPWithMAS ? '&' : '?') + this.objectToQuery(param)
+                    let url = this.serviceList.getProdType + (requestSendWithApp ? '&' : '?') + this.objectToQuery(param)
                     this.sendControlHttpRequestWrapper(url, {}).then((resp) => {
                         if (resp && resp.code == 0) {
                             result = this.proceedProductData(resp.data)
@@ -326,7 +322,7 @@ let customizeNativeService = Object.assign(nativeService, {
                     result = JSON.parse(resp.data)
                     resolve(result)
                 } else {
-                    let url = this.serviceList.getProdType + (requestSendWithApp || withoutAPPWithMAS ? '&' : '?') + this.objectToQuery(param)
+                    let url = this.serviceList.getProdType + (requestSendWithApp ? '&' : '?') + this.objectToQuery(param)
                     this.sendControlHttpRequestWrapper(url, {}).then((resp) => {
                         if (resp && resp.code == 0) {
                             result = this.proceedProductData(resp.data)
@@ -345,7 +341,7 @@ let customizeNativeService = Object.assign(nativeService, {
     },
 
     getProdMessage(param = {}) {
-        let url = this.serviceList.getProdMessage + (requestSendWithApp || withoutAPPWithMAS ? '&' : '?') + this.objectToQuery(param)
+        let url = this.serviceList.getProdMessage + (requestSendWithApp ? '&' : '?') + this.objectToQuery(param)
         return this.sendControlHttpRequestWrapper(url, {})
     },
     getUserProductPageList(param = {}) {
@@ -358,7 +354,7 @@ let customizeNativeService = Object.assign(nativeService, {
         return this.sendControlHttpRequestWrapper(this.serviceList.getDefaultAddr, param)
     },
     getAreaList(param = {}) {
-        let url = this.serviceList.getAreaList + (requestSendWithApp || withoutAPPWithMAS ? '&' : '?') + this.objectToQuery(param)
+        let url = this.serviceList.getAreaList + (requestSendWithApp ? '&' : '?') + this.objectToQuery(param)
         return this.sendControlHttpRequestWrapper(url, {}, { method: "GET" })
     },
     userAddrAdd(param = {}) {

@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
-            <div slot="customerContent" class="header-right">
+            <div slot="customerContent" class="header-right" v-if="!isCreate">
                 <text class="header-right-text" @click="deleteAddress">删除</text>
             </div>
         </midea-header>
@@ -32,7 +32,7 @@
         </scroller>
 
         <div class="action-bar">
-            <midea-button :text="isCreate?'新增':'保存'" type="green" :btnStyle="{'background-color': '#267AFF','border-radius': '4px'}" @mideaButtonClicked="submit">
+            <midea-button :text="isCreate?'新增':'保存'" type="green" :btnStyle="{'background-color': '#267AFF','border-radius': '4px','opacity':isDataReady?'1':'0.2'}" @mideaButtonClicked="submit">
             </midea-button>
         </div>
 
@@ -90,6 +90,24 @@ export default {
     computed: {
         areaDesc() {
             return this.userAddress.province ? (this.userAddress.provinceName + ' ' + this.userAddress.cityName + ' ' + this.userAddress.countyName + ' ' + this.userAddress.streetName) : '请选中所在区域'
+        },
+        isDataReady() {
+            let result = true
+            if (this.userAddress.receiverName == '' ||
+                this.userAddress.receiverMobile == '' ||
+                this.userAddress.province == '' ||
+                this.userAddress.provinceName == '' ||
+                this.userAddress.city == '' ||
+                this.userAddress.cityName == '' ||
+                this.userAddress.county == '' ||
+                this.userAddress.countyName == '' ||
+                this.userAddress.street == '' ||
+                this.userAddress.streetName == '' ||
+                this.userAddress.addr == '') {
+                result = false
+            }
+
+            return result
         }
     },
     methods: {
@@ -180,6 +198,8 @@ export default {
             })
         },
         submit() {
+            if (!this.isDataReady) return
+
             if (this.userAddress.userAddrId) {
                 //地址修改
                 nativeService.userAddrUpdate(this.userAddress).then((resp) => {

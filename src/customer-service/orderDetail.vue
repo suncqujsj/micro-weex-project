@@ -52,7 +52,7 @@
             <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 2 && checkPassTime(formattedOrder)" @click="urgeOrder()">催办</text>
             <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 3" @click="renewOrder()">重新报单</text>
             <text class="action primary-action" v-if="formattedOrder.allowCallbackWX == 'Y'" @click="assessService()">评价有礼</text>
-            <text class="action" v-if="formattedOrder.callbackStatus == 12" @click="assessService()">查看评价</text>
+            <!-- <text class="action" v-if="formattedOrder.callbackStatus == 12" @click="assessService()">查看评价</text> -->
             <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 6" @click="callService()">联系网点</text>
         </div>
 
@@ -194,16 +194,18 @@ export default {
         },
         cancelOrder() {
             this.dialogShow = false
-            let param = {
-                orgCode: this.order.orgCode,
-                serviceOrderNo: this.order.serviceOrderNo,
-                operator: nativeService.userInfo.userName
-            }
-            nativeService.cancelserviceorder(param).then(() => {
-                this.order.serviceOrderStatus = '22'
-                this.appPageDataChannel.postMessage({ page: this.fromPage, key: "cancelOrder", data: { id: this.order.serviceOrderNo } })
-            }).catch((error) => {
-                nativeService.toast(nativeService.getErrorMessage(error))
+            nativeService.getUserInfo().then((data) => {
+                let param = {
+                    orgCode: this.order.orgCode,
+                    serviceOrderNo: this.order.serviceOrderNo,
+                    operator: data.nickName
+                }
+                nativeService.cancelserviceorder(param).then(() => {
+                    this.order.serviceOrderStatus = '22'
+                    this.appPageDataChannel.postMessage({ page: this.fromPage, key: "cancelOrder", data: { id: this.order.serviceOrderNo } })
+                }).catch((error) => {
+                    nativeService.toast(nativeService.getErrorMessage(error))
+                })
             })
         },
         assessService() {

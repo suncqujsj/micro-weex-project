@@ -11,7 +11,8 @@
             <image class="period-header-action" src="./assets/img/service_ic_cancel@3x.png" resize='contain' @click="buttonCancel"></image>
         </div>
         <scroller class="period-content-wrapper" show-scrollbar=false>
-            <div class="period-content-item-wrapper" v-for="(item, index) in currentRegionList" :key="index" @click="selectItem(item)" :ref="'area'+index">
+            <div ref="areaStart"></div>
+            <div class="period-content-item-wrapper" v-for="(item, index) in currentRegionList" :key="index" @click="selectItem(item)">
                 <text v-bind:class="['period-content-item']">{{item.regionName}}</text>
             </div>
         </scroller>
@@ -134,8 +135,8 @@ export default {
                 }
                 this.currentregionCode = regionCode
                 this.$nextTick(() => {
-                    const el = this.$refs['area0'][0]
-                    dom.scrollToElement(el)
+                    const el = this.$refs["areaStart"]
+                    dom.scrollToElement(el, { offset: 0, animated: false })
                 })
             }).catch((error) => {
                 nativeService.toast(nativeService.getErrorMessage(error))

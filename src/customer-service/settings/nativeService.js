@@ -4,7 +4,6 @@ import { SERVICE_STORAGE_KEYS } from './globalKeys'
 const cssRrequestSendWithApp = true
 const requestSendWithApp = true
 const HOST_CSS = cssRrequestSendWithApp ? '' : "http://csuat.midea.com"
-const HOST_CENTER_APP = requestSendWithApp ? '' : "http://cmms2.midea.com"
 const HOST_CENTER = requestSendWithApp ? '' : "http://cmms2.midea.com"
 const HOST_antiFake = "http://wap.cjm.so/Common/DataService.ashx"
 
@@ -37,8 +36,8 @@ let customizeNativeService = Object.assign(nativeService, {
         getChargePriceForMaterial: HOST_CSS + "/c-css-ipms/api/insp/getChargePriceForMaterial", //客服-CSS-配件价格查询
 
         //中控消息
-        getProdType: HOST_CENTER_APP + "/pdgw-ap/message/getProdType", //客服-中控-产品列表
-        getProdMessage: HOST_CENTER_APP + "/pdgw-ap/message/getProdMessage", //客服-中控-获取售后产品资料对外服务接口
+        getProdType: HOST_CENTER + "/pdgw-ap/message/getProdType", //客服-中控-产品列表
+        getProdMessage: HOST_CENTER + "/pdgw-ap/message/getProdMessage", //客服-中控-获取售后产品资料对外服务接口
 
         //中控-用户消息
         getUserProductPageList: HOST_CENTER + "/ccrm2-core/userProduct/getUserProductPageList", //客服-中控-获取家电列表
@@ -49,10 +48,14 @@ let customizeNativeService = Object.assign(nativeService, {
         userAddrUpdate: HOST_CENTER + "/ccrm2-core/userAddr/update", //客服-中控-地址修改
         userAddrDelete: HOST_CENTER + "/ccrm2-core/userAddr/delete", //客服-中控-地址删除
     },
-    userInfo: null,
     objectToQuery(obj) {
         return Object.keys(obj).map(k =>
-            encodeURIComponent(k) + '=' + encodeURIComponent(obj[k] || '')
+            k + '=' + obj[k]
+        ).join('&')
+    },
+    objectToQueryWithEncode(obj) {
+        return Object.keys(obj).map(k =>
+            encodeURIComponent(k) + '=' + encodeURIComponent(obj[k])
         ).join('&')
     },
     getErrorMessage(error) {
@@ -76,18 +79,13 @@ let customizeNativeService = Object.assign(nativeService, {
             let param = {
                 interfaceSource: "SMART"
             }
-            if (this.userInfo) {
-                param.webUserCode = this.userInfo.uid //"oFtQywGHyqrWbDvjVdRTeR9Ig3m0"
-                param.webUserPhone = this.userInfo.mobile
+            this.getUserInfo().then((data) => {
+                param.webUserCode = data.uid //"oFtQywGHyqrWbDvjVdRTeR9Ig3m0"
+                param.webUserPhone = data.mobile
                 resolve(param)
-            } else {
-                this.getUserInfo().then((data) => {
-                    this.userInfo = data || {}
-                    this.getCssRequestCommonParam().then((resp) => {
-                        resolve(resp)
-                    })
-                })
-            }
+            }).catch((error) => {
+                reject(error)
+            })
         })
     },
     sendCssHttpRequestWrapper(url, params, options) {
@@ -135,6 +133,8 @@ let customizeNativeService = Object.assign(nativeService, {
                         reject(error)
                     })
                 }
+            }).catch((error) => {
+                reject(error)
             })
         })
     },
@@ -211,17 +211,12 @@ let customizeNativeService = Object.assign(nativeService, {
                 sourceSys: "APP",
                 tm: Math.round(new Date().getTime() / 1000) //时间戳
             }
-            if (this.userInfo) {
-                param.uid = this.userInfo.uid //"2a58bb9810b3462b80e6d42c142441f8"
+            this.getUserInfo().then((data) => {
+                param.uid = data.uid //"2a58bb9810b3462b80e6d42c142441f8"
                 resolve(param)
-            } else {
-                this.getUserInfo().then((data) => {
-                    this.userInfo = data || {}
-                    this.getRequestCommonParam().then((resp) => {
-                        resolve(resp)
-                    })
-                })
-            }
+            }).catch((error) => {
+                reject(error)
+            })
         })
     },
     sendControlHttpRequestWrapper(url, params, options) {
@@ -269,6 +264,8 @@ let customizeNativeService = Object.assign(nativeService, {
                         reject(error)
                     })
                 }
+            }).catch((error) => {
+                reject(error)
             })
         })
     },
@@ -373,7 +370,7 @@ let customizeNativeService = Object.assign(nativeService, {
     //防伪
     antiFakeQuery(param = {}) {
         return new Promise((resolve, reject) => {
-            let url = HOST_antiFake + "?" + this.objectToQuery(Object.assign({
+            let url = HOST_antiFake + "?" + this.objectToQueryWithEncode(Object.assign({
                 "function": "AntiFakeQuery",
                 "CorpID": 14500,
                 "QueryType": 2

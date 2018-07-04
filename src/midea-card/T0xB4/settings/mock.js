@@ -6,57 +6,43 @@ export const all = [
         data: {
             "errorCode": 0,
 		    "params": {
+		        "work_status": "standby",
+		        "work_mode": "double_tube",
+		        "temperature": "25",
+		        "work_hour": "5",
+		        "work_minute": "30",
+		        "error_code": "0",
+		        "lock":"on"
+		    }
+        }
+    },
+    {
+        path: 'off',
+        data: {
+            "errorCode": 0,
+		    "params": {
 		        "work_status": "work",
 		        "work_mode": "double_tube",
 		        "temperature": "25",
 		        "work_hour": "5",
 		        "work_minute": "30",
-		        "error_code": "0"
+		        "error_code": "0",
+		        "lock":"off"
 		    }
         }
     },
     {
-        path: 'poweroff',
+        path: 'on',
         data: {
             "errorCode": 0,
 		    "params": {
-		        "power": "off",
-		        "mode": "auto",
+		        "work_status": "work",
+		        "work_mode": "double_tube",
 		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
-		    }
-        }
-    },
-    {
-        path: 'temperatureControl',
-        data: {
-            "errorCode": 0,
-		    "params": {
-		        "power": "on",
-		        "mode": "fan",
-		        "temperature": "26",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
-		    }
-        }
-    },
-    {
-        path: 'poweron',
-        data: {
-            "errorCode": 0,
-		    "params": {
-		        "power": "on",
-		        "mode": "auto",
-		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "work_hour": "5",
+		        "work_minute": "30",
+		        "error_code": "0",
+		        "lock":"on"
 		    }
         }
     },

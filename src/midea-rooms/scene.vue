@@ -9,7 +9,7 @@
                 <div class="up-desc">
                     <text class="desc white">{{temperatureStatus}} {{pm25Status}}</text>
                     <midea-vote :defaulSelectd="Number(scene.indicator.level)" :disabled="true" :styles="style.vote" :imgPath="voteImg"></midea-vote>
-                    <text class="improve white">一键优化</text>
+                    <text class="improve white" @click="quickOptimize">一键优化</text>
                 </div>
                 <div class="up-status row-sa" v-if="scene.roomType=='1' || scene.roomType=='2'">
                     <div>
@@ -78,16 +78,16 @@
         </div>
     
         <div class="down-block row-sa">
-            <div v-for="mode in scene.modeList" @click="changeMode(mode.modeId)">
-                <image class="down-icon" :src="icon.actions[mode.modelId]"></image>
-                <text class="down-text">{{mode.modelName}}</text>
+            <div v-for="model in scene.modeList" @click="changeModel(model.modelId)">
+                <image class="down-icon" :src="icon.actions[model.modelId]"></image>
+                <text class="down-text">{{model.modelName}}</text>
             </div>
         </div>
         <toast-dialog :show="showToastDialog" @close="closeToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}">
-            <div class="row-sb mgb-10" v-for="device in activeModeDevices">
-                <div>
-                    <text class="pop-hd">{{device.name}}</text>
-                    <text class="sub-pop-hd">{{device.status}}</text>
+            <div class="row-sb mgb-10" v-for="item in modelDevices">
+                <div class="row-sb toast-line">
+                    <text class="pop-hd">{{item.applianceName}}</text>
+                    <image class="toast-icon" :src="icon.model[item.status]"></image>
                 </div>
                 <!-- <image class="icon" :src="icon[modeSetStatus]"> -->
             </div>
@@ -216,10 +216,19 @@
     }
     .pop-hd{
         font-size: 32px;
+        width: 400px;
+        text-overflow: ellipsis;
     }
     .sub-pop-hd{
         font-size: 28px;
         color:#8A8A8F;
+    }
+    .toast-line{
+        padding: 10px;
+    }
+    .toast-icon{
+        width: 50px;
+        height: 50px;
     }
 </style>
 
@@ -321,66 +330,6 @@
                 uid: '',
                 homegroupId: '',
                 scene: {},
-                /*
-                scene: {
-                    "indicator": {
-                        "water_capacity": "",
-                        "water_temperature": "",
-                        "level": 1,
-                        "work_stats": "",
-                        "remain_time": ""
-                    },
-                    "prop": {
-                        "comfortable": "70",
-                        "use": "3",
-                        "save": "60"
-                    },
-                    "sceneId": 66,
-                    "name": "卫浴",
-                    "homegroupId": 150366,
-                    "type": 3,
-                    "list": [
-                        {
-                            "modelId": 1009,
-                            "name": "舒适",
-                            "action": [
-                                {
-                                    "type": "0xE2",
-                                    "command": {
-                                        "temperature": "70",
-                                        "power": "on"
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "modelId": 1010,
-                            "name": "省电",
-                            "action": [
-                                {
-                                    "type": "0xE2",
-                                    "command": {
-                                        "temperature": "60",
-                                        "power": "on"
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "modelId": 1011,
-                            "name": "停用",
-                            "action": [
-                                {
-                                    "type": "0xE2",
-                                    "command": {
-                                        "power": "off"
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                },
-                */
                 icon:{
                     next: 'assets/img/more_w.png',
                     success: '',
@@ -402,6 +351,11 @@
                         '1013': 'assets/img/power_off.png',
                         '1014': 'assets/img/alarm_on.png',
                         '1015': 'assets/img/start_on.png',
+                    },
+                    model: {
+                        1: 'assets/img/loading.png',
+                        2: 'assets/img/success.png',
+                        3: 'assets/img/fail.png'
                     }
                 },
                 style: {
@@ -433,7 +387,7 @@
                 activeModeDevices: [],
                 applianceList: {},
                 showToastDialog: false,
-                userDevices: [],
+                userDevices: {},
                 userSupportDevices: [],
                 showMall: false,
                 chartData: {
@@ -465,6 +419,7 @@
                         "y": "次数"
                     }
                 },
+                modelDevices: []
             }
         },
         methods: {
@@ -473,10 +428,6 @@
             },
             goSetting(){
                 this.goTo('setting', {}, {roomType: this.roomType, sceneId: this.sceneId})
-            },
-            changeMode(mode){
-                this.activeModeDevices = mode
-                this.showToastDialog = true
             },
             closeToastDialog(){
                 this.showToastDialog = false
@@ -502,6 +453,35 @@
                     nativeService.alert(error)
                 })
             },
+            quickOptimize(){
+                let reqUrl = url.scene.optimize
+                let reqParams = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    sceneId: this.sceneId,
+                }
+                let codeDesc = {
+                    '1000':"未知系统错误",
+                    '1001':"参数格式错误",
+                    '1002':"参数为空",
+                    '1003':"参数类型不支持",
+                    '1105':"账户不存在",
+                    '1200':"用户不在家庭",
+                    '1701':"场景不存在",
+                    '1704':"场景没有关联设备"
+                }
+                this.webRequest(reqUrl, reqParams).then((res)=>{
+                    if (res.code == 0) {
+                        resolve(res.data)
+                    }else if (res.code == 1711){
+                        nativeService.alert(res.msg)
+                    }else{
+                        nativeService.toast(codeDesc[res.code])
+                    }
+                }).catch( (err )=>{
+                    reject(err)
+                })
+            },
             getDevices(){
                 return new Promise((resolve,reject)=>{
                     let reqUrl = url.scene.supportList
@@ -521,52 +501,87 @@
                     })
                 })
             },
-            changeMode(modeId){
-                this.executeMode(modeId).then((resolve, reject) => {
-                    this.executeModeCheck().then((resolve, reject)=>{
-                    })
+            changeModel(modelId){
+                this.executeModel(modelId).then((data) => {
+                    this.executeModelCheck(data)
+                }).catch((err)=>{
+                    nativeService.alert(err)
                 })
             },
-            executeMode(modeId){
+            executeModel(modelId){
                 return new Promise((resolve, reject)=>{
                     let reqUrl = url.scene.modeExecute
                     let reqParams = {
                         uid: this.uid,
                         homegroupId: this.homegroupId,
                         sceneId: this.sceneId,
-                        modeId: modeId
+                        modelId: modelId
+                    }
+                    let codeDesc = {
+                        '1000':	'未知系统错误',
+                        '1001':	'参数格式错误',
+                        '1002':	'参数为空',
+                        '1105':	'账户不存在',
+                        '1200':	'用户不在家庭',
+                        '1701':	'场景不存在',
+                        '1704':	'场景没有关联设备',
+                        '1709':	'模式不存在'
                     }
                     this.webRequest(reqUrl, reqParams).then((res)=>{
                         if (res.code == 0) {
-                            resolve(res.data)
+                            
+                            resolve({
+                                modelId:modelId,
+                                resultId: res.data.resultId}
+                            )
                         }else{
-                            reject(res.msg)
+                            nativeService.alert(codeDesc[res.code])
                         }
-                    }).catch( (err )=>{
+                    }).catch( (err)=>{
                         reject(err)
                     })
                 })
             },
-            executeModeCheck(){
-                return new Promise((resolve, reject)=>{
-                    let reqUrl = url.scene.modeExecute
-                    let reqParams = {
-                        uid: this.uid,
-                        homegroupId: this.homegroupId,
-                        sceneId: this.sceneId,
-                        modeId: modeId
+            executeModelCheck(data){
+                // status 1-执行中，2-执行成功，3-执行失败
+                let reqUrl = url.scene.status
+                let reqParams = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    sceneId: this.sceneId,
+                    modelId: data.modelId,
+                    resultId: data.resultId
+                }
+                this.webRequest(reqUrl, reqParams).then((res)=>{
+                    if (res.code == 0) {
+                        this.modelDevices = Object.assign({}, res.data.list)
+                        this.showToastDialog = true
+                        
+                    }else{
+                        reject(res.msg)
                     }
-                    this.webRequest(reqUrl, reqParams).then((res)=>{
-                        if (res.code == 0) {
-                            resolve(res.data)
-                        }else{
-                            reject(res.msg)
-                        }
-                    }).catch( (err )=>{
-                        reject(err)
-                    })
                 })
-
+            },
+            getWashData(){
+                let washerCode
+                for (var x in this.userDevices) {
+                    if (this.userDevices[x].deviceType.indexOf(['0xDA','0xDB']) > -1){
+                        washerCode = this.userDevices[x].deviceId
+                    }
+                }
+                let reqUrl = url.scene.washerConsumption
+                let reqParams = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    applianceCode: washerCode
+                }
+                this.webRequest(reqUrl, reqParams).then((res)=>{
+                    if (res.code == 0) {
+                        nativeService.alert(res)
+                    }
+                }).catch((err)=>{
+                    
+                })
             }
         },
         created(){
@@ -574,6 +589,11 @@
             this.homegroupId = nativeService.getParameters('homegroupId')
             this.sceneId = nativeService.getParameters('sceneId')
             this.roomType = nativeService.getParameters('roomType')
+            this.userDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
+            
+            if (roomType == 4) {
+                this.getWashData()
+            }
             this.getSceneDetail()
         }
     }

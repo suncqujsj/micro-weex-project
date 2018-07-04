@@ -133,7 +133,10 @@
             goNext(){
                 let params = {
                     from: 'addAuto',
-                    sceneType: this.autos[this.activeTypeIndex].sceneType
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    sceneType: this.autos[this.activeTypeIndex].sceneType,
+                    userDevices: nativeService.getParameters('userDevices')
                 }
                 if (this.autos[this.activeTypeIndex].sceneType == 2){
                     this.goTo('autoBindDevices', {}, params)
@@ -146,6 +149,8 @@
             }
         },
         created(){
+            this.uid = nativeService.getParameters('uid')
+            this.homegroupId = nativeService.getParameters('homegroupId')
         }
     }
 </script>

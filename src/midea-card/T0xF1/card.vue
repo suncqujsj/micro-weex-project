@@ -114,7 +114,7 @@
             },
             updateUI(data) {
             	if(data.errorCode == 0) {
-	                let params = data.params;
+	                let params = data.params || data.result;
 	                this.work_status = params.work_status;
 					if(this.work_status == "0") {//待机
 						this.display_value1 = "空闲";

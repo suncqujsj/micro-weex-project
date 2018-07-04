@@ -51,7 +51,7 @@
         <scroller v-if="sceneType== 3 && showMapSearchResult" class="map-result">
             <div v-if="mapSearchResult.length > 0">
                 <div v-for="(item,i) in mapSearchResult" @click="selectMapSearchResult(item)">
-                    <text :class="['map-result-item', i==0?'noborder':'']">{{item.key}}-{{item.district}} </text>
+                    <text :class="['map-result-item', i==0?'noborder':'']">{{item.key}}-{{item.city}} </text>
                 </div>
                 <text class="no-more">没有更多了...</text>
             </div>
@@ -246,13 +246,13 @@
                 hours: [],
                 minutes: [],
                 week: [
-                    { title: '一', value: 'Monday', repeat: 0 },
-                    { title: '二', value: 'Tuesday', repeat: 0 },
-                    { title: '三', value: 'Wednesday', repeat: 0 },
-                    { title: '四', value: 'Thursday', repeat: 0 },
-                    { title: '五', value: 'Friday', repeat: 0 },
-                    { title: '六', value: 'Saturday', repeat: 0 },
-                    { title: '日', value: 'Sunday', repeat: 0 }
+                    { title: '一', repeat: 0 },
+                    { title: '二', repeat: 0 },
+                    { title: '三', repeat: 0 },
+                    { title: '四', repeat: 0 },
+                    { title: '五', repeat: 0 },
+                    { title: '六', repeat: 0 },
+                    { title: '日', repeat: 0 },
                 ],
                 weather: {
                     data: ['晴','阴天','下雨','下雪'],
@@ -315,11 +315,26 @@
             }
         },
         methods: {
+            goBack(){
+                nativeService.goBack()
+            },
             initData(){
                 this.from = nativeService.getParameters('from')
                 this.sceneType = nativeService.getParameters('sceneType')
-                nativeService.alert(this.from)
+                this.uid = nativeService.getParameters('uid')
+                this.homegroupId = nativeService.getParameters('homegroupId')
                 if (this.from == 'editAuto') {
+                    let tmpWeely = nativeService.getParameters('weekly')
+                    let weekName = ['一', '二', '三', '四', '五', '六', '七']
+                    let tmpWeek = []
+                    for (var x in tmpWeely) {
+                        tmpWeek.push({
+                            title: weekName[x],
+                            repeat: tmpWeely[x]
+                        })
+                    }
+                    this.week = tmpWeek
+                                 
                     if (this.sceneType == 3) {
                         this.mapCenter.latitude = nativeService.getParameters('locationLatitude')
                         this.mapCenter.longitude = nativeService.getParameters('locationLongitude')
@@ -352,24 +367,20 @@
                     this.title = '天气变化'
                     this.weatherTemperature = this.generateListArray(-10,40)
                 }
-              
-            },
-            goBack(){
-                nativeService.goBack()
             },
             setRepeat(i){
-                let tmp = {
-                    0: 1,
-                    1: 0
+                if (this.week[i].repeat == '0'){
+                    this.week[i].repeat = '1'
+                }else if (this.week[i].repeat == '1') {
+                    this.week[i].repeat = '0'
                 }
-                this.week[i].repeat = tmp[this.week[i].repeat]
                 
                 if (this.from == 'editAuto') {
                     let weeklyString = ''
                     for (let i=0; i<this.week.length; i++) {
                         weeklyString += this.week[i].repeat
                     }
-                    this.editParams.weekly = 'weekly'
+                    this.editParams.weekly = weeklyString
                 }
             },
             generateListArray(min, max){
@@ -386,36 +397,17 @@
             closeDialog(type){
                 this[type].showDialog = false
             },
-            /*
-                indoorDialogConfirm(){
-                    this.indoor.items[this.indoor.activeSubIndex].switchStatus = this.switchTo[this.indoor.items[this.indoor.activeSubIndex].switchStatus]
-                    this.indoor.showDialog = false//关弹窗
-                },
-                onOffIndoorSwitch(item, index){
-                    this.indoor.items[index].showSwitch = !item.showSwitch//打开或关闭子天气设置面板
-                },
-                setIndoorSubConditionSwitch(item, index){
-                    this.indoor.showDialog = true //弹窗
-                    this.indoor.activeSubIndex = index
-                    this.indoor.activeSwitchStatus = item.switchStatus//为弹窗设置子天气开关状态值
-                    this.indoor.activeSubTypeName = item.title//为弹窗设置子天气开关状态值
-                },
-                setIndoorSubConditionValue(item){
-                },
-            */
             // 时间 start
             setActiveHour(hour){
                 this.activeHour = hour.value
                 if (this.from == 'editAuto') {
                     this.editParams.hour = this.activeHour
-                    channelAutoTypeSet.postMessage(this.editParams)
                 }
             },
             setActiveMinute(minute){
                 this.activeMinute = minute.value
                 if (this.from == 'editAuto') {
                     this.editParams.minute = this.activeMinute
-                    channelAutoTypeSet.postMessage(this.editParams)
                 }
             },
             // 时间 end
@@ -459,16 +451,20 @@
                 this.mapSearchResult = []
             },
             selectMapSearchResult(destination){
-                let tmp = []
+                let tmpDestination = []
                 Object.keys(destination).map(function(x){
-                    tmp.push( x + '='+ encodeURIComponent(destination[x]))
+                    tmpDestination.push( x + '='+ encodeURIComponent(destination[x]))
                 })
-                destination = tmp.join('&')
+                tmpDestination = tmpDestination.join('&')
 
                 if (this.from == 'editAuto') {
-                    this.editParams.destination = destination
+                    this.editParams.locationAddress = destination.key
+                    this.editParams.locationLatitude = destination.latitude
+                    this.editParams.locationLongitude = destination.longitude
+                    channelAutoTypeSet.postMessage({page: 'setCondition', editParams: this.editParams})
+                    this.goBack()
                 }else{
-                    this.goNext(destination)
+                    this.goNext(tmpDestination)
                 }
             },
             searchInputBlur(e){
@@ -497,7 +493,6 @@
                 this.weather.activeTypeIndex = index
                 if (this.from == 'editAuto') {
                     this.editParams.weatherStatus = encodeURIComponent(this.weather.data[this.weather.activeTypeIndex])
-                    channelAutoTypeSet.postMessage(this.editParams)
                 }
             },
             setWeatherSwitch(){
@@ -509,7 +504,6 @@
                 
                 if (this.from == 'editAuto') {
                     this.editParams.logical =  this.weather.activeSwitch=='低于'?'<':'>'
-                    channelAutoTypeSet.postMessage(this.editParams)
                 }
             },
             setActiveWeatherTemperature(wTemp){
@@ -517,7 +511,6 @@
                 
                 if (this.from == 'editAuto') {
                     this.editParams.weatherTemperature = this.activeWeatherTemperature
-                    channelAutoTypeSet.postMessage(this.editParams)
                 }
             },
             // 天气 end
@@ -526,9 +519,16 @@
                 for (let i=0; i<this.week.length; i++) {
                     weeklyString += this.week[i].repeat
                 }
+                if (weeklyString == '0000000')  {
+                    nativeService.alert('还没有设置重复日数哦')
+                    return
+                }
                 let params = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
                     sceneType: this.sceneType,
-                    weekly: weeklyString
+                    weekly: weeklyString,
+                    from: this.from
                 }
                 if (this.sceneType == 3) {
                     params.destination = destination
@@ -552,6 +552,8 @@
                     let logical = this.weather.activeSwitch=='低于'?'<':'>'
                     params.logical = logical
                 }
+                
+                params.userDevices = nativeService.getParameters('userDevices')
                 this.goTo('autoBindDevices', {}, params )
             },
             saveChange(){
@@ -559,6 +561,7 @@
                     nativeService.alert('没有改动哦')
                     return
                 }
+                channelAutoTypeSet.postMessage({page: 'setCondition', editParams: this.editParams})
                 this.goBack()
             }
         },

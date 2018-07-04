@@ -5,22 +5,30 @@
             <text class="done-text white">完成</text>
         </div>
         <div class="content">
-            <div v-if="sceneType != 2" class="hd">
-                <text v-if="sceneType != 2" class="hd-text">在{{weekDesc}}</text>
-                <text v-if="sceneType == 3 && direction == 1" class="hd-text">到达 {{destination.key}} 时</text>
-                <text v-if="sceneType == 3 && direction == 2" class="hd-text">离开 {{destination.key}} 时</text>
-                <text v-if="sceneType == 4" class="hd-text">的{{startTime}}</text>
-                <text>自动操控</text>
+            <div v-if="sceneType != 2 && from=='addAuto'" class="hd">
+                <text v-if="sceneType == 3 && direction == 1" class="hd-text">在{{weekDesc}}到达 {{destination.key}} 时自动操控</text>
+                <text v-if="sceneType == 3 && direction == 2" class="hd-text">在{{weekDesc}}离开 {{destination.key}} 时自动操控</text>
+                <text v-if="sceneType == 4" class="hd-text">在{{weekDesc}}的{{startTime}}自动操控</text>
+                <text v-if="sceneType == 6" class="hd-text">在{{weekDesc}}天气{{weatherStatus}}，气温{{logical}} {{weatherTemperature}}℃时自动操控</text>
             </div>
             <text class="sub-hd">选择要控制的电器，点击更改具体控制</text>
-            <div class="device-box row-sb">
-                <div class="device" v-for="(device, idx) in devices">
-                    <div @click="goSetDevice(device)">
-                        <image class="device-img" :src="img[device.deviceType]"></image>
-                        <text class="device-name">{{device.deviceName}}</text>
+            <div v-if="from == 'addAuto'" class="device-box row-sb">
+                <div class="device" v-for="(item, idx) in userDevices">
+                    <div @click="goSetDevice(item)">
+                        <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
+                        <text class="device-name">{{item.deviceName}}</text>
                         <!-- <text class="device-desc">{{device.desc}}</text> -->
                     </div>
-                    <image class="check-icon" :src="icon[device.status]" @click="checkOn(device, idx)"></image>
+                    <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, idx)"></image>
+                </div>
+            </div>
+            <div v-if="from == 'editAuto'" class="device-box row-sb">
+                <div class="device" v-for="(item, idx) in unbindDevices">
+                    <div @click="goSetDevice(item)">
+                        <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
+                        <text class="device-name">{{item.deviceName}}</text>
+                    </div>
+                    <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, idx)"></image>
                 </div>
             </div>
         </div>
@@ -125,7 +133,8 @@
     import mideaList from '@/midea-rooms/components/list.vue'
     import mideaPromt from '@/component/promt.vue'
 
-    import { url } from './config/config.js'
+    import { url, applianceImgPath, autoSupportActions } from './config/config.js'
+    const channelBindDevice = new BroadcastChannel('autoBroadcast')
 
     export default {
         components:{ MideaHeader, MideaCell, mideaList, mideaPromt },
@@ -136,8 +145,7 @@
                     height: this.pageHeight+'px'
                 }
                 return tmp
-            },
-          
+            }
         },
         data(){
             return {
@@ -158,29 +166,8 @@
                     leftImg: 'assets/img/b.png',
                     rightImg: 'assets/img/b.png'
                 },
-                img: {
-                    '0xAC': 'assets/img/stop_on.png'
-                },
-                devices: [
-                    {
-                        deviceId: "111111", 
-                        deviceName: "name1",
-                        deviceType: "0xAC",
-                        deviceSubType: "xxxxx", 
-                        deviceSn: "16584",
-                        isOnline: 1,
-                        status: 'uncheck'
-                    },
-                    {
-                        deviceId: "2222222", 
-                        deviceName: "name2",
-                        deviceType: "0xAC",
-                        deviceSubType: "xxxxx", 
-                        deviceSn: "165854",
-                        isOnline: 1,
-                        status: 'uncheck'
-                    }
-                ],
+                applianceImgPath: applianceImgPath,
+                userDevices: {},
                 deviceCheckList: {},
                 weekDesc: '',
                 destination: {},
@@ -189,106 +176,174 @@
                 showPrompt: false,
                 inputAutoName: '',
                 checkedDevices: {},
-                logical: ''
+                logical: '',
+                editParams: {},
+                unbindDevices: {},
+                autoSupportActions: {},
+                unbindDevicesActions: {}
             }
         },
         methods: {
-            initData(){
-                this.sceneType = nativeService.getParameters('sceneType')
-                if ( this.sceneType != 2 ) {
-                    this.weekly = nativeService.getParameters('weekly')
-                    let weekText = {
-                        1: '周一',
-                        2: '周二',
-                        3: '周三',
-                        4: '周四',
-                        5: '周五',
-                        6: '周六',
-                        7: '周日',
-                    }
-                    let weekTmp = []
-                    let week = this.weekly.split('')
-                    for (let i=0; i<week.length; i++) {
-                        if (week[i] == '1' ) {
-                            weekTmp.push(weekText[i])
-                        }
-                    }
-                    this.weekDesc = weekTmp.join('、')
-                }
-                if ( this.sceneType == 3 ) {
-                    this.direction = nativeService.getParameters('direction')
-                    this.destination = decodeURIComponent(nativeService.getParameters('destination'))
-                    let destArray = this.destination.split('&'), tmpDest = {}
-                    destArray.map((x)=>{
-                        tmpDest[x.split('=')[0]] = x.split('=')[1]
-                    })
-                    this.destination = tmpDest
-                }
-                if ( this.sceneType == 4 ) {
-                    this.startTime = nativeService.getParameters('startTimeHour') + ':'+ nativeService.getParameters('startTimeMinute')
-                }
-                if( this.sceneType == 6 ) {
-                    this.weatherTemperature = nativeService.getParameters('weatherTemperature')
-                    this.weatherStatus = decodeURIComponent(nativeService.getParameters('weatherStatus'))
-                    this.logical = nativeService.getParameters('logical')
-
-                    nativeService.getGPSInfo({
-                        desiredAccuracy: "10",
-                        distanceFilter: "10",
-                        alwaysAuthorization: "0" 
-                    }).then( (res) => {
-                        let key
-                        this.gpsInfo = res
-
-                        if( res.city){
-                            nativeService.getCityInfo({cityName: res.city}).then((res)=>{
-                                if ( res.cityWeatherNo ) {
-                                    this.cityWeatherNo = res.cityNo
-                                nativeService.toast( this.cityWeatherNo )
-                                }
-                            }).catch((err)=>{
-                                nativeService.toast(err)
-                            })
-                        }else {
-                            nativeService.alert('1获取不到当前城市，请检查是否开启定位权限')
-                        }
-                    }).catch((error) => {
-                        nativeService.alert(error)
-                    })
-
-                }
-            },
             goBack(){
                 nativeService.goBack()
             },
-            save(){ },
-            turnOn(){ },
+            initData(){
+                this.uid = nativeService.getParameters('uid')
+                this.homegroupId = nativeService.getParameters('homegroupId')
+                this.sceneType = nativeService.getParameters('sceneType')
+                this.from = nativeService.getParameters('from')
+                this.autoSupportActions = Object.assign({}, this.autoSupportActions, autoSupportActions[this.sceneType])
+
+                let tmpUserDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
+                for (var i in tmpUserDevices) {
+                    tmpUserDevices[i].isCheck = 'uncheck'
+                }
+                this.userDevices = tmpUserDevices
+
+                if (this.from == 'addAuto'){
+                    this.generateAllDevices()
+                    this.generateAllDeviceActions()
+                    if ( this.sceneType == 2 ){
+                        this.weekly = '1111111'
+                    }else {
+                        this.weekly = nativeService.getParameters('weekly')
+                        let weekText = {
+                            0: '周一',
+                            1: '周二',
+                            2: '周三',
+                            3: '周四',
+                            4: '周五',
+                            5: '周六',
+                            6: '周日',
+                        }
+                        let weekTmp = []
+                        let week = this.weekly.split('')
+                        for (let i=0; i<week.length; i++) {
+                            if (week[i] == '1' ) {
+                                weekTmp.push(weekText[i])
+                            }
+                        }
+                        this.weekDesc = weekTmp.join('、')
+                    }
+                    if ( this.sceneType == 3 ) {
+                        this.direction = nativeService.getParameters('direction')
+                        this.destination = decodeURIComponent(nativeService.getParameters('destination'))
+                        let destArray = this.destination.split('&'), tmpDest = {}
+                        destArray.map((x)=>{
+                            tmpDest[x.split('=')[0]] = x.split('=')[1]
+                        })
+                        this.destination = tmpDest
+                    }
+                    if ( this.sceneType == 4 ) {
+                        this.startTime = nativeService.getParameters('startTimeHour') + ':'+ nativeService.getParameters('startTimeMinute')
+                    }
+                    if( this.sceneType == 6 ) {
+                        this.weatherTemperature = nativeService.getParameters('weatherTemperature')
+                        this.weatherStatus = decodeURIComponent(nativeService.getParameters('weatherStatus'))
+                        this.logical = nativeService.getParameters('logical')
+
+                        nativeService.getGPSInfo({
+                            desiredAccuracy: "10",
+                            distanceFilter: "10",
+                            alwaysAuthorization: "0" 
+                        }).then( (res) => {
+                            let key
+                            this.gpsInfo = res
+
+                            if( res.city){
+                                nativeService.getCityInfo({cityName: res.city}).then((res)=>{
+                                    if ( res.cityWeatherNo ) {
+                                        this.cityWeatherNo = res.cityNo
+                                    }
+                                }).catch((err)=>{
+                                    nativeService.toast(err)
+                                })
+                            }else {
+                                nativeService.alert('获取不到当前设置天气城市，请检查是否开启定位权限')
+                            }
+                        }).catch((error) => {
+                            nativeService.alert(error)
+                        })
+                    }
+                }else if (this.from == 'editAuto'){
+                    let tmpUnbindDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('unbindDevices')))
+                    this.unbindDevices = Object.assign({}, this.unbindDevices, tmpUnbindDevices)
+                    let tmpUnbindDevicesActions = JSON.parse(decodeURIComponent(nativeService.getParameters('unbindDevicesActions')))
+                    this.unbindDevicesActions = Object.assign({}, this.unbindDevicesActions, tmpUnbindDevicesActions)
+                }
+            },
             checkOn(device, index){
                 let tmp = {
                     check: 'uncheck',
                     uncheck: 'check'
                 }
-                this.devices[index].status = tmp[device.status]
-                this.checkedDevices[device.deviceId] = true
-            },
-            goAutoTypeSet(){
-                this.goTo('autoTypeSet', {}, { sceneType: this.sceneType })
-            },
-            deleteQuickStart(){
-                nativeService.toast('delete')
+                if (this.from == 'addAuto') {
+                    if (device.isCheck == 'check'){
+                        this.userDevices[index].isCheck = 'uncheck'
+                        this.checkedDevices[device.deviceId] = false
+                    }else if (device.isCheck == 'uncheck') {
+                        this.userDevices[index].isCheck = 'check'
+                        this.checkedDevices[device.deviceId] = true
+                    }
+                }else if( this.from == 'editAuto'){
+                    if (device.isCheck == 'check'){
+                        this.unbindDevices[index].isCheck = 'uncheck'
+                        this.checkedDevices[device.deviceId] = false
+                    }else if (device.isCheck == 'uncheck') {
+                        this.unbindDevices[index].isCheck = 'check'
+                        this.checkedDevices[device.deviceId] = true
+                    }
+                }
             },
             goSetDevice(device){
-                let params = {}
-                params.sceneType = this.sceneType
-
-                params.deviceType = device.deviceType
-                params.deviceName = device.deviceName
-                params.deviceId = device.deviceId
+                let from
+                if (this.from == 'addAuto') {
+                    from = 'addAuto'
+                }else if (this.from == 'editAuto') {
+                    from = 'addEdit' //编辑页面新增设备
+                }
+                let params = {
+                    from: from,
+                    sceneType: this.sceneType,
+                    deviceType: device.deviceType,
+                    deviceName: encodeURIComponent(device.deviceName),
+                    deviceId: device.deviceId
+                }
                 
                 this.goTo('setDevice', {}, params)
             },
+            generateAllDevices(){
+                let tmpAllDevices = {}
+                for (var x in this.userDevices) {
+                    tmpAllDevices[this.userDevices[x].deviceId] = this.userDevices[x]
+                }
+                this.allDevices = Object.assign({}, this.allDevices, tmpAllDevices)
+            },
+            generateAllDeviceActions(){
+                let tmpAllDeviceActions = {}
+                for (var x in this.allDevices) {
+                    tmpAllDeviceActions[this.allDevices[x].deviceId] = this.autoSupportActions[this.allDevices[x].deviceType].actions
+                }
+                this.allDeviceActions = Object.assign({}, this.allDeviceActions, tmpAllDeviceActions)
+            },
             getDone(){
-                this.showPrompt = true
+                if (this.from == 'addAuto') {
+                    // this.showPrompt = true
+                    this.setNewAuto()
+                }else if(this.from == 'editAuto'){
+                    let tmpCheckedDevice = {}
+                    
+                    for(var i in this.checkedDevices) {
+                        if (this.checkedDevices[i]) {
+                            tmpCheckedDevice[i] = Object.assign(this.unbindDevices[i])
+                        }
+                    }
+                    channelBindDevice.postMessage({
+                        page: 'autoBindDevices',
+                        newDevices: tmpCheckedDevice
+                    })
+                    this.goBack()
+                }
             },
             promptConfirm(){
                 if (this.inputAutoName == ''){
@@ -306,87 +361,77 @@
                 this.inputAutoName = val;
             },
             setNewAuto(){
-                nativeService.getItem('homegroupId',(res)=>{
-                    if (res.result == 'success'){
-                        this.homegroupId = res.data
-                                    
-                        nativeService.getItem('uid', (res)=>{
-                            if (res.result == 'success'){
-                                this.uid = res.data
+                let reqUrl = url.auto.add
+                let reqParams = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    sceneType: this.sceneType,
+                    image: this.icon.auto[this.sceneType],
+                    name: this.inputAutoName
+                }
 
-                                let reqUrl = url.auto.add
-                                let reqParams = {
-                                    uid: this.uid,
-                                    homegroupId: this.homegroupId,
-                                    sceneType: this.sceneType,
-                                    image: this.icon.auto[this.sceneType],
-                                    name: this.inputAutoName
-                                }
+                if ( Object.keys(this.checkedDevices).length === 0) {
+                    nativeService.alert('还没有选择自动化关联设备哦')
+                    return
+                }
 
-                                if ( Object.keys(this.checkedDevices).length === 0) {
-                                    nativeService.alert('还没有选择自动化关联设备哦')
-                                    return
-                                }
-                                nativeService.getItem('task', (res)=>{
-                                    
-                                    reqParams.task = res.data
-                                    if (this.sceneType == 2) {
-                                        reqParams.weekly = '1111111'
-                                    }else{
-                                        reqParams.weekly = this.weekly
-                                    }
+                let tmpTask = {}
+                for (var x in this.userDevices)
+                reqParams.task = tmpTask
+                reqParams.weekly = this.weekly
 
-                                    if (this.sceneType == 3) {
-                                        
-                                        reqParams.location = JSON.stringify({
-                                            address: this.destination.key,
-                                            latitude: this.destination.latitude,
-                                            longitude: this.destination.longitude,
-                                            distance: '500',
-                                            direction: this.direction,
-                                            directionName: ['接近位置', '靠近位置'][this.direction]
-                                        })
-                                        
-                                    }
+                if (this.sceneType == 3) {
+                    reqParams.location = JSON.stringify({
+                        address: this.destination.key,
+                        latitude: this.destination.latitude,
+                        longitude: this.destination.longitude,
+                        distance: '500',
+                        direction: this.direction,
+                        directionName: ['接近位置', '靠近位置'][this.direction]
+                    })
+                    
+                }
 
-                                    if (this.sceneType == 4) {
-                                        reqParams.startTime = this.startTime
-                                    }
-                                    
-                                    if (this.sceneType == 6) {
-                                        let tmp = JSON.stringify({
-                                            cityNo: this.cityWeatherNo,
-                                            temperature: this.weatherTemperature,
-                                            latitude: this.gpsInfo.latitude,
-                                            longitude: this.gpsInfo.longitude,
-                                            weatherStatus: this.weatherStatus,
-                                            logical: this.logical
-                                        })
-                                        reqParams.weather = tmp
-                                    }
-                                    this.webRequest(reqUrl, reqParams).then((rtnData)=>{
-                                        nativeService.alert(rtnData)
-                                        if (rtnData.code == 0) {
-                                            nativeService.alert('新增成功！', function(){
-                                                nativeService.goTo('weex.js')
-                                            })
-                                        }
-                                    }).catch( (error )=>{
+                if (this.sceneType == 4) {
+                    reqParams.startTime = this.startTime
+                }
+                
+                if (this.sceneType == 6) {
+                    let tmp = JSON.stringify({
+                        cityNo: this.cityWeatherNo,
+                        temperature: this.weatherTemperature,
+                        latitude: this.gpsInfo.latitude,
+                        longitude: this.gpsInfo.longitude,
+                        weatherStatus: this.weatherStatus,
+                        logical: this.logical
+                    })
+                    reqParams.weather = tmp
+                }
+                    // this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                    //     nativeService.alert(rtnData)
+                    //     if (rtnData.code == 0) {
+                    //         nativeService.alert('新增成功！', function(){
+                    //             nativeService.goTo('weex.js')
+                    //         })
+                    //     }
+                    // }).catch( (error )=>{
 
-                                    })
-                                })
-                            }else{
-                                nativeService.alert('获取用户身份失败')
-                            }
-                        })
-                    }else{
-                        nativeService.alert('获取用户家庭失败')
-                    }
-                })
-            },
+                    // })
+            
+            }
         },
         created() {
-            this.initData()
+            let that = this
+            that.initData()
+            if (that.from == 'addAuto') {
+                channelBindDevice.onmessage = function(e) {
+                    if (e.data.page == 'setDevice') {
+                        that.allDeviceActions[e.data.applianceCode] = e.data.actions
+                nativeService.alert(that.allDeviceActions)
+                        
+                    }
+                }
+            }
         }
     }
 </script>

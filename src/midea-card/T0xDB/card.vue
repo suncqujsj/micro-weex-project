@@ -5,7 +5,7 @@
 		    	 <div class="card" v-if="onoff == 'on'">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
-	        				<text class="main-status" :class="[running_status != 'start'?'main-status-only':'']">{{remain_min}}</text>
+	        				<text class="main-status" :class="[running_status != 'start'?'main-status-only':'']">{{remain_time}}</text>
 	        				<text class="danwei">{{danwei}}</text>
 	        			</div>
 	        			<text class="main-status-second">{{subInfo}}</text>
@@ -200,36 +200,25 @@
             updateUI(data) {
 	            this.lock = false;
 	            if(data.errorCode == 0) {
-	                let params = data.params;
+	                let params = data.params || data.result;
 	                let errorCode = parseInt(params.error_code);
 	                this.onoff = params.power;
 	                this.running_status = params.running_status;
-					this.remain_time = this.caculateTime(params.remain_time);
-					this.remain_min = params.remain_time;
+					this.remain_time = params.remain_time;//this.caculateTime(params.remain_time);
 					this.expert_step = this.return_expert_step[params.expert_step];
 					this.program = this.return_program[params.program];
 					this.deviceLock = params.lock;
-					if(this.onoff == "off") {
-						this.remain_time = "已关机";
-						this.danwei = "";
-						this.program = "";
-						this.subInfo = "";
-					}else if(this.onoff == "on" && this.running_status == "start") {
+					if(this.running_status == "start") {
 						this.remain_time = this.remain_time;
-						this.program = this.program;
 						this.danwei = "分";
 						this.subInfo = "大约需要";
-					}else if(this.onoff == "on" && this.running_status == "delay") {
+					}else if(this.running_status == "delay") {
 						this.remain_time = "预约中";
-						this.remain_min = "预约中";
-						this.program = "";
 						this.danwei = "";
 						this.subInfo = "";
 					} else {
 						this.remain_time = this.return_running_status[this.running_status];
-						this.remain_min = "";
 						this.danwei = "";
-						this.program = "";
 						this.subInfo = "";
 					}
 //					localStorage.setItem('DBonoff',this.onoff);
@@ -271,9 +260,12 @@
             	if(this.running_status == "start") {
             		//pause logic
             		let params = {
-		                "control_status": "pause",
-		                "name": "pause"
-		            }
+            			"operation":"luaControl",
+            			"name":"pause",
+            			"data":{
+            				"control_status": "pause",
+            			}
+            		};
             		nativeService.sendLuaRequest(params,true).then(function(data) {
 	            		self.updateUI(data);
 	            	},function(error) {
@@ -282,9 +274,12 @@
             	} else {
             		//start logic
             		let params = {
-		                "control_status": "start",
-		                "name": "start"
-		            }
+            			"operation":"luaControl",
+            			"name":"start",
+            			"data":{
+            				"control_status": "start",
+            			}
+            		};
             		nativeService.sendLuaRequest(params,true).then(function(data) {
 	            		self.updateUI(data);
 	            	},function(error) {
@@ -441,7 +436,8 @@
 		color: #FFFFFF;
 	}
 	.main-status-only {
-		font-size: 50%;;
+		font-size: 75px;
+		margin-top: 74px;
 	}
 	.danwei {
 		font-family: PingFangSC-Light;

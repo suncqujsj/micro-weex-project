@@ -211,7 +211,6 @@
         },
         created(){
             this.getItem('userAutos', (res)=>{
-                nativeService.alert(1111)
                 if ( res.result == 'success') {
                     this.autoList = res.data
                 }

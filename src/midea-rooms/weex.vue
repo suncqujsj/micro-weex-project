@@ -13,7 +13,7 @@
                             <image class="icon" :src="item.image"></image>
                             <text class="auto-name">{{item.name}}</text>
                         </div>
-                        <image class="auto-btn" :src="icon.autoBtn[item.enable]"  @click="executeAuto(item.autoId)">
+                        <image class="auto-btn" :src="icon.autoBtn[item.enable]"  @click="executeAuto(item.sceneId)">
                     </div>
                 </div>
             </scroller>
@@ -119,66 +119,31 @@
                     4: '加热中',
                     5: '热水充足'
                 },
-                autoList: [
-                    {
-                        "image": "assets/img/hand.png",
-                        "task": [
-                            {
-                                "applianceCode": 111111,
-                                "command": {
-                                    "mode": "auto",
-                                    "power": "true"
-                                }
-                            },
-                            {
-                                "applianceCode": 2222222,
-                                "command": {
-                                    "mode": "auto",
-                                    "power": "false"
-                                }
-                            }
-                        ],
-                        "sceneType": 2,
-                        "createTime": "2018-07-01 18:16:33",
-                        "enable": 1,
-                        "sceneId": 103,
-                        "name": "手动",
-                        "weather": "",
-                        "updateTime": "2018-07-01 18:16:33",
-                        "location": "",
-                        "homegroupId": 150366,
-                        "weekly": "1111111"
-                    }
-                ],
+                autoList: [],
                 sceneList: null,
+                userDevices: {},
                 user: null,
                 autoTemplate: {}
             }
         },
         methods: { 
-            goScene(scene){
-                if (scene.applianceCount <= 0 ) {
-                    nativeService.toast('您在该场景下没有设备，请关联设备')
-                    return
-                }
-                let params = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    roomType:scene.roomType,
-                    sceneId: scene.sceneId
-                }             
-                this.goTo("scene", {}, params)
-                
-            },
             editAuto(auto){
                 if (auto.isAdd){
                     let params = {
+                        from: 'addAuto',
                         uid: this.uid,
                         homegroupId: this.homegroupId,
                         sceneType: auto.sceneType,
                         userDevices: this.userDevices
-                    }                 
-                    this.goTo('autoTypeSet',{}, params)
+                    }
+                    if (auto.sceneType == 3) {
+                        params.direction = auto.direction
+                    }
+                    if (auto.sceneType == 2) {
+                        this.goTo("autoBindDevices", {}, params)
+                    }else{
+                        this.goTo('autoTypeSet',{}, params)
+                    }
                 }else{
                     let params = {
                         uid: this.uid,
@@ -187,16 +152,41 @@
                         sceneId: auto.sceneId,
                         userDevices: this.userDevices
                     }
-                    this.goTo("autoEdit", {}, params)
+                    
+                        this.goTo("autoEdit", {}, params)
+                    
                 }
             },
-            executeAuto(autoId){
-                nativeService.alert('executeAuto')
+            executeAuto(sceneId){
+                let reqUrl = url.auto.execute
+                let reqParams = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    sceneId: sceneId
+                }
+                let codeDesc = {
+                    '1000': '未知系统错误',
+                    '1001': '参数格式错误',
+                    '1002': '参数为空',
+                    '1105': '账户不存在',
+                    '1200': '用户不在家庭',
+                    '1701': '自动化项目不存在'                
+                }
+                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                    if (rtnData.code == 0) {
+                        this.sceneList = rtnData.data.list
+                    }else{
+                        nativeService.toast(codeDesc[res.code])
+                    }
+                }).catch( (error )=>{
+                    nativeService.alert(error)
+                })
             },
             goAddAuto(){
                 let params = {
                     uid: this.uid,
                     homegroupId: this.homegroupId,
+                    userDevices: this.userDevices
                 }
                 this.goTo('addAuto', {}, params)
             },
@@ -214,32 +204,33 @@
                                 isAdd: true,
                                 image: 'assets/img/man.png',
                                 sceneType: 2,
-                                name: '手动（新增）'
+                                name: '新增-手动'
                             },
                             '3.1':{
                                 isAdd: true,
                                 image: 'assets/img/arrive.png',
                                 sceneType: 3,
                                 direction: 1,
-                                name: '到达某地（新增）'
+                                name: '新增-到达某地'
                             },
                             '3.2': {
                                 isAdd: true,
                                 image: 'assets/img/arrive.png',
                                 sceneType: 3,
                                 direction: 2,
-                                name: '离开某地（新增）'
+                                name: '新增-离开某地'
                             },
                             '4': {
                                 isAdd: true,
                                 image: 'assets/img/clock.png',
                                 sceneType: 4,
-                                name: '在某个时间（新增）'
+                                name: '新增-在某个时间'
                             },
                             '6': {
+                                isAdd: true,
                                 image: 'assets/img/slweather.png',
                                 sceneType: 6,
-                                name: '在某个天气（新增）'
+                                name: '新增-在某个天气'
                             }
                         }
                         let templateName = ['2', '3.1', '3.2', '4', '6'], tmpTemp =  []
@@ -274,6 +265,21 @@
                 }).catch( (error )=>{
                     nativeService.alert(error)
                 })
+            },
+            goScene(scene){
+                if (scene.applianceCount <= 0 ) {
+                    nativeService.toast('您在该场景下没有设备，请关联设备')
+                    return
+                }
+                let params = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    roomType:scene.roomType,
+                    sceneId: scene.sceneId,
+                    userDevices: this.userDevices
+                }             
+                this.goTo("scene", {}, params)
+                
             },
         },
         created(){

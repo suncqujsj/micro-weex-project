@@ -1,6 +1,6 @@
 export const DEVICE_STATUS = {
 	  work_status: {
-	  	cancel :"待机/取消工作",
+	  	cancel :"待机",
 			work :"工作",
 			pause :"暂停",
 			save_power :"省电",

@@ -5,7 +5,7 @@
 		    	 <div class="card card-hot">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
-	        				<text class="main-status main-status-exception">{{display_value}}</text>
+	        				<text class="main-status main-status-exception" :class="[work_status != 'order'?'main-status-simple':'']">{{display_value}}</text>
 	        				<text class="danwei"></text>
 	        			</div>
 	        			<text class="main-status-second">{{display_value2}}</text>
@@ -14,8 +14,8 @@
 		        		</div>
 		        	</div>
 		        	<div class="card-right">
-		        		<div class="card-control" @click="powerOnoff">
-		        			<image class="card-control-img" src="./assets/img/smart_ic_alarm@2x.png"></image>
+		        		<div class="card-control" @click="lockSwitch">
+		        			<image class="card-control-img" :src="deviceLock"></image>
 		        		</div>
 		        		<div class="card-icon">
 		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip022@2x.png"></image>
@@ -46,14 +46,14 @@
 
 <script>
     import nativeService from '@/common/services/nativeService.js'
-		import mideaSwitch from '@/midea-component/switch.vue'
-		import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
-		import mideaItem from '@/midea-component/item.vue'
-		import Mock from './settings/mock'
-		import { DEVICE_STATUS } from './settings/deviceStatus'
-		const modal = weex.requireModule('modal');
-		const dom = weex.requireModule('dom');
-		var stream = weex.requireModule('stream');
+	import mideaSwitch from '@/midea-component/switch.vue'
+	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
+	import mideaItem from '@/midea-component/item.vue'
+	import Mock from './settings/mock'
+	import { DEVICE_STATUS } from './settings/deviceStatus'
+	const modal = weex.requireModule('modal');
+	const dom = weex.requireModule('dom');
+	var stream = weex.requireModule('stream');
     export default {
         components: {
             mideaSwitch,
@@ -76,6 +76,7 @@
                 mode: "",
                 minutes: "",
                 second: "",
+                lock: "",
                 display_value: "",
                 display_value2: "",
                 powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
@@ -119,19 +120,22 @@
             	});
             },
             updateUI(data) {
+            	nativeService.alert(data);
             	if(data.errorCode == 0) {
-	                let params = data.params;
+	                let params = data.params || data.result;
 	                this.onoff = params.power;
 	                this.mode = DEVICE_STATUS.mode[params.mode];
 					this.work_status = DEVICE_STATUS.work_status[params.work_status];
 					this.minutes = params.minutes;
 	                this.second = params.second;
+	                this.lock = params.lock;
 	                if(params.work_status == "order") {
 	                	this.display_value = this.minutes+"分"+this.second+"秒";	
 	                	this.display_value2 = "后开始运行";
 	                } else {
-	                	this.display_value = "-";
-	                	this.display_value2 = "--";
+	                	this.display_value = this.work_status || "--";
+	                	this.mode = DEVICE_STATUS.mode[params.mode] || "--";
+	                	this.display_value2 = "";
 	                }
 	                
 				}else {
@@ -146,26 +150,44 @@
             	this.deviceSn = data.deviceSn;
             	this.onlineStatus = data.isOnline;
             },
-            powerOnoff() {
-		    
+            lockSwitch() {
+            	let self = this;
+            	if(self.work_status == "work") {
+            		nativeService.toast("工作中不能进行童锁操作");
+            		return;
+            	}
+		        let name = this.lock == "on"? "off":"on";
+		        let lockSwitch = this.lock == "on"? "off" : "on";
+            	let params = {
+            			"operation":"luaControl",
+            			"name":name,
+            			"data":{
+            				"lock": lockSwitch,
+            			}
+            		};
+            	nativeService.sendLuaRequest(params,true).then(function(data) {
+            		self.updateUI(data);
+            	},function(error) {
+            		console.log("error");
+            	});
             }
         },
         computed: {
-	        	statusImg() {
-		        		let img = "./assets/img/smart_ic_smart@2x.png";
-		        		if(this.currentStatus == "auto") {
-		        			img = "./assets/img/smart_ic_smart@2x.png"
-		        		} else if(this.currentStatus == "cold") {
-		        			img = "./assets/img/smart_ic_smart@2x.png"
-		        		}
-		        		return img;
+	        	deviceLock() {
+	        		let img = "";
+	        		if(this.lock == "on") {
+	        			img = "./assets/img/smart_ic_lock_white@2x.png";
+	        		} else {
+	        			img = "./assets/img/smart_ic_unlock_white@2x.png";
+	        		}
+	        		return img;
 	        	}
         },
         mounted() {
 	       let self = this;
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
-            	if(data.result.isOnline == 1) {
+            	if(data.result.isOnline || data.result.isOnline == 1) {
             		self.queryStatus();
             	}
             },function(error) {
@@ -267,6 +289,10 @@
 		flex-direction: row;
 		margin-top:32px;
 		margin-left:30px
+	}
+	.main-status-simple {
+		font-size: 75px;
+		margin-top: 74px;
 	}
 	.main-status {
 		font-size: 128px;

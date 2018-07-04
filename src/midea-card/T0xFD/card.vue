@@ -3,7 +3,7 @@
 	    <div class="box">
 	        <div v-if="onlineStatus == '1'">
 		    	 <div class="card" v-if="onoff == 'on'">
-		        	<div class="card-left">
+		        	<div class="card-left" @click="showControlPanelPage">
 	        			<div class="main-status-div">
 	        				<text class="main-status">{{cur_humidity}}</text>
 	        				<text class="danwei">{{danwei}}</text>
@@ -17,7 +17,7 @@
 		        		<div class="card-control" @click="poweronoff(0)">
 		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png"></image>
 		        		</div>
-		        		<div class="card-icon">
+		        		<div class="card-icon" @click="showControlPanelPage">
 		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip027@2x.png"></image>
 		        		</div>
 		        	</div>
@@ -33,8 +33,8 @@
 		        </div>
 	        </div>
 	        <div class="card-power-off" v-else>
-	        	<div class="control-div-offline">
-	        		<image class="card-control-img" :src="powerIcon_offline"  @click="poweronoff(1)"></image>
+	        	<div class="control-div-offline" @click="reload">
+	        		<image class="card-control-img" :src="powerIcon_offline"  ></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
@@ -55,13 +55,14 @@
 
 <script>
     import nativeService from '@/common/services/nativeService.js'
-		import mideaSwitch from '@/midea-component/switch.vue'
-		import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
-		import mideaItem from '@/midea-component/item.vue'
-		import Mock from './settings/mock'
-		const modal = weex.requireModule('modal');
-		const dom = weex.requireModule('dom');
-		var stream = weex.requireModule('stream');
+	import mideaSwitch from '@/midea-component/switch.vue'
+	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
+	import mideaItem from '@/midea-component/item.vue'
+	import Mock from './settings/mock'
+	const modal = weex.requireModule('modal');
+	const dom = weex.requireModule('dom');
+	var stream = weex.requireModule('stream');
+	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
             mideaSwitch,
@@ -128,7 +129,7 @@
             },
             updateUI(data) {
             	if(data.errorCode == 0) {
-	            	let params = data.params;
+	            	let params = data.params || data.result;
 	                this.onoff = params.power;
 	                this.wind_speed = this.return_wind_speed[params.wind_speed];
 					this.humidity = params.humidity;
@@ -228,6 +229,41 @@
                     me.updateUI(data);
                 })
 	        },
+	        handleNotification() {
+            	console.log("handleNotification Yoram");
+            	let me = this;
+            	globalEvent.addEventListener(this.pushKey, (data) => {
+            		me.queryStatus();
+		        });
+		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
+            		if(data && data.messageType == "deviceOnlineStatus") {
+            			if(data.messageBody && data.messageBody.onlineStatus == "online") {
+            				me.onlineStatus = "1";
+            			} else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+            				me.onlineStatus = "0";
+            			} else {
+            				me.onlineStatus = "0";
+            			}
+            		}
+		        });
+            },
+	        showControlPanelPage() {
+            	let params = {
+            		controlPanelName:"controlPanel.html"
+            	};
+            	bridgeModule.showControlPanelPage(params);
+           },
+            reload() {
+            	let params = {};
+            	nativeService.alert("start");
+            	bridgeModule.reload(params,function(result) {
+            		//successful
+            		nativeService.alert("successful");
+            	},function(error) {
+            		//fail
+            		nativeService.alert("fail");
+            	});
+            }
         },
         computed: {
         	
@@ -236,6 +272,7 @@
 	       let self = this;
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
+            	self.handleNotification();
             	if(data.result.isOnline == 1) {
             		self.queryStatus();
             	}

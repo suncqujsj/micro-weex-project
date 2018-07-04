@@ -22,7 +22,7 @@ export const all = [
             "errorCode": 0,
 		    "params": {
 		        "power": "on",
-		        "running_status":"start",
+		        "running_status":"delay",
 		         "program":"cotton",
 		         "remain_time":"25",
 		        "control_status":"start",

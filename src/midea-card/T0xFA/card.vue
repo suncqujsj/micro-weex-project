@@ -138,7 +138,7 @@
             },
             updateUI(data) {
             	if(data.errorCode == 0) {
-	            	let params = data.params;
+	            	let params = data.params || data.result;
 	                this.onoff = params.power;
 	                this.mode = params.mode;
 	            	this.gear = params.gear;

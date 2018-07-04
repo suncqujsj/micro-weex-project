@@ -142,7 +142,7 @@
             },
             updateUI(data) {
             	if(data.errorCode == 0) {
-	                let params = data.params;
+	                let params = data.params || data.result;
 	                let volumeString = "";
 	               	this.work_status = params.work_status;
 		            this.time_work_min = params.time_work_min;

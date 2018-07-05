@@ -4,7 +4,7 @@
         <list class="scroller" :style="scrollerStyle">
             <cell>
                 <div class="block"  style="background-color:#fff">
-                    <midea-list v-for="(item,idx) in userSupportDevices" :idx="1" :hasWrapBorder="false" leftMargin="25px">
+                    <midea-list v-for="(item,idx) in userSupportDevices" :idx="idx" :hasWrapBorder="false" leftMargin="25px">
                         <check-item  :title="item.applianceName" :status="item.isRelation == 1" @itemClick="switchBindSceneDevice(item,idx)"></check-item>
                     </midea-list>
                 </div>
@@ -39,27 +39,26 @@
                             </div>
                         </div>
                     </midea-list>
-                   
                 </div>
             </cell>
         </list>
         <!-- 客厅/卧室场景指标弹窗 -->
         <div v-if="roomType == 1 || roomType == 2">
-            <midea-popup :show="show.temperatureMin" :height="400" @mideaPopupOverlayClicked="closePropPop('temperatureMin')">
+            <midea-popup :show="show.temperatureMin" :height="400" @mideaPopupOverlayClicked="cancelProp('temperatureMin')">
                 <div class="row-sb pop-hd">
                     <text class="pop-text" @click="cancelProp('temperatureMin')">取消</text>
                     <text class="pop-text" @click="confirmProp('temperatureMin')">确定</text>
                 </div>
                 <scroll-picker :listArray="temperatureMinList" @onChange="setTemperatureMin"></scroll-picker>
             </midea-popup>
-            <midea-popup :show="show.temperatureMax" :height="400" @mideaPopupOverlayClicked="closePropPop('temperatureMax')">
+            <midea-popup :show="show.temperatureMax" :height="400" @mideaPopupOverlayClicked="cancelProp('temperatureMax')">
                 <div class="row-sb pop-hd">
                     <text class="pop-text" @click="cancelProp('temperatureMax')">取消</text>
                     <text class="pop-text" @click="confirmProp('temperatureMax')">确定</text>
                 </div>
                 <scroll-picker :listArray="temperatureMaxList" @onChange="setTemperatureMax"></scroll-picker>
             </midea-popup>
-            <midea-popup :show="show.humidityMin" :height="400" @mideaPopupOverlayClicked="closePropPop('humidityMin')">
+            <midea-popup :show="show.humidityMin" :height="400" @mideaPopupOverlayClicked="cancelProp('humidityMin')">
                  <div class="row-sb pop-hd">
                     <text class="pop-text" @click="cancelProp('humidityMin')">取消</text>
                     <text class="pop-text" @click="confirmProp('humidityMin')">确定</text>
@@ -68,7 +67,7 @@
                     <scroll-picker :listArray="humidityMinList" @onChange="setHumidityMin"></scroll-picker>
                 </div>
             </midea-popup>
-            <midea-popup :show="show.humidityMax" :height="400" @mideaPopupOverlayClicked="closePropPop('humidityMax')">
+            <midea-popup :show="show.humidityMax" :height="400" @mideaPopupOverlayClicked="cancelProp('humidityMax')">
                  <div class="row-sb pop-hd">
                     <text class="pop-text" @click="cancelProp('humidityMax')">取消</text>
                     <text class="pop-text" @click="confirmProp('humidityMax')">确定</text>
@@ -136,7 +135,6 @@
     import mideaList from '@/midea-rooms/components/list.vue'
     import scrollPicker from '@/midea-rooms/components/scrollPicker.vue'
     import mideaRange from '@/midea-rooms/components/range.vue'
-    
 
     import { url } from './config/config.js'
 
@@ -153,23 +151,23 @@
                 return tmp
             },
             temperatureMinList(){
-                let min = 18, max = Number(this.temperatureRange.max)
+                let min = 18, max = Number(this.temperatureRange.max)-1
                 return this.generateListArray(min, max) 
             },
             temperatureMaxList(){
-                let min = Number(this.temperatureRange.min), max = 30
+                let min = Number(this.temperatureRange.min)+1, max = 30
                 return this.generateListArray(min, max)
             },
             humidityMinList(){
-                let min = 10, max = Number(this.humidityRange.max)
+                let min = 10, max = Number(this.humidityRange.max)-1
                 return this.generateListArray(min, max)
             },
             humidityMaxList(){
-                let min = Number(this.humidityRange.min+1), max = 90
+                let min = Number(this.humidityRange.min)+1, max = 90
                 return this.generateListArray(min, max)
             },
             comfortableList(){
-                let min = Number(this.sceneProp.save+1), max = 80
+                let min = Number(this.sceneProp.save)+1, max = 80
                 return this.generateListArray(min, max)
             },
             saveList(){
@@ -236,11 +234,15 @@
                 this.userDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
 
                 this.getSupportDevices().then((res)=>{
+                    if (res.applianceList.length == 0) {
+                        nativeService.toast('您在该场景下没有可以绑定的设备哦')
+                        this.goBack()
+                    }
                     this.userSupportDevices = res.applianceList
                     this.scenePropFormat = this.jsonToArray(res.prop)
                     this.sceneProp = res.prop
 
-                    if ( this.roomType == 1 || this.roomType == 2 ){
+                    if ( this.roomType == 1 || this.roomType == 2 ){//初始化客厅/卧室的温度、湿度（可以被用户设置）
                         this.temperatureRange = {
                             min: this.sceneProp.temperature.split(',')[0],
                             max:this.sceneProp.temperature.split(',')[1]
@@ -260,10 +262,7 @@
                 }
                 return tmp
             },
-            itemChecked(e) {
-                this.checkedList = e.checkedList;
-            },
-            getSupportDevices(){
+            getSupportDevices(){//获取此房间可绑定的设备以及该房间的指标数据（温度、湿度、水温、人数等）
                 return new Promise((resolve,reject)=>{
                     let reqUrl = url.scene.supportList
                     let reqParams = {
@@ -282,21 +281,6 @@
                     })
                 })
             },
-            filttAllowedDevices(supportDevice){//过滤出该场景支持的设备, 应该用不上了
-                // return this.userDevices.filter( (v) => {
-                //     return supportDevice.indexOf(v) > -1
-                // })
-                let tmpArray = []
-        
-                for (var i=0; i<this.userDevices.length; i++ ){
-                    for( var j=0; j<supportDevice.length;j++ ){
-                        if (this.userDevices[i].deviceType == supportDevice[j].type){
-                            tmpArray.push(this.userDevices[i])
-                        }
-                    }
-                }
-                return tmpArray
-            },
             jsonToArray(jsonObj){
                 var tmp= []
                 for (var key in jsonObj) {
@@ -306,7 +290,7 @@
                 }
                 return tmp
             },
-            switchBindSceneDevice(appliance, index){
+            switchBindSceneDevice(appliance, index){//解绑、绑定设备到房间
                 let tmpDevice = this.userSupportDevices[index]
                 
                 if (appliance.isRelation == 1) {
@@ -383,77 +367,6 @@
             closePropPop(propType){
                 this.show[propType] = false
             },
-            cancelProp(propType){
-                this.activeProp[propType] = ''
-                this.closePropPop(propType)
-            },
-            confirmProp(propType){
-                let reqUrl = url.scene.modelSet
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneId: this.sceneId
-                }
-                if (this.roomType == 1 || this.roomType == 2) {
-                    switch(propType) {
-                        case 'temperatureMin':
-                            this.temperatureRange.min = this.activeProp[propType] || this.temperatureRange.min
-                            break;
-                        case 'temperatureMax':
-                            this.temperatureRange.max = this.activeProp[propType] || this.temperatureRange.max
-                            break;
-                        case 'humidityMin':
-                            this.humidityRange.min = this.activeProp[propType] || this.humidityRange.min
-                            break;
-                        case 'humidityMax':
-                            this.humidityRange.max = this.activeProp[propType] ||  this.humidityRange.max
-                            break;
-                    }
-                    
-                    let tmpTemp = {
-                        min: this.activeProp.temperatureMin || this.temperatureRange.min,
-                        max: this.activeProp.temperatureMax || this.temperatureRange.min
-                    }
-
-                    let tmpHumid = {
-                        min :this.activeProp.humidityMin || this.humidityRange.min,
-                        max: this.activeProp.humidityMax || this.humidityRange.min
-                    }
-                    reqParams.prop = JSON.stringify({
-                        temperature: tmpTemp.min + ',' + tmpTemp.max,
-                        humidity: tmpHumid.min + ',' + tmpHumid.max
-                    })
-                }else if( this.roomType == 3 ){
-                    this.sceneProp[propType] = this.activeProp[propType]
-                    reqParams.prop = JSON.stringify({
-                        use: this.activeProp.use || this.sceneProp.use,
-                        comfortable: this.activeProp.comfortable || this.sceneProp.comfortable || 80,
-                        save: this.activeProp.save || this.sceneProp.save || 40
-                    })
-                }
-                this.webRequest(reqUrl, reqParams).then((res)=>{
-                    let codeMsg = {
-                        "1000": "未知系统错误",
-                        "1001": "参数格式错误",
-                        "1002": "参数为空",
-                        "1003": "参数类型不支持",
-                        "1105": "账户不存在",
-                        "1202": "用户不是家庭的管理员",
-                        "1701": "场景不存在"
-                    }
-                    this.closePropPop(propType)
-                    if (res.code == 0) {
-                        setTimeout(()=>{
-                            nativeService.alert('修改成功！')
-                            this.reload()
-                        },500)
-                    }else{
-                        nativeService.alert(codeMsg[res.code])
-                    }
-                }).catch( (err )=>{
-                    // nativeService.alert('设置场景属性失败')
-                })
-            },
             setTemperatureMin(result){
                 this.activeProp.temperatureMin = result.value
             },
@@ -474,6 +387,114 @@
             },
             setUseValue(result){
                 this.activeProp.use = result.value
+            },
+            cancelProp(propType){
+                this.activeProp[propType] = ''
+                this.closePropPop(propType)
+            },
+            confirmProp(propType){
+                let reqUrl = url.scene.modelSet
+                let reqParams = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    sceneId: this.sceneId
+                }
+                /*
+                1.scrollPick-> set ActiveProp 
+                    * scrollPick只有一个值的时候，无法选中这个值，将scrollPick里的值直接赋给activeProp
+                    * 
+                2.comfirmPop -> sendRequest
+                */
+                if (this.roomType == 1 || this.roomType == 2) {
+                    if (propType == 'temperatureMin') {
+                        if (this.temperatureMinList.length == 1) {
+                           this.activeProp[propType] = this.temperatureMinList[0].value
+                        } else {
+                            if ( !this.activeProp[propType]) {
+                                nativeService.alert('您还没有设置属性值哦')
+                                return
+                            }
+                        }
+                    }
+                    if (propType == 'temperatureMax') {
+                        if (this.temperatureMaxList.length == 1) {
+                           this.activeProp[propType] = this.temperatureMaxList[0].value
+                        } else {
+                            if ( !this.activeProp[propType]) {
+                                nativeService.alert('您还没有设置属性值哦')
+                                return
+                            }
+                        }
+                    }
+                    if (propType == 'humidityMin') {
+                        if (this.humidityMinList.length == 1) {
+                           this.activeProp[propType] = this.humidityMinList[0].value
+                        } else {
+                            if ( !this.activeProp[propType]) {
+                                nativeService.alert('您还没有设置属性值哦')
+                                return
+                            }
+                        }
+                    }
+                    if (propType == 'humidityMax') {
+                        if (this.humidityMaxList.length == 1) {
+                            this.activeProp[propType] = this.humidityMaxList[0].value
+                        } else {
+                            if ( !this.activeProp[propType]) {
+                                nativeService.alert('您还没有设置属性值哦')
+                                return
+                            }
+                        }
+                    }
+                    
+                    let tmpTemp = {
+                        min: this.activeProp.temperatureMin || this.temperatureRange.min,
+                        max: this.activeProp.temperatureMax || this.temperatureRange.max
+                    }
+                    let tmpHumid = {
+                        min :this.activeProp.humidityMin || this.humidityRange.min,
+                        max: this.activeProp.humidityMax || this.humidityRange.max
+                    }
+                    reqParams.prop = JSON.stringify({
+                        temperature: tmpTemp.min + ',' + tmpTemp.max,
+                        humidity: tmpHumid.min + ',' + tmpHumid.max
+                    })
+                }else if( this.roomType == 3 ){
+                    let propTypeList = propType + 'List'
+                    if (this[propTypeList].length == 1) {
+                        this.activeProp[propType] = this[propTypeList][0].value
+                    } else if (!this.activeProp[propType]){
+                        nativeService.alert('您还没有设置属性值哦')
+                        return
+                    }
+                    reqParams.prop = JSON.stringify({
+                        use: this.activeProp.use || this.sceneProp.use,
+                        comfortable: this.activeProp.comfortable || this.sceneProp.comfortable,
+                        save: this.activeProp.save || this.sceneProp.save,
+                    })
+                }
+                this.webRequest(reqUrl, reqParams).then((res)=>{
+                    this.closePropPop(propType)
+                    if (res.code == 0) {
+                        setTimeout(()=>{
+                            nativeService.alert('修改成功！')
+                            this.reload()
+                        },500)
+                    }else{
+                        let codeMsg = {
+                            "1000": "未知系统错误",
+                            "1001": "参数格式错误",
+                            "1002": "参数为空",
+                            "1003": "参数类型不支持",
+                            "1105": "账户不存在",
+                            "1202": "用户不是家庭的管理员",
+                            "1701": "场景不存在"
+                        }
+                        nativeService.alert(codeMsg[res.code])
+                    }
+                }).catch( (err )=>{
+                    nativeService.alert('设置场景属性失败')
+                })
             },
         },
         created(){

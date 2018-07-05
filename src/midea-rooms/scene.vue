@@ -68,7 +68,7 @@
                 </div>
             </div>
             <div v-if="scene.roomType=='4'" class="up-block balcony-block">
-                <text class="weather white font12">todo 无法获取天气，请在系统设置中打开定位服务</text>
+                <text class="weather white font12">{{weatherDesc}}</text>
                 <slider>
                     <div>
                         <midea-barchart-view class="barchart" :data="chartData"></midea-barchart-view>
@@ -85,18 +85,18 @@
         </div>
     
         <div class="down-block row-sa">
-            <div v-for="model in scene.modeList" @click="changeModel(model.modelId)">
+            <div v-for="model in scene.modeList" @click="executeModel(model.modelId)">
                 <image class="down-icon" :src="icon.actions[model.modelId]"></image>
                 <text class="down-text">{{model.modelName}}</text>
             </div>
         </div>
-        <toast-dialog :show="showToastDialog" @close="closeToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}">
-            <div class="row-sb mgb-10" v-for="item in modelDevices">
+        <!-- <toast-dialog :show="showToastDialog" @close="closeToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}"> -->
+        <toast-dialog :show="showToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}">
+            <div class="row-sb mgb-10" v-for="item in sceneDevices">
                 <div class="row-sb toast-line">
                     <text class="pop-hd">{{item.applianceName}}</text>
                     <image class="toast-icon" :src="icon.model[item.status]"></image>
                 </div>
-                <!-- <image class="icon" :src="icon[modeSetStatus]"> -->
             </div>
         </toast-dialog>
         <web v-if="showMall" src=""></web>
@@ -152,6 +152,7 @@
     }
     .balcony-block{
         padding-top: 100px;
+        width: 750px;
     }
     .desc{
         margin-bottom: -10px;
@@ -203,7 +204,8 @@
         font-size: 24px;
     }
     .barchart {
-        width: 750px;
+        width: 700px;
+        margin-left: 25px;
         height: 500px;
     }
     .wash-list{
@@ -236,9 +238,6 @@
     .toast-icon{
         width: 50px;
         height: 50px;
-    }
-    .setting{
-        top: 120px;
     }
 </style>
 
@@ -429,7 +428,8 @@
                         "y": "次数"
                     }
                 },
-                modelDevices: []
+                weatherDesc: '',
+                sceneDevices: []
             }
         },
         methods: {
@@ -470,35 +470,6 @@
                     nativeService.alert(error)
                 })
             },
-            quickOptimize(){
-                let reqUrl = url.scene.optimize
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneId: this.sceneId,
-                }
-                let codeDesc = {
-                    '1000':"未知系统错误",
-                    '1001':"参数格式错误",
-                    '1002':"参数为空",
-                    '1003':"参数类型不支持",
-                    '1105':"账户不存在",
-                    '1200':"用户不在家庭",
-                    '1701':"场景不存在",
-                    '1704':"场景没有关联设备"
-                }
-                this.webRequest(reqUrl, reqParams).then((res)=>{
-                    if (res.code == 0) {
-                        resolve(res.data)
-                    }else if (res.code == 1711){
-                        nativeService.alert(res.msg)
-                    }else{
-                        nativeService.toast(codeDesc[res.code])
-                    }
-                }).catch( (err )=>{
-                    reject(err)
-                })
-            },
             getDevices(){
                 return new Promise((resolve,reject)=>{
                     let reqUrl = url.scene.supportList
@@ -518,64 +489,92 @@
                     })
                 })
             },
-            changeModel(modelId){
-                this.executeModel(modelId).then((data) => {
-                    this.executeModelCheck(data)
-                }).catch((err)=>{
-                    nativeService.alert(err)
-                })
-            },
-            executeModel(modelId){
-                return new Promise((resolve, reject)=>{
-                    let reqUrl = url.scene.modeExecute
-                    let reqParams = {
-                        uid: this.uid,
-                        homegroupId: this.homegroupId,
-                        sceneId: this.sceneId,
-                        modelId: modelId
-                    }
-                    let codeDesc = {
-                        '1000':	'未知系统错误',
-                        '1001':	'参数格式错误',
-                        '1002':	'参数为空',
-                        '1105':	'账户不存在',
-                        '1200':	'用户不在家庭',
-                        '1701':	'场景不存在',
-                        '1704':	'场景没有关联设备',
-                        '1709':	'模式不存在'
-                    }
-                    this.webRequest(reqUrl, reqParams).then((res)=>{
-                        if (res.code == 0) {
-                            
-                            resolve({
-                                modelId:modelId,
-                                resultId: res.data.resultId}
-                            )
-                        }else{
-                            nativeService.alert(codeDesc[res.code])
-                        }
-                    }).catch( (err)=>{
-                        reject(err)
-                    })
-                })
-            },
-            executeModelCheck(data){
-                // status 1-成功，2-执行中，3-失败
-                let reqUrl = url.scene.status
+            quickOptimize(){
+                let reqUrl = url.scene.optimize
                 let reqParams = {
                     uid: this.uid,
                     homegroupId: this.homegroupId,
                     sceneId: this.sceneId,
-                    modelId: data.modelId,
-                    resultId: data.resultId
+                }
+                let codeDesc = {
+                    '1000':"未知系统错误",
+                    '1001':"参数格式错误",
+                    '1002':"参数为空",
+                    '1003':"参数类型不支持",
+                    '1105':"账户不存在",
+                    '1200':"用户不在家庭",
+                    '1701':"场景不存在",
+                    '1704':"场景没有关联设备"
                 }
                 this.webRequest(reqUrl, reqParams).then((res)=>{
                     if (res.code == 0) {
-                        this.modelDevices = Object.assign({}, res.data.list)
-                        this.showToastDialog = true
+                        this.checkQuickOptimize(modelId, res.data.resultId)
+                    }else if (res.code == 1711){
+                        nativeService.alert(res.msg)
                     }else{
-                        reject(res.msg)
+                        nativeService.toast(codeDesc[res.code])
                     }
+                }).catch( (err )=>{
+                    reject(err)
+                })
+            },
+            checkQuickOptimize(modelId, resultId){
+                // status 1-成功，2-执行中，3-失败
+                let reqUrl = url.scene.optimizeStatus
+                let reqParams = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    sceneId: this.sceneId,
+                    resultId: resultId
+                }
+                this.webRequest(reqUrl, reqParams).then((res)=>{
+                    let finish = 1
+                    if (res.code == 0) {
+                        this.showToastDialog = true
+                        this.sceneDevices = Object.assign({}, res.data.list)
+                        for (var x in this.sceneDevices) {
+                            if (this.sceneDevices[x].status == 2 || this.sceneDevices[x].status == 3) {
+                                finish = 0
+                                break
+                            }
+                        }
+                        setTimeout(()=>{
+                            if (finish == 1) {
+                                this.showToastDialog = false
+                            }else{
+                                this.checkQuickOptimize(modelId, resultId)
+                            }
+                        },1000)
+                    }else{
+
+                    }
+                })
+            },
+            executeModel(modelId){
+                let reqUrl = url.scene.modelExecute
+                let reqParams = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    sceneId: this.sceneId,
+                    modelId: modelId
+                }
+                let codeDesc = {
+                    '1000':	'未知系统错误',
+                    '1001':	'参数格式错误',
+                    '1002':	'参数为空',
+                    '1105':	'账户不存在',
+                    '1200':	'用户不在家庭',
+                    '1701':	'场景不存在',
+                    '1704':	'场景没有关联设备',
+                    '1709':	'模式不存在'
+                }
+                this.webRequest(reqUrl, reqParams).then((res)=>{
+                    if (res.code == 0) {
+                        nativeService.toast('执行成功！')
+                    }else{
+                        nativeService.alert(codeDesc[res.code])
+                    }
+                }).catch( (err)=>{
                 })
             },
             getWashData(){
@@ -598,6 +597,8 @@
                 }).catch((err)=>{
                     
                 })
+            },
+            getWeatherInfo(){
             }
         },
         created(){
@@ -607,10 +608,11 @@
             this.roomType = nativeService.getParameters('roomType')
             this.userDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
             
+            this.getSceneDetail()
             if (this.roomType == 4) {
                 this.getWashData()
+                this.getWeatherInfo()
             }
-            this.getSceneDetail()
             
         }
     }

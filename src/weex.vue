@@ -1,8 +1,17 @@
 <template>
     <div class="wrapper" ref="wrapper">
         <midea-header title="跳转页" :isImmersion="false" @leftImgClick="leftImgClick"></midea-header>
+
+        <div class="item-group">
+            <text class="text-label">目标地址:</text>
+            <input class="text-input" type="text" placeholder="请输入目标地址" v-model="host" @input="hostChange" />
+        </div>
+        <div class="item-group">
+            <text class="text-label">测试模块:</text>
+            <text class="text-input" @click="isShowModuleList=true">{{module}}</text>
+        </div>
         <midea-title-bar title="输入远端目标页面地址"></midea-title-bar>
-        <textarea type="text" placeholder="输入远端目标页面地址" class="textarea" :value="url" @input="urlChange" rows=3 />
+        <textarea type="text" placeholder="输入远端目标页面地址" class="textarea" v-model="url" rows=3 />
         <midea-button text="进入远端目标页面" type="green" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
 
@@ -14,6 +23,8 @@
                 <text class="history-action" @click="removeLink(index)">删除</text>
             </div>
         </scroller>
+
+        <midea-select :show="isShowModuleList" title="选择模块" :items="moduleList" :index="moduleIndex" @close="isShowModuleList=false" @itemClick="selectModule"></midea-select>
     </div>
 </template>
 <style scoped>
@@ -45,28 +56,61 @@
   text-align: center;
   align-self: stretch;
 }
+
+.item-group {
+  padding-top: 20px;
+  padding-left: 32px;
+  padding-right: 32px;
+  padding-bottom: 20px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-color: #e5e5e8;
+  border-width: 1px;
+}
+.text-label {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #000000;
+  width: 140px;
+}
+.text-input {
+  flex: 1;
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #000000;
+  padding-left: 22px;
+  padding-right: 50px;
+}
 </style>
 <script>
 import nativeService from '@/common/services/nativeService'
 
-import { MideaHeader, MideaTitleBar, MideaButton } from '@/index'
+import { MideaHeader, MideaTitleBar, MideaButton, MideaSelect } from '@/index'
 
 module.exports = {
     components: {
         MideaHeader,
         MideaTitleBar,
-        MideaButton
+        MideaButton,
+        MideaSelect
     },
     data: () => ({
-        url: "http://10.8.81.45:8080/dist/midea-demo/weex.js?root=midea-demo&ip=10.8.81.45",
+        host: '10.8.81.45',
+        module: 'midea-demo',
+        isShowModuleList: false,
+        moduleIndex: null,
+        moduleList: [
+            { key: 0, value: "midea-demo" },
+            { key: 1, value: "customer-service" },
+            { key: 2, value: "midea-rooms" },
+        ],
+        url: "",
         history: []
     }),
     methods: {
         leftImgClick() {
             nativeService.goBack()
-        },
-        urlChange(event) {
-            this.url = event.value
         },
         mideaButtonClicked() {
             if (this.history.indexOf(this.url) < 0) {
@@ -84,6 +128,16 @@ module.exports = {
         removeLink(index) {
             this.history.splice(index, 1)
             nativeService.setItem('demo_target_history', this.history, () => { })
+        },
+        hostChange() {
+            this.url = this.generateUrl()
+        },
+        selectModule(event) {
+            this.module = event.item.value
+            this.url = this.generateUrl()
+        },
+        generateUrl() {
+            return "http://" + this.host + ":8080/dist/" + this.module + "/weex.js?root=" + this.module + "&ip=" + this.host
         }
     },
     created() {
@@ -93,6 +147,10 @@ module.exports = {
                 if (this.history && this.history.length > 0) {
                     this.url = this.history[0]
                 }
+            }
+
+            if (!this.url) {
+                this.url = this.generateUrl()
             }
         })
     }

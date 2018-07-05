@@ -318,7 +318,7 @@ export default {
 
                     let param = {
                         prodCode: this.order.serviceUserDemandVOs[0].prodCode,
-                        branchCode: this.order.branchCode,
+                        brandCode: this.order.serviceUserDemandVOs[0].brandCode,
                         unitCode: this.order.unitCode
                     }
                     this.getUnitList(param)
@@ -332,8 +332,8 @@ export default {
                     this.getGPSInfo().then(() => {
                         this.getAreaCodeByName(this.gpsInfo.province, this.gpsInfo.city, this.gpsInfo.district).then((areaResp) => {
                             this.areaObject = areaResp
-
                             let param = {
+                                brandCode: this.selectedProduct.brandCode,
                                 prodCode: this.selectedProduct.prodCode,
                                 areaCode: this.areaObject.county
                             }

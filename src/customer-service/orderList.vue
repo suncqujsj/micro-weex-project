@@ -2,7 +2,7 @@
     <div>
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
         <scroller class="scroller" ref="orderListScroller" loadmoreoffset=300 @loadmore="loadmore">
-            <refresh class="refresh" @refresh="onrefresh" :display="refreshing ? 'show' : 'hide'">
+            <refresh v-if="isLoaded" class="refresh" @refresh="onrefresh" :display="refreshing ? 'show' : 'hide'">
                 <text class="indicator-text">刷新列表 ...</text>
                 <loading-indicator class="indicator"></loading-indicator>
             </refresh>
@@ -12,16 +12,15 @@
                 <text class="empty-page-text">暂无订单</text>
             </div>
             <div v-else>
-                <div v-for="(order, index) in formattedOrderList" :key="index" @click="goToOrderDetail(index)">
-                    <order-block class="order-block" :order="order" :ref="'order'+index">
-                        <div v-if="hasAction(order)" slot="action-bar" class="action-bar">
-                            <text class="action" v-if="order.calcServiceOrderStatus == 1" @click="checkBranch(index)">查看网点</text>
-                            <text class="action" v-if="[2, 6].indexOf(order.calcServiceOrderStatus)>-1" @click="showDialog(index)">取消工单</text>
-                            <text class="action" v-if="order.calcServiceOrderStatus == 2 && checkPassTime(order)" @click="urgeOrder(index)">催办</text>
-                            <text class="action" v-if="order.calcServiceOrderStatus == 3" @click="renewOrder(index)">重新报单</text>
-                            <text class="action primary-action" v-if="order.allowCallbackWX == 'Y'" @click="goToCallback(index)">评价有礼</text>
-                            <!-- <text class="action" v-if="order.callbackStatus == 12" @click="goToCallback(index)">查看评价</text> -->
-                            <text class="action" v-if="order.calcServiceOrderStatus == 6" @click="callService(index)">联系网点</text>
+                <div v-for="(formattedOrder, index) in formattedOrderList" :key="index" @click="goToOrderDetail(index)">
+                    <order-block class="order-block" :order="formattedOrder" :ref="'order'+index">
+                        <div v-if="hasAction(formattedOrder)" slot="action-bar" class="action-bar">
+                            <text class="action" v-if="formattedOrder.isAbleToCheckBranch" @click="checkBranch(index)">查看网点</text>
+                            <text class="action" v-if="formattedOrder.isAbleToCancel" @click="showDialog(index)">取消工单</text>
+                            <text class="action" v-if="formattedOrder.isAbleToUrgeOrder" @click="urgeOrder(index)">催办</text>
+                            <text class="action" v-if="formattedOrder.isAbleToRenew" @click="renewOrder(index)">重新报单</text>
+                            <text class="action primary-action" v-if="formattedOrder.allowCallbackWX == 'Y'" @click="goToCallback(index)">评价有礼</text>
+                            <text class="action" v-if="formattedOrder.isAbleToCallService" @click="callService(index)">联系网点</text>
                         </div>
                     </order-block>
                 </div>
@@ -126,12 +125,8 @@ export default {
             })
         },
         getOrderList() {
-            let status = []
-            for (let index = 10; index < 35; index++) {
-                status.push(index)
-            }
             let param = {
-                dispatchOrderStatus: status.join(","),  //派工单状态
+                interfaceSource: "SMART",
                 page: this.orderListPage,
                 resultNum: 10
             }
@@ -168,13 +163,12 @@ export default {
         },
         hasAction(formattedOrder) {
             let result = false
-            if (formattedOrder.calcServiceOrderStatus == 1 ||
-                [2, 6].indexOf(formattedOrder.calcServiceOrderStatus) > -1 ||
-                (formattedOrder.calcServiceOrderStatus == 2 && checkPassTime(formattedOrder)) ||
-                formattedOrder.calcServiceOrderStatus == 3 ||
-                formattedOrder.allowCallbackWX == 'Y' ||
-                formattedOrder.callbackStatus == 12 ||
-                formattedOrder.calcServiceOrderStatus == 6) {
+            if (formattedOrder.isAbleToCheckBranch ||
+                formattedOrder.isAbleToCancel ||
+                formattedOrder.isAbleToUrgeOrder ||
+                formattedOrder.isAbleToRenew ||
+                formattedOrder.isAbleToCallService ||
+                formattedOrder.allowCallbackWX == 'Y') {
                 result = true
             }
 
@@ -208,10 +202,10 @@ export default {
             this.selectedOrderIndex = index
             let order = this.orderList[this.selectedOrderIndex]
             let param = {
+                interfaceSource: order.interfaceSource,
                 orgCode: order.orgCode,
                 serviceOrderNo: order.serviceOrderNo,
-                prodCode: order.serviceUserDemandVOs[0].prodCode,
-                interfaceSource: "SMART"
+                prodCode: order.serviceUserDemandVOs[0].prodCode
             }
             nativeService.queryservicereqsrvprod(param).then((resp) => {
                 this.reminderOptions = resp.data
@@ -231,6 +225,7 @@ export default {
             let order = this.orderList[this.selectedOrderIndex]
             let reminderOption = this.reminderOptions[event.index]
             let param = {
+                interfaceSource: order.interfaceSource,
                 orgCode: order.orgCode,
                 serviceOrderNo: order.serviceOrderNo,
                 reminderReason: reminderOption.serviceRequireItemName,
@@ -271,6 +266,7 @@ export default {
             nativeService.getUserInfo().then((data) => {
                 let order = this.orderList[this.selectedOrderIndex]
                 let param = {
+                    interfaceSource: order.interfaceSource,
                     orgCode: order.orgCode,
                     serviceOrderNo: order.serviceOrderNo,
                     operator: data.nickName
@@ -298,6 +294,7 @@ export default {
             let order = this.orderList[index]
 
             let param = {
+                interfaceSource: order.interfaceSource,
                 serviceOrderNo: order.serviceOrderNo,
                 orgCode: order.orgCode,
                 customerPhone: order.customerMobilephone1

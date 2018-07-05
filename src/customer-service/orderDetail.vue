@@ -47,13 +47,12 @@
             </div>
         </scroller>
         <div class="action-bar" v-if="formattedOrder && hasAction">
-            <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 1" @click="checkBranch()">查看网点</text>
-            <text class="action" v-if="[2, 6].indexOf(formattedOrder.calcServiceOrderStatus)>-1" @click="showDialog()">取消工单</text>
-            <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 2 && checkPassTime(formattedOrder)" @click="urgeOrder()">催办</text>
-            <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 3" @click="renewOrder()">重新报单</text>
-            <text class="action primary-action" v-if="formattedOrder.allowCallbackWX == 'Y'" @click="assessService()">评价有礼</text>
-            <!-- <text class="action" v-if="formattedOrder.callbackStatus == 12" @click="assessService()">查看评价</text> -->
-            <text class="action" v-if="formattedOrder.calcServiceOrderStatus == 6" @click="callService()">联系网点</text>
+            <text class="action" v-if="formattedOrder.isAbleToCheckBranch" @click="checkBranch()">查看网点</text>
+            <text class="action" v-if="formattedOrder.isAbleToCancel" @click="showDialog()">取消工单</text>
+            <text class="action" v-if="formattedOrder.isAbleToUrgeOrder" @click="urgeOrder()">催办</text>
+            <text class="action" v-if="formattedOrder.isAbleToRenew" @click="renewOrder()">重新报单</text>
+            <text class="action primary-action" v-if="formattedOrder.allowCallbackWX == 'Y'" @click="goToCallback()">评价有礼</text>
+            <text class="action" v-if="formattedOrder.isAbleToCallService" @click="callService()">联系网点</text>
         </div>
 
         <midea-actionsheet :items="urgeOrderItems" :show="isShowUrgeOrder" @close="closeUrgeOrderActionsheet" @itemClick="urgeOrdertItemClick" @btnClick="urgeOrderBtnClick" ref="urgeOrderActionsheet">
@@ -110,13 +109,12 @@ export default {
         },
         hasAction() {
             let result = false
-            if (this.formattedOrder.calcServiceOrderStatus == 1 ||
-                [2, 6].indexOf(this.formattedOrder.calcServiceOrderStatus) > -1 ||
-                (this.formattedOrder.calcServiceOrderStatus == 2 && checkPassTime(this.formattedOrder)) ||
-                this.formattedOrder.calcServiceOrderStatus == 3 ||
-                this.formattedOrder.allowCallbackWX == 'Y' ||
-                this.formattedOrder.callbackStatus == 12 ||
-                this.formattedOrder.calcServiceOrderStatus == 6) {
+            if (this.formattedOrder.isAbleToCheckBranch ||
+                this.formattedOrder.isAbleToCancel ||
+                this.formattedOrder.isAbleToUrgeOrder ||
+                this.formattedOrder.isAbleToRenew ||
+                this.formattedOrder.isAbleToCallService ||
+                this.formattedOrder.allowCallbackWX == 'Y') {
                 result = true
             }
 
@@ -124,6 +122,17 @@ export default {
         }
     },
     methods: {
+        getOrderProgress() {
+            let param = {
+                interfaceSource: this.order.interfaceSource,
+                serviceOrderCode: this.order.serviceOrderNo
+            }
+            nativeService.queryconsumerorderprogress(param).then((resp) => {
+                this.progressList = resp.oiqueryConsumerOrderProgressVOList
+            }).catch((error) => {
+                nativeService.toast(nativeService.getErrorMessage(error))
+            })
+        },
         convertProcessTime(time) {
             return util.dateFormat(new Date(time), "yyyy-MM-dd hh:mm")
         },
@@ -140,10 +149,10 @@ export default {
         urgeOrder() {
             let order = this.order
             let param = {
+                interfaceSource: order.interfaceSource,
                 orgCode: order.orgCode,
                 serviceOrderNo: order.serviceOrderNo,
-                prodCode: order.serviceUserDemandVOs[0].prodCode,
-                interfaceSource: "SMART"
+                prodCode: order.serviceUserDemandVOs[0].prodCode
             }
             nativeService.queryservicereqsrvprod(param).then((resp) => {
                 this.reminderOptions = resp.data
@@ -163,6 +172,7 @@ export default {
             let order = this.order
             let reminderOption = this.reminderOptions[event.index]
             let param = {
+                interfaceSource: order.interfaceSource,
                 orgCode: order.orgCode,
                 serviceOrderNo: order.serviceOrderNo,
                 reminderReason: reminderOption.serviceRequireItemName,
@@ -195,9 +205,11 @@ export default {
         cancelOrder() {
             this.dialogShow = false
             nativeService.getUserInfo().then((data) => {
+                let order = this.order
                 let param = {
-                    orgCode: this.order.orgCode,
-                    serviceOrderNo: this.order.serviceOrderNo,
+                    interfaceSource: order.interfaceSource,
+                    orgCode: order.orgCode,
+                    serviceOrderNo: order.serviceOrderNo,
                     operator: data.nickName
                 }
                 nativeService.cancelserviceorder(param).then(() => {
@@ -208,7 +220,7 @@ export default {
                 })
             })
         },
-        assessService() {
+        goToCallback() {
             nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, this.order,
                 () => {
                     this.goTo("orderCallback", {}, { from: 'orderList', id: this.order.serviceOrderNo })
@@ -218,6 +230,7 @@ export default {
             let order = this.order
 
             let param = {
+                interfaceSource: order.interfaceSource,
                 serviceOrderNo: order.serviceOrderNo,
                 orgCode: order.orgCode,
                 customerPhone: order.customerMobilephone1
@@ -237,40 +250,31 @@ export default {
             }).catch((error) => {
                 nativeService.toast(nativeService.getErrorMessage(error))
             })
-        },
-        checkPassTime(order) {
-            let result = false
-            let now = new Date()
-            if (order.contactTime && new Date(order.contactTime) < now.setHours(now.getHours() - 1)) {
-                result = true
-            }
-            return result
         }
     },
     created() {
         this.serviceOrderNo = nativeService.getParameters('id') || null
 
-        let param = {
-            serviceOrderCode: this.serviceOrderNo
-        }
-        nativeService.queryconsumerorderprogress(param).then((resp) => {
-            this.progressList = resp.oiqueryConsumerOrderProgressVOList
-        }).catch((error) => {
-            nativeService.toast(nativeService.getErrorMessage(error))
-        })
 
         if (this.fromPage == "orderList") {
+            //从订单列表进入
             nativeService.getItem(this.SERVICE_STORAGE_KEYS.currentOrder, (resp) => {
                 if (resp.result == 'success') {
                     this.order = JSON.parse(resp.data) || {}
+                    this.getOrderProgress()
                 }
             })
         } else {
+            //其他入口进入
             param = {
-                serviceOrderCode: this.serviceOrderNo
+                interfaceSource: "SMART",
+                serviceOrderCode: this.serviceOrderNo,
+                page: 0,
+                resultNum: 1
             }
             nativeService.queryserviceorder(param).then((data) => {
                 this.order = data.list[0]
+                this.getOrderProgress()
             }).catch((error) => {
                 nativeService.toast(nativeService.getErrorMessage(error))
             })

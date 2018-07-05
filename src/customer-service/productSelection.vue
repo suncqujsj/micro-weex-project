@@ -138,10 +138,10 @@ export default {
         searchProduct() {
             if (this.isMultiMode) {
                 //选择后返回本页
-                this.goTo("productSearch", {}, { from: 'productSelection' })
+                this.goTo("productSearch", {}, { from: 'productSelection', 'isMultiMode': this.isMultiMode })
             } else {
                 //选择后跳转到toPage页
-                this.goTo("productSearch", {}, { from: this.fromPage, to: this.toPage })
+                this.goTo("productSearch", {}, { from: this.fromPage, to: this.toPage, 'isMultiMode': this.isMultiMode })
             }
         },
         selectBrand(index) {

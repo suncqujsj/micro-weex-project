@@ -1,3 +1,5 @@
+
+import appConfig from './config'
 import nativeService from '@/common/services/nativeService'
 import util from '@/common/util/util'
 import { SERVICE_STORAGE_KEYS } from './globalKeys'
@@ -38,7 +40,7 @@ let customizeNativeService = Object.assign(nativeService, {
 
         //中控消息
         getProdType: HOST_CENTER + "/pdgw-ap/message/getProdType", //客服-中控-产品列表
-        getProdMessage: HOST_CENTER + "/pdgw-ap/message/getProdMessage", //客服-中控-获取售后产品资料对外服务接口
+        getProdMessage: HOST_CENTER + "/pdgw-ap/message/getProdMessage", //客服-中控-获取售后产品资料对外服务接口 (产品型号模糊查询)
 
         //中控-用户消息
         getUserProductPageList: HOST_CENTER + "/ccrm2-core/userProduct/getUserProductPageList", //客服-中控-获取家电列表
@@ -78,7 +80,7 @@ let customizeNativeService = Object.assign(nativeService, {
     getCssRequestCommonParam() {
         return new Promise((resolve, reject) => {
             let param = {
-                interfaceSource: "SMART"
+                plugin_version: appConfig.plugin_version || '0.0.1'
             }
             this.getUserInfo().then((data) => {
                 param.webUserCode = data.uid //"oFtQywGHyqrWbDvjVdRTeR9Ig3m0"
@@ -209,6 +211,7 @@ let customizeNativeService = Object.assign(nativeService, {
     getRequestCommonParam() {
         return new Promise((resolve, reject) => {
             let param = {
+                plugin_version: appConfig.plugin_version || '0.0.1',
                 sourceSys: "APP",
                 tm: Math.round(new Date().getTime() / 1000) //时间戳
             }

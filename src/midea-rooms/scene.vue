@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <scroller class="wrap">
         <div :style="wrapStyle">
             <midea-header :title="scene.name" bgColor="transparent" titleText="#fff"  @leftImgClick="goBack"></midea-header>
             <div class="setting" @click="goSetting()">
@@ -14,48 +14,55 @@
                 <div class="up-status row-sa" v-if="scene.roomType=='1' || scene.roomType=='2'">
                     <div>
                         <text class="info-text font14 white">温度</text>
-                        <div class="row-c status-value">
-                            <text class="font36 white">{{scene.indicator.temperature}}</text>
-                            <text class="font16 white mgb-10">℃</text>
+                        <div  class="row-c status-value">
+                            <text v-if="scene.indicator.temperature" class="font36 white">{{scene.indicator.temperature}}</text>
+                            <text v-if="scene.indicator.temperature" class="font16 white mgb-10">℃</text>
+                            <text v-else class="font36 white">-</text>
                         </div>
                         <text class="info-text font12 white">{{temperatureStatus}}</text>
                     </div>  
                     <div>
                         <text class="info-text font14 white">湿度</text>
                         <div class="row-c status-value">
-                            <text class="font36 white">{{scene.indicator.humidity}}</text>
-                            <text class="font16 white mgb-10">%</text>
+                            <text v-if="scene.indicator.humidity" class="font36 white">{{scene.indicator.humidity}}</text>
+                            <text v-if="scene.indicator.humidity" class="font16 white mgb-10">%</text>
+                            <text v-else class="font36 white">-</text>
                         </div>
                         <text class="info-text font12 white">{{humidityStatus}}</text>
                     </div>  
                     <div>
                         <text class="info-text font14 white">空气质量</text>
                         <div class="row-c status-value">
-                            <text class="font36 white">{{scene.indicator.pm5}}</text>
+                            <text v-if="scene.indicator.pm5" class="font36 white">{{scene.indicator.pm5}}</text>
+                            <text v-else class="font36 white">-</text>
                         </div>
                         <text class="info-text font12 white">{{pm25Status}}</text>
                     </div>
                 </div>
                 <div class="up-status row-sa" v-if="scene.roomType=='3'">
                     <div>
-                        <text class="info-text font14 white">{{scene.indicator.work_stats}}</text>
+                        <text v-if="scene.indicator.work_stats" class="info-text font14 white">{{scene.indicator.work_stats}}</text>
+                        <text v-else class="info-text font14 white">工作状态</text>
                         <div class="row-c status-value">
-                            <text class="font36 white">{{scene.indicator.water_temperature}}</text>
-                            <text class="font16 white mgb-10">℃</text>
+                            <text v-if="scene.indicator.water_temperature" class="font36 white">{{scene.indicator.water_temperature}}</text>
+                            <text v-if="scene.indicator.water_temperature" class="font16 white mgb-10">℃</text>
+                            <text v-else class="font36 white">-</text>
                         </div>
                     </div>  
                     <div>
                         <text class="info-text font14 white">热水量</text>
                         <div class="row-c status-value">
-                            <text class="font36 white">{{scene.indicator.water_capacity}}</text>
-                            <text class="font16 white mgb-10">%</text>
+                            <text v-if="scene.indicator.water_capacity" class="font36 white">{{scene.indicator.water_capacity}}</text>
+                            <text v-if="scene.indicator.water_capacity" class="font16 white mgb-10">%</text>
+                            <text v-else class="font36 white">-</text>
                         </div>
                     </div>  
                      <div v-if="scene.roomType=='3' ">
                         <text class="info-text font14 white">还需加热</text>
                         <div class="row-c status-value">
-                            <text class="font36 white">{{scene.indicator.remain_time}}</text>
-                            <text class="font16 white mgb-10">分</text>
+                            <text v-if="scene.indicator.remain_time" class="font36 white">{{scene.indicator.remain_time}}</text>
+                            <text v-if="scene.indicator.remain_time" class="font16 white mgb-10">分</text>
+                            <text v-else class="font36 white">-</text>
                         </div>
                     </div>
                 </div>
@@ -63,10 +70,10 @@
             <div v-if="scene.roomType=='4'" class="up-block balcony-block">
                 <text class="weather white font12">todo 无法获取天气，请在系统设置中打开定位服务</text>
                 <slider>
-                    <div class="barchart">
+                    <div>
                         <midea-barchart-view class="barchart" :data="chartData"></midea-barchart-view>
                     </div>
-                    <div class="barchart">
+                    <div>
                         <midea-barchart-view class="barchart" :data="chartData"></midea-barchart-view>
                     </div>
                 </slider>
@@ -93,7 +100,7 @@
             </div>
         </toast-dialog>
         <web v-if="showMall" src=""></web>
-    </div>
+    </scroller>
 </template>
 
 <style>
@@ -196,8 +203,8 @@
         font-size: 24px;
     }
     .barchart {
-        width: 730px;
-        height: 350px;
+        width: 750px;
+        height: 500px;
     }
     .wash-list{
         /* margin-top: 100px; */
@@ -229,6 +236,9 @@
     .toast-icon{
         width: 50px;
         height: 50px;
+    }
+    .setting{
+        top: 120px;
     }
 </style>
 
@@ -400,13 +410,13 @@
                             "value": [1, 6, 2, 1, 2, 3, 7],
                             "title": "冷藏室",
                             "color": "#2AD2FC",
-                            "background": "#ffffff"
+                            "backgroundColor": "#111"
                         },
                         {
                             "value": [10, 5, 3, 4, 1, 2, 6],
                             "title": "下段冷冻室",
                             "color": "#1B81FB",
-                            "background": "#ffffff"
+                            "background": "#111"
                         }
                     ],
                     "description": "",

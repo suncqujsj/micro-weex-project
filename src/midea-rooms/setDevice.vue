@@ -5,7 +5,8 @@
             <text class="hd-text">{{deviceName}}</text>
             <text class="hd-text font-grey"  @click="save">确定</text>
         </div>
-        <div class="content">
+        <list>
+        <cell class="content">
             <text class="sub-hd">设置为</text>
             <div class="ability-list" v-for="(item,i) in actions">
                 <div :class="['row-sb','floor', i=='0'?'no-border':'']">
@@ -20,7 +21,8 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </cell>
+        </list>
         <div class="pop-floor" v-for="(item,idx) in actions">
              <midea-popup v-if="item.type == 'list' || item.type=='range'" :show="show[item.property]" :height="600" @mideaPopupOverlayClicked="closePop(item.property)">
                 <div class="row-sb pop-hd">

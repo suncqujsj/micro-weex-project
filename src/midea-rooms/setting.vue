@@ -1,41 +1,48 @@
 <template>
     <div>
         <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
-        <sroller class="scroller" :style="scrollerStyle">
-            <div class="block">
-                <div v-for="(group, groupIdx) in userSupportDevices">
-                    <midea-list v-if="userSupportDevices.length > 0" style="background-color:#fff" v-for="(item,idx) in group" :idx="1" :hasWrapBorder="false" leftMargin="25px">
-                        <check-item v-if="group.length == 1" :title="item.applianceName" :status="item.isRelation == 1" @itemClick="bindSceneAppliance(item, groupIdx)"></check-item><!-- 同品类有一个设备 -->
-                        <check-item v-else :title="item.applianceName" mode="radio" :status="item.isRelation == 1" @itemClick="bindGroupDevice(item, groupIdx)"></check-item><!-- 同品类有多个设备 -->
+        <list class="scroller" :style="scrollerStyle">
+            <cell>
+                <div class="block"  style="background-color:#fff">
+                    <midea-list v-for="(item,idx) in userSupportDevices" :idx="1" :hasWrapBorder="false" leftMargin="25px">
+                        <check-item  :title="item.applianceName" :status="item.isRelation == 1" @itemClick="switchBindSceneDevice(item,idx)"></check-item>
                     </midea-list>
                 </div>
-            </div>
-            <div class="block" v-if="roomType == 1 || roomType == 2">
-                <div class="range-block">
-                    <div class="row-sb range-hd">
-                        <text class="text">适宜温度</text>
-                        <text class="text range-value">{{temperatureRange.min}}℃ - {{temperatureRange.max}}℃</text>
+                <div class="block" v-if="roomType == 1 || roomType == 2">
+                    <div class="range-block">
+                        <div class="row-sb range-hd">
+                            <text class="text">适宜温度</text>
+                            <text class="text range-value">{{temperatureRange.min}}℃ - {{temperatureRange.max}}℃</text>
+                        </div>
+                        <div class="range-bd">
+                            <midea-range :wrapWidth="700" unit="℃" :min="18" :max="30" :rangeMin="temperatureRange.min" :rangeMax="temperatureRange.max" @minClicked="showPropPop('temperatureMin')" @maxClicked="showPropPop('temperatureMax')"></midea-range>
+                        </div>
                     </div>
-                    <div class="range-bd">
-                        <midea-range :wrapWidth="700" unit="℃" :min="18" :max="30" :rangeMin="temperatureRange.min" :rangeMax="temperatureRange.max" @minClicked="showPropPop('temperatureMin')" @maxClicked="showPropPop('temperatureMax')"></midea-range>
+                    <div class="range-block">
+                        <div class="row-sb range-hd">
+                            <text class="text">适宜湿度</text>
+                            <text class="text range-value">{{humidityRange.min}}% - {{humidityRange.max}}%</text>
+                        </div>
+                        <div class="range-bd" @click="showPropPop('humidity')">
+                            <midea-range :wrapWidth="700" unit="%" :min="10" :max="90" :rangeMin="humidityRange.min" :rangeMax="humidityRange.max" @minClicked="showPropPop('humidityMin')" @maxClicked="showPropPop('humidityMax')"></midea-range>
+                        </div>
                     </div>
                 </div>
-                <div class="range-block">
-                    <div class="row-sb range-hd">
-                        <text class="text">适宜湿度</text>
-                        <text class="text range-value">{{humidityRange.min}}% - {{humidityRange.max}}%</text>
-                    </div>
-                    <div class="range-bd" @click="showPropPop('humidity')">
-                        <midea-range :wrapWidth="700" unit="%" :min="10" :max="90" :rangeMin="humidityRange.min" :rangeMax="humidityRange.max" @minClicked="showPropPop('humidityMin')" @maxClicked="showPropPop('humidityMax')"></midea-range>
-                    </div>
+                <div class="block" v-if="roomType == 3">
+                    <midea-list style="background-color:#fff" v-for="(prop,i) in scenePropFormat" :idx="i" :hasWrapBorder="false" leftMargin="25px">
+                        <div class="row-sb set-item" @click="showPropPop(prop.key)">
+                            <text class="text">{{sceneName[prop.key]}}</text>
+                            <div class="row-e">
+                                <text class="value-text">{{prop.value}}</text>
+                                <text v-if="prop.key == 'comfortable' || prop.key == 'save'" class="value-text">℃</text>
+                                <image class="next-icon" :src="icon.next"></image>
+                            </div>
+                        </div>
+                    </midea-list>
+                   
                 </div>
-            </div>
-            <div class="block" v-if="roomType == 3">
-                <midea-list style="background-color:#fff" v-for="(prop,i) in scenePropFormat" :idx="i" :hasWrapBorder="false" leftMargin="25px">
-                    <midea-cell :title="sceneName[prop.key]" :rightText="prop.value" :hasArrow="true" :clickActivied="true" @mideaCellClick="showPropPop(prop.key)" :hasBottomBorder="false" :cellStyle="{paddingLeft: '0'}"></midea-cell>
-                </midea-list>
-            </div>
-        </sroller>
+            </cell>
+        </list>
         <!-- 客厅/卧室场景指标弹窗 -->
         <div v-if="roomType == 1 || roomType == 2">
             <midea-popup :show="show.temperatureMin" :height="400" @mideaPopupOverlayClicked="closePropPop('temperatureMin')">
@@ -99,7 +106,7 @@
 </template>
 
 <style>
-    .wrap  { padding:30px; }
+    .wrap  { padding:30px;}
     .row-s { flex-direction: row; align-items: center; justify-content: flex-start; }
     .row-sb{ flex-direction: row; align-items: center; justify-content: space-between; }
     .row-sa{ flex-direction: row; align-items: center; justify-content: space-around; }
@@ -114,6 +121,9 @@
     .range-hd{ border-bottom-color: #e5e5e5; border-bottom-width: 2px; border-bottom-style: solid; margin-left: 25px; padding-top: 30px; padding-bottom: 30px; padding-right: 25px; }
     .range-bd{ padding: 25px; }
     .range-value{ color: #666; }
+    .value-text{ color: #666; font-size: 28px;}
+    .next-icon{width: 12px; height: 24px; margin-left: 20px;}
+    .set-item{ padding-top: 25px; padding-bottom: 25px; padding-right: 25px;}
 </style>
 
 <script>
@@ -126,6 +136,7 @@
     import mideaList from '@/midea-rooms/components/list.vue'
     import scrollPicker from '@/midea-rooms/components/scrollPicker.vue'
     import mideaRange from '@/midea-rooms/components/range.vue'
+    
 
     import { url } from './config/config.js'
 
@@ -154,15 +165,15 @@
                 return this.generateListArray(min, max)
             },
             humidityMaxList(){
-                let min = Number(this.humidityRange.min), max = 90
+                let min = Number(this.humidityRange.min+1), max = 90
                 return this.generateListArray(min, max)
             },
             comfortableList(){
-                let min = Number(this.sceneProp.save), max = 80
+                let min = Number(this.sceneProp.save+1), max = 80
                 return this.generateListArray(min, max)
             },
             saveList(){
-                let min = 40, max = Number(this.sceneProp.save)
+                let min = 40, max = Number(this.sceneProp.comfortable-1)
                 return this.generateListArray(min, max)
             },
             useList(){
@@ -177,6 +188,9 @@
                     color: '#111',
                     leftImg: 'assets/img/b.png'
                 },
+                icon: {
+                    next: 'assets/img/more.png'
+                },
                 userSupportDevices: [],
                 temperatureRange: {},
                 humidityRange: {},
@@ -184,7 +198,7 @@
                 sceneName: {
                     temperature: '适宜温度',
                     humidity: '适宜湿度',
-                    comfortable: '适宜水温',
+                    comfortable: '舒适水温',
                     save: '省电水温',
                     use: '使用人数'
                 },
@@ -222,7 +236,7 @@
                 this.userDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
 
                 this.getSupportDevices().then((res)=>{
-                    this.userSupportDevices = this.formatUserSupportDevices(res.applianceList)
+                    this.userSupportDevices = res.applianceList
                     this.scenePropFormat = this.jsonToArray(res.prop)
                     this.sceneProp = res.prop
 
@@ -268,25 +282,6 @@
                     })
                 })
             },
-            formatUserSupportDevices(applianceList){
-                let typeArray = [], typeObj = {}, tmp = []
-                for (let i=0;i<applianceList.length; i++){
-                    let typeName = applianceList[i].applianceType
-                    if(typeArray.indexOf(typeName) == -1){
-                        typeArray.push(typeName)
-                    }
-                }
-                for (let j=0; j<typeArray.length; j++) {
-                    typeObj[typeArray[j]] = []
-                }
-                for (var k=0;k<applianceList.length; k++){
-                    typeObj[applianceList[k].applianceType].push(applianceList[k])
-                }
-                for (var x in typeObj){
-                    tmp.push(typeObj[x])
-                }
-                return tmp
-            },
             filttAllowedDevices(supportDevice){//过滤出该场景支持的设备, 应该用不上了
                 // return this.userDevices.filter( (v) => {
                 //     return supportDevice.indexOf(v) > -1
@@ -311,38 +306,24 @@
                 }
                 return tmp
             },
-            bindGroupDevice(appliance, index){//绑定同品类数量大于1的设备，radio类型
-                nativeService.alert(this.userSupportDevices[index])
+            switchBindSceneDevice(appliance, index){
+                let tmpDevice = this.userSupportDevices[index]
+                
                 if (appliance.isRelation == 1) {
                     this.deleteSceneAppliance(appliance.applianceCode).then((res)=>{
-                    }).catch((err)=>{
-                        nativeService.alert(err)
+                        tmpDevice.isRelation = 2
+                        this.userSupportDevices.splice(index, 1, tmpDevice)
+                        nativeService.alert('解绑成功！')
                     })
-                }else if (appliance.isRelation == 2) {
+                } else if (appliance.isRelation == 2) {
                     this.addSceneAppliance(appliance.applianceCode).then((res)=>{
-                    }).catch((err)=>{
-                        nativeService.alert(err)
+                        tmpDevice.isRelation = 1
+                        this.userSupportDevices.splice(index, 1, tmpDevice)
+                        this.reload()
+                        nativeService.toast('绑定成功！')
                     })
                 }
-            },
-            bindSceneAppliance(appliance, groupIdx){//绑定同品类数量为1个的设备，checkbox类型
-                if (appliance.isRelation == 1) {
-                    this.deleteSceneAppliance(appliance.applianceCode).then((res)=>{
-                        let tmp = this.userSupportDevices[groupIdx][0]
-                        tmp.isRelation = 2
-                        Vue.set( this.userSupportDevices[groupIdx], 0, tmp)
-                    }).catch((err)=>{
-                        nativeService.alert(err)
-                    })
-                }else if (appliance.isRelation == 2) {
-                    this.addSceneAppliance(appliance.applianceCode).then((res)=>{
-                        let tmp = this.userSupportDevices[groupIdx][0]
-                        tmp.isRelation = 1
-                        Vue.set( this.userSupportDevices[groupIdx], 0, tmp)
-                    }).catch((err)=>{
-                        nativeService.alert(err)
-                    })
-                }
+        
             },
             addSceneAppliance(applianceCode){
                 return new Promise((resolve,reject)=>{
@@ -444,11 +425,10 @@
                     })
                 }else if( this.roomType == 3 ){
                     this.sceneProp[propType] = this.activeProp[propType]
-
                     reqParams.prop = JSON.stringify({
-                        comfortable: this.activeProp.comfortable || this.sceneProp.comfortable,
                         use: this.activeProp.use || this.sceneProp.use,
-                        save: this.activeProp.save || this.sceneProp.save
+                        comfortable: this.activeProp.comfortable || this.sceneProp.comfortable || 80,
+                        save: this.activeProp.save || this.sceneProp.save || 40
                     })
                 }
                 this.webRequest(reqUrl, reqParams).then((res)=>{
@@ -463,7 +443,10 @@
                     }
                     this.closePropPop(propType)
                     if (res.code == 0) {
-                        this.reload()
+                        setTimeout(()=>{
+                            nativeService.alert('修改成功！')
+                            this.reload()
+                        },500)
                     }else{
                         nativeService.alert(codeMsg[res.code])
                     }

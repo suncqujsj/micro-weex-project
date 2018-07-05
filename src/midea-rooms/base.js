@@ -17,6 +17,7 @@ import mideaHeader from '@/midea-component/header.vue'
 
 const appDataChannel = new BroadcastChannel(plugin_name + 'appData')
 const pushDataChannel = new BroadcastChannel(plugin_name + 'pushData')
+const bridgeModule = weex.requireModule('bridgeModule');
 
 export default {
     components: {
@@ -39,6 +40,9 @@ export default {
     computed: {
         pageHeight() {
             return 750 / weex.config.env.deviceWidth * weex.config.env.deviceHeight
+        },
+        isipx: function () {
+            return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6')
         }
     },
     methods: {
@@ -160,6 +164,9 @@ export default {
                     }
                 })
             })
+        },
+        reload() {
+            bridgeModule.reload({}, result => {}, err => {})
         }
     },
     created() {

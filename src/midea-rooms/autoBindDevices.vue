@@ -4,34 +4,36 @@
         <div class="done" @click="getDone()">
             <text class="done-text white">完成</text>
         </div>
-        <div class="content">
-            <div v-if="sceneType != 2 && from=='addAuto'" class="hd">
-                <text v-if="sceneType == 3 && direction == 1" class="hd-text">在{{weekDesc}}到达 {{destination.key}} 时自动操控</text>
-                <text v-if="sceneType == 3 && direction == 2" class="hd-text">在{{weekDesc}}离开 {{destination.key}} 时自动操控</text>
-                <text v-if="sceneType == 4" class="hd-text">在{{weekDesc}}的{{startTime}}自动操控</text>
-                <text v-if="sceneType == 6" class="hd-text">在{{weekDesc}}天气{{weatherStatus}}，气温{{logical}} {{weatherTemperature}}℃时自动操控</text>
-            </div>
-            <text class="sub-hd">选择要控制的电器，点击更改具体控制</text>
-            <div v-if="from == 'addAuto'" class="device-box row-sb">
-                <div class="device" v-for="(item, idx) in userDevices">
-                    <div @click="goSetDevice(item)">
-                        <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
-                        <text class="device-name">{{item.deviceName}}</text>
-                        <!-- <text class="device-desc">{{device.desc}}</text> -->
-                    </div>
-                    <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, idx)"></image>
+        <list>
+            <cell class="content">
+                <div v-if="sceneType != 2 && from=='addAuto'" class="hd">
+                    <text v-if="sceneType == 3 && direction == 1" class="hd-text">在{{weekDesc}}到达 {{destination.key}} 时自动操控</text>
+                    <text v-if="sceneType == 3 && direction == 2" class="hd-text">在{{weekDesc}}离开 {{destination.key}} 时自动操控</text>
+                    <text v-if="sceneType == 4" class="hd-text">在{{weekDesc}}的{{startTime}}自动操控</text>
+                    <text v-if="sceneType == 6" class="hd-text">在{{weekDesc}}天气{{weatherStatus}}，气温{{logical}} {{weatherTemperature}}℃时自动操控</text>
                 </div>
-            </div>
-            <div v-if="from == 'editAuto'" class="device-box row-sb">
-                <div class="device" v-for="(item, idx) in unbindDevices">
-                    <div @click="goSetDevice(item)">
-                        <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
-                        <text class="device-name">{{item.deviceName}}</text>
+                <text class="sub-hd">选择要控制的电器，点击更改具体控制</text>
+                <div v-if="from == 'addAuto'" class="device-box row-sb">
+                    <div class="device" v-for="(item, idx) in userDevices">
+                        <div @click="goSetDevice(item)">
+                            <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
+                            <text class="device-name">{{item.deviceName}}</text>
+                            <!-- <text class="device-desc">{{device.desc}}</text> -->
+                        </div>
+                        <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, idx)"></image>
                     </div>
-                    <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, idx)"></image>
                 </div>
-            </div>
-        </div>
+                <div v-if="from == 'editAuto'" class="device-box row-sb">
+                    <div class="device" v-for="(item, idx) in unbindDevices">
+                        <div @click="goSetDevice(item)">
+                            <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
+                            <text class="device-name">{{item.deviceName}}</text>
+                        </div>
+                        <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, idx)"></image>
+                    </div>
+                </div>
+            </cell>
+        </list>
         <midea-promt title="快捷操作名称" ref="promt" placeholder="" :inputValue="inputAutoName" :show="showPrompt" @okClicked="promptConfirm" @onPromtClose="promptClose" @onPromtInput="promptInput"></midea-promt>
    </div>
 </template>

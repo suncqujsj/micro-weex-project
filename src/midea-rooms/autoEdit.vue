@@ -5,47 +5,49 @@
             <text class="hd-text">{{autoDetail.name}}</text>
             <text class="hd-text font-grey"  @click="sendAutoEdit">保存</text>
         </div>
-        <div class="content">
-            <div v-if="sceneType != 2">
-                <div style="background-color:#fff">
-                    <div class="row-sb auto-name-floor">
-                        <text>名称</text>
-                        <input class="auto-name" type="text" placeholder="" :value="inputAutoName" @change="editAutoName" @return="editAutoName"/>
+        <list>
+            <cell class="content">
+                <div v-if="sceneType != 2">
+                    <div style="background-color:#fff">
+                        <div class="row-sb auto-name-floor">
+                            <text>名称</text>
+                            <input class="auto-name" type="text" placeholder="" :value="inputAutoName" @change="editAutoName" @return="editAutoName"/>
+                        </div>
+                        <div class="row-sb floor auto-switch-floor">
+                            <text>启用</text>
+                            <div>
+                                <switch-bar :checked="autoDetail.enable" @change="openAuto"></switch-bar>
+                            </div>
+                        </div>
                     </div>
-                    <div class="row-sb floor auto-switch-floor">
-                        <text>启用</text>
-                        <div>
-                            <switch-bar :checked="autoDetail.enable" @change="openAuto"></switch-bar>
+                    <div>
+                        <text class="sub-hd">当如下条件满足时</text>
+                        <div @click="goAutoTypeSet" class="row-sb floor">
+                            <div class="row-s ">
+                                <image class="icon" :src="autoDetail.image"></image>
+                                <text class="condition-desc" v-if="sceneType==3">在{{weekDesc}} {{directionText[autoDetail.location.direction]}} {{autoDetail.location.address}}时</text>
+                                <text class="condition-desc" v-if="sceneType==4">在{{weekDesc}} {{autoDetail.startTime}}时</text>
+                                <text class="condition-desc" v-if="sceneType==6"> 在{{weekDesc}} 天气{{autoDetail.weather.weatherStatus}}, 气温{{temperatureLoginText[autoDetail.weather.logical]}} {{autoDetail.weather.temperature}}℃ 时</text>
+                            </div>
+                            <image class="icon-next" :src="icon.next"></image>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <text class="sub-hd">当如下条件满足时</text>
-                    <div @click="goAutoTypeSet" class="row-sb floor">
-                        <div class="row-s ">
-                            <image class="icon" :src="autoDetail.image"></image>
-                            <text class="condition-desc" v-if="sceneType==3">在{{weekDesc}} {{directionText[autoDetail.location.direction]}} {{autoDetail.location.address}}时</text>
-                            <text class="condition-desc" v-if="sceneType==4">在{{weekDesc}} {{autoDetail.startTime}}时</text>
-                            <text class="condition-desc" v-if="sceneType==6"> 在{{weekDesc}} 天气{{autoDetail.weather.weatherStatus}}, 气温{{temperatureLoginText[autoDetail.weather.logical]}} {{autoDetail.weather.temperature}}℃ 时</text>
+                    <text class="sub-hd">设备</text>
+                    <div class="device-box row-sb">
+                        <div class="device" v-for="(item, key) in autoBindDevices">
+                            <div @click="setDevice(key)">
+                                <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
+                                <text class="device-name">{{item.deviceName}}</text>
+                            </div>
+                            <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, key)"></image>
                         </div>
-                        <image class="icon-next" :src="icon.next"></image>
                     </div>
+                    <text class="select-btn" @click="goBindNewDevice">选择设备</text>
                 </div>
-            </div>
-            <div>
-                <text class="sub-hd">设备</text>
-                <div class="device-box row-sb">
-                    <div class="device" v-for="(item, key) in autoBindDevices">
-                        <div @click="setDevice(key)">
-                            <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
-                            <text class="device-name">{{item.deviceName}}</text>
-                        </div>
-                        <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, key)"></image>
-                    </div>
-                </div>
-                <text class="select-btn" @click="goBindNewDevice">选择设备</text>
-            </div>
-        </div>
+            </cell>
+        </list>
         <div class="delete" :style="deleteStyle"><text class="delete-text"  @click="showDialog('delete')">删除快捷操作</text></div>
         <!-- 删除自动化弹窗提示 -->
         <midea-dialog  :show="show.delete" @close="closeDialog('delete')" @mideaDialogCancelBtnClicked="closeDialog('delete')" @mideaDialogConfirmBtnClicked="deleteAuto" >
@@ -182,6 +184,8 @@
         width: 600px;
         text-overflow: ellipsis
     }
+    
+    .wrap{background-color: #3af}
 </style>
 
 <script>
@@ -249,7 +253,7 @@
             },
             deleteStyle(){
                 let tmp = {
-                    top: this.pageHeight-200+'px'
+                    top: this.pageHeight-88+'px'
                 }
                 return tmp
             },
@@ -530,8 +534,6 @@
                 reqParams.task = JSON.stringify(tmpTask) || JSON.stringify(this.autoDetail.task)
 
                 this.webRequest(reqUrl, reqParams).then((rtnData)=>{
-                    nativeService.alert(rtnData)
-
                     if (rtnData.code == 0) {
                         nativeService.alert('修改成功', function(){
                             nativeService.goTo('weex.js')

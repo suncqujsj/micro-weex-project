@@ -4,50 +4,53 @@
             <image class="back" :src="header.leftImg" @click="goBack"></image>
             <text class="head-text">{{title}}</text>
             <text v-if="sceneType != 3" class="next-text white"  @click="goNext">下一步</text>
+            <text v-else class="next-text white"></text>  <!-- 占位用，防止标题跑偏 -->
         </div>
         <div v-if="from=='editAuto'" class="row-sb head">
             <text class="head-text font-grey" @click="goBack">取消</text>
             <text class="head-text">{{title}}</text>
             <text class="head-text font-grey"  @click="saveChange">确定</text>
         </div>
-        <div class="content">
-            <div style="background-color: #fff" v-if="sceneType == 3">
-                <wxc-searchbar ref="wxc-searchbar" returnKeyType="search"
-                    @wxcSearchbarCancelClicked="searchCancel"
-                    @wxcSearchbarInputReturned="searchInputReturned"
-                    @wxcSearchbarInputOnInput="searchInputOnInput"
-                    @wxcSearchbarCloseClicked="searchClose"
-                    @wxcSearchbarInputOnFocus="searchInputFocus"
-                    @wxcSearchbarInputOnBlur="searchInputBlur">
-                </wxc-searchbar>
-                <midea-map-view class="map" :data="mapData" @marker-pick="mapMarkerPick" @point-pick="mapPointPick"></midea-map-view>
-            </div>
-            <div v-if="sceneType==4">
-                <text class="hd">时间</text>
-                <div class="time-picker row-sb">
-                    <scroll-picker :wrapWidth="375" :listArray="hours" @onChange="setActiveHour"></scroll-picker>
-                    <scroll-picker :wrapWidth="375" :listArray="minutes" @onChange="setActiveMinute"></scroll-picker>
+        <list>
+            <cell class="content">
+                <div style="background-color: #fff" v-if="sceneType == 3">
+                    <wxc-searchbar ref="wxc-searchbar" returnKeyType="search"
+                        @wxcSearchbarCancelClicked="searchCancel"
+                        @wxcSearchbarInputReturned="searchInputReturned"
+                        @wxcSearchbarInputOnInput="searchInputOnInput"
+                        @wxcSearchbarCloseClicked="searchClose"
+                        @wxcSearchbarInputOnFocus="searchInputFocus"
+                        @wxcSearchbarInputOnBlur="searchInputBlur">
+                    </wxc-searchbar>
+                    <midea-map-view class="map" :data="mapData" @marker-pick="mapMarkerPick" @point-pick="mapPointPick"></midea-map-view>
                 </div>
-            </div>
-            <div v-if="sceneType==6">
-                <text class="hd">天气</text>
-                <div>
-                     <midea-list style="background-color:#fff" v-for="(item,i) in weather.data" :idx="i" :hasWrapBorder="false" leftMargin="25px">
-                        <check-item :title="item" @itemClick="selectWeather(i)" :status="weather.activeTypeIndex==i" mode="radio"></check-item>
-                    </midea-list>
+                <div v-if="sceneType==4">
+                    <text class="hd">时间</text>
+                    <div class="time-picker row-sb">
+                        <scroll-picker :wrapWidth="375" :listArray="hours" @onChange="setActiveHour"></scroll-picker>
+                        <scroll-picker :wrapWidth="375" :listArray="minutes" @onChange="setActiveMinute"></scroll-picker>
+                    </div>
                 </div>
-                <div class="box">
-                    <midea-cell title="气温" :hasArrow="true" @mideaCellClick="setWeatherSwitch" :cellStyle="{paddingLeft: '30px'}" :rightText="switchs[weather.activeSwitch]"></midea-cell>
-                    <scroll-picker :wrapWidth="750" :wrapHeight="320" :listArray="weatherTemperature" @onChange="setActiveWeatherTemperature"></scroll-picker>
+                <div v-if="sceneType==6">
+                    <text class="hd">天气</text>
+                    <div>
+                        <midea-list style="background-color:#fff" v-for="(item,i) in weather.data" :idx="i" :hasWrapBorder="false" leftMargin="25px">
+                            <check-item :title="item" @itemClick="selectWeather(i)" :status="weather.activeTypeIndex==i" mode="radio"></check-item>
+                        </midea-list>
+                    </div>
+                    <div class="box">
+                        <midea-cell title="气温" :hasArrow="true" @mideaCellClick="setWeatherSwitch" :cellStyle="{paddingLeft: '30px'}" :rightText="switchs[weather.activeSwitch]"></midea-cell>
+                        <scroll-picker :wrapWidth="750" :wrapHeight="320" :listArray="weatherTemperature" @onChange="setActiveWeatherTemperature"></scroll-picker>
+                    </div>
                 </div>
-            </div>
-            <div class="repeat">
-                <text class="hd">重复</text>
-                <div class="row-sa repeat-week">
-                    <text :class="['week', item.repeat==1?'week-active':'']" v-for="(item,i) in week" @click="setRepeat(i)">{{item.title}}</text>
+                <div class="repeat">
+                    <text class="hd">重复</text>
+                    <div class="row-sa repeat-week">
+                        <text :class="['week', item.repeat==1?'week-active':'']" v-for="(item,i) in week" @click="setRepeat(i)">{{item.title}}</text>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </cell>
+        </list>
         <scroller v-if="sceneType== 3 && showMapSearchResult" class="map-result">
             <div v-if="mapSearchResult.length > 0">
                 <div v-for="(item,i) in mapSearchResult" @click="selectMapSearchResult(item)">
@@ -77,7 +80,7 @@
     }
     .back{
         width: 12px;
-        height: 24px;;
+        height: 24px;
     }
     .next-text{
         padding: 10px;
@@ -217,14 +220,6 @@
         components:{
             MideaHeader, MideaCell, mideaDialog, WxcSearchbar,
             mideaList, scrollPicker, checkItem
-        },
-        computed:{
-            wrapStyle(){
-                let tmp = {
-                    height: this.pageHeight+'px'
-                }
-                return tmp
-            }
         },
         mixins: [base],
         data(){
@@ -492,7 +487,7 @@
             selectWeather(index){
                 this.weather.activeTypeIndex = index
                 if (this.from == 'editAuto') {
-                    this.editParams.weatherStatus = encodeURIComponent(this.weather.data[this.weather.activeTypeIndex])
+                    this.editParams.weatherStatus = this.weather.data[this.weather.activeTypeIndex]
                 }
             },
             setWeatherSwitch(){
@@ -561,7 +556,10 @@
                     nativeService.alert('没有改动哦')
                     return
                 }
-                channelAutoTypeSet.postMessage({page: 'setCondition', editParams: this.editParams})
+                channelAutoTypeSet.postMessage({
+                    page: 'setCondition',
+                    editParams: this.editParams
+                })
                 this.goBack()
             }
         },

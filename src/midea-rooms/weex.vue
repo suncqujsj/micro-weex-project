@@ -36,7 +36,8 @@
                         <div v-if="scene.roomType == 4" class="scene-dexc">
                             <text class="scene-desc">{{scene.indicator.work_stats}}</text>
                         </div>
-                        <image v-if="scene.applianceCount>0" class="next" :src="icon.next"></image>
+                        <!-- <image v-if="scene.applianceCount>0" class="next" :src="icon.next"></image> -->
+                        <image class="next" :src="icon.next"></image>
                     </div>
                 </div>
             </div>
@@ -45,6 +46,7 @@
 </template>
 
 <style>
+    /* .wrap{ background-color: #f00 } */
     .wrap { padding-left:30px; padding-right:30px; flex-direction: column;}
     .row-s { flex-direction: row; align-items: center; justify-content: flex-start; }
     .row-sb{ flex-direction: row; align-items: center; justify-content: space-between; }
@@ -268,8 +270,7 @@
             },
             goScene(scene){
                 if (scene.applianceCount <= 0 ) {
-                    nativeService.toast('您在该场景下没有设备，请关联设备')
-                    return
+                    nativeService.toast('无法获取相关数据，点击右上角设置设备')
                 }
                 let params = {
                     uid: this.uid,

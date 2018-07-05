@@ -4,34 +4,36 @@
         <div class="done" @click="getDone()">
             <text class="done-text white">完成</text>
         </div>
-        <div class="content">
-            <div v-if="sceneType != 2 && from=='addAuto'" class="hd">
-                <text v-if="sceneType == 3 && direction == 1" class="hd-text">在{{weekDesc}}到达 {{destination.key}} 时自动操控</text>
-                <text v-if="sceneType == 3 && direction == 2" class="hd-text">在{{weekDesc}}离开 {{destination.key}} 时自动操控</text>
-                <text v-if="sceneType == 4" class="hd-text">在{{weekDesc}}的{{startTime}}自动操控</text>
-                <text v-if="sceneType == 6" class="hd-text">在{{weekDesc}}天气{{weatherStatus}}，气温{{logical}} {{weatherTemperature}}℃时自动操控</text>
-            </div>
-            <text class="sub-hd">选择要控制的电器，点击更改具体控制</text>
-            <div v-if="from == 'addAuto'" class="device-box row-sb">
-                <div class="device" v-for="(item, idx) in userDevices">
-                    <div @click="goSetDevice(item)">
-                        <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
-                        <text class="device-name">{{item.deviceName}}</text>
-                        <!-- <text class="device-desc">{{device.desc}}</text> -->
-                    </div>
-                    <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, idx)"></image>
+        <list>
+            <cell class="content">
+                <div v-if="sceneType != 2 && from=='addAuto'" class="hd">
+                    <text v-if="sceneType == 3 && direction == 1" class="hd-text">在{{weekDesc}}到达 {{destination.key}} 时自动操控</text>
+                    <text v-if="sceneType == 3 && direction == 2" class="hd-text">在{{weekDesc}}离开 {{destination.key}} 时自动操控</text>
+                    <text v-if="sceneType == 4" class="hd-text">在{{weekDesc}}的{{startTime}}自动操控</text>
+                    <text v-if="sceneType == 6" class="hd-text">在{{weekDesc}}天气{{weatherStatus}}，气温{{logical}} {{weatherTemperature}}℃时自动操控</text>
                 </div>
-            </div>
-            <div v-if="from == 'editAuto'" class="device-box row-sb">
-                <div class="device" v-for="(item, idx) in unbindDevices">
-                    <div @click="goSetDevice(item)">
-                        <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
-                        <text class="device-name">{{item.deviceName}}</text>
+                <text class="sub-hd">选择要控制的电器，点击更改具体控制</text>
+                <div v-if="from == 'addAuto'" class="device-box row-sb">
+                    <div class="device" v-for="(item, idx) in userDevices">
+                        <div @click="goSetDevice(item)">
+                            <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
+                            <text class="device-name">{{item.deviceName}}</text>
+                            <!-- <text class="device-desc">{{device.desc}}</text> -->
+                        </div>
+                        <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, idx)"></image>
                     </div>
-                    <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, idx)"></image>
                 </div>
-            </div>
-        </div>
+                <div v-if="from == 'editAuto'" class="device-box row-sb">
+                    <div class="device" v-for="(item, idx) in unbindDevices">
+                        <div @click="goSetDevice(item)">
+                            <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
+                            <text class="device-name">{{item.deviceName}}</text>
+                        </div>
+                        <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, idx)"></image>
+                    </div>
+                </div>
+            </cell>
+        </list>
         <midea-promt title="快捷操作名称" ref="promt" placeholder="" :inputValue="inputAutoName" :show="showPrompt" @okClicked="promptConfirm" @onPromtClose="promptClose" @onPromtInput="promptInput"></midea-promt>
    </div>
 </template>
@@ -153,8 +155,8 @@
                     check:  'assets/img/check_on.png',
                     uncheck: 'assets/img/check_off.png',
                     auto: {
-                        2: 'assets/img/hand.png',
-                        3: 'assets/img/location.png',
+                        2: 'assets/img/man.png',
+                        3: 'assets/img/arrive.png',
                         4: 'assets/img/clock.png',
                         6: 'assets/img/slweather.png',
                     }
@@ -201,7 +203,6 @@
                 this.userDevices = tmpUserDevices
 
                 if (this.from == 'addAuto'){
-                    this.generateAllDevices()
                     this.generateAllDeviceActions()
                     if ( this.sceneType == 2 ){
                         this.weekly = '1111111'
@@ -312,24 +313,16 @@
                 
                 this.goTo('setDevice', {}, params)
             },
-            generateAllDevices(){
-                let tmpAllDevices = {}
-                for (var x in this.userDevices) {
-                    tmpAllDevices[this.userDevices[x].deviceId] = this.userDevices[x]
-                }
-                this.allDevices = Object.assign({}, this.allDevices, tmpAllDevices)
-            },
             generateAllDeviceActions(){
                 let tmpAllDeviceActions = {}
-                for (var x in this.allDevices) {
-                    tmpAllDeviceActions[this.allDevices[x].deviceId] = this.autoSupportActions[this.allDevices[x].deviceType].actions
+                for (var x in this.userDevices) {
+                    tmpAllDeviceActions[this.userDevices[x].deviceId] = this.autoSupportActions[this.userDevices[x].deviceType].actions
                 }
                 this.allDeviceActions = Object.assign({}, this.allDeviceActions, tmpAllDeviceActions)
             },
             getDone(){
                 if (this.from == 'addAuto') {
-                    // this.showPrompt = true
-                    this.setNewAuto()
+                    this.showPrompt = true
                 }else if(this.from == 'editAuto'){
                     let tmpCheckedDevice = {}
                     
@@ -369,15 +362,22 @@
                     image: this.icon.auto[this.sceneType],
                     name: this.inputAutoName
                 }
-
-                if ( Object.keys(this.checkedDevices).length === 0) {
-                    nativeService.alert('还没有选择自动化关联设备哦')
-                    return
+                let tmpTask = []
+                
+                for (var key in this.checkedDevices) {//key: applianceCode
+                    let tmpCommand = {}
+                    if ( this.checkedDevices[key] ) {
+                        for (var x in this.allDeviceActions[key]) { 
+                            tmpCommand[this.allDeviceActions[key][x].property] = this.allDeviceActions[key][x].currentStatus || this.allDeviceActions[key][x].default
+                        }
+                    }
+                    tmpTask.push({
+                        applianceCode: key,
+                        command: tmpCommand
+                    })
                 }
-
-                let tmpTask = {}
-                for (var x in this.userDevices)
-                reqParams.task = tmpTask
+                
+                reqParams.task = JSON.stringify(tmpTask)
                 reqParams.weekly = this.weekly
 
                 if (this.sceneType == 3) {
@@ -407,16 +407,15 @@
                     })
                     reqParams.weather = tmp
                 }
-                    // this.webRequest(reqUrl, reqParams).then((rtnData)=>{
-                    //     nativeService.alert(rtnData)
-                    //     if (rtnData.code == 0) {
-                    //         nativeService.alert('新增成功！', function(){
-                    //             nativeService.goTo('weex.js')
-                    //         })
-                    //     }
-                    // }).catch( (error )=>{
+                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                    if (rtnData.code == 0) {
+                        nativeService.alert('新增成功！', function(){
+                            nativeService.goTo('weex.js')
+                        })
+                    }
+                }).catch( (error )=>{
 
-                    // })
+                })
             
             }
         },
@@ -427,8 +426,6 @@
                 channelBindDevice.onmessage = function(e) {
                     if (e.data.page == 'setDevice') {
                         that.allDeviceActions[e.data.applianceCode] = e.data.actions
-                nativeService.alert(that.allDeviceActions)
-                        
                     }
                 }
             }

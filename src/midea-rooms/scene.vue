@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <scroller class="wrap">
         <div :style="wrapStyle">
             <midea-header :title="scene.name" bgColor="transparent" titleText="#fff"  @leftImgClick="goBack"></midea-header>
             <div class="setting" @click="goSetting()">
@@ -14,59 +14,66 @@
                 <div class="up-status row-sa" v-if="scene.roomType=='1' || scene.roomType=='2'">
                     <div>
                         <text class="info-text font14 white">温度</text>
-                        <div class="row-c status-value">
-                            <text class="font36 white">{{scene.indicator.temperature}}</text>
-                            <text class="font16 white mgb-10">℃</text>
+                        <div  class="row-c status-value">
+                            <text v-if="scene.indicator.temperature" class="font36 white">{{scene.indicator.temperature}}</text>
+                            <text v-if="scene.indicator.temperature" class="font16 white mgb-10">℃</text>
+                            <text v-else class="font36 white">-</text>
                         </div>
                         <text class="info-text font12 white">{{temperatureStatus}}</text>
                     </div>  
                     <div>
                         <text class="info-text font14 white">湿度</text>
                         <div class="row-c status-value">
-                            <text class="font36 white">{{scene.indicator.humidity}}</text>
-                            <text class="font16 white mgb-10">%</text>
+                            <text v-if="scene.indicator.humidity" class="font36 white">{{scene.indicator.humidity}}</text>
+                            <text v-if="scene.indicator.humidity" class="font16 white mgb-10">%</text>
+                            <text v-else class="font36 white">-</text>
                         </div>
                         <text class="info-text font12 white">{{humidityStatus}}</text>
                     </div>  
                     <div>
                         <text class="info-text font14 white">空气质量</text>
                         <div class="row-c status-value">
-                            <text class="font36 white">{{scene.indicator.pm5}}</text>
+                            <text v-if="scene.indicator.pm5" class="font36 white">{{scene.indicator.pm5}}</text>
+                            <text v-else class="font36 white">-</text>
                         </div>
                         <text class="info-text font12 white">{{pm25Status}}</text>
                     </div>
                 </div>
                 <div class="up-status row-sa" v-if="scene.roomType=='3'">
                     <div>
-                        <text class="info-text font14 white">{{scene.indicator.work_stats}}</text>
+                        <text v-if="scene.indicator.work_stats" class="info-text font14 white">{{scene.indicator.work_stats}}</text>
+                        <text v-else class="info-text font14 white">工作状态</text>
                         <div class="row-c status-value">
-                            <text class="font36 white">{{scene.indicator.water_temperature}}</text>
-                            <text class="font16 white mgb-10">℃</text>
+                            <text v-if="scene.indicator.water_temperature" class="font36 white">{{scene.indicator.water_temperature}}</text>
+                            <text v-if="scene.indicator.water_temperature" class="font16 white mgb-10">℃</text>
+                            <text v-else class="font36 white">-</text>
                         </div>
                     </div>  
                     <div>
                         <text class="info-text font14 white">热水量</text>
                         <div class="row-c status-value">
-                            <text class="font36 white">{{scene.indicator.water_capacity}}</text>
-                            <text class="font16 white mgb-10">%</text>
+                            <text v-if="scene.indicator.water_capacity" class="font36 white">{{scene.indicator.water_capacity}}</text>
+                            <text v-if="scene.indicator.water_capacity" class="font16 white mgb-10">%</text>
+                            <text v-else class="font36 white">-</text>
                         </div>
                     </div>  
                      <div v-if="scene.roomType=='3' ">
                         <text class="info-text font14 white">还需加热</text>
                         <div class="row-c status-value">
-                            <text class="font36 white">{{scene.indicator.remain_time}}</text>
-                            <text class="font16 white mgb-10">分</text>
+                            <text v-if="scene.indicator.remain_time" class="font36 white">{{scene.indicator.remain_time}}</text>
+                            <text v-if="scene.indicator.remain_time" class="font16 white mgb-10">分</text>
+                            <text v-else class="font36 white">-</text>
                         </div>
                     </div>
                 </div>
             </div>
             <div v-if="scene.roomType=='4'" class="up-block balcony-block">
-                <text class="weather white font12">todo 无法获取天气，请在系统设置中打开定位服务</text>
+                <text class="weather white font12">{{weatherDesc}}</text>
                 <slider>
-                    <div class="barchart">
+                    <div>
                         <midea-barchart-view class="barchart" :data="chartData"></midea-barchart-view>
                     </div>
-                    <div class="barchart">
+                    <div>
                         <midea-barchart-view class="barchart" :data="chartData"></midea-barchart-view>
                     </div>
                 </slider>
@@ -78,22 +85,22 @@
         </div>
     
         <div class="down-block row-sa">
-            <div v-for="model in scene.modeList" @click="changeModel(model.modelId)">
+            <div v-for="model in scene.modeList" @click="executeModel(model.modelId)">
                 <image class="down-icon" :src="icon.actions[model.modelId]"></image>
                 <text class="down-text">{{model.modelName}}</text>
             </div>
         </div>
-        <toast-dialog :show="showToastDialog" @close="closeToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}">
-            <div class="row-sb mgb-10" v-for="item in modelDevices">
+        <!-- <toast-dialog :show="showToastDialog" @close="closeToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}"> -->
+        <toast-dialog :show="showToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}">
+            <div class="row-sb mgb-10" v-for="item in sceneDevices">
                 <div class="row-sb toast-line">
                     <text class="pop-hd">{{item.applianceName}}</text>
                     <image class="toast-icon" :src="icon.model[item.status]"></image>
                 </div>
-                <!-- <image class="icon" :src="icon[modeSetStatus]"> -->
             </div>
         </toast-dialog>
         <web v-if="showMall" src=""></web>
-    </div>
+    </scroller>
 </template>
 
 <style>
@@ -145,6 +152,7 @@
     }
     .balcony-block{
         padding-top: 100px;
+        width: 750px;
     }
     .desc{
         margin-bottom: -10px;
@@ -196,8 +204,9 @@
         font-size: 24px;
     }
     .barchart {
-        width: 730px;
-        height: 350px;
+        width: 700px;
+        margin-left: 25px;
+        height: 500px;
     }
     .wash-list{
         /* margin-top: 100px; */
@@ -353,8 +362,8 @@
                         '1015': 'assets/img/start_on.png',
                     },
                     model: {
-                        1: 'assets/img/loading.png',
-                        2: 'assets/img/success.png',
+                        1: 'assets/img/success.png',
+                        2: 'assets/img/loading.png',
                         3: 'assets/img/fail.png'
                     }
                 },
@@ -400,13 +409,13 @@
                             "value": [1, 6, 2, 1, 2, 3, 7],
                             "title": "冷藏室",
                             "color": "#2AD2FC",
-                            "background": "#ffffff"
+                            "backgroundColor": "#111"
                         },
                         {
                             "value": [10, 5, 3, 4, 1, 2, 6],
                             "title": "下段冷冻室",
                             "color": "#1B81FB",
-                            "background": "#ffffff"
+                            "background": "#111"
                         }
                     ],
                     "description": "",
@@ -419,7 +428,8 @@
                         "y": "次数"
                     }
                 },
-                modelDevices: []
+                weatherDesc: '',
+                sceneDevices: []
             }
         },
         methods: {
@@ -427,7 +437,14 @@
                 nativeService.goBack()
             },
             goSetting(){
-                this.goTo('setting', {}, {roomType: this.roomType, sceneId: this.sceneId})
+                let params = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    roomType: this.roomType,
+                    sceneId: this.sceneId,
+                    userDevices: nativeService.getParameters('userDevices')
+                }
+                this.goTo('setting', {}, params)
             },
             closeToastDialog(){
                 this.showToastDialog = false
@@ -453,35 +470,6 @@
                     nativeService.alert(error)
                 })
             },
-            quickOptimize(){
-                let reqUrl = url.scene.optimize
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneId: this.sceneId,
-                }
-                let codeDesc = {
-                    '1000':"未知系统错误",
-                    '1001':"参数格式错误",
-                    '1002':"参数为空",
-                    '1003':"参数类型不支持",
-                    '1105':"账户不存在",
-                    '1200':"用户不在家庭",
-                    '1701':"场景不存在",
-                    '1704':"场景没有关联设备"
-                }
-                this.webRequest(reqUrl, reqParams).then((res)=>{
-                    if (res.code == 0) {
-                        resolve(res.data)
-                    }else if (res.code == 1711){
-                        nativeService.alert(res.msg)
-                    }else{
-                        nativeService.toast(codeDesc[res.code])
-                    }
-                }).catch( (err )=>{
-                    reject(err)
-                })
-            },
             getDevices(){
                 return new Promise((resolve,reject)=>{
                     let reqUrl = url.scene.supportList
@@ -501,65 +489,92 @@
                     })
                 })
             },
-            changeModel(modelId){
-                this.executeModel(modelId).then((data) => {
-                    this.executeModelCheck(data)
-                }).catch((err)=>{
-                    nativeService.alert(err)
-                })
-            },
-            executeModel(modelId){
-                return new Promise((resolve, reject)=>{
-                    let reqUrl = url.scene.modeExecute
-                    let reqParams = {
-                        uid: this.uid,
-                        homegroupId: this.homegroupId,
-                        sceneId: this.sceneId,
-                        modelId: modelId
-                    }
-                    let codeDesc = {
-                        '1000':	'未知系统错误',
-                        '1001':	'参数格式错误',
-                        '1002':	'参数为空',
-                        '1105':	'账户不存在',
-                        '1200':	'用户不在家庭',
-                        '1701':	'场景不存在',
-                        '1704':	'场景没有关联设备',
-                        '1709':	'模式不存在'
-                    }
-                    this.webRequest(reqUrl, reqParams).then((res)=>{
-                        if (res.code == 0) {
-                            
-                            resolve({
-                                modelId:modelId,
-                                resultId: res.data.resultId}
-                            )
-                        }else{
-                            nativeService.alert(codeDesc[res.code])
-                        }
-                    }).catch( (err)=>{
-                        reject(err)
-                    })
-                })
-            },
-            executeModelCheck(data){
-                // status 1-执行中，2-执行成功，3-执行失败
-                let reqUrl = url.scene.status
+            quickOptimize(){
+                let reqUrl = url.scene.optimize
                 let reqParams = {
                     uid: this.uid,
                     homegroupId: this.homegroupId,
                     sceneId: this.sceneId,
-                    modelId: data.modelId,
-                    resultId: data.resultId
+                }
+                let codeDesc = {
+                    '1000':"未知系统错误",
+                    '1001':"参数格式错误",
+                    '1002':"参数为空",
+                    '1003':"参数类型不支持",
+                    '1105':"账户不存在",
+                    '1200':"用户不在家庭",
+                    '1701':"场景不存在",
+                    '1704':"场景没有关联设备"
                 }
                 this.webRequest(reqUrl, reqParams).then((res)=>{
                     if (res.code == 0) {
-                        this.modelDevices = Object.assign({}, res.data.list)
-                        this.showToastDialog = true
-                        
+                        this.checkQuickOptimize(modelId, res.data.resultId)
+                    }else if (res.code == 1711){
+                        nativeService.alert(res.msg)
                     }else{
-                        reject(res.msg)
+                        nativeService.toast(codeDesc[res.code])
                     }
+                }).catch( (err )=>{
+                    reject(err)
+                })
+            },
+            checkQuickOptimize(modelId, resultId){
+                // status 1-成功，2-执行中，3-失败
+                let reqUrl = url.scene.optimizeStatus
+                let reqParams = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    sceneId: this.sceneId,
+                    resultId: resultId
+                }
+                this.webRequest(reqUrl, reqParams).then((res)=>{
+                    let finish = 1
+                    if (res.code == 0) {
+                        this.showToastDialog = true
+                        this.sceneDevices = Object.assign({}, res.data.list)
+                        for (var x in this.sceneDevices) {
+                            if (this.sceneDevices[x].status == 2 || this.sceneDevices[x].status == 3) {
+                                finish = 0
+                                break
+                            }
+                        }
+                        setTimeout(()=>{
+                            if (finish == 1) {
+                                this.showToastDialog = false
+                            }else{
+                                this.checkQuickOptimize(modelId, resultId)
+                            }
+                        },1000)
+                    }else{
+
+                    }
+                })
+            },
+            executeModel(modelId){
+                let reqUrl = url.scene.modelExecute
+                let reqParams = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    sceneId: this.sceneId,
+                    modelId: modelId
+                }
+                let codeDesc = {
+                    '1000':	'未知系统错误',
+                    '1001':	'参数格式错误',
+                    '1002':	'参数为空',
+                    '1105':	'账户不存在',
+                    '1200':	'用户不在家庭',
+                    '1701':	'场景不存在',
+                    '1704':	'场景没有关联设备',
+                    '1709':	'模式不存在'
+                }
+                this.webRequest(reqUrl, reqParams).then((res)=>{
+                    if (res.code == 0) {
+                        nativeService.toast('执行成功！')
+                    }else{
+                        nativeService.alert(codeDesc[res.code])
+                    }
+                }).catch( (err)=>{
                 })
             },
             getWashData(){
@@ -582,6 +597,8 @@
                 }).catch((err)=>{
                     
                 })
+            },
+            getWeatherInfo(){
             }
         },
         created(){
@@ -591,10 +608,12 @@
             this.roomType = nativeService.getParameters('roomType')
             this.userDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
             
-            if (roomType == 4) {
-                this.getWashData()
-            }
             this.getSceneDetail()
+            if (this.roomType == 4) {
+                this.getWashData()
+                this.getWeatherInfo()
+            }
+            
         }
     }
 </script>

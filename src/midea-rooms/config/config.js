@@ -13,9 +13,10 @@ export const url = {
         detail: domain + '/v1/scene/detail',
         supportList: domain + '/v1/scene/support/type/list',
         modelSet: domain + '/v1/scene/model/set',
-        modeExecute: domain + '/v1/scene/model/execute',
+        modelExecute: domain + '/v1/scene/model/execute',
+        modelStatus: domain + '/v1/scene/model/status/get',
         optimize: domain + '/v1/scene/optimize',
-        status: domain + '/v1/scene/model/status/get',
+        optimizeStatus: domain + '/v1/scene/optimize/status/get',
         record: domain + '/v1/scene/record/list',
         recordDelete: domain + '/v1/scene/record/delete',
         washerConsumption: domain + '/v1/scene/washerConsumption'

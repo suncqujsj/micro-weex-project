@@ -294,6 +294,7 @@ export default {
         },
         submit() {
             let param = {
+                interfaceSource: this.order.interfaceSource,
                 orgCode: this.order.orgCode,
                 oiCallbackDetailVOList: [],
                 oiCallbackInfoVO: {
@@ -424,6 +425,7 @@ export default {
                 if (this.order.allowCallbackWX == "Y") {
                     //评价有礼
                     let param = {
+                        interfaceSource: this.order.interfaceSource,
                         serviceOrderNo: this.order.serviceOrderNo,
                         orgCode: this.order.orgCode
                     }
@@ -437,6 +439,7 @@ export default {
                     this.isReadOnly = true
                     //查看评价
                     let param = {
+                        interfaceSource: this.order.interfaceSource,
                         serviceOrderNo: this.order.serviceOrderNo,
                         orgCode: this.order.orgCode,
                         customerPhone: this.order.customerMobilephone1

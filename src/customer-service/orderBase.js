@@ -9,31 +9,34 @@ export default {
     methods: {
         convertServiceOrderStatus(order) {
             let status = order.serviceOrderStatus
+            let resultStatus
 
-            if (10 <= status && status <= 15) {
-                // 已接单
+            if (['10', '11', '13', '14', '15', '32'].indexOf(status) > -1) {
                 if (order.serviceMethodCode == 11) {
-                    //送修
-                    status = 1
+                    //已接单-送修
+                    resultStatus = 1
                 } else if (order.serviceMethodCode == 10) {
-                    //上门
-                    status = 2
+                    //已接单-上门
+                    resultStatus = 2
+                } else {
+                    // 已接单
+                    resultStatus = 7
                 }
-            } else if (status == 16) {
-                // 待服务
-                status = 6
-            } else if (17 <= status && status <= 20) {
-                // 已完成-待评价
-                status = 4
-            } else if (status == 21 || status >= 23) {
-                // 已完成 - 已评价
-                status = 5
-            } else if (status == 22) {
+            } else if (status == '22') {
                 // 已取消
-                status = 3
+                resultStatus = 3
+            } else if (['17', '18'].indexOf(status) > -1) {
+                // 已完成/已终止
+                resultStatus = 4
+            } else if (['19', '20', '21'].indexOf(status) > -1) {
+                // 已完成
+                resultStatus = 5
+            } else if (['33', '16', '31'].indexOf(status) > -1) {
+                // 待服务
+                resultStatus = 6
             }
 
-            return status
+            return resultStatus
         },
         formatOrder(order) {
             if (!order) {
@@ -45,7 +48,12 @@ export default {
                 contactTimeDesc: '',
                 orderDesc: '',
                 imageUrl: '',
-                isFinished: false,
+                isAbleToCancel: false, //是否可取消订单
+                isAbleToCheckBranch: false, //是否可查看网点
+                isAbleToUrgeOrder: false, //是否可催单
+                isAbleToRenew: false, //是否可重新报单
+                isAbleToCallService: false, //是否可联系网点
+                isFinished: false, //是否已完成
                 statusIcon: '',
                 calcServiceOrderStatus: 0,
                 statusDesc: ''
@@ -73,25 +81,38 @@ export default {
                     //已接单-送修
                     others.statusDesc = "已接单"
                     others.statusIcon = "./assets/img/service_ic_order_ongoing@3x.png"
+                    others.isAbleToCancel = true
+                    others.isAbleToCheckBranch = true
                     break;
                 case 2:
                     //已接单-上门
                     others.statusDesc = "已接单"
                     others.statusIcon = "./assets/img/service_ic_order_ongoing@3x.png"
+                    others.isAbleToCancel = true
+                    if (this.checkPassTime(order)) {
+                        others.isAbleToUrgeOrder = true
+                    }
+                    break;
+                case 7:
+                    //已接单
+                    others.statusDesc = "已接单"
+                    others.statusIcon = "./assets/img/service_ic_order_ongoing@3x.png"
+                    others.isAbleToCancel = true
                     break;
                 case 3:
                     // 已取消
                     others.statusDesc = "已取消"
                     others.statusIcon = "./assets/img/service_ic_order_cancel@3x.png"
+                    others.isAbleToRenew = true
                     break;
                 case 4:
-                    // 已完成-待评价
+                    // 已完成/已终止
                     others.statusDesc = "已完成"
                     others.statusIcon = "./assets/img/service_ic_order_finish@3x.png"
                     others.isFinished = true
                     break;
                 case 5:
-                    // 已完成 - 已评价
+                    // 已完成
                     others.statusDesc = "已完成"
                     others.statusIcon = "./assets/img/service_ic_order_finish@3x.png"
                     others.isFinished = true
@@ -100,19 +121,21 @@ export default {
                     // 待服务
                     others.statusDesc = "待服务"
                     others.statusIcon = "./assets/img/service_ic_order_new@3x.png"
+                    others.isAbleToCancel = true
+                    others.isAbleToCallService = true
                     break;
-                default:
-                    let status = order.serviceOrderStatus
-
-                    if (10 <= status && status <= 15) {
-                        // 已接单
-                        others.statusDesc = "已接单"
-                        others.statusIcon = "./assets/img/service_ic_order_ongoing@3x.png"
-                    }
             }
 
 
             return Object.assign({}, order, others)
+        },
+        checkPassTime(order) {
+            let result = false
+            let now = new Date()
+            if (order.contactTime && new Date(order.contactTime) < now.setHours(now.getHours() - 1)) {
+                result = true
+            }
+            return result
         }
     },
     created() {

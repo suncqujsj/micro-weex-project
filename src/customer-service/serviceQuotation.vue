@@ -92,16 +92,17 @@ export default {
     },
     methods: {
         convertTimeDesc(time) {
-            return util.dateFormat(new Date(time), "yyyy年MM月dd日 hh:mm")
+            return time ? util.dateFormat(new Date(time), "yyyy年MM月dd日 hh:mm") : ''
         },
         submit() {
             nativeService.getUserInfo().then((userInfo) => {
                 let param = {
-                    "webConfirmNo": "1234567", //外部确认号码???this.userInfo.uid
-                    "confirmIphone": userInfo.mobile,
-                    "archivesNo": this.chargeList[0].archivesNo,
-                    "serviceOrderNo": this.order.serviceOrderNo,
-                    "orgCode": this.order.orgCode
+                    interfaceSource: this.order.interfaceSource,
+                    webConfirmNo: this.userInfo.uid, //外部确认号码???
+                    confirmIphone: userInfo.mobile,
+                    archivesNo: this.chargeList[0].archivesNo,
+                    serviceOrderNo: this.order.serviceOrderNo,
+                    orgCode: this.order.orgCode
                 }
                 nativeService.dochargecomfirm(param).then((resp) => {
                     nativeService.toast("确认成功")
@@ -120,6 +121,7 @@ export default {
     created() {
         this.serviceOrderNo = nativeService.getParameters('id') || null
         let param = {
+            interfaceSource: "SMART",
             filterOrderNos: this.serviceOrderNo,
             page: 0,
             resultNum: 1
@@ -128,8 +130,9 @@ export default {
             if (data.list && data.list.length > 0) {
                 this.order = data.list[0]
                 let chargeDetailParam = {
-                    "serviceOrderNo": this.order.serviceOrderNo,
-                    "orgCode": this.order.orgCode
+                    interfaceSource: this.order.interfaceSource,
+                    serviceOrderNo: this.order.serviceOrderNo,
+                    orgCode: this.order.orgCode
                 }
                 nativeService.querychargedetails(chargeDetailParam).then((resp) => {
                     this.chargeList = resp.chargeList

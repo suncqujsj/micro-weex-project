@@ -38,6 +38,7 @@ export default {
             if (resp.result == 'success') {
                 this.selectedProduct = JSON.parse(resp.data)[0] || {}
                 let param = {
+                    interfaceSource: "SMART",
                     depth: 3,
                     parentServiceRequireCode: "BX",
                     brandCode: this.selectedProduct.brandCode, //查询品牌

@@ -218,8 +218,8 @@ export default {
                 servCustomerAddress: '',  //现场服务用户所在地址
                 servAreaCode: '',  //现场服务用户所在区域编码
                 servAreaName: '',  //现场服务用户所在区域名称
-                orderOrigin: '38',  //38
-                interfaceSource: 'MJAPP',  //MJAPP
+                orderOrigin: '',  //38
+                interfaceSource: '',  //MJAPP
                 requireServiceDate: '',  //用户要求服务时间
                 webUserCode: '',  //APP用户UUID
                 webUserPhone: '',  //APP用户注册手机号
@@ -372,8 +372,8 @@ export default {
             } else {
                 this.goTo('productSelection', {}, { from: 'maintenance', to: 'serviceCharge' })
             }
-        },        
-	//维修产品
+        },
+        //维修产品
         selectProduct() {
             nativeService.setItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, JSON.stringify(this.selectedProduct), () => {
                 this.goTo('productSelection', {}, { from: 'maintenance' })
@@ -420,6 +420,7 @@ export default {
         getExcludedFaultList() {
             nativeService.getUserInfo().then((data) => {
                 let param = {
+                    interfaceSource: "SMART",
                     operator: data.nickName || "operator",
                     operatorUnit: "operatorUnit",
                     orgCode: this.selectedFault.orgCode,
@@ -603,7 +604,7 @@ export default {
                 (resp) => {
                     this.isRecording = false
                     if (this.isMicPanelShow) {
-                        this.micResult += resp.data
+                        this.micResult += (resp.data || resp.speakData || '')
                     }
                 }
             ).catch((error) => {
@@ -681,8 +682,8 @@ export default {
                         webUserCode: this.userInfo.uid, //"oFtQywGHyqrWbDvjVdRTeR9Ig3m0"
                         webUserPhone: this.userInfo.mobile,
 
-                        customerName: this.userAddress.receiverName,   //报单人姓名
-                        customerMobilephone1: this.userAddress.receiverMobile,  //报单人手机号1
+                        customerName: this.userInfo.nickName,   //报单人姓名
+                        customerMobilephone1: this.userInfo.mobile,  //报单人手机号1
                         customerAddress: this.userAddress.provinceName + ' ' + this.userAddress.cityName + ' ' + this.userAddress.countyName + ' ' + this.userAddress.streetName + ' ' + this.userAddress.addr,  //报单人所在地址
                         areaCode: this.userAddress.street,  //报单人所在区域编码
                         areaName: this.userAddress.streetName, //报单人所在区域名称

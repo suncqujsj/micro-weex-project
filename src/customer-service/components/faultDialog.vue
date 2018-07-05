@@ -79,6 +79,7 @@
 .fault-dialog {
   position: relative;
   width: 558px;
+  height: 580px;
   margin-top: 70px;
   padding-left: 20px;
   padding-right: 20px;

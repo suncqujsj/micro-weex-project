@@ -117,20 +117,17 @@ export default {
     },
     methods: {
         refreshPage() {
-            this.order = null
             nativeService.getUserInfo().then((data) => {
                 if (data.uid) {
                     this.getOrderList()
+                } else {
+                    this.order = null
                 }
             })
         },
         getOrderList() {
-            let status = []
-            for (let index = 10; index < 17; index++) {
-                status.push(index)
-            }
             let param = {
-                dispatchOrderStatus: "10;11;12;13;14;15;16",  //在途工单派工单状态
+                interfaceSource: "SMART",
                 page: 0,
                 resultNum: 1
             }
@@ -194,13 +191,10 @@ export default {
             }
         }
     },
-    beforeCreate() {
-        console.log('beforeCreate:在初始化内部变量，并且添加了事件功能后被触发')
-    },
     created() {
         debugUtil.cleanDebugLog()
         this.resetStorage()
-        this.getOrderList()
+        this.refreshPage()
     }
 }
 </script>

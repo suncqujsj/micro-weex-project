@@ -6,18 +6,17 @@
 		    	 <div class="card" v-if="onlineStatus == '1'">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
-	        				<text class="main-status">{{display_value}}</text>
+	        				<text class="main-status" :class="[work_status != 'work'?'main-status-simple':'']">{{display_value1}}</text>
 	        				<text class="danwei">{{danwei}}</text>
 		        		</div>
-	        			<text class="main-status-second" style="text-align: center;">剩余时间</text>
+	        			<text class="main-status-second" style="text-align: center;">{{display_value2}}</text>
 		        		<div class="card-status-detail">
 		        			<text class="main-status-third">{{work_mode}}</text>
 		        		</div>
 		        	</div>
 		        	<div class="card-right">
-		        		<div class="card-control" @click="powerOnoff" >
-		        			<image v-if="1==2" class="card-control-img" style="margin-right:35px" src="./assets/img/Smart_ic_alarm@2x.png"></image>
-		        			<image v-if="1==2" class="card-control-img" :src="powerOnoffImg"></image>
+		        		<div class="card-control" @click="lockSwitch" >
+		        			<image class="card-control-img" :src="deviceLock"></image>
 		        		</div>
 		        		<div class="card-icon">
 		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip042@2x.png"></image>
@@ -84,7 +83,9 @@
                 work_mode: "",
                 work_hour: "",
                 work_minute: "",
-                display_value: "",
+                lock: "",
+                display_value1: "",
+                display_value2: "",
                 danwei: "分",
                 return_work_mode: {
                 	none: "不设置",
@@ -95,6 +96,17 @@
 					zymosis: "发酵",
 					underside_tube: "单下管发热",
 					temperature_differ: "上下异温"
+                },
+                return_work_status: {
+                	standby: "空闲中",
+					work: "工作",
+					save_power: "省电",
+					preheat: "预热",
+					lock_on: "上锁",
+					preheating: "预热中",
+					preheat_finish: "预热结束",
+					work_finish: "完成工作",
+					recipes_finish: "菜谱段结束"
                 },
                 powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
                 data:{
@@ -170,17 +182,20 @@
             },
             updateUI(data) {
             	if(data.errorCode == 0) {
-	                let params = data.params;
+	                let params = data.params || data.result;
 	                this.work_status = params.work_status;
 	                this.work_mode = this.return_work_mode[params.work_mode];
 	                this.work_hour = params.work_hour;
 	                this.work_minute = params.work_minute;
+	                this.lock = params.lock;
 	                if(this.work_status == "work") {
-	                	this.display_value = this.work_hour + ":" + this.work_minute;
+	                	this.display_value1 = this.work_hour + ":" + this.work_minute;
+	                	this.display_value2 = "剩余时间";
 	                	this.danwei = "分";
 	                } else {
-	                	this.display_value = "-";
-	                	this.danwei = "-";
+	                	this.display_value1 = this.return_work_status[this.work_status];
+	                	this.display_value2 = "";
+	                	this.danwei = "";
 	                }
 	            }else {
 	                this.temperature = this.tmpTemperatureValue; //记录临时温度值
@@ -195,6 +210,27 @@
             	this.deviceSn = data.deviceSn;
             	this.onlineStatus = data.isOnline;
             },
+            lockSwitch() {
+            	let self = this;
+            	if(self.work_status == "work") {
+            		nativeService.toast("工作中不能进行童锁操作");
+            		return;
+            	}
+		        let name = this.lock == "on"? "off":"on";
+		        let lockSwitch = this.lock == "on"? "off" : "on";
+            	let params = {
+            			"operation":"luaControl",
+            			"name":name,
+            			"data":{
+            				"lock": lockSwitch,
+            			}
+            		};
+            	nativeService.sendLuaRequest(params,true).then(function(data) {
+            		self.updateUI(data);
+            	},function(error) {
+            		console.log("error");
+            	});
+            }
         },
         computed: {
 				powerOnoffImg () {
@@ -214,6 +250,15 @@
 		        			img = "./assets/img/smart_ic_cold_on@2x.png"
 		        		}
 		        		return img;
+	        	},
+	        	deviceLock() {
+	        		let img = "";
+	        		if(this.lock == "on") {
+	        			img = "./assets/img/smart_ic_lock_white@2x.png";
+	        		} else {
+	        			img = "./assets/img/smart_ic_unlock_white@2x.png";
+	        		}
+	        		return img;
 	        	}
         },
         mounted() {
@@ -377,6 +422,10 @@
 		color: #FFFFFF;
 		letter-spacing: 0;
 		text-align: center;
+	}
+	.main-status-simple {
+		font-size: 75px;
+		margin-top: 74px;
 	}
 	.danwei {
 		font-family: PingFangSC-Regular;

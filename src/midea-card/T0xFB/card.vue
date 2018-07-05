@@ -21,7 +21,7 @@
 		        		<div class="card-control" @click="poweronoff(0)">
 		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png"></image>
 		        		</div>
-		        		<div class="card-icon">
+		        		<div class="card-icon" @click="showControlPanelPage">
 		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip040@2x.png"></image>
 		        		</div>
 		        	</div>
@@ -37,8 +37,8 @@
 		        </div>
 	        </div>
 	        <div class="card-power-off" v-else>
-	        	<div class="control-div-offline">
-	        		<image class="card-control-img" :src="powerIcon_offline"  @click="poweronoff(1)"></image>
+	        	<div class="control-div-offline"  @click="reload">
+	        		<image class="card-control-img" :src="powerIcon_offline" ></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
@@ -59,13 +59,14 @@
 
 <script>
     import nativeService from '@/common/services/nativeService.js'
-		import mideaSwitch from '@/midea-component/switch.vue'
-		import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
-		import mideaItem from '@/midea-component/item.vue'
-		import Mock from './settings/mock'
-		const modal = weex.requireModule('modal');
-		const dom = weex.requireModule('dom');
-		var stream = weex.requireModule('stream');
+	import mideaSwitch from '@/midea-component/switch.vue'
+	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
+	import mideaItem from '@/midea-component/item.vue'
+	import Mock from './settings/mock'
+	const modal = weex.requireModule('modal');
+	const dom = weex.requireModule('dom');
+	var stream = weex.requireModule('stream');
+	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
             mideaSwitch,
@@ -139,7 +140,7 @@
             },
             updateUI(data) {
             	if(data.errorCode == 0) {
-	                let params = data.params;
+	                let params = data.params || data.result;
 	                this.onoff = params.power;
 	                this.mode = params.mode;
 	            	this.gear = params.gear;
@@ -238,6 +239,20 @@
                     me.updateUI(data);
                 })
 	        },
+	        showControlPanelPage() {
+            	let params = {
+            		controlPanelName:"controlPanel.html"
+            	};
+            	bridgeModule.showControlPanelPage(params);
+            },
+            reload() {
+            	let params = {};
+            	bridgeModule.reload(params,function(result) {
+            		//successful
+            	},function(error) {
+            		//fail
+            	});
+            },
         },
         computed: {
         	

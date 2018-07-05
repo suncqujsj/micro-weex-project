@@ -180,14 +180,17 @@
             			"data":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
+            		nativeService.alert(data);
             		self.updateUI(data);
             	},function(error) {
+            		nativeService.alert(error);
             		console.log("error");
             	});
             },
             updateUI(data) {
+            	nativeService.alert(data);
             	if(data.errorCode == 0) {
-	                let params = data.params;
+	                let params = data.params || data.result;
 	                this.onoff = params.power;
 	                this.running_status = params.running_status;
 					this.remain_time = this.caculateTime(params.remain_time);
@@ -265,6 +268,7 @@
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);
             	},function(error) {
+            		nativeService.alert(data);
             		console.log("error");
             	});
             },
@@ -342,7 +346,7 @@
 	        let self = this;
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
-            	if(data.result.isOnline == 1) {
+            	if(data.result.isOnline == "1") {
             		self.queryStatus();
             	}
             },function(error) {

@@ -153,7 +153,7 @@
             },
             updateUI(data) {
             	if(data.errorCode == 0) {
-	                let params = data.params;
+	                let params = data.params || data.result;
 	                this.deviceTip = parseInt(params.error_code);
 	                this.onoff = params.power;
 					this.temperature = params.temperature;

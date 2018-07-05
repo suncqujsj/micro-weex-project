@@ -18,7 +18,7 @@
 		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png"></image>
 		        		</div>
 		        		<div class="card-icon">
-		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip026@2x.png"></image>
+		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip025@2x.png"></image>
 		        		</div>
 		        	</div>
 		        </div>
@@ -28,7 +28,7 @@
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image class="icon-offline" src="./assets/img/smart_img_equip026@2x.png"></image>
+		        		<image class="icon-offline" src="./assets/img/smart_img_equip025@2x.png"></image>
 		        	</div>
 		        </div>
 	        </div>
@@ -38,7 +38,7 @@
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
-	        		<image class="icon-offline" src="./assets/img/smart_img_equip026@2x.png"></image>
+	        		<image class="icon-offline" src="./assets/img/smart_img_equip025@2x.png"></image>
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
@@ -134,7 +134,7 @@
             },
             updateUI(data) {
             	if(data.errorCode == 0) {
-	            	let params = data.params;
+	            	let params = data.params || data.result;
 	                this.onoff = params.power;
 					this.humidity = params.humidity;
 					this.cur_humidity = params.cur_humidity;

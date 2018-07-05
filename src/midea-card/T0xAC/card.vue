@@ -74,17 +74,6 @@
 		        	</div>
 		        	<text class="text-offline-center">已离线</text>
 		        </div>
-		        <!--<div class="mark" v-if="ismark">
-					<text class="wrapper" v-if="isloading">{{loadingText}}</text>
-					<div v-if="!isloading">
-						<text class="text_download">功能组件更新(约4M)</text>
-		        		<text class="text_wifi" v-if="!iswifi">您正在使用非WiFi网络</text>
-		        		<div class="btn_download">
-		        			<div class="btn_giveup" @click="giveup()"><text class="giveup_text">忽略</text></div>
-		        			<midea-button :btnStyle="{width: '200px',height: '80px',borderRadius: '7px'}" text="下载" type="green" @mideaButtonClicked="downloading()"></midea-button>
-		        		</div>
-					</div>
-	        	</div>-->
 	        </div>
 	        <div class="smart">
 		        <div class="smart-title">
@@ -133,21 +122,14 @@
                 mideaChecked: true,
                 mideaChecked2: false,
                 
-//              loadingText: '下载中...',
-//              loadinging: true,
-//          	isloading: false,
-//          	ismark: true,
-//          	isupdata: true,
-//          	iswifi: false,
-            	
                 PD004: -1, //0表示PD004，1表示非PD004。PD004（一拖多）
 	            promptStr:"",//蜂鸣声,需要从控制页的localStorage里拿
 	            onoff: "on",//localStorage.getItem("AConoff") || "on", //当前设备开关机状态
-	            mode: "",//localStorage.getItem("ACmode") || "",
-	            temperature: "",//parseInt(localStorage.getItem("ACtemperature")),
+	            mode: "--",//localStorage.getItem("ACmode") || "",
+	            temperature: "--",//parseInt(localStorage.getItem("ACtemperature")),
 	            indoorTemperature: "",//localStorage.getItem("ACindoorTemperature"),
 	            outdoorTemperature: "",//localStorage.getItem("ACoutdoorTemperature"),
-	            danwei: "°",
+	            danwei: "",
             
                 powerIcon: "./assets/img/smart_ic_off@3x.png",
                 powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
@@ -177,20 +159,20 @@
             },
             temperatureControl (value) {// -1 or 1
 	            if(this.onoff == 'off') {
-	                modal.toast({ 'message': "关机状态无法设置温度", 'duration': 2 });
+	            	nativeService.toast("关机状态无法设置温度");
 	                return;
 	            }
 	            let temperature = this.temperature;
 	            if(temperature <= 17 && value == -1) {
-	                modal.toast({ 'message': "最低设置温度17度", 'duration': 2 });
+	            	nativeService.toast("最低设置温度17度");
 	                return
 	            }
 	            if(temperature >= 30 && value == 1) {
-	                modal.toast({ 'message': "最高设置温度30度", 'duration': 2 });
+	            	nativeService.toast("最高设置温度30度");
 	                return
 	            }
 	            if(this.mode == 'fan') {
-	                  modal.toast({ 'message': "送风模式无法设置温度", 'duration': 2 });
+	            	nativeService.toast("送风模式无法设置温度");
 	                return
 	            }
 	            let promptStr = "0";//localStorage.getItem("ACTone"+this.deviceSN);
@@ -201,7 +183,6 @@
         			"name":"temperatureControl",
         			"data":{
         				temperature: me.temperature,
-                    	buzzer: promptStr == "0"?"off":"on"
         			}
                 }
                 nativeService.sendLuaRequest(params,true).then(function(data) {
@@ -224,12 +205,13 @@
             updateUI(data) {
             	let self = this;
 	            if(data.errorCode == 0) {
-	                let params = data.params;
+	                let params = data.params || data.result;
 	                this.onoff = params.power;
 	                this.mode = params.mode;
 	                // this.temperature = parseInt(params.temperature) + parseFloat(params.small_temperature);
 	                this.temperature = parseInt(params.temperature); //不显示小数位
 	                this.tmpTemperatureValue = this.temperature; //记录临时温度值
+	                this.danwei = "°";
 	
 	                this.indoorTemperature = parseInt(params.indoor_temperature) || "--";
 	                if(params.indoor_temperature == 0) {
@@ -241,7 +223,7 @@
 	                }
 	            }else {
 	                this.temperature = this.tmpTemperatureValue; //记录临时温度值
-	                modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+	                nativeService.toast("连接设备超时");
 	            }
             },
             updateDeviceInfo(data) {
@@ -273,7 +255,6 @@
             			"name":name,
             			"data":{
             				"power": poweronoff,
-            				"buzzer": "off"
             			}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
@@ -308,106 +289,15 @@
             },
             reload() {
             	let params = {};
+            	nativeService.alert("start");
             	bridgeModule.reload(params,function(result) {
             		//successful
+            		nativeService.alert("successful");
             	},function(error) {
             		//fail
+            		nativeService.alert("fail");
             	});
             },
-//          mideaClose(){
-//      		this.showDialog = false;
-//      		let that = this;
-//      		let testEl = that.$refs.test;
-//      		let i = 50;
-//      		timer();
-//      		testEl.style.top = '50px';
-//      		function timer() {
-//      			setTimeout(() => {
-//      				i = i + 50;
-//      				testEl.style.top = i + 'px';
-////      				nativeService.toast(i);
-//      				if (i < 500) {
-//      					timer();
-//      				}
-//      			},200)
-//      		}
-//      	},
-//      	giveup() {
-//      		this.ismark = false;
-//      	},
-//      	downloading() {
-//      		this.isloading = true;
-////      		nativeService.showLoading();
-//      		this.downLoadDevicePlugin();
-//      	},
-//      	getDevicePluginInfo(){
-//          	nativeService.getDevicePluginInfo(this.deviceId).then(
-//	                (res) => {
-//						if(parseInt(res.needUpdate) == 1){
-//							this.ismark = true;
-//						}else{
-//							this.ismark = false;
-//						}
-//	                }
-//	            ).catch((error) => {
-//	            	this.ismark = false;
-//	            })
-//          },
-//          getNetworkStatus(){
-//          	nativeService.getNetworkStatus().then(
-//	                (resp) => {
-////	                    this.result = resp;
-//	                    if(parseInt(resp.type) == 1){
-//	                    	this.iswifi = true;
-//	                    }else{
-//	                    	this.iswifi = false;
-//	                    }
-//	                    this.getDevicePluginInfo();
-//	                }
-//	            ).catch((error) => {
-//	            	this.iswifi = false;
-//	            })
-//          },
-//          downLoadDevicePlugin(){
-//          	nativeService.downLoadDevicePlugin(this.deviceId,(resp) => {
-//          		let res = resp;
-//          		let status = parseInt(res.status);
-//          		switch (status){
-//          			case 0:
-//          			    this.loadingText = '等待下载'
-//          				break;
-//          			case 1:
-//          			    this.loadingText = '下载中...'
-//          				break;
-//          			case 2:
-//          			    this.loadingText = '暂停'
-//          				break;
-//          			case 3:
-//          			    this.loadingText = '下载失败'
-//          				break;
-//          			case 4:
-//          			    this.loadingText = '下载成功'
-//          				break;
-//          			case 5:
-//          			    this.loadingText = '解压中...'
-//          				break;
-//          			case 6:
-//          			    this.loadingText = '解压失败'
-//          				break;
-//          			case 7:
-//          			    this.loadingText = '解压成功'
-//          				break;
-//          		}
-//          		let progress = parseInt(res.progress);
-//          		if (progress == 100) {
-//          			nativeService.toast('下载成功');
-//          			this.ismark = false;
-//          			this.isloading = false;
-//          		}
-//	            },(error) => {
-//	                nativeService.toast(error)
-//	            })
-//          }
         },
         computed: {
 			powerOnoffImg () {
@@ -454,11 +344,11 @@
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
             	self.handleNotification();
-            	if(data.result.isOnline == 1) {
+            	if(data.result.isOnline || data.result.isOnline == "1") {
             		self.queryStatus();
             	}
             },function(error) {
-            	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+            	nativeService.toast("连接设备超时");
             })
         }
     }

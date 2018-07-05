@@ -168,7 +168,7 @@
             },
             updateUI(data) {
             	if(data.errorCode == 0) {
-	                let params = data.params;
+	                let params = data.params || data.result;
 	                this.workStatus = this.work_status[params.work_status] || "";
 	                this.workstatusNum = params.work_status;
 	                this.temperature = params.temperature || "--";

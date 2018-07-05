@@ -2,92 +2,16 @@ import Mock, { mock } from 'mockjs';
 
 export const all = [
     {
-        path: 'luaQuery',
-        data: {
-            "errorCode": 0,
-		    "params": {
-		        "power": "on",
-		        "mode": "auto",
-		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
-		    }
-        }
-    },
-    {
         path: 'deviceinfo',
         data: {
             "errorCode": 0,
 		    "params": {
-		        "rinse_count": 2, 
-			    "rinse_level": 0, 
-			    "lock": "off", 
-			    "mode": "normal", 
-			    "program": "standard", 
-			    "power": "off", 
-			    "intelligent_wash": "off", 
-			    "wash_strength": 2, 
-			    "error_code": 0, 
-			    "wash_time": 15, 
-			    "temperature": 0, 
-			    "version": 7, 
-			    "dehydration_time": 7, 
-			    "remain_time": 55, 
-			    "running_status": "work", 
-			    "dehydration_speed": 3, 
-			    "wash_level": 0
-		    }
-        }
-    },
-    {
-        path: 'start',
-        data: {
-            "errorCode": 0,
-		    "params": {
-		        "rinse_count": 2, 
-			    "rinse_level": 0, 
-			    "lock": "off", 
-			    "mode": "normal", 
-			    "program": "standard", 
-			    "power": "on", 
-			    "intelligent_wash": "off", 
-			    "wash_strength": 2, 
-			    "error_code": 0, 
-			    "wash_time": 15, 
-			    "temperature": 0, 
-			    "version": 7, 
-			    "dehydration_time": 7, 
-			    "remain_time": 55, 
-			    "running_status": "work", 
-			    "dehydration_speed": 3, 
-			    "wash_level": 0
-		    }
-        }
-    },
-    {
-        path: 'pause',
-        data: {
-            "errorCode": 0,
-		    "params": {
-		        "rinse_count": 2, 
-			    "rinse_level": 0, 
-			    "lock": "off", 
-			    "mode": "normal", 
-			    "program": "standard", 
-			    "power": "on", 
-			    "intelligent_wash": "off", 
-			    "wash_strength": 2, 
-			    "error_code": 0, 
-			    "wash_time": 15, 
-			    "temperature": 0, 
-			    "version": 7, 
-			    "dehydration_time": 7, 
-			    "remain_time": 55, 
-			    "running_status": "standby", 
-			    "dehydration_speed": 3, 
-			    "wash_level": 0
+		        "power": "on",
+		        "heat": "off",
+		        "heat_status":"on",
+		        "cool":"off",
+		        "cool_status":"off",
+		        "heat_temperature":"40"
 		    }
         }
     },
@@ -96,38 +20,12 @@ export const all = [
         data: {
             "errorCode": 0,
 		    "params": {
-		        "rinse_count": 2, 
-			    "rinse_level": 0, 
-			    "lock": "off", 
-			    "mode": "normal", 
-			    "program": "standard", 
-			    "power": "off", 
-			    "intelligent_wash": "off", 
-			    "wash_strength": 2, 
-			    "error_code": 0, 
-			    "wash_time": 15, 
-			    "temperature": 0, 
-			    "version": 7, 
-			    "dehydration_time": 7, 
-			    "remain_time": 55, 
-			    "running_status": "work", 
-			    "dehydration_speed": 3, 
-			    "wash_level": 0
-		    }
-        }
-    },
-    {
-        path: 'temperatureControl',
-        data: {
-            "errorCode": 0,
-		    "params": {
-		        "power": "on",
-		        "mode": "fan",
-		        "temperature": "26",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "power": "off",
+		        "heat": "on",
+		        "heat_status":"on",
+		        "cool":"off",
+		        "cool_status":"off",
+		        "heat_temperature":"40"
 		    }
         }
     },
@@ -136,46 +34,13 @@ export const all = [
         data: {
             "errorCode": 0,
 		    "params": {
-		        "rinse_count": 2, 
-			    "rinse_level": 0, 
-			    "lock": "off", 
-			    "mode": "normal", 
-			    "program": "standard", 
-			    "power": "on", 
-			    "intelligent_wash": "off", 
-			    "wash_strength": 2, 
-			    "error_code": 0, 
-			    "wash_time": 15, 
-			    "temperature": 0, 
-			    "version": 7, 
-			    "dehydration_time": 7, 
-			    "remain_time": 55, 
-			    "running_status": "work", 
-			    "dehydration_speed": 3, 
-			    "wash_level": 0
+		        "power": "on",
+		        "heat": "off",
+		        "heat_status":"off",
+		        "cool":"on",
+		        "cool_status":"on",
+		        "cool_temperature":"10"
 		    }
-        }
-    },
-    {
-        path: 'luaControl',
-        data: {
-            errorCode: 0,
-            msg: 'success',
-            result: {}
-        }
-    },
-    {
-        path: 'app/message/settings',
-        data: {
-            errorCode: 0,
-            msg: 'success',
-            result: {
-                "errorPush": '@pick([0, 1])',
-                "defrost30MinPush": '@pick([0, 1])',
-                "doorOpenPush": '@pick([0, 1])',
-                "watchModePush": '@pick([0, 1])',
-                "defrost60MinPush": '@pick([0, 1])'
-            }
         }
     },
     {

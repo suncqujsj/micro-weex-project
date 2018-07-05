@@ -166,7 +166,7 @@
             },
             updateUI(data) {
             	if(data.errorCode == 0) {
-	            	let params = data.params;
+	            	let params = data.params || data.result;
 	                this.work_status = params.work_status;
 	                this.function_no = params.function_no;
 					if(this.work_status == "5") {//关机
@@ -413,7 +413,7 @@
 	}
 	.main-status-simple {
 		font-size: 75px;
-		margin-top: 50px;
+		margin-top: 74px;
 	}
 	.danwei {
 		font-family: PingFangSC-Light;

@@ -7,10 +7,10 @@
 				    	 <div class="card card-hot">
 				        	<div class="card-left">
 			        			<div class="main-status-div">
-			        				<text class="main-status">{{cur_temperature}}</text>
+			        				<text class="main-status">{{currentTemperture}}</text>
 			        				<text class="danwei">°</text>
 			        			</div>
-			        			<text class="main-status-second">当前水温</text>
+			        			<text class="main-status-second">设置水温</text>
 				        		<div class="card-status-detail">
 				        			<text class="main-status-third">{{mode}}</text>
 				        		</div>
@@ -67,14 +67,14 @@
 
 <script>
     import nativeService from '@/common/services/nativeService.js'
-		import mideaSwitch from '@/midea-component/switch.vue'
-		import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
-		import scrollerBar from '@/midea-card/T0xAC/components/scroller-bar.vue'
-		import mideaItem from '@/midea-component/item.vue'
-		import Mock from './settings/mock'
-		const modal = weex.requireModule('modal');
-		const dom = weex.requireModule('dom');
-		var stream = weex.requireModule('stream');
+	import mideaSwitch from '@/midea-component/switch.vue'
+	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
+	import scrollerBar from '@/midea-card/T0xAC/components/scroller-bar.vue'
+	import mideaItem from '@/midea-component/item.vue'
+	import Mock from './settings/mock'
+	const modal = weex.requireModule('modal');
+	const dom = weex.requireModule('dom');
+	var stream = weex.requireModule('stream');
     export default {
         components: {
             mideaSwitch,
@@ -191,7 +191,7 @@
             },
             updateUI(data) {
             	if(data.errorCode == 0) {
-	                let params = data.params;
+	                let params = data.params || data.result;
 	                this.deviceTip = parseInt(params.error_code);
 	                this.onoff = params.power;
 					this.temperature = params.temperature;

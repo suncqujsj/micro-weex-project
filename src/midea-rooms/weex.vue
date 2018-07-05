@@ -46,7 +46,7 @@
 </template>
 
 <style>
-    .wrap{ background-color: #f00 }
+    /* .wrap{ background-color: #f00 } */
     .wrap { padding-left:30px; padding-right:30px; flex-direction: column;}
     .row-s { flex-direction: row; align-items: center; justify-content: flex-start; }
     .row-sb{ flex-direction: row; align-items: center; justify-content: space-between; }

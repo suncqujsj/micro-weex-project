@@ -185,7 +185,7 @@
         text-overflow: ellipsis
     }
     
-    .wrap{background-color: #3af}
+    /* .wrap{background-color: #3af} */
 </style>
 
 <script>

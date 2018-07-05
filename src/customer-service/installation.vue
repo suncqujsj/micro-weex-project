@@ -485,7 +485,7 @@ export default {
                 (resp) => {
                     this.isRecording = false
                     if (this.isMicPanelShow) {
-                        this.micResult += resp.data
+                        this.micResult += (resp.data || resp.speakData || '')
                     }
                 }
             ).catch((error) => {

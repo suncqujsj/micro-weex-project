@@ -153,8 +153,8 @@
                     check:  'assets/img/check_on.png',
                     uncheck: 'assets/img/check_off.png',
                     auto: {
-                        2: 'assets/img/hand.png',
-                        3: 'assets/img/location.png',
+                        2: 'assets/img/man.png',
+                        3: 'assets/img/arrive.png',
                         4: 'assets/img/clock.png',
                         6: 'assets/img/slweather.png',
                     }
@@ -201,7 +201,6 @@
                 this.userDevices = tmpUserDevices
 
                 if (this.from == 'addAuto'){
-                    this.generateAllDevices()
                     this.generateAllDeviceActions()
                     if ( this.sceneType == 2 ){
                         this.weekly = '1111111'
@@ -312,24 +311,16 @@
                 
                 this.goTo('setDevice', {}, params)
             },
-            generateAllDevices(){
-                let tmpAllDevices = {}
-                for (var x in this.userDevices) {
-                    tmpAllDevices[this.userDevices[x].deviceId] = this.userDevices[x]
-                }
-                this.allDevices = Object.assign({}, this.allDevices, tmpAllDevices)
-            },
             generateAllDeviceActions(){
                 let tmpAllDeviceActions = {}
-                for (var x in this.allDevices) {
-                    tmpAllDeviceActions[this.allDevices[x].deviceId] = this.autoSupportActions[this.allDevices[x].deviceType].actions
+                for (var x in this.userDevices) {
+                    tmpAllDeviceActions[this.userDevices[x].deviceId] = this.autoSupportActions[this.userDevices[x].deviceType].actions
                 }
                 this.allDeviceActions = Object.assign({}, this.allDeviceActions, tmpAllDeviceActions)
             },
             getDone(){
                 if (this.from == 'addAuto') {
-                    // this.showPrompt = true
-                    this.setNewAuto()
+                    this.showPrompt = true
                 }else if(this.from == 'editAuto'){
                     let tmpCheckedDevice = {}
                     
@@ -369,15 +360,22 @@
                     image: this.icon.auto[this.sceneType],
                     name: this.inputAutoName
                 }
-
-                if ( Object.keys(this.checkedDevices).length === 0) {
-                    nativeService.alert('还没有选择自动化关联设备哦')
-                    return
+                let tmpTask = []
+                
+                for (var key in this.checkedDevices) {//key: applianceCode
+                    let tmpCommand = {}
+                    if ( this.checkedDevices[key] ) {
+                        for (var x in this.allDeviceActions[key]) { 
+                            tmpCommand[this.allDeviceActions[key][x].property] = this.allDeviceActions[key][x].currentStatus || this.allDeviceActions[key][x].default
+                        }
+                    }
+                    tmpTask.push({
+                        applianceCode: key,
+                        command: tmpCommand
+                    })
                 }
-
-                let tmpTask = {}
-                for (var x in this.userDevices)
-                reqParams.task = tmpTask
+                
+                reqParams.task = JSON.stringify(tmpTask)
                 reqParams.weekly = this.weekly
 
                 if (this.sceneType == 3) {
@@ -407,16 +405,15 @@
                     })
                     reqParams.weather = tmp
                 }
-                    // this.webRequest(reqUrl, reqParams).then((rtnData)=>{
-                    //     nativeService.alert(rtnData)
-                    //     if (rtnData.code == 0) {
-                    //         nativeService.alert('新增成功！', function(){
-                    //             nativeService.goTo('weex.js')
-                    //         })
-                    //     }
-                    // }).catch( (error )=>{
+                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                    if (rtnData.code == 0) {
+                        nativeService.alert('新增成功！', function(){
+                            nativeService.goTo('weex.js')
+                        })
+                    }
+                }).catch( (error )=>{
 
-                    // })
+                })
             
             }
         },
@@ -427,8 +424,6 @@
                 channelBindDevice.onmessage = function(e) {
                     if (e.data.page == 'setDevice') {
                         that.allDeviceActions[e.data.applianceCode] = e.data.actions
-                nativeService.alert(that.allDeviceActions)
-                        
                     }
                 }
             }

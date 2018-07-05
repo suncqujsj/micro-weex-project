@@ -2,12 +2,11 @@
     <div>
         <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
         <sroller class="scroller" :style="scrollerStyle">
-            <text class="hd">关联设备</text>
             <div class="block">
                 <div v-for="(group, groupIdx) in userSupportDevices">
-                    <midea-list v-if="userSupportDevices.length > 0" style="background-color:#fff" v-for="(device,idx) in group" :idx="1" :hasWrapBorder="false" leftMargin="25px">
-                        <check-item v-if="group.length == 1" :title="device.applianceName" :status="device.isRelation == 1" @itemClick="bindSceneAppliance(device, groupIdx)"></check-item>
-                        <check-item v-else :title="device.applianceName" mode="radio" :status="device.isRelation == 1" @itemClick="bindGroupDevice(device, groupIdx)"></check-item>
+                    <midea-list v-if="userSupportDevices.length > 0" style="background-color:#fff" v-for="(item,idx) in group" :idx="1" :hasWrapBorder="false" leftMargin="25px">
+                        <check-item v-if="group.length == 1" :title="item.applianceName" :status="item.isRelation == 1" @itemClick="bindSceneAppliance(item, groupIdx)"></check-item><!-- 同品类有一个设备 -->
+                        <check-item v-else :title="item.applianceName" mode="radio" :status="item.isRelation == 1" @itemClick="bindGroupDevice(item, groupIdx)"></check-item><!-- 同品类有多个设备 -->
                     </midea-list>
                 </div>
             </div>
@@ -155,7 +154,7 @@
                 return this.generateListArray(min, max)
             },
             humidityMaxList(){
-                let min = Number(this.humidityRange.max), max = 90
+                let min = Number(this.humidityRange.min), max = 90
                 return this.generateListArray(min, max)
             },
             comfortableList(){
@@ -181,21 +180,7 @@
                 userSupportDevices: [],
                 temperatureRange: {},
                 humidityRange: {},
-                sceneProp: {
-                    "temperatureRange": "18,30",
-                    "pm25": "75",
-                    "pm25Range": "50,90",
-                    "temperature": "28",
-                    "humidity": "80",
-                    "humidityRange": "10,90"
-                },
-                sceneProp: [
-                    { key: 'temperature', value: '28,30' },
-                    { key: 'humidity', value: '10,80' },
-                    { key: 'comfortable', value: '70' },
-                    { key: 'use', value: '3' },
-                    { key: 'save', value: '60' },
-                ],
+                sceneProp: {},
                 sceneName: {
                     temperature: '适宜温度',
                     humidity: '适宜湿度',
@@ -222,21 +207,36 @@
                     use: '',  
                 },
                 activeGroupDevice: {},
-                userDevices: [
-                    {
-                        "deviceId": "xxxxx", 
-                        "deviceName": "xxxxxx",
-                        "deviceType": "0xAC",
-                        "deviceSubType": "xxxxx", 
-                        "deviceSn": "xxxxxxxxx",
-                        "isOnline": 1
-                    }
-                ],
+                userDevices: {}
             }
         },
         methods: {
             goBack(){
                 nativeService.goBack()
+            },
+            initData(){
+                this.uid = nativeService.getParameters('uid')
+                this.homegroupId = nativeService.getParameters('homegroupId')
+                this.sceneId = nativeService.getParameters('sceneId')
+                this.roomType = nativeService.getParameters('roomType')
+                this.userDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
+
+                this.getSupportDevices().then((res)=>{
+                    this.userSupportDevices = this.formatUserSupportDevices(res.applianceList)
+                    this.scenePropFormat = this.jsonToArray(res.prop)
+                    this.sceneProp = res.prop
+
+                    if ( this.roomType == 1 || this.roomType == 2 ){
+                        this.temperatureRange = {
+                            min: this.sceneProp.temperature.split(',')[0],
+                            max:this.sceneProp.temperature.split(',')[1]
+                        }
+                        this.humidityRange = {
+                            min: this.sceneProp.humidity.split(',')[0],
+                            max: this.sceneProp.humidity.split(',')[1]
+                        }
+                    }
+                })
             },
             generateListArray(min, max){
                 let tmp = []
@@ -257,7 +257,6 @@
                         homegroupId: this.homegroupId,
                         sceneId: this.sceneId
                     }
-                    
                     this.webRequest(reqUrl, reqParams).then((res)=>{
                         if (res.code == 0) {
                             resolve(res.data)
@@ -269,39 +268,7 @@
                     })
                 })
             },
-            // formatUserSupportDevices(applianceList){
-            formatUserSupportDevices(){
-                let applianceList = [
-                    {
-                        "applianceName": "test设备FA xxxxxxx",
-                        "applianceType": "0xFA",
-                        "applianceCode": 21990232670864,
-                        "isRelation": 1
-                    },
-                    {
-                        "applianceName": "test设备FA xxssxxxxx",
-                        "applianceType": "0xFA",
-                        "applianceCode": 21990232670864,
-                        "isRelation": 2
-                    },
-                    {
-                        "applianceType": "0xAC",
-                        "applianceCode": 21990232670962,
-                        "isRelation": 1
-                    },
-                    {
-                        "applianceName": "加湿器0008",
-                        "applianceType": "0xFD",
-                        "applianceCode": 1099511810436,
-                        "isRelation": 1
-                    },
-                    {
-                        "applianceName": "净化器0513",
-                        "applianceType": "0xFC",
-                        "applianceCode": 1099511810483,
-                        "isRelation": 1
-                    }
-                ]
+            formatUserSupportDevices(applianceList){
                 let typeArray = [], typeObj = {}, tmp = []
                 for (let i=0;i<applianceList.length; i++){
                     let typeName = applianceList[i].applianceType
@@ -345,21 +312,18 @@
                 return tmp
             },
             bindGroupDevice(appliance, index){//绑定同品类数量大于1的设备，radio类型
+                nativeService.alert(this.userSupportDevices[index])
                 if (appliance.isRelation == 1) {
                     this.deleteSceneAppliance(appliance.applianceCode).then((res)=>{
-                        // this.userSupportDevices[appliance.applianceType][index].isRelation = 2
                     }).catch((err)=>{
                         nativeService.alert(err)
                     })
                 }else if (appliance.isRelation == 2) {
                     this.addSceneAppliance(appliance.applianceCode).then((res)=>{
-                        // this.userSupportDevices[appliance.applianceType][index].isRelation = 1
-                        
                     }).catch((err)=>{
                         nativeService.alert(err)
                     })
                 }
-              
             },
             bindSceneAppliance(appliance, groupIdx){//绑定同品类数量为1个的设备，checkbox类型
                 if (appliance.isRelation == 1) {
@@ -404,7 +368,7 @@
                                 1300: '设备不存在',
                                 1305: '用户不是设备的管理员'
                             }
-                            nativeService.alert(codeMsg)
+                            nativeService.alert(codeMsg[res.code])
                             reject()
                         }
                     }).catch( (err )=>{
@@ -452,16 +416,16 @@
                 if (this.roomType == 1 || this.roomType == 2) {
                     switch(propType) {
                         case 'temperatureMin':
-                            this.temperatureRange.min = this.activeProp[propType]
+                            this.temperatureRange.min = this.activeProp[propType] || this.temperatureRange.min
                             break;
                         case 'temperatureMax':
-                            this.temperatureRange.max = this.activeProp[propType]
+                            this.temperatureRange.max = this.activeProp[propType] || this.temperatureRange.max
                             break;
                         case 'humidityMin':
-                            this.humidityRange.min = this.activeProp[propType]
+                            this.humidityRange.min = this.activeProp[propType] || this.humidityRange.min
                             break;
                         case 'humidityMax':
-                            this.humidityRange.max = this.activeProp[propType]
+                            this.humidityRange.max = this.activeProp[propType] ||  this.humidityRange.max
                             break;
                     }
                     
@@ -487,17 +451,24 @@
                         save: this.activeProp.save || this.sceneProp.save
                     })
                 }
-                
                 this.webRequest(reqUrl, reqParams).then((res)=>{
-
+                    let codeMsg = {
+                        "1000": "未知系统错误",
+                        "1001": "参数格式错误",
+                        "1002": "参数为空",
+                        "1003": "参数类型不支持",
+                        "1105": "账户不存在",
+                        "1202": "用户不是家庭的管理员",
+                        "1701": "场景不存在"
+                    }
                     this.closePropPop(propType)
                     if (res.code == 0) {
-                        resolve(res.data)
+                        this.reload()
                     }else{
-                        reject(res.msg)
+                        nativeService.alert(codeMsg[res.code])
                     }
                 }).catch( (err )=>{
-                    reject(err)
+                    // nativeService.alert('设置场景属性失败')
                 })
             },
             setTemperatureMin(result){
@@ -520,38 +491,10 @@
             },
             setUseValue(result){
                 this.activeProp.use = result.value
-            }
+            },
         },
         created(){
-            this.uid = nativeService.getParameters('uid')
-            this.homegroupId = nativeService.getParameters('homegroupId')
-            this.sceneId = nativeService.getParameters('sceneId')
-            this.roomType = nativeService.getParameters('roomType')
-
-
-            nativeService.getItem('userDevice', (res)=>{
-                this.userDevices = res.data
-
-                this.getSupportDevices().then((res)=>{
-                    this.userSupportDevices = this.formatUserSupportDevices(res.applianceList)
-                    this.scenePropFormat = this.jsonToArray(res.prop)
-                    this.sceneProp = res.prop
-                    if ( this.roomType == 1 || this.roomType == 2 ){
-                        this.temperatureRange = {
-                            min: res.prop.temperature.split(',')[0],
-                            max: res.prop.temperature.split(',')[1]
-                        }
-                        this.humidityRange = {
-                            min: res.prop.humidity.split(',')[0],
-                            max: res.prop.humidity.split(',')[1]
-                        }
-                    }
-                })
-            })
-                      
-                                    
-            this.userSupportDevices = this.formatUserSupportDevices()
-
+            this.initData()
         }
     }
 </script>

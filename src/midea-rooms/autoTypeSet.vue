@@ -4,6 +4,7 @@
             <image class="back" :src="header.leftImg" @click="goBack"></image>
             <text class="head-text">{{title}}</text>
             <text v-if="sceneType != 3" class="next-text white"  @click="goNext">下一步</text>
+            <text v-else class="next-text white"></text>  <!-- 占位用，防止标题跑偏 -->
         </div>
         <div v-if="from=='editAuto'" class="row-sb head">
             <text class="head-text font-grey" @click="goBack">取消</text>
@@ -77,7 +78,7 @@
     }
     .back{
         width: 12px;
-        height: 24px;;
+        height: 24px;
     }
     .next-text{
         padding: 10px;
@@ -217,14 +218,6 @@
         components:{
             MideaHeader, MideaCell, mideaDialog, WxcSearchbar,
             mideaList, scrollPicker, checkItem
-        },
-        computed:{
-            wrapStyle(){
-                let tmp = {
-                    height: this.pageHeight+'px'
-                }
-                return tmp
-            }
         },
         mixins: [base],
         data(){
@@ -492,7 +485,7 @@
             selectWeather(index){
                 this.weather.activeTypeIndex = index
                 if (this.from == 'editAuto') {
-                    this.editParams.weatherStatus = encodeURIComponent(this.weather.data[this.weather.activeTypeIndex])
+                    this.editParams.weatherStatus = this.weather.data[this.weather.activeTypeIndex]
                 }
             },
             setWeatherSwitch(){
@@ -561,7 +554,10 @@
                     nativeService.alert('没有改动哦')
                     return
                 }
-                channelAutoTypeSet.postMessage({page: 'setCondition', editParams: this.editParams})
+                channelAutoTypeSet.postMessage({
+                    page: 'setCondition',
+                    editParams: this.editParams
+                })
                 this.goBack()
             }
         },

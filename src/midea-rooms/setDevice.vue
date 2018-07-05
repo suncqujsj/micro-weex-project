@@ -112,7 +112,7 @@
                 },
                 from: '',
                 deviceName: '',
-                actions: [],
+                actions: {},
                 userDevice: [],
                 deviceTask: {},
                 show: {},
@@ -139,7 +139,6 @@
                 nativeService.goBack()
             },
             initData(){
-                // nativeService.alert(weex.config.bundleUrl)
                 this.sceneType = nativeService.getParameters('sceneType')
                 this.deviceType = nativeService.getParameters('deviceType')
                 this.deviceName = decodeURIComponent(nativeService.getParameters('deviceName'))
@@ -150,34 +149,27 @@
                 }else if (this.from == 'editAuto') {
                     this.deviceTask = Object.assign({}, this.deviceTask, JSON.parse(decodeURIComponent(nativeService.getParameters('deviceTask'))))
                 }
-
                 let tmpActions = autoSupportActions[this.sceneType][this.deviceType].actions
+                
                 let tmpShow = {}
                 let tmpActiveKey = {}
-                let currentStatus
-                let currentStatusName
                 for (var i in tmpActions) {
+                    let currentStatus
                     if ( this.from == 'addAuto' || this.from == 'addEdit' ) {
                         currentStatus = tmpActions[i].default
-                        if (tmpActions[i].type != 'range') {
-                            currentStatusName = tmpActions[i]['value'][currentStatus]
-                        }
                     }else if( this.from == 'editAuto'){
                         if (this.deviceTask[tmpActions[i].property] ) {
                             currentStatus = this.deviceTask[tmpActions[i].property]
-                            if (tmpActions[i].type != 'range') {
-                                currentStatusName = tmpActions[i]['value'][currentStatus]
-                            }
                         }else{
                             currentStatus = tmpActions[i].default
-                            if (tmpActions[i].type != 'range') {
-                                currentStatusName = tmpActions[i]['value'][currentStatus]
-                            }
                         }
                     }
+                    if (tmpActions[i].type == 'range') {
+                        tmpActions[i] = Object.assign({}, tmpActions[i], {currentStatus: currentStatus})
+                    }else{
+                        tmpActions[i] = Object.assign({}, tmpActions[i], {currentStatus: currentStatus, currentStatusName: tmpActions[i]['value'][currentStatus]})
+                    }
                     
-                    tmpActions[i] = Object.assign({}, tmpActions[i], {currentStatus: currentStatus, currentStatusName: currentStatusName})
-
                     //显示启用按钮状态， 初始化选择项activeKey
                     if (tmpActions[i].type == 'switch') {
                     }else if (tmpActions[i].type == 'list' ){
@@ -187,13 +179,10 @@
                         this.rangeArrays[tmpActions[i].property] = this.generateListArray(tmpActions[i].range.min, tmpActions[i].range.max)
                     }
                 }
-               
-                this.actions = Object.assign({}, this.actions, tmpActions)
-                
+
+                this.actions = tmpActions
                 this.show = Object.assign({}, this.show, tmpShow)
                 this.activeKey = Object.assign({}, this.activeKey, tmpActiveKey)
-                
-                // nativeService.alert(this.actions)
             },
             switchAction(action, i){
                 let tmp = {

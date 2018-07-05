@@ -514,24 +514,24 @@
                     reqParams.weather = JSON.stringify(tmpWeather)
                 }
                 let tmpTask = []
-                for (var x in this.bindDeviceActions) {
+                
+                for (var key in this.bindDeviceActions) { //key: applianceCode
                     let tmpCommand = {}
-                    for (var i in this.bindDeviceActions[x]) {
-                        tmpCommand[this.bindDeviceActions[x][i].property] = this.bindDeviceActions[x][i].currentStatus
+                    for (var i in this.bindDeviceActions[key]) {
+                        tmpCommand[this.bindDeviceActions[key][i].property] = this.bindDeviceActions[key][i].currentStatus || this.bindDeviceActions[key][i].default
+                        
                     }
                     tmpTask.push({
-                        applianceCode: x,
+                        applianceCode: key,
                         command: tmpCommand
                     })
                 }
-                reqParams.task = tmpTask || this.autoDetail.task
 
-
-                nativeService.alert(reqParams)
+                reqParams.task = JSON.stringify(tmpTask) || JSON.stringify(this.autoDetail.task)
 
                 this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                     nativeService.alert(rtnData)
-                    
+
                     if (rtnData.code == 0) {
                         nativeService.alert('修改成功', function(){
                             nativeService.goTo('weex.js')
@@ -547,7 +547,6 @@
             this.initData()
             channelAutoEdit.onmessage = function(e) {
                 if (e.data.page == 'setDevice') {
-                    nativeService.alert(e)
                     that.userSetActions = Object.assign({}, that.userSetActions, e.data.actions)
                 }
                 if (e.data.page == 'autoBindDevices') {
@@ -574,10 +573,9 @@
                     if ( e.data.editParams.weatherTemperature) {
                         that.autoDetail.weather.temperature = e.data.editParams.weatherTemperature
                     }
-                    if ( e.data.editParams.weatherTemperature) {
+                    if ( e.data.editParams.logical) {
                         that.autoDetail.weather.logical = e.data.editParams.logical
                     }
-                    nativeService.alert(that.editParams)
                 }
             }
         }

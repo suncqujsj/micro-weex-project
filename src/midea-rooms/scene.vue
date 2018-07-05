@@ -353,8 +353,8 @@
                         '1015': 'assets/img/start_on.png',
                     },
                     model: {
-                        1: 'assets/img/loading.png',
-                        2: 'assets/img/success.png',
+                        1: 'assets/img/success.png',
+                        2: 'assets/img/loading.png',
                         3: 'assets/img/fail.png'
                     }
                 },
@@ -427,7 +427,14 @@
                 nativeService.goBack()
             },
             goSetting(){
-                this.goTo('setting', {}, {roomType: this.roomType, sceneId: this.sceneId})
+                let params = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    roomType: this.roomType,
+                    sceneId: this.sceneId,
+                    userDevices: nativeService.getParameters('userDevices')
+                }
+                this.goTo('setting', {}, params)
             },
             closeToastDialog(){
                 this.showToastDialog = false
@@ -543,7 +550,7 @@
                 })
             },
             executeModelCheck(data){
-                // status 1-执行中，2-执行成功，3-执行失败
+                // status 1-成功，2-执行中，3-失败
                 let reqUrl = url.scene.status
                 let reqParams = {
                     uid: this.uid,
@@ -556,7 +563,6 @@
                     if (res.code == 0) {
                         this.modelDevices = Object.assign({}, res.data.list)
                         this.showToastDialog = true
-                        
                     }else{
                         reject(res.msg)
                     }
@@ -591,10 +597,11 @@
             this.roomType = nativeService.getParameters('roomType')
             this.userDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
             
-            if (roomType == 4) {
+            if (this.roomType == 4) {
                 this.getWashData()
             }
             this.getSceneDetail()
+            
         }
     }
 </script>

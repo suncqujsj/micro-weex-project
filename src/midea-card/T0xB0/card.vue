@@ -17,7 +17,7 @@
 		        		<div class="card-control" @click="lockSwitch">
 		        			<image class="card-control-img" :src="deviceLock"></image>
 		        		</div>
-		        		<div class="card-icon">
+		        		<div class="card-icon" @click="showControlPanelPage">
 		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip022@2x.png"></image>
 		        		</div>
 		        	</div>
@@ -25,7 +25,7 @@
 	        </div>
 	        <div class="card-power-off" v-else>
 	        	<div class="control-div-offline">
-	        		<image class="card-control-img" :src="powerIcon_offline"  @click="poweronoff(1)"></image>
+	        		<image class="card-control-img" :src="powerIcon_offline"  @click="reload"></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
@@ -54,6 +54,8 @@
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
 	var stream = weex.requireModule('stream');
+	const globalEvent = weex.requireModule('globalEvent');
+	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
             mideaSwitch,
@@ -69,6 +71,8 @@
             	deviceSn: "",
             	onlineStatus:"",
             	
+            	pushKey: "receiveMessage",
+            	pushKeyOnline: "receiveMessageFromApp",
                 mideaChecked: true,
                 mideaChecked2: false,
                 onoff: "",
@@ -120,7 +124,6 @@
             	});
             },
             updateUI(data) {
-            	nativeService.alert(data);
             	if(data.errorCode == 0) {
 	                let params = data.params || data.result;
 	                this.onoff = params.power;
@@ -140,6 +143,14 @@
 	                
 				}else {
 	                modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+	            }
+            },
+            updateUILock(data) {
+            	if(data.errorCode == 0) {
+	                let params = data.params || data.result;
+	                this.lock = params.lock;
+				}else {
+	                nativeService.toast("连接设备超时");
 	            }
             },
             updateDeviceInfo(data) {
@@ -166,11 +177,44 @@
             			}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
-            		self.updateUI(data);
+            		//self.updateUI(data);
+            		self.updateUILock(data);
             	},function(error) {
             		console.log("error");
             	});
-            }
+            },
+            handleNotification() {
+            	console.log("handleNotification Yoram");
+            	let me = this;
+            	globalEvent.addEventListener(this.pushKey, (data) => {
+            		me.queryStatus();
+		        });
+		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
+            		if(data && data.messageType == "deviceOnlineStatus") {
+            			if(data.messageBody && data.messageBody.onlineStatus == "online") {
+            				me.onlineStatus = "1";
+            			} else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+            				me.onlineStatus = "0";
+            			} else {
+            				me.onlineStatus = "0";
+            			}
+            		}
+		        });
+            },
+            showControlPanelPage() {
+            	let params = {
+            		controlPanelName:"controlPanel.html"
+            	};
+            	bridgeModule.showControlPanelPage(params);
+            },
+            reload() {
+            	let params = {};
+            	bridgeModule.reload(params,function(result) {
+            		//successful
+            	},function(error) {
+            		//fail
+            	});
+            },
         },
         computed: {
 	        	deviceLock() {
@@ -187,6 +231,7 @@
 	       let self = this;
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
+            	self.handleNotification();
             	if(data.result.isOnline || data.result.isOnline == 1) {
             		self.queryStatus();
             	}

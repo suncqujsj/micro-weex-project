@@ -2,27 +2,25 @@
 	<scroller class="content" show-scrollbar="false">
 	    <div class="box">
 	        <div v-if="onlineStatus == '1'">
-		    	 <div class="card" v-if="onoff == 'on'">
+		    	 <div class="card card-hot" v-if="onoff == 'on'">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
-	        				<text class="main-status">{{display_value2}}</text>
+	        				<text class="main-status">{{minutes}}</text>
 	        				<text class="danwei">{{danwei}}</text>
 	        			</div>
-	        			<text class="main-status-second"></text>
+	        			<text class="main-status-second">运行时间</text>
 		        		<div class="card-status-detail">
-		        			<text class="main-status-third">{{display_value1}}</text>
+		        			<text class="main-status-third">{{display_value}}</text>
 		        		</div>
 		        		<div class="card-control-temp-div">
-		        			<image @click="down" class="cart-control-temp-img" src="./assets/img/smart_ic_reduce_huge@2x.png"></image>
-		        			<image @click="up" class="cart-control-temp-img cart-control-temp-img-right" src="./assets/img/smart_ic_increase_huge@2x.png"></image>
 		        		</div>
 		        	</div>
 		        	<div class="card-right">
 		        		<div class="card-control" @click="poweronoff(0)">
 		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png"></image>
 		        		</div>
-		        		<div class="card-icon" @click="showControlPanelPage">
-		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip028@2x.png"></image>
+		        		<div class="card-icon">
+		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip030@2x.png"></image>
 		        		</div>
 		        	</div>
 		        </div>
@@ -32,17 +30,17 @@
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image class="icon-offline" src="./assets/img/smart_img_equip028@2x.png"></image>
+		        		<image class="icon-offline" src="./assets/img/smart_img_equip030@2x.png"></image>
 		        	</div>
 		        </div>
 	        </div>
 	        <div class="card-power-off" v-else>
 	        	<div class="control-div-offline">
-	        		<image class="card-control-img" :src="powerIcon_offline"  @click="reload"></image>
+	        		<image class="card-control-img" :src="powerIcon_offline"  @click="poweronoff(1)"></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
-	        		<image class="icon-offline" src="./assets/img/smart_img_equip028@2x.png"></image>
+	        		<image class="icon-offline" src="./assets/img/smart_img_equip030@2x.png"></image>
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
@@ -66,8 +64,6 @@
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
 	var stream = weex.requireModule('stream');
-	const globalEvent = weex.requireModule('globalEvent');
-	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
             mideaSwitch,
@@ -83,27 +79,15 @@
             	deviceSn: "",
             	onlineStatus:"",
             	
-            	pushKey: "receiveMessage",
-            	pushKeyOnline: "receiveMessageFromApp",
                 mideaChecked: true,
                 mideaChecked2: false,
                 onoff: "",
-                mode: "",
+                minutes: "",
                 gear: "",
-                deviceLock: "",
-                temperature: "",
-                danwei: "档",
-                display_value1: "",
-                display_value2: "",
-                return_mode: {
-	            	normal:"正常风",
-					natural:"自然风",
-					sleep:"睡眠风",
-					comfort:"舒适风",
-					feel:"人感",
-					baby:"宝宝风",
-					mute:"静音风"
-	            },
+                light: "",
+                danwei: "",
+                display_value: "",
+                
 	            powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
                 powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
                 data:{
@@ -137,26 +121,26 @@
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);
             	},function(error) {
+            		nativeService.alert(error);
             		console.log("error");
             	});
             },
             updateUI(data) {
+            	nativeService.alert(data);
             	if(data.errorCode == 0) {
-	            	let params = data.params || data.result;
+	                let params = data.params || data.result;
 	                this.onoff = params.power;
-	                this.mode = params.mode;
+	                this.minutes = params.minutes;
 	            	this.gear = params.gear;
-	            	this.display_value1 = this.return_mode[params.mode];
-	            	this.display_value2 = params.gear;
-					if(this.mode == "baby") {
-						this.display_value1 = "";
-						this.display_value2 = this.return_mode[params.mode];
-						this.danwei = "";
-					} else {
-						this.danwei = "档";
-					}
+	            	this.light = params.light;
+	            	this.danwei = "分钟";
+	            	if(this.light == "on") {
+	            		this.display_value = this.gear +"档 | 灯开"
+	            	} else {
+	            		this.display_value = this.gear +"档 | 灯关"
+	            	}
 	            }else {
-	                modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+	                nativeService.toast("连接设备超时");
 	            }
             },
             updateDeviceInfo(data) {
@@ -180,106 +164,11 @@
             			}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
+            		nativeService.alert(data);
             		self.updateUI(data);
             	},function(error) {
+            		nativeService.alert(error);
             		console.log("error");
-            	});
-            },
-            up () {
-				this.deviceSubtype = parseInt(this.deviceSubtype);
-	        	if(this.deviceSubtype == 10) {
-	        		if(!(this.mode == "normal" || this.mode == "sleep")) {
-	        			modal.toast({ 'message': '只有正常风或睡眠风模式下可以设置档位', 'duration': 2 });
-		                return;
-		        	} 
-	        	} else {
-	        		if(this.mode != "normal") {
-		        		modal.toast({ 'message': '只有正常风模式下可以设置档位', 'duration': 2 });
-		                return;
-		        	} 
-	        	}
-	        	
-	            let gear = 'up';
-	            let set_gear = "";
-	            if(this.gear >= 26) {
-	            	modal.toast({ 'message': '风速已达最大值', 'duration': 2 });
-	                return;
-	            } else {
-	            	set_gear = parseInt(this.gear) + 1;
-	            }
-	            let params = {
-                	"operation":"luaControl",
-        			"name":"up",
-        			"data":{
-        				"gear":set_gear
-        			}
-                }
-	            let me = this;
-	            nativeService.sendLuaRequest(params,true).then(function(data) {
-                    me.updateUI(data);
-                })
-	        },
-	        down () {
-	        	if(this.deviceSubtype == 10) {
-	        		if(!(this.mode == "normal" || this.mode == "sleep")) {
-	        			modal.toast({ 'message': '只有正常风或睡眠风模式下可以设置档位', 'duration': 2 });
-		                return;
-		        	} 
-	        	} else {
-	        		if(this.mode != "normal") {
-	        			modal.toast({ 'message': '只有正常风模式下可以设置档位', 'duration': 2 });
-		                return;
-		        	} 
-	        	}
-	            let set_gear = "";
-	            if(this.gear == 1) {
-	            	modal.toast({ 'message': '风速已达最小值', 'duration': 2 });
-	                return;
-	            } else {
-	            	set_gear = parseInt(this.gear) -1;
-	            }
-	            let params = {
-                	"operation":"luaControl",
-        			"name":"down",
-        			"data":{
-        				"gear":set_gear
-        			}
-                }
-	            let me = this;
-	            nativeService.sendLuaRequest(params,true).then(function(data) {
-                    me.updateUI(data);
-                })
-	        },
-	        handleNotification() {
-            	console.log("handleNotification Yoram");
-            	let me = this;
-            	globalEvent.addEventListener(this.pushKey, (data) => {
-            		me.queryStatus();
-		        });
-		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
-            		if(data && data.messageType == "deviceOnlineStatus") {
-            			if(data.messageBody && data.messageBody.onlineStatus == "online") {
-            				me.onlineStatus = "1";
-            			} else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
-            				me.onlineStatus = "0";
-            			} else {
-            				me.onlineStatus = "0";
-            			}
-            		}
-		        });
-            },
-            showControlPanelPage() {
-            	let params = {
-            		controlPanelName:"controlPanel.html"
-            	};
-            	bridgeModule.showControlPanelPage(params);
-            },
-            reload() {
-            	let params = {};
-            	bridgeModule.reload(params,function(result) {
-            		//successful
-            	},function(error) {
-            		//fail
             	});
             },
         },
@@ -290,12 +179,11 @@
 	       let self = this;
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
-            	self.handleNotification();
             	if(data.result.isOnline == 1) {
             		self.queryStatus();
             	}
             },function(error) {
-            	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+            	nativeService.toast("连接设备超时");
             })
         }
     }
@@ -345,7 +233,7 @@
 	.text-offline-center {
 		position: absolute;
 		right:300px;
-		top:200px;
+		top:180px;
 		align-items: center;
 	}
 	.control-div-offline {
@@ -386,19 +274,20 @@
 		height:60px
 	}
 	.icon-offline {
-		width: 314px;
-		height: 314px;
+		width:534px;
+		height:248px;
+		margin-bottom: 50px;
 		opacity: 0.3;
 		box-shadow: 0 5px 6px 0 rgba(0,0,0,0.12);
 	}
 	.card-icon {
 		align-items: flex-end;
-		margin-top:-60px;
-		margin-right:-10px
 	}
 	.card-icon-img {
-		width:314px;
-		height:314px
+		width:534px;
+		height:248px;
+		margin-right: -115px;
+		margin-bottom: 45px;
 	}
 	.main-status-div {
 		flex-direction: row;

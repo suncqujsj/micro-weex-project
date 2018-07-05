@@ -5,7 +5,7 @@
 	    	 <div class="card" v-if="onlineStatus == '1'">
 	        	<div class="card-left">
         			<div class="main-status-div">
-        				<text class="main-status">{{display_value2}}</text>
+        				<text class="main-status main-status-simple">{{display_value2}}</text>
         				<text class="danwei">{{danwei}}</text>
 	        		</div>
         			<text class="main-status-second" style="text-align: center;"></text>
@@ -17,14 +17,14 @@
 	        		<div class="card-control">
 	        			<image class="card-control-img" :src="controlStartPauseImg" @click="controlStartPause"></image>
 	        		</div>
-	        		<div class="card-icon">
+	        		<div class="card-icon" @click="showControlPanelPage">
 	        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip043@2x.png"></image>
 	        		</div>
 	        	</div>
 	        </div>
 	        <div class="card-power-off" v-else>
 	        	<div class="control-div-offline">
-	        		<image class="card-control-img" :src="powerIcon_offline"></image>
+	        		<image class="card-control-img" :src="powerIcon_offline" @click="reload"></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
@@ -59,6 +59,8 @@
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
 	var stream = weex.requireModule('stream');
+	const globalEvent = weex.requireModule('globalEvent');
+	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
             mideaSwitch,
@@ -75,6 +77,8 @@
             	deviceSn: "",
             	onlineStatus:"",
             	
+            	pushKey: "receiveMessage",
+            	pushKeyOnline: "receiveMessageFromApp",
                 mideaChecked: true,
                 mideaChecked2: false,
                 
@@ -83,7 +87,7 @@
 	            work_status:"cooking",	//当前设备状态
 	            display_value: "",//localStorage.getItem("EAdisplay_value") || "",
 	            display_value2: "",//localStorage.getItem("EAdisplay_value2") || "",
-	            danwei: "分",//localStorage.getItem("EAdanwei") || "",
+	            danwei: "",//localStorage.getItem("EAdanwei") || "",
                 return_work_status	:{
 	            	cooking:"工作中",
 	            	schedule:"预约中",
@@ -368,7 +372,7 @@
 	                this.mode = params.mode;
 					this.work_status = params.work_status;
 	            	if(params.work_status == "cooking") {//工作中
-	            		this.display_value = (this.return_mode[this.mode]?this.return_mode[this.mode]:"");
+	            		this.display_value = (this.return_mode[this.mode]?this.return_mode[this.mode]:"") || "--";
 		            	this.display_value2 = "烹饪中";
 		            	if(this.mode == "keep_warm") {
 		            		this.display_value = "";
@@ -376,7 +380,7 @@
 		            	}
 		            	this.danwei = "";
 	            	} else if(params.work_status == "schedule") {//预约中
-	            		this.display_value = (this.return_mode[this.mode]?this.return_mode[this.mode]:"");
+	            		this.display_value = (this.return_mode[this.mode]?this.return_mode[this.mode]:"") || "--";
 	            		this.display_value2 = "预约中"
 	            		this.danwei = "";
 	            	} else if(params.work_status == "keep_warm") {//保温中
@@ -405,9 +409,13 @@
             	if(this.work_status == "cooking" || this.work_status == "keep_warm") {
             		//pause logic
             		let params = {
-		                "work_status": "cancel",
-		                "name": "pause"
-		            }
+	                	"operation":"luaControl",
+	        			"name":"pause",
+	        			"data":{
+	        				"work_status": "cancel",
+		                	"name": "pause"
+	        			}
+	                }
             		nativeService.sendLuaRequest(params,true).then(function(data) {
 	            		self.updateUI(data);
 	            	},function(error) {
@@ -416,15 +424,51 @@
             	} else {
             		//start logic
             		let params = {
-		                "work_status": "cooking",
-		                "name": "start"
-		            }
+	                	"operation":"luaControl",
+	        			"name":"start",
+	        			"data":{
+	        				"work_status": "cooking",
+		                	"name": "start"
+	        			}
+	                }
             		nativeService.sendLuaRequest(params,true).then(function(data) {
 	            		self.updateUI(data);
 	            	},function(error) {
 	            		console.log("error");
 	            	});
             	}
+            },
+            handleNotification() {
+            	console.log("handleNotification Yoram");
+            	let me = this;
+            	globalEvent.addEventListener(this.pushKey, (data) => {
+            		me.queryStatus();
+		        });
+		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
+            		if(data && data.messageType == "deviceOnlineStatus") {
+            			if(data.messageBody && data.messageBody.onlineStatus == "online") {
+            				me.onlineStatus = "1";
+            			} else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+            				me.onlineStatus = "0";
+            			} else {
+            				me.onlineStatus = "0";
+            			}
+            		}
+		        });
+            },
+            showControlPanelPage() {
+            	let params = {
+            		controlPanelName:"controlPanel.html"
+            	};
+            	bridgeModule.showControlPanelPage(params);
+            },
+            reload() {
+            	let params = {};
+            	bridgeModule.reload(params,function(result) {
+            		//successful
+            	},function(error) {
+            		//fail
+            	});
             },
         },
         computed: {
@@ -442,6 +486,7 @@
             let self = this;
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
+            	self.handleNotification();
             	if(data.result.isOnline == 1) {
             		self.queryStatus();
             	}
@@ -598,6 +643,10 @@
 		color: #FFFFFF;
 		letter-spacing: 0;
 		text-align: center;
+	}
+	.main-status-simple {
+		font-size: 75px;
+		margin-top: 74px;
 	}
 	.danwei {
 		font-family: PingFangSC-Regular;

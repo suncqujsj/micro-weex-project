@@ -396,7 +396,7 @@
                 activeModeDevices: [],
                 applianceList: {},
                 showToastDialog: false,
-                userDevices: {},
+                userDevices: '',
                 userSupportDevices: [],
                 showMall: false,
                 chartData: {
@@ -606,8 +606,9 @@
             this.homegroupId = nativeService.getParameters('homegroupId')
             this.sceneId = nativeService.getParameters('sceneId')
             this.roomType = nativeService.getParameters('roomType')
-            this.userDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
-            
+            if (nativeService.getParameters('userDevices')) {
+                this.userDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
+            }
             this.getSceneDetail()
             if (this.roomType == 4) {
                 this.getWashData()

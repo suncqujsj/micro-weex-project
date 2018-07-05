@@ -141,27 +141,44 @@ export default {
                 appId: '1000',
                 stamp: +new Date()
             }, reqBody)
-         
+
             return JSON.stringify(reqBody)
         },
         webRequest(reqUrl, reqParams) {
             return new Promise((resolve, reject) => {
-                let reqBody = this.generateReqBody(reqParams)
-                stream.fetch({
-                    method: 'post',
-                    url: reqUrl,
-                    mode: 'cors',
+            //     let reqBody = this.generateReqBody(reqParams)
+            //     stream.fetch({
+            //         method: 'post',
+            //         url: reqUrl,
+            //         mode: 'cors',
+            //         headers: {
+            //             'Content-Type': 'application/json;charset=utf-8',
+            //         },
+            //         type: 'json',
+            //         body: reqBody
+            //     }, (rtnData) => {
+            //         if (rtnData.ok) {
+            //             resolve(rtnData.data)
+            //         } else {
+            //             reject(rtnData)
+            //         }
+            //     })
+                let requestOption = {
+                    method: "POST",
+                    isShowLoading: true
+                }
+                let requestParam = {
+                    method: requestOption.method,
                     headers: {
-                        'Content-Type': 'application/json;charset=utf-8',
+                        "Content-Type": "application/json;charset=utf-8"
                     },
-                    type: 'json',
-                    body: reqBody
-                }, (rtnData) => {
-                    if (rtnData.ok) {
-                        resolve(rtnData.data)
-                    } else {
-                        reject(rtnData)
-                    }
+                    data: this.generateReqBody(reqParams)
+                }
+                nativeService.isDummy = false
+                nativeService.sendCentralCloundRequest(reqUrl, requestParam, requestOption).then((resp) => {
+                    resolve(resp)
+                }).catch((error) => {
+                    reject(error)
                 })
             })
         },
@@ -202,4 +219,3 @@ export default {
     }
 };
 
-    

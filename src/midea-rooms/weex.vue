@@ -46,7 +46,6 @@
 </template>
 
 <style>
-    /* .wrap{ background-color: #f00 } */
     .wrap { padding-left:30px; padding-right:30px; flex-direction: column;}
     .row-s { flex-direction: row; align-items: center; justify-content: flex-start; }
     .row-sb{ flex-direction: row; align-items: center; justify-content: space-between; }
@@ -68,7 +67,7 @@
     }
     .auto-name{ width: 120px; font-size: 28px; color: #666666; margin-bottom: 8px; text-overflow: clip; lines: 1  }
     /* .auto-desc{ width: 120px; font-size: 24px; color: #C7C7CC; lines:1; } */
-    .scene-list{ height:1000px; }
+    .scene-list{ padding-bottom: 100px; }
     .scene { width: 690px; height: 206px; padding-bottom: 16px; position: relative; }
     .scene-bg{ width: 690px; height: 185px; position: absolute; }
     .next { width: 16px; height: 32px; position:absolute; top:77px; right: 25px;}
@@ -123,7 +122,7 @@
                 },
                 autoList: [],
                 sceneList: null,
-                userDevices: {},
+                userDevices: '',
                 user: null,
                 autoTemplate: {}
             }
@@ -154,9 +153,7 @@
                         sceneId: auto.sceneId,
                         userDevices: this.userDevices
                     }
-                    
-                        this.goTo("autoEdit", {}, params)
-                    
+                    this.goTo("autoEdit", {}, params)
                 }
             },
             executeAuto(sceneId){
@@ -258,6 +255,7 @@
                     uid: this.uid,
                     homegroupId: this.homegroupId
                 }
+                
                 this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                     if (rtnData.code == 0) {
                         this.sceneList = rtnData.data.list
@@ -286,33 +284,34 @@
         created(){
             /* 获取用户信息-> 获取家庭id-> 获取自动化列表->获取场景列表 */
             nativeService.getUserInfo().then((res)=>{
-                // this.uid = res.uid
+                this.uid = res.uid
+                nativeService.getCurrentHomeInfo().then( (res)=>{
+                    this.homegroupId = res.homeId
+                    this.userDevices = ''
+                    if (res.deviceList) {
+                        this.userDevices = encodeURIComponent(JSON.stringify(res.deviceList))
+                    }
+                    // this.uid = 'ac70d2636c0c4dd5b86bc97bbc8166c6'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
+                    // this.homegroupId = '150366'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
+                    // this.userDevices = encodeURIComponent(JSON.stringify([// 这里用的是模拟数据,等他调好bug后再改回真实数据
+                    //     {
+                    //         deviceId: '2222222',
+                    //         deviceName: '设备二',
+                    //         deviceType: '0xFD',
+                    //         isOnline: 1
+                    //     },{
+                    //         deviceId: '111111',
+                    //         deviceName: '设备一',
+                    //         deviceType: '0xAC',
+                    //         isOnline: 1
+                    //     }
+                    // ]))
 
-                // nativeService.getCurrentHomeInfo().then( (res)=>{
-                    // this.homegroupId = res.homeId
-                    //  this.userDevices = JSON.stringify(res.deviceList)
-
-                    this.uid = 'ac70d2636c0c4dd5b86bc97bbc8166c6'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
-                    this.homegroupId = '150366'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
-                    this.userDevices = encodeURIComponent(JSON.stringify([// 这里用的是模拟数据,等他调好bug后再改回真实数据
-                        {
-                            deviceId: '2222222',
-                            deviceName: '设备二',
-                            deviceType: '0xFD',
-                            isOnline: 1
-                        },{
-                            deviceId: '111111',
-                            deviceName: '设备一',
-                            deviceType: '0xAC',
-                            isOnline: 1
-                        }
-                    ]))
-
-                    this.getAutoList()
                     this.getSceneList()
-                // }).catch((err)=>{
-                //     nativeService.toast(err)
-                // })
+                    this.getAutoList()
+                }).catch((err)=>{
+                    nativeService.toast(err)
+                })
             })
         }
     }

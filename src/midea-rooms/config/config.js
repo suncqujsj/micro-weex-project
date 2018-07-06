@@ -1146,253 +1146,361 @@ export const autoSupportActions = {
             }]
         }
     },
-    '4': {
-        "0xAC": {
-            "name": "空调",
-            "actions": [{
-                    "property": "power",
-                    "propertyName": "电源",
-                    "type": "switch",
-                    "value": {
-                        "off": "关机",
-                        "on": "开机",
+        '4': {
+            "0xAC": {
+                "name": "空调",
+                "actions": [{
+                        "property": "power",
+                        "propertyName": "电源",
+                        "type": "switch",
+                        "value": {
+                            "off": "关机",
+                            "on": "开机",
+                        },
+                        "default": "off"
                     },
-                    "default": "off"
-                },
-                {
-                    "property": "mode",
-                    "propertyName": "模式",
-                    "type": "list",
-                    "value": {
-                        "auto": "自动",
-                        "fan": "送风",
-                        "cool": "制冷",
-                        "heat": "制热",
-                        "dry": "抽湿",
+                    {
+                        "property": "mode",
+                        "propertyName": "模式",
+                        "type": "list",
+                        "value": {
+                            "auto": "自动",
+                            "fan": "送风",
+                            "cool": "制冷",
+                            "heat": "制热",
+                            "dry": "抽湿",
+                        },
+                        "default": "auto"
                     },
-                    "default": "auto"
-                },
-                {
-                    "property": "temperature",
-                    "propertyName": "温度",
-                    "type": "range",
-                    "range": {
-                        "max": 30,
-                        "min": 17
-                    },
-                    "default": 27
-                }
-            ]
-        },
-        "0xCC": {
-            "name": "中央空调",
-            "actions": [{
-                    "property": "power",
-                    "propertyName": "电源",
-                    "type": "switch",
-                    "value": {
-                        "off": "关机",
-                        "on": "开机",
-                    },
-                    "default": "off"
-                },
-                {
-                    "property": "mode",
-                    "propertyName": "模式",
-                    "type": "list",
-                    "value": {
-                        "auto": "自动",
-                        "fan": "送风",
-                        "cool": "制冷",
-                        "heat": "制热",
-                        "dry": "抽湿"
-                    },
-                    "default": "auto"
-                },
-                {
-                    "property": "temperature",
-                    "propertyName": "温度",
-                    "type": "range",
-                    "range": {
-                        "max": 30,
-                        "min": 17
-                    },
-                    "default": 27
-                }
-            ]
-        },
-        "0xE1": {
-            "name": "洗碗机",
-            "actions": [{
-                    "property": "work_status",
-                    "propertyName": "工作状态",
-                    "type": "list",
-                    "value": {
-                        "soft_gear": "软水档位设置中",
-                        "error": "错误",
-                        "order": "预约",
-                        "work": "开始工作",
-                        "cancel": "取消工作",
-                        "power_off": "关机",
-                        "power_on": "开机",
-                    },
-                    "default": "power_off"
-                },
-                {
-                    "property": "mode",
-                    "propertyName": "模式",
-                    "type": "list",
-                    "value": {
-                        "self_define": "自定义",
-                        "fast_wash": "快速洗",
-                        "glass_wash": "玻璃洗",
-                        "eco_wash": "节能洗/经济洗",
-                        "standard_wash": "及时洗/标准洗",
-                        "strong_wash": "强力洗",
-                        "auto_wash": "自动洗/智能洗",
-                    },
-                    "default": "auto_wash"
-                }
-            ]
-        },
-        "0xE2": {
-            "name": "热水器",
-            "actions": [{
-                    "property": "power",
-                    "propertyName": "电源",
-                    "type": "switch",
-                    "value": {
-                        "off": "关机",
-                        "on": "开机",
-                    },
-                    "default": "off"
-                },
-                {
-                    "property": "temperature",
-                    "propertyName": "温度",
-                    "type": "range",
-                    "range": {
-                        "max": 75,
-                        "min": 30
-                    },
-                    "default": 65
-                }
-            ]
-        },
-        "0xE3": {
-            "name": "燃热水器",
-            "actions": [{
-                    "property": "power",
-                    "propertyName": "电源",
-                    "type": "switch",
-                    "value": {
-                        "off": "关机",
-                        "on": "开机",
-                    },
-                    "default": "off"
-                },
-                {
-                    "property": "temperature",
-                    "propertyName": "温度",
-                    "type": "range",
-                    "range": {
-                        "max": 65,
-                        "min": 35
-                    },
-                    "default": 65
-                }
-            ]
-        },
-        "0xFA": {
-            "name": "风扇",
-            "actions": [{
-                    "property": "power",
-                    "propertyName": "电源",
-                    "type": "switch",
-                    "value": {
-                        "off": "关机",
-                        "on": "开机",
-                    },
-                    "default": "off"
-                },
-                {
-                    "property": "mode",
-                    "propertyName": "模式",
-                    "type": "list",
-                    "value": {
-                        "normal": "正常风",
-                        "natural": "自然风",
-                        "sleep": "睡眠风",
-                        "comfort": "舒适风",
-                        "feel": "人感",
-                        "baby": "宝宝风",
-                        "mute": "静音风",
-                    },
-                    "default": "normal"
-                }
-            ]
-        },
-        "0xFB": {
-            "name": "电暖器",
-            "actions": [{
-                    "property": "power",
-                    "propertyName": "电源",
-                    "type": "switch",
-                    "value": {
-                        "off": "关机",
-                        "on": "开机",
-                    },
-                    "default": "off"
-                },
-                {
-                    "property": "temperature",
-                    "propertyName": "温度",
-                    "type": "range",
-                    "range": {
-                        "max": 50,
-                        "min": -40
-                    },
-                    "default": 27
-                }
-            ]
-        },
-        "0xFC": {
-            "name": "空气净化器",
-            "actions": [{
-                    "property": "power",
-                    "propertyName": "电源",
-                    "type": "switch",
-                    "value": {
-                        "off": "关机",
-                        "on": "开机",
-                    },
-                    "default": "off"
-                },
-                {
-                    "property": "mode",
-                    "propertyName": "模式",
-                    "value": {
-                        "auto": "自动",
-                        "manual": "手动",
-                        "sleep": "睡眠",
-                        "fast": "急速"
+                    {
+                        "property": "temperature",
+                        "propertyName": "温度",
+                        "type": "range",
+                        "range": {
+                            "max": 30,
+                            "min": 17
+                        },
+                        "default": 27
                     }
-                },
-                {
-                    "property": "wind_speed",
-                    "propertyName": "风速",
-                    "type": "range",
-                    "range": {
-                        "max": 0,
-                        "min": 101
+                ]
+            },
+            "0xCC": {
+                "name": "中央空调",
+                "actions": [{
+                        "property": "power",
+                        "propertyName": "电源",
+                        "type": "switch",
+                        "value": {
+                            "off": "关机",
+                            "on": "开机",
+                        },
+                        "default": "off"
                     },
-                    "default": 101
-                }
-            ]
-        },
-        "0xFD": {
-            "name": "加湿器",
-            "actions": [{
+                    {
+                        "property": "mode",
+                        "propertyName": "模式",
+                        "type": "list",
+                        "value": {
+                            "auto": "自动",
+                            "fan": "送风",
+                            "cool": "制冷",
+                            "heat": "制热",
+                            "dry": "抽湿"
+                        },
+                        "default": "auto"
+                    },
+                    {
+                        "property": "temperature",
+                        "propertyName": "温度",
+                        "type": "range",
+                        "range": {
+                            "max": 30,
+                            "min": 17
+                        },
+                        "default": 27
+                    }
+                ]
+            },
+            "0xE1": {
+                "name": "洗碗机",
+                "actions": [{
+                        "property": "work_status",
+                        "propertyName": "工作状态",
+                        "type": "list",
+                        "value": {
+                            "soft_gear": "软水档位设置中",
+                            "error": "错误",
+                            "order": "预约",
+                            "work": "开始工作",
+                            "cancel": "取消工作",
+                            "power_off": "关机",
+                            "power_on": "开机",
+                        },
+                        "default": "power_off"
+                    },
+                    {
+                        "property": "mode",
+                        "propertyName": "模式",
+                        "type": "list",
+                        "value": {
+                            "self_define": "自定义",
+                            "fast_wash": "快速洗",
+                            "glass_wash": "玻璃洗",
+                            "eco_wash": "节能洗/经济洗",
+                            "standard_wash": "及时洗/标准洗",
+                            "strong_wash": "强力洗",
+                            "auto_wash": "自动洗/智能洗",
+                        },
+                        "default": "auto_wash"
+                    }
+                ]
+            },
+            "0xE2": {
+                "name": "热水器",
+                "actions": [{
+                        "property": "power",
+                        "propertyName": "电源",
+                        "type": "switch",
+                        "value": {
+                            "off": "关机",
+                            "on": "开机",
+                        },
+                        "default": "off"
+                    },
+                    {
+                        "property": "temperature",
+                        "propertyName": "温度",
+                        "type": "range",
+                        "range": {
+                            "max": 75,
+                            "min": 30
+                        },
+                        "default": 65
+                    }
+                ]
+            },
+            "0xE3": {
+                "name": "燃热水器",
+                "actions": [{
+                        "property": "power",
+                        "propertyName": "电源",
+                        "type": "switch",
+                        "value": {
+                            "off": "关机",
+                            "on": "开机",
+                        },
+                        "default": "off"
+                    },
+                    {
+                        "property": "temperature",
+                        "propertyName": "温度",
+                        "type": "range",
+                        "range": {
+                            "max": 65,
+                            "min": 35
+                        },
+                        "default": 65
+                    }
+                ]
+            },
+            "0xFA": {
+                "name": "风扇",
+                "actions": [{
+                        "property": "power",
+                        "propertyName": "电源",
+                        "type": "switch",
+                        "value": {
+                            "off": "关机",
+                            "on": "开机",
+                        },
+                        "default": "off"
+                    },
+                    {
+                        "property": "mode",
+                        "propertyName": "模式",
+                        "type": "list",
+                        "value": {
+                            "normal": "正常风",
+                            "natural": "自然风",
+                            "sleep": "睡眠风",
+                            "comfort": "舒适风",
+                            "feel": "人感",
+                            "baby": "宝宝风",
+                            "mute": "静音风",
+                        },
+                        "default": "normal"
+                    }
+                ]
+            },
+            "0xFB": {
+                "name": "电暖器",
+                "actions": [{
+                        "property": "power",
+                        "propertyName": "电源",
+                        "type": "switch",
+                        "value": {
+                            "off": "关机",
+                            "on": "开机",
+                        },
+                        "default": "off"
+                    },
+                    {
+                        "property": "temperature",
+                        "propertyName": "温度",
+                        "type": "range",
+                        "range": {
+                            "max": 50,
+                            "min": -40
+                        },
+                        "default": 27
+                    }
+                ]
+            },
+            "0xFC": {
+                "name": "空气净化器",
+                "actions": [{
+                        "property": "power",
+                        "propertyName": "电源",
+                        "type": "switch",
+                        "value": {
+                            "off": "关机",
+                            "on": "开机",
+                        },
+                        "default": "off"
+                    },
+                    {
+                        "property": "mode",
+                        "propertyName": "模式",
+                        "value": {
+                            "auto": "自动",
+                            "manual": "手动",
+                            "sleep": "睡眠",
+                            "fast": "急速"
+                        }
+                    },
+                    {
+                        "property": "wind_speed",
+                        "propertyName": "风速",
+                        "type": "range",
+                        "range": {
+                            "max": 0,
+                            "min": 101
+                        },
+                        "default": 101
+                    }
+                ]
+            },
+            "0xFD": {
+                "name": "加湿器",
+                "actions": [{
+                        "property": "power",
+                        "propertyName": "电源",
+                        "type": "switch",
+                        "value": {
+                            "off": "关机",
+                            "on": "开机",
+                        },
+                        "default": "off"
+                    },
+                    {
+                        "property": "wind_speed",
+                        "propertyName": "风速",
+                        "type": "list",
+                        "value": {
+                            "low": "低风",
+                            "middle": "中风",
+                            "high": "高风",
+                            "auto": "自动"
+                        },
+                        "default": "auto"
+                    }
+                ]
+            },
+            "0xB6": {
+                "name": "抽油烟机",
+                "actions": [{
+                        "property": "power",
+                        "propertyName": "电源",
+                        "type": "switch",
+                        "value": {
+                            "off": "关机",
+                            "on": "开机",
+                        },
+                        "default": "off"
+                    },
+                    {
+                        "property": "gear",
+                        "propertyName": "档位",
+                        "type": "list",
+                        "value": {
+                            "1": "1档",
+                            "2": "2档",
+                            "3": "3档",
+                            "4": "4档"
+                        },
+                        "default": "1"
+                    }
+                ]
+            },
+            "0xB8": {
+                "name": "吸尘器",
+                "actions": [{
+                        "property": "work_status",
+                        "propertyName": "工作状态",
+                        "type": "list",
+                        "value": {
+                            "work": "启动",
+                            "stop": "停止",
+                            "charge": "回充",
+                        },
+                        "default": "stop"
+                    },
+                    {
+                        "property": "work_mode",
+                        "propertyName": "工作模式",
+                        "type": "list",
+                        "value": {
+                            "random": "随机模式",
+                            "arc": "弓形模式",
+                            "edge": "沿边模式",
+                            "emphases": "重点模式",
+                            "screw": "螺旋模式",
+                            "auto": "自动模式",
+                        },
+                        "default": "auto"
+                    }
+                ]
+            },
+            "0xA1": {
+                "name": "除湿机",
+                "actions": [{
+                        "property": "power",
+                        "propertyName": "电源",
+                        "type": "switch",
+                        "value": {
+                            "off": "关机",
+                            "on": "开机",
+                        },
+                        "default": "off"
+                    },
+                    {
+                        "property": "mode",
+                        "propertyName": "模式",
+                        "type": "list",
+                        "value": {
+                            "set": "设定除湿",
+                            "continuity": "连续除湿",
+                            "auto": "自动除湿",
+                            "dry_clothes": "干衣模式",
+                            "dry_shoes": "干鞋模式",
+                        },
+                        "default": "auto"
+                    }
+                ]
+            },
+            "0x10": {
+                "name": "插座",
+                "actions": [{
                     "property": "power",
                     "propertyName": "电源",
                     "type": "switch",
@@ -1401,24 +1509,11 @@ export const autoSupportActions = {
                         "on": "开机",
                     },
                     "default": "off"
-                },
-                {
-                    "property": "wind_speed",
-                    "propertyName": "风速",
-                    "type": "list",
-                    "value": {
-                        "low": "低风",
-                        "middle": "中风",
-                        "high": "高风",
-                        "auto": "自动"
-                    },
-                    "default": "auto"
-                }
-            ]
-        },
-        "0xB6": {
-            "name": "抽油烟机",
-            "actions": [{
+                }]
+            },
+            "0x13": {
+                "name": "WiFi吸顶灯",
+                "actions": [{
                     "property": "power",
                     "propertyName": "电源",
                     "type": "switch",
@@ -1427,103 +1522,8 @@ export const autoSupportActions = {
                         "on": "开机",
                     },
                     "default": "off"
-                },
-                {
-                    "property": "gear",
-                    "propertyName": "档位",
-                    "type": "list",
-                    "value": {
-                        "1": "1档",
-                        "2": "2档",
-                        "3": "3档",
-                        "4": "4档"
-                    },
-                    "default": "1"
-                }
-            ]
-        },
-        "0xB8": {
-            "name": "吸尘器",
-            "actions": [{
-                    "property": "work_status",
-                    "propertyName": "工作状态",
-                    "type": "list",
-                    "value": {
-                        "work": "启动",
-                        "stop": "停止",
-                        "charge": "回充",
-                    },
-                    "default": "stop"
-                },
-                {
-                    "property": "work_mode",
-                    "propertyName": "工作模式",
-                    "type": "list",
-                    "value": {
-                        "random": "随机模式",
-                        "arc": "弓形模式",
-                        "edge": "沿边模式",
-                        "emphases": "重点模式",
-                        "screw": "螺旋模式",
-                        "auto": "自动模式",
-                    },
-                    "default": "auto"
-                }
-            ]
-        },
-        "0xA1": {
-            "name": "除湿机",
-            "actions": [{
-                    "property": "power",
-                    "propertyName": "电源",
-                    "type": "switch",
-                    "value": {
-                        "off": "关机",
-                        "on": "开机",
-                    },
-                    "default": "off"
-                },
-                {
-                    "property": "mode",
-                    "propertyName": "模式",
-                    "type": "list",
-                    "value": {
-                        "set": "设定除湿",
-                        "continuity": "连续除湿",
-                        "auto": "自动除湿",
-                        "dry_clothes": "干衣模式",
-                        "dry_shoes": "干鞋模式",
-                    },
-                    "default": "auto"
-                }
-            ]
-        },
-        "0x10": {
-            "name": "插座",
-            "actions": [{
-                "property": "power",
-                "propertyName": "电源",
-                "type": "switch",
-                "value": {
-                    "off": "关机",
-                    "on": "开机",
-                },
-                "default": "off"
-            }]
-        },
-        "0x13": {
-            "name": "WiFi吸顶灯",
-            "actions": [{
-                "property": "power",
-                "propertyName": "电源",
-                "type": "switch",
-                "value": {
-                    "off": "关机",
-                    "on": "开机",
-                },
-                "default": "off"
-            }]
-        }
+                }]
+            }
     },
     '6': {
         "0xAC": {

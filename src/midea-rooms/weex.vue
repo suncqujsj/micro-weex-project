@@ -67,7 +67,7 @@
     }
     .auto-name{ width: 120px; font-size: 28px; color: #666666; margin-bottom: 8px; text-overflow: clip; lines: 1  }
     /* .auto-desc{ width: 120px; font-size: 24px; color: #C7C7CC; lines:1; } */
-    .scene-list{ padding-bottom: 100px; }
+    .scene-list{ height: 1200px;}
     .scene { width: 690px; height: 206px; padding-bottom: 16px; position: relative; }
     .scene-bg{ width: 690px; height: 185px; position: absolute; }
     .next { width: 16px; height: 32px; position:absolute; top:77px; right: 25px;}

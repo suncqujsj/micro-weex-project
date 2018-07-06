@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="wrapStyle">
         <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
         <list class="scroller" :style="scrollerStyle">
             <cell>
@@ -140,10 +140,17 @@
 
     export default {
         components:{ mideaCell, MideaHeader, MideaPopup, checkItem, mideaList, scrollPicker, mideaRange },
-        computed:{
-        },
         mixins: [base],
         computed:{
+            wrapStyle(){
+                let tmp = {}
+                if (this.isipx) {
+                    tmp.marginTop = '64px'
+                }else{
+                    tmp.marginTop = '40px'
+                }
+                return tmp
+            },
             scrollerStyle(){
                 let tmp = {
                     height: this.pageHeight+'px'

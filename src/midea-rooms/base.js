@@ -41,7 +41,7 @@ export default {
         pageHeight() {
             return 750 / weex.config.env.deviceWidth * weex.config.env.deviceHeight
         },
-        isipx: function () {
+        isipx: function () {//是否是iphoneX
             return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6')
         }
     },
@@ -144,7 +144,7 @@ export default {
 
             return JSON.stringify(reqBody)
         },
-        webRequest(reqUrl, reqParams) {
+        webRequest(reqUrl, reqParams, isShowLoading = true) {
             return new Promise((resolve, reject) => {
             //     let reqBody = this.generateReqBody(reqParams)
             //     stream.fetch({
@@ -165,7 +165,7 @@ export default {
             //     })
                 let requestOption = {
                     method: "POST",
-                    isShowLoading: true
+                    isShowLoading: isShowLoading
                 }
                 let requestParam = {
                     method: requestOption.method,

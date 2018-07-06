@@ -55,7 +55,7 @@
         color: #000;
     }
     .done{
-        position:fixed;
+        position:absolute;
         right: 10px;
         top: 30px;
     }
@@ -147,6 +147,11 @@
                 let tmp = {
                     height: this.pageHeight+'px'
                 }
+                if (this.isipx) {
+                    tmp.marginTop = '64px'
+                }else{
+                    tmp.marginTop = '40px'
+                }
                 return tmp
             }
         },
@@ -209,8 +214,6 @@
                 }
                 this.userDevices = tmpUserDevices
                 this.sceneSupportDevices = tmpSceneSupoortDevices
-                // nativeService.alert(this.sceneSupportDevices)
-                
 
                 if (this.from == 'addAuto'){
                     this.generateAllDeviceActions()

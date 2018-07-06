@@ -285,6 +285,11 @@
                 let tmp = {
                     height: this.pageHeight+'px'
                 }
+                if (this.isipx) {
+                    tmp.marginTop = '64px'
+                }else{
+                    tmp.marginTop = '40px'
+                }
                 return tmp
             },
             condition(){
@@ -564,13 +569,15 @@
                 this.goTo('autoBindDevices', {}, params )
             },
             saveChange(){
+                let that = this
                 if ( Object.keys(this.editParams).length === 0 ){
                     nativeService.alert('没有改动哦')
                     return
                 }
+                
                 channelAutoTypeSet.postMessage({
                     page: 'setCondition',
-                    editParams: this.editParams
+                    editParams: that.editParams
                 })
                 this.goBack()
             }

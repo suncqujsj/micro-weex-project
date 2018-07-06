@@ -1,6 +1,6 @@
 <template>
-    <scroller class="wrap">
-        <div :style="wrapStyle">
+    <scroller class="wrap" :style="wrapStyle">
+        <div :style="sceneStyle">
             <midea-header :title="scene.name" bgColor="transparent" titleText="#fff"  @leftImgClick="goBack"></midea-header>
             <div class="setting" @click="goSetting()">
                 <text class="setting-text white">设置</text>
@@ -69,14 +69,17 @@
             </div>
             <div v-if="scene.roomType=='4'" class="up-block balcony-block">
                 <text class="weather white font12">{{weatherDesc}}</text>
-                <slider>
-                    <div>
-                        <midea-barchart-view class="barchart" :data="chartData"></midea-barchart-view>
+                <slider v-if="hasWasherWaterData || hasWasherPowerData">
+                    <div v-if="hasWasherWaterData">
+                        <midea-barchart-view class="barchart" :data="washData"></midea-barchart-view>
                     </div>
-                    <div>
-                        <midea-barchart-view class="barchart" :data="chartData"></midea-barchart-view>
+                    <div v-if="hasWasherPowerData">
+                        <midea-barchart-view class="barchart" :data="washData"></midea-barchart-view>
                     </div>
                 </slider>
+                <div v-else>
+                    暂无数据
+                </div>
             </div>
             <div v-if="scene.roomType=='4'" class="wash-list wash-item row-sb" @click="buyShampoo">
                 <text class="font16 white">购买洗涤剂</text>
@@ -140,7 +143,7 @@
     .white{ color: #fff; }
     .mgb-10{ margin-bottom: 10px; }
     .setting{
-        position:fixed;
+        position:absolute;
         right: 10px;
         top: 30px;
     }
@@ -255,6 +258,15 @@
     export default {
         components:{ MideaHeader, MideaVote, ToastDialog, mideaCell, mideaList },
         computed:{
+            wrapStyle(){
+                let tmp = {}
+                if (this.isipx) {
+                    tmp.marginTop = '64px'
+                }else{
+                    tmp.marginTop = '40px'
+                }
+                return tmp
+            },
             temperatureStatus(){
                 let temperature = this.scene.indicator.temperature
                 let desc
@@ -324,7 +336,7 @@
              
                 return desc
             },
-            wrapStyle(){
+            sceneStyle(){
                 return { 
                     backgroundImage: this.style.linearBg[this.scene.roomType],
                     height: this.pageHeight*0.75 + 'px',
@@ -399,37 +411,56 @@
                 userDevices: '',
                 userSupportDevices: [],
                 showMall: false,
-                chartData: {
-                    "x": {
-                        "value": [1, 2, 3, 4, 5, 6, 7],
-                        "label": ["11.6", "11.7", "11.8", "11.9", "11.10", "11.11", "11.12"]
+                weatherDesc: '',
+                sceneDevices: [],
+                washerPowerData: {
+                    x: {
+                        "value": [],
+                        "label": []
                     },
-                    "y": [
+                    y: [
                         {
-                            "value": [1, 6, 2, 1, 2, 3, 7],
-                            "title": "冷藏室",
+                            "value": [],
+                            "title": "用电量",
                             "color": "#2AD2FC",
                             "backgroundColor": "#111"
-                        },
-                        {
-                            "value": [10, 5, 3, 4, 1, 2, 6],
-                            "title": "下段冷冻室",
-                            "color": "#1B81FB",
-                            "background": "#111"
                         }
                     ],
-                    "description": "",
-                    "legend": {
+                    description: "",
+                    legend: {
                         "position": "TOP_LEFT",
                         "orientation": "HORIZONTAL" 
                     },
-                    "unit": {
+                    unit: {
                         "x": "日期",
-                        "y": "次数"
+                        "y": "度"
                     }
                 },
-                weatherDesc: '',
-                sceneDevices: []
+                washerWaterData: {
+                    x: {
+                        "value": [],
+                        "label": []
+                    },
+                    y: [
+                        {
+                            "value": [],
+                            "title": "用水量",
+                            "color": "#2AD2FC",
+                            "backgroundColor": "#111"
+                        }
+                    ],
+                    description: "",
+                    legend: {
+                        "position": "TOP_LEFT",
+                        "orientation": "HORIZONTAL" 
+                    },
+                    unit: {
+                        "x": "日期",
+                        "y": "吨"
+                    }
+                },
+                hasWasherPowerData: false,
+                hasWasherWaterData: false
             }
         },
         methods: {
@@ -464,7 +495,14 @@
                     if (res.code == '0') {
                         this.scene = res.data
                     }else{
-                        nativeService.toast(rtnData.msg)
+                        let codeMsg = {
+                            "1000": "未知系统错误",
+                            "1001": "参数格式错误",
+                            "1002": "参数为空",
+                            "1105": "账户不存在",
+                            "1200": "用户不在家庭"
+                        }
+                        nativeService.toast(codeMsg[res.code])
                     }
                 }).catch( (error )=>{
                     nativeService.alert(error)
@@ -507,18 +545,24 @@
                     '1704':"场景没有关联设备"
                 }
                 this.webRequest(reqUrl, reqParams).then((res)=>{
+                    
                     if (res.code == 0) {
-                        this.checkQuickOptimize(modelId, res.data.resultId)
+                        this.checkQuickOptimize(res.data.resultId)
+                        
                     }else if (res.code == 1711){
                         nativeService.alert(res.msg)
                     }else{
-                        nativeService.toast(codeDesc[res.code])
+                        if (codeDesc.hasOwnProperty(res.code)) {
+                            nativeService.toast(codeDesc[res.code])
+                        }else{
+                            nativeService.toast(res.msg)
+                        }
                     }
                 }).catch( (err )=>{
                     reject(err)
                 })
             },
-            checkQuickOptimize(modelId, resultId){
+            checkQuickOptimize(resultId){
                 // status 1-成功，2-执行中，3-失败
                 let reqUrl = url.scene.optimizeStatus
                 let reqParams = {
@@ -527,26 +571,25 @@
                     sceneId: this.sceneId,
                     resultId: resultId
                 }
-                this.webRequest(reqUrl, reqParams).then((res)=>{
-                    let finish = 1
+                this.webRequest(reqUrl, reqParams, false).then((res)=>{
                     if (res.code == 0) {
                         this.showToastDialog = true
-                        this.sceneDevices = Object.assign({}, res.data.list)
+                        this.sceneDevices = Object.assign({}, res.data.list[0].actionList)
+                        
                         for (var x in this.sceneDevices) {
                             if (this.sceneDevices[x].status == 2 || this.sceneDevices[x].status == 3) {
-                                finish = 0
+                                  setTimeout(()=>{
+                                    this.checkQuickOptimize(resultId)
+                                },1000)
+                            } else{
+                                setTimeout(()=>{
+                                    this.showToastDialog = false
+                                },2000)
                                 break
                             }
                         }
-                        setTimeout(()=>{
-                            if (finish == 1) {
-                                this.showToastDialog = false
-                            }else{
-                                this.checkQuickOptimize(modelId, resultId)
-                            }
-                        },1000)
+                      
                     }else{
-
                     }
                 })
             },
@@ -578,27 +621,80 @@
                 })
             },
             getWashData(){
-                let washerCode
+                let washerCode = ''
                 for (var x in this.userDevices) {
                     if (this.userDevices[x].deviceType.indexOf(['0xDA','0xDB']) > -1){
                         washerCode = this.userDevices[x].deviceId
+                        break
                     }
                 }
-                let reqUrl = url.scene.washerConsumption
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    applianceCode: washerCode
-                }
-                this.webRequest(reqUrl, reqParams).then((res)=>{
-                    if (res.code == 0) {
-                        nativeService.alert(res)
+                if (washerCode != '') {
+                    let reqUrl = url.scene.washerConsumption
+                    let reqParams = {
+                        uid: this.uid,
+                        homegroupId: this.homegroupId,
+                        applianceCode: washerCode
                     }
-                }).catch((err)=>{
-                    
-                })
+                    this.webRequest(reqUrl, reqParams).then((res)=>{
+                        if (res.code == 0) {
+                            for (var i in res.data.historyConsumptions) {
+                                let tmpPowerXValue = [], tmpPowerXLabel = [], tmpPowerYValue = [], tmpPowerYLabel = [], 
+                                    tmpWaterXValue = [], tmpWaterXLabel = [], tmpWaterYValue = [], tmpWaterYLabel = []
+                                tmpPowerXValue[i] = i
+                                tmpPowerXLabel[i] = res.data.historyConsumptions[i].date
+                                tmpPowerYValue[i] = res.data.historyConsumptions[i].powerConsumption || ''
+                                tmpPowerYLabel[i] = res.data.historyConsumptions[i].powerConsumption || ''
+
+                                tmpWaterXValue[i] = i
+                                tmpWaterXLabel[i] = res.data.historyConsumptions[i].date
+                                tmpWaterYValue[i] = res.data.historyConsumptions[i].waterConsumption || ''
+                                tmpWaterYLabel[i] = res.data.historyConsumptions[i].waterConsumption || ''
+                            }
+                            washerPowerData.x.value = tmpPowerXValue
+                            washerPowerData.x.label = tmpPowerXLabel
+                            washerPowerData.y.value = tmpPowerYValue
+                            washerPowerData.y.label = tmpPowerYLabel
+                            
+                            washerWaterData.x.value = tmpPowerXValue
+                            washerWaterData.x.label = tmpPowerXLabel
+                            washerWaterData.y.value = tmpPowerYValue
+                            washerWaterData.y.label = tmpPowerYLabel
+                            
+                            this.hasWasherPowerData = true
+                            this.hasWasherWaterData = true
+                        }else{
+                            let codeMsg = {
+                                "1000": "未知系统错误",
+                                "1001": "参数格式错误",
+                                "1002": "参数为空",
+                                "1105": "账户不存在"
+                            }
+                            nativeService.alert(codeMsg[res.code])
+                        }
+                    }).catch((err)=>{
+                        
+                    })
+                }
             },
             getWeatherInfo(){
+                nativeService.getGPSInfo({
+                    desiredAccuracy: "10",
+                    distanceFilter: "10",
+                    alwaysAuthorization: "0" 
+                }).then((res)=>{
+                    nativeService.getCityInfo({cityName: res.city}).then((res)=>{
+                        nativeService.getWeatherInfo({cityNo: res.cityNo}).then((res)=>{
+                            this.weatherDesc = '今天' + res.weatherStatus + '气温' + res.temperature + '℃'
+                        }).catch(()=>{
+                            this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
+                        })
+                    }).catch(()=>{
+                        this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
+                    })
+                }).catch(()=>{
+                    this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
+                })
+               
             }
         },
         created(){
@@ -606,6 +702,7 @@
             this.homegroupId = nativeService.getParameters('homegroupId')
             this.sceneId = nativeService.getParameters('sceneId')
             this.roomType = nativeService.getParameters('roomType')
+            
             if (nativeService.getParameters('userDevices')) {
                 this.userDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
             }

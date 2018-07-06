@@ -796,6 +796,13 @@ export default {
          })
          return this.commandInterfaceWrapper(param)
     },
+    /*  ^5.0.0 根据getCityInfo获得的城市对应的气象局ID获取城市天气信息， 比如温度， 风向等信息 */
+    getWeatherInfo(params) {
+        let param = Object.assign(params, {
+            operation: 'getWeatherInfo'
+        })
+        return this.commandInterfaceWrapper(param)
+    },
     //获取登录态信息
     getLoginInfo() {
         let param = {

@@ -20,7 +20,7 @@
         background-color: #f2f2f2;
     }
     .next{
-        position:fixed;
+        position: absolute;
         right: 10px;
         top: 30px;
     }
@@ -55,6 +55,11 @@
             wrapStyle(){
                 let tmp = {
                     height: this.pageHeight+'px'
+                }
+                if (this.isipx) {
+                    tmp.marginTop = '64px'
+                }else{
+                    tmp.marginTop = '40px'
                 }
                 return tmp
             }

@@ -1,6 +1,6 @@
 // 美居场景首页
 <template>
-    <scroller class="wrap"  :show-scrollbar="false">
+    <scroller class="wrap"  :show-scrollbar="false" >
         <div>
             <div class="hd row-sb">
                 <text class="hd-name">快捷操作</text>
@@ -285,6 +285,7 @@
             /* 获取用户信息-> 获取家庭id-> 获取自动化列表->获取场景列表 */
             nativeService.getUserInfo().then((res)=>{
                 this.uid = res.uid
+                
                 nativeService.getCurrentHomeInfo().then( (res)=>{
                     this.homegroupId = res.homeId
                     this.userDevices = ''

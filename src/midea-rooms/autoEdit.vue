@@ -261,7 +261,7 @@
             },
             deleteStyle(){
                 let tmp = {
-                    top: this.pageHeight-88+'px'
+                    top: this.pageHeight-130+'px'
                 }
                 return tmp
             },

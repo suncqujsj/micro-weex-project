@@ -175,7 +175,7 @@
                     if (rtnData.code == 0) {
                         this.sceneList = rtnData.data.list
                     }else{
-                        nativeService.toast(codeDesc[res.code])
+                        nativeService.toast(codeDesc[rtnData.code])
                     }
                 }).catch( (error )=>{
                     nativeService.alert(error)
@@ -285,7 +285,7 @@
             /* 获取用户信息-> 获取家庭id-> 获取自动化列表->获取场景列表 */
             nativeService.getUserInfo().then((res)=>{
                 this.uid = res.uid
-                
+
                 nativeService.getCurrentHomeInfo().then( (res)=>{
                     this.homegroupId = res.homeId
                     this.userDevices = ''

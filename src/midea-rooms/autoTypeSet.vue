@@ -331,8 +331,15 @@
                     this.week = tmpWeek
                                  
                     if (this.sceneType == 3) {
-                        this.mapCenter.latitude = nativeService.getParameters('locationLatitude')
-                        this.mapCenter.longitude = nativeService.getParameters('locationLongitude')
+                         nativeService.getGPSInfo({
+                            desiredAccuracy: "10",
+                            distanceFilter: "10",
+                            alwaysAuthorization: "0" 
+                        }).then( (res) => {
+                            this.gpsInfo = res
+                        })
+                        this.mapCenter.latitude = nativeService.getParameters('locationLatitude') ||  this.gpsInfo.latitude
+                        this.mapCenter.longitude = nativeService.getParameters('locationLongitude') || this.gpsInfo.longitude
                     }
                     if (this.sceneType == 4) {}
                     if (this.sceneType == 6) {
@@ -352,6 +359,13 @@
                     }else if (this.direction == 2) {
                         this.title = '离开某地'
                     }
+                    nativeService.getGPSInfo({
+                        desiredAccuracy: "10",
+                        distanceFilter: "10",
+                        alwaysAuthorization: "0" 
+                    }).then( (res) => {
+                        this.gpsInfo = res
+                    })
                 }
                 if (this.sceneType == 4){
                     this.title = '在某个时间'
@@ -466,21 +480,19 @@
                 this.searchLocation(e.value)
             },
             goCurrentLocation(){
-                if (this.gpsInfo) {
-                    let tmp = {
-                        latitude: this.gpsInfo.latitude,
-                        longitude: this.gpsInfo.longitude,
-                        zoom: 10
-                    }
-                    this.mapCenter = tmp
-                    this.markers = [{
-                        icon: {
-                            normal: icon.mapNormal,
-                            click: icon.mapClick
-                        },
-                        list: [{ latitude: this.gpsInfo.latitude, longitude: this.gpsInfo.longitude, id: 1 }]
-                    }]
+                let tmp = {
+                    latitude: this.gpsInfo.latitude,
+                    longitude: this.gpsInfo.longitude,
+                    zoom: 10
                 }
+                this.mapCenter = tmp
+                this.markers = [{
+                    icon: {
+                        normal: icon.mapNormal,
+                        click: icon.mapClick
+                    },
+                    list: [{ latitude: this.gpsInfo.latitude, longitude: this.gpsInfo.longitude, id: 1 }]
+                }]
             },
             // 地图部分 end
             // 天气 start

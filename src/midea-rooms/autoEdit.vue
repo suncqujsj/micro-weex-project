@@ -80,6 +80,7 @@
     }
     .content{
         margin-top: 16px;
+        padding-bottom: 150px;
     }
     .sub-hd{
         color: #666;
@@ -242,7 +243,8 @@
                 userSetActions: {},
                 unbindDevices: {},
                 unbindDevicesActions: {},
-                bindDeviceActions: {}
+                bindDeviceActions: {},
+                newDevices: {}
             }
         },
         computed: {
@@ -363,13 +365,16 @@
             generateBindDeviceActions(){//生成已绑定设备的actions
                 let tmpBindDeviceActions = {}
                 for (var x in this.autoBindDevices) {
-                    if (this.userSetActions[x]) {
-                        tmpBindDeviceActions[x] = Object.assign({}, tmpBindDeviceActions[x], this.userSetActions[x])
-                    }else{
-                        tmpBindDeviceActions[x] = this.autoSupportActions[this.autoBindDevices[x].deviceType].actions
+                    if (this.autoBindDevices[x].isCheck == 'check'){
+                        if (this.userSetActions[x]) {
+                            tmpBindDeviceActions[x] = Object.assign({}, tmpBindDeviceActions[x], this.userSetActions[x])
+                        }else{
+                            tmpBindDeviceActions[x] = this.autoSupportActions[this.autoBindDevices[x].deviceType].actions
+                        }
                     }
                 }
-                this.bindDeviceActions =  Object.assign({}, this.bindDeviceActions, tmpBindDeviceActions)
+                this.bindDeviceActions =  Object.assign({}, tmpBindDeviceActions)
+                
             },
             openAuto(){
                 if (this.autoDetail.enable == 1) {
@@ -454,6 +459,7 @@
                 }
                 this.autoBindDevices[item.deviceId].isCheck = tmpStatus[this.autoBindDevices[item.deviceId].isCheck]
 
+                this.generateBindDeviceActions()
                 this.updateTask()//勾选或取消时需要更新task数据
             },
             updateTask(){
@@ -467,7 +473,6 @@
                         }
                     }
                 }
-                nativeService.alert(tmpTask)
                 this.editParams.task = JSON.stringify(tmpTask)
             },
             goBindNewDevice(){
@@ -483,7 +488,7 @@
                     }
                     this.goTo('autoBindDevices', {}, params)
                 }else{
-                    nativeService.alert('此快捷操作已经绑定了所有设备哦')
+                    nativeService.alert('此快捷操作已经选择了所有设备哦')
                 }
                 
             },
@@ -531,7 +536,7 @@
                     reqParams.weather = JSON.stringify(tmpWeather)
                 }
                 let tmpTask = []
-                
+               
                 for (var key in this.bindDeviceActions) { //key: applianceCode
                     let tmpCommand = {}
                     for (var i in this.bindDeviceActions[key]) {
@@ -543,9 +548,9 @@
                         command: tmpCommand
                     })
                 }
-
                 reqParams.task = JSON.stringify(tmpTask) || JSON.stringify(this.autoDetail.task)
 
+                
                 this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                     if (rtnData.code == 0) {
                         nativeService.alert('修改成功', function(){
@@ -580,8 +585,9 @@
                     }
                     if ( e.data.editParams.hour) {
                         let tmpMinute = e.data.editParams.minute || '00'
-                        that.autoDetail.startTime = e.data.editParams + ':' + tmpMinute
+                        that.autoDetail.startTime = e.data.editParams.hour + ':' + tmpMinute
                     }
+                 
                     if ( e.data.editParams.weatherStatus) {
                         that.autoDetail.weather.weatherStatus = e.data.editParams.weatherStatus
                     }

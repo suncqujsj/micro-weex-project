@@ -258,7 +258,6 @@
                             distanceFilter: "10",
                             alwaysAuthorization: "0" 
                         }).then( (res) => {
-                            let key
                             this.gpsInfo = res
 
                             if( res.city){

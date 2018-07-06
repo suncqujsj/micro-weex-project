@@ -18,14 +18,14 @@
 		        		<div class="card-control" @click="lockSwitch" >
 		        			<image class="card-control-img" :src="deviceLock"></image>
 		        		</div>
-		        		<div class="card-icon">
+		        		<div class="card-icon" @click="showControlPanelPage">
 		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip042@2x.png"></image>
 		        		</div>
 		        	</div>
 		        </div>
 			    <div v-else class="card-power-off" >
-			    	<div class="control-div-offline">
-			    		<image class="card-control-img" :src="powerIcon_offline"></image>
+			    	<div class="control-div-offline" >
+			    		<image class="card-control-img" :src="powerIcon_offline" @click="reload"></image>
 			    		<text class="text-offline">重连</text>
 			    	</div>
 			    	<div>
@@ -61,6 +61,8 @@
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
 	var stream = weex.requireModule('stream');
+	const globalEvent = weex.requireModule('globalEvent');
+	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
             mideaSwitch,
@@ -77,6 +79,8 @@
             	deviceSn: "",
             	onlineStatus:"",
             	
+            	pushKey: "receiveMessage",
+            	pushKeyOnline: "receiveMessageFromApp",
                 mideaChecked: true,
                 mideaChecked2: false,
                 work_status: "",
@@ -230,7 +234,39 @@
             	},function(error) {
             		console.log("error");
             	});
-            }
+            },
+            handleNotification() {
+            	console.log("handleNotification Yoram");
+            	let me = this;
+            	globalEvent.addEventListener(this.pushKey, (data) => {
+            		me.queryStatus();
+		        });
+		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
+            		if(data && data.messageType == "deviceOnlineStatus") {
+            			if(data.messageBody && data.messageBody.onlineStatus == "online") {
+            				me.onlineStatus = "1";
+            			} else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+            				me.onlineStatus = "0";
+            			} else {
+            				me.onlineStatus = "0";
+            			}
+            		}
+		        });
+            },
+            showControlPanelPage() {
+            	let params = {
+            		controlPanelName:"controlPanel.html"
+            	};
+            	bridgeModule.showControlPanelPage(params);
+            },
+            reload() {
+            	let params = {};
+            	bridgeModule.reload(params,function(result) {
+            		//successful
+            	},function(error) {
+            		//fail
+            	});
+            },
         },
         computed: {
 				powerOnoffImg () {
@@ -265,6 +301,7 @@
            let self = this;
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
+            	self.handleNotification();
             	if(data.result.isOnline == 1) {
             		self.queryStatus();
             	}

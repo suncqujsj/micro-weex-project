@@ -57,13 +57,13 @@
 
 <script>
     import nativeService from '@/common/services/nativeService.js'
-		import mideaSwitch from '@/midea-component/switch.vue'
-		import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
-		import mideaItem from '@/midea-component/item.vue'
-		import Mock from './settings/mock'
-		const modal = weex.requireModule('modal');
-		const dom = weex.requireModule('dom');
-		var stream = weex.requireModule('stream');
+	import mideaSwitch from '@/midea-component/switch.vue'
+	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
+	import mideaItem from '@/midea-component/item.vue'
+	import Mock from './settings/mock'
+	const modal = weex.requireModule('modal');
+	const dom = weex.requireModule('dom');
+	var stream = weex.requireModule('stream');
     export default {
         components: {
             mideaSwitch,
@@ -197,11 +197,7 @@
 					this.program = params.program;
 					this.deviceLock = params.lock;
 				
-					if(this.onoff == "off") {
-						this.display_value1 = "";
-						this.display_value2 = "已关机";
-						this.danwei = "";
-					}else if(this.onoff == "on" && this.running_status == "work") {
+					if(this.onoff == "on" && this.running_status == "work") {
 						if(params.intelligent_wash && params.intelligent_wash == "on") {
 							if(!this.program || this.program == "invalid") {
 								this.display_value1 = "智能洗";
@@ -277,10 +273,14 @@
             	if(this.running_status == "work") {
             		//pause logic
             		let params = {
-		                "control_status": "pause",
-		                "name": "pause"
-		            }
+            			"operation":"luaControl",
+            			"name":"pause",
+            			"data":{
+            				"control_status": "pause",
+            			}
+            		};
             		nativeService.sendLuaRequest(params,true).then(function(data) {
+            			nativeService.alert(nativeService);
 	            		self.updateUI(data);
 	            	},function(error) {
 	            		console.log("error");
@@ -288,10 +288,14 @@
             	} else {
             		//start logic
             		let params = {
-		                "control_status": "start",
-		                "name": "start"
-		            }
+            			"operation":"luaControl",
+            			"name":"start",
+            			"data":{
+            				"control_status": "start",
+            			}
+            		};
             		nativeService.sendLuaRequest(params,true).then(function(data) {
+            			nativeService.alert(nativeService);
 	            		self.updateUI(data);
 	            	},function(error) {
 	            		console.log("error");

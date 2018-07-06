@@ -158,7 +158,6 @@
             			"name":name,
             			"data":{
             				"power": poweronoff,
-            				"buzzer": "off"
             			}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {

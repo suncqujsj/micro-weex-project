@@ -289,13 +289,10 @@
             },
             reload() {
             	let params = {};
-            	nativeService.alert("start");
             	bridgeModule.reload(params,function(result) {
             		//successful
-            		nativeService.alert("successful");
             	},function(error) {
             		//fail
-            		nativeService.alert("fail");
             	});
             },
         },

@@ -106,6 +106,7 @@
     .device-box{
         padding-left: 32.25px;
         padding-right: 14.25px;
+        flex-wrap: wrap;
     }
     .device{
         width: 333.75px;
@@ -299,10 +300,14 @@
                 this.sceneId = nativeService.getParameters('sceneId')
                 this.autoSupportActions = autoSupportActions[this.sceneType]
                 let tmpUserDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
+                let tmpSceneSupoortDevices = []//生成此场景支持的此用户的设备列表
                 for (var i in tmpUserDevices) {
                     this.userDevices[tmpUserDevices[i].deviceId] = tmpUserDevices[i]
+                    if (this.autoSupportActions.hasOwnProperty(tmpUserDevices[i].deviceType)){
+                        tmpSceneSupoortDevices.push(tmpUserDevices[i])
+                    }
                 }
-                
+                this.sceneSupoortDevices = tmpSceneSupoortDevices
                 this.getAutoDetail()
             },
             getAutoDetail(){
@@ -338,13 +343,16 @@
             },
             generateUnbindDevices(){//生成未绑定设备列表
                 let bindApplianceCode = [],  tmpUnbindDevices = {},  tmpUnbindDevicesAction = {}
+              
                 for (var x in this.autoBindDevices) {
                     bindApplianceCode.push(x)
                 }
-                for (var i in this.userDevices) {
-                    if ( bindApplianceCode.indexOf(this.userDevices[i].deviceId) == -1 ){
-                        tmpUnbindDevices[this.userDevices[i].deviceId] =  Object.assign(this.userDevices[i], {isCheck: 'uncheck'})
-                        tmpUnbindDevicesAction[i] = this.autoSupportActions[tmpUnbindDevices[i].deviceType].actions
+                
+                for (var i in this.sceneSupoortDevices) {
+                    if ( bindApplianceCode.indexOf(this.sceneSupoortDevices[i].deviceId) == -1 ){
+                        let tmp = Object.assign(this.sceneSupoortDevices[i], {isCheck: 'uncheck'})
+                        tmpUnbindDevices[this.sceneSupoortDevices[i].deviceId] =  tmp
+                        tmpUnbindDevicesAction[this.sceneSupoortDevices[i].deviceId] = this.autoSupportActions[this.sceneSupoortDevices[i].deviceType]
                     }
                 }
                 this.unbindDevices = {} 
@@ -444,17 +452,22 @@
                     check: 'uncheck',
                     uncheck: 'check'
                 }
-                this.autoBindDevices[item.applianceCode].isCheck = tmpStatus[this.autoBindDevices[item.applianceCode].isCheck]
+                this.autoBindDevices[item.deviceId].isCheck = tmpStatus[this.autoBindDevices[item.deviceId].isCheck]
 
                 this.updateTask()//勾选或取消时需要更新task数据
             },
             updateTask(){
                 let tmpTask = []
-                for (var i in this.autoBindDevices) {
-                    if (this.autoBindDevices[i].isCheck == 'check') {
-                        tmpTask.push(this.autoDetail.task[i])
+                for (var key in this.autoBindDevices) {
+                    if (this.autoBindDevices[key].isCheck == 'check') {
+                        for (var x in this.autoDetail.task) {
+                            if (this.autoDetail.task[x].applianceCode == key) {
+                                tmpTask.push(this.autoDetail.task[x])
+                            }
+                        }
                     }
                 }
+                nativeService.alert(tmpTask)
                 this.editParams.task = JSON.stringify(tmpTask)
             },
             goBindNewDevice(){

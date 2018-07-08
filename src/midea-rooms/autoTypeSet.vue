@@ -176,7 +176,7 @@
         height: 450px;
         width: 750px;
         padding-bottom: 25px;
-        position: fixed;
+        position: absolute;
         top: 172px;
         left: 0;
         right: 0;
@@ -485,6 +485,7 @@
                 this.searchLocation(e.value)
             },
             goCurrentLocation(){
+                this.showMapSearchResult = false
                 let tmp = {
                     latitude: this.gpsInfo.latitude,
                     longitude: this.gpsInfo.longitude,

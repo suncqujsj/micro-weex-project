@@ -376,7 +376,8 @@
                     homegroupId: this.homegroupId,
                     sceneType: this.sceneType,
                     image: this.icon.auto[this.sceneType],
-                    name: this.inputAutoName
+                    name: this.inputAutoName,
+                    enable: 1
                 }
                 let tmpTask = []
                 
@@ -447,4 +448,3 @@
         }
     }
 </script>
-

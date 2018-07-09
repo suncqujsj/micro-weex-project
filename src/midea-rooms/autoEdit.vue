@@ -419,7 +419,7 @@
                 }
                 if (this.sceneType == 6){
                     params.weatherStatus = encodeURIComponent(this.autoDetail.weather.weatherStatus)
-
+                    params.logical = encodeURIComponent(this.autoDetail.weather.logical)
                 }
                 this.goTo('autoTypeSet', {}, params)
             },

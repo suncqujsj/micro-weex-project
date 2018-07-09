@@ -13,7 +13,7 @@
                             <image class="icon" :src="item.image"></image>
                             <text class="auto-name">{{item.name}}</text>
                         </div>
-                        <image class="auto-btn" :src="icon.autoBtn[item.enable]"  @click="executeAuto(item.sceneId)">
+                        <image v-if="item.sceneType==2" class="auto-btn" :src="icon.autoBtn[item.enable]"  @click="executeAuto(item.sceneId)">
                     </div>
                 </div>
             </scroller>
@@ -42,6 +42,14 @@
                 </div>
             </div>
         </div>
+        <toast-dialog :show="showToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}">
+            <div class="row-sb" v-for="item in autoExecuteDevices">
+                <div class="row-sb toast-line">
+                    <text class="toast-hd">{{item.applianceName}}</text>
+                    <image class="toast-icon" :src="icon.exe[item.status]"></image>
+                </div>
+            </div>
+        </toast-dialog>
     </scroller>
 </template>
 
@@ -74,12 +82,20 @@
     .scene-name, .scene-desc{ color: #fff; }
     .scene-name{ font-size: 32px; margin-top: 50px; margin-left: 32px; margin-bottom: 30px;}
     .scene-desc{ margin-left: 24px; font-size: 24px; }
+    .toast-line{ padding: 10px; }
+    .toast-hd{
+        font-size: 32px;
+        width: 400px;
+        text-overflow: ellipsis;
+    }
+    .toast-icon{ width: 50px; height: 50px; }
 </style>
 
 <script>
     import { url } from './config/config.js'
     import base from './base'
     import nativeService from '@/common/services/nativeService.js'
+    import ToastDialog from '@/midea-component/toastDialog.vue'
 
     export default {
         computed:{
@@ -96,6 +112,7 @@
                 return tmp
             }
         },
+        components: {ToastDialog},
         mixins: [base],
         data(){
             return {
@@ -106,6 +123,11 @@
                     autoBtn:{
                         0: 'assets/img/auto_btn.png',
                         1: 'assets/img/autooo.png',
+                    },
+                    exe: {
+                        1: 'assets/img/success.png',
+                        2: 'assets/img/loading.png',
+                        3: 'assets/img/fail.png'
                     }
                 },
                 sceneImg: {
@@ -124,7 +146,10 @@
                 sceneList: null,
                 userDevices: '',
                 user: null,
-                autoTemplate: {}
+                autoTemplate: {},
+                showToastDialog: false,
+                autoExecuteDevices: [],
+                checkAutoExeTimes: 0
             }
         },
         methods: { 
@@ -173,13 +198,50 @@
                 }
                 this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                     if (rtnData.code == 0) {
-                        this.sceneList = rtnData.data.list
+                        this.checkExecuteAuto(sceneId,rtnData.data.resultId)
                     }else{
                         nativeService.toast(codeDesc[rtnData.code])
                     }
                 }).catch( (error )=>{
                     nativeService.alert(error)
                 })
+            },
+            checkExecuteAuto(sceneId, resultId){
+                if (this.checkAutoExeTimes < 20) {//最多查20次
+                    this.checkAutoExeTimes += 1
+                    let reqUrl = url.auto.executeStatus
+                    let reqParams = {
+                        uid: this.uid,
+                        homegroupId: this.homegroupId,
+                        sceneId: sceneId,
+                        resultId: resultId
+                    }
+                    
+                    this.webRequest(reqUrl, reqParams, false).then((res)=>{
+                        
+                        if (res.code == 0) {
+                            this.showToastDialog = true
+                            this.autoExecuteDevices = res.data.list
+                            
+                            for (var x in this.autoExecuteDevices) {
+                                if (this.autoExecuteDevices[x].status == 2 || this.autoExecuteDevices[x].status == 3) {
+                                    setTimeout(()=>{
+                                        this.checkExecuteAuto(sceneId, resultId)
+                                    },1000)
+                                } else{
+                                    setTimeout(()=>{
+                                        this.showToastDialog = false
+                                    },2000)
+                                    break
+                                }
+                            }
+                        }else{
+                        }
+                    })
+                }else{
+                    this.showToastDialog = false
+                    nativeService.toast('自动化执行失败，请再试一次')
+                }
             },
             goAddAuto(){
                 let params = {
@@ -282,7 +344,6 @@
             },
         },
         created(){
-            /* 获取用户信息-> 获取家庭id-> 获取自动化列表->获取场景列表 */
             nativeService.getUserInfo().then((res)=>{
                 this.uid = res.uid
 

@@ -1,12 +1,12 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
             <div slot="customerContent" class="header-right">
                 <text class="header-right-text" @click="switchMode">{{isListMode?'地图模式':'列表模式'}}</text>
             </div>
         </midea-header>
         <div v-if="!serviceOrderNo" class="info-bar">
-            <text class="info-address" @click="changeArea">{{areaObject.county?(areaObject.provinceName+ ' '+areaObject.cityName+ ' '+areaObject.countyName):'请选择位置'}}</text>
+            <text class="info-address" @click="changeArea">{{areaObject.county?(areaObject.cityName+ ' '+areaObject.countyName):'请选择位置'}}</text>
             <image class="arraw-down-icon" src="./assets/img/service_ic_hide@3x.png" resize='contain' @click="changeArea">
             </image>
             <div class="info-product" @click="switchMode">
@@ -14,6 +14,13 @@
             </div>
         </div>
 
+        <div class="empty-page" v-if="!locateSuccess">
+            <image class="empty-page-icon" src="./assets/img/service_ic_dingwei@3x.png" resize='contain'>
+            </image>
+            <text class="empty-page-text">无法获取地址，请手动定位</text>
+            <text class="empty-page-refresh" @click="initPage">刷新</text>
+            <!-- <text class="empty-page-relocate">重新定位</text> -->
+        </div>
         <div class="empty-page" v-if="isLoaded && sortedBranchList.length == 0">
             <image class="empty-page-icon" src="./assets/img/default_ic_nobranch@3x.png" resize='contain'>
             </image>
@@ -58,6 +65,7 @@ export default {
             title: '网点查询',
             isListMode: true,
             gpsInfo: null,
+            locateSuccess: true,
             areaObject: {
                 province: '',
                 provinceName: '',
@@ -156,6 +164,42 @@ export default {
         }
     },
     methods: {
+        initPage() {
+            if (this.serviceOrderNo) {
+                this.getGPSInfo().then(() => { })
+                //订单中查看网点
+                nativeService.getItem(this.SERVICE_STORAGE_KEYS.currentOrder, (resp) => {
+                    if (resp.result == 'success') {
+                        this.order = JSON.parse(resp.data) || {}
+
+                        let param = {
+                            prodCode: this.order.serviceUserDemandVOs[0].prodCode,
+                            brandCode: this.order.serviceUserDemandVOs[0].brandCode,
+                            unitCode: this.order.unitCode
+                        }
+                        this.getUnitList(param)
+                    }
+                })
+            } else {
+                //首页网点查询
+                nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, (resp) => {
+                    if (resp.result == 'success') {
+                        this.selectedProduct = JSON.parse(resp.data)[0] || {}
+                        this.getGPSInfo().then(() => {
+                            this.getAreaCodeByName(this.gpsInfo.province, this.gpsInfo.city, this.gpsInfo.district).then((areaResp) => {
+                                this.areaObject = areaResp
+                                let param = {
+                                    brandCode: this.selectedProduct.brandCode,
+                                    prodCode: this.selectedProduct.prodCode,
+                                    areaCode: this.areaObject.county
+                                }
+                                this.getUnitList(param)
+                            })
+                        })
+                    }
+                })
+            }
+        },
         handlePageData(data) {
             if (data.page == "branchList") {
                 if (data.key == "areaSelection") {
@@ -205,38 +249,55 @@ export default {
                 }
                 nativeService.showLoadingWithMsg("正在获取位置信息...")
                 nativeService.getGPSInfo(gpsParam).then((data) => {
+                    this.locateSuccess = true
                     nativeService.hideLoadingWithMsg()
                     this.gpsInfo = data
                     resolve(data)
                 }).catch((error) => {
-                    nativeService.toast("定位失败")
+                    // nativeService.toast("定位失败")
+                    this.locateSuccess = false
                     nativeService.hideLoadingWithMsg()
                     reject(error)
                 })
             })
         },
         getAreaCodeByName(province, city, county) {
-            let provinceObj, cityObj, countyObj
+            let temp, provinceObj, cityObj, countyObj
             return new Promise((resolve, reject) => {
                 let param = {
                     regionCode: '0'
                 }
                 nativeService.getAreaList(param).then((data) => {
-                    provinceObj = data.content.children.filter((provinceItem) => {
+                    temp = data.content.children.filter((provinceItem) => {
                         return province == provinceItem.regionName
-                    })[0]
+                    })
+                    if (temp && temp.length > 0) {
+                        provinceObj = temp[0]
+                    } else {
+                        throw { msg: '地域定位失败' }
+                    }
                     nativeService.getAreaList({
                         regionCode: provinceObj.regionCode
                     }).then((data) => {
-                        cityObj = data.content.children.filter((cityItem) => {
+                        temp = data.content.children.filter((cityItem) => {
                             return city == cityItem.regionName
-                        })[0]
+                        })
+                        if (temp && temp.length > 0) {
+                            cityObj = temp[0]
+                        } else {
+                            throw { msg: '地域定位失败' }
+                        }
                         nativeService.getAreaList({
                             regionCode: cityObj.regionCode
                         }).then((data) => {
-                            countyObj = data.content.children.filter((countyItem) => {
+                            temp = data.content.children.filter((countyItem) => {
                                 return county == countyItem.regionName
-                            })[0]
+                            })
+                            if (temp && temp.length > 0) {
+                                countyObj = temp[0]
+                            } else {
+                                throw { msg: '地域定位失败' }
+                            }
                             resolve({
                                 province: provinceObj.regionCode,
                                 provinceName: provinceObj.regionName,
@@ -309,40 +370,7 @@ export default {
     },
     created() {
         this.serviceOrderNo = nativeService.getParameters('id') || null
-        if (this.serviceOrderNo) {
-            this.getGPSInfo().then(() => { })
-            //订单中查看网点
-            nativeService.getItem(this.SERVICE_STORAGE_KEYS.currentOrder, (resp) => {
-                if (resp.result == 'success') {
-                    this.order = JSON.parse(resp.data) || {}
-
-                    let param = {
-                        prodCode: this.order.serviceUserDemandVOs[0].prodCode,
-                        brandCode: this.order.serviceUserDemandVOs[0].brandCode,
-                        unitCode: this.order.unitCode
-                    }
-                    this.getUnitList(param)
-                }
-            })
-        } else {
-            //首页网点查询
-            nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, (resp) => {
-                if (resp.result == 'success') {
-                    this.selectedProduct = JSON.parse(resp.data)[0] || {}
-                    this.getGPSInfo().then(() => {
-                        this.getAreaCodeByName(this.gpsInfo.province, this.gpsInfo.city, this.gpsInfo.district).then((areaResp) => {
-                            this.areaObject = areaResp
-                            let param = {
-                                brandCode: this.selectedProduct.brandCode,
-                                prodCode: this.selectedProduct.prodCode,
-                                areaCode: this.areaObject.county
-                            }
-                            this.getUnitList(param)
-                        })
-                    })
-                }
-            })
-        }
+        this.initPage()
     }
 }
 </script>
@@ -446,5 +474,24 @@ export default {
 .phone {
   margin-top: 100px;
   color: #267aff;
+}
+.empty-page-refresh {
+  margin-top: 36px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #267aff;
+  text-align: center;
+  width: 182px;
+  padding: 10px;
+  border-color: #267aff;
+  border-width: 1px;
+  border-radius: 4px;
+}
+.empty-page-relocate {
+  padding-top: 36px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #267aff;
+  text-align: center;
 }
 </style>

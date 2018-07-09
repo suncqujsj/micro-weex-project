@@ -311,7 +311,7 @@ export default {
   margin-top: 16px;
   font-family: PingFangSC-Regular;
   font-size: 32px;
-  color: #000000;
+  color: #267aff;
   text-align: center;
   background-color: #ffffff;
   text-align: center;

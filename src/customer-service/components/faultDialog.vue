@@ -171,7 +171,7 @@
   font-family: PingFangSC-Regular;
   font-size: 24px;
   color: #666666;
-  padding: 10px;
+  padding: 12px;
 }
 </style>
 

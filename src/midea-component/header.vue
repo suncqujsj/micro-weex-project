@@ -40,7 +40,7 @@
   height: 88px;
   display: flex;
   justify-content: center;
-  padding-left: 32px;
+  padding-left: 20px;
 }
 .header-right-image-wrapper {
   width: 88px;
@@ -50,8 +50,8 @@
   padding-left: 12px;
 }
 .header-left-image {
-  height: 44px;
-  width: 24px;
+  height: 48px;
+  width: 48px;
 }
 .header-right-image {
   height: 44px;
@@ -84,7 +84,7 @@ export default {
         },
         leftImg: {
             type: String,
-            default: '../img/header/tab_back.png'
+            default: '../img/header/public_ic_back@3x.png'
         },
         rightImg: {
             type: String,

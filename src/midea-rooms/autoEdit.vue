@@ -507,7 +507,21 @@
                     image: this.autoDetail.image,
                 }
 
-                if (Object.keys(this.editParams).length === 0) {
+                let tmpTask = []               
+                for (var key in this.bindDeviceActions) { //key: applianceCode
+                    let tmpCommand = {}
+                    for (var i in this.bindDeviceActions[key]) {
+                        tmpCommand[this.bindDeviceActions[key][i].property] = this.bindDeviceActions[key][i].currentStatus || this.bindDeviceActions[key][i].default
+                        
+                    }
+                    tmpTask.push({
+                        applianceCode: key,
+                        command: tmpCommand
+                    })
+                }
+
+                reqParams.task = JSON.stringify(tmpTask) || JSON.stringify(this.autoDetail.task)
+                if (Object.keys(this.editParams).length === 0  && !reqParams.task ) {
                     nativeService.alert('没有改动哦')
                     return
                 }
@@ -540,20 +554,6 @@
                     }
                     reqParams.weather = JSON.stringify(tmpWeather)
                 }
-                let tmpTask = []
-               
-                for (var key in this.bindDeviceActions) { //key: applianceCode
-                    let tmpCommand = {}
-                    for (var i in this.bindDeviceActions[key]) {
-                        tmpCommand[this.bindDeviceActions[key][i].property] = this.bindDeviceActions[key][i].currentStatus || this.bindDeviceActions[key][i].default
-                        
-                    }
-                    tmpTask.push({
-                        applianceCode: key,
-                        command: tmpCommand
-                    })
-                }
-                reqParams.task = JSON.stringify(tmpTask) || JSON.stringify(this.autoDetail.task)
 
                 this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                     if (rtnData.code == 0) {

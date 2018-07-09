@@ -688,23 +688,20 @@
                 }
             },
             getWeatherInfo(){
+            	nativeService.alert(1)
                 nativeService.getGPSInfo({
                     desiredAccuracy: "10",
                     distanceFilter: "10",
                     alwaysAuthorization: "0" 
                 }).then((gps)=>{
+            	nativeService.alert(2)
                     nativeService.getCityInfo({cityName: gps.city}).then( (city)=>{
-                        nativeService.alert(2)
-                        // nativeService.getWeatherInfo({cityNo: city.cityNo}).then((weather)=>{
-                            
-                        //     nativeService.alert(3+ JSON.stringify(weather))
-                        //     this.weatherDesc = '今天' + weather.weatherStatus + '气温' + weather.temperature + '℃'
-                        // }).catch(()=>{
-                        //     this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
-                        // })
+                        nativeService.getWeatherInfo({cityNo: city.cityNo}).then((weather)=>{
+                            this.weatherDesc = '今天' + weather.weatherStatus + '气温' + weather.temperature + '℃'
+                        }).catch(()=>{
+                            this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
+                        })
                     }).catch((err)=>{
-                        
-                        nativeService.alert(err)
                         this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
                     })
                 }).catch((err)=>{

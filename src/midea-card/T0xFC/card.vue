@@ -1,29 +1,48 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
 	    <div class="box">
-	        <div>
-		    	 <div class="card">
-		        	<div class="card-left">
+	        <div  v-if="onlineStatus == '1'">
+		    	 <div class="card" v-if="onoff == 'on'">
+		        	<div class="card-left" @click="showControlPanelPage">
 	        			<div class="main-status-div">
-	        				<text class="main-status">30</text>
+	        				<text class="main-status">{{pm25}}</text>
 	        				<text class="danwei"></text>
 	        			</div>
 	        			<text class="main-status-second">PM2.5</text>
 		        		<div class="card-status-detail">
-		        			<text class="main-status-third">自动</text>
+		        			<text class="main-status-third">{{mode}}</text>
 		        		</div>
 		        	</div>
 		        	<div class="card-right">
-		        		<div class="card-control" @click="powerOnoff">
+		        		<div class="card-control" @click="poweronoff(0)">
 		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png"></image>
 		        		</div>
-		        		<div class="card-icon">
+		        		<div class="card-icon" @click="showControlPanelPage">
 		        			<image class="card-icon-img" src="./assets/img/smart_img_equip033@2x.png"></image>
 		        		</div>
 		        		<div></div>
 		        		
 		        	</div>
 		        </div>
+		        <div class="card-power-off" v-else>
+		        	<div class="control-div-offline">
+		        		<image class="card-control-img" :src="powerIcon_poweroff"  @click="poweronoff(1)"></image>
+		        		<text class="text-offline">电源</text>
+		        	</div>
+		        	<div>
+		        		<image class="icon-offline" src="./assets/img/smart_img_equip033@2x.png"></image>
+		        	</div>
+		        </div>
+	        </div>
+	        <div class="card-power-off" v-else>
+	        	<div class="control-div-offline" @click="reload">
+	        		<image class="card-control-img" :src="powerIcon_offline"></image>
+	        		<text class="text-offline">重连</text>
+	        	</div>
+	        	<div>
+	        		<image class="icon-offline" src="./assets/img/smart_img_equip033@2x.png"></image>
+	        	</div>
+	        	<text class="text-offline-center">已离线</text>
 	        </div>
 	        <div class="smart">
 		        <div class="smart-title">
@@ -39,13 +58,16 @@
 
 <script>
     import nativeService from '@/common/services/nativeService.js'
-		import mideaSwitch from '@/midea-component/switch.vue'
-		import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
-		import scrollerBar from '@/midea-card/T0xAC/components/scroller-bar.vue'
-		import mideaItem from '@/midea-component/item.vue'
-		const modal = weex.requireModule('modal');
-		const dom = weex.requireModule('dom');
-		var stream = weex.requireModule('stream');
+	import mideaSwitch from '@/midea-component/switch.vue'
+	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
+	import scrollerBar from '@/midea-card/T0xAC/components/scroller-bar.vue'
+	import mideaItem from '@/midea-component/item.vue'
+	import Mock from './settings/mock'
+	const modal = weex.requireModule('modal');
+	const dom = weex.requireModule('dom');
+	var stream = weex.requireModule('stream');
+	const globalEvent = weex.requireModule('globalEvent');
+	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
             mideaSwitch,
@@ -55,11 +77,28 @@
         },
         data() {
             return {
+            	deviceId:"",
+            	deviceName: "",
+            	deviceType: "",
+            	deviceSubType: "",
+            	deviceSn: "",
+            	onlineStatus:"",
+            	onoff: "",
+            	PM25: "",
+            	mode: "",
+            	return_mode:{
+		            manual:"手动模式",
+					sleep:"睡眠模式",
+					fast:"急速模式",
+					auto:"自动模式",
+	            },
+            	
+            	pushKey: "receiveMessage",
+            	pushKeyOnline: "receiveMessageFromApp",
                 mideaChecked: true,
                 mideaChecked2: false,
-                currentTemperture:19,
-                power:"off",
-                currentStatus:"auto",
+                powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
+                powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
                 data:{
                  	title:"PM2.5高于70时，自动打开净化器。",
                  	detail:"说明文字说明文字说明文字。"
@@ -68,15 +107,6 @@
                  	title:"滤网更换提醒。",
                  	detail:"说明文字说明文字说明文字。"
                 },
-                data3:{
-                 	title:"宝宝最适宜温度",
-                 	detail:""
-                },
-                list: [
-                { 
-                	"name": "电饭煲食谱",
-                	"rightText":"更多"
-                }]
             }
         },
         methods: {
@@ -86,19 +116,11 @@
              onMideachange2(event) {
             		//modal.toast({ 'message': event.value, 'duration': 2 });
             },
-            changeTemperture(event) {
-	            	let currentSetTemperture = Math.ceil(event.contentOffset.x/52) +29;
-	            	if(currentSetTemperture <= 17) {
-	            		currentSetTemperture = 17;
-	            	} else if (currentSetTemperture >= 30) {
-	            		currentSetTemperture = 30;
-	            	}
-	            	this.currentTemperture = currentSetTemperture;
-            },
             queryStatus () {
             	let self = this;
             	let params = {
             			"operation":"luaQuery",
+            			"name":"deviceinfo",
             			"data":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
@@ -108,48 +130,91 @@
             	});
             },
             updateUI(data) {
-            	console.log("yoram:");
-            	console.dir(data);
+            	if(data.errorCode == 0) {
+	                let params = data.params || data.result;
+	                this.onoff = params.power;
+	                if(parseInt(params.pm25) > 999) {
+	                    this.pm25 = "--";
+	                }else {
+	                    this.pm25 = params.pm25;
+	                }
+	               
+	                this.mode = this.return_mode[params.mode];
+	            }else {
+	                nativeService.toast("连接设备超时");
+	            }
             },
-            powerOnoff() {
-            	//nativeService.getPath((weexPath)=> {
-		            	stream.fetch({
-		            		method:'get',
-		            		url:"/dist/T0xAC/dummy/delDevice.js",
-		            		type:"json"
-		            	},function(ret) {
-		            		console.dir(nativeService.convertToJson(ret.data))
-		            	},function(response) {
-		            		console.dir(nativeService.convertToJson(response.data));
-		            	})
-		          // });
-		        }
+             updateDeviceInfo(data) {
+            	this.deviceId = data.deviceId;
+            	this.deviceName = data.deviceName;
+            	this.deviceType = data.deviceType;
+            	this.deviceSubType = data.deviceSubType;
+            	this.deviceSn = data.deviceSn;
+            	this.onlineStatus = data.isOnline;
+            },
+            poweronoff(flag) {
+		        let self = this;
+		        let name = flag == 1? "poweron":"poweroff";
+		        let poweronoff = flag == 1? "on" : "off";
+            	let params = {
+            			"operation":"luaControl",
+            			"name":name,
+            			"data":{
+            				"power": poweronoff,
+            			}
+            		};
+            	nativeService.sendLuaRequest(params,true).then(function(data) {
+            		self.updateUI(data);
+            	},function(error) {
+            		console.log("error");
+            	});
+            },
+            handleNotification() {
+            	console.log("handleNotification Yoram");
+            	let me = this;
+            	globalEvent.addEventListener(this.pushKey, (data) => {
+            		me.queryStatus();
+		        });
+		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
+            		if(data && data.messageType == "deviceOnlineStatus") {
+            			if(data.messageBody && data.messageBody.onlineStatus == "online") {
+            				me.onlineStatus = "1";
+            			} else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+            				me.onlineStatus = "0";
+            			} else {
+            				me.onlineStatus = "0";
+            			}
+            		}
+		        });
+            },
+            showControlPanelPage() {
+            	let params = {
+            		controlPanelName:"controlPanel.html"
+            	};
+            	bridgeModule.showControlPanelPage(params);
+            },
+            reload() {
+            	let params = {};
+            	bridgeModule.reload(params,function(result) {
+            		//successful
+            	},function(error) {
+            		//fail
+            	});
+            },
         },
         computed: {
-				powerOnoffImg () {
-		            let img = "./assets/img/smart_ic_power@2x.png";
-		            if(this.power == "on") {
-		                img = "./assets/img/smart_ic_power@2x.png";
-		            } else {
-		                img = "./assets/img/smart_ic_power@2x.png";
-		            }
-		            return img;
-		        },
-	        	statusImg() {
-		        		let img = "./assets/img/smart_ic_smart@2x.png";
-		        		if(this.currentStatus == "auto") {
-		        			img = "./assets/img/smart_ic_smart@2x.png"
-		        		} else if(this.currentStatus == "cold") {
-		        			img = "./assets/img/smart_ic_smart@2x.png"
-		        		}
-		        		return img;
-	        	}
         },
         mounted() {
-	        	const el = this.$refs.scrollBar;
-	        	//modal.toast({ 'message': this.currentTemperture, 'duration': 2 });
-            dom.scrollToElement(el,{offset:parseInt(30 - this.currentTemperture) * 52})
-            //this.queryStatus();
+	        let self = this;
+            nativeService.getDeviceInfo().then(function(data) {
+            	self.updateDeviceInfo(data.result);
+            	self.handleNotification();
+            	if(data.result.isOnline == 1) {
+            		self.queryStatus();
+            	}
+            },function(error) {
+            	nativeService.toast("连接设备超时");
+            })
         }
     }
 </script>
@@ -177,6 +242,41 @@
 	.card-hot {
 		background-color: #FFBD00;
 	}
+	.card-power-off {
+		width:694px;
+		height:392px;
+		margin-left:28px;
+		margin-right:28px;
+		margin-top:28px;
+		background-color: #D8D8DE;
+		flex-direction: row;
+		border-radius: 6px;
+		justify-content: center;
+		align-items: flex-end;
+	}
+	.text-offline {
+		font-family: PingFangSC-Regular;
+		font-size: 28px;
+		color: #5D75F6;
+		letter-spacing: 0;
+		text-align: center;
+	}
+	.text-offline-center {
+		position: absolute;
+		right:300px;
+		top:170px;
+		align-items: center;
+	}
+	.control-div-offline {
+		position: absolute;
+		right:32px;
+		top:32px;
+		align-items: center;
+	}
+	.icon-offline {
+		width: 314px;
+		height: 314px;
+	}
 	.card-control {
 		align-items: flex-end;
 		margin-top:44px;
@@ -192,8 +292,8 @@
 		height:56px;
 	}
 	.card-control-img {
-		width:48px;
-		height:50px
+		width:60px;
+		height:60px
 	}
 	.card-icon {
 		margin-top:-20px;

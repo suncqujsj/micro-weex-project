@@ -2,77 +2,47 @@ import Mock, { mock } from 'mockjs';
 
 export const all = [
     {
-        path: 'luaQuery',
-        data: {
-            "errorCode": 0,
-		    "params": {
-		        "power": "on",
-		        "mode": "auto",
-		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
-		    }
-        }
-    },
-    {
         path: 'deviceinfo',
         data: {
             "errorCode": 0,
 		    "params": {
-		        "power": "on",
-		        "mode": "cool",
+		        "work_status": "standby",
+		        "work_mode": "double_tube",
 		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "work_hour": "5",
+		        "work_minute": "30",
+		        "error_code": "0",
+		        "lock":"on"
 		    }
         }
     },
     {
-        path: 'poweroff',
+        path: 'off',
         data: {
             "errorCode": 0,
 		    "params": {
-		        "power": "off",
-		        "mode": "auto",
+		        "work_status": "work",
+		        "work_mode": "double_tube",
 		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "work_hour": "5",
+		        "work_minute": "30",
+		        "error_code": "0",
+		        "lock":"off"
 		    }
         }
     },
     {
-        path: 'temperatureControl',
+        path: 'on',
         data: {
             "errorCode": 0,
 		    "params": {
-		        "power": "on",
-		        "mode": "fan",
-		        "temperature": "26",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
-		    }
-        }
-    },
-    {
-        path: 'poweron',
-        data: {
-            "errorCode": 0,
-		    "params": {
-		        "power": "on",
-		        "mode": "auto",
+		        "work_status": "work",
+		        "work_mode": "double_tube",
 		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "work_hour": "5",
+		        "work_minute": "30",
+		        "error_code": "0",
+		        "lock":"on"
 		    }
         }
     },
@@ -103,15 +73,12 @@ export const all = [
         data: {
             "msg": "",
             "result": {
-                "deviceID": "1099511629098",
-                "deviceSSID": "",
-                "deviceName": "冰箱541F",
-                "deviceType": "0xCA",
+                "deviceId": "1099511629098",
+                "deviceName": "空调541F",
+                "deviceType": "0xAC",
                 "deviceSubType": "0",
-                "online": "1",
-                "deviceDescription": "",
-                "activated": "",
-                "isDeviceOwner": "1"
+                "isOnline": "1",
+                "deviceSn": "",
             },
             "errorCode": "0"
         }

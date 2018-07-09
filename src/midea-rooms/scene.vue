@@ -1,99 +1,109 @@
 <template>
-    <div>
-        <div :style="wrapStyle">
+    <scroller class="wrap" :style="wrapStyle">
+        <div :style="sceneStyle">
             <midea-header :title="scene.name" bgColor="transparent" titleText="#fff"  @leftImgClick="goBack"></midea-header>
             <div class="setting" @click="goSetting()">
                 <text class="setting-text white">设置</text>
             </div>
-            <div v-if="scene.type=='1' || scene.type=='2' || scene.type=='3' " class="up-block" >
+            <div v-if="scene.roomType=='1' || scene.roomType=='2' || scene.roomType=='3' " class="up-block" >
                 <div class="up-desc">
                     <text class="desc white">{{temperatureStatus}} {{pm25Status}}</text>
                     <midea-vote :defaulSelectd="Number(scene.indicator.level)" :disabled="true" :styles="style.vote" :imgPath="voteImg"></midea-vote>
-                    <text class="improve white">一键优化</text>
+                    <text class="improve white" @click="quickOptimize">一键优化</text>
                 </div>
-                <div class="up-status row-sa" v-if="scene.type=='1' || scene.type=='2'">
+                <div class="up-status row-sa" v-if="scene.roomType=='1' || scene.roomType=='2'">
                     <div>
                         <text class="info-text font14 white">温度</text>
-                        <div class="row-c status-value">
-                            <text class="font36 white">{{scene.indicator.temperature}}</text>
-                            <text class="font16 white mgb-10">℃</text>
+                        <div  class="row-c status-value">
+                            <text v-if="scene.indicator.temperature" class="font36 white">{{scene.indicator.temperature}}</text>
+                            <text v-if="scene.indicator.temperature" class="font16 white mgb-10">℃</text>
+                            <text v-else class="font36 white">-</text>
                         </div>
                         <text class="info-text font12 white">{{temperatureStatus}}</text>
                     </div>  
                     <div>
                         <text class="info-text font14 white">湿度</text>
                         <div class="row-c status-value">
-                            <text class="font36 white">{{scene.indicator.humidity}}</text>
-                            <text class="font16 white mgb-10">%</text>
+                            <text v-if="scene.indicator.humidity" class="font36 white">{{scene.indicator.humidity}}</text>
+                            <text v-if="scene.indicator.humidity" class="font16 white mgb-10">%</text>
+                            <text v-else class="font36 white">-</text>
                         </div>
                         <text class="info-text font12 white">{{humidityStatus}}</text>
                     </div>  
                     <div>
                         <text class="info-text font14 white">空气质量</text>
                         <div class="row-c status-value">
-                            <text class="font36 white">{{scene.indicator.pm5}}</text>
+                            <text v-if="scene.indicator.pm5" class="font36 white">{{scene.indicator.pm5}}</text>
+                            <text v-else class="font36 white">-</text>
                         </div>
                         <text class="info-text font12 white">{{pm25Status}}</text>
                     </div>
                 </div>
-                <div class="up-status row-sa" v-if="scene.type=='3'">
+                <div class="up-status row-sa" v-if="scene.roomType=='3'">
                     <div>
-                        <text class="info-text font14 white">{{scene.indicator.work_stats}}</text>
+                        <text v-if="scene.indicator.work_stats" class="info-text font14 white">{{scene.indicator.work_stats}}</text>
+                        <text v-else class="info-text font14 white">工作状态</text>
                         <div class="row-c status-value">
-                            <text class="font36 white">{{scene.indicator.water_temperature}}</text>
-                            <text class="font16 white mgb-10">℃</text>
+                            <text v-if="scene.indicator.water_temperature" class="font36 white">{{scene.indicator.water_temperature}}</text>
+                            <text v-if="scene.indicator.water_temperature" class="font16 white mgb-10">℃</text>
+                            <text v-else class="font36 white">-</text>
                         </div>
                     </div>  
                     <div>
                         <text class="info-text font14 white">热水量</text>
                         <div class="row-c status-value">
-                            <text class="font36 white">{{scene.indicator.water_capacity}}</text>
-                            <text class="font16 white mgb-10">%</text>
+                            <text v-if="scene.indicator.water_capacity" class="font36 white">{{scene.indicator.water_capacity}}</text>
+                            <text v-if="scene.indicator.water_capacity" class="font16 white mgb-10">%</text>
+                            <text v-else class="font36 white">-</text>
                         </div>
                     </div>  
-                     <div v-if="scene.type=='3' ">
+                     <div v-if="scene.roomType=='3' ">
                         <text class="info-text font14 white">还需加热</text>
                         <div class="row-c status-value">
-                            <text class="font36 white">{{scene.indicator.remain_time}}</text>
-                            <text class="font16 white mgb-10">分</text>
+                            <text v-if="scene.indicator.remain_time" class="font36 white">{{scene.indicator.remain_time}}</text>
+                            <text v-if="scene.indicator.remain_time" class="font16 white mgb-10">分</text>
+                            <text v-else class="font36 white">-</text>
                         </div>
                     </div>
                 </div>
             </div>
-            <div v-if="scene.type=='4'" class="up-block balcony-block">
-                <text class="weather white font12">todo 无法获取天气，请在系统设置中打开定位服务</text>
-                <slider>
-                    <div class="barchart">
-                        <midea-barchart-view class="barchart" :data="chartData"></midea-barchart-view>
+            <div v-if="scene.roomType=='4'" class="up-block balcony-block">
+                <text class="weather white font12">{{weatherDesc}}</text>
+                <slider v-if="hasWasherWaterData || hasWasherPowerData">
+                    <div v-if="hasWasherWaterData">
+                        <midea-barchart-view class="barchart" :data="washData"></midea-barchart-view>
                     </div>
-                    <div class="barchart">
-                        <midea-barchart-view class="barchart" :data="chartData"></midea-barchart-view>
+                    <div v-if="hasWasherPowerData">
+                        <midea-barchart-view class="barchart" :data="washData"></midea-barchart-view>
                     </div>
                 </slider>
+                <div v-else>
+                    暂无数据
+                </div>
             </div>
-            <div v-if="scene.type=='4'" class="wash-list wash-item row-sb" @click="buyShampoo">
+            <div v-if="scene.roomType=='4'" class="wash-list wash-item row-sb" @click="buyShampoo">
                 <text class="font16 white">购买洗涤剂</text>
                 <image class="next" :src="icon.next"></image>
             </div>
         </div>
     
         <div class="down-block row-sa">
-            <div v-for="mode in scene.modeList" @click="changeMode(mode.modeId)">
-                <image class="down-icon" :src="icon.actions[mode.modelId][mode.action[0].command.power]"></image>
-                <text class="down-text">{{mode.modelName}}</text>
+            <div v-for="model in scene.modeList" @click="executeModel(model.modelId)">
+                <image class="down-icon" :src="icon.actions[model.modelId]"></image>
+                <text class="down-text">{{model.modelName}}</text>
             </div>
         </div>
-        <toast-dialog :show="showToastDialog" @close="closeToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}">
-            <div class="row-sb mgb-10" v-for="device in activeModeDevices">
-                <div>
-                    <text class="pop-hd">{{device.name}}</text>
-                    <text class="sub-pop-hd">{{device.status}}</text>
+        <!-- <toast-dialog :show="showToastDialog" @close="closeToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}"> -->
+        <toast-dialog :show="showToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}">
+            <div class="row-sb mgb-10" v-for="item in sceneDevices">
+                <div class="row-sb toast-line">
+                    <text class="pop-hd">{{item.applianceName}}</text>
+                    <image class="toast-icon" :src="icon.model[item.status]"></image>
                 </div>
-                <!-- <image class="icon" :src="icon[modeSetStatus]"> -->
             </div>
         </toast-dialog>
         <web v-if="showMall" src=""></web>
-    </div>
+    </scroller>
 </template>
 
 <style>
@@ -133,7 +143,7 @@
     .white{ color: #fff; }
     .mgb-10{ margin-bottom: 10px; }
     .setting{
-        position:fixed;
+        position:absolute;
         right: 10px;
         top: 30px;
     }
@@ -145,6 +155,7 @@
     }
     .balcony-block{
         padding-top: 100px;
+        width: 750px;
     }
     .desc{
         margin-bottom: -10px;
@@ -196,8 +207,9 @@
         font-size: 24px;
     }
     .barchart {
-        width: 730px;
-        height: 350px;
+        width: 700px;
+        margin-left: 25px;
+        height: 500px;
     }
     .wash-list{
         /* margin-top: 100px; */
@@ -216,10 +228,19 @@
     }
     .pop-hd{
         font-size: 32px;
+        width: 400px;
+        text-overflow: ellipsis;
     }
     .sub-pop-hd{
         font-size: 28px;
         color:#8A8A8F;
+    }
+    .toast-line{
+        padding: 10px;
+    }
+    .toast-icon{
+        width: 50px;
+        height: 50px;
     }
 </style>
 
@@ -237,6 +258,15 @@
     export default {
         components:{ MideaHeader, MideaVote, ToastDialog, mideaCell, mideaList },
         computed:{
+            wrapStyle(){
+                let tmp = {}
+                if (this.isipx) {
+                    tmp.marginTop = '64px'
+                }else{
+                    tmp.marginTop = '40px'
+                }
+                return tmp
+            },
             temperatureStatus(){
                 let temperature = this.scene.indicator.temperature
                 let desc
@@ -306,9 +336,9 @@
              
                 return desc
             },
-            wrapStyle(){
+            sceneStyle(){
                 return { 
-                    backgroundImage: this.style.linearBg[this.scene.type],
+                    backgroundImage: this.style.linearBg[this.scene.roomType],
                     height: this.pageHeight*0.75 + 'px',
                     position: 'relative',
                     overflow: 'hidden'
@@ -321,127 +351,32 @@
                 uid: '',
                 homegroupId: '',
                 scene: {},
-                /*
-                scene: {
-                    "indicator": {
-                        "water_capacity": "",
-                        "water_temperature": "",
-                        "level": 1,
-                        "work_stats": "",
-                        "remain_time": ""
-                    },
-                    "prop": {
-                        "comfortable": "70",
-                        "use": "3",
-                        "save": "60"
-                    },
-                    "sceneId": 66,
-                    "name": "卫浴",
-                    "homegroupId": 150366,
-                    "type": 3,
-                    "list": [
-                        {
-                            "modelId": 1009,
-                            "name": "舒适",
-                            "action": [
-                                {
-                                    "type": "0xE2",
-                                    "command": {
-                                        "temperature": "70",
-                                        "power": "on"
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "modelId": 1010,
-                            "name": "省电",
-                            "action": [
-                                {
-                                    "type": "0xE2",
-                                    "command": {
-                                        "temperature": "60",
-                                        "power": "on"
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "modelId": 1011,
-                            "name": "停用",
-                            "action": [
-                                {
-                                    "type": "0xE2",
-                                    "command": {
-                                        "power": "off"
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                },
-                */
                 icon:{
                     next: 'assets/img/more_w.png',
                     success: '',
                     fail: '',
                     hanging: '',
                     actions: {
-                        '1001': {
-                            on: 'assets/img/home_on.png',
-                            off: 'assets/img/home_off.png'
-                        },
-                        '1002': {
-                            on: 'assets/img/comfort_on.png',
-                            off: 'assets/img/comfort_off.png'
-                        },
-                        '1003': {
-                            on: 'assets/img/eco_on.png',
-                            off: 'assets/img/eco_off.png'
-                        },
-                        '1004': {
-                            on: 'assets/img/shut_on.png',
-                            off: 'assets/img/shut_off.png'
-                        },
-                        '1005': {
-                            on: 'assets/img/home_on.png',
-                            off: 'assets/img/home_off.png'
-                        },
-                        '1006': {
-                            on: 'assets/img/comfort_on.png',
-                            off: 'assets/img/comfort_off.png'
-                        },
-                        '1007': {
-                            on: 'assets/img/eco_on.png',
-                            off: 'assets/img/eco_off.png'
-                        },
-                        '1008': {
-                            on: 'assets/img/shut_on.png',
-                            off: 'assets/img/shut_off.png'
-                        },
-                        '1009': {
-                            on: 'assets/img/comfort_on.png',
-                            off: 'assets/img/comfort_off.png'
-                        },
-                        '1010': {
-                            on: 'assets/img/eco_on.png',
-                            off: 'assets/img/eco_off.png'
-                        },
-                        '1011': {
-                            on: 'assets/img/stop_on.png',
-                            off: 'assets/img/stop_off.png'
-                        },
+                        '1001': 'assets/img/home_on.png',
+                        '1002': 'assets/img/comfort_on.png',
+                        '1003': 'assets/img/eco_on.png',
+                        '1004': 'assets/img/shut_on.png',
+                        '1005': 'assets/img/home_on.png',
+                        '1006': 'assets/img/comfort_on.png',
+                        '1007': 'assets/img/eco_on.png',
+                        '1008': 'assets/img/shut_on.png',
+                        '1009': 'assets/img/comfort_on.png',
+                        '1010': 'assets/img/eco_on.png',
+                        '1011': 'assets/img/stop_on.png',
                         '1012': 'assets/img/power_on.png',
                         '1013': 'assets/img/power_off.png',
-                        '1014': {
-                            on: 'assets/img/alarm_on.png',
-                            off: 'assets/img/alarm_off.png'
-                        },
-                        '1015': {
-                            on: 'assets/img/start_on.png',
-                            off: 'assets/img/start_off.png'
-                        },
-
+                        '1014': 'assets/img/alarm_on.png',
+                        '1015': 'assets/img/start_on.png',
+                    },
+                    model: {
+                        1: 'assets/img/success.png',
+                        2: 'assets/img/loading.png',
+                        3: 'assets/img/fail.png'
                     }
                 },
                 style: {
@@ -473,38 +408,59 @@
                 activeModeDevices: [],
                 applianceList: {},
                 showToastDialog: false,
-                userDevices: [],
+                userDevices: '',
                 userSupportDevices: [],
                 showMall: false,
-                chartData: {
-                    "x": {
-                        "value": [1, 2, 3, 4, 5, 6, 7],
-                        "label": ["11.6", "11.7", "11.8", "11.9", "11.10", "11.11", "11.12"]
+                weatherDesc: '',
+                sceneDevices: [],
+                washerPowerData: {
+                    x: {
+                        "value": [],
+                        "label": []
                     },
-                    "y": [
+                    y: [
                         {
-                            "value": [1, 6, 2, 1, 2, 3, 7],
-                            "title": "冷藏室",
+                            "value": [],
+                            "title": "用电量",
                             "color": "#2AD2FC",
-                            "background": "#ffffff"
-                        },
-                        {
-                            "value": [10, 5, 3, 4, 1, 2, 6],
-                            "title": "下段冷冻室",
-                            "color": "#1B81FB",
-                            "background": "#ffffff"
+                            "backgroundColor": "#111"
                         }
                     ],
-                    "description": "",
-                    "legend": {
+                    description: "",
+                    legend: {
                         "position": "TOP_LEFT",
                         "orientation": "HORIZONTAL" 
                     },
-                    "unit": {
+                    unit: {
                         "x": "日期",
-                        "y": "次数"
+                        "y": "度"
                     }
                 },
+                washerWaterData: {
+                    x: {
+                        "value": [],
+                        "label": []
+                    },
+                    y: [
+                        {
+                            "value": [],
+                            "title": "用水量",
+                            "color": "#2AD2FC",
+                            "backgroundColor": "#111"
+                        }
+                    ],
+                    description: "",
+                    legend: {
+                        "position": "TOP_LEFT",
+                        "orientation": "HORIZONTAL" 
+                    },
+                    unit: {
+                        "x": "日期",
+                        "y": "吨"
+                    }
+                },
+                hasWasherPowerData: false,
+                hasWasherWaterData: false
             }
         },
         methods: {
@@ -512,11 +468,14 @@
                 nativeService.goBack()
             },
             goSetting(){
-                this.goTo('setting', {}, {sceneType: this.sceneType, sceneId: this.sceneId})
-            },
-            changeMode(mode){
-                this.activeModeDevices = mode
-                this.showToastDialog = true
+                let params = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    roomType: this.roomType,
+                    sceneId: this.sceneId,
+                    userDevices: nativeService.getParameters('userDevices')
+                }
+                this.goTo('setting', {}, params)
             },
             closeToastDialog(){
                 this.showToastDialog = false
@@ -536,7 +495,14 @@
                     if (res.code == '0') {
                         this.scene = res.data
                     }else{
-                        // nativeService.toast(rtnData.msg)
+                        let codeMsg = {
+                            "1000": "未知系统错误",
+                            "1001": "参数格式错误",
+                            "1002": "参数为空",
+                            "1105": "账户不存在",
+                            "1200": "用户不在家庭"
+                        }
+                        nativeService.toast(codeMsg[res.code])
                     }
                 }).catch( (error )=>{
                     nativeService.alert(error)
@@ -561,85 +527,190 @@
                     })
                 })
             },
-            changeMode(modeId){
-                this.executeMode(modeId).then((resolve, reject) => {
-                    this.executeModeCheck().then((resolve, reject)=>{
-                    })
+            quickOptimize(){
+                let reqUrl = url.scene.optimize
+                let reqParams = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    sceneId: this.sceneId,
+                }
+                let codeDesc = {
+                    '1000':"未知系统错误",
+                    '1001':"参数格式错误",
+                    '1002':"参数为空",
+                    '1003':"参数类型不支持",
+                    '1105':"账户不存在",
+                    '1200':"用户不在家庭",
+                    '1701':"场景不存在",
+                    '1704':"场景没有关联设备"
+                }
+                this.webRequest(reqUrl, reqParams).then((res)=>{
+                    
+                    if (res.code == 0) {
+                        this.checkQuickOptimize(res.data.resultId)
+                        
+                    }else if (res.code == 1711){
+                        nativeService.alert(res.msg)
+                    }else{
+                        if (codeDesc.hasOwnProperty(res.code)) {
+                            nativeService.toast(codeDesc[res.code])
+                        }else{
+                            nativeService.toast(res.msg)
+                        }
+                    }
+                }).catch( (err )=>{
+                    reject(err)
                 })
             },
-            executeMode(modeId){
-                return new Promise((resolve, reject)=>{
-                    let reqUrl = url.scene.modeExecute
+            checkQuickOptimize(resultId){
+                // status 1-成功，2-执行中，3-失败
+                let reqUrl = url.scene.optimizeStatus
+                let reqParams = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    sceneId: this.sceneId,
+                    resultId: resultId
+                }
+                this.webRequest(reqUrl, reqParams, false).then((res)=>{
+                    if (res.code == 0) {
+                        this.showToastDialog = true
+                        this.sceneDevices = Object.assign({}, res.data.list[0].actionList)
+                        
+                        for (var x in this.sceneDevices) {
+                            if (this.sceneDevices[x].status == 2 || this.sceneDevices[x].status == 3) {
+                                  setTimeout(()=>{
+                                    this.checkQuickOptimize(resultId)
+                                },1000)
+                            } else{
+                                setTimeout(()=>{
+                                    this.showToastDialog = false
+                                },2000)
+                                break
+                            }
+                        }
+                      
+                    }else{
+                    }
+                })
+            },
+            executeModel(modelId){
+                let reqUrl = url.scene.modelExecute
+                let reqParams = {
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    sceneId: this.sceneId,
+                    modelId: modelId
+                }
+                let codeDesc = {
+                    '1000':	'未知系统错误',
+                    '1001':	'参数格式错误',
+                    '1002':	'参数为空',
+                    '1105':	'账户不存在',
+                    '1200':	'用户不在家庭',
+                    '1701':	'场景不存在',
+                    '1704':	'场景没有关联设备',
+                    '1709':	'模式不存在'
+                }
+                this.webRequest(reqUrl, reqParams).then((res)=>{
+                    if (res.code == 0) {
+                        nativeService.toast('执行成功！')
+                    }else{
+                        nativeService.alert(codeDesc[res.code])
+                    }
+                }).catch( (err)=>{
+                })
+            },
+            getWashData(){
+                let washerCode = ''
+                for (var x in this.userDevices) {
+                    if (this.userDevices[x].deviceType.indexOf(['0xDA','0xDB']) > -1){
+                        washerCode = this.userDevices[x].deviceId
+                        break
+                    }
+                }
+                if (washerCode != '') {
+                    let reqUrl = url.scene.washerConsumption
                     let reqParams = {
                         uid: this.uid,
                         homegroupId: this.homegroupId,
-                        sceneId: this.sceneId,
-                        modeId: modeId
-                    }
-                    this.webRequest(reqUrl, reqParams).then((res)=>{
-                        nativeService.alert(res)
-                        if (res.code == 0) {
-                            nativeService.alert(res)
-                            resolve(res.data)
-                        }else{
-                            reject(res.msg)
-                        }
-                    }).catch( (err )=>{
-                        reject(err)
-                    })
-                })
-            },
-            executeModeCheck(){
-                return new Promise((resolve, reject)=>{
-                    let reqUrl = url.scene.status
-                    let reqParams = {
-                        uid: this.uid,
-                        homegroupId: this.homegroupId,
-                        sceneId: this.sceneId,
-                        modeId: modeId
+                        applianceCode: washerCode
                     }
                     this.webRequest(reqUrl, reqParams).then((res)=>{
                         if (res.code == 0) {
-                            resolve(res.data)
-                        }else{
-                            reject(res.msg)
-                        }
-                    }).catch( (err )=>{
-                        reject(err)
-                    })
-                })
+                            for (var i in res.data.historyConsumptions) {
+                                let tmpPowerXValue = [], tmpPowerXLabel = [], tmpPowerYValue = [], tmpPowerYLabel = [], 
+                                    tmpWaterXValue = [], tmpWaterXLabel = [], tmpWaterYValue = [], tmpWaterYLabel = []
+                                tmpPowerXValue[i] = i
+                                tmpPowerXLabel[i] = res.data.historyConsumptions[i].date
+                                tmpPowerYValue[i] = res.data.historyConsumptions[i].powerConsumption || ''
+                                tmpPowerYLabel[i] = res.data.historyConsumptions[i].powerConsumption || ''
 
+                                tmpWaterXValue[i] = i
+                                tmpWaterXLabel[i] = res.data.historyConsumptions[i].date
+                                tmpWaterYValue[i] = res.data.historyConsumptions[i].waterConsumption || ''
+                                tmpWaterYLabel[i] = res.data.historyConsumptions[i].waterConsumption || ''
+                            }
+                            washerPowerData.x.value = tmpPowerXValue
+                            washerPowerData.x.label = tmpPowerXLabel
+                            washerPowerData.y.value = tmpPowerYValue
+                            washerPowerData.y.label = tmpPowerYLabel
+                            
+                            washerWaterData.x.value = tmpPowerXValue
+                            washerWaterData.x.label = tmpPowerXLabel
+                            washerWaterData.y.value = tmpPowerYValue
+                            washerWaterData.y.label = tmpPowerYLabel
+                            
+                            this.hasWasherPowerData = true
+                            this.hasWasherWaterData = true
+                        }else{
+                            let codeMsg = {
+                                "1000": "未知系统错误",
+                                "1001": "参数格式错误",
+                                "1002": "参数为空",
+                                "1105": "账户不存在"
+                            }
+                            nativeService.alert(codeMsg[res.code])
+                        }
+                    }).catch((err)=>{
+                        
+                    })
+                }
+            },
+            getWeatherInfo(){
+                nativeService.getGPSInfo({
+                    desiredAccuracy: "10",
+                    distanceFilter: "10",
+                    alwaysAuthorization: "0" 
+                }).then((res)=>{
+                    nativeService.getCityInfo({cityName: res.city}).then((res)=>{
+                        nativeService.getWeatherInfo({cityNo: res.cityNo}).then((res)=>{
+                            this.weatherDesc = '今天' + res.weatherStatus + '气温' + res.temperature + '℃'
+                        }).catch(()=>{
+                            this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
+                        })
+                    }).catch(()=>{
+                        this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
+                    })
+                }).catch(()=>{
+                    this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
+                })
+               
             }
         },
         created(){
+            this.uid = nativeService.getParameters('uid')
+            this.homegroupId = nativeService.getParameters('homegroupId')
             this.sceneId = nativeService.getParameters('sceneId')
-            this.sceneType = nativeService.getParameters('sceneType')
-      
-            nativeService.getItem('uid', (res)=>{
-                if (res.result == 'success'){
-                    this.uid = res.data
-                    nativeService.getItem('homegroupId',(res)=>{
-                        if (res.result == 'success'){
-                            this.homegroupId = res.data
-                            this.getSceneDetail()
-
-                            /*
-                                nativeService.getItem('home', (res)=>{
-                                    let data = JSON.parse(res.data)
-                                    this.userDevices = data.deviceList   
-                                    this.getDevices().then((res)=>{
-                                        this.userSupportDevices = this.filttAllowedDevices(res.typeList)    
-                                    })
-                                })
-                            */
-                        }else{
-                            nativeService.toast('获取用户家庭失败')
-                        }
-                    })
-                }else{
-                    nativeService.toast('获取用户身份失败')
-                }
-            })
+            this.roomType = nativeService.getParameters('roomType')
+            
+            if (nativeService.getParameters('userDevices')) {
+                this.userDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
+            }
+            this.getSceneDetail()
+            if (this.roomType == 4) {
+                this.getWashData()
+                this.getWeatherInfo()
+            }
             
         }
     }

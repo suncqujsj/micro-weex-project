@@ -6,13 +6,14 @@
             <div class="search-bar-content">
                 <image class="search-bar-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
                 <input class="search-bar-input" placeholder="请输入产品品类，如空调、洗衣机" v-model="keyWord" @return="keyBoardsearch" return-key-type="search"></input>
+                <image v-if="keyWord.length>0" class="search-bar-close" :src="'./assets/img/service_ic_cancel@3x.png'" resize="contain" @click="keyWord=''"></image>
             </div>
             <text v-if="isIos" class="search-action" @click="back">取消</text>
             <text v-if="!isIos" class="search-action" @click="searchProduct(keyWord)">搜索</text>
         </div>
         <scroller class="product-content">
-            <template v-if="convertedProductData && convertedProductData.length>0">
-                <div v-for="(item, index) in convertedProductData" @click="selectItem(item)" :key="index">
+            <template v-if="convertedProductList && convertedProductList.length>0">
+                <div v-for="(item, index) in convertedProductList" @click="selectItem(item)" :key="index">
                     <div class="search-result-content">
                         <image class="search-result-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
                         <midea-rich-text class="search-result-desc" :hasTextMargin="false" :config-list="item.richDesc"></midea-rich-text>
@@ -24,6 +25,11 @@
                 <div class="search-history">
                     <text class="search-history-item" v-for="(item,index) in historyKeys" :key="index" @click="searchProduct(item)">{{item}}</text>
                 </div>
+            </div>
+            <div class="empty-page" v-if="isLoaded && convertedProductList.length == 0">
+                <image class="empty-page-icon" src="./assets/img/default_ic_noresult@3x.png" resize='contain'>
+                </image>
+                <text class="empty-page-text">抱歉 {{'\n'}}没有找到“{{searchKeyWord}}”相关的产品</text>
             </div>
         </scroller>
     </div>
@@ -49,16 +55,16 @@ export default {
             searchKeyWord: '',
             historyKeys: [],
             dialogShow: false,
-            productData: []
+            productList: []
         }
     },
     computed: {
-        convertedProductData() {
+        convertedProductList() {
             let result = []
-            if (this.searchKeyWord && this.productData && this.productData.length > 0) {
+            if (this.searchKeyWord && this.productList && this.productList.length > 0) {
                 let reg = new RegExp(this.searchKeyWord, "gi")
-                for (let index = 0; index < this.productData.length; index++) {
-                    const brandItem = this.productData[index]
+                for (let index = 0; index < this.productList.length; index++) {
+                    const brandItem = this.productList[index]
                     for (let indexChild = 0; indexChild < brandItem.productTypeDTOList.length; indexChild++) {
                         const productCategary = brandItem.productTypeDTOList[indexChild];
                         let matchProductArray = productCategary.children.filter((product) => {
@@ -109,8 +115,9 @@ export default {
                 return
             }
             this.keyWord = value
-    
+
             this.searchKeyWord = this.keyWord
+            this.isLoaded = true
             if (this.historyKeys.indexOf(this.searchKeyWord) < 0) {
                 this.historyKeys.push(this.searchKeyWord)
                 nativeService.setItem(this.SERVICE_STORAGE_KEYS.historyKeys, this.historyKeys, () => { })
@@ -134,9 +141,30 @@ export default {
                 this.historyKeys = JSON.parse(resp.data) || []
             }
         })
-        nativeService.getProdType().then((data) => {
-            this.productData = data
-        })
+        this.isMultiMode = nativeService.getParameters('isMultiMode')
+        if (this.isMultiMode) {
+            //报装 - 支持安装的产品品类列表
+            let param = {
+                version: "1.0",
+                codeType: "bzbx"
+            }
+            nativeService.getProdTypeForInstallation(param).then((data) => {
+                this.productList = data
+            }).catch((error) => {
+                nativeService.toast(nativeService.getErrorMessage(error))
+            })
+        } else {
+            //所有产品品类列表
+            let param = {
+                version: "1.0",
+                codeType: ""
+            }
+            nativeService.getProdType(param).then((data) => {
+                this.productList = data
+            }).catch((error) => {
+                nativeService.toast(nativeService.getErrorMessage(error))
+            })
+        }
     }
 }
 </script>
@@ -176,6 +204,12 @@ export default {
   font-size: 28px;
   color: #000000;
   height: 40px;
+}
+.search-bar-close {
+  height: 40px;
+  width: 40px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 .search-action {
   width: 120px;
@@ -235,5 +269,23 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #000000;
+}
+.empty-page {
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 160px;
+}
+.empty-page-icon {
+  width: 240px;
+  height: 240px;
+}
+.empty-page-text {
+  padding-top: 36px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #888888;
+  text-align: center;
 }
 </style>

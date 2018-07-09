@@ -58,7 +58,6 @@ export default {
     },
     methods: {
         scroll(event) {
-            console.dir(event)
             let offsetY = event.contentOffset.y || ''
             if (offsetY % this.itemHeight != 0) {
                 let firstVisibleItemIndex = Math.abs(Math.round(offsetY / 70))

@@ -21,13 +21,73 @@ export const all = [
         data: {
             "errorCode": 0,
 		    "params": {
-		        "power": "on",
-		        "mode": "cool",
-		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "rinse_count": 2, 
+			    "rinse_level": 0, 
+			    "lock": "off", 
+			    "mode": "normal", 
+			    "program": "standard", 
+			    "power": "off", 
+			    "intelligent_wash": "off", 
+			    "wash_strength": 2, 
+			    "error_code": 0, 
+			    "wash_time": 15, 
+			    "temperature": 0, 
+			    "version": 7, 
+			    "dehydration_time": 7, 
+			    "remain_time": 55, 
+			    "running_status": "work", 
+			    "dehydration_speed": 3, 
+			    "wash_level": 0
+		    }
+        }
+    },
+    {
+        path: 'start',
+        data: {
+            "errorCode": 0,
+		    "params": {
+		        "rinse_count": 2, 
+			    "rinse_level": 0, 
+			    "lock": "off", 
+			    "mode": "normal", 
+			    "program": "standard", 
+			    "power": "on", 
+			    "intelligent_wash": "off", 
+			    "wash_strength": 2, 
+			    "error_code": 0, 
+			    "wash_time": 15, 
+			    "temperature": 0, 
+			    "version": 7, 
+			    "dehydration_time": 7, 
+			    "remain_time": 55, 
+			    "running_status": "work", 
+			    "dehydration_speed": 3, 
+			    "wash_level": 0
+		    }
+        }
+    },
+    {
+        path: 'pause',
+        data: {
+            "errorCode": 0,
+		    "params": {
+		        "rinse_count": 2, 
+			    "rinse_level": 0, 
+			    "lock": "off", 
+			    "mode": "normal", 
+			    "program": "standard", 
+			    "power": "on", 
+			    "intelligent_wash": "off", 
+			    "wash_strength": 2, 
+			    "error_code": 0, 
+			    "wash_time": 15, 
+			    "temperature": 0, 
+			    "version": 7, 
+			    "dehydration_time": 7, 
+			    "remain_time": 55, 
+			    "running_status": "standby", 
+			    "dehydration_speed": 3, 
+			    "wash_level": 0
 		    }
         }
     },
@@ -36,13 +96,23 @@ export const all = [
         data: {
             "errorCode": 0,
 		    "params": {
-		        "power": "off",
-		        "mode": "auto",
-		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "rinse_count": 2, 
+			    "rinse_level": 0, 
+			    "lock": "off", 
+			    "mode": "normal", 
+			    "program": "standard", 
+			    "power": "off", 
+			    "intelligent_wash": "off", 
+			    "wash_strength": 2, 
+			    "error_code": 0, 
+			    "wash_time": 15, 
+			    "temperature": 0, 
+			    "version": 7, 
+			    "dehydration_time": 7, 
+			    "remain_time": 55, 
+			    "running_status": "work", 
+			    "dehydration_speed": 3, 
+			    "wash_level": 0
 		    }
         }
     },
@@ -66,13 +136,23 @@ export const all = [
         data: {
             "errorCode": 0,
 		    "params": {
-		        "power": "on",
-		        "mode": "auto",
-		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "rinse_count": 2, 
+			    "rinse_level": 0, 
+			    "lock": "off", 
+			    "mode": "normal", 
+			    "program": "standard", 
+			    "power": "on", 
+			    "intelligent_wash": "off", 
+			    "wash_strength": 2, 
+			    "error_code": 0, 
+			    "wash_time": 15, 
+			    "temperature": 0, 
+			    "version": 7, 
+			    "dehydration_time": 7, 
+			    "remain_time": 55, 
+			    "running_status": "work", 
+			    "dehydration_speed": 3, 
+			    "wash_level": 0
 		    }
         }
     },
@@ -101,17 +181,14 @@ export const all = [
     {
         path: 'getDeviceInfo',
         data: {
-            "msg": "",
+           "msg": "",
             "result": {
-                "deviceID": "1099511629098",
-                "deviceSSID": "",
-                "deviceName": "冰箱541F",
-                "deviceType": "0xCA",
+                "deviceId": "1099511629098",
+                "deviceName": "空调541F",
+                "deviceType": "0xAC",
                 "deviceSubType": "0",
-                "online": "1",
-                "deviceDescription": "",
-                "activated": "",
-                "isDeviceOwner": "1"
+                "isOnline": "1",
+                "deviceSn": "",
             },
             "errorCode": "0"
         }

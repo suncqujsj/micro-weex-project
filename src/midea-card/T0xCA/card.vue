@@ -1,59 +1,57 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
 	    <div class="box">
-	        <div class="card">
-		    	 <div class="card-row">
+	        <div v-if="onlineStatus == '1'">
+		    	 <div class="card">
 		        	<div class="card-left">
-		        		<div><text class="text-label">冷藏</text></div>
-		        		<div style="flex-direction: row;margin-left: 100px">
-		        			<text class="text-main-status" style="margin-bottom: 80px;">05</text>
-		        			<image class="img" :src="rightArrow"></image>
+	        			<div class="main-status-div">
+	        				<div class="main-status-left-div">
+	        					<div><text class="main-status-subtext">冷藏</text></div>
+	        					<div style="flex-direction: row;">
+	        						<text class="main-status-text">{{storage_temperature}}</text>
+	        						<text class="main-status-danwei">°</text>
+	        					</div>
+	        				</div>
+	        				<div class="main-status-separate"></div>
+	        				<div class="main-status-right-div">
+	        					<div><text class="main-status-subtext">冷冻</text></div>
+	        					<div style="flex-direction: row;">
+	        						<text class="main-status-text">{{freezing_temperature}}</text>
+	        						<text class="main-status-danwei">°</text>
+	        					</div>
+	        				</div>
+	        			</div>
+	        			<div style="margin-bottom: 114px;"><text class="main-status-mode">模式速冻</text></div>
+		        	</div>
+		        	<div class="card-right">
+		        		<div class="card-control">
+		        			<image class="card-control-img" style="margin-right:35px" :src="startPause" @click="controlStartPause"></image>
+		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
 		        		</div>
-		        	</div>
-		        	<div class="card-middle" style="margin-top:50px">
-		        	</div>
-		        	<div class="card-right" style="margin-left:115px">
-		        		<div><text class="text-label">变温</text></div>
-		        		<div style="flex-direction: row;margin-left: -30px">
-		        			<text class="text-main-status" style="margin-bottom: 80px;">-05</text>
-		        			<image class="img" :src="rightArrow"></image>
+		        		<div class="card-icon" style="margin-right:40px">
+		        			<image class="card-icon-img" src="./assets/img/smart_img_equip012@2x.png"></image>
 		        		</div>
 		        	</div>
 		        </div>
-		        <div class="card-separate">
-		        	<div class="card-separate-left"></div>
-		        	<div class="card-separate-middle"></div>
-		        	<div class="card-separate-right"></div>
-		        </div>
-		        <div class="card-row" style="align-items: flex-end;">
-		        	<div class="card-left">
-		        		<div style="margin-top: 60px"><text class="text-label">冷冻</text></div>
-		        		<div style="flex-direction: row;margin-left: 100px">
-		        			<text class="text-main-status" style="margin-bottom: 80px;">-12</text>
-		        			<image class="img" :src="rightArrow"></image>
-		        		</div>
-		        	</div>
-		        	<div class="card-middle" style="margin-bottom: 50px;">
-		        	</div>
-		        	<div class="card-right" style="margin-left:115px">
-		        		<div style="margin-top: 40px"><text class="text-label">模式</text></div>
-		        		<div style="flex-direction: row;margin-left: -15px">
-		        			<text class="text-main-status-last" style="margin-bottom: 80px;">速冻</text>
-		        			<image class="img" :src="rightArrow"></image>
-		        		</div>
-		        	</div>
-		        	
-		        </div>
+	        </div>
+	        <div class="card-power-off" v-else>
+	        	<div class="control-div-offline">
+	        		<image class="card-control-img" :src="powerIcon_offline"  @click="poweronoff(1)"></image>
+	        		<text class="text-offline">重连</text>
+	        	</div>
+	        	<div>
+	        		<image class="icon-offline" src="./assets/img/smart_img_equip012@2x.png"></image>
+	        	</div>
+	        	<text class="text-offline-center">已离线</text>
 	        </div>
 	        <div class="smart">
 		        <div class="smart-title">
 		        	<text class="smart-text">智能</text>
 		        	<image class="smart-img" src="./assets/img/smart_ic_more@2x.png"></image>
 		        </div>
-		        <midea-smart @change="onMideachange" :checked="mideaChecked" :data="data"></midea-smart>
-		      </div>
-		      <midea-smart @change="onMideachange2" :checked="mideaChecked2" :data="data2"></midea-smart>     
-	        <midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="false" :checked="mideaChecked2" :data="data3"></midea-smart>
+	      	</div>
+	      	<midea-smart @change="onMideachange2" :checked="mideaChecked2" :data="data2"></midea-smart>     
+	        <midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="true" :checked="mideaChecked2" :data="data3"></midea-smart>
 	    </div>
     </scroller>
 </template>
@@ -62,8 +60,8 @@
     import nativeService from '@/common/services/nativeService.js'
 	import mideaSwitch from '@/midea-component/switch.vue'
 	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
-	import scrollerBar from '@/midea-card/T0xAC/components/scroller-bar.vue'
 	import mideaItem from '@/midea-component/item.vue'
+	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
 	var stream = weex.requireModule('stream');
@@ -71,31 +69,40 @@
         components: {
             mideaSwitch,
             mideaSmart,
-            mideaItem,
-            scrollerBar
+            mideaItem
         },
         data() {
             return {
+            	deviceId:"",
+            	deviceName: "",
+            	deviceType: "",
+            	deviceSubType: "",
+            	deviceSn: "",
+            	onlineStatus:"",
+            	
                 mideaChecked: true,
                 mideaChecked2: false,
-                currentTemperture:19,
-                power:"off",
-                currentStatus:"auto",
-                powerIcon: "./assets/img/smart_ic_off@3x.png",
-                deviceIcon: "./assets/img/smart_img_equip001@2x.png",
-                rightArrow: "./assets/img/smart_ic_arrow_forward@2x.png",
+                storage_temperature:"",
+                freezing_temperature:"",
+                powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
+                powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
                 data:{
                  	title:"室内温度高于28°度时候，自动开启空调。",
                  	detail:"模式制冷，温度23."
                 },
                 data2:{
-                 	title:"宝宝最适宜温度",
-                 	detail:"温度28C，风速最小"
+                 	title:"每周三提醒清洗冰箱内侧。。",
+                 	detail:"每隔1个月提醒。"
                 },
                 data3:{
-                 	title:"宝宝最适宜温度",
+                 	title:"缺少消毒剂，柔顺剂提醒。",
                  	detail:""
-                }
+                },
+                list: [
+                { 
+                	"name": "电饭煲食谱",
+                	"rightText":"更多"
+                }],
             }
         },
         methods: {
@@ -105,19 +112,11 @@
              onMideachange2(event) {
             		//modal.toast({ 'message': event.value, 'duration': 2 });
             },
-            changeTemperture(event) {
-	            	let currentSetTemperture = Math.ceil(event.contentOffset.x/52) +29;
-	            	if(currentSetTemperture <= 17) {
-	            		currentSetTemperture = 17;
-	            	} else if (currentSetTemperture >= 30) {
-	            		currentSetTemperture = 30;
-	            	}
-	            	this.currentTemperture = currentSetTemperture;
-            },
             queryStatus () {
             	let self = this;
             	let params = {
             			"operation":"luaQuery",
+            			"name":"deviceinfo",
             			"data":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
@@ -127,118 +126,106 @@
             	});
             },
             updateUI(data) {
-            	console.log("yoram:");
-            	console.dir(data);
+	            this.lock = false;
+	            if(data.errorCode == 0) {
+	                let params = data.params || data.result;
+	                this.storage_temperature = params.storage_temperature;
+                	this.freezing_temperature = params.freezing_temperature
+	            }else {
+	                this.showToast('连接设备超时');
+	            }
             },
-            powerOnoff() {
-            	//nativeService.getPath((weexPath)=> {
-		            	stream.fetch({
-		            		method:'get',
-		            		url:"/dist/T0xAC/dummy/delDevice.js",
-		            		type:"json"
-		            	},function(ret) {
-		            		console.dir(nativeService.convertToJson(ret.data))
-		            	},function(response) {
-		            		console.dir(nativeService.convertToJson(response.data));
-		            	})
-		          // });
-		        }
+            updateDeviceInfo(data) {
+            	this.deviceId = data.deviceId;
+            	this.deviceName = data.deviceName;
+            	this.deviceType = data.deviceType;
+            	this.deviceSubType = data.deviceSubType;
+            	this.deviceSn = data.deviceSn;
+            	this.onlineStatus = data.isOnline;
+            },
         },
         computed: {
-				powerOnoffImg () {
-		            let img = "./assets/img/smart_ic_power@2x.png";
-		            if(this.power == "on") {
-		                img = "./assets/img/smart_ic_power@2x.png";
+		        startPause() {
+		        	let img = "./assets/img/smart_ic_power@2x.png";
+		            if(this.running_status == "start") {
+		                img = "./assets/img/smart_ic_pause@2x.png";
 		            } else {
-		                img = "./assets/img/smart_ic_power@2x.png";
+		                img = "./assets/img/smart_ic_play@2x.png";
 		            }
 		            return img;
-		        },
-	        	statusImg() {
-		        		let img = "./assets/img/smart_ic_smart@2x.png";
-		        		if(this.currentStatus == "auto") {
-		        			img = "./assets/img/smart_ic_smart@2x.png"
-		        		} else if(this.currentStatus == "cold") {
-		        			img = "./assets/img/smart_ic_smart@2x.png"
-		        		}
-		        		return img;
-	        	}
+		        }
         },
         mounted() {
-	        const el = this.$refs.scrollBar;
-            dom.scrollToElement(el,{offset:parseInt(30 - this.currentTemperture) * 52})
-            //this.queryStatus();
+            let self = this;
+            nativeService.getDeviceInfo().then(function(data) {
+            	self.updateDeviceInfo(data.result);
+            	if(data.result.isOnline == 1) {
+            		self.queryStatus();
+            	}
+            },function(error) {
+            	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+            })
         }
     }
 </script>
 
+
 <style>
 	.content {
 		flex:1;
-		width:750px;
-		scroll-direction: vertical;
+		width:750px
 	}
 	.box {
-		margin-bottom:290px;
+		margin-bottom:450px
 	}
 	.card {
-		width:694px;
+		width:694;
 		height:392px;
 		margin-left:28px;
 		margin-right:28px;
 		margin-top:28px;
 		background-color: #5D75F6;
-		flex-direction: column;
+		flex-direction: row;
 		border-radius: 6px;
 	}
-	.card-row {
+	.card-power-off {
+		width:694px;
+		height:392px;
+		margin-left:28px;
+		margin-right:28px;
+		margin-top:28px;
+		background-color: #D8D8DE;
 		flex-direction: row;
-		width: 694px;
-		height: 196px;
+		border-radius: 6px;
+		justify-content: center;
+		align-items: flex-end;
 	}
-	.card-separate {
-		flex-direction: row;
-		justify-content: space-between;
-		width: 694px;
-		height: 1px;
-	}
-	.card-separate-left {
-		width: 275px;
-		margin-left: 50px;
-		background-color: white;
-	}
-	.card-separate-middle {
-		width: 44px;
-		height: 44px;
-	}
-	.card-separate-right {
-		width: 275px;
-		margin-right: 50px;
-		background-color: white;
-	}
-	.text-label {
-		opacity: 0.7;
+	.text-offline {
 		font-family: PingFangSC-Regular;
-		font-size: 24px;
-		color: #FFFFFF;
-	}
-	.text-main-status {
-		font-family: SFProText-Light;
-		font-size: 60px;
-		color: #FFFFFF;
+		font-size: 28px;
+		color: #5D75F6;
 		letter-spacing: 0;
+		text-align: center;
 	}
-	.text-main-status-last {
-		font-family: PingFangSC-Regular;
-		font-size: 44px;
-		color: #FFFFFF;
-		letter-spacing: -1.69px;
+	.text-offline-center {
+		position: absolute;
+		right:325px;
+		top:170px;
+		align-items: center;
 	}
-	.img {
-		width: 40px;
-		height: 40px;
-		margin-top: 16px;
-		margin-left: 60px;
+	.control-div-offline {
+		position: absolute;
+		right:32px;
+		top:32px;
+		align-items: center;
+	}
+	.icon-offline {
+		width: 314px;
+		height: 314px;
+	}
+	.card-control-img {
+		width:60px;
+		height:60px
 	}
 	.card-hot {
 		background-color: #FFBD00;
@@ -246,7 +233,9 @@
 	.card-control {
 		align-items: flex-end;
 		margin-top:44px;
-		margin-right:44px
+		margin-right:44px;
+		flex-direction: row;
+		justify-content: flex-end;
 	}
 	.card-status-detail {
 		flex-direction: row;
@@ -262,29 +251,73 @@
 		height:50px
 	}
 	.card-icon {
-		align-items: flex-start;
+		align-items: flex-end;
 		margin-top:-60px;
 		margin-right:-24px
 	}
 	.card-icon-img {
-		width:534px;
-		height:248px
+		width:314px;
+		height:314px
 	}
 	.main-status-div {
 		flex-direction: row;
-		margin-top:32px;
-		margin-left:50px
+		margin-top: 86px
+	}
+	.main-status-left-div {
+		flex-direction: column;
+		align-items: center;
+	}
+	.main-status-right-div {
+		flex-direction: column;
+		align-items: center;
 	}
 	.main-status {
 		font-size: 128px;
 		color: #FFFFFF;
 	}
+	.main-status-subtext {
+		opacity: 0.7;
+		font-family: PingFangSC-Regular;
+		font-size: 24px;
+		color: #FFFFFF;
+	}
+	.main-status-text {
+		font-family: Roboto-Light;
+		font-size: 80px;
+		color: #FFFFFF;
+		letter-spacing: 0;
+		text-align: center;
+	}
+	.main-status-mode {
+		opacity: 0.7;
+		font-family: PingFangSC-Regular;
+		font-size: 24px;
+		color: #FFFFFF;
+		margin-left: -30px;
+	}
+	.main-status-separate {
+		opacity: 0.3;
+		border: 0 solid #FFFFFF;
+		background-color: #FFFFFF;
+		width:2px;
+		height:120px;
+		margin-left:10px;
+		margin-right:10px
+	}
+	.main-status-danwei {
+		font-family: PingFangSC-Regular;
+		font-size: 36px;
+		color: #FFFFFF;
+	}
+	.main-status-only {
+		font-size: 50%;;
+	}
 	.danwei {
 		font-family: PingFangSC-Light;
-		font-size: 96px;
+		font-size: 25px;
 		text-align: center;
 		color: #FFFFFF;
-		margin-top: 7px;
+		margin-top: 28px;
 	}
 	.main-status-second {
 		font-size: 26px;
@@ -300,34 +333,22 @@
 	}
 	.card-left {
 		flex-direction: column;
-		width:347px;
-		height:196px;
-		margin-top: 50px;
+		width:343px;
+		height:392px;
 		align-items: center;
 		justify-content: space-around;
-	}
-	.card-middle {
-		width: 1px;
-		height: 120px;
-		background-color: white;
+		margin-left:40px;
 	}
 	.card-right {
 		flex-direction: column;
-		width:347px;
-		height:196px;
-		margin-top: 50px;
-		justify-content: space-between;
-	}
-	.card-right-margin {
-		width:30px;
+		width:343px;
 		height:392px;
-		background-color: white;
-		margin-left: 9px;
+		justify-content: space-between;
 	}
 	.smart {
 		flex-direction: column;
 		justify-content: space-between;
-		margin-top:20px;
+		margin-top:50px;
 	}
 	.smart-title {
 		flex-direction: row;
@@ -368,12 +389,8 @@
 		color: #8A8A8F;
 		letter-spacing: 0;
 	}
-	
 	.scroller-bar {
 		margin-top:-72px;
-		font-family: PingFangSC-Light;
-		color: #FFFFFF;
-		letter-spacing: -4px;
 	}
 	.scroller {
 		height:120px;
@@ -396,17 +413,10 @@
 	}
 	.scroller-main-content {
 		font-size: 24px;
-		color: #FFFFFF;
-	}
-	.temp-danwei {
-		font-family: PingFangSC-Medium;
-		font-size: 12px;
-		color: #FFFFFF;
 	}
 	.scroller-main-separate {
 		font-size:16px;
 		margin-left:14px;
-		color: #FFFFFF;
 	}
 	.scroller-main-img-first {
 		width:233px;
@@ -421,4 +431,5 @@
 	.scroller-right {
 		width:350px;
 	}
+
 </style>

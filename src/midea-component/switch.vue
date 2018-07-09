@@ -15,11 +15,11 @@ export default {
         // 是否选中
         iconOn: {
             type: String,
-            default: '../img/check/switch_on.png'
+            default: './img/check/switch_on.png'
         },
         iconOff: {
             type: String,
-            default: '../img/check/switch_off.png'
+            default: './img/check/switch_off.png'
         },
         width: {
             type: String,

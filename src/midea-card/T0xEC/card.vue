@@ -2,26 +2,35 @@
 	<scroller class="content">
     <div class="box">
         <div>
-	    	 <div class="card">
+	    	 <div class="card" v-if="onlineStatus == '1'">
 	        	<div class="card-left">
         			<div class="main-status-div">
-        				<text class="main-status">24</text>
-        				<text class="danwei">分</text>
+        				<text class="main-status">{{currentWorkStatus}}</text>
+        				<text class="danwei"></text>
 	        		</div>
-        			<text class="main-status-second" style="text-align: center;">室内温度</text>
+        			<text class="main-status-second" style="text-align: center;"></text>
 	        		<div class="card-status-detail">
-	        			<text class="main-status-third">精华煮 /松软</text>
+	        			<text class="main-status-third"></text>
 	        		</div>
 	        	</div>
 	        	<div class="card-right">
 	        		<div class="card-control" @click="powerOnoff">
-	        			<image class="card-control-img" style="margin-right:35px" src="./assets/img/Smart_ic_alarm@2x.png"></image>
-	        			<image class="card-control-img" :src="powerOnoffImg"></image>
+	        			<image class="card-control-img" :src="controlStartPauseImg"></image>
 	        		</div>
 	        		<div class="card-icon">
 	        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip041@2x.png"></image>
 	        		</div>
 	        	</div>
+	        </div>
+	        <div class="card-power-off" v-else>
+	        	<div class="control-div-offline">
+	        		<image class="card-control-img" :src="powerIcon_offline"></image>
+	        		<text class="text-offline">重连</text>
+	        	</div>
+	        	<div>
+	        		<image class="icon-offline" src="./assets/img/smart_img_equip041@2x.png"></image>
+	        	</div>
+	        	<text class="text-offline-center">已离线</text>
 	        </div>
         </div>
 	    <scroller class="scroller-item" scroll-direction="horizontal">
@@ -42,13 +51,14 @@
 
 <script>
     import nativeService from '@/common/services/nativeService.js'
-		import mideaSwitch from '@/midea-component/switch.vue'
-		import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
-		import mideaItem from '@/midea-component/item.vue'
-		import cookbook from '@/midea-card/T0xAC/components/cookbook.vue'
-		const modal = weex.requireModule('modal');
-		const dom = weex.requireModule('dom');
-		var stream = weex.requireModule('stream');
+	import mideaSwitch from '@/midea-component/switch.vue'
+	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
+	import mideaItem from '@/midea-component/item.vue'
+	import cookbook from '@/midea-card/T0xAC/components/cookbook.vue'
+	import Mock from './settings/mock'
+	const modal = weex.requireModule('modal');
+	const dom = weex.requireModule('dom');
+	var stream = weex.requireModule('stream');
     export default {
         components: {
             mideaSwitch,
@@ -58,11 +68,36 @@
         },
         data() {
             return {
+            	deviceId:"",
+            	deviceName: "",
+            	deviceType: "",
+            	deviceSubType: "",
+            	deviceSn: "",
+            	onlineStatus:"",
+            	
+            	workStatus: "",
+	            temperature: "",//localStorage.getItem("ECtemperature") || "--",
+	            workstatusNum: "",
+	            currentWorkStatus:"",
+	            powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
+	            work_status: {
+					0: "待机",
+					1: "非预约烹饪中",
+					2: "预约等待中",
+					3: "保温/完成",
+					4: "开盖状态",
+					5: "排气中",
+					6: "非预约保压中",
+					7: "非预约排气中",
+					8: "预约烹饪中",
+					9: "预约排气中",
+					10: "中途开盖",
+					11: "排气完成（中途开盖）",
+					12: "已开盖（中途开盖）"
+				},
+            	
                 mideaChecked: true,
                 mideaChecked2: false,
-                currentTemperture:19,
-                power:"off",
-                currentStatus:"auto",
                 data:{
                  	title:"连续烹饪次数过多，提醒饮食多样性",
                  	detail:"次数30次以上"
@@ -118,19 +153,11 @@
              onMideachange2(event) {
             		//modal.toast({ 'message': event.value, 'duration': 2 });
             },
-            changeTemperture(event) {
-	            	let currentSetTemperture = Math.ceil(event.contentOffset.x/52) +29;
-	            	if(currentSetTemperture <= 17) {
-	            		currentSetTemperture = 17;
-	            	} else if (currentSetTemperture >= 30) {
-	            		currentSetTemperture = 30;
-	            	}
-	            	this.currentTemperture = currentSetTemperture;
-            },
             queryStatus () {
             	let self = this;
             	let params = {
             			"operation":"luaQuery",
+            			"name":"deviceinfo",
             			"data":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
@@ -140,45 +167,86 @@
             	});
             },
             updateUI(data) {
-            	console.log("yoram:");
-            	console.dir(data);
+            	if(data.errorCode == 0) {
+	                let params = data.params || data.result;
+	                this.workStatus = this.work_status[params.work_status] || "";
+	                this.workstatusNum = params.work_status;
+	                this.temperature = params.temperature || "--";
+	                if(this.workstatusNum == "0") {
+	                	this.currentWorkStatus = "空闲中";
+	                } else if(this.workstatusNum == "1" || this.workstatusNum == "8") {
+	                	this.currentWorkStatus = "烹饪中";
+	                } else if(this.workstatusNum == "3") {
+	                	this.currentWorkStatus = "保温中";
+	                } else if(this.workstatusNum == "4" || this.workstatusNum == "10" || this.workstatusNum == "12") {
+	                	this.currentWorkStatus = "已开盖";
+	                } else if(this.workstatusNum == "5" || this.workstatusNum == "7" || this.workstatusNum == "9"|| this.workstatusNum == "11") {
+	                	this.currentWorkStatus = "排气中";
+	                } else if(this.workstatusNum == "6") {
+	                	this.currentWorkStatus = "保压中";
+	                } else if(this.workstatusNum == "2") {
+	                	this.currentWorkStatus = "预约中";
+	                }
+	            }else {
+	                modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+	            }
             },
-            powerOnoff() {
-            	//nativeService.getPath((weexPath)=> {
-		            	stream.fetch({
-		            		method:'get',
-		            		url:"/dist/T0xAC/dummy/delDevice.js",
-		            		type:"json"
-		            	},function(ret) {
-		            		console.dir(nativeService.convertToJson(ret.data))
-		            	},function(response) {
-		            		console.dir(nativeService.convertToJson(response.data));
-		            	})
-		          // });
-		        }
+             updateDeviceInfo(data) {
+            	this.deviceId = data.deviceId;
+            	this.deviceName = data.deviceName;
+            	this.deviceType = data.deviceType;
+            	this.deviceSubType = data.deviceSubType;
+            	this.deviceSn = data.deviceSn;
+            	this.onlineStatus = data.isOnline;
+            },
+            controlStartPause() {
+            	let self = this;
+            	if(this.work_status == "cooking" || this.work_status == "keep_warm") {
+            		//pause logic
+            		let params = {
+		                "work_status": "cancel",
+		                "name": "pause"
+		            }
+            		nativeService.sendLuaRequest(params,true).then(function(data) {
+	            		self.updateUI(data);
+	            	},function(error) {
+	            		console.log("error");
+	            	});
+            	} else {
+            		//start logic
+            		let params = {
+		                "work_status": "cooking",
+		                "name": "start"
+		            }
+            		nativeService.sendLuaRequest(params,true).then(function(data) {
+	            		self.updateUI(data);
+	            	},function(error) {
+	            		console.log("error");
+	            	});
+            	}
+            },
         },
         computed: {
-				powerOnoffImg () {
-		            let img = "./assets/img/smart_ic_play@2x.png";
-		            if(this.power == "on") {
-		                img = "./assets/img/smart_ic_play@2x.png";
-		            } else {
-		                img = "./assets/img/smart_ic_play@2x.png";
-		            }
-		            return img;
-		        },
-	        	statusImg() {
-		        		let img = "./assets/img/smart_ic_cold_on@2x.png";
-		        		if(this.currentStatus == "auto") {
-		        			img = "./assets/img/smart_ic_auto_on@2x.png"
-		        		} else if(this.currentStatus == "cold") {
-		        			img = "./assets/img/smart_ic_cold_on@2x.png"
-		        		}
-		        		return img;
-	        	}
+        	controlStartPauseImg () {
+	            let img = "./assets/img/smart_ic_play@2x.png";
+	            if(this.work_status == "cooking" || this.work_status == "keep_warm") {
+	                img = "./assets/img/smart_ic_pause@2x.png";
+	            } else {
+	                img = "./assets/img/smart_ic_play@2x.png";
+	            }
+	            return img;
+	        },
         },
         mounted() {
-            //this.queryStatus();
+            let self = this;
+            nativeService.getDeviceInfo().then(function(data) {
+            	self.updateDeviceInfo(data.result);
+            	if(data.result.isOnline == 1) {
+            		self.queryStatus();
+            	}
+            },function(error) {
+            	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+            })
         }
     }
 </script>
@@ -228,16 +296,53 @@
 		height:56px
 	}
 	.card-control-img {
-		width:48px;
-		height:50px
+		width:60px;
+		height:60px
 	}
 	.card-icon {
 		align-items: flex-end;
 		margin-top:-60px;
 	}
+	.icon-offline {
+		width: 314px;
+		height: 314px;
+		opacity: 0.3;
+		box-shadow: 0 4px 7px 0 rgba(0,0,0,0.12);
+	}
 	.card-icon-img {
 		width:314px;
 		height:314px
+	}
+	.card-power-off {
+		width:694px;
+		height:392px;
+		margin-left:28px;
+		margin-right:28px;
+		margin-top:28px;
+		background-color: #D8D8DE;
+		flex-direction: row;
+		border-radius: 6px;
+		justify-content: center;
+		align-items: flex-end;
+	}
+	.text-offline {
+		font-family: PingFangSC-Regular;
+		font-size: 28px;
+		color: #5D75F6;
+		letter-spacing: 0;
+		text-align: center;
+	}
+	.text-offline-center {
+		position: absolute;
+		right:300px;
+		top:190px;
+		align-items: center;
+	}
+	.control-div-offline {
+		position: absolute;
+		right:32px;
+		top:32px;
+		align-items: center;
 	}
 	.smart {
 		flex-direction: column;

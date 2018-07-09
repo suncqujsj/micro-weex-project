@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper" @viewappear="refreshPage">
         <midea-header title="" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" :showLeftImg="false" :showRightImg="true" rightImg="./assets/img/service_ic_call@3x.png" @rightImgClick="showHotLine">
         </midea-header>
         <list>
@@ -8,7 +8,7 @@
                     <text class="service-title">服务</text>
                     <text class="service-desc">在线客服，随时为您提供服务</text>
                     <div class="service-desc-img-wrapper">
-                        <image class="service-desc-img" src="./assets/img/servie_pic_banner03@3x.png" resize='contain'></image>
+                        <image class="service-desc-img" src="./assets/img/servie_pic_service@3x.png" resize='contain'></image>
                     </div>
                 </div>
                 <div class="navigation-list">
@@ -41,7 +41,7 @@
                 </image>
                 <text slot="title" class="service-item-title">网点查询</text>
             </midea-item>
-            <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('serviceAndCharge')">
+            <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('serviceList')">
                 <image slot="itemImg" src="./assets/img/service_ic_policy@3x.png" class="service-item-img" resize='contain'>
                 </image>
                 <text slot="title" class="service-item-title">服务与收费政策</text>
@@ -55,7 +55,7 @@
             <cell class="wrapper-gap"></cell>
         </list>
 
-        <midea-actionsheet :items="actionsheetItems" :show="showBar" @close="closeActionsheet" @itemClick="actionsheetItemClick" @btnClick="actionsheetBtnClick" ref="actionsheet">
+        <midea-actionsheet class="actionsheet-popup" :items="actionsheetItems" button="取消" :show="showBar" @close="closeActionsheet" @itemClick="actionsheetItemClick" @btnClick="actionsheetBtnClick" ref="actionsheet">
             <div slot="item-0" class="actionsheet-item">
                 <text class="actionsheet-item-label">美的：</text>
                 <text class="actionsheet-item-desc">400-889-9315</text>
@@ -70,7 +70,7 @@
 
 <script>
 import base from './base'
-import orderBase from './order-base'
+import orderBase from './orderBase'
 import nativeService from './settings/nativeService'
 import debugUtil from '@/common/util/debugUtil'
 import util from '@/common/util/util'
@@ -116,18 +116,18 @@ export default {
         }
     },
     methods: {
-        handlePageData(data) {
-            if (data.key == "createOrder") {
-                this.getOrderList()
-            }
+        refreshPage() {
+            nativeService.getUserInfo().then((data) => {
+                if (data.uid) {
+                    this.getOrderList()
+                } else {
+                    this.order = null
+                }
+            })
         },
         getOrderList() {
-            let status = []
-            for (let index = 10; index < 17; index++) {
-                status.push(index)
-            }
             let param = {
-                dispatchOrderStatus: "10;11;12;13;14;15;16",  //在途工单派工单状态
+                interfaceSource: "SMART",
                 page: 0,
                 resultNum: 1
             }
@@ -135,10 +135,23 @@ export default {
                 if (data.list && data.list.length > 0) {
                     this.order = data.list[0]
                 }
+            }).catch((error) => {
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         },
         itemClicked(item) {
-            this.goTo(item.page)
+            nativeService.getUserInfo().then((data) => {
+                if (data.uid) {
+                    //已经登录
+                    this.goTo(item.page)
+                } else {
+                    //未登录
+                    nativeService.jumpNativePage({
+                        "pageName": "login", //跳转到登录界面
+                        "data": {}
+                    })
+                }
+            })
         },
         showHotLine() {
             this.showBar = true;
@@ -178,13 +191,10 @@ export default {
             }
         }
     },
-    beforeCreate() {
-        console.log('beforeCreate:在初始化内部变量，并且添加了事件功能后被触发')
-    },
     created() {
         debugUtil.cleanDebugLog()
         this.resetStorage()
-        this.getOrderList()
+        this.refreshPage()
     }
 }
 </script>
@@ -315,6 +325,9 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 32px;
   color: #000000;
+}
+.actionsheet-popup {
+  /* margin-bottom: 98px; */
 }
 .actionsheet-item {
   flex-direction: row;

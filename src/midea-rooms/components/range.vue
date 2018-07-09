@@ -84,7 +84,6 @@
                 tmp.minBtn.left = w* (this.rangeMin-this.min)/len
                 tmp.maxBtn.right = w* (this.max-this.rangeMax)/len
                 
-                // nativeService.alert(tmp)
                 return tmp
             },
         },

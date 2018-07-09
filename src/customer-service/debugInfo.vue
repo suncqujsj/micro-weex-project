@@ -5,13 +5,13 @@
         <div class="header-action">
             <text class="action" @click="clean">清空</text>
             <text class="action" @click="refresh">刷新</text>
-            <text class="action" @click="copyLog">拷贝日志</text>
+            <text class="action" @click="copyLog('')">拷贝日志</text>
             <text class="action" @click="getConfig">信息({{plugin_version}})</text>
             <text class="action" @click="showAppData">全局数据</text>
-            <text class="action" @click="testfunc">测试</text>
+            <text class="action" @click="testfunc">是否iphoneX:{{isipx}}</text>
         </div>
         <scroller class="info-box">
-            <text class="note">{{content}}</text>
+            <div v-for="(item, index) in convertedContent" :key="index" class="note" @longpress="copyLog(item)">{{item}}</div>
         </scroller>
 
         <midea-select :show="isShow" title="选择key" :items="list" @close="isShow=false" @itemClick="itemClick"></midea-select>
@@ -42,6 +42,15 @@ export default {
             list: []
         }
     },
+    computed: {
+        convertedContent() {
+            if (this.content) {
+                return this.content.split("\n\n")
+            } else {
+                return []
+            }
+        }
+    },
     methods: {
         getLogData() {
             debugUtil.getDebugLog().then((data) => {
@@ -58,8 +67,8 @@ export default {
         refresh() {
             this.getLogData()
         },
-        copyLog() {
-            clipboard.setString(this.content)
+        copyLog(item) {
+            clipboard.setString(item || this.content)
             nativeService.toast("已拷贝日志到粘贴板")
         },
         getConfig() {
@@ -127,6 +136,10 @@ export default {
   line-height: 38px;
   margin-left: 30px;
   margin-right: 30px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom-color: #000000;
+  border-bottom-width: 1px;
 }
 
 .header-action {

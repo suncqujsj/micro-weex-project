@@ -1,27 +1,37 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
 	    <div class="box">
-	        <div>
+	        <div v-if="onlineStatus == '1'">
 		    	 <div class="card card-hot">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
-	        				<text class="main-status">02:30</text>
+	        				<text class="main-status main-status-exception" :class="[work_status != 'order'?'main-status-simple':'']">{{display_value}}</text>
 	        				<text class="danwei"></text>
 	        			</div>
-	        			<text class="main-status-second">设置时间</text>
+	        			<text class="main-status-second">{{display_value2}}</text>
 		        		<div class="card-status-detail">
-		        			<text class="main-status-third">高火</text>
+		        			<text class="main-status-third">{{mode}}</text>
 		        		</div>
 		        	</div>
 		        	<div class="card-right">
-		        		<div class="card-control" @click="powerOnoff">
-		        			<image class="card-control-img" src="./assets/img/smart_ic_alarm@2x.png"></image>
+		        		<div class="card-control" @click="lockSwitch">
+		        			<image class="card-control-img" :src="deviceLock"></image>
 		        		</div>
-		        		<div class="card-icon">
+		        		<div class="card-icon" @click="showControlPanelPage">
 		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip022@2x.png"></image>
 		        		</div>
 		        	</div>
 		        </div>
+	        </div>
+	        <div class="card-power-off" v-else>
+	        	<div class="control-div-offline">
+	        		<image class="card-control-img" :src="powerIcon_offline"  @click="reload"></image>
+	        		<text class="text-offline">重连</text>
+	        	</div>
+	        	<div>
+	        		<image class="icon-offline" src="./assets/img/smart_img_equip022@2x.png"></image>
+	        	</div>
+	        	<text class="text-offline-center">已离线</text>
 	        </div>
 	        <div class="smart">
 		        <div class="smart-title">
@@ -36,12 +46,16 @@
 
 <script>
     import nativeService from '@/common/services/nativeService.js'
-		import mideaSwitch from '@/midea-component/switch.vue'
-		import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
-		import mideaItem from '@/midea-component/item.vue'
-		const modal = weex.requireModule('modal');
-		const dom = weex.requireModule('dom');
-		var stream = weex.requireModule('stream');
+	import mideaSwitch from '@/midea-component/switch.vue'
+	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
+	import mideaItem from '@/midea-component/item.vue'
+	import Mock from './settings/mock'
+	import { DEVICE_STATUS } from './settings/deviceStatus'
+	const modal = weex.requireModule('modal');
+	const dom = weex.requireModule('dom');
+	var stream = weex.requireModule('stream');
+	const globalEvent = weex.requireModule('globalEvent');
+	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
             mideaSwitch,
@@ -50,11 +64,26 @@
         },
         data() {
             return {
+            	deviceId:"",
+            	deviceName: "",
+            	deviceType: "",
+            	deviceSubType: "",
+            	deviceSn: "",
+            	onlineStatus:"",
+            	
+            	pushKey: "receiveMessage",
+            	pushKeyOnline: "receiveMessageFromApp",
                 mideaChecked: true,
                 mideaChecked2: false,
-                currentTemperture:38,
-                power:"off",
-                currentStatus:"auto",
+                onoff: "",
+                work_status: "",
+                mode: "",
+                minutes: "",
+                second: "",
+                lock: "",
+                display_value: "",
+                display_value2: "",
+                powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
                 data:{
                  	title:"室内温度高于28°度时候，自动开启空调。",
                  	detail:"模式制冷，温度23."
@@ -81,19 +110,11 @@
              onMideachange2(event) {
             		//modal.toast({ 'message': event.value, 'duration': 2 });
             },
-            changeTemperture(event) {
-	            	let currentSetTemperture = Math.ceil(event.contentOffset.x/52) +29;
-	            	if(currentSetTemperture <= 17) {
-	            		currentSetTemperture = 17;
-	            	} else if (currentSetTemperture >= 30) {
-	            		currentSetTemperture = 30;
-	            	}
-	            	this.currentTemperture = currentSetTemperture;
-            },
             queryStatus () {
             	let self = this;
             	let params = {
             			"operation":"luaQuery",
+            			"name":"deviceinfo",
             			"data":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
@@ -103,57 +124,120 @@
             	});
             },
             updateUI(data) {
-            	console.log("yoram:");
-            	console.dir(data);
+            	if(data.errorCode == 0) {
+	                let params = data.params || data.result;
+	                this.onoff = params.power;
+	                this.mode = DEVICE_STATUS.mode[params.mode];
+					this.work_status = DEVICE_STATUS.work_status[params.work_status];
+					this.minutes = params.minutes;
+	                this.second = params.second;
+	                this.lock = params.lock;
+	                if(params.work_status == "order") {
+	                	this.display_value = this.minutes+"分"+this.second+"秒";	
+	                	this.display_value2 = "后开始运行";
+	                } else {
+	                	this.display_value = this.work_status || "--";
+	                	this.mode = DEVICE_STATUS.mode[params.mode] || "--";
+	                	this.display_value2 = "";
+	                }
+	                
+				}else {
+	                modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+	            }
             },
-            powerOnoff() {
-            	//nativeService.getPath((weexPath)=> {
-		            	stream.fetch({
-		            		method:'get',
-		            		url:"/dist/T0xAC/dummy/delDevice.js",
-		            		type:"json"
-		            	},function(ret) {
-		            		console.dir(nativeService.convertToJson(ret.data))
-		            	},function(response) {
-		            		console.dir(nativeService.convertToJson(response.data));
-		            	})
-		          // });
-		        }
+            updateUILock(data) {
+            	if(data.errorCode == 0) {
+	                let params = data.params || data.result;
+	                this.lock = params.lock;
+				}else {
+	                nativeService.toast("连接设备超时");
+	            }
+            },
+            updateDeviceInfo(data) {
+            	this.deviceId = data.deviceId;
+            	this.deviceName = data.deviceName;
+            	this.deviceType = data.deviceType;
+            	this.deviceSubType = data.deviceSubType;
+            	this.deviceSn = data.deviceSn;
+            	this.onlineStatus = data.isOnline;
+            },
+            lockSwitch() {
+            	let self = this;
+            	if(self.work_status == "work") {
+            		nativeService.toast("工作中不能进行童锁操作");
+            		return;
+            	}
+		        let name = this.lock == "on"? "off":"on";
+		        let lockSwitch = this.lock == "on"? "off" : "on";
+            	let params = {
+            			"operation":"luaControl",
+            			"name":name,
+            			"data":{
+            				"lock": lockSwitch,
+            			}
+            		};
+            	nativeService.sendLuaRequest(params,true).then(function(data) {
+            		//self.updateUI(data);
+            		self.updateUILock(data);
+            	},function(error) {
+            		console.log("error");
+            	});
+            },
+            handleNotification() {
+            	console.log("handleNotification Yoram");
+            	let me = this;
+            	globalEvent.addEventListener(this.pushKey, (data) => {
+            		me.queryStatus();
+		        });
+		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
+            		if(data && data.messageType == "deviceOnlineStatus") {
+            			if(data.messageBody && data.messageBody.onlineStatus == "online") {
+            				me.onlineStatus = "1";
+            			} else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+            				me.onlineStatus = "0";
+            			} else {
+            				me.onlineStatus = "0";
+            			}
+            		}
+		        });
+            },
+            showControlPanelPage() {
+            	let params = {
+            		controlPanelName:"controlPanel.html"
+            	};
+            	bridgeModule.showControlPanelPage(params);
+            },
+            reload() {
+            	let params = {};
+            	bridgeModule.reload(params,function(result) {
+            		//successful
+            	},function(error) {
+            		//fail
+            	});
+            },
         },
         computed: {
-				powerOnoffImg () {
-		            let img = "./assets/img/smart_ic_power@2x.png";
-		            if(this.power == "on") {
-		                img = "./assets/img/smart_ic_power@2x.png";
-		            } else {
-		                img = "./assets/img/smart_ic_power@2x.png";
-		            }
-		            return img;
-		        },
-		        startPause() {
-		        	let img = "./assets/img/smart_ic_power@2x.png";
-		            if(this.power == "on") {
-		                img = "./assets/img/smart_ic_power@2x.png";
-		            } else {
-		                img = "./assets/img/smart_ic_power@2x.png";
-		            }
-		            return img;
-		        },
-	        	statusImg() {
-		        		let img = "./assets/img/smart_ic_smart@2x.png";
-		        		if(this.currentStatus == "auto") {
-		        			img = "./assets/img/smart_ic_smart@2x.png"
-		        		} else if(this.currentStatus == "cold") {
-		        			img = "./assets/img/smart_ic_smart@2x.png"
-		        		}
-		        		return img;
+	        	deviceLock() {
+	        		let img = "";
+	        		if(this.lock == "on") {
+	        			img = "./assets/img/smart_ic_lock_white@2x.png";
+	        		} else {
+	        			img = "./assets/img/smart_ic_unlock_white@2x.png";
+	        		}
+	        		return img;
 	        	}
         },
         mounted() {
-	        	const el = this.$refs.scrollBar;
-	        	//modal.toast({ 'message': this.currentTemperture, 'duration': 2 });
-            dom.scrollToElement(el,{offset:parseInt(30 - this.currentTemperture) * 52})
-            //this.queryStatus();
+	       let self = this;
+            nativeService.getDeviceInfo().then(function(data) {
+            	self.updateDeviceInfo(data.result);
+            	self.handleNotification();
+            	if(data.result.isOnline || data.result.isOnline == 1) {
+            		self.queryStatus();
+            	}
+            },function(error) {
+            	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+            })
         }
     }
 </script>
@@ -180,6 +264,37 @@
 	.card-hot {
 		background-color: #FFBD00;
 	}
+	.card-power-off {
+		width:694px;
+		height:392px;
+		margin-left:28px;
+		margin-right:28px;
+		margin-top:28px;
+		background-color: #D8D8DE;
+		flex-direction: row;
+		border-radius: 6px;
+		justify-content: center;
+		align-items: flex-end;
+	}
+	.text-offline {
+		font-family: PingFangSC-Regular;
+		font-size: 28px;
+		color: #5D75F6;
+		letter-spacing: 0;
+		text-align: center;
+	}
+	.text-offline-center {
+		position: absolute;
+		right:333px;
+		top:155px;
+		align-items: center;
+	}
+	.control-div-offline {
+		position: absolute;
+		right:32px;
+		top:32px;
+		align-items: center;
+	}
 	.card-control {
 		align-items: flex-end;
 		margin-top:44px;
@@ -197,8 +312,14 @@
 		height:56px;
 	}
 	.card-control-img {
-		width:48px;
-		height:50px
+		width:60px;
+		height:60px
+	}
+	.icon-offline {
+		width: 314px;
+		height: 314px;
+		opacity: 0.3;
+		box-shadow: 0 5px 6px 0 rgba(0,0,0,0.12);
 	}
 	.card-icon {
 		align-items: flex-end;
@@ -214,9 +335,16 @@
 		margin-top:32px;
 		margin-left:30px
 	}
+	.main-status-simple {
+		font-size: 75px;
+		margin-top: 74px;
+	}
 	.main-status {
 		font-size: 128px;
 		color: #FFFFFF;
+	}
+	.main-status-exception {
+		font-size: 70px;
 	}
 	.danwei {
 		font-family: PingFangSC-Light;

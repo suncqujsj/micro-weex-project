@@ -22,57 +22,39 @@ export const all = [
             "errorCode": 0,
 		    "params": {
 		        "power": "on",
-		        "mode": "cool",
-		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "mode": "baking",
+		        "work_status": "end",
+		        "minutes": "20",
+		        "second": "30",
+		        "lock": "on"
 		    }
         }
     },
     {
-        path: 'poweroff',
-        data: {
-            "errorCode": 0,
-		    "params": {
-		        "power": "off",
-		        "mode": "auto",
-		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
-		    }
-        }
-    },
-    {
-        path: 'temperatureControl',
+        path: 'on',
         data: {
             "errorCode": 0,
 		    "params": {
 		        "power": "on",
-		        "mode": "fan",
-		        "temperature": "26",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "mode": "unfreeze",
+		        "work_status": "order",
+		        "minutes": "25",
+		        "second": "35",
+		        "lock": "on"
 		    }
         }
     },
     {
-        path: 'poweron',
+        path: 'off',
         data: {
             "errorCode": 0,
 		    "params": {
 		        "power": "on",
-		        "mode": "auto",
-		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "mode": "ferment",
+		        "work_status": "order",
+		        "minutes": "22",
+		        "second": "33",
+		        "lock": "off"
 		    }
         }
     },
@@ -103,15 +85,12 @@ export const all = [
         data: {
             "msg": "",
             "result": {
-                "deviceID": "1099511629098",
-                "deviceSSID": "",
-                "deviceName": "冰箱541F",
-                "deviceType": "0xCA",
+                "deviceId": "1099511629098",
+                "deviceName": "空调541F",
+                "deviceType": "0xAC",
                 "deviceSubType": "0",
-                "online": "1",
-                "deviceDescription": "",
-                "activated": "",
-                "isDeviceOwner": "1"
+                "isOnline": "1",
+                "deviceSn": "",
             },
             "errorCode": "0"
         }

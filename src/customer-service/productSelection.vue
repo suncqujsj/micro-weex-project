@@ -9,16 +9,23 @@
             </div>
         </div>
         <div class="product-content">
-            <scroller class="product-content-left">
-                <text v-if="fromPage == 'maintenance'" v-bind:class="['product-brand',
+            <div class="product-content-left">
+                <scroller class="product-content-left-scroller">
+                    <text v-if="fromPage == 'maintenance'" v-bind:class="['product-brand',
                     selectedBrandIndex==-1?'product-brand-selected':'']" @click="selectBrand(-1)">我的家电</text>
-                <text v-for="(brandItem,brandIndex) in productList" :key="brandIndex" v-bind:class="['product-brand',
+                    <text v-for="(brandItem,brandIndex) in productList" :key="brandIndex" v-bind:class="['product-brand',
                     brandIndex==selectedBrandIndex?'product-brand-selected':'']" @click="selectBrand(brandIndex)">{{brandItem.brand}}</text>
-            </scroller>
+                </scroller>
+            </div>
             <scroller class="product-content-right">
                 <div v-if="selectedBrandIndex==-1" class="product-group">
                     <text class="product-group-title">我的家电</text>
                     <div class="product-group-content">
+                        <div class="empty-page" v-if="isLoaded && convertedMyProductList.length == 0">
+                            <image class="empty-page-icon" src="./assets/img/default_ic_noequitmentlight@3x.png" resize='contain'>
+                            </image>
+                            <text class="empty-page-text">您还没有家电</text>
+                        </div>
                         <div class="product-appliance-wrapper" v-for="(myProductItem,myProductIndex) in convertedMyProductList" :key="myProductIndex" @click="selectProductItem($event, myProductItem)">
                             <div class="product-appliance">
                                 <image class="appliance-img" :src="myProductItem.productImgUrl" resize="contain"></image>
@@ -35,25 +42,28 @@
                                 <image class="appliance-img" :src="categaryItem.isShowImage?productItem.prodImg:''" resize="contain"></image>
                                 <text class="appliance-name">{{productItem.prodName}}</text>
                             </div>
-                            <image v-if="isMultiMode && !checkIsSelected(productItem)" class="appliance-add-img" src="./assets/img/service_ic_addone@3x.png" resize="contain"></image>
+                            <image v-if="isMultiMode" class="appliance-add-img" src="./assets/img/service_ic_addone@3x.png" resize="contain"></image>
                         </div>
                     </div>
                 </div>
             </scroller>
         </div>
-        <div v-if="isShowAnimation" class="animation-outer" ref="outer">
+        <div v-if="isShowingAnimation" class="animation-outer" ref="outer">
             <div class="animation-inner" ref="inner" :style="{'left': animationConfig.startX,'top': animationConfig.startY}">
-                <image class="animation-img" :src="selectedProductArray[selectedProductArray.length - 1].prodImg || './assets/img/product/default.png'" resize="contain"></image>
+                <image class="animation-img" :src="animationImage" resize="contain"></image>
             </div>
         </div>
         <div v-if="isMultiMode" class="action-bar">
             <div class="product-selected-items-wrapper">
-                <scroller class="product-selected-items" scroll-direction="horizontal">
-                    <div v-if="selectedProductArray" class="selected-action-wrapper" v-for="(item,index) in selectedProductArray" :key="index" :ref="'selectedProduct'+index" @click="removeSelectedProduct(index)">
+                <scroller v-if="selectedProductArray && selectedProductArray.length>0" class="product-selected-items" scroll-direction="horizontal">
+                    <div class="selected-action-wrapper" v-for="(item,index) in selectedProductArray" :key="index" :ref="'selectedProduct'+index" @click="removeSelectedProduct(index)">
                         <text class="selected-action-desc">{{item.prodName}}</text>
                         <image class="selected-action-img" :src="'./assets/img/service_ic_delone@3x.png'" resize="contain"></image>
                     </div>
                 </scroller>
+                <div v-else>
+                    <text class="selected-selected-desc">选择需安装的产品</text>
+                </div>
             </div>
             <text v-bind:class="['action-btn',selectedProductArray.length>0?'':'disable-btn']" @click="submit">完成</text>
         </div>
@@ -77,12 +87,14 @@ export default {
         return {
             title: '选择需服务产品',
             myProductList: [],
+            isLoaded: false,
             productList: [],
             selectedBrandIndex: 0,
             dialogShow: false,
             isMultiMode: false,
             enableAnimation: true,
-            isShowAnimation: false,
+            isShowingAnimation: false,
+            animationImage: '',
             isProceedingSelection: false,
             animationConfig: {
                 startX: 0,
@@ -93,7 +105,7 @@ export default {
     },
     computed: {
         convertedMyProductList() {
-            let result
+            let result = []
             if (this.myProductList && this.myProductList.length > 0) {
                 result = this.myProductList.map((item) => {
                     return Object.assign(item, {
@@ -126,10 +138,10 @@ export default {
         searchProduct() {
             if (this.isMultiMode) {
                 //选择后返回本页
-                this.goTo("productSearch", {}, { from: 'productSelection' })
+                this.goTo("productSearch", {}, { from: 'productSelection', 'isMultiMode': this.isMultiMode })
             } else {
                 //选择后跳转到toPage页
-                this.goTo("productSearch", {}, { from: this.fromPage, to: this.toPage })
+                this.goTo("productSearch", {}, { from: this.fromPage, to: this.toPage, 'isMultiMode': this.isMultiMode })
             }
         },
         selectBrand(index) {
@@ -138,44 +150,36 @@ export default {
         showImage(event, item) {
             item.isShowImage = true
         },
-        checkIsSelected(productItem) {
-            let result = []
-            if (this.selectedProductArray && this.selectedProductArray.length > 0) {
-                result = this.selectedProductArray.filter((item) => {
-                    return item.brandCode == productItem.brandCode && item.prodCode == productItem.prodCode
-                })
-            }
-            return result.length > 0 ? true : false
-        },
         selectProductItem(event, productItem) {
             if (this.isProceedingSelection) return
 
             if (this.isMultiMode) {
                 //多选模式
-                if (!this.checkIsSelected(productItem)) {
-                    //之前未被选中
-                    if (this.selectedProductArray.length < 5) {
-                        this.isProceedingSelection = true
+                if (this.selectedProductArray.length < 6) {
+                    this.isProceedingSelection = true
+                    this.selectedProductArray.push(productItem)
+                    if (event && this.enableAnimation) {
+                        this.animationImage = productItem.prodImg
+                        this.isShowingAnimation = true
+                    }
+                    this.$nextTick(() => {
                         if (event && this.enableAnimation) {
-                            this.selectedProductArray.push(productItem)
                             this.showSelectAnimation(event, () => {
+                                this.animationImage = ''
+                                this.isShowingAnimation = false
                                 this.isProceedingSelection = false
-                                this.$nextTick(() => {
-                                    const el = this.$refs["selectedProduct" + (this.selectedProductArray.length - 1)][0]
-                                    dom.scrollToElement(el, {})
-                                })
                             })
                         } else {
-                            this.selectedProductArray.push(productItem)
                             this.isProceedingSelection = false
-                            this.$nextTick(() => {
-                                const el = this.$refs["selectedProduct" + (this.selectedProductArray.length - 1)][0]
-                                dom.scrollToElement(el, {})
-                            })
                         }
-                    } else {
-                        nativeService.toast("最多只能选5个")
-                    }
+                        if (this.selectedProductArray.length > 3) {
+                            const el = this.$refs["selectedProduct" + (this.selectedProductArray.length - 1)][0]
+                            dom.scrollToElement(el, { offset: 0, animated: true })
+                        }
+                    })
+
+                } else {
+                    nativeService.toast("最多只能选6个")
                 }
             } else {
                 this.selectedProductArray.splice(0, this.selectedProductArray.length, productItem)
@@ -186,8 +190,6 @@ export default {
         showSelectAnimation(event, callback) {
             this.animationConfig.startX = event.position.x
             this.animationConfig.startY = event.position.y
-
-            this.isShowAnimation = true
             const duration = 600
             this.$nextTick(() => {
                 //清楚之前的效果
@@ -200,39 +202,40 @@ export default {
                     duration: 0, //ms
                     timingFunction: 'linear',
                     delay: 0 //ms
-                })
-                var innerEl = this.$refs.inner;
-                animation.transition(innerEl, {
-                    styles: {
-                        transform: 'translateY(0px)',
-                        transformOrigin: 'center center'
-                    },
-                    duration: 0, //ms
-                    timingFunction: 'linear',
-                    delay: 0 //ms
-                })
-                //执行动画
-                animation.transition(outerEl, {
-                    styles: {
-                        transform: 'translateX(' + (100 - event.position.x) + 'px)',
-                        transformOrigin: 'center center'
-                    },
-                    duration: duration, //ms
-                    timingFunction: 'linear',
-                    delay: 0 //ms
-                }, function () {
-                })
-                animation.transition(innerEl, {
-                    styles: {
-                        transform: 'translateY(' + (this.pageHeight - event.position.y - 100) + 'px) scale(0.5)',
-                        transformOrigin: 'center center'
-                    },
-                    duration: duration + 1, //ms
-                    timingFunction: 'cubic-bezier(.38,-0.93,.66,.74)',
-                    delay: 0 //ms
-                }, function () {
-                    callback()
-                    this.isShowAnimation = false
+                }, () => {
+                    var innerEl = this.$refs.inner;
+                    animation.transition(innerEl, {
+                        styles: {
+                            transform: 'translateY(0px)',
+                            transformOrigin: 'center center'
+                        },
+                        duration: 0, //ms
+                        timingFunction: 'linear',
+                        delay: 0 //ms
+                    }, () => {
+                        //执行动画
+                        animation.transition(outerEl, {
+                            styles: {
+                                transform: 'translateX(' + (100 - event.position.x) + 'px)',
+                                transformOrigin: 'center center'
+                            },
+                            duration: duration, //ms
+                            timingFunction: 'linear',
+                            delay: 0 //ms
+                        }, () => {
+                        })
+                        animation.transition(innerEl, {
+                            styles: {
+                                transform: 'translateY(' + (this.pageHeight - event.position.y - 100) + 'px) scale(0.5)',
+                                transformOrigin: 'center center'
+                            },
+                            duration: duration + 1, //ms
+                            timingFunction: 'cubic-bezier(.38,-0.93,.66,.74)',
+                            delay: 0 //ms
+                        }, () => {
+                            callback()
+                        })
+                    })
                 })
             })
         },
@@ -275,7 +278,7 @@ export default {
             nativeService.getProdTypeForInstallation(param).then((data) => {
                 this.productList = data
             }).catch((error) => {
-                nativeService.toast(nativeService.getCssErrorMessage(error))
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
             //反选之前选中的
             nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, (resp) => {
@@ -285,17 +288,23 @@ export default {
             })
         } else {
             if (this.fromPage == "maintenance") {
-                this.selectedBrandIndex = -1
                 //我的家电
                 let param = {
                     pageIndex: 1,
-                    pageSize: 100
-
+                    pageSize: 100,
+                    selectType: 1,
+                    isIntelligent: 1
                 }
                 nativeService.getUserProductPageList(param).then((data) => {
                     this.myProductList = data.data.list
+                    if (this.myProductList && this.myProductList.length > 0) {
+                        this.selectedBrandIndex = -1
+                    } else {
+                        this.selectedBrandIndex = 0
+                    }
+                    this.isLoaded = true
                 }).catch((error) => {
-                    nativeService.toast(nativeService.getCssErrorMessage(error))
+                    nativeService.toast(nativeService.getErrorMessage(error))
                 })
             }
             //所有产品品类列表
@@ -306,7 +315,7 @@ export default {
             nativeService.getProdType(param).then((data) => {
                 this.productList = data
             }).catch((error) => {
-                nativeService.toast(nativeService.getCssErrorMessage(error))
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         }
     }
@@ -349,13 +358,16 @@ export default {
 .product-content {
   flex: 1;
   flex-direction: row;
+  justify-content: flex-start;
 }
 .product-content-left {
-  flex: 1;
-  align-content: center;
-  align-items: center;
+  width: 200px;
   border-right-color: #e5e5e8;
   border-right-width: 2px;
+}
+.product-content-left-scroller {
+  align-content: center;
+  align-items: center;
 }
 .product-brand {
   width: 200px;
@@ -377,7 +389,7 @@ export default {
   background-color: #f2f2f2;
 }
 .product-content-right {
-  flex: 2.75;
+  flex: 1;
   justify-content: flex-start;
   align-items: center;
 }
@@ -450,7 +462,7 @@ export default {
   padding-right: 32px;
 }
 .product-selected-items {
-  flex: 1;
+  width: 530px;
   height: 96px;
   flex-direction: row;
   justify-content: flex-start;
@@ -481,6 +493,11 @@ export default {
   right: 0px;
   height: 24px;
   width: 24px;
+}
+.selected-selected-desc {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #000000;
 }
 .action-btn {
   width: 120px;
@@ -519,5 +536,24 @@ export default {
   border-color: #e2e2e2;
   border-width: 1px;
   background-color: #e2e2e2;
+}
+
+.empty-page {
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 164px;
+}
+.empty-page-icon {
+  width: 240px;
+  height: 240px;
+}
+.empty-page-text {
+  padding-top: 36px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #888888;
+  text-align: center;
 }
 </style>

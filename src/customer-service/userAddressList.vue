@@ -3,6 +3,11 @@
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back" :showRightImg="true" rightImg="./assets/img/home_ic_add@3x.png" @rightImgClick="addAddress">
         </midea-header>
         <scroller loadmoreoffset=750 @loadmore="loadmore">
+            <div class="empty-page" v-if="isLoaded && userAddressList.length == 0">
+                <image class="empty-page-icon" src="./assets/img/default_ic_noaddress@3x.png" resize='contain'>
+                </image>
+                <text class="empty-page-text">还没有地址，{{'\n'}}请点击右上角+添加</text>
+            </div>
             <div v-for="(item, index) in userAddressList" :key="index" class="address-block" @click="submit(item)">
                 <div class="text-img">
                     <image v-if="selectedId==item.userAddrId" class="text-img" src="./assets/img/service_ic_checkbox@3x.png" resize='contain'></image>
@@ -18,8 +23,10 @@
                     <image class="edit-img" src="./assets/img/service_ic_edit@3x.png" resize='contain' @click="goToAddressDetail(item)"></image>
                 </div>
             </div>
-            <text class="loading-end" v-if="!loadingEnd">加载中...</text>
-            <text class="loading-end" v-if="loadingEnd">———— 到底了 ————</text>
+            <div class="list-end" v-if="isLoaded">
+                <text class="loading-end" v-if="hasNext && !loadingEnd">加载中...</text>
+                <!-- <text class="loading-end" v-if="loadingEnd">———— 到底了 ————</text> -->
+            </div>
         </scroller>
     </div>
 </template>
@@ -40,6 +47,8 @@ export default {
             title: '我的地址',
             selectedId: null,
             userAddressList: [],
+            isLoaded: false,
+            hasNext: false,
             addressListParam: null,
             addressListPage: 1,
             loadingEnd: false
@@ -58,6 +67,7 @@ export default {
             this.userAddressList = []
             this.addressListParam = null
             this.addressListPage = 1
+            this.hasNext = false
             this.loadingEnd = false
         },
         getAddressList() {
@@ -68,11 +78,16 @@ export default {
             this.addressListParam = param
             nativeService.getUserAddrPageList(this.addressListParam).then((data) => {
                 this.userAddressList = data.data.list
+                this.isLoaded = true
                 if (data.data.isLastPage) {
                     this.$nextTick(e => {
                         this.loadingEnd = true
                     })
+                } else {
+                    this.hasNext = false
                 }
+            }).catch((error) => {
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         },
         loadmore(event) {
@@ -87,6 +102,8 @@ export default {
                             this.loadingEnd = true
                         });
                     }
+                }).catch((error) => {
+                    nativeService.toast(nativeService.getErrorMessage(error))
                 })
             }, 1500)
         },
@@ -182,6 +199,10 @@ export default {
   height: 40px;
 }
 
+.list-end {
+  margin-top: 20px;
+  margin-bottom: 100px;
+}
 .loading-end {
   width: 750px;
   padding: 30px 0;
@@ -190,5 +211,24 @@ export default {
   text-align: center;
   font-family: PingFangSC-Regular;
   font-size: 24px;
+}
+
+.empty-page {
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 272px;
+}
+.empty-page-icon {
+  width: 240px;
+  height: 240px;
+}
+.empty-page-text {
+  padding-top: 36px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #888888;
+  text-align: center;
 }
 </style>

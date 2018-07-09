@@ -20,7 +20,7 @@
         background-color: #f2f2f2;
     }
     .next{
-        position:fixed;
+        position: absolute;
         right: 10px;
         top: 30px;
     }
@@ -45,12 +45,21 @@
     import MideaCell from '@/midea-component/cell.vue'
     import mideaList from '@/midea-rooms/components/list.vue'
     import checkItem from '@/midea-rooms/components/checkItem.vue'
+
+
+    const channelAddAuto = new BroadcastChannel('autoBroadcast')
+
     export default {
         components:{ MideaHeader, MideaCell, mideaList, checkItem },
         computed:{
             wrapStyle(){
                 let tmp = {
                     height: this.pageHeight+'px'
+                }
+                if (this.isipx) {
+                    tmp.marginTop = '64px'
+                }else{
+                    tmp.marginTop = '40px'
                 }
                 return tmp
             }
@@ -103,7 +112,6 @@
                     //     desc: '例如室内PM2.5高于40时打开净化器',
                     //     icon: 'assets/img/slsleep.png',
                     //     sceneType: 5,
-                    
                     // },
                     // {
                     //     title: '设备状态变化时',
@@ -128,16 +136,26 @@
                 this.activeTypeIndex = index
             },
             goNext(){
+                let params = {
+                    from: 'addAuto',
+                    uid: this.uid,
+                    homegroupId: this.homegroupId,
+                    sceneType: this.autos[this.activeTypeIndex].sceneType,
+                    userDevices: nativeService.getParameters('userDevices')
+                }
                 if (this.autos[this.activeTypeIndex].sceneType == 2){
-                    this.goTo('autoBindDevices')
+                    this.goTo('autoBindDevices', {}, params)
                 }else if ( this.autos[this.activeTypeIndex].sceneType == 3){
-                    this.goTo('autoTypeSelect', {}, { sceneType: this.autos[this.activeTypeIndex].sceneType, direction: this.autos[this.activeTypeIndex].direction })
+                    params.direction = this.autos[this.activeTypeIndex].direction
+                    this.goTo('autoTypeSet', {}, params)
                 }else{
-                    this.goTo('autoTypeSelect', {}, { sceneType: this.autos[this.activeTypeIndex].sceneType })
+                    this.goTo('autoTypeSet', {}, params)
                 }
             }
         },
         created(){
+            this.uid = nativeService.getParameters('uid')
+            this.homegroupId = nativeService.getParameters('homegroupId')
         }
     }
 </script>

@@ -3,45 +3,46 @@
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller>
-            <image class="advertisement" src="./assets/img/servie_pic_banner03@3x.png" resize='contain'></image>
+            <image class="advertisement" src="./assets/img/service_img_gangwei@3x.png" resize='contain'></image>
 
             <div class="item-group">
                 <text class="info-title">滤芯防伪查询</text>
             </div>
 
-            <div class="item-group scan-group">
-                <input class="scan-input" type="text" placeholder="请输入编号或扫描二维码" :autofocus=false :value="code" @input="oninput" />
-
-                <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain' @click="scanCode"></image>
+            <div class="item-group">
+                <scan-input placeholder="请输入编号或扫描二维码" v-model="code" @scanCode="scanCode"></scan-input>
             </div>
 
-            <div class="item-group scan-group">
-                <input class="scan-input" type="text" placeholder="请输入4位验证码" :autofocus=false :value="validCode" @input="onValidCodeinput" />
+            <div class="item-group">
+                <input class="item-input" type="text" placeholder="请输入4位验证码" :autofocus=false v-model="validCode" :return-key-type="isDataReady?'search':'text'"  @return="submit" />
             </div>
             <div class="item-group">
                 <text class="info-label">适用于生产日期2017年7月1日之后的滤芯</text>
             </div>
 
             <div class="action-bar">
-                <midea-button text="提交" type="green" :btnStyle="{'background-color': '#267AFF','border-radius': '4px'}" @mideaButtonClicked="submit">
-                </midea-button>
+                <div class="action-btn" v-bind:class="[isDataReady?'':'action-btn-disable']" @click="submit">
+                    <text class="action-btn-text" v-bind:class="[isDataReady?'':'action-btn-text-disable']">查询</text>
+                </div>
             </div>
         </scroller>
-        <midea-dialog :title="result.message" mainBtnColor="#267AFF" secondBtnColor="#267AFF" :show="dialogShow" cancelText="否" confirmText="确定" @mideaDialogCancelBtnClicked="dialogConfirm" @mideaDialogConfirmBtnClicked="dialogConfirm" single=true>
+        <midea-dialog :title="result.message" mainBtnColor="#267AFF" secondBtnColor="#267AFF" :show="dialogShow" cancelText="否" confirmText="确认" @mideaDialogCancelBtnClicked="dialogConfirm" @mideaDialogConfirmBtnClicked="dialogConfirm" single=true>
         </midea-dialog>
     </div>
 </template>
 
 <script>
 import base from './base'
-import nativeService from './settings/nativeService';
+import nativeService from './settings/nativeService'
 
 import { MideaButton, MideaDialog } from '@/index'
+import ScanInput from '@/customer-service/components/scanInput.vue'
 
 export default {
     components: {
         MideaButton,
-        MideaDialog
+        MideaDialog,
+        ScanInput
     },
     mixins: [base],
     data() {
@@ -55,28 +56,28 @@ export default {
             dialogShow: false
         }
     },
+    computed: {
+        isDataReady() {
+            return this.code && this.validCode
+        }
+    },
     methods: {
-        oninput(event) {
-            this.code = event.value
-        },
-        scanCode() {
-            nativeService.scanCode().then(
-                (resp) => {
-                    if (resp.status == 0) {
-                        this.code = resp.data.substr(resp.data.lastIndexOf('/') + 1)
-                    }
-                }
-            )
-        },
-        onValidCodeinput(event) {
-            this.validCode = event.value
+        scanCode(result) {
+            this.code = result.substr(result.lastIndexOf('/') + 1)
         },
         submit() {
-            nativeService.antiFakeQuery({ code: this.code, validCode: this.validCode }).then(
+            if (!this.isDataReady) return
+
+            let param = {
+                Code: this.code + this.validCode
+            }
+            nativeService.antiFakeQuery(param).then(
                 (resp) => {
                     this.result = resp
                     if (resp.success && resp.result.ResultID) {
-                        nativeService.setItem(this.SERVICE_STORAGE_KEYS.antifakeResult, resp, (resp) => {
+                        nativeService.setItem(this.SERVICE_STORAGE_KEYS.antifakeResult, Object.assign({
+                            code: this.code
+                        }, resp), (resp) => {
                             this.goTo('antifakeResult')
                         })
                     } else {
@@ -84,7 +85,7 @@ export default {
                     }
                 }
             ).catch((error) => {
-                this.result.message = "请求失败，请稍后重试。"
+                this.result.message = error || "请求失败，请稍后重试。"
                 this.dialogShow = true
             })
         },
@@ -113,21 +114,12 @@ export default {
   background-color: #f2f2f2;
 }
 .item-group {
-  padding-top: 32px;
   padding-left: 32px;
   padding-right: 32px;
+  padding-top: 32px;
   background-color: #ffffff;
 }
-.info-title {
-  font-family: PingFangSC-Medium;
-  font-weight: 600;
-  font-size: 28px;
-  color: #000000;
-}
-.scan-group {
-  position: relative;
-}
-.scan-input {
+.item-input {
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #000000;
@@ -136,15 +128,14 @@ export default {
   border-width: 1px;
   height: 72px;
   padding-left: 22px;
-  padding-right: 50px;
+  padding-right: 60px;
   background-color: #fafafa;
 }
-.scan-icon {
-  position: absolute;
-  top: 40px;
-  right: 50px;
-  height: 40px;
-  width: 40px;
+.info-title {
+  font-family: PingFangSC-Medium;
+  font-weight: 600;
+  font-size: 28px;
+  color: #000000;
 }
 .result-title {
   font-family: PingFangSC-Medium;
@@ -169,5 +160,29 @@ export default {
   width: 750px;
   text-align: center;
   padding-bottom: 50px;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+.action-btn {
+  flex: 1;
+  border-radius: 4px;
+  border-color: #267aff;
+  border-width: 1px;
+  justify-content: center;
+  align-items: center;
+  height: 84px;
+  margin-top: 32px;
+}
+.action-btn-disable {
+  border-color: #e5e5e8;
+}
+.action-btn-text {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #267aff;
+  text-align: center;
+}
+.action-btn-text-disable {
+  color: #e5e5e8;
 }
 </style>

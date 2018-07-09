@@ -1,30 +1,57 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
 	    <div class="box">
-	        <div>
-		    	 <div class="card card-hot">
-		        	<div class="card-left">
-	        			<div class="main-status-div">
-	        				<text class="main-status">58</text>
-	        				<text class="danwei">°</text>
-	        			</div>
-	        			<text class="main-status-second">当前水温</text>
-		        		<div class="card-status-detail">
-		        			<text class="main-status-third">加热中/还需10分钟</text>
-		        		</div>
+	    	<div v-if="onlineStatus == '1'">
+	    		<div v-if="onoff == 'on'">
+			        <div>
+				    	 <div class="card card-hot">
+				        	<div class="card-left">
+			        			<div class="main-status-div">
+			        				<text class="main-status">{{currentTemperture}}</text>
+			        				<text class="danwei">°</text>
+			        			</div>
+			        			<text class="main-status-second">设置水温</text>
+				        		<div class="card-status-detail">
+				        			<text class="main-status-third">{{mode}}</text>
+				        		</div>
+				        		<div class="card-control-temp-div">
+				        			<image @click="down" class="cart-control-temp-img" src="./assets/img/smart_ic_reduce_huge@2x.png"></image>
+				        			<image @click="up" class="cart-control-temp-img cart-control-temp-img-right" src="./assets/img/smart_ic_increase_huge@2x.png"></image>
+				        		</div>
+				        	</div>
+				        	<div class="card-right">
+				        		<div class="card-control">
+				        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
+				        		</div>
+				        		<div class="card-icon" @click="showControlPanelPage">
+				        			<image class="card-icon-img" src="./assets/img/smart_pic_equip021@2x.png"></image>
+				        		</div>
+				        	</div>
+				        </div>
+			        </div>
+			        <div class="scroller-bar" v-if="1==2">
+			        	<scroller-bar :max="75" :min="30" :currentTemperture="currentTemperture" :offsetStep="5" @scrollerBarScroll="scrollerBarScroll"></scroller-bar>
+			        </div>
+			    </div>
+			    <div class="card-power-off" v-else>
+		        	<div class="control-div-offline">
+		        		<image class="card-control-img" :src="powerIcon_poweroff"  @click="poweronoff(1)"></image>
+		        		<text class="text-offline">电源</text>
 		        	</div>
-		        	<div class="card-right">
-		        		<div class="card-control" @click="powerOnoff">
-		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png"></image>
-		        		</div>
-		        		<div class="card-icon">
-		        			<image class="card-icon-img" src="./assets/img/smart_pic_equip021@2x.png"></image>
-		        		</div>
+		        	<div>
+		        		<image class="icon-offline" src="./assets/img/smart_img_equip021@2x.png"></image>
 		        	</div>
 		        </div>
-	        </div>
-	        <div class="scroller-bar">
-	        	<scroller-bar :max="60" :min="30" :currentTemperture="currentTemperture"></scroller-bar>
+		    </div>
+		    <div class="card-power-off" v-else>
+	        	<div class="control-div-offline" @click="reload">
+	        		<image class="card-control-img" :src="powerIcon_offline"></image>
+	        		<text class="text-offline">重连</text>
+	        	</div>
+	        	<div>
+	        		<image class="icon-offline" src="./assets/img/smart_img_equip021@2x.png"></image>
+	        	</div>
+	        	<text class="text-offline-center">已离线</text>
 	        </div>
 	        <div class="smart">
 		        <div class="smart-title">
@@ -40,13 +67,16 @@
 
 <script>
     import nativeService from '@/common/services/nativeService.js'
-		import mideaSwitch from '@/midea-component/switch.vue'
-		import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
-		import scrollerBar from '@/midea-card/T0xAC/components/scroller-bar.vue'
-		import mideaItem from '@/midea-component/item.vue'
-		const modal = weex.requireModule('modal');
-		const dom = weex.requireModule('dom');
-		var stream = weex.requireModule('stream');
+	import mideaSwitch from '@/midea-component/switch.vue'
+	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
+	import scrollerBar from '@/midea-card/T0xAC/components/scroller-bar.vue'
+	import mideaItem from '@/midea-component/item.vue'
+	import Mock from './settings/mock'
+	const modal = weex.requireModule('modal');
+	const dom = weex.requireModule('dom');
+	var stream = weex.requireModule('stream');
+	const globalEvent = weex.requireModule('globalEvent');
+	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
             mideaSwitch,
@@ -56,11 +86,50 @@
         },
         data() {
             return {
+            	deviceId:"",
+            	deviceName: "",
+            	deviceType: "",
+            	deviceSubType: "",
+            	deviceSn: "",
+            	onlineStatus:"",
+            	
+            	pushKey: "receiveMessage",
+            	pushKeyOnline: "receiveMessageFromApp",
                 mideaChecked: true,
                 mideaChecked2: false,
-                currentTemperture:38,
-                power:"off",
-                currentStatus:"auto",
+                
+                currentTemperture: "",
+                currentSetValue: "",
+                danwei:"℃",
+	            mode:"",
+	            deviceTip: "",
+	            onoff: "",//localStorage.getItem("E2power") || "on",
+	            temperature: "",//localStorage.getItem("E2temperature") || "12",
+	            cur_temperature: "",//localStorage.getItem("E2cur_temperature") || "30",
+                return_mode: {
+	            	eplus:"E＋增容",
+					fast_wash:"极速洗",
+					summer:"夏季模式",
+					winter:"冬季模式",
+					efficient:"节能模式",
+					night:"峰谷夜电",
+					sterilization:"高温杀菌",
+					one_person:"一人洗",
+					two_person:"两人洗",
+					three_person:"三人洗",
+					old_man:"老人洗",
+					adult:"成人洗",
+					children:"儿童洗",
+					cloud:"云智能",
+					custom:"自设温度",
+					wash:"洗漱用水",
+					shower:"淋浴用水",
+					bath:"浴缸用水",
+					memory:"智能记忆",
+					none:""
+	            },
+                powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
+                powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
                 data:{
                  	title:"室内温度高于28°度时候，自动开启空调。",
                  	detail:"模式制冷，温度23."
@@ -87,19 +156,35 @@
              onMideachange2(event) {
             		//modal.toast({ 'message': event.value, 'duration': 2 });
             },
-            changeTemperture(event) {
-	            	let currentSetTemperture = Math.ceil(event.contentOffset.x/52) +29;
-	            	if(currentSetTemperture <= 17) {
-	            		currentSetTemperture = 17;
-	            	} else if (currentSetTemperture >= 30) {
-	            		currentSetTemperture = 30;
+            changeTemperture(value) {
+            	let self = this;
+            	let params = {
+            			"operation":"luaControl",
+            			"name":"update",
+            			"data":{
+            				"mode":"custom",
+               				"temperature": value
+            			}
+            		};
+            	nativeService.sendLuaRequest(params,true).then(function(data) {
+            		self.updateUI(data);
+            	},function(error) {
+            		console.log("error");
+            	});
+            },
+            scrollerBarScroll(event) {
+            	this.currentSetValue = event.value;
+            	setTimeout(() => {
+            		if((this.currentTemperture - this.currentSetValue)%5 == 0 && this.onoff == "on") {
+            			this.changeTemperture(this.currentSetValue);
 	            	}
-	            	this.currentTemperture = currentSetTemperture;
+	            }, 1500)
             },
             queryStatus () {
             	let self = this;
             	let params = {
             			"operation":"luaQuery",
+            			"name":"deviceinfo",
             			"data":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
@@ -109,22 +194,119 @@
             	});
             },
             updateUI(data) {
-            	console.log("yoram:");
-            	console.dir(data);
+            	if(data.errorCode == 0) {
+	                let params = data.params || data.result;
+	                this.deviceTip = parseInt(params.error_code);
+	                this.onoff = params.power;
+					this.temperature = params.temperature;
+					this.cur_temperature = params.cur_temperature;
+					this.currentTemperture = params.temperature;
+					this.mode = this.return_mode[params.mode] || "--";
+	            }else {
+	                modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+	            }
             },
-            powerOnoff() {
-            	//nativeService.getPath((weexPath)=> {
-		            	stream.fetch({
-		            		method:'get',
-		            		url:"/dist/T0xAC/dummy/delDevice.js",
-		            		type:"json"
-		            	},function(ret) {
-		            		console.dir(nativeService.convertToJson(ret.data))
-		            	},function(response) {
-		            		console.dir(nativeService.convertToJson(response.data));
-		            	})
-		          // });
-		        }
+            updateDeviceInfo(data) {
+            	this.deviceId = data.deviceId;
+            	this.deviceName = data.deviceName;
+            	this.deviceType = data.deviceType;
+            	this.deviceSubType = data.deviceSubType;
+            	this.deviceSn = data.deviceSn;
+            	this.onlineStatus = data.isOnline;
+            },
+            poweronoff(flag) {
+		        let self = this;
+		        let name = flag == 1? "poweron":"poweroff";
+		        let poweronoff = flag == 1? "on" : "off";
+            	let params = {
+            			"operation":"luaControl",
+            			"name":name,
+            			"data":{
+            				"power": poweronoff,
+            			}
+            		};
+            	nativeService.sendLuaRequest(params,true).then(function(data) {
+            		self.updateUI(data);
+            	},function(error) {
+            		console.log("error");
+            	});
+            },
+            up () {
+	        	if(this.deviceTip) {
+	        		modal.toast({ 'message': "设备故障，暂无法操作", 'duration': 2 });
+	           		return;
+	           	}
+	        	if(this.temperature >= 75) {
+	        		modal.toast({ 'message': "已达到最高温度", 'duration': 2 });
+	           		return;
+	           	}
+	            let me = this;
+	            let params = {
+                	"operation":"luaControl",
+        			"name":"up",
+        			"data":{
+        				"mode":"custom",
+	            		"temperature":parseInt(this.temperature) + 5
+        			}
+                }
+                nativeService.sendLuaRequest(params,true).then(function(data) {
+                    me.updateUI(data);
+                })
+	        },
+	        down () {
+	        	if(this.deviceTip) {
+	           		modal.toast({ 'message': "设备故障，暂无法操作", 'duration': 2 });
+	           		return;
+	           	}
+	        	if(this.temperature <= 30) {
+	        		modal.toast({ 'message': "已达到最低温度", 'duration': 2 });
+	           		return;
+	           	}
+	            let me = this;
+	            let params = {
+                	"operation":"luaControl",
+        			"name":"down",
+        			"data":{
+        				"mode":"custom",
+	            		"temperature": parseInt(this.temperature) - 5
+        			}
+                }
+                nativeService.sendLuaRequest(params,true).then(function(data) {
+                    me.updateUI(data);
+                })
+	        },
+	        handleNotification() {
+            	console.log("handleNotification Yoram");
+            	let me = this;
+            	globalEvent.addEventListener(this.pushKey, (data) => {
+            		me.queryStatus();
+		        });
+		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
+            		if(data && data.messageType == "deviceOnlineStatus") {
+            			if(data.messageBody && data.messageBody.onlineStatus == "online") {
+            				me.onlineStatus = "1";
+            			} else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+            				me.onlineStatus = "0";
+            			} else {
+            				me.onlineStatus = "0";
+            			}
+            		}
+		        });
+            },
+            showControlPanelPage() {
+            	let params = {
+            		controlPanelName:"controlPanel.html"
+            	};
+            	bridgeModule.showControlPanelPage(params);
+            },
+            reload() {
+            	let params = {};
+            	bridgeModule.reload(params,function(result) {
+            		//successful
+            	},function(error) {
+            		//fail
+            	});
+            },
         },
         computed: {
 				powerOnoffImg () {
@@ -156,10 +338,16 @@
 	        	}
         },
         mounted() {
-	        	const el = this.$refs.scrollBar;
-	        	//modal.toast({ 'message': this.currentTemperture, 'duration': 2 });
-            dom.scrollToElement(el,{offset:parseInt(30 - this.currentTemperture) * 52})
-            //this.queryStatus();
+	        let self = this;
+            nativeService.getDeviceInfo().then(function(data) {
+            	self.updateDeviceInfo(data.result);
+            	self.handleNotification();
+            	if(data.result.isOnline == 1) {
+            		self.queryStatus();
+            	}
+            },function(error) {
+            	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+            })
         }
     }
 </script>
@@ -186,6 +374,37 @@
 	.card-hot {
 		background-color: #FFBD00;
 	}
+	.card-power-off {
+		width:694px;
+		height:392px;
+		margin-left:28px;
+		margin-right:28px;
+		margin-top:28px;
+		background-color: #D8D8DE;
+		flex-direction: row;
+		border-radius: 6px;
+		justify-content: center;
+		align-items: center;
+	}
+	.text-offline {
+		font-family: PingFangSC-Regular;
+		font-size: 28px;
+		color: #5D75F6;
+		letter-spacing: 0;
+		text-align: center;
+	}
+	.text-offline-center {
+		position: absolute;
+		right:300px;
+		top:170px;
+		align-items: center;
+	}
+	.control-div-offline {
+		position: absolute;
+		right:32px;
+		top:32px;
+		align-items: center;
+	}
 	.card-control {
 		align-items: flex-end;
 		margin-top:44px;
@@ -193,18 +412,33 @@
 		flex-direction: row;
 		justify-content: flex-end;
 	}
+	.card-control-temp-div {
+		flex-direction: row;
+		margin-left: 35px;
+		margin-bottom: 25px;
+	}
+	.cart-control-temp-img {
+		width: 56px;
+		height: 56px
+	}
+	.cart-control-temp-img-right {
+		margin-left: 100px
+	}
 	.card-status-detail {
 		flex-direction: row;
 		justify-content: center;
-		margin-bottom:60px;
 	}
 	.card-status-detail-img {
 		width:56px;
 		height:56px;
 	}
 	.card-control-img {
-		width:48px;
-		height:50px
+		width:60px;
+		height:60px
+	}
+	.icon-offline {
+		width: 534px;
+		height: 248px;
 	}
 	.card-icon {
 		align-items: flex-end;
@@ -212,8 +446,9 @@
 		margin-right:-10px
 	}
 	.card-icon-img {
-		width:282px;
-		height:286px
+		width:335px;
+		height:290px;
+		resize: contain;
 	}
 	.main-status-div {
 		flex-direction: row;

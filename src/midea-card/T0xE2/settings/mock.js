@@ -22,12 +22,9 @@ export const all = [
             "errorCode": 0,
 		    "params": {
 		        "power": "on",
-		        "mode": "cool",
-		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "mode": "fast_wash",
+		        "temperature": "35",
+		        "cur_temperature": "65",
 		    }
         }
     },
@@ -36,28 +33,22 @@ export const all = [
         data: {
             "errorCode": 0,
 		    "params": {
-		        "power": "off",
-		        "mode": "auto",
+		       "power": "off",
+		        "mode": "summer",
 		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "cur_temperature": "65",
 		    }
         }
     },
     {
-        path: 'temperatureControl',
+        path: 'update',
         data: {
             "errorCode": 0,
 		    "params": {
-		        "power": "on",
-		        "mode": "fan",
-		        "temperature": "26",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		       "power": "on",
+		        "mode": "summer",
+		        "temperature": "45",
+		        "cur_temperature": "65",
 		    }
         }
     },
@@ -67,13 +58,34 @@ export const all = [
             "errorCode": 0,
 		    "params": {
 		        "power": "on",
-		        "mode": "auto",
-		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "mode": "summer",
+		        "temperature": "55",
+		        "cur_temperature": "60",
 		    }
+        }
+    },
+    {
+        path: 'up',
+        data: {
+            "errorCode": 0,
+				    "params": {
+				         "power": "on",
+					        "mode": "summer",
+					        "temperature": "25",
+					        "cur_temperature": "15"
+				   		 }
+        }
+    },
+    {
+        path: 'down',
+        data: {
+            "errorCode": 0,
+					    "params": {
+					        "power": "on",
+					        "mode": "winter",
+					        "temperature": "33",
+					        "cur_temperature": "44"
+					    }
         }
     },
     {
@@ -103,15 +115,12 @@ export const all = [
         data: {
             "msg": "",
             "result": {
-                "deviceID": "1099511629098",
-                "deviceSSID": "",
-                "deviceName": "冰箱541F",
-                "deviceType": "0xCA",
+                 "deviceId": "1099511629098",
+                "deviceName": "空调541F",
+                "deviceType": "0xAC",
                 "deviceSubType": "0",
-                "online": "1",
-                "deviceDescription": "",
-                "activated": "",
-                "isDeviceOwner": "1"
+                "isOnline": "1",
+                "deviceSn": "",
             },
             "errorCode": "0"
         }

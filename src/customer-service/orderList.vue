@@ -1,33 +1,34 @@
 <template>
     <div>
         <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
-        <scroller class="scroller" loadmoreoffset=750 @loadmore="loadmore">
-            <div class="empty-page" v-if="isOrderListLoaded && formattedOrderList.length == 0">
+        <scroller class="scroller" ref="orderListScroller" loadmoreoffset=300 @loadmore="loadmore">
+            <refresh v-if="isLoaded" class="refresh" @refresh="onrefresh" :display="refreshing ? 'show' : 'hide'">
+                <text class="indicator-text">刷新列表 ...</text>
+                <loading-indicator class="indicator"></loading-indicator>
+            </refresh>
+            <div class="empty-page" v-if="isLoaded && formattedOrderList.length == 0">
                 <image class="empty-page-icon" src="./assets/img/default_ic_nolist@3x.png" resize='contain'>
                 </image>
                 <text class="empty-page-text">暂无订单</text>
             </div>
             <div v-else>
-                <div v-for="(order, index) in formattedOrderList" :key="index" @click="goToOrderDetail(index)">
-                    <order-block class="order-block" :order="order" :ref="'order'+index">
-                        <div slot="action-bar" class="action-bar">
-                            <text class="action" v-if="order.calcServiceOrderStatus == 1" @click="checkAddress()">查看网点</text>
-                            <text class="action" v-if="[2, 6].indexOf(order.calcServiceOrderStatus)>-1" @click="showDialog(index)">取消工单</text>
-                            <text class="action" v-if="order.calcServiceOrderStatus == 2 && checkPassTime(order)" @click="urgeOrder(index)">催办</text>
-                            <text class="action" v-if="order.calcServiceOrderStatus == 3" @click="renewOrder(index)">重新报单</text>
-                            <text class="action primary-action" v-if="order.allowCallbackWX == 'Y'" @click="assessService(index)">评价有礼</text>
-                            <text class="action" v-if="order.callbackStatus == 12" @click="assessService(index)">查看评价</text>
-                            <text class="action" v-if="order.calcServiceOrderStatus == 6" @click="callService(index)">联系网点</text>
+                <div v-for="(formattedOrder, index) in formattedOrderList" :key="index" @click="goToOrderDetail(index)">
+                    <order-block class="order-block" :order="formattedOrder" :ref="'order'+index">
+                        <div v-if="hasAction(formattedOrder)" slot="action-bar" class="action-bar">
+                            <text class="action" v-if="formattedOrder.isAbleToCheckBranch" @click="checkBranch(index)">查看网点</text>
+                            <text class="action" v-if="formattedOrder.isAbleToCancel" @click="showDialog(index)">取消工单</text>
+                            <text class="action" v-if="formattedOrder.isAbleToUrgeOrder" @click="urgeOrder(index)">催办</text>
+                            <text class="action" v-if="formattedOrder.isAbleToRenew" @click="renewOrder(index)">重新报单</text>
+                            <text class="action primary-action" v-if="formattedOrder.allowCallbackWX == 'Y'" @click="goToCallback(index)">评价有礼</text>
+                            <text class="action" v-if="formattedOrder.isAbleToCallService" @click="callService(index)">联系网点</text>
                         </div>
                     </order-block>
                 </div>
-                <div class="list-end" v-if="isOrderListLoaded">
-                    <text class="loading-end" v-if="hasNext && !loadingEnd">加载中...</text>
-                    <text class="loading-end" v-if="loadingEnd">———— 到底了 ————</text>
-                </div>
-                <!-- <loading class="loading" :display="showLoading" v-if="!loadingEnd">
-                <loading-indicator class="indicator"></loading-indicator>
-            </loading> -->
+                <loading class="loading" :display="showLoading" v-if="hasNext">
+                    <text class="indicator-text">加载中...</text>
+                    <loading-indicator class="indicator"></loading-indicator>
+                </loading>
+                <text v-if="isLoaded && !hasNext && formattedOrderList.length>3" class="indicator-text">———— 到底了 ————</text>
             </div>
         </scroller>
 
@@ -41,7 +42,7 @@
 
 <script>
 import base from './base'
-import orderBase from './order-base'
+import orderBase from './orderBase'
 import nativeService from './settings/nativeService'
 import OrderBlock from '@/customer-service/components/orderBlock.vue'
 
@@ -59,15 +60,15 @@ export default {
     data() {
         return {
             title: '进度查询',
+            refreshing: false,
             orderListParam: null,
             orderList: [],
             orderListPage: 0,
-            isOrderListLoaded: false,
+            isLoaded: false,
             hasNext: false,
             selectedOrderIndex: null,
             dialogShow: false,
             showLoading: 'hide',
-            loadingEnd: false,
             isShowUrgeOrder: false,
             reminderOptions: [],
         }
@@ -77,15 +78,13 @@ export default {
             //不可改变订单顺序
             return this.orderList.map((order) => {
                 return this.formatOrder(order)
-                // let calcServiceOrderStatus = this.formatOrder(order)
-                // return Object.assign(order, { calcServiceOrderStatus: calcServiceOrderStatus })
             })
         },
         urgeOrderItems() {
             let result = []
             if (this.reminderOptions) {
                 result = this.reminderOptions.map((item) => {
-                    return item.serviceRequireItemName
+                    return item.customerDesc
                 })
             }
             return result
@@ -94,12 +93,7 @@ export default {
     methods: {
         handlePageData(data) {
             if (data.key == "createOrder") {
-                this.orderListPage = 0
-                this.getOrderList()
-                this.$nextTick(() => {
-                    const el = this.$refs['order0'][0]
-                    dom.scrollToElement(el, { offset: -24 })
-                })
+                this.refreshOrderList()
             } else if (data.page == "orderList") {
                 if (data.key == "cancelOrder") {
                     let id = data.data.id
@@ -110,17 +104,29 @@ export default {
                             this.$set(this.orderList, this.selectedOrderIndex, order)
                         }
                     }
+                } else if (data.key == "createcallback") {
+                    this.refreshOrderList()
                 }
             }
         },
+        //下拉刷新
+        onrefresh(event) {
+            this.refreshing = true
+            this.refreshOrderList()
+        },
         //获取订单列表
+        refreshOrderList() {
+            this.orderListPage = 0
+            this.getOrderList()
+            this.$nextTick(() => {
+                const el = this.$refs['order0'][0]
+                dom.scrollToElement(el, { offset: -24 })
+                this.$refs.orderListScroller.resetLoadmore()
+            })
+        },
         getOrderList() {
-            let status = []
-            for (let index = 10; index < 35; index++) {
-                status.push(index)
-            }
             let param = {
-                dispatchOrderStatus: status.join(","),  //派工单状态
+                interfaceSource: "SMART",
                 page: this.orderListPage,
                 resultNum: 10
             }
@@ -128,9 +134,11 @@ export default {
             nativeService.queryserviceorder(this.orderListParam).then((data) => {
                 this.orderList = data.list
                 this.hasNext = data.pageIndex * data.pageSize >= data.total ? false : true
-                this.isOrderListLoaded = true
+                this.isLoaded = true
+                this.refreshing = false
             }).catch((error) => {
-                nativeService.toast(nativeService.getCssErrorMessage(error))
+                this.refreshing = false
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         },
         //加载更多
@@ -147,10 +155,24 @@ export default {
                         this.orderList = this.orderList.concat(data.list)
                     } else {
                         this.hasNext = false
-                        this.loadingEnd = true
                     }
+                }).catch((error) => {
+                    nativeService.toast(nativeService.getErrorMessage(error))
                 })
             }, 1500)
+        },
+        hasAction(formattedOrder) {
+            let result = false
+            if (formattedOrder.isAbleToCheckBranch ||
+                formattedOrder.isAbleToCancel ||
+                formattedOrder.isAbleToUrgeOrder ||
+                formattedOrder.isAbleToRenew ||
+                formattedOrder.isAbleToCallService ||
+                formattedOrder.allowCallbackWX == 'Y') {
+                result = true
+            }
+
+            return result
         },
         //查看详情
         goToOrderDetail(index) {
@@ -160,8 +182,12 @@ export default {
                 this.goTo("orderDetail", {}, { from: 'orderList', id: order.serviceOrderNo })
             })
         },
-        checkAddress() {
-            this.goTo('productSelection', {}, { from: 'orderList' })
+        checkBranch(index) {
+            this.selectedOrderIndex = index
+            let order = this.orderList[index]
+            nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, order, () => {
+                this.goTo("branchList", {}, { from: 'orderList', id: order.serviceOrderNo })
+            })
         },
         //催单
         checkPassTime(order) {
@@ -176,19 +202,19 @@ export default {
             this.selectedOrderIndex = index
             let order = this.orderList[this.selectedOrderIndex]
             let param = {
-                brandCode: order.serviceUserDemandVOs[0].brandCode,
-                depth: "3",
+                interfaceSource: order.interfaceSource,
                 orgCode: order.orgCode,
-                interfaceSource: "SMART",
-                parentServiceRequireCode: "CD",
+                serviceOrderNo: order.serviceOrderNo,
                 prodCode: order.serviceUserDemandVOs[0].prodCode
             }
-            nativeService.queryservicerequireproduct(param).then((resp) => {
-                this.reminderOptions = resp.list
+            nativeService.queryservicereqsrvprod(param).then((resp) => {
+                this.reminderOptions = resp.data
                 this.isShowUrgeOrder = true;
                 this.$nextTick(e => {
-                    this.$refs.urgeOrderActionsheet.open();
+                    this.$refs.urgeOrderActionsheet.open()
                 });
+            }).catch((error) => {
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         },
         closeUrgeOrderActionsheet() {
@@ -199,6 +225,7 @@ export default {
             let order = this.orderList[this.selectedOrderIndex]
             let reminderOption = this.reminderOptions[event.index]
             let param = {
+                interfaceSource: order.interfaceSource,
                 orgCode: order.orgCode,
                 serviceOrderNo: order.serviceOrderNo,
                 reminderReason: reminderOption.serviceRequireItemName,
@@ -207,7 +234,7 @@ export default {
             nativeService.createserviceuserdemand(param).then(() => {
                 nativeService.toast("催单成功")
             }).catch((error) => {
-                nativeService.toast(nativeService.getCssErrorMessage(error))
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         },
         urgeOrderBtnClick() {
@@ -236,38 +263,56 @@ export default {
         },
         cancelOrder() {
             this.dialogShow = false
-            let order = this.orderList[this.selectedOrderIndex]
-            let param = {
-                orgCode: order.orgCode,
-                serviceOrderNo: order.serviceOrderNo,
-                operator: nativeService.userInfo.userName
-            }
-            nativeService.cancelserviceorder(param).then(() => {
-                order.serviceOrderStatus = '22'
-                this.$set(this.orderList, this.selectedOrderIndex, order)
+            nativeService.getUserInfo().then((data) => {
+                let order = this.orderList[this.selectedOrderIndex]
+                let param = {
+                    interfaceSource: order.interfaceSource,
+                    orgCode: order.orgCode,
+                    serviceOrderNo: order.serviceOrderNo,
+                    operator: data.nickName
+                }
+                nativeService.cancelserviceorder(param).then(() => {
+                    order.serviceOrderStatus = '22'
+                    this.$set(this.orderList, this.selectedOrderIndex, order)
+                }).catch((error) => {
+                    nativeService.toast(nativeService.getErrorMessage(error))
+                })
             })
         },
 
         //评价有礼
-        assessService(index) {
+        goToCallback(index) {
             let order = this.orderList[index]
             nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, order,
                 () => {
-                    this.goTo("callbackInfo", {}, { from: 'orderList', id: order.serviceOrderNo })
+                    this.goTo("orderCallback", {}, { from: 'orderList', id: order.serviceOrderNo })
                 })
         },
 
         //联系网点
         callService(index) {
             let order = this.orderList[index]
-            nativeService.callTel({
-                tel: order.unitTel,
-                title: '网点客户服务',
-                desc: '拨打网点热线电话：' + order.unitTel
-            }).then(
-                (resp) => { }
-            ).catch((error) => {
-                nativeService.toast(error)
+
+            let param = {
+                interfaceSource: order.interfaceSource,
+                serviceOrderNo: order.serviceOrderNo,
+                orgCode: order.orgCode,
+                customerPhone: order.customerMobilephone1
+            }
+            nativeService.queryserviceuserdemanddispatch(param).then((data) => {
+                if (data.unitTel) {
+                    nativeService.callTel({
+                        tel: data.unitTel,
+                        title: '网点客户服务',
+                        desc: '拨打网点热线电话：' + data.unitTel
+                    }).then(
+                        (resp) => { }
+                    ).catch((error) => {
+                        nativeService.toast(error)
+                    })
+                }
+            }).catch((error) => {
+                nativeService.toast(nativeService.getErrorMessage(error))
             })
         }
     },
@@ -281,6 +326,42 @@ export default {
 .scroller {
   background-color: #f2f2f2;
 }
+.refresh {
+  width: 750;
+  display: -ms-flex;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+}
+.indicator {
+  margin-top: 16px;
+  height: 40px;
+  width: 40px;
+  color: #0078ff;
+}
+.indicator-text {
+  font-family: PingFangSC-Regular;
+  padding: 30px 0;
+  width: 750px;
+  color: #666666;
+  font-size: 24px;
+  text-align: center;
+}
+
+.loading {
+  width: 750;
+  display: -ms-flex;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+}
+
 .order-block {
   margin-top: 24px;
   margin-right: 32px;
@@ -313,40 +394,14 @@ export default {
   color: #0078ff;
   border-color: #0078ff;
 }
-.list-end {
-  margin-top: 20px;
-  margin-bottom: 100px;
-}
-.loading-end {
-  width: 750px;
-  padding: 30px 0;
-  background-color: #f2f2f2;
-  color: #666666;
-  text-align: center;
-  font-family: PingFangSC-Regular;
-  font-size: 24px;
-}
-.indicator-loading {
-  width: 750px;
-  height: 120px;
-  color: #0e90ff;
-  font-size: 42px;
-  text-align: center;
-}
-.indicator-text {
-  width: 750px;
-  color: #5f5f5f;
-  font-size: 28px;
-  text-align: center;
-}
 .empty-page {
   flex: 1;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  padding-top: 272px;
 }
 .empty-page-icon {
-  margin-top: 272px;
   width: 240px;
   height: 240px;
 }
@@ -355,5 +410,6 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #888888;
+  text-align: center;
 }
 </style>

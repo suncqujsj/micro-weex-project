@@ -22,12 +22,42 @@ export const all = [
             "errorCode": 0,
 		    "params": {
 		        "power": "on",
-		        "mode": "cool",
-		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "running_status":"delay",
+		         "program":"cotton",
+		         "remain_time":"25",
+		        "control_status":"start",
+		         "expert_step":2,
+		         "error_code":"0x52"
+		    }
+        }
+    },
+    {
+        path: 'start',
+        data: {
+            "errorCode": 0,
+		    "params": {
+		        "power": "on",
+		        "running_status":"start",
+		         "program":"cotton",
+		         "remain_time":"25",
+		        "control_status":"start",
+		         "expert_step":2,
+		         "error_code":"0x52"
+		    }
+        }
+    },
+    {
+        path: 'pause',
+        data: {
+            "errorCode": 0,
+		    "params": {
+		        "power": "on",
+		        "running_status":"delay",
+		         "program":"cotton",
+		         "remain_time":"25",
+		        "control_status":"start",
+		         "expert_step":2,
+		         "error_code":"0x52"
 		    }
         }
     },
@@ -37,12 +67,12 @@ export const all = [
             "errorCode": 0,
 		    "params": {
 		        "power": "off",
-		        "mode": "auto",
-		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "running_status":"start",
+		         "program":"cotton",
+		         "remain_time":"25",
+		        "control_status":"start",
+		         "expert_step":2,
+		         "error_code":"0x52"
 		    }
         }
     },
@@ -67,12 +97,12 @@ export const all = [
             "errorCode": 0,
 		    "params": {
 		        "power": "on",
-		        "mode": "auto",
-		        "temperature": "25",
-		        "small_temperature": "0.5",
-		        "indoor_temperature": "30",
-		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "running_status":"start",
+		         "program":"cotton",
+		         "remain_time":"50",
+		        "control_status":"start",
+		         "expert_step":2,
+		         "error_code":"0x52"
 		    }
         }
     },
@@ -101,17 +131,14 @@ export const all = [
     {
         path: 'getDeviceInfo',
         data: {
-            "msg": "",
+           "msg": "",
             "result": {
-                "deviceID": "1099511629098",
-                "deviceSSID": "",
-                "deviceName": "冰箱541F",
-                "deviceType": "0xCA",
+                "deviceId": "1099511629098",
+                "deviceName": "空调541F",
+                "deviceType": "0xAC",
                 "deviceSubType": "0",
-                "online": "1",
-                "deviceDescription": "",
-                "activated": "",
-                "isDeviceOwner": "1"
+                "isOnline": "1",
+                "deviceSn": "",
             },
             "errorCode": "0"
         }

@@ -68,7 +68,7 @@
                 </div>
             </div>
             <div v-if="scene.roomType=='4'" class="up-block balcony-block">
-                <text class="weather white font12">{{weatherDesc}}</text>
+                <text class="weather white">{{weatherDesc}}</text>
                 <slider v-if="hasWasherWaterData || hasWasherPowerData">
                     <div v-if="hasWasherWaterData">
                         <midea-barchart-view class="barchart" :data="washData"></midea-barchart-view>
@@ -78,7 +78,7 @@
                     </div>
                 </slider>
                 <div v-else>
-                    暂无数据
+                    <text class="no-washdata">暂无数据</text>
                 </div>
             </div>
             <div v-if="scene.roomType=='4'" class="wash-list wash-item row-sb" @click="buyShampoo">
@@ -164,6 +164,10 @@
     .desc, .weather{
         text-align: center;
     }
+    .weather{
+        font-size: 28px;
+        margin-bottom: 25px;
+    }
     .improve{
         margin-left: 275px;
         margin-top:25px;
@@ -241,6 +245,11 @@
     .toast-icon{
         width: 50px;
         height: 50px;
+    }
+    .no-washdata{
+        color: #fff;
+        text-align: center;
+        padding-top: 80px;
     }
 </style>
 
@@ -484,28 +493,31 @@
                 this.showMall = true
             },
             getSceneDetail(){
-                let reqUrl = url.scene.detail
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneId: this.sceneId
-                }
-                
-                this.webRequest(reqUrl, reqParams).then( (res) => {
-                    if (res.code == '0') {
-                        this.scene = res.data
-                    }else{
-                        let codeMsg = {
-                            "1000": "未知系统错误",
-                            "1001": "参数格式错误",
-                            "1002": "参数为空",
-                            "1105": "账户不存在",
-                            "1200": "用户不在家庭"
-                        }
-                        nativeService.toast(codeMsg[res.code])
+                return new Promise((resolve, reject)=>{
+                    let reqUrl = url.scene.detail
+                    let reqParams = {
+                        uid: this.uid,
+                        homegroupId: this.homegroupId,
+                        sceneId: this.sceneId
                     }
-                }).catch( (error )=>{
-                    nativeService.alert(error)
+                    
+                    this.webRequest(reqUrl, reqParams).then( (res) => {
+                        if (res.code == '0') {
+                            this.scene = res.data
+                            resolve()
+                        }else{
+                            let codeMsg = {
+                                "1000": "未知系统错误",
+                                "1001": "参数格式错误",
+                                "1002": "参数为空",
+                                "1105": "账户不存在",
+                                "1200": "用户不在家庭"
+                            }
+                            nativeService.toast(codeMsg[res.code])
+                        }
+                    }).catch( (error )=>{
+                        nativeService.alert(error)
+                    })
                 })
             },
             getDevices(){
@@ -620,46 +632,46 @@
                 }).catch( (err)=>{
                 })
             },
-            getWashData(){
-                let washerCode = ''
-                for (var x in this.userDevices) {
-                    if (this.userDevices[x].deviceType.indexOf(['0xDA','0xDB']) > -1){
-                        washerCode = this.userDevices[x].deviceId
-                        break
-                    }
-                }
-                if (washerCode != '') {
+            getWashData(washCode){
+                if (washCode) {
                     let reqUrl = url.scene.washerConsumption
+                    
                     let reqParams = {
                         uid: this.uid,
                         homegroupId: this.homegroupId,
-                        applianceCode: washerCode
+                        applianceCode: washCode
                     }
+                    
                     this.webRequest(reqUrl, reqParams).then((res)=>{
                         if (res.code == 0) {
-                            for (var i in res.data.historyConsumptions) {
-                                let tmpPowerXValue = [], tmpPowerXLabel = [], tmpPowerYValue = [], tmpPowerYLabel = [], 
-                                    tmpWaterXValue = [], tmpWaterXLabel = [], tmpWaterYValue = [], tmpWaterYLabel = []
+                            let result = res.data.historyConsumptions
+                            let tmpPowerXValue = [], tmpPowerXLabel = [], tmpPowerYValue = [], tmpPowerYLabel = [], 
+                                tmpWaterXValue = [], tmpWaterXLabel = [], tmpWaterYValue = [], tmpWaterYLabel = []
+
+
+                            for (let i=0; i<result.length; i++) {
                                 tmpPowerXValue[i] = i
-                                tmpPowerXLabel[i] = res.data.historyConsumptions[i].date
-                                tmpPowerYValue[i] = res.data.historyConsumptions[i].powerConsumption || ''
-                                tmpPowerYLabel[i] = res.data.historyConsumptions[i].powerConsumption || ''
+                                tmpPowerXLabel[i] = result[i].date
+                                tmpPowerYValue[i] = result[i].powerConsumption || ''
+                                tmpPowerYLabel[i] = result[i].powerConsumption || ''
 
                                 tmpWaterXValue[i] = i
-                                tmpWaterXLabel[i] = res.data.historyConsumptions[i].date
-                                tmpWaterYValue[i] = res.data.historyConsumptions[i].waterConsumption || ''
-                                tmpWaterYLabel[i] = res.data.historyConsumptions[i].waterConsumption || ''
+                                tmpWaterXLabel[i] = result[i].date
+                                tmpWaterYValue[i] = result[i].waterConsumption || ''
+                                tmpWaterYLabel[i] = result[i].waterConsumption || ''
                             }
-                            washerPowerData.x.value = tmpPowerXValue
-                            washerPowerData.x.label = tmpPowerXLabel
-                            washerPowerData.y.value = tmpPowerYValue
-                            washerPowerData.y.label = tmpPowerYLabel
+
+                            this.washerPowerData['x']['value'] = tmpPowerXValue
+                            this.washerPowerData['x']['label'] = tmpPowerXLabel
+                            this.washerPowerData['y']['value'] = tmpPowerYValue
+                            this.washerPowerData['y']['label'] = tmpPowerYLabel
                             
-                            washerWaterData.x.value = tmpPowerXValue
-                            washerWaterData.x.label = tmpPowerXLabel
-                            washerWaterData.y.value = tmpPowerYValue
-                            washerWaterData.y.label = tmpPowerYLabel
+                            this.washerWaterData['x']['value'] = tmpPowerXValue
+                            this.washerWaterData['x']['label'] = tmpPowerXLabel
+                            this.washerWaterData['y']['value'] = tmpPowerYValue
+                            this.washerWaterData['y']['label'] = tmpPowerYLabel
                             
+
                             this.hasWasherPowerData = true
                             this.hasWasherWaterData = true
                         }else{
@@ -672,7 +684,6 @@
                             nativeService.alert(codeMsg[res.code])
                         }
                     }).catch((err)=>{
-                        
                     })
                 }
             },
@@ -681,17 +692,22 @@
                     desiredAccuracy: "10",
                     distanceFilter: "10",
                     alwaysAuthorization: "0" 
-                }).then((res)=>{
-                    nativeService.getCityInfo({cityName: res.city}).then((res)=>{
-                        nativeService.getWeatherInfo({cityNo: res.cityNo}).then((res)=>{
-                            this.weatherDesc = '今天' + res.weatherStatus + '气温' + res.temperature + '℃'
-                        }).catch(()=>{
-                            this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
-                        })
-                    }).catch(()=>{
+                }).then((gps)=>{
+                    nativeService.getCityInfo({cityName: gps.city}).then( (city)=>{
+                        nativeService.alert(2)
+                        // nativeService.getWeatherInfo({cityNo: city.cityNo}).then((weather)=>{
+                            
+                        //     nativeService.alert(3+ JSON.stringify(weather))
+                        //     this.weatherDesc = '今天' + weather.weatherStatus + '气温' + weather.temperature + '℃'
+                        // }).catch(()=>{
+                        //     this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
+                        // })
+                    }).catch((err)=>{
+                        
+                        nativeService.alert(err)
                         this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
                     })
-                }).catch(()=>{
+                }).catch((err)=>{
                     this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
                 })
                
@@ -706,12 +722,12 @@
             if (nativeService.getParameters('userDevices')) {
                 this.userDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
             }
-            this.getSceneDetail()
-            if (this.roomType == 4) {
-                this.getWashData()
-                this.getWeatherInfo()
-            }
-            
+            this.getSceneDetail().then(()=>{
+                if (this.roomType == 4 && this.scene.applianceList.length > 0) {
+                    this.getWashData(this.scene.applianceList[0].applianceCode)
+                    this.getWeatherInfo()
+                }
+            })
         }
     }
 </script>

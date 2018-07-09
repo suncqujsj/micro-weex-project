@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller class="scroller">
             <div class="charge-detail-header">
@@ -48,7 +48,7 @@
             <text class="order-footer-label">未出现在报价单里的收费项，您有权拒绝付款</text>
 
             <div class="action-bar">
-                <midea-button v-if="isNeedCharge && !isConfirmed" text="我确认收费内容和报价" type="green" :btnStyle="{'background-color': '#267AFF','border-radius': '4px'}" @mideaButtonClicked="submit">
+                <midea-button v-if="!isConfirmed" text="我确认收费内容和报价" type="green" :btnStyle="{'background-color': '#267AFF','border-radius': '4px'}" @mideaButtonClicked="submit">
                 </midea-button>
                 <midea-button v-if="isConfirmed" text="查看工单详情" type="green" :btnStyle="{'background-color': '#267AFF','border-radius': '4px'}" @mideaButtonClicked="goToOrderDetail">
                 </midea-button>
@@ -76,7 +76,6 @@ export default {
             serviceOrderNo: '',
             order: null,
             chargeList: [],
-            isNeedCharge: false,
             isConfirmed: false
         }
     },
@@ -98,7 +97,7 @@ export default {
             nativeService.getUserInfo().then((userInfo) => {
                 let param = {
                     interfaceSource: this.order.interfaceSource,
-                    webConfirmNo: this.userInfo.uid, //外部确认号码???
+                    webConfirmNo: userInfo.uid, //外部确认号码???
                     confirmIphone: userInfo.mobile,
                     archivesNo: this.chargeList[0].archivesNo,
                     serviceOrderNo: this.order.serviceOrderNo,
@@ -136,8 +135,16 @@ export default {
                 }
                 nativeService.querychargedetails(chargeDetailParam).then((resp) => {
                     this.chargeList = resp.chargeList
-                    if (this.chargeList && this.chargeList.length > 0 && this.chargeList[0].chargeStatus == "11") {
-                        this.isNeedCharge = true
+                    if (this.chargeList && this.chargeList.length > 0) {
+                        /*  收费状态	WOM_CHARGE_STATUS	待用户确认	10
+                            收费状态	WOM_CHARGE_STATUS	用户确认	11
+                            收费状态	WOM_CHARGE_STATUS	支付成功	14
+                            收费状态	WOM_CHARGE_STATUS	支付失败	15 */
+                        if (this.chargeList[0].chargeStatus == "10") {
+                            this.isConfirmed = false
+                        } else {
+                            this.isConfirmed = true
+                        }
                     }
                 }).catch((error) => {
                     nativeService.toast(nativeService.getErrorMessage(error))
@@ -249,6 +256,7 @@ export default {
 }
 .charge-detail-item-sum {
   font-family: PingFangSC-Medium;
+  font-weight: 600;
   font-size: 32px;
   color: #ff9500;
   text-align: right;

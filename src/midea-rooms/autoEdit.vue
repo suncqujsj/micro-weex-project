@@ -419,7 +419,7 @@
                 }
                 if (this.sceneType == 6){
                     params.weatherStatus = encodeURIComponent(this.autoDetail.weather.weatherStatus)
-
+                    params.logical = encodeURIComponent(this.autoDetail.weather.logical)
                 }
                 this.goTo('autoTypeSet', {}, params)
             },
@@ -435,7 +435,7 @@
                 this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                     if (rtnData.code == 0) {
                         nativeService.alert('删除成功!', function(){
-                            nativeService.goTo('weex.js')
+                            nativeService.backToNative()
                         })
                     }
                 }).catch( (err)=>{
@@ -525,7 +525,6 @@
                     })
                 }
                 reqParams.task = JSON.stringify(tmpTask) || JSON.stringify(this.autoDetail.task)
-
                 if (Object.keys(this.editParams).length === 0 && !reqParams.task) {
                     nativeService.alert('没有改动哦')
                     return
@@ -564,7 +563,7 @@
                 this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                     if (rtnData.code == 0) {
                         nativeService.alert('修改成功', function(){
-                            nativeService.goTo('weex.js')
+                            nativeService.backToNative()
                         })
                     }
                 }).catch( (error )=>{

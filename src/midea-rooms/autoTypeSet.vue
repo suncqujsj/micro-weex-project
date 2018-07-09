@@ -349,6 +349,8 @@
                     if (this.sceneType == 4) {}
                     if (this.sceneType == 6) {
                         let tmpWeatherStatus = decodeURIComponent(nativeService.getParameters('weatherStatus'))
+                        let tmpWeatherLogical = decodeURIComponent(nativeService.getParameters('logical'))
+                        this.weather.activeSwitch = tmpWeatherLogical == '<' ? 'min':'max'
                         for (var w in this.weather.data) {
                             if (this.weather.data[w] == tmpWeatherStatus) {
                                 this.weather.activeTypeIndex = w
@@ -516,7 +518,7 @@
                 this.weather.showDialog = false
                 
                 if (this.from == 'editAuto') {
-                    this.editParams.logical =  this.weather.activeSwitch=='低于'?'<':'>'
+                    this.editParams.logical =  this.weather.activeSwitch=='min'?'<':'>'
                 }
             },
             setActiveWeatherTemperature(wTemp){
@@ -572,8 +574,7 @@
             saveChange(){
                 let that = this
                 if ( Object.keys(this.editParams).length === 0 ){
-                    nativeService.alert('没有改动哦')
-                    return
+                    nativeService.toast('没有改动哦')
                 }
                 
                 channelAutoTypeSet.postMessage({

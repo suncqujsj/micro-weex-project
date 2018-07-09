@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back"></midea-header>
         <scroller class="scroller" v-if="formattedOrder">
             <div class="order-detail-header">
                 <div class="order-detail-background"></div>
@@ -360,10 +360,12 @@ export default {
 .order-detail-step-line {
   position: absolute;
   top: 0px;
-  left: 29px;
-  width: 2px;
+  left: 28px;
+  width: 1px;
   height: 114px;
-  background-color: #efeff4;
+  border-right-color: #efeff4;
+  border-right-width: 3px;
+  border-right-style: dotted;
 }
 .first-step-line {
   top: 57px;
@@ -375,8 +377,8 @@ export default {
 .order-detail-step-dot {
   margin-left: 9px;
   margin-right: 9px;
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
   background-color: #c8c7cc;
   border-radius: 25px;
 }
@@ -418,6 +420,7 @@ export default {
   flex: 1;
   font-family: PingFangSC-Regular;
   font-size: 28px;
+  line-height: 36px;
   color: #000000;
 }
 .order-copy-group {

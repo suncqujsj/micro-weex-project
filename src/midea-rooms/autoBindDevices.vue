@@ -265,8 +265,8 @@
 
                             if( res.city){
                                 nativeService.getCityInfo({cityName: res.city}).then((res)=>{
-                                    if ( res.cityWeatherNo ) {
-                                        this.cityWeatherNo = res.cityNo
+                                    if ( res.cityNo ) {
+                                        this.cityNo = res.cityNo
                                     }
                                 }).catch((err)=>{
                                     nativeService.toast(err)
@@ -376,7 +376,8 @@
                     homegroupId: this.homegroupId,
                     sceneType: this.sceneType,
                     image: this.icon.auto[this.sceneType],
-                    name: this.inputAutoName
+                    name: this.inputAutoName,
+                    enable: 1
                 }
                 let tmpTask = []
                 
@@ -426,7 +427,7 @@
                 this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                     if (rtnData.code == 0) {
                         nativeService.alert('新增成功！', function(){
-                            nativeService.goTo('weex.js')
+                            nativeService.backToNative()
                         })
                     }
                 }).catch( (error )=>{
@@ -447,4 +448,3 @@
         }
     }
 </script>
-

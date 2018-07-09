@@ -60,7 +60,7 @@ export default {
             }
             //接入图标及渠道
             others.interfaceSourceIcon = "./assets/img/logo/" + order.interfaceSource + ".png"
-            others.interfaceSourceDesc = order.pubCreatePerson + "接入"
+            others.interfaceSourceDesc = order.pubCreatePerson
 
             //接入时间
             others.contactTimeDesc = util.dateFormat(new Date(order.contactTime), "yyyy-MM-dd")

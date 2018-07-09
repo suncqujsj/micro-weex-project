@@ -2,6 +2,7 @@
 import appConfig from './config'
 import nativeService from '@/common/services/nativeService'
 import util from '@/common/util/util'
+import debugUtil from '@/common/util/debugUtil'
 import { SERVICE_STORAGE_KEYS } from './globalKeys'
 const cssRrequestSendWithApp = true
 const requestSendWithApp = true
@@ -44,6 +45,8 @@ let customizeNativeService = Object.assign(nativeService, {
 
         //中控-用户消息
         getUserProductPageList: HOST_CENTER + "/ccrm2-core/userProduct/getUserProductPageList", //客服-中控-获取家电列表
+        getProductBySerialNo: HOST_CENTER + "/ccrm2-core/userProduct/getProductBySerialNo", //客服-中控-sn码查询用户产品 (一键报修)
+
         getAreaList: HOST_CENTER + "/cmms/area/list", //客服-中控-服务地区
         getUserAddrPageList: HOST_CENTER + "/ccrm2-core/userAddr/getUserAddrPageList", //客服-中控-地址列表查询
         getDefaultAddr: HOST_CENTER + "/ccrm2-core/userAddr/getDefaultAddr", //客服-中控-获取默认地址
@@ -62,17 +65,16 @@ let customizeNativeService = Object.assign(nativeService, {
         ).join('&')
     },
     getErrorMessage(error) {
-        let msg
+        let msg = "请求失败，请稍后重试。", errorCode
         if (error) {
-            msg = error.msg || error.errorMsg || error.returnMsg || error.errorMessage || "请求失败，请稍后重试。"
-        } else {
-            msg = "请求失败，请稍后重试。"
+            errorCode = error.code || error.errorCode
+            if (!isNaN(errorCode)) {
+                //若是正常的错误码，则显示错误信息
+                msg = error.msg || error.errorMsg || error.returnMsg || error.errorMessage || "请求失败，请稍后重试。"
+            }
+            msg += "(" + errorCode + ")"
         }
-        if (error.code) {
-            msg += "(" + error.code + ")"
-        } else if (error.errorCode) {
-            msg += "(" + error.errorCode + ")"
-        }
+        debugUtil.debugLog(error)
         return msg
     },
 
@@ -353,6 +355,9 @@ let customizeNativeService = Object.assign(nativeService, {
     },
     getUserProductPageList(param = {}) {
         return this.sendControlHttpRequestWrapper(this.serviceList.getUserProductPageList, param)
+    },
+    getProductBySerialNo(param = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.getProductBySerialNo, param)
     },
     getUserAddrPageList(param = {}) {
         return this.sendControlHttpRequestWrapper(this.serviceList.getUserAddrPageList, param)

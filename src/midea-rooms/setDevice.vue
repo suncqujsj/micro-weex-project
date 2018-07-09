@@ -10,9 +10,9 @@
             <text class="sub-hd">设置为</text>
             <div class="ability-list" v-for="(item,i) in actions">
                 <div :class="['row-sb','floor', i=='0'?'no-border':'']">
-                    <text>{{item.propertyName}}</text>
-                    <div >
-                        <switch-bar v-if="item.type == 'switch'" :checked="item.currentStatus =='on'? 1: 0" @change="switchAction(item,i)"></switch-bar>
+                    <text class="property-name">{{item.propertyName}}</text>
+                    <div>
+                        <switch-bar v-if="item.type == 'switch'" :isActive="item.currentStatus =='on'" @onSwitch="switchAction(item,i)"></switch-bar>
                         <div v-if="item.type == 'list' || item.type=='range' " class="row-e" @click="showPop(item.property)">
                             <text v-if="item.type == 'list'" class="property-text">{{item.currentStatusName}}</text>
                             <text v-if="item.type=='range'" class="property-text">{{item.currentStatus}}</text>
@@ -24,7 +24,7 @@
         </cell>
         </list>
         <div class="pop-floor" v-for="(item,idx) in actions">
-             <midea-popup v-if="item.type == 'list' || item.type=='range'" :show="show[item.property]" :height="600" @mideaPopupOverlayClicked="closePop(item.property)">
+            <midea-popup v-if="item.type == 'list' || item.type=='range'" :show="show[item.property]" :height="600" @mideaPopupOverlayClicked="closePop(item.property)">
                 <div class="row-sb pop-hd">
                     <text class="pop-text" @click="closePop(item.property)">取消</text>
                     <text class="pop-text" @click="confirmPop(item.property)">确定</text>
@@ -64,8 +64,6 @@
     }
     .floor{
         margin-left: 25px;
-        padding-top: 25px;
-        padding-bottom: 25px;
         padding-right: 25px;
         border-top-width: 2px;
         border-top-style: solid;
@@ -76,6 +74,10 @@
     }
     .ability-list{
         background-color: #fff;
+    }
+    .property-name{
+        padding-top: 25px;
+        padding-bottom: 25px;
     }
     .property-text{
         color: #666;
@@ -126,6 +128,8 @@
                     temperature: [],
                     windSpeed: []
                 },
+                pageStamp: '',
+                editProperties: {}
             }
         },
         computed: {
@@ -146,45 +150,56 @@
                 this.deviceName = decodeURIComponent(nativeService.getParameters('deviceName'))
                 this.deviceId = nativeService.getParameters('deviceId')
                 this.from = nativeService.getParameters('from')
+                this.pageStamp = nativeService.getParameters('pageStamp')
                 
                 if ( this.from == 'addAuto' ) {
                 }else if (this.from == 'editAuto') {
                     this.deviceTask = Object.assign({}, this.deviceTask, JSON.parse(decodeURIComponent(nativeService.getParameters('deviceTask'))))
                 }
-                let tmpActions = autoSupportActions[this.sceneType][this.deviceType].actions
-                
-                let tmpShow = {}
-                let tmpActiveKey = {}
-                for (var i in tmpActions) {
-                    let currentStatus
-                    if ( this.from == 'addAuto' || this.from == 'addEdit' ) {
-                        currentStatus = tmpActions[i].default
-                    }else if( this.from == 'editAuto'){
-                        if (this.deviceTask[tmpActions[i].property] ) {
-                            currentStatus = this.deviceTask[tmpActions[i].property]
+                nativeService.getItem(this.deviceId+this.pageStamp, (res)=>{
+
+                    if (res.result == 'success' && res.data) {
+                        this.editProperties = JSON.parse(res.data)
+                    }
+
+                    let tmpActions = autoSupportActions[this.sceneType][this.deviceType].actions
+                    let tmpShow = {}
+                    let tmpActiveKey = {}
+
+                    for (var i in tmpActions) {
+                        let currentStatus
+                        if ( this.from == 'addAuto' || this.from == 'addEdit' ) {
+                            currentStatus = this.editProperties[tmpActions[i].property] || tmpActions[i].default
+                        }else if( this.from == 'editAuto'){
+                            if (this.deviceTask[tmpActions[i].property] ) {
+                                currentStatus = this.editProperties[tmpActions[i].property] || this.deviceTask[tmpActions[i].property]
+                            }else{
+                                currentStatus = this.editProperties[tmpActions[i].property]  || tmpActions[i].default
+                            }
+                        }
+
+                        if (tmpActions[i].type == 'range') {
+                            tmpActions[i] = Object.assign({}, tmpActions[i], {currentStatus: currentStatus})
                         }else{
-                            currentStatus = tmpActions[i].default
+                            tmpActions[i] = Object.assign({}, tmpActions[i], {currentStatus: currentStatus, currentStatusName: tmpActions[i]['value'][currentStatus]})
+                        }
+                        
+                        //显示启用按钮状态， 初始化选择项activeKey
+                        if (tmpActions[i].type == 'switch') {
+                        }else if (tmpActions[i].type == 'list' ){
+                            tmpShow[tmpActions[i].property] = false //初始化弹窗显示状态为false
+                        }else if ( tmpActions[i].type == 'range'){
+                            tmpShow[tmpActions[i].property] = false //初始化弹窗显示状态为false
+                            this.rangeArrays[tmpActions[i].property] = this.generateListArray(tmpActions[i].range.min, tmpActions[i].range.max)
                         }
                     }
-                    if (tmpActions[i].type == 'range') {
-                        tmpActions[i] = Object.assign({}, tmpActions[i], {currentStatus: currentStatus})
-                    }else{
-                        tmpActions[i] = Object.assign({}, tmpActions[i], {currentStatus: currentStatus, currentStatusName: tmpActions[i]['value'][currentStatus]})
-                    }
-                    
-                    //显示启用按钮状态， 初始化选择项activeKey
-                    if (tmpActions[i].type == 'switch') {
-                    }else if (tmpActions[i].type == 'list' ){
-                        tmpShow[tmpActions[i].property] = false //初始化弹窗显示状态为false
-                    }else if ( tmpActions[i].type == 'range'){
-                        tmpShow[tmpActions[i].property] = false //初始化弹窗显示状态为false
-                        this.rangeArrays[tmpActions[i].property] = this.generateListArray(tmpActions[i].range.min, tmpActions[i].range.max)
-                    }
-                }
 
-                this.actions = tmpActions
-                this.show = Object.assign({}, this.show, tmpShow)
-                this.activeKey = Object.assign({}, this.activeKey, tmpActiveKey)
+                    this.actions = tmpActions
+                    this.show = Object.assign({}, this.show, tmpShow)
+                    this.activeKey = Object.assign({}, this.activeKey, tmpActiveKey)
+
+                })
+                
             },
             switchAction(action, i){
                 let tmp = {
@@ -192,6 +207,7 @@
                     'off': 'on'
                 }
                 this.actions[i].currentStatus = tmp[this.actions[i].currentStatus]
+                this.editProperties[this.actions[i].property] =  this.actions[i].currentStatus
             },
             generateListArray(min, max){
                 let tmp = []
@@ -213,20 +229,23 @@
             confirmPop(property){
                 this.show[property] = false
                 for (var x in this.actions) {
-                    if (this.actions[x].property == property){
+                    if (this.actions[x].property == property && this.actions[x].type == 'range'){
                         this.actions[x].currentStatus = this.active[property]
                     }
                 }
+                this.editProperties[this.actions[x].property] = this.actions[x].currentStatus
             },
             setActiveTemperature(e){
                 this.active.temperature = e.value
             },
             setActiveWindSpeed(e){
-                this.active.windSpeed = e.value
+                this.active.wind_speed = e.value
             },
             setActiveKey(propertyIdx, key){
                 this.actions[propertyIdx].currentStatus = key
                 this.actions[propertyIdx].currentStatusName = this.actions[propertyIdx]['value'][key]
+
+                this.editProperties[this.actions[propertyIdx].property] = this.actions[propertyIdx].currentStatus
             },
             save(){
                 channelSetDevice.postMessage({
@@ -234,6 +253,7 @@
                     applianceCode: this.deviceId,
                     actions: this.actions
                 })
+                nativeService.setItem(this.deviceId+this.pageStamp, JSON.stringify(this.editProperties))
                 this.goBack()
             }
         },

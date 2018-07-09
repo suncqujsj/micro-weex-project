@@ -117,7 +117,7 @@ export const applianceActions = {
             "wind_speed": {
                 "type": "range",
                 "range": {
-                    "max": 0,
+                    "max": 101,
                     "min": 101
                 },
                 "default": 101
@@ -612,20 +612,22 @@ export const autoSupportActions = {
                 {
                     "property": "mode",
                     "propertyName": "模式",
+                    "type": "list",
                     "value": {
                         "auto": "自动",
                         "manual": "手动",
                         "sleep": "睡眠",
                         "fast": "急速"
-                    }
+                    },
+                    "default": "auto"
                 },
                 {
                     "property": "wind_speed",
                     "propertyName": "风速",
                     "type": "range",
                     "range": {
-                        "max": 0,
-                        "min": 101
+                        "max": 101,
+                        "min": 0
                     },
                     "default": 101
                 }
@@ -991,6 +993,7 @@ export const autoSupportActions = {
                 {
                     "property": "mode",
                     "propertyName": "模式",
+                    "type": "list",
                     "value": {
                         "auto": "自动",
                         "manual": "手动",
@@ -1004,8 +1007,8 @@ export const autoSupportActions = {
                     "propertyName": "风速",
                     "type": "range",
                     "range": {
-                        "max": 0,
-                        "min": 101
+                        "max": 101,
+                        "min": 0
                     },
                     "default": 101
                 }
@@ -1371,20 +1374,22 @@ export const autoSupportActions = {
                 {
                     "property": "mode",
                     "propertyName": "模式",
+                    "type": "list",
                     "value": {
                         "auto": "自动",
                         "manual": "手动",
                         "sleep": "睡眠",
                         "fast": "急速"
-                    }
+                    },
+                    "default": "auto"
                 },
                 {
                     "property": "wind_speed",
                     "propertyName": "风速",
                     "type": "range",
                     "range": {
-                        "max": 0,
-                        "min": 101
+                        "max": 101,
+                        "min": 0
                     },
                     "default": 101
                 }
@@ -1716,21 +1721,22 @@ export const autoSupportActions = {
                 {
                     "property": "mode",
                     "propertyName": "模式",
+                    "type": "list",
                     "value": {
                         "auto": "自动",
                         "manual": "手动",
                         "sleep": "睡眠",
                         "fast": "急速"
-                    }
+                    },
+                    "default": "auto"
                 },
                 {
                     "property": "wind_speed",
                     "propertyName": "风速",
                     "type": "range",
                     "range": {
-                        "max": 0,
-                        "min": 101
-                    },
+                        "max": 101,
+                        "min": 0                    },
                     "default": 101
                 }
             ]

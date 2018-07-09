@@ -23,7 +23,7 @@
 				        		<div class="card-control">
 				        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
 				        		</div>
-				        		<div class="card-icon">
+				        		<div class="card-icon" @click="showControlPanelPage">
 				        			<image class="card-icon-img" src="./assets/img/smart_pic_equip021@2x.png"></image>
 				        		</div>
 				        	</div>
@@ -44,8 +44,8 @@
 		        </div>
 		    </div>
 		    <div class="card-power-off" v-else>
-	        	<div class="control-div-offline">
-	        		<image class="card-control-img" :src="powerIcon_offline"  @click="poweronoff(1)"></image>
+	        	<div class="control-div-offline" @click="reload">
+	        		<image class="card-control-img" :src="powerIcon_offline"></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
@@ -75,6 +75,8 @@
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
 	var stream = weex.requireModule('stream');
+	const globalEvent = weex.requireModule('globalEvent');
+	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
             mideaSwitch,
@@ -91,6 +93,8 @@
             	deviceSn: "",
             	onlineStatus:"",
             	
+            	pushKey: "receiveMessage",
+            	pushKeyOnline: "receiveMessageFromApp",
                 mideaChecked: true,
                 mideaChecked2: false,
                 
@@ -197,7 +201,7 @@
 					this.temperature = params.temperature;
 					this.cur_temperature = params.cur_temperature;
 					this.currentTemperture = params.temperature;
-					this.mode = this.return_mode[params.mode];
+					this.mode = this.return_mode[params.mode] || "--";
 	            }else {
 	                modal.toast({ 'message': "连接设备超时", 'duration': 2 });
 	            }
@@ -271,6 +275,38 @@
                     me.updateUI(data);
                 })
 	        },
+	        handleNotification() {
+            	console.log("handleNotification Yoram");
+            	let me = this;
+            	globalEvent.addEventListener(this.pushKey, (data) => {
+            		me.queryStatus();
+		        });
+		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
+            		if(data && data.messageType == "deviceOnlineStatus") {
+            			if(data.messageBody && data.messageBody.onlineStatus == "online") {
+            				me.onlineStatus = "1";
+            			} else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+            				me.onlineStatus = "0";
+            			} else {
+            				me.onlineStatus = "0";
+            			}
+            		}
+		        });
+            },
+            showControlPanelPage() {
+            	let params = {
+            		controlPanelName:"controlPanel.html"
+            	};
+            	bridgeModule.showControlPanelPage(params);
+            },
+            reload() {
+            	let params = {};
+            	bridgeModule.reload(params,function(result) {
+            		//successful
+            	},function(error) {
+            		//fail
+            	});
+            },
         },
         computed: {
 				powerOnoffImg () {
@@ -305,6 +341,7 @@
 	        let self = this;
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
+            	self.handleNotification();
             	if(data.result.isOnline == 1) {
             		self.queryStatus();
             	}

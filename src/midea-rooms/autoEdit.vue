@@ -13,10 +13,10 @@
                             <text>名称</text>
                             <input class="auto-name" type="text" placeholder="" :value="inputAutoName" @change="editAutoName" @return="editAutoName"/>
                         </div>
-                        <div class="row-sb floor auto-switch-floor">
+                        <div class="row-sb switch-floor auto-switch-floor">
                             <text>启用</text>
                             <div>
-                                <switch-bar :checked="autoDetail.enable" @change="openAuto"></switch-bar>
+                                <switch-bar :isActive="autoDetail.enable" @onSwitch="openAuto"></switch-bar>
                             </div>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
         background-color: #fff; 
         padding-left: 25px;
         padding-right: 25px;
-        padding-top: 30px;
+        padding-top: 25px;
         padding-bottom: 30px;
     }
     .font-grey {
@@ -80,6 +80,7 @@
     }
     .content{
         margin-top: 16px;
+        padding-bottom: 150px;
     }
     .sub-hd{
         color: #666;
@@ -103,9 +104,14 @@
         border-bottom-style: solid;
         border-bottom-width: 2px;
     }
+    .switch-floor{
+        margin-left: 25px;
+        padding-right: 25px;
+    }
     .device-box{
         padding-left: 32.25px;
         padding-right: 14.25px;
+        flex-wrap: wrap;
     }
     .device{
         width: 333.75px;
@@ -241,7 +247,9 @@
                 userSetActions: {},
                 unbindDevices: {},
                 unbindDevicesActions: {},
-                bindDeviceActions: {}
+                bindDeviceActions: {},
+                newDevices: {},
+                pageStamp: ''//进入编辑页时的时间戳
             }
         },
         computed: {
@@ -249,11 +257,16 @@
                 let tmp = {
                     height: this.pageHeight+'px'
                 }
+                if (this.isipx) {
+                    tmp.marginTop = '64px'
+                }else{
+                    tmp.marginTop = '40px'
+                }
                 return tmp
             },
             deleteStyle(){
                 let tmp = {
-                    top: this.pageHeight-88+'px'
+                    top: this.pageHeight-130+'px'
                 }
                 return tmp
             },
@@ -293,16 +306,21 @@
                 this.goTo('weex')
             },
             initData(){
+                this.pageStamp = +new Date()
                 this.uid = nativeService.getParameters('uid')
                 this.homegroupId = nativeService.getParameters('homegroupId')
                 this.sceneType = nativeService.getParameters('sceneType')
                 this.sceneId = nativeService.getParameters('sceneId')
                 this.autoSupportActions = autoSupportActions[this.sceneType]
                 let tmpUserDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
+                let tmpSceneSupoortDevices = []//生成此场景支持的此用户的设备列表
                 for (var i in tmpUserDevices) {
                     this.userDevices[tmpUserDevices[i].deviceId] = tmpUserDevices[i]
+                    if (this.autoSupportActions.hasOwnProperty(tmpUserDevices[i].deviceType)){
+                        tmpSceneSupoortDevices.push(tmpUserDevices[i])
+                    }
                 }
-                
+                this.sceneSupoortDevices = tmpSceneSupoortDevices
                 this.getAutoDetail()
             },
             getAutoDetail(){
@@ -331,6 +349,7 @@
             },
             generateBindDevices(){//生成已绑定设备列表
                 let tmpAutoBindDevices = {}
+
                 for (var i in this.task) {
                     tmpAutoBindDevices[this.task[i].applianceCode] = Object.assign({isCheck:'check'},this.userDevices[this.task[i].applianceCode])
                 }
@@ -338,13 +357,16 @@
             },
             generateUnbindDevices(){//生成未绑定设备列表
                 let bindApplianceCode = [],  tmpUnbindDevices = {},  tmpUnbindDevicesAction = {}
+              
                 for (var x in this.autoBindDevices) {
                     bindApplianceCode.push(x)
                 }
-                for (var i in this.userDevices) {
-                    if ( bindApplianceCode.indexOf(this.userDevices[i].deviceId) == -1 ){
-                        tmpUnbindDevices[this.userDevices[i].deviceId] =  Object.assign(this.userDevices[i], {isCheck: 'uncheck'})
-                        tmpUnbindDevicesAction[i] = this.autoSupportActions[tmpUnbindDevices[i].deviceType].actions
+                
+                for (var i in this.sceneSupoortDevices) {
+                    if ( bindApplianceCode.indexOf(this.sceneSupoortDevices[i].deviceId) == -1 ){
+                        let tmp = Object.assign(this.sceneSupoortDevices[i], {isCheck: 'uncheck'})
+                        tmpUnbindDevices[this.sceneSupoortDevices[i].deviceId] =  tmp
+                        tmpUnbindDevicesAction[this.sceneSupoortDevices[i].deviceId] = this.autoSupportActions[this.sceneSupoortDevices[i].deviceType]
                     }
                 }
                 this.unbindDevices = {} 
@@ -355,22 +377,23 @@
             generateBindDeviceActions(){//生成已绑定设备的actions
                 let tmpBindDeviceActions = {}
                 for (var x in this.autoBindDevices) {
-                    if (this.userSetActions[x]) {
-                        tmpBindDeviceActions[x] = Object.assign({}, tmpBindDeviceActions[x], this.userSetActions[x])
-                    }else{
-                        tmpBindDeviceActions[x] = this.autoSupportActions[this.autoBindDevices[x].deviceType].actions
+                    if (this.autoBindDevices[x].isCheck == 'check'){
+                        if (this.userSetActions[x]) {
+                            tmpBindDeviceActions[x] = Object.assign({}, tmpBindDeviceActions[x], this.userSetActions[x])
+                        }else{
+                            tmpBindDeviceActions[x] = this.autoSupportActions[this.autoBindDevices[x].deviceType].actions
+                        }
                     }
                 }
-                this.bindDeviceActions =  Object.assign({}, this.bindDeviceActions, tmpBindDeviceActions)
+                this.bindDeviceActions =  Object.assign({}, tmpBindDeviceActions)
             },
-            openAuto(){
+            openAuto(e){
                 if (this.autoDetail.enable == 1) {
                     this.autoDetail.enable = 0
-                    this.editParams.enable = 0
                 }else if (this.autoDetail.enable == 0) {
                     this.autoDetail.enable = 1
-                    this.editParams.enable = 1
                 }
+                this.editParams.enable = Number(e.value)
             },
             editAutoName(input){
                 this.inputAutoName = input.value
@@ -396,7 +419,7 @@
                 }
                 if (this.sceneType == 6){
                     params.weatherStatus = encodeURIComponent(this.autoDetail.weather.weatherStatus)
-
+                    params.logical = encodeURIComponent(this.autoDetail.weather.logical)
                 }
                 this.goTo('autoTypeSet', {}, params)
             },
@@ -435,7 +458,8 @@
                     deviceId: deviceId,
                     deviceType: this.userDevices[deviceId].deviceType,
                     deviceTask: tmpTask,
-                    deviceName: encodeURIComponent(this.autoBindDevices[deviceId].deviceName)
+                    deviceName: encodeURIComponent(this.autoBindDevices[deviceId].deviceName),
+                    pageStamp: this.pageStamp
                 }
                 this.goTo('setDevice', {}, params)
             },
@@ -444,15 +468,20 @@
                     check: 'uncheck',
                     uncheck: 'check'
                 }
-                this.autoBindDevices[item.applianceCode].isCheck = tmpStatus[this.autoBindDevices[item.applianceCode].isCheck]
+                this.autoBindDevices[item.deviceId].isCheck = tmpStatus[this.autoBindDevices[item.deviceId].isCheck]
 
+                this.generateBindDeviceActions()
                 this.updateTask()//勾选或取消时需要更新task数据
             },
             updateTask(){
                 let tmpTask = []
-                for (var i in this.autoBindDevices) {
-                    if (this.autoBindDevices[i].isCheck == 'check') {
-                        tmpTask.push(this.autoDetail.task[i])
+                for (var key in this.autoBindDevices) {
+                    if (this.autoBindDevices[key].isCheck == 'check') {
+                        for (var x in this.autoDetail.task) {
+                            if (this.autoDetail.task[x].applianceCode == key) {
+                                tmpTask.push(this.autoDetail.task[x])
+                            }
+                        }
                     }
                 }
                 this.editParams.task = JSON.stringify(tmpTask)
@@ -470,9 +499,8 @@
                     }
                     this.goTo('autoBindDevices', {}, params)
                 }else{
-                    nativeService.alert('此快捷操作已经绑定了所有设备哦')
+                    nativeService.alert('此快捷操作已经选择了所有设备哦')
                 }
-                
             },
             sendAutoEdit(){
                 let reqUrl = url.auto.update
@@ -484,10 +512,24 @@
                     image: this.autoDetail.image,
                 }
 
-                if (Object.keys(this.editParams).length === 0) {
+                let tmpTask = []
+                for (var key in this.bindDeviceActions) { //key: applianceCode
+                    let tmpCommand = {}
+                    for (var i in this.bindDeviceActions[key]) {
+                        tmpCommand[this.bindDeviceActions[key][i].property] = this.bindDeviceActions[key][i].currentStatus || this.bindDeviceActions[key][i].default
+                        
+                    }
+                    tmpTask.push({
+                        applianceCode: key,
+                        command: tmpCommand
+                    })
+                }
+                reqParams.task = JSON.stringify(tmpTask) || JSON.stringify(this.autoDetail.task)
+                if (Object.keys(this.editParams).length === 0 && !reqParams.task) {
                     nativeService.alert('没有改动哦')
                     return
                 }
+
                 reqParams.name = this.editParams.name || this.autoDetail.name
                 reqParams.enable = this.editParams.enable || this.autoDetail.enable
                 reqParams.weekly = this.editParams.weekly || this.autoDetail.weekly
@@ -517,21 +559,6 @@
                     }
                     reqParams.weather = JSON.stringify(tmpWeather)
                 }
-                let tmpTask = []
-                
-                for (var key in this.bindDeviceActions) { //key: applianceCode
-                    let tmpCommand = {}
-                    for (var i in this.bindDeviceActions[key]) {
-                        tmpCommand[this.bindDeviceActions[key][i].property] = this.bindDeviceActions[key][i].currentStatus || this.bindDeviceActions[key][i].default
-                        
-                    }
-                    tmpTask.push({
-                        applianceCode: key,
-                        command: tmpCommand
-                    })
-                }
-
-                reqParams.task = JSON.stringify(tmpTask) || JSON.stringify(this.autoDetail.task)
 
                 this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                     if (rtnData.code == 0) {
@@ -549,7 +576,10 @@
             this.initData()
             channelAutoEdit.onmessage = function(e) {
                 if (e.data.page == 'setDevice') {
-                    that.userSetActions = Object.assign({}, that.userSetActions, e.data.actions)
+                    let tmpUserSetActions = {}
+                    tmpUserSetActions[e.data.applianceCode] = e.data.actions
+                    that.userSetActions = Object.assign({}, that.userSetActions, tmpUserSetActions)
+                    that.generateBindDeviceActions()
                 }
                 if (e.data.page == 'autoBindDevices') {
                     that.autoBindDevices = Object.assign({}, that.autoBindDevices, e.data.newDevices)
@@ -567,8 +597,9 @@
                     }
                     if ( e.data.editParams.hour) {
                         let tmpMinute = e.data.editParams.minute || '00'
-                        that.autoDetail.startTime = e.data.editParams + ':' + tmpMinute
+                        that.autoDetail.startTime = e.data.editParams.hour + ':' + tmpMinute
                     }
+                 
                     if ( e.data.editParams.weatherStatus) {
                         that.autoDetail.weather.weatherStatus = e.data.editParams.weatherStatus
                     }

@@ -176,7 +176,7 @@
         height: 450px;
         width: 750px;
         padding-bottom: 25px;
-        position: fixed;
+        position: absolute;
         top: 172px;
         left: 0;
         right: 0;
@@ -285,6 +285,11 @@
                 let tmp = {
                     height: this.pageHeight+'px'
                 }
+                if (this.isipx) {
+                    tmp.marginTop = '64px'
+                }else{
+                    tmp.marginTop = '40px'
+                }
                 return tmp
             },
             condition(){
@@ -331,12 +336,21 @@
                     this.week = tmpWeek
                                  
                     if (this.sceneType == 3) {
-                        this.mapCenter.latitude = nativeService.getParameters('locationLatitude')
-                        this.mapCenter.longitude = nativeService.getParameters('locationLongitude')
+                         nativeService.getGPSInfo({
+                            desiredAccuracy: "10",
+                            distanceFilter: "10",
+                            alwaysAuthorization: "0" 
+                        }).then( (res) => {
+                            this.gpsInfo = res
+                        })
+                        this.mapCenter.latitude = nativeService.getParameters('locationLatitude') ||  this.gpsInfo.latitude
+                        this.mapCenter.longitude = nativeService.getParameters('locationLongitude') || this.gpsInfo.longitude
                     }
                     if (this.sceneType == 4) {}
                     if (this.sceneType == 6) {
                         let tmpWeatherStatus = decodeURIComponent(nativeService.getParameters('weatherStatus'))
+                        let tmpWeatherLogical = decodeURIComponent(nativeService.getParameters('logical'))
+                        this.weather.activeSwitch = tmpWeatherLogical == '<' ? 'min':'max'
                         for (var w in this.weather.data) {
                             if (this.weather.data[w] == tmpWeatherStatus) {
                                 this.weather.activeTypeIndex = w
@@ -352,6 +366,13 @@
                     }else if (this.direction == 2) {
                         this.title = '离开某地'
                     }
+                    nativeService.getGPSInfo({
+                        desiredAccuracy: "10",
+                        distanceFilter: "10",
+                        alwaysAuthorization: "0" 
+                    }).then( (res) => {
+                        this.gpsInfo = res
+                    })
                 }
                 if (this.sceneType == 4){
                     this.title = '在某个时间'
@@ -466,21 +487,20 @@
                 this.searchLocation(e.value)
             },
             goCurrentLocation(){
-                if (this.gpsInfo) {
-                    let tmp = {
-                        latitude: this.gpsInfo.latitude,
-                        longitude: this.gpsInfo.longitude,
-                        zoom: 10
-                    }
-                    this.mapCenter = tmp
-                    this.markers = [{
-                        icon: {
-                            normal: icon.mapNormal,
-                            click: icon.mapClick
-                        },
-                        list: [{ latitude: this.gpsInfo.latitude, longitude: this.gpsInfo.longitude, id: 1 }]
-                    }]
+                this.showMapSearchResult = false
+                let tmp = {
+                    latitude: this.gpsInfo.latitude,
+                    longitude: this.gpsInfo.longitude,
+                    zoom: 10
                 }
+                this.mapCenter = tmp
+                this.markers = [{
+                    icon: {
+                        normal: icon.mapNormal,
+                        click: icon.mapClick
+                    },
+                    list: [{ latitude: this.gpsInfo.latitude, longitude: this.gpsInfo.longitude, id: 1 }]
+                }]
             },
             // 地图部分 end
             // 天气 start
@@ -498,7 +518,7 @@
                 this.weather.showDialog = false
                 
                 if (this.from == 'editAuto') {
-                    this.editParams.logical =  this.weather.activeSwitch=='低于'?'<':'>'
+                    this.editParams.logical =  this.weather.activeSwitch=='min'?'<':'>'
                 }
             },
             setActiveWeatherTemperature(wTemp){
@@ -552,13 +572,14 @@
                 this.goTo('autoBindDevices', {}, params )
             },
             saveChange(){
+                let that = this
                 if ( Object.keys(this.editParams).length === 0 ){
-                    nativeService.alert('没有改动哦')
-                    return
+                    nativeService.toast('没有改动哦')
                 }
+                
                 channelAutoTypeSet.postMessage({
                     page: 'setCondition',
-                    editParams: this.editParams
+                    editParams: that.editParams
                 })
                 this.goBack()
             }

@@ -14,7 +14,7 @@
                 </div>
                 <text class="sub-hd">选择要控制的电器，点击更改具体控制</text>
                 <div v-if="from == 'addAuto'" class="device-box row-sb">
-                    <div class="device" v-for="(item, idx) in userDevices">
+                    <div class="device" v-for="(item, idx) in sceneSupportDevices">
                         <div @click="goSetDevice(item)">
                             <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
                             <text class="device-name">{{item.deviceName}}</text>
@@ -55,7 +55,7 @@
         color: #000;
     }
     .done{
-        position:fixed;
+        position:absolute;
         right: 10px;
         top: 30px;
     }
@@ -71,6 +71,7 @@
     .device-box{
         padding-left: 32.25px;
         padding-right: 14.25px;
+        flex-wrap: wrap;
     }
     .device{
         width: 333.75px;
@@ -146,6 +147,11 @@
                 let tmp = {
                     height: this.pageHeight+'px'
                 }
+                if (this.isipx) {
+                    tmp.marginTop = '64px'
+                }else{
+                    tmp.marginTop = '40px'
+                }
                 return tmp
             }
         },
@@ -169,7 +175,7 @@
                     rightImg: 'assets/img/b.png'
                 },
                 applianceImgPath: applianceImgPath,
-                userDevices: {},
+                userDevices: [],
                 deviceCheckList: {},
                 weekDesc: '',
                 destination: {},
@@ -182,7 +188,9 @@
                 editParams: {},
                 unbindDevices: {},
                 autoSupportActions: {},
-                unbindDevicesActions: {}
+                unbindDevicesActions: {},
+                sceneSupportDevices: []
+
             }
         },
         methods: {
@@ -197,10 +205,15 @@
                 this.autoSupportActions = Object.assign({}, this.autoSupportActions, autoSupportActions[this.sceneType])
 
                 let tmpUserDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
+                let tmpSceneSupoortDevices = []
                 for (var i in tmpUserDevices) {
                     tmpUserDevices[i].isCheck = 'uncheck'
+                    if (this.autoSupportActions.hasOwnProperty(tmpUserDevices[i].deviceType)){
+                        tmpSceneSupoortDevices.push(tmpUserDevices[i])
+                    }
                 }
                 this.userDevices = tmpUserDevices
+                this.sceneSupportDevices = tmpSceneSupoortDevices
 
                 if (this.from == 'addAuto'){
                     this.generateAllDeviceActions()
@@ -248,7 +261,6 @@
                             distanceFilter: "10",
                             alwaysAuthorization: "0" 
                         }).then( (res) => {
-                            let key
                             this.gpsInfo = res
 
                             if( res.city){
@@ -280,10 +292,10 @@
                 }
                 if (this.from == 'addAuto') {
                     if (device.isCheck == 'check'){
-                        this.userDevices[index].isCheck = 'uncheck'
+                        this.sceneSupportDevices[index].isCheck = 'uncheck'
                         this.checkedDevices[device.deviceId] = false
                     }else if (device.isCheck == 'uncheck') {
-                        this.userDevices[index].isCheck = 'check'
+                        this.sceneSupportDevices[index].isCheck = 'check'
                         this.checkedDevices[device.deviceId] = true
                     }
                 }else if( this.from == 'editAuto'){
@@ -315,12 +327,16 @@
             },
             generateAllDeviceActions(){
                 let tmpAllDeviceActions = {}
-                for (var x in this.userDevices) {
-                    tmpAllDeviceActions[this.userDevices[x].deviceId] = this.autoSupportActions[this.userDevices[x].deviceType].actions
+                for (var x in this.sceneSupportDevices) {
+                    tmpAllDeviceActions[this.sceneSupportDevices[x].deviceId] = this.autoSupportActions[this.sceneSupportDevices[x].deviceType].actions
                 }
                 this.allDeviceActions = Object.assign({}, this.allDeviceActions, tmpAllDeviceActions)
             },
             getDone(){
+                if ( Object.keys(this.checkedDevices).length == 0) {
+                    nativeService.alert('没有选择绑定设备哦')
+                    return
+                }
                 if (this.from == 'addAuto') {
                     this.showPrompt = true
                 }else if(this.from == 'editAuto'){
@@ -360,7 +376,8 @@
                     homegroupId: this.homegroupId,
                     sceneType: this.sceneType,
                     image: this.icon.auto[this.sceneType],
-                    name: this.inputAutoName
+                    name: this.inputAutoName,
+                    enable: 1
                 }
                 let tmpTask = []
                 
@@ -416,7 +433,6 @@
                 }).catch( (error )=>{
 
                 })
-            
             }
         },
         created() {
@@ -432,5 +448,3 @@
         }
     }
 </script>
-
-

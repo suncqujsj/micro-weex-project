@@ -79,6 +79,42 @@ export const all = [
             },
             "errorCode": "0"
         }
+    },
+    {
+        path: 'getNetworkStatus',
+        data: {
+            "msg": "",
+            "result":{
+				"status":1, //0表示不可用，1表示可用
+				"type": 1 //0:非wifi, 1: wifi
+			},
+            "errorCode": "0"
+        }
+    },
+    {
+        path: 'getDevicePluginInfo',
+        data: {
+            "msg": "",
+            "result":{
+				"status": 0,
+				"version": "5.0",
+				"packageSize": "30692",
+				"needUpdate": 1, //0表示不用更新，1表示需要更新
+				"autoDown": 0 //0表示不自动下载，1表示自动下载
+			},
+            "errorCode": "0"
+        }
+    },
+    {
+        path: 'downLoadDevicePlugin',
+        data: {
+            "msg": "",
+            "result":{
+				"status": 7, //0 等待下载，1 下载中，2暂停，3下载失败， 4。下载成功 5.解压中，6，解压失败，7.解压成功
+				"progress": 100 //下载进度
+			},
+            "errorCode": "0"
+        }
     }
 ]
 

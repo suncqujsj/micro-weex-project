@@ -138,7 +138,6 @@
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);
             	},function(error) {
-            		nativeService.alert(error);
             		console.log("error");
             	});
             },

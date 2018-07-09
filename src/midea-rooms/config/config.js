@@ -1,5 +1,5 @@
-// const env = 'sit'
-const env = 'dev'
+const env = 'sit'
+// const env = 'dev'
 const domains = {
     'sit': '',
     'dev': 'http://iot-dev.smartmidea.net'
@@ -28,7 +28,7 @@ export const url = {
         update: domain + '/v1/scene/auto/update',
         delete: domain + '/v1/scene/auto/delete',
         execute: domain + '/v1/scene/auto/execute',
-        status: domain + '/v1/scene/auto/status/get',
+        executeStatus: domain + '/v1/scene/auto/status/get',
         recordUpload: domain + '/v1/scene/auto/record/upload',
         record: domain + '/v1/scene/auto/record/list',
         recordDelete: domain + '/v1/scene/auto/record/delete',
@@ -117,7 +117,7 @@ export const applianceActions = {
             "wind_speed": {
                 "type": "range",
                 "range": {
-                    "max": 0,
+                    "max": 101,
                     "min": 101
                 },
                 "default": 101
@@ -612,20 +612,22 @@ export const autoSupportActions = {
                 {
                     "property": "mode",
                     "propertyName": "模式",
+                    "type": "list",
                     "value": {
                         "auto": "自动",
                         "manual": "手动",
                         "sleep": "睡眠",
                         "fast": "急速"
-                    }
+                    },
+                    "default": "auto"
                 },
                 {
                     "property": "wind_speed",
                     "propertyName": "风速",
                     "type": "range",
                     "range": {
-                        "max": 0,
-                        "min": 101
+                        "max": 101,
+                        "min": 0
                     },
                     "default": 101
                 }
@@ -991,6 +993,7 @@ export const autoSupportActions = {
                 {
                     "property": "mode",
                     "propertyName": "模式",
+                    "type": "list",
                     "value": {
                         "auto": "自动",
                         "manual": "手动",
@@ -1004,8 +1007,8 @@ export const autoSupportActions = {
                     "propertyName": "风速",
                     "type": "range",
                     "range": {
-                        "max": 0,
-                        "min": 101
+                        "max": 101,
+                        "min": 0
                     },
                     "default": 101
                 }
@@ -1371,20 +1374,22 @@ export const autoSupportActions = {
                 {
                     "property": "mode",
                     "propertyName": "模式",
+                    "type": "list",
                     "value": {
                         "auto": "自动",
                         "manual": "手动",
                         "sleep": "睡眠",
                         "fast": "急速"
-                    }
+                    },
+                    "default": "auto"
                 },
                 {
                     "property": "wind_speed",
                     "propertyName": "风速",
                     "type": "range",
                     "range": {
-                        "max": 0,
-                        "min": 101
+                        "max": 101,
+                        "min": 0
                     },
                     "default": 101
                 }
@@ -1716,21 +1721,22 @@ export const autoSupportActions = {
                 {
                     "property": "mode",
                     "propertyName": "模式",
+                    "type": "list",
                     "value": {
                         "auto": "自动",
                         "manual": "手动",
                         "sleep": "睡眠",
                         "fast": "急速"
-                    }
+                    },
+                    "default": "auto"
                 },
                 {
                     "property": "wind_speed",
                     "propertyName": "风速",
                     "type": "range",
                     "range": {
-                        "max": 0,
-                        "min": 101
-                    },
+                        "max": 101,
+                        "min": 0                    },
                     "default": 101
                 }
             ]
@@ -1813,6 +1819,7 @@ export const applianceImgPath = {
     "0xFB": "assets/img/0xFB.png",//电暖器
     "0xB6": "assets/img/0xB6.png", //抽油烟机
     "0xB8": "assets/img/0xB8.png", //吸尘器
+    "0xFC": "assets/img/0xFC.png", //空气净化器
     "0xFA": "assets/img/0xFA.png",//风扇
     "0xFD": "assets/img/0xFD.png",//加湿器
     "0xA1": "assets/img/0xA1.png",//除湿机

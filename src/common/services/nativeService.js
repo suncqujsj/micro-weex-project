@@ -597,6 +597,92 @@ export default {
                 });
         })
     },
+    /*
+     * created by zhouhg 20180621 start
+     */
+    //根据设备信息获取插件信息
+    getDevicePluginInfo(params){
+      	 return new Promise((resolve, reject) => {
+    		let that = this;
+    		if (this.isDummy != true) {
+	            bridgeModule.getDevicePluginInfo(params,
+                (resData) => {
+                    resolve(resData);
+                },
+                (error) => {
+                    reject(error)
+                });
+	        }else{
+	        	let data = Mock.getMock('getDevicePluginInfo');
+	        	resolve(data);
+	        }
+            
+        })
+    },
+    //下载插件接口
+	downLoadDevicePlugin(params,callback,callbackFail){
+		let that = this;
+    	if (this.isDummy != true) {
+            bridgeModule.downLoadDevicePlugin(params,
+                (resData) => {
+                    callback(resData);
+                },
+                (error) => {
+                    callbackFail(error)
+                });
+        }else{
+	        let data = Mock.getMock('downLoadDevicePlugin');
+	        setTimeout(function(){
+	        	callback(data);
+	        },3000)
+	    }
+    },
+    getDeviceOnlineStatus(params,callback,callbackFail){
+    	return new Promise((resolve, reject) => {
+    		let that = this;
+    		bridgeModule.getDeviceOnlineStatus(params,
+	            (resData) => {
+	                resolve(resData)
+	            },
+	        (error) => {
+	            reject(error)
+	        });
+        })
+    },
+    //设备主动上报在线离线状态
+	deviceOnlineStatus() {
+        let params = {
+            operation: 'deviceOnlineStatus'
+        }
+        return this.commandInterfaceWrapper(params)
+    },
+    //更新下载插件并解压后，需要替换加载新下载的插件
+    loadingLatestPlugin(params,callback,callbackFail){
+//  	let params = {};
+    	return new Promise((resolve, reject) => {
+            bridgeModule.loadingLatestPlugin(params,
+                (resData) => {
+                    resolve(resData)
+                },
+                (error) => {
+                    reject(error)
+                });
+        })
+    },
+    //重新加载当前页面
+    reload(callback,callbackFail){
+    	let params = {};
+        bridgeModule.reload(params,
+            (resData) => {
+                callback(resData)
+            },
+        (error) => {
+                callbackFail(error)
+        });
+    },
+    /*
+     * created by zhouhg 20180621 end
+     */
 
     //统一JS->Native接口
     commandInterfaceWrapper(param) {
@@ -795,6 +881,13 @@ export default {
              operation: 'getCityInfo'
          })
          return this.commandInterfaceWrapper(param)
+    },
+    /*  ^5.0.0 根据getCityInfo获得的城市对应的气象局ID获取城市天气信息， 比如温度， 风向等信息 */
+    getWeatherInfo(params) {
+        let param = Object.assign(params, {
+            operation: 'getWeatherInfo'
+        })
+        return this.commandInterfaceWrapper(param)
     },
     //获取登录态信息
     getLoginInfo() {

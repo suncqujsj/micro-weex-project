@@ -82,6 +82,8 @@
 		        </div>
 		        <midea-smart @change="onMideachange" :checked="mideaChecked" :data="data"></midea-smart>
 		      </div>
+		      <!--downloading by zhouhg-->
+		      <midea-download></midea-download>
 		      <midea-smart @change="onMideachange2" :checked="mideaChecked2" :data="data2"></midea-smart>     
 	        <midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="false" :checked="mideaChecked2" :data="data3"></midea-smart>
 	    </div>
@@ -94,6 +96,8 @@
 	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
 	import mideaItem from '@/midea-component/item.vue'
 	import mideaButton from '@/midea-component/button.vue';
+	//downloading by zhouhg
+	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	
 	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
@@ -106,7 +110,8 @@
             mideaSwitch,
             mideaSmart,
             mideaItem,
-            mideaButton
+            mideaButton,
+            mideaDownload   //downloading by zhouhg
         },
         data() {
             return {

@@ -1,28 +1,27 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
             <div slot="customerContent" class="header-right">
                 <text class="header-right-text" @click="goToServiceCharge">收费标准</text>
             </div>
         </midea-header>
         <scroller class="content-wrapper">
             <div class="base-group">
-                <midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectProduct">
-                    <div slot="title" class="cell-title">
+                <div class="service-cell" @click="selectProduct">
+                    <div class="service-cell-block">
                         <text class="cell-label">维修产品</text>
                         <text class="cell-label-star">*</text>
+                        <text class="right-text address-text" v-bind:class="[selectedProductDesc=='请选择'?'empty-text':'']">{{selectedProductDesc}}</text>
+                        <image class="arrow-icon" src="./img/arrow_right.png" resize='contain'></image>
                     </div>
-                    <div slot="rightText">
-                        <text class="right-text">{{selectedProductDesc}}</text>
-                    </div>
-                </midea-cell>
+                </div>
                 <midea-cell v-if="isIncludeU99" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectProductUse">
                     <div slot="title" class="cell-title">
                         <text class="cell-label">使用场所</text>
                         <text class="cell-label-star">*</text>
                     </div>
                     <div slot="rightText">
-                        <text class="right-text">{{productUseDesc}}</text>
+                        <text class="right-text" v-bind:class="[productUseDesc=='请选择'?'empty-text':'']">{{productUseDesc}}</text>
                     </div>
                 </midea-cell>
                 <midea-cell :height="excludedFault?'80':'100'" :hasBottomBorder="false" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectFaultType">
@@ -31,7 +30,7 @@
                         <text class="cell-label-star">*</text>
                     </div>
                     <div slot="rightText">
-                        <text class="right-text">{{faultDesc}}</text>
+                        <text class="right-text" v-bind:class="[faultDesc=='请选择'?'empty-text':'']">{{faultDesc}}</text>
                     </div>
                 </midea-cell>
                 <div class="arraw-cell" v-if="excludedFault" @click="showExcludedFault">
@@ -51,15 +50,15 @@
                         <text class="cell-label-star">*</text>
                     </div>
                     <div slot="rightText">
-                        <text class="right-text">{{serviePeriodDesc}}</text>
+                        <text class="right-text" v-bind:class="[serviePeriodDesc=='请选择'?'empty-text':'']">{{serviePeriodDesc}}</text>
                     </div>
                 </midea-cell>
 
-                <div class="address-cell" @click="selectAddress">
-                    <div class="address-block">
+                <div class="service-cell" @click="selectAddress">
+                    <div class="service-cell-block">
                         <text class="cell-label">服务地址</text>
                         <text class="cell-label-star">*</text>
-                        <text class="right-text address-text">{{userAddressDesc}}</text>
+                        <text class="right-text address-text" v-bind:class="[userAddressDesc=='请选择'?'empty-text':'']">{{userAddressDesc}}</text>
                         <image class="arrow-icon" src="./img/arrow_right.png" resize='contain'></image>
                     </div>
                 </div>
@@ -67,7 +66,7 @@
 
             <div class="base-group">
                 <div class="item-group">
-                    <text class="type-select-label">以下为选填信息，有助于更快更好地为您服务</text>
+                    <text class="type-select-label">以下为选填信息，有助于更好更快地为您服务</text>
 
                     <div class="search-history">
                         <text v-for="(item,index) in types" :key="index" v-bind:class="['search-history-item', typeSelectedIndex==index?'search-history-item-selected':'']" @click="typeSelected(index)">{{item.title}}</text>
@@ -75,7 +74,7 @@
                 </div>
 
                 <div class="item-group">
-                    <scan-input placeholder="请输入型号或扫机身条码" v-model="code" :scan="typeSelectedIndex==0" @scanCode="scanCode"></scan-input>
+                    <scan-input placeholder="请输入型号或扫描机身条码" v-model="code" :scan="typeSelectedIndex==1" @scanCode="scanCode"></scan-input>
                 </div>
                 <div class="item-group photo-group">
                     <text class="photo-label">现场图片</text>
@@ -91,16 +90,16 @@
                     </div>
                 </div>
                 <div class="item-group info-group">
-                    <textarea class="info-textarea" placeholder="请输入其他备注信息" v-model="order.pubRemark" rows="5" maxlength="120"></textarea>
+                    <textarea class="info-textarea" placeholder="其他备注信息" v-model="order.pubRemark" rows="5" maxlength="120"></textarea>
                     <text class="info-textarea-calc">{{order.pubRemark.length}}/120</text>
                     <div class="mic-icon-wrapper" @click="isMicPanelShow=true">
                         <image class="mic-icon" src="./assets/img/service_ic_tape@3x.png" resize='contain'></image>
                     </div>
                 </div>
-                <div class="action-bar">
-                    <midea-button text="提交" type="green" :btnStyle="{'background-color': '#267AFF','opacity':dataReadyStatus.status?'1':'0.2','border-radius': '4px'}" @mideaButtonClicked="submit">
-                    </midea-button>
-                </div>
+            </div>
+            <div class="action-bar">
+                <midea-button text="提交" type="green" :btnStyle="{'background-color': '#267AFF','opacity':dataReadyStatus.status?'1':'0.2','border-radius': '4px'}" @mideaButtonClicked="submit">
+                </midea-button>
             </div>
         </scroller>
 
@@ -127,7 +126,7 @@
                 </div>
                 <text v-if="micResult" class="mic-result-confirm" @click="confirmMicResult">确定</text>
             </div>
-            <text class="mic-result-desc">按住说话</text>
+            <text class="mic-record-tip">按住说话</text>
         </midea-popup>
     </div>
 </template>
@@ -162,7 +161,8 @@ export default {
         return {
             title: '维修服务',
             isRenew: false,
-
+            applianceSN: '',  //一键报修
+            oneStepFaultDesc: '', //一键报修
             selectedProduct: [],
 
             isShowProductUse: false,
@@ -191,11 +191,11 @@ export default {
             typeSelectedIndex: 0,
             types: [
                 {
-                    'title': '机身条码',
+                    'title': '产品型号',
                     'isSelected': true
                 },
                 {
-                    'title': '产品型号',
+                    'title': '机身条码',
                     'isSelected': false
                 }
             ],
@@ -302,7 +302,7 @@ export default {
         userAddressDesc() {
             let result = PLEASE_SELECT
             if (this.userAddress) {
-                result = this.userAddress.receiverName + ' ' + this.userAddress.receiverMobile + '\n' + this.userAddress.provinceName + this.userAddress.cityName + this.userAddress.countyName + this.userAddress.streetName + this.userAddress.addr
+                result = this.userAddress.receiverName + ' ' + this.userAddress.receiverMobile + '\n' + this.userAddress.provinceName + this.userAddress.cityName + this.userAddress.countyName + this.userAddress.streetName + (this.isRenew ? '' : '\n') + this.userAddress.addr
             }
             return result
         },
@@ -536,7 +536,7 @@ export default {
             this.showTakePhotoBar = false
             let messageParam = {
                 compressRage: 10,
-                type: 'png',
+                type: 'jpg',
                 isNeedBase64: true
             }
             if (event.index == 0) {
@@ -547,7 +547,8 @@ export default {
                         this.photoData.push({
                             fileName: resp.fileName,
                             imgMeta: imgBase64[0],
-                            contentStr: imgBase64[1]
+                            contentStr: imgBase64[1],
+                            size: resp.size
                         })
                     }
                 ).catch((error) => {
@@ -561,7 +562,8 @@ export default {
                         this.photoData.push({
                             fileName: resp.fileName,
                             imgMeta: imgBase64[0],
-                            contentStr: imgBase64[1]
+                            contentStr: imgBase64[1],
+                            size: resp.size
                         })
                     }
                 ).catch((error) => {
@@ -596,10 +598,12 @@ export default {
                     }
                 }
             ).catch((error) => {
+                this.isRecording = false
             })
         },
         stopRecordAudio() {
             if (!this.isRecording) return
+
             nativeService.stopRecordAudio().then(
                 (resp) => {
                     this.isRecording = false
@@ -671,6 +675,42 @@ export default {
 
         },
 
+        claimBySN(applianceSN) {
+            let param = {
+                serialNo: applianceSN
+            }
+            nativeService.getProductBySerialNo(param).then((resp) => {
+                //通过SN获取设备信息
+                let deviceInfo = resp.data
+
+                //维修产品
+                this.selectedProduct.push({
+                    brandCode: deviceInfo.brandCode,  //产品品牌
+                    brand: deviceInfo.productBrand,  //产品品牌名称
+                    prodCode: deviceInfo.productTypeId,  //产品品类
+                    prodName: deviceInfo.productType  //产品品类名称
+                })
+
+                //故障类型
+                let param = {
+                    interfaceSource: "SMART",
+                    depth: 3,
+                    parentServiceRequireCode: "BX01016",
+                    brandCode: deviceInfo.brandCode, //查询品牌
+                    prodCode: deviceInfo.productTypeId, //查询品类
+                }
+                nativeService.queryservicerequireproduct(param).then((data) => {
+                    let faultList = data.list
+                    if (faultList && faultList.length > 0) {
+                        this.selectedFault = faultList[0]
+                    }
+                }).catch((error) => {
+                    nativeService.toast(nativeService.getErrorMessage(error))
+                })
+
+            })
+        },
+
         submit() {
             if (!this.dataReadyStatus.status) return
 
@@ -722,8 +762,8 @@ export default {
                     productAmount: 1,  //默认填1
                     serviceDesc: '', //服务描述
                     productUse: product.userTypeCode == "U99" ? this.order.productUse : '',
-                    productCode: this.typeSelectedIndex == 0 ? this.code : '',
-                    productModel: this.typeSelectedIndex == 1 ? this.code : ''
+                    productCode: this.typeSelectedIndex == 1 ? this.code : '',
+                    productModel: this.typeSelectedIndex == 0 ? this.code : ''
                 }]
                 param["serviceUserDemandVOs"] = serviceUserDemandVOs
 
@@ -757,6 +797,13 @@ export default {
             nativeService.getDefaultAddr().then((data) => {
                 this.userAddress = data.data
             })
+
+            this.applianceSN = nativeService.getParameters('applianceSN') || ''
+            if (this.applianceSN) {
+                //一键报修
+                this.oneStepFaultDesc = nativeService.getParameters('faultDesc') || ''
+                this.claimBySN(this.applianceSN)
+            }
         }
 
         globalEvent.addEventListener("receiveMessageFromApp", (data) => {
@@ -770,7 +817,7 @@ export default {
 
 <style>
 .wrapper {
-  background-color: #ffffff;
+  background-color: #f2f2f2;
   position: relative;
 }
 .header-right {
@@ -789,11 +836,8 @@ export default {
   padding-right: 20px;
   text-align: right;
 }
-.content-wrapper {
-}
 .base-group {
-  padding-top: 24px;
-  background-color: #f2f2f2;
+  margin-top: 24px;
 }
 .cell-title {
   flex: 1;
@@ -818,6 +862,9 @@ export default {
   padding-right: 24px;
   text-align: right;
   width: 430px;
+}
+.empty-text {
+  color: #c8c7cc;
 }
 .arraw-cell {
   background-color: #fff7d5;
@@ -867,10 +914,12 @@ export default {
   width: 12px;
 }
 
-.address-cell {
+.service-cell {
   background-color: #ffffff;
+  border-bottom-color: #e2e2e2;
+  border-bottom-width: 1px;
 }
-.address-block {
+.service-cell-block {
   flex-direction: row;
   align-items: center;
   padding-top: 24px;
@@ -883,7 +932,9 @@ export default {
   padding-right: 10px;
 }
 .item-group {
-  padding: 24px;
+  padding-top: 24px;
+  padding-left: 24px;
+  padding-right: 24px;
   background-color: #ffffff;
 }
 
@@ -904,9 +955,9 @@ export default {
   color: #666666;
   background-color: #f6f6f6;
   text-align: center;
-  padding-top: 8px;
+  padding-top: 10px;
   padding-right: 28px;
-  padding-bottom: 8px;
+  padding-bottom: 10px;
   padding-left: 28px;
   margin-left: 12px;
   margin-right: 12px;
@@ -918,6 +969,7 @@ export default {
 }
 .info-group {
   position: relative;
+  padding-bottom: 24px;
 }
 .info-textarea {
   font-family: PingFangSC-Regular;
@@ -930,6 +982,7 @@ export default {
   padding-left: 22px;
   padding-right: 50px;
   background-color: #fafafa;
+  height: 200px;
 }
 .info-textarea-calc {
   position: absolute;
@@ -951,9 +1004,9 @@ export default {
   width: 40px;
 }
 .action-bar {
-  background-color: #ffffff;
   width: 750px;
   text-align: center;
+  padding-top: 30px;
   padding-bottom: 50px;
 }
 .photo-group {
@@ -1057,10 +1110,10 @@ export default {
   color: #267aff;
   padding: 20px;
 }
-.mic-result-desc {
+.mic-record-tip {
   font-family: PingFangSC-Regular;
-  font-size: 32px;
-  color: #666666;
+  font-size: 24px;
+  color: #8a8a8f;
   text-align: center;
   padding-top: 10px;
 }

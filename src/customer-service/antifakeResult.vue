@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller class="scroller">
             <div class="base-group">
@@ -48,7 +48,7 @@
                         <text class="dialog-result-count">{{result.QueryCount}}</text>
                         <text class="dialog-result-count-desc">次</text>
                     </div>
-                    <text class="dialog-result-count-title">{{result.QueryCount>1?' (该码已被查询过，请谨防假冒)':''}}</text>
+                    <text class="dialog-result-count-title">{{resultMessage}}</text>
                     <text class="dialog-result-desc">尊敬的客户你好，您所查询的是</text>
                     <text class="dialog-result-desc">{{code}}</text>
                 </div>
@@ -90,9 +90,9 @@ export default {
         },
         resultMessage() {
             if (this.result.QueryCount == 1) {
-                return "该码第一次被查询，是美的正品。"
+                return "该码第1次被查询，是美的正品"
             } else if (this.result.QueryCount > 1) {
-                return "该码已被查询过，请谨防假冒。"
+                return "该码已被查询过，请谨防假冒"
             }
         }
     },
@@ -209,17 +209,19 @@ export default {
   padding-bottom: 10px;
 }
 .dialog-result-count-title {
-  font-family: PingFangSC-Regular;
+  font-family: PingFangSC-Medium;
+  font-weight: 600;
   font-size: 32px;
   color: #000000;
   text-align: center;
   padding-top: 18px;
-  padding-bottom: 18px;
+  padding-bottom: 8px;
 }
 .dialog-result-desc {
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #666666;
+  padding-top: 10px;
 }
 .dialog-result-footer {
   flex: 1;

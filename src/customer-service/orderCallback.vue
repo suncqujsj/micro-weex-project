@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back"></midea-header>
         <scroller class="scroller">
             <order-block class="order-block" :order="order" :showStatus="false">
                 <div slot="action-bar">
@@ -136,7 +136,7 @@ export default {
                         "callbackResultName": resultItem.callbackResultName,
                     }
                     let reasonItemList = resultItem.oiCallbackResultUnsatisfyReasonVOList
-                    if (callbackTypeCode == "FM" && ["W11101", "W11102", "W11103"].indexOf(resultItem.callbackResultCode) < 0) {
+                    if (callbackTypeCode == "FM" && [1, 0, -2].indexOf(resultItem.callbackResultScore) < 0) {
                         let reasonObj = Object.assign({}, groupItemObj, resultItemObj)
                         //未完成的评价
                         this.uncompletedList.push(reasonObj)
@@ -149,13 +149,13 @@ export default {
                             })
 
                             if (callbackTypeCode == "FM") {
-                                if (resultItem.callbackResultCode == "W11101") {
+                                if (resultItem.callbackResultScore == 1) {
                                     //满意
                                     this.satisfyList.push(reasonObj)
-                                } else if (resultItem.callbackResultCode == "W11102") {
+                                } else if (resultItem.callbackResultScore == 0) {
                                     //一般
                                     this.normalList.push(reasonObj)
-                                } else if (resultItem.callbackResultCode == "W11103") {
+                                } else if (resultItem.callbackResultScore == -2) {
                                     //不满意
                                     this.unSatisfyList.push(reasonObj)
                                 }

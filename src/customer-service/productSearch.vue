@@ -1,12 +1,12 @@
 <template>
     <div>
-        <midea-header v-if="!isIos" :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header v-if="!isIos" :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <div class="search-bar" :style="{'height':isIos?'136px':'96px','padding-top':isIos?'40px':'0px'}">
             <div class="search-bar-content">
                 <image class="search-bar-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
                 <input class="search-bar-input" placeholder="请输入产品品类，如空调、洗衣机" v-model="keyWord" @return="keyBoardsearch" return-key-type="search"></input>
-                <image v-if="keyWord.length>0" class="search-bar-close" :src="'./assets/img/service_ic_cancel@3x.png'" resize="contain" @click="keyWord=''"></image>
+                <image v-if="keyWord.length>0" class="search-bar-close" :src="'./assets/img/me_ic_return@3x.png'" resize="contain" @click="keyWord=''"></image>
             </div>
             <text v-if="isIos" class="search-action" @click="back">取消</text>
             <text v-if="!isIos" class="search-action" @click="searchProduct(keyWord)">搜索</text>
@@ -15,7 +15,6 @@
             <template v-if="convertedProductList && convertedProductList.length>0">
                 <div v-for="(item, index) in convertedProductList" @click="selectItem(item)" :key="index">
                     <div class="search-result-content">
-                        <image class="search-result-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
                         <midea-rich-text class="search-result-desc" :hasTextMargin="false" :config-list="item.richDesc"></midea-rich-text>
                     </div>
                 </div>
@@ -120,6 +119,9 @@ export default {
             this.isLoaded = true
             if (this.historyKeys.indexOf(this.searchKeyWord) < 0) {
                 this.historyKeys.push(this.searchKeyWord)
+                if (this.historyKeys.length > 8) {
+                    this.historyKeys.shift()
+                }
                 nativeService.setItem(this.SERVICE_STORAGE_KEYS.historyKeys, this.historyKeys, () => { })
             }
         },
@@ -236,10 +238,10 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 24px;
   color: #666666;
-  padding-top: 8px;
-  padding-right: 18px;
-  padding-bottom: 8px;
-  padding-left: 18px;
+  padding-top: 10px;
+  padding-right: 24px;
+  padding-bottom: 10px;
+  padding-left: 24px;
   margin-right: 30px;
   margin-bottom: 30px;
   border-radius: 4px;
@@ -248,7 +250,7 @@ export default {
 
 .search-result-content {
   flex: 1;
-  width: 586px;
+  /* width: 586px; */
   height: 90px;
   border-radius: 4px;
   background-color: #ffffff;

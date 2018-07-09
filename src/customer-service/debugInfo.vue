@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" @viewappear="viewappear" @viewdisappear="viewdisappear">
-        <midea-header :title="'Debug信息'+buildTime" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="'Debug信息'+buildTime" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <div class="header-action">
             <text class="action" @click="clean">清空</text>

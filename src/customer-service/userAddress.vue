@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
             <div slot="customerContent" class="header-right" v-if="!isCreate">
                 <text class="header-right-text" @click="deleteAddress">删除</text>
             </div>
@@ -18,7 +18,7 @@
             </div>
             <div class="item-group">
                 <text class="text-label">所在区域</text>
-                <text class="text-desc" @click="isShowAddressPicker=true">{{areaDesc}}</text>
+                <text class="text-desc" v-bind:class="[areaDesc=='请选择所在区域'?'empty-text':'']" @click="isShowAddressPicker=true">{{areaDesc}}</text>
                 <image class="text-img" src="./assets/img/me_ic_area@3x.png" resize='contain' @click="getPosition"></image>
             </div>
             <div class="item-group">
@@ -27,7 +27,7 @@
             </div>
             <div class="item-group">
                 <text class="text-label">默认地址</text>
-                <midea-switch2 :checked="userAddress.defaultAddr" @change="changeDefaultAddr" width="70" height="38"></midea-switch2>
+                <midea-switch2 :checked="userAddress.defaultAddr" @change="changeDefaultAddr" width="48" height="48"></midea-switch2>
             </div>
         </scroller>
 
@@ -89,7 +89,7 @@ export default {
     },
     computed: {
         areaDesc() {
-            return this.userAddress.province ? (this.userAddress.provinceName + ' ' + this.userAddress.cityName + ' ' + this.userAddress.countyName + ' ' + this.userAddress.streetName) : '请选中所在区域'
+            return this.userAddress.province ? (this.userAddress.provinceName + ' ' + this.userAddress.cityName + ' ' + this.userAddress.countyName + ' ' + this.userAddress.streetName) : '请选择所在区域'
         },
         isDataReady() {
             let result = true
@@ -307,5 +307,8 @@ export default {
   width: 750px;
   text-align: center;
   padding-bottom: 20px;
+}
+.empty-text {
+  color: #9a9a9a;
 }
 </style>

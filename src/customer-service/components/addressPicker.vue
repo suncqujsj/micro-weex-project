@@ -218,6 +218,7 @@ export default {
 }
 .period-header-area-current {
   font-family: PingFangSC-Medium;
+  font-weight: 600;
   font-size: 28px;
   color: #000000;
   padding-left: 32px;

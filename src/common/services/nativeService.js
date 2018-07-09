@@ -597,6 +597,92 @@ export default {
                 });
         })
     },
+    /*
+     * created by zhouhg 20180621 start
+     */
+    //根据设备信息获取插件信息
+    getDevicePluginInfo(params){
+      	 return new Promise((resolve, reject) => {
+    		let that = this;
+    		if (this.isDummy != true) {
+	            bridgeModule.getDevicePluginInfo(params,
+                (resData) => {
+                    resolve(resData);
+                },
+                (error) => {
+                    reject(error)
+                });
+	        }else{
+	        	let data = Mock.getMock('getDevicePluginInfo');
+	        	resolve(data);
+	        }
+            
+        })
+    },
+    //下载插件接口
+	downLoadDevicePlugin(params,callback,callbackFail){
+		let that = this;
+    	if (this.isDummy != true) {
+            bridgeModule.downLoadDevicePlugin(params,
+                (resData) => {
+                    callback(resData);
+                },
+                (error) => {
+                    callbackFail(error)
+                });
+        }else{
+	        let data = Mock.getMock('downLoadDevicePlugin');
+	        setTimeout(function(){
+	        	callback(data);
+	        },3000)
+	    }
+    },
+    getDeviceOnlineStatus(params,callback,callbackFail){
+    	return new Promise((resolve, reject) => {
+    		let that = this;
+    		bridgeModule.getDeviceOnlineStatus(params,
+	            (resData) => {
+	                resolve(resData)
+	            },
+	        (error) => {
+	            reject(error)
+	        });
+        })
+    },
+    //设备主动上报在线离线状态
+	deviceOnlineStatus() {
+        let params = {
+            operation: 'deviceOnlineStatus'
+        }
+        return this.commandInterfaceWrapper(params)
+    },
+    //更新下载插件并解压后，需要替换加载新下载的插件
+    loadingLatestPlugin(params,callback,callbackFail){
+//  	let params = {};
+    	return new Promise((resolve, reject) => {
+            bridgeModule.loadingLatestPlugin(params,
+                (resData) => {
+                    resolve(resData)
+                },
+                (error) => {
+                    reject(error)
+                });
+        })
+    },
+    //重新加载当前页面
+    reload(callback,callbackFail){
+    	let params = {};
+        bridgeModule.reload(params,
+            (resData) => {
+                callback(resData)
+            },
+        (error) => {
+                callbackFail(error)
+        });
+    },
+    /*
+     * created by zhouhg 20180621 end
+     */
 
     //统一JS->Native接口
     commandInterfaceWrapper(param) {

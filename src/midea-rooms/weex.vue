@@ -1,6 +1,6 @@
 // 美居场景首页
 <template>
-    <scroller class="wrap"  :show-scrollbar="false" >
+    <scroller class="wrap"  :show-scrollbar="false" @viewappear="initData">
         <div>
             <div class="hd row-sb">
                 <text class="hd-name">快捷操作</text>
@@ -342,39 +342,41 @@
                 this.goTo("scene", {}, params)
                 
             },
+            initData(){
+                nativeService.getUserInfo().then((res)=>{
+                    this.uid = res.uid
+
+                    nativeService.getCurrentHomeInfo().then( (res)=>{
+                        this.homegroupId = res.homeId
+                        this.userDevices = ''
+                        if (res.deviceList) {
+                            this.userDevices = encodeURIComponent(JSON.stringify(res.deviceList))
+                        }
+                        // this.uid = 'ac70d2636c0c4dd5b86bc97bbc8166c6'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
+                        // this.homegroupId = '150366'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
+                        // this.userDevices = encodeURIComponent(JSON.stringify([// 这里用的是模拟数据,等他调好bug后再改回真实数据
+                        //     {
+                        //         deviceId: '2222222',
+                        //         deviceName: '设备二',
+                        //         deviceType: '0xFD',
+                        //         isOnline: 1
+                        //     },{
+                        //         deviceId: '111111',
+                        //         deviceName: '设备一',
+                        //         deviceType: '0xAC',
+                        //         isOnline: 1
+                        //     }
+                        // ]))
+
+                        this.getSceneList()
+                        this.getAutoList()
+                    }).catch((err)=>{
+                        nativeService.toast(err)
+                    })
+                })
+             }
         },
         created(){
-            nativeService.getUserInfo().then((res)=>{
-                this.uid = res.uid
-
-                nativeService.getCurrentHomeInfo().then( (res)=>{
-                    this.homegroupId = res.homeId
-                    this.userDevices = ''
-                    if (res.deviceList) {
-                        this.userDevices = encodeURIComponent(JSON.stringify(res.deviceList))
-                    }
-                    // this.uid = 'ac70d2636c0c4dd5b86bc97bbc8166c6'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
-                    // this.homegroupId = '150366'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
-                    // this.userDevices = encodeURIComponent(JSON.stringify([// 这里用的是模拟数据,等他调好bug后再改回真实数据
-                    //     {
-                    //         deviceId: '2222222',
-                    //         deviceName: '设备二',
-                    //         deviceType: '0xFD',
-                    //         isOnline: 1
-                    //     },{
-                    //         deviceId: '111111',
-                    //         deviceName: '设备一',
-                    //         deviceType: '0xAC',
-                    //         isOnline: 1
-                    //     }
-                    // ]))
-
-                    this.getSceneList()
-                    this.getAutoList()
-                }).catch((err)=>{
-                    nativeService.toast(err)
-                })
-            })
         }
     }
 </script>

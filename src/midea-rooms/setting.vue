@@ -4,7 +4,7 @@
         <list class="scroller" :style="scrollerStyle">
             <cell>
                 <div class="block"  style="background-color:#fff">
-                    
+                    <text class="sub-hd">关联设备</text>
                     <midea-list v-for="(item,idx) in userSupportDevices" :idx="idx" :hasWrapBorder="false" leftMargin="25px">
                         <check-item  :title="item.applianceName" :status="item.isRelation == 1" @itemClick="switchBindSceneDevice(item,idx)"></check-item>
                     </midea-list>
@@ -124,6 +124,7 @@
     .value-text{ color: #666; font-size: 28px;}
     .next-icon{width: 12px; height: 24px; margin-left: 20px;}
     .set-item{ padding-top: 25px; padding-bottom: 25px; padding-right: 25px;}
+    .sub-hd{background-color: #f2f2f2; padding: 25px; color:#777;  font-size: 28px;}
 </style>
 
 <script>

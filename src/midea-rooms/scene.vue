@@ -648,7 +648,6 @@
                             let tmpPowerXValue = [], tmpPowerXLabel = [], tmpPowerYValue = [], tmpPowerYLabel = [], 
                                 tmpWaterXValue = [], tmpWaterXLabel = [], tmpWaterYValue = [], tmpWaterYLabel = []
 
-
                             for (let i=0; i<result.length; i++) {
                                 tmpPowerXValue[i] = i
                                 tmpPowerXLabel[i] = result[i].date
@@ -694,17 +693,13 @@
                     alwaysAuthorization: "0" 
                 }).then((gps)=>{
                     nativeService.getCityInfo({cityName: gps.city}).then( (city)=>{
-                        nativeService.alert(2)
-                        // nativeService.getWeatherInfo({cityNo: city.cityNo}).then((weather)=>{
-                            
-                        //     nativeService.alert(3+ JSON.stringify(weather))
-                        //     this.weatherDesc = '今天' + weather.weatherStatus + '气温' + weather.temperature + '℃'
-                        // }).catch(()=>{
-                        //     this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
-                        // })
+                        nativeService.getWeatherInfo({cityNo: city.cityNo}).then((weather)=>{
+            	            nativeService.alert('weather' + JSON.stringify(weather))
+                            this.weatherDesc = '今天' + weather.weatherStatus + '气温' + weather.temperature + '℃'
+                        }).catch(()=>{
+                            this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
+                        })
                     }).catch((err)=>{
-                        
-                        nativeService.alert(err)
                         this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
                     })
                 }).catch((err)=>{
@@ -731,4 +726,3 @@
         }
     }
 </script>
-

@@ -6,10 +6,10 @@ export const all = [
         data: {
             "errorCode": 0,
 		    "params": {
-		        "power": "on",
-		        "minutes": "40",
-		        "gear":"4",
-		        "light":"on"
+		        "work_status": "work",
+		        "mode": "auto_wash",
+		        "wash_stage":"4",
+		        "left_time":"40"
 		    }
         }
     },
@@ -18,10 +18,10 @@ export const all = [
         data: {
             "errorCode": 0,
 		    "params": {
-		        "power": "off",
-		        "minutes": "40",
-		        "gear":"4",
-		        "light":"on"
+		       "work_status": "power_off",
+		        "mode": "auto_wash",
+		        "wash_stage":"4",
+		        "left_time":"40"
 		    }
         }
     },
@@ -30,10 +30,58 @@ export const all = [
         data: {
             "errorCode": 0,
 		    "params": {
-		        "power": "on",
-		        "minutes": "50",
-		        "gear":"4",
-		        "light":"off"
+		       "work_status": "power_on",
+		        "mode": "auto_wash",
+		        "wash_stage":"4",
+		        "left_time":"40"
+		    }
+        }
+    },
+    {
+        path: 'start',
+        data: {
+            "errorCode": 0,
+		    "params": {
+		       "work_status": "work",
+		        "mode": "auto_wash",
+		        "wash_stage":"4",
+		        "left_time":"40"
+		    }
+        }
+    },
+    {
+        path: 'pause',
+        data: {
+            "errorCode": 0,
+		    "params": {
+		       "work_status": "order",
+		        "mode": "auto_wash",
+		        "wash_stage":"4",
+		        "left_time":"40"
+		    }
+        }
+    },
+    {
+        path: 'startWork',
+        data: {
+            "errorCode": 0,
+		    "params": {
+		       "work_status": "work",
+		        "mode": "auto_wash",
+		        "wash_stage":"4",
+		        "left_time":"40"
+		    }
+        }
+    },
+    {
+        path: 'cancelWork',
+        data: {
+            "errorCode": 0,
+		    "params": {
+		       "work_status": "cancel",
+		        "mode": "auto_wash",
+		        "wash_stage":"4",
+		        "left_time":"40"
 		    }
         }
     },

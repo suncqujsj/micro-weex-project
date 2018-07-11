@@ -398,12 +398,12 @@
                 }
                 if (this.sceneType == 4){
                     this.title = '在某个时间'
-                    this.hours = this.generateListArray(0,23)
-                    this.minutes = this.generateListArray(0,59)
+                    this.hours = this.generateTimeListArray(0,23)
+                    this.minutes = this.generateTimeListArray(0,59)
                 }
                 if (this.sceneType == 6){
                     this.title = '天气变化'
-                    this.weatherTemperature = this.generateListArray(-10,40)
+                    this.weatherTemperature = this.generateNumberListArray(-10,40)
                 }
             },
             setRepeat(i){
@@ -421,7 +421,15 @@
                     this.editParams.weekly = weeklyString
                 }
             },
-            generateListArray(min, max){
+            generateNumberListArray(min, max){
+                let tmp = []
+                let len  = max-min+1
+                for (let i=0; i<len; i++){
+                    tmp[i] = { index: i, value: i+min }
+                }
+                return tmp
+            },
+            generateTimeListArray(min, max){
                 let tmp = []
                 let len  = max-min+1
                 for (let i=0; i<len; i++){

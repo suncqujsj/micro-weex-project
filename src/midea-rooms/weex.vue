@@ -26,17 +26,16 @@
                     <div class="scene-info">
                         <text class="scene-name">{{scene.name}}</text>
                         <div v-if="scene.roomType == 1 || scene.roomType == 2" class="row-s">
-                            <text v-if="scene.indicator.temperature" class="scene-desc">室温{{scene.indicator.temperature}}, </text>
-                            <text v-if="scene.indicator.humidity" class="scene-desc">湿度{{scene.indicator.humidity}}, </text>
-                            <text v-if="scene.indicator.pm25" class="scene-desc">空气质量{{scene.indicator.pm25}} </text>
+                            <text v-if="isLogin && scene.indicator.temperature" class="scene-desc">室温{{scene.indicator.temperature}}, </text>
+                            <text v-if="isLogin && scene.indicator.humidity" class="scene-desc">湿度{{scene.indicator.humidity}}, </text>
+                            <text v-if="isLogin && scene.indicator.pm25" class="scene-desc">空气质量{{scene.indicator.pm25}} </text>
                         </div>
                         <div v-if="scene.roomType == 3" class="scene-desc">
-                            <text class="scene-desc">{{feel[scene.indicator.level]}}</text>
+                            <text v-if="isLogin && scene.indicator.level" class="scene-desc">{{feel[scene.indicator.level]}}</text>
                         </div>
                         <div v-if="scene.roomType == 4" class="scene-dexc">
-                            <text class="scene-desc">{{scene.indicator.work_stats}}</text>
+                            <text v-if="isLogin && scene.indicator.work_stats" class="scene-desc">{{scene.indicator.work_stats}}</text>
                         </div>
-                        <!-- <image v-if="scene.applianceCount>0" class="next" :src="icon.next"></image> -->
                         <image class="next" :src="icon.next"></image>
                     </div>
                 </div>
@@ -116,6 +115,7 @@
         mixins: [base],
         data(){
             return {
+                isLogin: false,
                 uid: '',
                 homegroupId: '',
                 icon: {
@@ -142,8 +142,55 @@
                     4: '加热中',
                     5: '热水充足'
                 },
-                autoList: [],
-                sceneList: null,
+                autoList: [
+                    {
+                        isAdd: true,
+                        image: 'assets/img/man.png',
+                        sceneType: 2,
+                        name: '新增-手动'
+                    },
+                    {
+                        isAdd: true,
+                        image: 'assets/img/arrive.png',
+                        sceneType: 3,
+                        direction: 1,
+                        name: '新增-到达某地'
+                    },
+                    {
+                        isAdd: true,
+                        image: 'assets/img/arrive.png',
+                        sceneType: 3,
+                        direction: 2,
+                        name: '新增-离开某地'
+                    },
+                    {
+                        isAdd: true,
+                        image: 'assets/img/clock.png',
+                        sceneType: 4,
+                        name: '新增-在某个时间'
+                    },
+                    {
+                        isAdd: true,
+                        image: 'assets/img/slweather.png',
+                        sceneType: 6,
+                        name: '新增-在某个天气'
+                    }
+                ],
+                sceneList: [
+                    {
+                        "name": "客厅",
+                        "roomType": 1
+                    }, {
+                        "name": "卧室",
+                        "roomType": 2
+                    }, {
+                        "name": "卫浴",
+                        "roomType": 3
+                    }, {
+                        "name": "阳台",
+                        "roomType": 4
+                    }
+                ],
                 userDevices: '',
                 user: null,
                 autoTemplate: {},
@@ -153,58 +200,107 @@
             }
         },
         methods: { 
-            editAuto(auto){
-                if (auto.isAdd){
-                    let params = {
-                        from: 'addAuto',
-                        uid: this.uid,
-                        homegroupId: this.homegroupId,
-                        sceneType: auto.sceneType,
-                        userDevices: this.userDevices
-                    }
-                    if (auto.sceneType == 3) {
-                        params.direction = auto.direction
-                    }
-                    if (auto.sceneType == 2) {
-                        this.goTo("autoBindDevices", {}, params)
+            initData(){
+                nativeService.getUserInfo().then((res)=>{
+                    if (res.uid == '' || res.uid == undefined){
                     }else{
-                        this.goTo('autoTypeSet',{}, params)
+                        this.isLogin = true
+                        this.uid = res.uid
+                        nativeService.getCurrentHomeInfo().then( (res)=>{
+                            this.homegroupId = res.homeId
+                            this.userDevices = ''
+                            if (res.deviceList) {
+                                this.userDevices = encodeURIComponent(JSON.stringify(res.deviceList))
+                            }
+                            // this.uid = 'ac70d2636c0c4dd5b86bc97bbc8166c6'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
+                            // this.homegroupId = '150366'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
+                            // this.userDevices = encodeURIComponent(JSON.stringify([// 这里用的是模拟数据,等他调好bug后再改回真实数据
+                            //     {
+                            //         deviceId: '2222222',
+                            //         deviceName: '设备二',
+                            //         deviceType: '0xFD',
+                            //         isOnline: 1
+                            //     },{
+                            //         deviceId: '111111',
+                            //         deviceName: '设备一',
+                            //         deviceType: '0xAC',
+                            //         isOnline: 1
+                            //     }
+                            // ]))
+
+                            this.getSceneList()
+                            this.getAutoList()
+                        }).catch((err)=>{
+                            nativeService.toast(err)
+                        })
+                    }
+                    
+                })
+            },
+            editAuto(auto){
+                if (this.isLogin) {
+                    if (auto.isAdd){
+                        let params = {
+                            from: 'addAuto',
+                            uid: this.uid,
+                            homegroupId: this.homegroupId,
+                            sceneType: auto.sceneType,
+                            userDevices: this.userDevices
+                        }
+                        if (auto.sceneType == 3) {
+                            params.direction = auto.direction
+                        }
+                        if (auto.sceneType == 2) {
+                            this.goTo("autoBindDevices", {}, params)
+                        }else{
+                            this.goTo('autoTypeSet',{}, params)
+                        }
+                    }else{
+                        let params = {
+                            uid: this.uid,
+                            homegroupId: this.homegroupId,
+                            sceneType: auto.sceneType,
+                            sceneId: auto.sceneId,
+                            userDevices: this.userDevices
+                        }
+                        this.goTo("autoEdit", {}, params)
                     }
                 }else{
-                    let params = {
-                        uid: this.uid,
-                        homegroupId: this.homegroupId,
-                        sceneType: auto.sceneType,
-                        sceneId: auto.sceneId,
-                        userDevices: this.userDevices
-                    }
-                    this.goTo("autoEdit", {}, params)
+                    nativeService.alert('您还没有登录，点击确定前往登录', function(){
+                        nativeService.jumpNativePage({pageName: 'login'})
+                    }) 
                 }
             },
             executeAuto(sceneId){
-                let reqUrl = url.auto.execute
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneId: sceneId
-                }
-                let codeDesc = {
-                    '1000': '未知系统错误',
-                    '1001': '参数格式错误',
-                    '1002': '参数为空',
-                    '1105': '账户不存在',
-                    '1200': '用户不在家庭',
-                    '1701': '自动化项目不存在'                
-                }
-                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
-                    if (rtnData.code == 0) {
-                        this.checkExecuteAuto(sceneId,rtnData.data.resultId)
-                    }else{
-                        nativeService.toast(codeDesc[rtnData.code])
+                if (this.isLogin) {
+                    let reqUrl = url.auto.execute
+                    let reqParams = {
+                        uid: this.uid,
+                        homegroupId: this.homegroupId,
+                        sceneId: sceneId
                     }
-                }).catch( (error )=>{
-                    nativeService.alert(error)
-                })
+                    let codeDesc = {
+                        '1000': '未知系统错误',
+                        '1001': '参数格式错误',
+                        '1002': '参数为空',
+                        '1105': '账户不存在',
+                        '1200': '用户不在家庭',
+                        '1701': '自动化项目不存在'                
+                    }
+                    this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                        if (rtnData.code == 0) {
+                            this.checkExecuteAuto(sceneId,rtnData.data.resultId)
+                        }else{
+                            nativeService.toast(codeDesc[rtnData.code])
+                        }
+                    }).catch( (error )=>{
+                        nativeService.alert(error)
+                    })
+                }else{
+                    nativeService.alert('您还没有登录，点击确定前往登录', function(){
+                        nativeService.jumpNativePage({pageName: 'login'})
+                    }) 
+                }
             },
             checkExecuteAuto(sceneId, resultId){
                 if (this.checkAutoExeTimes < 20) {//最多查20次
@@ -329,52 +425,24 @@
                 })
             },
             goScene(scene){
-                if (scene.applianceCount <= 0 ) {
-                    nativeService.toast('无法获取相关数据，点击右上角设置设备')
+                if (this.isLogin) {
+                    if (scene.applianceCount <= 0 ) {
+                        nativeService.toast('无法获取相关数据，点击右上角设置设备')
+                    }
+                    let params = {
+                        uid: this.uid,
+                        homegroupId: this.homegroupId,
+                        roomType:scene.roomType,
+                        sceneId: scene.sceneId,
+                        userDevices: this.userDevices
+                    }             
+                    this.goTo("scene", {}, params)
+                }else{
+                    nativeService.alert('您还没有登录，点击确定前往登录', function(){
+                        nativeService.jumpNativePage({pageName: 'login'})
+                    }) 
                 }
-                let params = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    roomType:scene.roomType,
-                    sceneId: scene.sceneId,
-                    userDevices: this.userDevices
-                }             
-                this.goTo("scene", {}, params)
-                
-            },
-            initData(){
-                nativeService.getUserInfo().then((res)=>{
-                    this.uid = res.uid
-
-                    nativeService.getCurrentHomeInfo().then( (res)=>{
-                        this.homegroupId = res.homeId
-                        this.userDevices = ''
-                        if (res.deviceList) {
-                            this.userDevices = encodeURIComponent(JSON.stringify(res.deviceList))
-                        }
-                        // this.uid = 'ac70d2636c0c4dd5b86bc97bbc8166c6'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
-                        // this.homegroupId = '150366'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
-                        // this.userDevices = encodeURIComponent(JSON.stringify([// 这里用的是模拟数据,等他调好bug后再改回真实数据
-                        //     {
-                        //         deviceId: '2222222',
-                        //         deviceName: '设备二',
-                        //         deviceType: '0xFD',
-                        //         isOnline: 1
-                        //     },{
-                        //         deviceId: '111111',
-                        //         deviceName: '设备一',
-                        //         deviceType: '0xAC',
-                        //         isOnline: 1
-                        //     }
-                        // ]))
-
-                        this.getSceneList()
-                        this.getAutoList()
-                    }).catch((err)=>{
-                        nativeService.toast(err)
-                    })
-                })
-             }
+            }
         },
         created(){
         }

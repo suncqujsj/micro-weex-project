@@ -936,6 +936,10 @@ export default {
     //调用第三方SDK统一接口
     interfaceForThirdParty(...args) {
         bridgeModule.interfaceForThirdParty(...args)
-    }
+    },
+    //
+    updateAutoList() {
+        bridgeModule.updateAutoList()
+    },
     //**********APP业务接口***************END
 }

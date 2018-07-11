@@ -1,109 +1,120 @@
 <template>
-    <scroller class="wrap" :style="wrapStyle">
-        <div :style="sceneStyle">
-            <midea-header :title="scene.name" bgColor="transparent" titleText="#fff"  @leftImgClick="goBack"></midea-header>
-            <div class="setting" @click="goSetting()">
-                <text class="setting-text white">设置</text>
-            </div>
-            <div v-if="scene.roomType=='1' || scene.roomType=='2' || scene.roomType=='3' " class="up-block" >
-                <div class="up-desc">
-                    <text class="desc white">{{temperatureStatus}} {{pm25Status}}</text>
-                    <midea-vote :defaulSelectd="Number(scene.indicator.level)" :disabled="true" :styles="style.vote" :imgPath="voteImg"></midea-vote>
-                    <text class="improve white" @click="quickOptimize">一键优化</text>
+    <div>
+            
+        <scroller class="wrap" :style="wrapStyle">
+            <div :style="sceneStyle">
+                <midea-header :title="scene.name" bgColor="transparent" titleText="#fff"  @leftImgClick="goBack"></midea-header>
+                <div class="setting" @click="goSetting()">
+                    <text class="setting-text white">设置</text>
                 </div>
-                <div class="up-status row-sa" v-if="scene.roomType=='1' || scene.roomType=='2'">
-                    <div>
-                        <text class="info-text font14 white">温度</text>
-                        <div  class="row-c status-value">
-                            <text v-if="scene.indicator.temperature" class="font36 white">{{scene.indicator.temperature}}</text>
-                            <text v-if="scene.indicator.temperature" class="font16 white mgb-10">℃</text>
-                            <text v-else class="font36 white">-</text>
-                        </div>
-                        <text class="info-text font12 white">{{temperatureStatus}}</text>
-                    </div>  
-                    <div>
-                        <text class="info-text font14 white">湿度</text>
-                        <div class="row-c status-value">
-                            <text v-if="scene.indicator.humidity" class="font36 white">{{scene.indicator.humidity}}</text>
-                            <text v-if="scene.indicator.humidity" class="font16 white mgb-10">%</text>
-                            <text v-else class="font36 white">-</text>
-                        </div>
-                        <text class="info-text font12 white">{{humidityStatus}}</text>
-                    </div>  
-                    <div>
-                        <text class="info-text font14 white">空气质量</text>
-                        <div class="row-c status-value">
-                            <text v-if="scene.indicator.pm5" class="font36 white">{{scene.indicator.pm5}}</text>
-                            <text v-else class="font36 white">-</text>
-                        </div>
-                        <text class="info-text font12 white">{{pm25Status}}</text>
+                <div v-if="scene.roomType=='1' || scene.roomType=='2' || scene.roomType=='3' " class="up-block" >
+                    <div class="up-desc">
+                        <text class="desc white">{{temperatureStatus}} {{pm25Status}}</text>
+                        <midea-vote :defaulSelectd="Number(scene.indicator.level)" :disabled="true" :styles="style.vote" :imgPath="voteImg"></midea-vote>
+                        <text class="improve white" @click="quickOptimize">一键优化</text>
                     </div>
-                </div>
-                <div class="up-status row-sa" v-if="scene.roomType=='3'">
-                    <div>
-                        <text v-if="scene.indicator.work_stats" class="info-text font14 white">{{scene.indicator.work_stats}}</text>
-                        <text v-else class="info-text font14 white">工作状态</text>
-                        <div class="row-c status-value">
-                            <text v-if="scene.indicator.water_temperature" class="font36 white">{{scene.indicator.water_temperature}}</text>
-                            <text v-if="scene.indicator.water_temperature" class="font16 white mgb-10">℃</text>
-                            <text v-else class="font36 white">-</text>
-                        </div>
-                    </div>  
-                    <div>
-                        <text class="info-text font14 white">热水量</text>
-                        <div class="row-c status-value">
-                            <text v-if="scene.indicator.water_capacity" class="font36 white">{{scene.indicator.water_capacity}}</text>
-                            <text v-if="scene.indicator.water_capacity" class="font16 white mgb-10">%</text>
-                            <text v-else class="font36 white">-</text>
-                        </div>
-                    </div>  
-                     <div v-if="scene.roomType=='3' ">
-                        <text class="info-text font14 white">还需加热</text>
-                        <div class="row-c status-value">
-                            <text v-if="scene.indicator.remain_time" class="font36 white">{{scene.indicator.remain_time}}</text>
-                            <text v-if="scene.indicator.remain_time" class="font16 white mgb-10">分</text>
-                            <text v-else class="font36 white">-</text>
+                    <div class="up-status row-sa" v-if="scene.roomType=='1' || scene.roomType=='2'">
+                        <div>
+                            <text class="info-text font14 white">温度</text>
+                            <div  class="row-c status-value">
+                                <text v-if="scene.indicator.temperature" class="font36 white">{{scene.indicator.temperature}}</text>
+                                <text v-if="scene.indicator.temperature" class="font16 white mgb-10">℃</text>
+                                <text v-else class="font36 white">-</text>
+                            </div>
+                            <text class="info-text font12 white">{{temperatureStatus}}</text>
+                        </div>  
+                        <div>
+                            <text class="info-text font14 white">湿度</text>
+                            <div class="row-c status-value">
+                                <text v-if="scene.indicator.humidity" class="font36 white">{{scene.indicator.humidity}}</text>
+                                <text v-if="scene.indicator.humidity" class="font16 white mgb-10">%</text>
+                                <text v-else class="font36 white">-</text>
+                            </div>
+                            <text class="info-text font12 white">{{humidityStatus}}</text>
+                        </div>  
+                        <div>
+                            <text class="info-text font14 white">空气质量</text>
+                            <div class="row-c status-value">
+                                <text v-if="scene.indicator.pm5" class="font36 white">{{scene.indicator.pm5}}</text>
+                                <text v-else class="font36 white">-</text>
+                            </div>
+                            <text class="info-text font12 white">{{pm25Status}}</text>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div v-if="scene.roomType=='4'" class="up-block balcony-block">
-                <text class="weather white">{{weatherDesc}}</text>
-                <slider v-if="hasWasherWaterData || hasWasherPowerData">
-                    <div v-if="hasWasherWaterData">
-                        <midea-barchart-view class="barchart" :data="washData"></midea-barchart-view>
+                    <div class="up-status row-sa" v-if="scene.roomType=='3'">
+                        <div>
+                            <text v-if="scene.indicator.work_stats" class="info-text font14 white">{{scene.indicator.work_stats}}</text>
+                            <text v-else class="info-text font14 white">工作状态</text>
+                            <div class="row-c status-value">
+                                <text v-if="scene.indicator.water_temperature" class="font36 white">{{scene.indicator.water_temperature}}</text>
+                                <text v-if="scene.indicator.water_temperature" class="font16 white mgb-10">℃</text>
+                                <text v-else class="font36 white">-</text>
+                            </div>
+                        </div>  
+                        <div>
+                            <text class="info-text font14 white">热水量</text>
+                            <div class="row-c status-value">
+                                <text v-if="scene.indicator.water_capacity" class="font36 white">{{scene.indicator.water_capacity}}</text>
+                                <text v-if="scene.indicator.water_capacity" class="font16 white mgb-10">%</text>
+                                <text v-else class="font36 white">-</text>
+                            </div>
+                        </div>  
+                        <div v-if="scene.roomType=='3' ">
+                            <text class="info-text font14 white">还需加热</text>
+                            <div class="row-c status-value">
+                                <text v-if="scene.indicator.remain_time" class="font36 white">{{scene.indicator.remain_time}}</text>
+                                <text v-if="scene.indicator.remain_time" class="font16 white mgb-10">分</text>
+                                <text v-else class="font36 white">-</text>
+                            </div>
+                        </div>
                     </div>
-                    <div v-if="hasWasherPowerData">
-                        <midea-barchart-view class="barchart" :data="washData"></midea-barchart-view>
+                </div>
+                <div v-if="scene.roomType=='4'" class="up-block balcony-block">
+                    <text class="weather white">{{weatherDesc}}</text>
+                    <slider v-if="hasWasherWaterData || hasWasherPowerData">
+                        <div v-if="hasWasherWaterData">
+                            <midea-barchart-view class="barchart" :data="washData"></midea-barchart-view>
+                        </div>
+                        <div v-if="hasWasherPowerData">
+                            <midea-barchart-view class="barchart" :data="washData"></midea-barchart-view>
+                        </div>
+                    </slider>
+                    <div v-else>
+                        <text class="no-washdata">暂无数据</text>
                     </div>
-                </slider>
-                <div v-else>
-                    <text class="no-washdata">暂无数据</text>
+                </div>
+                <!-- <div v-if="scene.roomType=='4'" class="wash-list wash-item row-sb" @click="buyShampoo">
+                    <text class="font16 white">购买洗涤剂</text>
+                    <image class="next" :src="icon.next"></image>
+                </div> -->
+            </div>
+            <div v-if="scene.roomType == 4" class="down-block row-sa">
+                <div @click="powerOnOff">
+                    <image class="down-icon" :src="icon.washer[washerPower]"></image>
+                    <text class="down-text">{{washerStatus[washerPower]}}</text>
+                </div>
+                <div @click="controlStartPause">
+                    <image class="down-icon" :src="icon.washer[washerControlStatus]"></image>
+                    <text class="down-text">{{washerStatus[washerControlStatus]}}</text>
                 </div>
             </div>
-            <div v-if="scene.roomType=='4'" class="wash-list wash-item row-sb" @click="buyShampoo">
-                <text class="font16 white">购买洗涤剂</text>
-                <image class="next" :src="icon.next"></image>
-            </div>
-        </div>
-    
-        <div class="down-block row-sa">
-            <div v-for="model in scene.modeList" @click="executeModel(model.modelId)">
-                <image class="down-icon" :src="icon.actions[model.modelId]"></image>
-                <text class="down-text">{{model.modelName}}</text>
-            </div>
-        </div>
-        <!-- <toast-dialog :show="showToastDialog" @close="closeToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}"> -->
-        <toast-dialog :show="showToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}">
-            <div class="row-sb mgb-10" v-for="item in sceneDevices">
-                <div class="row-sb toast-line">
-                    <text class="pop-hd">{{item.applianceName}}</text>
-                    <image class="toast-icon" :src="icon.model[item.status]"></image>
+            <div v-if="scene.roomType != 4" class="down-block row-sa">
+                <div v-for="model in scene.modeList" @click="executeModel(model.modelId)">
+                    <image class="down-icon" :src="icon.actions[model.modelId]"></image>
+                    <text class="down-text">{{model.modelName}}</text>
                 </div>
             </div>
-        </toast-dialog>
-        <web v-if="showMall" src=""></web>
-    </scroller>
+            <toast-dialog :show="showToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}">
+                <div class="row-sb mgb-10" v-for="item in sceneDevices">
+                    <div class="row-sb toast-line">
+                        <text class="pop-hd">{{item.applianceName}}</text>
+                        <image class="toast-icon" :src="icon.model[item.status]"></image>
+                    </div>
+                </div>
+            </toast-dialog>
+        </scroller>
+        
+    </div>
 </template>
 
 <style>
@@ -251,6 +262,7 @@
         text-align: center;
         padding-top: 80px;
     }
+ 
 </style>
 
 <script>
@@ -275,6 +287,17 @@
                     tmp.marginTop = '40px'
                 }
                 return tmp
+            },
+            webStyle(){
+                return {
+                    width: '750px',
+                    height: this.pageHeight + 'px',
+                    position: 'fixed',
+                    top: '0px',
+                    left: '0px',
+                    bottom: '0px',
+                    right: '0px'
+                }
             },
             temperatureStatus(){
                 let temperature = this.scene.indicator.temperature
@@ -386,6 +409,12 @@
                         1: 'assets/img/success.png',
                         2: 'assets/img/loading.png',
                         3: 'assets/img/fail.png'
+                    },
+                    washer: {
+                        on: 'assets/img/power_on.png',
+                        off: 'assets/img/power_off.png',
+                        start: 'assets/img/start_on.png',
+                        pause: 'assets/img/stop_on.png'
                     }
                 },
                 style: {
@@ -469,7 +498,15 @@
                     }
                 },
                 hasWasherPowerData: false,
-                hasWasherWaterData: false
+                hasWasherWaterData: false,
+                washerPower: 'off',
+                washerControlStatus: 'pause',
+                washerStatus: {
+                    on: '开机',
+                    off: '关机',
+                    start: '启动',
+                    pause: '暂停'
+                },
             }
         },
         methods: {
@@ -490,7 +527,10 @@
                 this.showToastDialog = false
             },
             buyShampoo(){
-                this.showMall = true
+                let params = {
+                    uid: this.uid
+                }
+                this.goTo('buyShampoo', {}, params)
             },
             getSceneDetail(){
                 return new Promise((resolve, reject)=>{
@@ -632,14 +672,13 @@
                 }).catch( (err)=>{
                 })
             },
-            getWashData(washCode){
-                if (washCode) {
+            getWashData(){
+                if (this.washerCode) {
                     let reqUrl = url.scene.washerConsumption
-                    
                     let reqParams = {
                         uid: this.uid,
                         homegroupId: this.homegroupId,
-                        applianceCode: washCode
+                        applianceCode: this.washerCode
                     }
                     
                     this.webRequest(reqUrl, reqParams).then((res)=>{
@@ -651,13 +690,23 @@
                             for (let i=0; i<result.length; i++) {
                                 tmpPowerXValue[i] = i
                                 tmpPowerXLabel[i] = result[i].date
-                                tmpPowerYValue[i] = result[i].powerConsumption || ''
-                                tmpPowerYLabel[i] = result[i].powerConsumption || ''
+
+                                tmpPowerYValue[i] = 0
+                                tmpPowerYLabel[i] = 0
+                                if (result[i].powerConsumption && result[i].powerConsumption != '') {
+                                    tmpPowerYValue[i] = result[i].powerConsumption
+                                     tmpPowerYLabel[i] = result[i].powerConsumption
+                                }
 
                                 tmpWaterXValue[i] = i
                                 tmpWaterXLabel[i] = result[i].date
-                                tmpWaterYValue[i] = result[i].waterConsumption || ''
-                                tmpWaterYLabel[i] = result[i].waterConsumption || ''
+                                
+                                tmpWaterYValue[i] = 0
+                                tmpWaterYLabel[i] = 0
+                                if (result[i].waterConsumption && result[i].waterConsumption != '') {
+                                    tmpWaterYValue[i] = result[i].waterConsumption
+                                    tmpWaterYLabel[i] = result[i].waterConsumption
+                                }
                             }
 
                             this.washerPowerData['x']['value'] = tmpPowerXValue
@@ -665,12 +714,11 @@
                             this.washerPowerData['y']['value'] = tmpPowerYValue
                             this.washerPowerData['y']['label'] = tmpPowerYLabel
                             
-                            this.washerWaterData['x']['value'] = tmpPowerXValue
-                            this.washerWaterData['x']['label'] = tmpPowerXLabel
-                            this.washerWaterData['y']['value'] = tmpPowerYValue
-                            this.washerWaterData['y']['label'] = tmpPowerYLabel
+                            this.washerWaterData['x']['value'] = tmpWaterXValue
+                            this.washerWaterData['x']['label'] = tmpWaterXLabel
+                            this.washerWaterData['y']['value'] = tmpWaterYValue
+                            this.washerWaterData['y']['label'] = tmpWaterYLabel
                             
-
                             this.hasWasherPowerData = true
                             this.hasWasherWaterData = true
                         }else{
@@ -694,8 +742,14 @@
                 }).then((gps)=>{
                     nativeService.getCityInfo({cityName: gps.city}).then( (city)=>{
                         nativeService.getWeatherInfo({cityNo: city.cityNo}).then((weather)=>{
-            	            nativeService.alert('weather' + JSON.stringify(weather))
-                            this.weatherDesc = '今天' + weather.weatherStatus + '气温' + weather.temperature + '℃'
+                            let tmpDesc = ''
+                            if (weather.weatherStatus) {
+                                tmpDesc += '今天' + weather.weatherStatus
+                            }
+                            if (weather.grade) {
+                                tmpDesc += ' , 气温' + weather.grade + '℃'
+                            }
+                            this.weatherDesc = tmpDesc || '无法获取天气，请在系统设置中打开定位服务'
                         }).catch(()=>{
                             this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
                         })
@@ -705,7 +759,66 @@
                 }).catch((err)=>{
                     this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
                 })
-               
+            },
+            setWasherStatus(luaData){
+                // this.washerRunningStatus = luaData.running_status
+            },
+            luaQueryStatus () {
+            	let self = this;
+            	let params = {
+                    data:{}, 
+                    operation: 'luaQuery',
+                    applianceId: String(self.washerCode),
+                }
+                nativeService.alert('params:  ' + JSON.stringify(params))
+
+            	nativeService.sendLuaRequest(params, true).then(function(luaData) {
+                    nativeService.alert('luaData:  ' + JSON.stringify(luaData))
+                    self.setWasherStatus(luaData)
+            	},function(error) {
+                    nativeService.alert('error:  ' + JSON.stringify(error))
+            	});
+            },
+            powerOnOff(){//控制阳台场景洗衣机的开启关闭
+		        let self = this;
+		        let poweronoff = this.washerPower=='off' ? "on" : "off";
+            	let params = {
+            			operation: "luaControl",
+                        applianceId: self.washerCode,
+            			data: { "power": poweronoff },
+            		};
+            	nativeService.sendLuaRequest(params,true).then(function(data) {
+            		self.setWasherStatus(data);
+            	},function(error) {
+            		nativeService.alert(data);
+            	});
+            },
+            controlStartPause(){//控制阳台场景洗衣机的启动暂停
+            	let self = this;
+            	if( self.washerRunningStatus == "work") {
+            		let params = {
+            			operation:"luaControl",
+                        applianceId: self.washerCode,
+            			data:{ "control_status": "pause" }
+            		};
+            		nativeService.sendLuaRequest(params,true).then(function(data) {
+            			nativeService.alert(data)
+	            		self.setWasherStatus(data)
+	            	},function(error) {
+	            		nativeService.alert(error)
+	            	})
+            	} else {
+            		let params = {
+            			operation: "luaControl",
+                        applianceId: self.washerCode,
+            			data: { control_status: "start" },
+            		};
+            		nativeService.sendLuaRequest(params,true).then(function(data) {
+	            		self.setWasherStatus(data);
+	            	},function(error) {
+	            		nativeService.alert(error)
+	            	});
+            	}
             }
         },
         created(){
@@ -719,8 +832,10 @@
             }
             this.getSceneDetail().then(()=>{
                 if (this.roomType == 4 && this.scene.applianceList.length > 0) {
-                    this.getWashData(this.scene.applianceList[0].applianceCode)
+                    this.washerCode = this.scene.applianceList[0].applianceCode
+                    this.getWashData()
                     this.getWeatherInfo()
+                    this.luaQueryStatus()
                 }
             })
         }

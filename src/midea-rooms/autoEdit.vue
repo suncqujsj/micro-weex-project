@@ -434,6 +434,9 @@
                 }
                 this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                     if (rtnData.code == 0) {
+                        if (this.sceneType == 3) {
+                            this.updateAutoList()//通知原生位置类型自动化列表需要更新
+                        }
                         nativeService.alert('删除成功!', function(){
                             nativeService.backToNative()
                         })
@@ -562,6 +565,9 @@
 
                 this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                     if (rtnData.code == 0) {
+                        if (this.sceneType == 3) {
+                            this.updateAutoList()//通知原生位置类型自动化列表需要更新
+                        }
                         nativeService.alert('修改成功', function(){
                             nativeService.backToNative()
                         })

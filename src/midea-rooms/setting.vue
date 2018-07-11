@@ -245,7 +245,10 @@
                 this.getSupportDevices().then((res)=>{
                     if (res.applianceList.length == 0) {
                         nativeService.toast('您在该场景下没有可以绑定的设备哦')
-                        this.goBack()
+                        setTimeout(()=>{
+                            this.goBack()
+                        },500)
+                        return
                     }
                     this.userSupportDevices = res.applianceList
                     this.scenePropFormat = this.jsonToArray(res.prop)
@@ -306,14 +309,16 @@
                     this.deleteSceneAppliance(appliance.applianceCode).then((res)=>{
                         tmpDevice.isRelation = 2
                         this.userSupportDevices.splice(index, 1, tmpDevice)
-                        nativeService.alert('解绑成功！')
+                        nativeService.toast('解绑成功！')
+                        this.initData()
                     })
                 } else if (appliance.isRelation == 2) {
                     this.addSceneAppliance(appliance.applianceCode).then((res)=>{
                         tmpDevice.isRelation = 1
                         this.userSupportDevices.splice(index, 1, tmpDevice)
-                        this.reload()
                         nativeService.toast('绑定成功！')
+                        this.initData()
+                        
                     })
                 }
         
@@ -486,8 +491,8 @@
                     this.closePropPop(propType)
                     if (res.code == 0) {
                         setTimeout(()=>{
-                            nativeService.alert('修改成功！')
-                            this.reload()
+                            nativeService.toast('修改成功！')
+                            this.initData()
                         },500)
                     }else{
                         let codeMsg = {

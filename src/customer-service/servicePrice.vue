@@ -13,7 +13,7 @@
                 </div>
 
                 <div class="item-group scan-group group-bottom-border">
-                    <input class="item-input" placeholder="请输入配件名称" :autofocus=false v-model="materialName" />
+                    <input class="item-input" placeholder="请输入配件名称" :autofocus=false v-model="materialName"  maxlength="50"/>
                 </div>
 
                 <div class="action-bar">

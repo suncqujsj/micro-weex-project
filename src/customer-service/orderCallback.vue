@@ -41,7 +41,7 @@
                     </div>
                     <div v-if="serviceLevel" class="remark-group">
                         <text v-if="isReadOnly" class="remark-text" :value="remark||' '"></text>
-                        <textarea v-else class="remark-textarea" placeholder="还想说点，将匿名并延迟告诉工程师" rows="4" v-model="remark"></textarea>
+                        <textarea v-else class="remark-textarea" placeholder="还想说点，将匿名并延迟告诉工程师" rows="4" v-model="remark" maxlength="250"></textarea>
                     </div>
                 </template>
                 <text v-if="!isReadOnly && isDataReady" class="action-button" @click="submit">提交</text>

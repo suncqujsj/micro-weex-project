@@ -3,9 +3,9 @@
         <midea-header v-if="!isIos" :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <div class="search-bar" :style="{'height':isIos?'136px':'96px','padding-top':isIos?'40px':'0px'}">
-            <div class="search-bar-content">
+            <div class="search-bar-content" v-bind:class="[isIos?'':'search-bar-top']">
                 <image class="search-bar-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
-                <input class="search-bar-input" placeholder="请输入产品品类，如空调、洗衣机" v-model="keyWord" @return="keyBoardsearch" return-key-type="search"></input>
+                <input class="search-bar-input" placeholder="请输入产品品类，如空调、洗衣机" v-model="keyWord" maxlength="20" @return="keyBoardsearch" return-key-type="search"></input>
                 <image v-if="keyWord.length>0" class="search-bar-close" :src="'./assets/img/me_ic_return@3x.png'" resize="contain" @click="keyWord=''"></image>
             </div>
             <text v-if="isIos" class="search-action" @click="back">取消</text>
@@ -193,6 +193,10 @@ export default {
   flex-direction: row;
   align-items: center;
   margin-left: 32px;
+}
+.search-bar-top {
+  border-top-color: #e2e2e2;
+  border-top-width: 1px;
 }
 .search-bar-img {
   height: 40px;

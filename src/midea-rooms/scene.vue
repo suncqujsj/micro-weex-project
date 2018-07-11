@@ -735,11 +735,13 @@
                 }
             },
             getWeatherInfo(){
+            	nativeService.alert(1)
                 nativeService.getGPSInfo({
                     desiredAccuracy: "10",
                     distanceFilter: "10",
                     alwaysAuthorization: "0" 
                 }).then((gps)=>{
+            	nativeService.alert(2)
                     nativeService.getCityInfo({cityName: gps.city}).then( (city)=>{
                         nativeService.getWeatherInfo({cityNo: city.cityNo}).then((weather)=>{
                             let tmpDesc = ''

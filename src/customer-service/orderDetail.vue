@@ -181,7 +181,11 @@ export default {
             nativeService.createserviceuserdemand(param).then(() => {
                 nativeService.toast("催单成功")
             }).catch((error) => {
-                nativeService.toast(nativeService.getErrorMessage(error))
+                if (error.errorCode == 'WOM100111') {
+                    nativeService.alert(error.errorMsg)
+                } else {
+                    nativeService.toast(nativeService.getErrorMessage(error))
+                }
             })
         },
         urgeOrderBtnClick() {

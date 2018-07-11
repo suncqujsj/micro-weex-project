@@ -9,12 +9,12 @@
             <cell class="group-gap-top"></cell>
             <div class="item-group">
                 <text class="text-label">姓名</text>
-                <input class="text-input" type="text" placeholder="请输入姓名" v-model="userAddress.receiverName" />
+                <input class="text-input" type="text" placeholder="请输入姓名" v-model="userAddress.receiverName" maxlength="20"/>
                 <image class="text-img" src="./assets/img/me_ic_addresslist@3x.png" resize='contain' @click="getAddressBookPerson"></image>
             </div>
             <div class="item-group">
                 <text class="text-label">手机号码</text>
-                <input class="text-input" type="tel" placeholder="请输入手机号码" v-model="userAddress.receiverMobile" />
+                <input class="text-input" type="tel" placeholder="请输入手机号码" v-model="userAddress.receiverMobile"  maxlength="11"/>
             </div>
             <div class="item-group">
                 <text class="text-label">所在区域</text>
@@ -23,11 +23,11 @@
             </div>
             <div class="item-group">
                 <text class="text-label">详细地址</text>
-                <input class="text-input" type="text" placeholder="请输入详细地址" v-model="userAddress.addr" />
+                <input class="text-input" type="text" placeholder="请输入详细地址" v-model="userAddress.addr" maxlength="200"/>
             </div>
             <div class="item-group">
                 <text class="text-label">默认地址</text>
-                <midea-switch2 :checked="userAddress.defaultAddr" @change="changeDefaultAddr" width="48" height="48"></midea-switch2>
+                <midea-switch2 :checked="userAddress.defaultAddr" @change="changeDefaultAddr"></midea-switch2>
             </div>
         </scroller>
 

@@ -68,7 +68,8 @@ let customizeNativeService = Object.assign(nativeService, {
         let msg = "请求失败，请稍后重试。", errorCode
         if (error) {
             errorCode = error.code || error.errorCode
-            if (!isNaN(errorCode)) {
+            let unNormalErrorCode = ['error_system']
+            if (unNormalErrorCode.indexOf(errorCode) < 0) {
                 //若是正常的错误码，则显示错误信息
                 msg = error.msg || error.errorMsg || error.returnMsg || error.errorMessage || "请求失败，请稍后重试。"
             }
@@ -143,70 +144,70 @@ let customizeNativeService = Object.assign(nativeService, {
             })
         })
     },
-    queryserviceorder(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.queryserviceorder, param)
+    queryserviceorder(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.queryserviceorder, param, options)
     },
-    createserviceorder(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.createserviceorder, param)
+    createserviceorder(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.createserviceorder, param, options)
     },
-    queryserviceuserdemanddispatch(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.queryserviceuserdemanddispatch, param)
+    queryserviceuserdemanddispatch(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.queryserviceuserdemanddispatch, param, options)
     },
-    queryservicereqsrvprod(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.queryservicereqsrvprod, param)
+    queryservicereqsrvprod(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.queryservicereqsrvprod, param, options)
     },
-    createserviceuserdemand(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.createserviceuserdemand, param)
+    createserviceuserdemand(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.createserviceuserdemand, param, options)
     },
-    cancelserviceorder(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.cancelserviceorder, param)
+    cancelserviceorder(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.cancelserviceorder, param, options)
     },
-    extractcallbackitem(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.extractcallbackitem, param)
+    extractcallbackitem(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.extractcallbackitem, param, options)
     },
-    createcallbackinfo(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.createcallbackinfo, param)
+    createcallbackinfo(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.createcallbackinfo, param, options)
     },
-    queryconsumerorderprogress(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.queryconsumerorderprogress, param)
+    queryconsumerorderprogress(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.queryconsumerorderprogress, param, options)
     },
-    queryservicerequireproduct(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.queryservicerequireproduct, param)
+    queryservicerequireproduct(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.queryservicerequireproduct, param, options)
     },
-    getexcludedfaultlist(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.getexcludedfaultlist, param)
+    getexcludedfaultlist(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.getexcludedfaultlist, param, options)
     },
-    appexcludedfaulttraces(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.appexcludedfaulttraces, param)
+    appexcludedfaulttraces(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.appexcludedfaulttraces, param, options)
     },
-    queryunitarchives(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.queryunitarchives, param)
+    queryunitarchives(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.queryunitarchives, param, options)
     },
-    querywarrantydescbycodeorsn(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.querywarrantydescbycodeorsn, param)
+    querywarrantydescbycodeorsn(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.querywarrantydescbycodeorsn, param, options)
     },
-    createchargeinfo(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.createchargeinfo, param)
+    createchargeinfo(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.createchargeinfo, param, options)
     },
-    dochargecomfirm(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.dochargecomfirm, param)
+    dochargecomfirm(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.dochargecomfirm, param, options)
     },
-    querychargedetails(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.querychargedetails, param)
+    querychargedetails(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.querychargedetails, param, options)
     },
-    querychargestatus(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.querychargestatus, param)
+    querychargestatus(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.querychargestatus, param, options)
     },
-    queryproductinfobysn(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.queryproductinfobysn, param)
+    queryproductinfobysn(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.queryproductinfobysn, param, options)
     },
 
     // CSS 接口： 技术组提供
-    getChargeStandardList(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.getChargeStandardList, param)
+    getChargeStandardList(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.getChargeStandardList, param, options)
     },
-    getChargePriceForMaterial(param = {}) {
-        return this.sendCssHttpRequestWrapper(this.serviceList.getChargePriceForMaterial, param)
+    getChargePriceForMaterial(param = {}, options = {}) {
+        return this.sendCssHttpRequestWrapper(this.serviceList.getChargePriceForMaterial, param, options)
     },
 
     //** 中控后台服务 start **/
@@ -349,34 +350,34 @@ let customizeNativeService = Object.assign(nativeService, {
         })
     },
 
-    getProdMessage(param = {}) {
+    getProdMessage(param = {}, options = {}) {
         let url = this.serviceList.getProdMessage + (requestSendWithApp || withoutAPPWithMAS ? '&' : '?') + this.objectToQuery(param)
         return this.sendControlHttpRequestWrapper(url, {})
     },
-    getUserProductPageList(param = {}) {
-        return this.sendControlHttpRequestWrapper(this.serviceList.getUserProductPageList, param)
+    getUserProductPageList(param = {}, options = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.getUserProductPageList, param, options)
     },
-    getProductBySerialNo(param = {}) {
-        return this.sendControlHttpRequestWrapper(this.serviceList.getProductBySerialNo, param)
+    getProductBySerialNo(param = {}, options = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.getProductBySerialNo, param, options)
     },
-    getUserAddrPageList(param = {}) {
-        return this.sendControlHttpRequestWrapper(this.serviceList.getUserAddrPageList, param)
+    getUserAddrPageList(param = {}, options = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.getUserAddrPageList, param, options)
     },
-    getDefaultAddr(param = {}) {
-        return this.sendControlHttpRequestWrapper(this.serviceList.getDefaultAddr, param)
+    getDefaultAddr(param = {}, options = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.getDefaultAddr, param, options)
     },
-    getAreaList(param = {}) {
+    getAreaList(param = {}, options = {}) {
         let url = this.serviceList.getAreaList + (requestSendWithApp || withoutAPPWithMAS ? '&' : '?') + this.objectToQuery(param)
         return this.sendControlHttpRequestWrapper(url, {}, { method: "GET" })
     },
-    userAddrAdd(param = {}) {
-        return this.sendControlHttpRequestWrapper(this.serviceList.userAddrAdd, param)
+    userAddrAdd(param = {}, options = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.userAddrAdd, param, options)
     },
-    userAddrUpdate(param = {}) {
-        return this.sendControlHttpRequestWrapper(this.serviceList.userAddrUpdate, param)
+    userAddrUpdate(param = {}, options = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.userAddrUpdate, param, options)
     },
-    userAddrDelete(param = {}) {
-        return this.sendControlHttpRequestWrapper(this.serviceList.userAddrDelete, param)
+    userAddrDelete(param = {}, options = {}) {
+        return this.sendControlHttpRequestWrapper(this.serviceList.userAddrDelete, param, options)
     },
 
     //防伪

@@ -11,7 +11,9 @@
             <text class="action" @click="testfunc">是否iphoneX:{{isipx}}</text>
         </div>
         <scroller class="info-box">
-            <div v-for="(item, index) in convertedContent" :key="index" class="note" @longpress="copyLog(item)">{{item}}</div>
+            <template v-for="item in convertedContent">
+                <text v-for="(subItem, subIndex) in item.split('&*&')" :key="subIndex" class="note" @longpress="copyLog(subItem)">{{subItem}}</text>
+            </template>
         </scroller>
 
         <midea-select :show="isShow" title="选择key" :items="list" @close="isShow=false" @itemClick="itemClick"></midea-select>
@@ -45,7 +47,7 @@ export default {
     computed: {
         convertedContent() {
             if (this.content) {
-                return this.content.split("\n\n")
+                return this.content.split("\n\n").reverse()
             } else {
                 return []
             }

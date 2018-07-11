@@ -30,7 +30,7 @@
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image class="icon-offline" src="./assets/img/smart_img_equip030@2x.png"></image>
+		        		<image class="icon-offline" src="./assets/img/smart_img_equip030@2x.png" @click="queryStatus"></image>
 		        	</div>
 		        </div>
 	        </div>
@@ -119,12 +119,15 @@
             			"data":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
+            		nativeService.alert(data);
             		self.updateUI(data);
             	},function(error) {
+            		nativeService.alert(error);
             		console.log("error");
             	});
             },
             updateUI(data) {
+            	nativeService.alert(data);
             	if(data.errorCode == 0) {
 	                let params = data.params || data.result;
 	                this.onoff = params.power;
@@ -158,11 +161,16 @@
             			"name":name,
             			"data":{
             				"power": poweronoff,
+//							"light":"on",
+//							"intelligent":"on"
             			}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
-            		self.updateUI(data);
+            		nativeService.alert(data);
+            		//self.updateUI(data);
+//					self.queryStatus();
             	},function(error) {
+            		nativeService.alert(error);
             		console.log("error");
             	});
             },

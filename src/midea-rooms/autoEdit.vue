@@ -435,7 +435,7 @@
                 this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                     if (rtnData.code == 0) {
                         nativeService.alert('删除成功!', function(){
-                            nativeService.goTo('weex.js')
+                            nativeService.backToNative()
                         })
                     }
                 }).catch( (err)=>{
@@ -563,7 +563,7 @@
                 this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                     if (rtnData.code == 0) {
                         nativeService.alert('修改成功', function(){
-                            nativeService.goTo('weex.js')
+                            nativeService.backToNative()
                         })
                     }
                 }).catch( (error )=>{

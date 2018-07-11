@@ -1,6 +1,6 @@
 <template>
     <div class="scan-block">
-        <input class="scan-input" type="text" :placeholder="placeholder" :autofocus=false :value="value" @input="oninput" @blur="onblur" />
+        <input class="scan-input" type="text" :placeholder="placeholder" :autofocus=false :value="value" @input="oninput" @blur="onblur" maxlength="100"/>
 
         <div v-if="scan" class="scan-icon-wrapper" @click="scanCode">
             <image class="scan-icon" src="./assets/img/service_ic_scan@3x.png" resize='contain'></image>

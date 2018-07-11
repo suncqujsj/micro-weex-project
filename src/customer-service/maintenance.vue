@@ -90,10 +90,12 @@
                     </div>
                 </div>
                 <div class="item-group info-group">
-                    <textarea class="info-textarea" placeholder="其他备注信息" v-model="order.pubRemark" rows="5" maxlength="120"></textarea>
-                    <text class="info-textarea-calc">{{order.pubRemark.length}}/120</text>
-                    <div class="mic-icon-wrapper" @click="isMicPanelShow=true">
-                        <image class="mic-icon" src="./assets/img/service_ic_tape@3x.png" resize='contain'></image>
+                    <div class="info-textarea-wrapper">
+                        <textarea class="info-textarea" placeholder="其他备注信息" v-model="order.pubRemark" rows="5" maxlength="120"></textarea>
+                        <text class="info-textarea-calc">{{order.pubRemark.length}}/120</text>
+                        <div class="mic-icon-wrapper" @click="isMicPanelShow=true">
+                            <image class="mic-icon" src="./assets/img/service_ic_tape@3x.png" resize='contain'></image>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -639,21 +641,21 @@ export default {
             this.getExcludedFaultList()
 
             //期望服务时间
-            let temp = order.requireServiceDate.split(" ")
-            let matchDateItem = this.serviePeriodDate.find((item) => {
-                return item.value == temp[0]
-            })
-            if (matchDateItem) {
-                this.selectedDateIndex = matchDateItem.index
-            } else {
-                this.selectedDateIndex = 1
-            }
-            let matchTimeItem = this.serviePeriodTime.find((item) => {
-                return item.desc == temp[1]
-            })
-            if (matchTimeItem) {
-                this.selectedTimeIndex = matchTimeItem.index
-            }
+            // let temp = order.requireServiceDate.split(" ")
+            // let matchDateItem = this.serviePeriodDate.find((item) => {
+            //     return item.value == temp[0]
+            // })
+            // if (matchDateItem) {
+            //     this.selectedDateIndex = matchDateItem.index
+            // } else {
+            //     this.selectedDateIndex = 1
+            // }
+            // let matchTimeItem = this.serviePeriodTime.find((item) => {
+            //     return item.desc == temp[1]
+            // })
+            // if (matchTimeItem) {
+            //     this.selectedTimeIndex = matchTimeItem.index
+            // }
 
             //服务地址
             let customerAddressArray = order.customerAddress.split(" ")
@@ -760,7 +762,7 @@ export default {
                     prodCode: product.prodCode,  //产品品类
                     prodName: product.prodName,  //产品品类名称
                     productAmount: 1,  //默认填1
-                    serviceDesc: '', //服务描述
+                    serviceDesc: this.oneStepFaultDesc || '', //服务描述
                     productUse: product.userTypeCode == "U99" ? this.order.productUse : '',
                     productCode: this.typeSelectedIndex == 1 ? this.code : '',
                     productModel: this.typeSelectedIndex == 0 ? this.code : ''
@@ -801,7 +803,7 @@ export default {
             this.applianceSN = nativeService.getParameters('applianceSN') || ''
             if (this.applianceSN) {
                 //一键报修
-                this.oneStepFaultDesc = nativeService.getParameters('faultDesc') || ''
+                this.oneStepFaultDesc = decodeURIComponent(nativeService.getParameters('faultDesc') || '')
                 this.claimBySN(this.applianceSN)
             }
         }
@@ -971,32 +973,37 @@ export default {
   position: relative;
   padding-bottom: 24px;
 }
+.info-textarea-wrapper {
+  position: relative;
+  border-radius: 4px;
+  border-color: #e5e5e8;
+  border-width: 1px;
+  padding-bottom: 50px;
+  background-color: #fafafa;
+  height: 200px;
+}
 .info-textarea {
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #000000;
-  border-radius: 4px;
-  border-color: #e5e5e8;
-  border-width: 1px;
   padding-top: 10px;
   padding-left: 22px;
   padding-right: 50px;
   background-color: #fafafa;
-  height: 200px;
+  height: 150px;
 }
 .info-textarea-calc {
   position: absolute;
-  bottom: 28px;
-  right: 100px;
+  bottom: 8px;
+  right: 50px;
   color: #8a8a8f;
   height: 40px;
   font-size: 24px;
 }
 .mic-icon-wrapper {
   position: absolute;
-  right: 20px;
-  bottom: 20px;
-  padding-right: 30px;
+  right: 10px;
+  bottom: 0px;
   padding-bottom: 15px;
 }
 .mic-icon {

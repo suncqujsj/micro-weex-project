@@ -8,7 +8,7 @@ const debugUtil = {
     debugInfoDataChannel: debugInfoDataChannel,
     debugInfoExist: '',
     debugInfo: '',
-    debugLogSizeLmite: 50000,
+    debugLogSizeLmite: 80000,
     debugLog(...messages) {
         if (!this.isEnableDebugInfo) return
 
@@ -32,7 +32,7 @@ const debugUtil = {
                         message = JSON.stringify(JSON.parse(message), null, 2)
                     } catch (error) { }
                 }
-                debugInfoArray.push(message)
+                debugInfoArray = debugInfoArray.concat(this.strCut2Arr(message, 2000))
             }
             let newDebugInfo = new Date() + '\n' + debugInfoArray.join(", ") + '\n\n'
             this.debugInfo += newDebugInfo
@@ -76,6 +76,22 @@ const debugUtil = {
     },
     removeItem(key, callback) {
         storage.removeItem(key, callback)
+    },
+
+    strCut2Arr(str, n) {
+        var arr = []
+        var len = Math.ceil(str.length / n);
+        for (var i = 0; i < len; i++) {
+            if (str.length >= n) {
+                var strCut = str.substring(0, n);
+                arr.push(strCut + '&*&');
+                str = str.substring(n);
+            } else {
+                str = str;
+                arr.push(str)
+            }
+        }
+        return arr;
     }
 }
 

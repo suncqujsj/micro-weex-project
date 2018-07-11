@@ -4,7 +4,7 @@
         </midea-header>
         <div class="search-bar">
             <div class="search-bar-content">
-                <input class="search-bar-input" placeholder="请输入型号" :autofocus=true v-model="searchModelKeyWord" @return="true" @input="searchProduct"></input>
+                <input class="search-bar-input" placeholder="请输入型号" :autofocus=true v-model="searchModelKeyWord" @return="true" @input="searchProduct" maxlength="30"></input>
             </div>
         </div>
         <scroller class="product-content" loadmoreoffset=50 @loadmore="loadmore">

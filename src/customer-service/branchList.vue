@@ -14,7 +14,7 @@
             </div>
         </div>
 
-        <div class="empty-page" v-if="!locateSuccess">
+        <div class="empty-page" v-if="isSearchByGPS && locateFailed">
             <image class="empty-page-icon" src="./assets/img/service_ic_dingwei@3x.png" resize='contain'>
             </image>
             <text class="empty-page-text">无法获取地址，请手动定位</text>
@@ -65,7 +65,7 @@ export default {
             title: '网点查询',
             isListMode: true,
             gpsInfo: null,
-            locateSuccess: true,
+            locateFailed: false,
             areaObject: {
                 province: '',
                 provinceName: '',
@@ -75,6 +75,7 @@ export default {
                 countyName: '',
             },
             serviceOrderNo: null,
+            isSearchByGPS: true,
             order: null,
             selectedProduct: null,
             branchList: [],
@@ -166,6 +167,7 @@ export default {
     methods: {
         initPage() {
             if (this.serviceOrderNo) {
+                this.isSearchByGPS = false
                 this.getGPSInfo().then(() => { })
                 //订单中查看网点
                 nativeService.getItem(this.SERVICE_STORAGE_KEYS.currentOrder, (resp) => {
@@ -249,13 +251,13 @@ export default {
                 }
                 nativeService.showLoadingWithMsg("正在获取位置信息...")
                 nativeService.getGPSInfo(gpsParam).then((data) => {
-                    this.locateSuccess = true
+                    this.locateFailed = false
                     nativeService.hideLoadingWithMsg()
                     this.gpsInfo = data
                     resolve(data)
                 }).catch((error) => {
                     // nativeService.toast("定位失败")
-                    this.locateSuccess = false
+                    this.locateFailed = true
                     nativeService.hideLoadingWithMsg()
                     reject(error)
                 })

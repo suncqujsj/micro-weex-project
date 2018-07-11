@@ -27,7 +27,7 @@
                 </div>
             </div>
 
-            <div class="base-group">
+            <!-- <div class="base-group">
                 <div class="item-group">
                     <text class="info-title">综合停伪技术</text>
                 </div>
@@ -38,7 +38,7 @@
                 <div class="item-group">
                     <text class="antifake-footer-desc">查询小贴士:xxxxxx</text>
                 </div>
-            </div>
+            </div> -->
         </scroller>
 
         <empty-dialog :show="dialogShow">

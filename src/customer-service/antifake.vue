@@ -14,7 +14,7 @@
             </div>
 
             <div class="item-group">
-                <input class="item-input" type="text" placeholder="请输入4位验证码" :autofocus=false v-model="validCode" :return-key-type="isDataReady?'search':'text'"  @return="submit" />
+                <input class="item-input" type="text" placeholder="请输入4位验证码" :autofocus=false v-model="validCode" :return-key-type="isDataReady?'search':'text'" maxlength="4" @return="submit" />
             </div>
             <div class="item-group">
                 <text class="info-label">适用于生产日期2017年7月1日之后的滤芯</text>

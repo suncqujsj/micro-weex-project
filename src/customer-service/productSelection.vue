@@ -111,8 +111,8 @@ export default {
                     return Object.assign(item, {
                         brandCode: item.brandCode,
                         brand: item.productBrand,
-                        prodCode: item.productCode,
-                        prodName: item.productName,
+                        prodCode: item.productTypeId,
+                        prodName: item.productType,
                         userTypeCode: item.userTypeCode
                     })
                 })
@@ -288,12 +288,13 @@ export default {
             })
         } else {
             if (this.fromPage == "maintenance") {
+                this.selectedBrandIndex = -1
                 //我的家电
                 let param = {
                     pageIndex: 1,
                     pageSize: 100,
                     selectType: 1,
-                    isIntelligent: 1
+                    // isIntelligent: 1
                 }
                 nativeService.getUserProductPageList(param).then((data) => {
                     this.myProductList = data.data.list

@@ -131,7 +131,7 @@ export default {
                 page: 0,
                 resultNum: 1
             }
-            nativeService.queryserviceorder(param).then((data) => {
+            nativeService.queryserviceorder(param, { isShowLoading: false }).then((data) => {
                 if (data.list && data.list.length > 0) {
                     this.order = data.list[0]
                 }

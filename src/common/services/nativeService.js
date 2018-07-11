@@ -530,17 +530,20 @@ export default {
     //发送Lua指令接口
     sendLuaRequest(params, isShowLoading = true) {
         return new Promise((resolve, reject) => {
-            var param = {};
-            param.operation = params.operation || "luaControl";//luaQuery or luaControl
-            param.params = params.data || {};
+            if (!params.operation) {
+                params.operation = "luaQuery"//luaQuery or luaControl
+            }
+            if (!params.params) {
+                params.params = {}
+            }
             if (this.isDummy != true) {
                 if (isShowLoading) {
                     this.showLoading()
                 }
                 let msgid = this.genMessageId()
-                bridgeModule.commandInterface(JSON.stringify(param),
+                bridgeModule.commandInterface(JSON.stringify(params),
                     (resData) => {
-                        debugUtil.debugLog(debugLogSeperator, `Lua request(${msgid}): `, param)
+                        debugUtil.debugLog(debugLogSeperator, `Lua request(${msgid}): `, params)
                         debugUtil.debugLog(`Lua response(${msgid}):`, resData, debugLogSeperator)
                         if (typeof resData == 'string') {
                             resData = JSON.parse(resData);
@@ -555,7 +558,7 @@ export default {
                             reject(resData);
                         }
                     }, (error) => {
-                        debugUtil.debugLog(debugLogSeperator, `Lua request(${msgid}): `, param)
+                        debugUtil.debugLog(debugLogSeperator, `Lua request(${msgid}): `, params)
                         debugUtil.debugLog(`=======> Lua error(${msgid}): `, error, debugLogSeperator)
                         if (isShowLoading) {
                             this.hideLoading()
@@ -569,11 +572,11 @@ export default {
                 let resData
 
                 if (params['operation'] || params['name']) {
-                	if(params['name']) {
-                		resData = Mock.getMock(params['name'])
-                	} else {
-                		resData = Mock.getMock(params['operation'])	
-                	}
+                    if (params['name']) {
+                        resData = Mock.getMock(params['name'])
+                    } else {
+                        resData = Mock.getMock(params['operation'])
+                    }
                 }
                 debugUtil.debugLog("Mock: ", resData)
                 resolve(resData);
@@ -607,6 +610,92 @@ export default {
                 });
         })
     },
+    /*
+     * created by zhouhg 20180621 start
+     */
+    //根据设备信息获取插件信息
+    getDevicePluginInfo(params) {
+        return new Promise((resolve, reject) => {
+            let that = this;
+            if (this.isDummy != true) {
+                bridgeModule.getDevicePluginInfo(params,
+                    (resData) => {
+                        resolve(resData);
+                    },
+                    (error) => {
+                        reject(error)
+                    });
+            } else {
+                let data = Mock.getMock('getDevicePluginInfo');
+                resolve(data);
+            }
+
+        })
+    },
+    //下载插件接口
+    downLoadDevicePlugin(params, callback, callbackFail) {
+        let that = this;
+        if (this.isDummy != true) {
+            bridgeModule.downLoadDevicePlugin(params,
+                (resData) => {
+                    callback(resData);
+                },
+                (error) => {
+                    callbackFail(error)
+                });
+        } else {
+            let data = Mock.getMock('downLoadDevicePlugin');
+            setTimeout(function () {
+                callback(data);
+            }, 3000)
+        }
+    },
+    getDeviceOnlineStatus(params, callback, callbackFail) {
+        return new Promise((resolve, reject) => {
+            let that = this;
+            bridgeModule.getDeviceOnlineStatus(params,
+                (resData) => {
+                    resolve(resData)
+                },
+                (error) => {
+                    reject(error)
+                });
+        })
+    },
+    //设备主动上报在线离线状态
+    deviceOnlineStatus() {
+        let params = {
+            operation: 'deviceOnlineStatus'
+        }
+        return this.commandInterfaceWrapper(params)
+    },
+    //更新下载插件并解压后，需要替换加载新下载的插件
+    loadingLatestPlugin(params, callback, callbackFail) {
+        //  	let params = {};
+        return new Promise((resolve, reject) => {
+            bridgeModule.loadingLatestPlugin(params,
+                (resData) => {
+                    resolve(resData)
+                },
+                (error) => {
+                    reject(error)
+                });
+        })
+    },
+    //重新加载当前页面
+    reload(callback, callbackFail) {
+        let params = {};
+        bridgeModule.reload(params,
+            (resData) => {
+                callback(resData)
+            },
+            (error) => {
+                callbackFail(error)
+            });
+    },
+    /*
+     * created by zhouhg 20180621 end
+     */
 
     //统一JS->Native接口
     commandInterfaceWrapper(param) {
@@ -687,17 +776,17 @@ export default {
         let param = {
             operation: 'getDeviceInfo'
         }
-        if(this.isDummy == true) {
-        	 return new Promise((resolve, reject) => {
-	        	let resData = Mock.getMock(param.operation);
-	            if (resData.errorCode == 0) {
-	                resolve(resData);
-	            } else {
-	                reject(resData)
-	            }
-	        });
+        if (this.isDummy == true) {
+            return new Promise((resolve, reject) => {
+                let resData = Mock.getMock(param.operation);
+                if (resData.errorCode == 0) {
+                    resolve(resData);
+                } else {
+                    reject(resData)
+                }
+            });
         } else {
-        	return this.commandInterfaceWrapper(param)
+            return this.commandInterfaceWrapper(param)
         }
     },
     //更新当前设备信息
@@ -800,11 +889,11 @@ export default {
         })
         return this.commandInterfaceWrapper(param)
     },
-    getCityInfo(params){
-         let param = Object.assign(params, {
-             operation: 'getCityInfo'
-         })
-         return this.commandInterfaceWrapper(param)
+    getCityInfo(params) {
+        let param = Object.assign(params, {
+            operation: 'getCityInfo'
+        })
+        return this.commandInterfaceWrapper(param)
     },
     /*  ^5.0.0 根据getCityInfo获得的城市对应的气象局ID获取城市天气信息， 比如温度， 风向等信息 */
     getWeatherInfo(params) {
@@ -860,6 +949,10 @@ export default {
     //调用第三方SDK统一接口
     interfaceForThirdParty(...args) {
         bridgeModule.interfaceForThirdParty(...args)
-    }
+    },
+    //
+    updateAutoList() {
+        bridgeModule.updateAutoList()
+    },
     //**********APP业务接口***************END
 }

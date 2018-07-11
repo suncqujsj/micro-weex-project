@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <div class="search-bar">
             <div class="search-bar-content" @click="searchProduct">
@@ -111,8 +111,8 @@ export default {
                     return Object.assign(item, {
                         brandCode: item.brandCode,
                         brand: item.productBrand,
-                        prodCode: item.productCode,
-                        prodName: item.productName,
+                        prodCode: item.productTypeId,
+                        prodName: item.productType,
                         userTypeCode: item.userTypeCode
                     })
                 })
@@ -288,12 +288,13 @@ export default {
             })
         } else {
             if (this.fromPage == "maintenance") {
+                this.selectedBrandIndex = -1
                 //我的家电
                 let param = {
                     pageIndex: 1,
                     pageSize: 100,
                     selectType: 1,
-                    isIntelligent: 1
+                    // isIntelligent: 1
                 }
                 nativeService.getUserProductPageList(param).then((data) => {
                     this.myProductList = data.data.list
@@ -332,6 +333,8 @@ export default {
   padding-left: 32px;
   padding-right: 32px;
   padding-bottom: 16px;
+  border-top-color: #e2e2e2;
+  border-top-width: 1px;
   border-bottom-color: #e2e2e2;
   border-bottom-width: 1px;
   background-color: #ffffff;
@@ -342,12 +345,13 @@ export default {
   border-radius: 4px;
   background-color: #f2f2f2;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 .search-bar-img {
   height: 40px;
   width: 40px;
+  margin-left: 16px;
   margin-right: 10px;
 }
 .search-bar-desc {
@@ -363,7 +367,7 @@ export default {
 .product-content-left {
   width: 200px;
   border-right-color: #e5e5e8;
-  border-right-width: 2px;
+  border-right-width: 1px;
 }
 .product-content-left-scroller {
   align-content: center;
@@ -375,7 +379,7 @@ export default {
   align-items: center;
   font-family: PingFangSC-Regular;
   font-size: 28px;
-  color: #666666;
+  color: #000000;
   text-align: center;
   padding-top: 34px;
   padding-right: 16px;
@@ -387,6 +391,8 @@ export default {
   font-weight: 600;
   color: #000000;
   background-color: #f2f2f2;
+  border-left-color: #000000;
+  border-left-width: 4px;
 }
 .product-content-right {
   flex: 1;
@@ -399,8 +405,9 @@ export default {
 .product-group-title {
   width: 550px;
   padding: 32px;
-  font-family: PingFangSC-Regular;
-  font-size: 28px;
+  font-family: PingFangSC-Medium;
+  font-weight: 600;
+  font-size: 24px;
   color: #000000;
 }
 .product-group-content {
@@ -423,8 +430,6 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  border-color: #f2f2f2;
-  border-width: 4px;
 }
 .appliance-img {
   height: 124px;
@@ -442,7 +447,7 @@ export default {
   font-size: 24px;
   color: #666666;
   text-align: center;
-  padding-top: 5px;
+  padding-top: 16px;
   padding-bottom: 5px;
 }
 .action-bar {
@@ -502,7 +507,7 @@ export default {
 .action-btn {
   width: 120px;
   font-family: PingFangSC-Regular;
-  font-size: 24px;
+  font-size: 28px;
   color: #ffffff;
   text-align: center;
   background-color: #267aff;

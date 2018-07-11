@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
             <div slot="customerContent" class="header-right" v-if="!isCreate">
                 <text class="header-right-text" @click="deleteAddress">删除</text>
             </div>
@@ -9,25 +9,25 @@
             <cell class="group-gap-top"></cell>
             <div class="item-group">
                 <text class="text-label">姓名</text>
-                <input class="text-input" type="text" placeholder="请输入姓名" v-model="userAddress.receiverName" />
+                <input class="text-input" type="text" placeholder="请输入姓名" v-model="userAddress.receiverName" maxlength="20"/>
                 <image class="text-img" src="./assets/img/me_ic_addresslist@3x.png" resize='contain' @click="getAddressBookPerson"></image>
             </div>
             <div class="item-group">
                 <text class="text-label">手机号码</text>
-                <input class="text-input" type="tel" placeholder="请输入手机号码" v-model="userAddress.receiverMobile" />
+                <input class="text-input" type="tel" placeholder="请输入手机号码" v-model="userAddress.receiverMobile"  maxlength="11"/>
             </div>
             <div class="item-group">
                 <text class="text-label">所在区域</text>
-                <text class="text-desc" @click="isShowAddressPicker=true">{{areaDesc}}</text>
+                <text class="text-desc" v-bind:class="[areaDesc=='请选择所在区域'?'empty-text':'']" @click="isShowAddressPicker=true">{{areaDesc}}</text>
                 <image class="text-img" src="./assets/img/me_ic_area@3x.png" resize='contain' @click="getPosition"></image>
             </div>
             <div class="item-group">
                 <text class="text-label">详细地址</text>
-                <input class="text-input" type="text" placeholder="请输入详细地址" v-model="userAddress.addr" />
+                <input class="text-input" type="text" placeholder="请输入详细地址" v-model="userAddress.addr" maxlength="200"/>
             </div>
             <div class="item-group">
                 <text class="text-label">默认地址</text>
-                <midea-switch2 :checked="userAddress.defaultAddr" @change="changeDefaultAddr" width="70" height="38"></midea-switch2>
+                <midea-switch2 :checked="userAddress.defaultAddr" @change="changeDefaultAddr"></midea-switch2>
             </div>
         </scroller>
 
@@ -89,7 +89,7 @@ export default {
     },
     computed: {
         areaDesc() {
-            return this.userAddress.province ? (this.userAddress.provinceName + ' ' + this.userAddress.cityName + ' ' + this.userAddress.countyName + ' ' + this.userAddress.streetName) : '请选中所在区域'
+            return this.userAddress.province ? (this.userAddress.provinceName + ' ' + this.userAddress.cityName + ' ' + this.userAddress.countyName + ' ' + this.userAddress.streetName) : '请选择所在区域'
         },
         isDataReady() {
             let result = true
@@ -307,5 +307,8 @@ export default {
   width: 750px;
   text-align: center;
   padding-bottom: 20px;
+}
+.empty-text {
+  color: #9a9a9a;
 }
 </style>

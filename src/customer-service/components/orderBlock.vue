@@ -7,17 +7,17 @@
                 <image class="order-block-channel-icon" :src="formattedOrder.interfaceSourceIcon" resize='stretch'>
                 </image>
             </div>
-            <text class="order-block-channel">{{formattedOrder.interfaceSourceDesc}}</text>
-            <text class="order-block-time">{{formattedOrder.contactTimeDesc}}</text>
-            <text v-if="showStatus" v-bind:class="['order-block-status', formattedOrder.calcServiceOrderStatus=='3'?'order-block-status-gray':'']">{{formattedOrder.isFinished?'':formattedOrder.statusDesc}}</text>
+            <text class="order-block-channel">{{formattedOrder.interfaceSourceDesc}}接入</text>
+            <text v-if="showStatus" v-bind:class="['order-block-status', formattedOrder.calcServiceOrderStatus=='3'?'order-block-status-gray':'']">{{formattedOrder.calcServiceOrderStatus==5?'':formattedOrder.statusDesc}}</text>
         </div>
-        <image v-if="showStatus && formattedOrder.isFinished" class="order-block-status-icon" src="./assets/img/service_ic_finish@3x.png" resize='contain'>
+        <image v-if="showStatus && formattedOrder.calcServiceOrderStatus==5" class="order-block-status-icon" src="./assets/img/service_ic_finish@3x.png" resize='contain'>
         </image>
         <div class="order-block-body">
             <image class="order-block-img" :src="formattedOrder.imageUrl" resize='contain'>
             </image>
             <div class="order-block-content">
                 <text class="order-block-label">{{formattedOrder.orderDesc}}</text>
+                <text class="order-block-desc">{{formattedOrder.contactTimeDesc}}</text>
             </div>
             <text v-if="formattedOrder.price" class="order-block-price">{{formattedOrder.price}}元</text>
         </div>
@@ -66,7 +66,7 @@ export default {
 
 <style>
 .order-block {
-  padding-bottom: 24px;
+  padding-bottom: 14px;
   border-radius: 8px;
   background-color: #ffffff;
   overflow: hidden;
@@ -87,7 +87,7 @@ export default {
   height: 40px;
   width: 40px;
   margin-left: 24px;
-  margin-right: 8px;
+  margin-right: 10px;
 }
 .order-block-channel-icon {
   position: absolute;
@@ -97,19 +97,12 @@ export default {
   width: 40px;
 }
 .order-block-channel {
-  font-family: PingFangSC-Regular;
-  font-size: 28px;
-  color: #000000;
-  text-align: left;
-  margin-right: 32px;
-}
-.order-block-time {
   flex: 1;
   font-family: PingFangSC-Regular;
-  font-size: 28px;
-  color: #8a8a8f;
+  font-size: 24px;
+  color: #000000;
   text-align: left;
-  margin-right: 8px;
+  margin-right: 28px;
 }
 .order-block-status-icon {
   position: absolute;
@@ -121,7 +114,7 @@ export default {
 .order-block-status {
   width: 90px;
   font-family: PingFangSC-Regular;
-  font-size: 28px;
+  font-size: 24px;
   color: #ff8f00;
   text-align: right;
   margin-right: 32px;
@@ -133,8 +126,8 @@ export default {
   height: 200px;
   flex-direction: row;
   justify-content: center;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 30px;
+  padding-bottom: 30px;
   align-items: center;
   border-bottom-color: #e5e5e8;
   border-bottom-width: 1px;
@@ -148,7 +141,7 @@ export default {
   border-width: 1px;
   border-style: solid;
   margin-left: 24px;
-  margin-right: 32px;
+  margin-right: 24px;
 }
 .order-block-content {
   flex: 1;
@@ -156,17 +149,18 @@ export default {
 }
 .order-block-label {
   font-family: PingFangSC-Regular;
-  font-size: 36px;
+  font-size: 32px;
   color: #000000;
 }
 .order-block-desc {
   font-family: PingFangSC-Regular;
-  font-size: 26px;
-  color: #666666;
+  font-size: 24px;
+  color: #8a8a8f;
+  margin-top: 10px;
 }
 .order-block-price {
   width: 200px;
-  font-size: 32px;
+  font-size: 28px;
   text-align: right;
   color: #ff8f00;
   margin-right: 32px;

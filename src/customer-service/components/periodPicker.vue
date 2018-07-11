@@ -9,7 +9,7 @@
         <div class="period-content">
             <div class="period-content-select-area"></div>
             <scroller class="period-content-wrapper" show-scrollbar=false @scroll="scroll" @scrollend="scrollEnd">
-                <div v-for="(item, index) in datesArray" :key="index" :ref="'date'+index">
+                <div class="period-content-item-wrapper" v-for="(item, index) in datesArray" :key="index" :ref="'date'+index">
                     <text v-bind:class="['period-content-item',
                     index==0?'first-content-item':'',
                     index==(datesArray.length-1)?'last-content-item':'',
@@ -21,7 +21,7 @@
                 </div>
             </scroller>
             <scroller class="period-content-wrapper" show-scrollbar=false @scroll="scrollTime" @scrollend="scrollTimeEnd">
-                <div v-for="(item, index) in timesArray" :key="index" :ref="'time'+index">
+                <div class="period-content-item-wrapper" v-for="(item, index) in timesArray" :key="index" :ref="'time'+index">
                     <text v-bind:class="['period-content-item',
                     index==0?'first-content-item':'',
                     index==(timesArray.length-1)?'last-content-item':'',
@@ -255,6 +255,9 @@ export default {
   align-content: center;
   align-items: center;
 }
+.period-content-item-wrapper {
+  width: 300px;
+}
 .period-content-item {
   width: 300px;
   height: 70px;
@@ -311,7 +314,7 @@ export default {
   margin-top: 16px;
   font-family: PingFangSC-Regular;
   font-size: 32px;
-  color: #000000;
+  color: #267aff;
   text-align: center;
   background-color: #ffffff;
   text-align: center;

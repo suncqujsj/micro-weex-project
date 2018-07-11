@@ -131,7 +131,7 @@ export default {
                 page: 0,
                 resultNum: 1
             }
-            nativeService.queryserviceorder(param).then((data) => {
+            nativeService.queryserviceorder(param, { isShowLoading: false }).then((data) => {
                 if (data.list && data.list.length > 0) {
                     this.order = data.list[0]
                 }
@@ -241,7 +241,7 @@ export default {
 .navigation-list {
   flex-direction: row;
   justify-content: space-between;
-  padding-top: 34px;
+  padding-top: 30px;
   padding-right: 72px;
   padding-bottom: 42px;
   padding-left: 72px;
@@ -257,7 +257,7 @@ export default {
   width: 120px;
 }
 .navigation-desc {
-  padding-top: 28px;
+  padding-top: 24px;
   font-size: 24px;
   color: #000000;
 }
@@ -317,8 +317,8 @@ export default {
   height: 24px;
 }
 .service-item-img {
-  height: 32px;
-  width: 32px;
+  height: 40px;
+  width: 40px;
   margin-right: 24px;
 }
 .service-item-title {

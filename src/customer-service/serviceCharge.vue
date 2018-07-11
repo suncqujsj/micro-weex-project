@@ -1,11 +1,11 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <div class="search-bar">
             <div class="search-bar-content">
                 <image class="search-bar-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
-                <input class="search-bar-input" placeholder="查询关键字" v-model="queryParam.content" @return="search" return-key-type="search"></input>
+                <input class="search-bar-input" placeholder="查询关键字" v-model="queryParam.content" maxlength="20" @return="search" return-key-type="search"></input>
             </div>
             <text v-if="isIos" class="search-action" @click="back">取消</text>
             <text v-if="!isIos" class="search-action" @click="search">搜索</text>
@@ -15,7 +15,7 @@
                 <div class="cell-item">
                     <div class="cell-sub-item level-one" @click="levelAClicked(itemA, indexA)">
                         <text class="cell-item-title">{{itemA.classAProject}}</text>
-                        <image class="cell-arrow-icon" :src="expandedAIndex==indexA?'./assets/img/service_ic_hide@3x.png':'./assets/img/service_ic_show@3x.png'" resize="contain"></image>
+                        <image class="cell-arrow-icon" :src="expandedAIndex==indexA?'./assets/img/service_ic_show@3x.png':'./assets/img/service_ic_hide@3x.png'" resize="contain"></image>
                     </div>
                 </div>
                 <div v-if="expandedAIndex==indexA" class="cell-expand-item" v-for="(itemB, indexB) in itemA.children" :key="indexB">
@@ -25,7 +25,7 @@
                     </div>
                     <div v-if="expandedBIndex==indexB" class="level-three" v-for="(itemC, indexC) in itemB.children" :key="indexC">
                         <div class="cell-sub-item">
-                            <text class="cell-item-sub-title">{{itemC.classCProject}}</text>
+                            <text class="cell-item-final-title">{{itemC.classCProject}}</text>
                             <text class="cell-item-price">{{itemC.chargeStandard}}{{itemC.unit}}</text>
                         </div>
                         <div>
@@ -233,6 +233,12 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #666666;
+}
+.cell-item-final-title {
+  font-family: PingFangSC-Medium;
+  font-weight: 600;
+  font-size: 28px;
+  color: #000000;
 }
 .cell-item-price {
   font-family: PingFangSC-Regular;

@@ -156,8 +156,7 @@
                 }else if (this.from == 'editAuto') {
                     this.deviceTask = Object.assign({}, this.deviceTask, JSON.parse(decodeURIComponent(nativeService.getParameters('deviceTask'))))
                 }
-                nativeService.getItem(this.deviceId+this.pageStamp, (res)=>{
-
+                nativeService.getItem('mideaRoom'+this.deviceId+this.pageStamp, (res)=>{
                     if (res.result == 'success' && res.data) {
                         this.editProperties = JSON.parse(res.data)
                     }
@@ -253,7 +252,7 @@
                     applianceCode: this.deviceId,
                     actions: this.actions
                 })
-                nativeService.setItem(this.deviceId+this.pageStamp, JSON.stringify(this.editProperties))
+                nativeService.setItem('mideaRoom'+this.deviceId+this.pageStamp, JSON.stringify(this.editProperties))
                 this.goBack()
             }
         },

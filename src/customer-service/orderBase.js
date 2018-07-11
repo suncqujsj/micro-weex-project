@@ -25,12 +25,15 @@ export default {
             } else if (status == '22') {
                 // 已取消
                 resultStatus = 3
-            } else if (['17', '18'].indexOf(status) > -1) {
+            } else if (['17', '18', '19', '20', '21'].indexOf(status) > -1) {
                 // 已完成/已终止
-                resultStatus = 4
-            } else if (['19', '20', '21'].indexOf(status) > -1) {
-                // 已完成
-                resultStatus = 5
+                if (order.allowCallbackWX == 'Y') {
+                    // 已完成 - 待评价
+                    resultStatus = 4
+                } else {
+                    resultStatus = 5
+                }
+
             } else if (['33', '16', '31'].indexOf(status) > -1) {
                 // 待服务
                 resultStatus = 6
@@ -60,7 +63,7 @@ export default {
             }
             //接入图标及渠道
             others.interfaceSourceIcon = "./assets/img/logo/" + order.interfaceSource + ".png"
-            others.interfaceSourceDesc = order.pubCreatePerson + "接入"
+            others.interfaceSourceDesc = order.originSystem
 
             //接入时间
             others.contactTimeDesc = util.dateFormat(new Date(order.contactTime), "yyyy-MM-dd")
@@ -107,7 +110,7 @@ export default {
                     break;
                 case 4:
                     // 已完成/已终止
-                    others.statusDesc = "已完成"
+                    others.statusDesc = "待评价"
                     others.statusIcon = "./assets/img/service_ic_order_finish@3x.png"
                     others.isFinished = true
                     break;

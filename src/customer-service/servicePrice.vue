@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller>
             <div class="base-group">
@@ -13,12 +13,13 @@
                 </div>
 
                 <div class="item-group scan-group group-bottom-border">
-                    <input class="item-input" placeholder="请输入配件名称" :autofocus=false v-model="materialName" />
+                    <input class="item-input" placeholder="请输入配件名称" :autofocus=false v-model="materialName"  maxlength="50"/>
                 </div>
 
                 <div class="action-bar">
-                    <midea-button text="查询" type="green" :btnStyle="{'background-color': '#267AFF','opacity':isDataReady?'1':'0.2','border-radius': '4px'}" @mideaButtonClicked="search">
-                    </midea-button>
+                    <div class="action-btn" v-bind:class="[isDataReady?'':'action-btn-disable']" @click="search">
+                        <text class="action-btn-text" v-bind:class="[isDataReady?'':'action-btn-text-disable']">查询</text>
+                    </div>
                 </div>
             </div>
 
@@ -45,12 +46,10 @@ import base from './base'
 import nativeService from './settings/nativeService'
 import util from '@/common/util/util'
 
-import { MideaButton } from '@/index'
 import ScanInput from '@/customer-service/components/scanInput.vue'
 
 export default {
     components: {
-        MideaButton,
         ScanInput
     },
     mixins: [base],
@@ -170,8 +169,13 @@ export default {
   padding-left: 5px;
 }
 .item-group {
-  padding: 24px;
+  padding-top: 32px;
+  padding-left: 32px;
+  padding-right: 32px;
   background-color: #ffffff;
+}
+.last-item-group {
+  padding-bottom: 32px;
 }
 .item-input-text {
   font-family: PingFangSC-Regular;
@@ -188,7 +192,7 @@ export default {
   background-color: #fafafa;
 }
 .placeholder {
-  color: #e5e5e8;
+  color: #9a9a9a;
 }
 .item-input {
   font-family: PingFangSC-Regular;
@@ -253,6 +257,31 @@ export default {
   background-color: #ffffff;
   width: 750px;
   text-align: center;
+  padding-bottom: 50px;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+.action-btn {
+  flex: 1;
+  border-radius: 4px;
+  border-color: #267aff;
+  border-width: 1px;
+  justify-content: center;
+  align-items: center;
+  height: 84px;
+  margin-top: 32px;
+}
+.action-btn-disable {
+  border-color: #e5e5e8;
+}
+.action-btn-text {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #267aff;
+  text-align: center;
+}
+.action-btn-text-disable {
+  color: #e5e5e8;
 }
 .result-header {
   flex-direction: row;

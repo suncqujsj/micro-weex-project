@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back"></midea-header>
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back"></midea-header>
         <scroller class="scroller" ref="orderListScroller" loadmoreoffset=300 @loadmore="loadmore">
             <refresh v-if="isLoaded" class="refresh" @refresh="onrefresh" :display="refreshing ? 'show' : 'hide'">
                 <text class="indicator-text">刷新列表 ...</text>
@@ -157,6 +157,8 @@ export default {
                         this.hasNext = false
                     }
                 }).catch((error) => {
+                    this.showLoading = 'hide'
+                    this.$refs.orderListScroller.resetLoadmore()
                     nativeService.toast(nativeService.getErrorMessage(error))
                 })
             }, 1500)
@@ -234,7 +236,11 @@ export default {
             nativeService.createserviceuserdemand(param).then(() => {
                 nativeService.toast("催单成功")
             }).catch((error) => {
-                nativeService.toast(nativeService.getErrorMessage(error))
+                if (error.errorCode == 'WOM100111') {
+                    nativeService.alert(error.errorMsg)
+                } else {
+                    nativeService.toast(nativeService.getErrorMessage(error))
+                }
             })
         },
         urgeOrderBtnClick() {
@@ -360,6 +366,7 @@ export default {
   -webkit-align-items: center;
   -webkit-box-align: center;
   align-items: center;
+  padding-bottom: 16px;
 }
 
 .order-block {
@@ -373,7 +380,7 @@ export default {
 .action-bar {
   flex-direction: row;
   justify-content: flex-end;
-  padding-top: 15px;
+  padding-top: 10px;
   margin-right: 32px;
 }
 .action {
@@ -381,9 +388,9 @@ export default {
   font-size: 24px;
   color: #000000;
   border-radius: 4px;
-  padding-top: 14px;
+  padding-top: 10px;
   padding-right: 24px;
-  padding-bottom: 14px;
+  padding-bottom: 10px;
   padding-left: 24px;
   margin-left: 32px;
   border-color: #e5e5e8;

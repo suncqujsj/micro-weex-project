@@ -260,22 +260,18 @@
                             desiredAccuracy: "10",
                             distanceFilter: "10",
                             alwaysAuthorization: "0" 
-                        }).then( (res) => {
-                            this.gpsInfo = res
-
-                            if( res.city){
-                                nativeService.getCityInfo({cityName: res.city}).then((res)=>{
-                                    if ( res.cityWeatherNo ) {
-                                        this.cityWeatherNo = res.cityNo
-                                    }
-                                }).catch((err)=>{
-                                    nativeService.toast(err)
-                                })
-                            }else {
+                        }).then( (gps) => {
+                            this.gpsInfo = gps
+                            nativeService.getCityInfo({cityName: gps.city}).then((city)=>{
+                                if ( city.cityNo ) {
+                                    this.cityWeatherNo = city.cityNo
+                                }
+                            }).catch((err)=>{
                                 nativeService.alert('获取不到当前设置天气城市，请检查是否开启定位权限')
-                            }
+                            })
                         }).catch((error) => {
                             nativeService.alert(error)
+                            nativeService.alert('获取不到当前设置天气城市，请检查是否开启定位权限')
                         })
                     }
                 }else if (this.from == 'editAuto'){
@@ -376,7 +372,8 @@
                     homegroupId: this.homegroupId,
                     sceneType: this.sceneType,
                     image: this.icon.auto[this.sceneType],
-                    name: this.inputAutoName
+                    name: this.inputAutoName,
+                    enable: 1
                 }
                 let tmpTask = []
                 
@@ -425,8 +422,11 @@
                 }
                 this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                     if (rtnData.code == 0) {
+                        if (this.sceneType == 3) {
+                            this.updateAutoList()//通知原生位置类型自动化列表需要更新
+                        }
                         nativeService.alert('新增成功！', function(){
-                            nativeService.goTo('weex.js')
+                            nativeService.backToNative()
                         })
                     }
                 }).catch( (error )=>{
@@ -447,4 +447,3 @@
         }
     }
 </script>
-

@@ -28,7 +28,7 @@ export const url = {
         update: domain + '/v1/scene/auto/update',
         delete: domain + '/v1/scene/auto/delete',
         execute: domain + '/v1/scene/auto/execute',
-        status: domain + '/v1/scene/auto/status/get',
+        executeStatus: domain + '/v1/scene/auto/status/get',
         recordUpload: domain + '/v1/scene/auto/record/upload',
         record: domain + '/v1/scene/auto/record/list',
         recordDelete: domain + '/v1/scene/auto/record/delete',

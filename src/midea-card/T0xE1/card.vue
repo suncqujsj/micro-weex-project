@@ -2,25 +2,29 @@
 	<scroller class="content" show-scrollbar="false">
 	    <div class="box">
 	        <div v-if="onlineStatus == '1'">
-		    	 <div class="card card-hot" v-if="onoff == 'on'">
+		    	 <div class="card" v-if="onoff == 'on'">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
-	        				<text class="main-status">{{minutes}}</text>
+	        				<text class="main-status" :class="[work_status != 'work'?'main-status-simple':'']">{{display_value1}}</text>
 	        				<text class="danwei">{{danwei}}</text>
 	        			</div>
-	        			<text class="main-status-second">运行时间</text>
+	        			<text class="main-status-second">{{main_detail}}</text>
 		        		<div class="card-status-detail">
-		        			<text class="main-status-third">{{display_value}}</text>
-		        		</div>
-		        		<div class="card-control-temp-div">
+		        			<text class="main-status-third">{{display_value2}}</text>
 		        		</div>
 		        	</div>
 		        	<div class="card-right">
-		        		<div class="card-control" @click="poweronoff(0)">
-		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png"></image>
+		        		<div class="card-control" v-if="work_status=='work'">
+		        			<image v-if="work_status=='work'" class="card-control-img" :src="startPause" @click="controlStartPause"></image>
+		        			<image v-if="work_status=='work'" class="card-control-img" src="./assets/img/smart_ic_cancelwork@2x.png" @click="cancelWork"></image>
+		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
 		        		</div>
-		        		<div class="card-icon">
-		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip030@2x.png"></image>
+		        		<div class="card-control" v-else>
+		        			<image v-if="work_status!='work'" class="card-control-img" style="margin-left:50px" src="./assets/img/smart_ic_play@2x.png" @click="startWork"></image>
+		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
+		        		</div>
+		        		<div class="card-icon" >
+		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip029@2x.png" @click="showControlPanelPage()"></image>
 		        		</div>
 		        	</div>
 		        </div>
@@ -30,17 +34,17 @@
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image class="icon-offline" src="./assets/img/smart_img_equip030@2x.png"></image>
+		        		<image class="icon-offline" src="./assets/img/smart_img_equip029@2x.png" @click="showControlPanelPage"></image>
 		        	</div>
 		        </div>
 	        </div>
 	        <div class="card-power-off" v-else>
-	        	<div class="control-div-offline">
-	        		<image class="card-control-img" :src="powerIcon_offline"  @click="poweronoff(1)"></image>
+	        	<div class="control-div-offline" @click="reload()">
+	        		<image class="card-control-img" :src="powerIcon_offline"></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
-	        		<image class="icon-offline" src="./assets/img/smart_img_equip030@2x.png"></image>
+	        		<image class="icon-offline" src="./assets/img/smart_img_equip029@2x.png"></image>
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
@@ -63,7 +67,9 @@
 	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
-	var stream = weex.requireModule('stream');
+	const stream = weex.requireModule('stream');
+	const globalEvent = weex.requireModule('globalEvent');
+	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
             mideaSwitch,
@@ -79,15 +85,48 @@
             	deviceSn: "",
             	onlineStatus:"",
             	
+            	pushKey: "receiveMessage",
+            	pushKeyOnline: "receiveMessageFromApp",
                 mideaChecked: true,
                 mideaChecked2: false,
-                onoff: "",
-                minutes: "",
-                gear: "",
-                light: "",
-                danwei: "",
-                display_value: "",
                 
+                work_status:"",
+                mode: "",
+                wash_stage: "",
+                left_time: "",
+                operator: "",
+                onoff: "",
+                danwei: "",
+                
+                display_value1: "",
+                main_detail: "",
+	            display_value2: "",
+	            return_work_status:{
+				    power_on: "开机",
+					power_off: "关机",
+					cancel: "取消工作",
+					work: "开始工作",
+					order: "预约",
+					error: "错误",
+					soft_gear: "软水档位设置中"
+	            },
+	            return_mode: {
+	            	auto_wash: "自动洗/智能洗",   
+					strong_wash: "强力洗 ",
+					standard_wash: "及时洗/标准洗",
+					eco_wash: "节能洗/经济洗",
+					glass_wash: "玻璃洗",
+					fast_wash: "快速洗",
+					self_define: "自定义洗"
+	            },
+	            return_wash_stage: {
+	            	0: "未洗涤",
+					1: "预洗",
+					2: "主洗",
+					3: "漂洗",
+					4: "干燥",
+					5: "结束"
+	            },
 	            powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
                 powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
                 data:{
@@ -121,26 +160,35 @@
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);
             	},function(error) {
-            		nativeService.alert(error);
             		console.log("error");
             	});
             },
             updateUI(data) {
-            	nativeService.alert(data);
             	if(data.errorCode == 0) {
-	                let params = data.params || data.result;
-	                this.onoff = params.power;
-	                this.minutes = params.minutes;
-	            	this.gear = params.gear;
-	            	this.light = params.light;
-	            	this.danwei = "分钟";
-	            	if(this.light == "on") {
-	            		this.display_value = this.gear +"档 | 灯开"
-	            	} else {
-	            		this.display_value = this.gear +"档 | 灯关"
-	            	}
+	            	let params = data.params || data.result;
+	                this.work_status = params.work_status;
+	                this.mode = params.mode;
+	                this.wash_stage = params.wash_stage;
+	                this.left_time = params.left_time;
+	                this.operator = params.operator;
+	                if(this.work_status == "power_off") {
+	                	this.onoff = "off";
+	                } else {
+	                	this.onoff = "on";
+	                	if(this.work_status == "work") {
+	                		this.display_value1 = this.left_time;
+	                		this.main_detail = "工作剩余时间";
+	                		this.display_value2 = this.return_mode[this.mode] + " " + this.return_wash_stage[params.wash_stage];
+	                		this.danwei = "分"
+	                	} else {
+	                		this.display_value1 = this.return_work_status[this.work_status];
+	                		this.main_detail = "";
+	                		this.display_value2 = this.return_mode[this.mode] || "--";
+	                		this.danwei = "";
+	                	}
+	                }
 	            }else {
-	                nativeService.toast("连接设备超时");
+	                modal.toast({ 'message': "连接设备超时", 'duration': 2 });
 	            }
             },
             updateDeviceInfo(data) {
@@ -153,16 +201,19 @@
             },
             poweronoff(flag) {
 		    	let self = this;
+		    	if(flag != 1 && this.work_status == "work") {
+		    		nativeService.toast("工作中不可以直接关机");
+		    		return;
+		    	}
 		        let name = flag == 1? "poweron":"poweroff";
-		        let poweronoff = flag == 1? "on" : "off";
+		        let poweronoff = this.work_status == "power_off"?"power_on":"power_off";
             	let params = {
-            			"operation":"luaControl",
-            			"name":name,
-            			"data":{
-            				"power": poweronoff,
-            				"buzzer": "off"
-            			}
-            		};
+        			"operation":"luaControl",
+        			"name":name,
+        			"data":{
+        				"work_status": poweronoff
+        			}
+        		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		nativeService.alert(data);
             		self.updateUI(data);
@@ -171,14 +222,126 @@
             		console.log("error");
             	});
             },
+            controlStartPause() {
+            	let self = this;
+            	if(this.operator == "start") {
+            		//pause logic
+            		let params = {
+            			"operation":"luaControl",
+            			"name":"pause",
+            			"data":{
+            				"operator": "pause"
+            			}
+            		};
+            		nativeService.sendLuaRequest(params,true).then(function(data) {
+            			nativeService.alert(data);
+	            		self.updateUI(data);
+	            	},function(error) {
+	            		nativeService.alert(error);
+	            		console.log("error");
+	            	});
+            	} else {
+            		//start logic
+            		let params = {
+            			"operation":"luaControl",
+            			"name":"start",
+            			"data":{
+            				"operator": "start",
+            			}
+            		};
+            		nativeService.sendLuaRequest(params,true).then(function(data) {
+            			nativeService.alert(data);
+	            		self.updateUI(data);
+	            	},function(error) {
+	            		nativeService.alert(error);
+	            		console.log("error");
+	            	});
+            	}
+            },
+            cancelWork() {
+            	let self = this;
+            	let params = {
+        			"operation":"luaControl",
+        			"name":"cancelWork",
+        			"data":{
+        				"work_status": "cancel"
+        			}
+        		};
+        		nativeService.sendLuaRequest(params,true).then(function(data) {
+        			nativeService.alert(data);
+            		self.updateUI(data);
+            	},function(error) {
+            		nativeService.alert(error);
+            		console.log("error");
+            	});
+            },
+            startWork() {
+            	let self = this;
+            	let params = {
+        			"operation":"luaControl",
+        			"name":"startWork",
+        			"data":{
+        				"work_status": "work",
+        				"mode": this.return_mode[this.mode] ? this.mode : "auto_wash"
+        			}
+        		};
+        		nativeService.sendLuaRequest(params,true).then(function(data) {
+        			nativeService.alert(data);
+            		self.updateUI(data);
+            	},function(error) {
+            		nativeService.alert(error);
+            		console.log("error");
+            	});
+            },
+	        handleNotification() {
+            	console.log("handleNotification Yoram");
+            	let me = this;
+            	globalEvent.addEventListener(this.pushKey, (data) => {
+            		me.queryStatus();
+		        });
+		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
+            		if(data && data.messageType == "deviceOnlineStatus") {
+            			if(data.messageBody && data.messageBody.onlineStatus == "online") {
+            				me.onlineStatus = "1";
+            			} else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+            				me.onlineStatus = "0";
+            			} else {
+            				me.onlineStatus = "0";
+            			}
+            		}
+		        });
+            },
+	        showControlPanelPage() {
+            	let params = {
+            		controlPanelName:"controlPanel.html"
+            	};
+            	bridgeModule.showControlPanelPage(params);
+            },
+            reload() {
+            	let params = {};
+            	bridgeModule.reload(params,function(result) {
+            		//successful
+            	},function(error) {
+            		//fail
+            	});
+            }
         },
         computed: {
-        	
+        	startPause() {
+	        	let img = "";
+	            if(this.operator == "start") {
+	                img = "./assets/img/smart_ic_pause@2x.png";
+	            } else {
+	                img = "./assets/img/smart_ic_play@2x.png";
+	            }
+	            return img;
+	        }
         },
         mounted() {
 	       let self = this;
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
+            	self.handleNotification();
             	if(data.result.isOnline == 1) {
             		self.queryStatus();
             	}
@@ -233,7 +396,7 @@
 	.text-offline-center {
 		position: absolute;
 		right:300px;
-		top:180px;
+		top:200px;
 		align-items: center;
 	}
 	.control-div-offline {
@@ -245,9 +408,8 @@
 	.card-control {
 		align-items: flex-end;
 		margin-top:44px;
-		margin-right:44px;
 		flex-direction: row;
-		justify-content: flex-end;
+		justify-content: space-around;
 	}
 	.card-control-temp-div {
 		flex-direction: row;
@@ -264,6 +426,7 @@
 	.card-status-detail {
 		flex-direction: row;
 		justify-content: center;
+		margin-bottom: 60px;
 	}
 	.card-status-detail-img {
 		width:56px;
@@ -274,20 +437,19 @@
 		height:60px
 	}
 	.icon-offline {
-		width:534px;
-		height:248px;
-		margin-bottom: 50px;
+		width: 314px;
+		height: 314px;
 		opacity: 0.3;
 		box-shadow: 0 5px 6px 0 rgba(0,0,0,0.12);
 	}
 	.card-icon {
 		align-items: flex-end;
+		margin-top:-60px;
+		margin-right:-10px
 	}
 	.card-icon-img {
-		width:534px;
-		height:248px;
-		margin-right: -115px;
-		margin-bottom: 45px;
+		width:314px;
+		height:314px
 	}
 	.main-status-div {
 		flex-direction: row;
@@ -297,6 +459,10 @@
 	.main-status {
 		font-size: 128px;
 		color: #FFFFFF;
+	}
+	.main-status-simple {
+		font-size: 75px;
+		margin-top: 74px;
 	}
 	.danwei {
 		font-family: PingFangSC-Light;

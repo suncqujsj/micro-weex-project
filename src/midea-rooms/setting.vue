@@ -4,6 +4,7 @@
         <list class="scroller" :style="scrollerStyle">
             <cell>
                 <div class="block"  style="background-color:#fff">
+                    <text class="sub-hd">关联设备</text>
                     <midea-list v-for="(item,idx) in userSupportDevices" :idx="idx" :hasWrapBorder="false" leftMargin="25px">
                         <check-item  :title="item.applianceName" :status="item.isRelation == 1" @itemClick="switchBindSceneDevice(item,idx)"></check-item>
                     </midea-list>
@@ -123,6 +124,7 @@
     .value-text{ color: #666; font-size: 28px;}
     .next-icon{width: 12px; height: 24px; margin-left: 20px;}
     .set-item{ padding-top: 25px; padding-bottom: 25px; padding-right: 25px;}
+    .sub-hd{background-color: #f2f2f2; padding: 25px; color:#777;  font-size: 28px;}
 </style>
 
 <script>
@@ -243,7 +245,10 @@
                 this.getSupportDevices().then((res)=>{
                     if (res.applianceList.length == 0) {
                         nativeService.toast('您在该场景下没有可以绑定的设备哦')
-                        this.goBack()
+                        setTimeout(()=>{
+                            this.goBack()
+                        },500)
+                        return
                     }
                     this.userSupportDevices = res.applianceList
                     this.scenePropFormat = this.jsonToArray(res.prop)
@@ -304,14 +309,16 @@
                     this.deleteSceneAppliance(appliance.applianceCode).then((res)=>{
                         tmpDevice.isRelation = 2
                         this.userSupportDevices.splice(index, 1, tmpDevice)
-                        nativeService.alert('解绑成功！')
+                        nativeService.toast('解绑成功！')
+                        this.initData()
                     })
                 } else if (appliance.isRelation == 2) {
                     this.addSceneAppliance(appliance.applianceCode).then((res)=>{
                         tmpDevice.isRelation = 1
                         this.userSupportDevices.splice(index, 1, tmpDevice)
-                        this.reload()
                         nativeService.toast('绑定成功！')
+                        this.initData()
+                        
                     })
                 }
         
@@ -484,8 +491,8 @@
                     this.closePropPop(propType)
                     if (res.code == 0) {
                         setTimeout(()=>{
-                            nativeService.alert('修改成功！')
-                            this.reload()
+                            nativeService.toast('修改成功！')
+                            this.initData()
                         },500)
                     }else{
                         let codeMsg = {

@@ -1,10 +1,10 @@
 <template>
     <div>
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <div class="search-bar">
             <div class="search-bar-content">
-                <input class="search-bar-input" placeholder="请输入型号" :autofocus=true v-model="searchModelKeyWord" @return="true" @input="searchProduct"></input>
+                <input class="search-bar-input" placeholder="请输入型号" :autofocus=true v-model="searchModelKeyWord" @return="true" @input="searchProduct" maxlength="30"></input>
             </div>
         </div>
         <scroller class="product-content" loadmoreoffset=50 @loadmore="loadmore">

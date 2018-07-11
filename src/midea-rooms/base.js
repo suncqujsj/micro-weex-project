@@ -43,6 +43,13 @@ export default {
         },
         isipx: function () {//是否是iphoneX
             return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6')
+        },
+        platform() {
+            if (weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6')) {
+                return 'iphoneX'
+            } else {
+                return weex.config.env.platform.toLowerCase()
+            }
         }
     },
     methods: {

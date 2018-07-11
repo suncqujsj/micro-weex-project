@@ -170,7 +170,7 @@ export default {
         //Debug Log相关信息
         debugUtil.isEnableDebugInfo = appConfig.enable_debug || false //开启关闭debuglog功能
         debugUtil.debugLog("@@@@@@ " + this.title + "(" + plugin_name + "-" + srcFileName + ") @@@@@@")
-        debugUtil.debugLog(bundleUrl)
+        debugUtil.debugLog("bundleUrl:", bundleUrl)
 
         //监听全局推送(native->weex)
         globalEvent.addEventListener(this.pushKey, (data) => {

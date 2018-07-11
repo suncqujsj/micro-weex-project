@@ -1,13 +1,13 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./img/header/tab_back_black.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller>
             <div class="base-group">
                 <div class="item-group">
                     <scan-input placeholder="请输入或扫机身条码" v-model="barCode" @blur="checkBarCode" @scanCode="scanCode"></scan-input>
                 </div>
-                <div class="item-group">
+                <div class="item-group last-item-group">
                     <text v-if="!productModel" class="item-input-text placeholder" @click="goToSearch">请输入型号</text>
                     <text v-else class="item-input-text" @click="goToSearch">{{productModel}}</text>
                 </div>
@@ -192,8 +192,13 @@ export default {
   width: 480px;
 }
 .item-group {
-  padding: 24px;
+  padding-top: 32px;
+  padding-left: 32px;
+  padding-right: 32px;
   background-color: #ffffff;
+}
+.last-item-group {
+  padding-bottom: 32px;
 }
 .item-input-text {
   font-family: PingFangSC-Regular;
@@ -210,7 +215,7 @@ export default {
   background-color: #fafafa;
 }
 .placeholder {
-  color: #e5e5e8;
+  color: #9a9a9a;
 }
 .item-input {
   font-family: PingFangSC-Regular;

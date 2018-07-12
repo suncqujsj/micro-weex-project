@@ -74,7 +74,7 @@
         flex-wrap: wrap;
     }
     .device{
-        width: 333.75px;
+        width: 333px;
         padding: 20px;
         margin-right: 18px;
         margin-bottom: 14px;
@@ -88,6 +88,7 @@
         position: relative;
     }
     .device-name{
+        height: 36px;
         font-size: 32px;
         margin-bottom: 4px;
     }

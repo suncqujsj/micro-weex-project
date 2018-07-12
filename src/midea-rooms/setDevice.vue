@@ -9,11 +9,16 @@
         <cell class="content">
             <text class="sub-hd">设置为</text>
             <div class="ability-list" v-for="(item,i) in actions">
-                <div :class="['row-sb','floor', i=='0'?'no-border':'']">
+                <div v-if="item.type == 'switch'" :class="['row-sb','floor', i=='0'?'no-border':'']">
                     <text class="property-name">{{item.propertyName}}</text>
                     <div>
-                        <switch-bar v-if="item.type == 'switch'" :isActive="item.currentStatus =='on'" @onSwitch="switchAction(item,i)"></switch-bar>
-                        <div v-if="item.type == 'list' || item.type=='range' " class="row-e" @click="showPop(item.property)">
+                        <switch-bar :isActive="item.currentStatus =='on'" @onSwitch="switchAction(item,i)"></switch-bar>
+                    </div>
+                </div>
+                <div v-if="item.type == 'list' || item.type=='range'" :class="['row-sb','floor', i=='0'?'no-border':'']"  @click="showPop(item.property)">
+                    <text class="property-name">{{item.propertyName}}</text>
+                    <div>
+                        <div class="row-e">
                             <text v-if="item.type == 'list'" class="property-text">{{item.currentStatusName}}</text>
                             <text v-if="item.type=='range'" class="property-text">{{item.currentStatus}}</text>
                             <image class="icon" :src="icon.more"></image>
@@ -76,8 +81,8 @@
         background-color: #fff;
     }
     .property-name{
-        padding-top: 25px;
-        padding-bottom: 25px;
+        padding-top: 30px;
+        padding-bottom: 30px;
     }
     .property-text{
         color: #666;

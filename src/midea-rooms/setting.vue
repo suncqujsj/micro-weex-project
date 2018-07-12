@@ -6,7 +6,7 @@
                 <div class="block"  style="background-color:#fff">
                     <text class="sub-hd">关联设备</text>
                     <midea-list v-for="(item,idx) in userSupportDevices" :idx="idx" :hasWrapBorder="false" leftMargin="25px">
-                        <check-item  :title="item.applianceName" :status="item.isRelation == 1" @itemClick="switchBindSceneDevice(item,idx)"></check-item>
+                        <check-item  :title="item.applianceName" :status="item.isRelation == 1" @itemClick="switchBindSceneDevice(item)"></check-item>
                     </midea-list>
                 </div>
                 <div class="block" v-if="roomType == 1 || roomType == 2">
@@ -251,6 +251,7 @@
                         return
                     }
                     this.userSupportDevices = res.applianceList
+                    
                     this.scenePropFormat = this.jsonToArray(res.prop)
                     this.sceneProp = res.prop
 
@@ -302,23 +303,18 @@
                 }
                 return tmp
             },
-            switchBindSceneDevice(appliance, index){//解绑、绑定设备到房间
-                let tmpDevice = this.userSupportDevices[index]
-                
+            switchBindSceneDevice(appliance){//解绑、绑定设备到房间
                 if (appliance.isRelation == 1) {
                     this.deleteSceneAppliance(appliance.applianceCode).then((res)=>{
-                        tmpDevice.isRelation = 2
-                        this.userSupportDevices.splice(index, 1, tmpDevice)
+                        // this.initData()
+                        this.reload()
                         nativeService.toast('解绑成功！')
-                        this.initData()
-                    })
+                     })
                 } else if (appliance.isRelation == 2) {
                     this.addSceneAppliance(appliance.applianceCode).then((res)=>{
-                        tmpDevice.isRelation = 1
-                        this.userSupportDevices.splice(index, 1, tmpDevice)
+                        // this.initData()
+                        this.reload()
                         nativeService.toast('绑定成功！')
-                        this.initData()
-                        
                     })
                 }
         
@@ -348,10 +344,9 @@
                                 1305: '用户不是设备的管理员'
                             }
                             nativeService.alert(codeMsg[res.code])
-                            reject()
                         }
                     }).catch( (err )=>{
-                        reject(err)
+                        nativeService.alert(err)
                     })
                 })
             },
@@ -368,10 +363,20 @@
                         if (res.code == 0) {
                             resolve(res)
                         }else{
-                            reject()
+                            let codeMsg = {
+                                '1000':	'未知系统错误',
+                                '1001':	'参数格式错误',
+                                '1002':	'参数为空',
+                                '1105':	'账户不存在',
+                                '1202':	'用户不是家庭的管理员',
+                                '1300':	'设备不存在',
+                                '1701':	'场景不存在',
+                                '1700':	'无操作权限'
+                            }
+                            nativeService.alert(codeMsg[res.code])
                         }
                     }).catch( (err )=>{
-                        reject(err)
+                        nativeService.alert(err)
                     })
                 })
             },

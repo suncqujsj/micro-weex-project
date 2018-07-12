@@ -153,23 +153,24 @@ export default {
         },
         webRequest(reqUrl, reqParams, isShowLoading = true) {
             return new Promise((resolve, reject) => {
-            //     let reqBody = this.generateReqBody(reqParams)
-            //     stream.fetch({
-            //         method: 'post',
-            //         url: reqUrl,
-            //         mode: 'cors',
-            //         headers: {
-            //             'Content-Type': 'application/json;charset=utf-8',
-            //         },
-            //         type: 'json',
-            //         body: reqBody
-            //     }, (rtnData) => {
-            //         if (rtnData.ok) {
-            //             resolve(rtnData.data)
-            //         } else {
-            //             reject(rtnData)
-            //         }
-            //     })
+                /*     let reqBody = this.generateReqBody(reqParams)
+                    //     stream.fetch({
+                    //         method: 'post',
+                    //         url: reqUrl,
+                    //         mode: 'cors',
+                    //         headers: {
+                    //             'Content-Type': 'application/json;charset=utf-8',
+                    //         },
+                    //         type: 'json',
+                    //         body: reqBody
+                    //     }, (rtnData) => {
+                    //         if (rtnData.ok) {
+                    //             resolve(rtnData.data)
+                    //         } else {
+                    //             reject(rtnData)
+                    //         }
+                    //     })
+                */
                 let requestOption = {
                     method: "POST",
                     isShowLoading: isShowLoading

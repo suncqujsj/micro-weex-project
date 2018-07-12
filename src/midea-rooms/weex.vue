@@ -142,7 +142,8 @@
                     4: '加热中',
                     5: '热水充足'
                 },
-                autoList: [
+                autoList: [],
+                autoListTmpl: [
                     {
                         isAdd: true,
                         image: 'assets/img/man.png',
@@ -176,7 +177,8 @@
                         name: '新增-在某个天气'
                     }
                 ],
-                sceneList: [
+                sceneList: [],
+                sceneListTmpl: [
                     {
                         "name": "客厅",
                         "roomType": 1
@@ -203,9 +205,9 @@
             initData(){
                 nativeService.getUserInfo().then((res)=>{
                     if (res.uid == '' || res.uid == undefined){
+                        this.sceneList = this.sceneListTmpl
+                        this.autoList = this.autoListTmpl
                     }else{
-                        this.isLogin = true
-                        this.uid = res.uid
                         nativeService.getCurrentHomeInfo().then( (res)=>{
                             this.homegroupId = res.homeId
                             this.userDevices = ''
@@ -230,84 +232,85 @@
 
                             this.getSceneList()
                             this.getAutoList()
-                        }).catch((err)=>{
-                            nativeService.toast(err)
                         })
                     }
-                    
                 })
             },
             editAuto(auto){
-                if (this.isLogin) {
-                    if (auto.isAdd){
-                        let params = {
-                            from: 'addAuto',
-                            uid: this.uid,
-                            homegroupId: this.homegroupId,
-                            sceneType: auto.sceneType,
-                            userDevices: this.userDevices
-                        }
-                        if (auto.sceneType == 3) {
-                            params.direction = auto.direction
-                        }
-                        if (auto.sceneType == 2) {
-                            this.goTo("autoBindDevices", {}, params)
-                        }else{
-                            this.goTo('autoTypeSet',{}, params)
-                        }
+                nativeService.getUserInfo().then((res)=>{
+                    if (res.uid == '' || res.uid == undefined){
+                        nativeService.alert('您还没有登录，点击确定前往登录', function(){
+                            nativeService.jumpNativePage({pageName: 'login'})
+                        })
                     }else{
-                        let params = {
-                            uid: this.uid,
-                            homegroupId: this.homegroupId,
-                            sceneType: auto.sceneType,
-                            sceneId: auto.sceneId,
-                            userDevices: this.userDevices
+                        if (auto.isAdd){
+                            let params = {
+                                from: 'addAuto',
+                                uid: res.uid,
+                                homegroupId: this.homegroupId,
+                                sceneType: auto.sceneType,
+                                userDevices: this.userDevices
+                            }
+                            if (auto.sceneType == 3) {
+                                params.direction = auto.direction
+                            }
+                            if (auto.sceneType == 2) {
+                                this.goTo("autoBindDevices", {}, params)
+                            }else{
+                                this.goTo('autoTypeSet',{}, params)
+                            }
+                        }else{
+                            let params = {
+                                uid: res.uid,
+                                homegroupId: this.homegroupId,
+                                sceneType: auto.sceneType,
+                                sceneId: auto.sceneId,
+                                userDevices: this.userDevices
+                            }
+                            this.goTo("autoEdit", {}, params)
                         }
-                        this.goTo("autoEdit", {}, params)
                     }
-                }else{
-                    nativeService.alert('您还没有登录，点击确定前往登录', function(){
-                        nativeService.jumpNativePage({pageName: 'login'})
-                    }) 
-                }
+                })
             },
             executeAuto(sceneId){
-                if (this.isLogin) {
-                    let reqUrl = url.auto.execute
-                    let reqParams = {
-                        uid: this.uid,
-                        homegroupId: this.homegroupId,
-                        sceneId: sceneId
-                    }
-                    let codeDesc = {
-                        '1000': '未知系统错误',
-                        '1001': '参数格式错误',
-                        '1002': '参数为空',
-                        '1105': '账户不存在',
-                        '1200': '用户不在家庭',
-                        '1701': '自动化项目不存在'                
-                    }
-                    this.webRequest(reqUrl, reqParams).then((rtnData)=>{
-                        if (rtnData.code == 0) {
-                            this.checkExecuteAuto(sceneId,rtnData.data.resultId)
-                        }else{
-                            nativeService.toast(codeDesc[rtnData.code])
+                nativeService.getUserInfo().then((res)=>{
+                    if (res.uid == '' || res.uid == undefined){
+                        nativeService.alert('您还没有登录，点击确定前往登录', function(){
+                            nativeService.jumpNativePage({pageName: 'login'})
+                        })
+                    }else{
+                        let reqUrl = url.auto.execute
+                        let reqParams = {
+                            uid: res.uid,
+                            homegroupId: this.homegroupId,
+                            sceneId: sceneId
                         }
-                    }).catch( (error )=>{
-                        nativeService.alert(error)
-                    })
-                }else{
-                    nativeService.alert('您还没有登录，点击确定前往登录', function(){
-                        nativeService.jumpNativePage({pageName: 'login'})
-                    }) 
-                }
+                        let codeDesc = {
+                            '1000': '未知系统错误',
+                            '1001': '参数格式错误',
+                            '1002': '参数为空',
+                            '1105': '账户不存在',
+                            '1200': '用户不在家庭',
+                            '1701': '自动化项目不存在'                
+                        }
+                        this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                            if (rtnData.code == 0) {
+                                this.checkExecuteAuto(sceneId,rtnData.data.resultId, res.uid)
+                            }else{
+                                nativeService.toast(codeDesc[rtnData.code])
+                            }
+                        }).catch( (error )=>{
+                            nativeService.alert(error)
+                        })
+                    }
+                })
             },
-            checkExecuteAuto(sceneId, resultId){
+            checkExecuteAuto(sceneId, resultId, uid){
                 if (this.checkAutoExeTimes < 20) {//最多查20次
                     this.checkAutoExeTimes += 1
                     let reqUrl = url.auto.executeStatus
                     let reqParams = {
-                        uid: this.uid,
+                        uid: uid,
                         homegroupId: this.homegroupId,
                         sceneId: sceneId,
                         resultId: resultId
@@ -340,108 +343,127 @@
                 }
             },
             goAddAuto(){
-                let params = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    userDevices: this.userDevices
-                }
-                this.goTo('addAuto', {}, params)
+                nativeService.getUserInfo().then((res)=>{
+                    if (res.uid == '' || res.uid == undefined){
+                        nativeService.alert('您还没有登录，点击确定前往登录', function(){
+                            nativeService.jumpNativePage({pageName: 'login'})
+                        }) 
+                    }else{
+                        let params = {
+                            uid: res.uid,
+                            homegroupId: this.homegroupId,
+                            userDevices: this.userDevices
+                        }
+                        this.goTo('addAuto', {}, params)
+                    }
+                })
             },
             getAutoList(){
-                let reqUrl = url.auto.list
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId
-                }
-                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
-                    if (rtnData.code == 0) {
-                        this.autoList = rtnData.data.list
-                        let basicTemplate = {
-                            '2': {
-                                isAdd: true,
-                                image: 'assets/img/man.png',
-                                sceneType: 2,
-                                name: '新增-手动'
-                            },
-                            '3.1':{
-                                isAdd: true,
-                                image: 'assets/img/arrive.png',
-                                sceneType: 3,
-                                direction: 1,
-                                name: '新增-到达某地'
-                            },
-                            '3.2': {
-                                isAdd: true,
-                                image: 'assets/img/arrive.png',
-                                sceneType: 3,
-                                direction: 2,
-                                name: '新增-离开某地'
-                            },
-                            '4': {
-                                isAdd: true,
-                                image: 'assets/img/clock.png',
-                                sceneType: 4,
-                                name: '新增-在某个时间'
-                            },
-                            '6': {
-                                isAdd: true,
-                                image: 'assets/img/slweather.png',
-                                sceneType: 6,
-                                name: '新增-在某个天气'
+                nativeService.getUserInfo().then((res)=>{
+                    if (res.uid == '' || res.uid == undefined){
+                    }else{
+                        let reqUrl = url.auto.list
+                        let reqParams = {
+                            uid: res.uid,
+                            homegroupId: this.homegroupId
+                        }
+                        this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                            if (rtnData.code == 0) {
+                                this.autoList = rtnData.data.list
+                                let basicTemplate = {
+                                    '2': {
+                                        isAdd: true,
+                                        image: 'assets/img/man.png',
+                                        sceneType: 2,
+                                        name: '新增-手动'
+                                    },
+                                    '3.1':{
+                                        isAdd: true,
+                                        image: 'assets/img/arrive.png',
+                                        sceneType: 3,
+                                        direction: 1,
+                                        name: '新增-到达某地'
+                                    },
+                                    '3.2': {
+                                        isAdd: true,
+                                        image: 'assets/img/arrive.png',
+                                        sceneType: 3,
+                                        direction: 2,
+                                        name: '新增-离开某地'
+                                    },
+                                    '4': {
+                                        isAdd: true,
+                                        image: 'assets/img/clock.png',
+                                        sceneType: 4,
+                                        name: '新增-在某个时间'
+                                    },
+                                    '6': {
+                                        isAdd: true,
+                                        image: 'assets/img/slweather.png',
+                                        sceneType: 6,
+                                        name: '新增-在某个天气'
+                                    }
+                                }
+                                let templateName = ['2', '3.1', '3.2', '4', '6'], tmpTemp =  []
+                                for (var i in this.autoList) {
+                                    let sType = String(this.autoList[i].sceneType)
+                                    if (sType == '3') {
+                                        sType = sType + '.' +this.autoList[i].location.direction
+                                    }
+                                    templateName.splice(templateName.indexOf(sType), 1)
+                                }
+                                for (var x in templateName) {
+                                    tmpTemp.push(basicTemplate[templateName[x]])
+                                }
+                                this.autoList = this.autoList.concat(tmpTemp)
+                                
                             }
-                        }
-                        let templateName = ['2', '3.1', '3.2', '4', '6'], tmpTemp =  []
-                        for (var i in this.autoList) {
-                            let sType = String(this.autoList[i].sceneType)
-                            if (sType == '3') {
-                                sType = sType + '.' +this.autoList[i].location.direction
-                            }
-                            templateName.splice(templateName.indexOf(sType), 1)
-                        }
-                        for (var x in templateName) {
-                            tmpTemp.push(basicTemplate[templateName[x]])
-                        }
-                        this.autoList = this.autoList.concat(tmpTemp)
-                        
+                        }).catch( (error )=>{
+                        })
                     }
-                }).catch( (error )=>{
                 })
             },
             getSceneList(){
-                let reqUrl = url.scene.list
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId
-                }
-                
-                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
-                    if (rtnData.code == 0) {
-                        this.sceneList = rtnData.data.list
+                nativeService.getUserInfo().then((res)=>{
+                    if (res.uid == '' || res.uid == undefined){
                     }else{
-                        nativeService.toast(rtnData.msg)
+                        let reqUrl = url.scene.list
+                        let reqParams = {
+                            uid: res.uid,
+                            homegroupId: this.homegroupId
+                        }
+                        this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                            if (rtnData.code == 0) {
+                                this.sceneList = rtnData.data.list
+                            }else{
+                                nativeService.toast(rtnData.msg)
+                            }
+                        }).catch( (error )=>{
+                            nativeService.alert(error)
+                        })
                     }
-                }).catch( (error )=>{
-                    nativeService.alert(error)
                 })
             },
             goScene(scene){
-                if (this.isLogin) {
-                    if (scene.applianceCount <= 0 ) {
-                        nativeService.toast('无法获取相关数据，点击右上角设置设备')
+                nativeService.getUserInfo().then((res)=>{
+                    if (res.uid == '' || res.uid == undefined){
+                        nativeService.alert('您还没有登录，点击确定前往登录', function(){
+                            nativeService.jumpNativePage({pageName: 'login'})
+                        }) 
+                    }else{
+                        if (scene.applianceCount <= 0 ) {
+                            nativeService.toast('无法获取相关数据，点击右上角设置设备')
+                        }
+                        let params = {
+                            uid: res.uid,
+                            homegroupId: this.homegroupId,
+                            roomType:scene.roomType,
+                            sceneId: scene.sceneId,
+                            userDevices: this.userDevices
+                        }             
+                        this.goTo("scene", {}, params)
                     }
-                    let params = {
-                        uid: this.uid,
-                        homegroupId: this.homegroupId,
-                        roomType:scene.roomType,
-                        sceneId: scene.sceneId,
-                        userDevices: this.userDevices
-                    }             
-                    this.goTo("scene", {}, params)
-                }else{
-                    nativeService.alert('您还没有登录，点击确定前往登录', function(){
-                        nativeService.jumpNativePage({pageName: 'login'})
-                    }) 
-                }
+                })
             }
         },
         created(){

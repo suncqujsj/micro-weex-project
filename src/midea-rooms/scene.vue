@@ -735,13 +735,11 @@
                 }
             },
             getWeatherInfo(){
-            	nativeService.alert(1)
                 nativeService.getGPSInfo({
                     desiredAccuracy: "10",
                     distanceFilter: "10",
                     alwaysAuthorization: "0" 
                 }).then((gps)=>{
-            	nativeService.alert(2)
                     nativeService.getCityInfo({cityName: gps.city}).then( (city)=>{
                         nativeService.getWeatherInfo({cityNo: city.cityNo}).then((weather)=>{
                             let tmpDesc = ''
@@ -751,7 +749,7 @@
                             if (weather.grade) {
                                 tmpDesc += ' , 气温' + weather.grade + '℃'
                             }
-                            this.weatherDesc = tmpDesc || '无法获取天气，请在系统设置中打开定位服务'
+                            this.weatherDesc = tmpDesc || '无法获取天气，可能因为未开启定位服务'
                         }).catch(()=>{
                             this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
                         })
@@ -768,12 +766,11 @@
             luaQueryStatus () {
             	let self = this;
             	let params = {
-                    data:{}, 
+                    params:{}, 
                     operation: 'luaQuery',
-                    applianceId: String(self.washerCode),
+                    applianceId: String(self.washerCode)
                 }
-                nativeService.alert('params:  ' + JSON.stringify(params))
-
+                nativeService.alert(params)
             	nativeService.sendLuaRequest(params, true).then(function(luaData) {
                     nativeService.alert('luaData:  ' + JSON.stringify(luaData))
                     self.setWasherStatus(luaData)
@@ -792,7 +789,7 @@
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.setWasherStatus(data);
             	},function(error) {
-            		nativeService.alert(data);
+            		nativeService.alert(error);
             	});
             },
             controlStartPause(){//控制阳台场景洗衣机的启动暂停

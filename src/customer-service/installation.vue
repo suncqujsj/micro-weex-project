@@ -77,8 +77,7 @@
                 </div>
             </div>
             <div class="action-bar">
-                <midea-button text="提交" type="green" :btnStyle="{'background-color': '#267AFF','opacity':dataReadyStatus.status?'1':'0.2','border-radius': '4px'}" @mideaButtonClicked="submit">
-                </midea-button>
+                <midea-button text="提交" :disabled="!isDataReady" @mideaButtonClicked="submit"></midea-button>
             </div>
         </scroller>
 
@@ -297,43 +296,30 @@ export default {
             return result
         },
 
-        dataReadyStatus() {
-            let result = {
-                status: true,
-                message: ''
-            }
-            let isPrevValided = true
-            let message = ''
+        isDataReady() {
+            let result = true
 
             //安装产品
-            if (isPrevValided && !(this.selectedProduct && this.selectedProduct.length > 0)) {
-                isPrevValided = false
-                message = "请选择 安装产品"
+            if (result && !(this.selectedProduct && this.selectedProduct.length > 0)) {
+                result = false
             }
             //使用场所
-            if (isPrevValided && this.checkIsIncludeU99() && this.order.productUse == '') {
-                isPrevValided = false
-                message = "请选择 使用场所"
+            if (result && this.checkIsIncludeU99() && this.order.productUse == '') {
+                result = false
             }
             //物流状态
-            if (isPrevValided && this.transportStatusIndex == null) {
-                isPrevValided = false
-                message = "请选择 物流状态"
+            if (result && this.transportStatusIndex == null) {
+                result = false
             }
             //期望服务时间
-            if (isPrevValided && !(this.serviePeriodDate && this.selectedDateIndex != null && this.serviePeriodTime && this.selectedTimeIndex != null)) {
-                isPrevValided = false
-                message = "请选择 期望服务时间"
+            if (result && !(this.serviePeriodDate && this.selectedDateIndex != null && this.serviePeriodTime && this.selectedTimeIndex != null)) {
+                result = false
             }
-
             //服务地址
-            if (isPrevValided && !this.userAddress) {
-                isPrevValided = false
-                message = "请选择 服务地址"
+            if (result && !this.userAddress) {
+                result = false
             }
 
-            result.status = isPrevValided
-            result.message = message
             return result
         }
     },
@@ -553,7 +539,7 @@ export default {
         },
 
         submit() {
-            if (!this.dataReadyStatus.status) return
+            if (!this.isDataReady) return
 
             nativeService.getUserInfo().then((data) => {
                 this.userInfo = data || {}
@@ -713,18 +699,18 @@ export default {
   flex-direction: row;
   align-items: center;
   padding-top: 24px;
-  padding-left: 24px;
+  padding-left: 32px;
   padding-right: 24px;
-  padding-bottom: 24px;
+  padding-bottom: 32px;
 }
 .address-text {
   flex: 1;
-  padding-right: 10px;
+  padding-right: 20px;
 }
 .item-group {
-  padding-top: 24px;
-  padding-left: 24px;
-  padding-right: 24px;
+  padding-top: 32px;
+  padding-left: 32px;
+  padding-right: 32px;
   background-color: #ffffff;
 }
 
@@ -746,11 +732,10 @@ export default {
   background-color: #f6f6f6;
   text-align: center;
   padding-top: 10px;
-  padding-right: 28px;
+  padding-right: 32px;
   padding-bottom: 10px;
-  padding-left: 28px;
-  margin-left: 12px;
-  margin-right: 12px;
+  padding-left: 32px;
+  margin-right: 24px;
   border-radius: 4px;
 }
 .search-history-item-selected {

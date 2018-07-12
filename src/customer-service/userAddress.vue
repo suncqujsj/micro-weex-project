@@ -9,12 +9,12 @@
             <cell class="group-gap-top"></cell>
             <div class="item-group">
                 <text class="text-label">姓名</text>
-                <input class="text-input" type="text" placeholder="请输入姓名" v-model="userAddress.receiverName" maxlength="20"/>
+                <input class="text-input" type="text" placeholder="请输入姓名" v-model="userAddress.receiverName" maxlength="20" />
                 <image class="text-img" src="./assets/img/me_ic_addresslist@3x.png" resize='contain' @click="getAddressBookPerson"></image>
             </div>
             <div class="item-group">
                 <text class="text-label">手机号码</text>
-                <input class="text-input" type="tel" placeholder="请输入手机号码" v-model="userAddress.receiverMobile"  maxlength="11"/>
+                <input class="text-input" type="tel" placeholder="请输入手机号码" v-model="userAddress.receiverMobile" maxlength="11" />
             </div>
             <div class="item-group">
                 <text class="text-label">所在区域</text>
@@ -23,7 +23,7 @@
             </div>
             <div class="item-group">
                 <text class="text-label">详细地址</text>
-                <input class="text-input" type="text" placeholder="请输入详细地址" v-model="userAddress.addr" maxlength="200"/>
+                <input class="text-input" type="text" placeholder="请输入详细地址" v-model="userAddress.addr" maxlength="200" />
             </div>
             <div class="item-group">
                 <text class="text-label">默认地址</text>
@@ -32,8 +32,7 @@
         </scroller>
 
         <div class="action-bar">
-            <midea-button :text="isCreate?'新增':'保存'" type="green" :btnStyle="{'background-color': '#267AFF','border-radius': '4px','opacity':isDataReady?'1':'0.2'}" @mideaButtonClicked="submit">
-            </midea-button>
+            <midea-button :text="isCreate?'新增':'保存'" :disabled="!isDataReady" @mideaButtonClicked="submit"></midea-button>
         </div>
 
         <address-picker :isShow="isShowAddressPicker" :data="gpsAddress || userAddress" @oncancel="servieAddressCancel" @onchanged="servieAddressSelected">
@@ -124,9 +123,18 @@ export default {
                     this.gpsAddress = areaResp
                     this.isShowAddressPicker = true
                 })
-            }).catch(() => {
-                nativeService.toast("定位失败")
+            }).catch((error) => {
                 nativeService.hideLoadingWithMsg()
+                if (typeof error == 'string') {
+                    try {
+                        error = JSON.parse(error)
+                    } catch (e) { }
+                }
+                if (error.errorCode == '-1') {
+                    nativeService.toast("获取权限失败，请设置权限")
+                } else {
+                    nativeService.toast("定位失败")
+                }
             })
         },
         getAreaCodeByName(province, city, county) {
@@ -175,6 +183,17 @@ export default {
                     }
                     this.userAddress.receiverName = name
                     this.userAddress.receiverMobile = resp.phone.replace(/[^0-9]/g, "")
+                }
+            }).catch((error) => {
+                if (typeof error == 'string') {
+                    try {
+                        error = JSON.parse(error)
+                    } catch (e) {
+
+                    }
+                }
+                if (error.errorCode == '-1') {
+                    nativeService.toast("获取权限失败，请设置权限")
                 }
             })
         },

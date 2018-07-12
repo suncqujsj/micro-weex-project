@@ -40,11 +40,13 @@
                         <text v-for="(item,index) in normalOtherList" :key="index" v-bind:class="['callback-item', item.isSelected?'callback-item-selected':'']" @click="selectNormalOtherCallback(index)">{{item.customerLable}}</text>
                     </div>
                     <div v-if="serviceLevel" class="remark-group">
-                        <text v-if="isReadOnly" class="remark-text" :value="remark||' '"></text>
-                        <textarea v-else class="remark-textarea" placeholder="还想说点，将匿名并延迟告诉工程师" rows="4" v-model="remark" maxlength="250"></textarea>
+                        <textarea class="remark-textarea" placeholder="还想说点，将匿名并延迟告诉工程师" rows="4" v-model="remark" maxlength="250"></textarea>
                     </div>
                 </template>
-                <text v-if="!isReadOnly && isDataReady" class="action-button" @click="submit">提交</text>
+
+                <div v-if="isDataReady" class="action-bar">
+                    <midea-button text="提交" :btnStyle="{width: '638px'}" @mideaButtonClicked="submit"></midea-button>
+                </div>
             </div>
         </scroller>
 
@@ -57,14 +59,13 @@ import orderBase from './orderBase'
 import nativeService from './settings/nativeService'
 import util from '@/common/util/util'
 import OrderBlock from '@/customer-service/components/orderBlock.vue'
-import { MideaDialog, MideaButton } from '@/index'
+import { MideaButton } from '@/index'
 
 const clipboard = weex.requireModule('clipboard')
 
 export default {
     components: {
         OrderBlock,
-        MideaDialog,
         MideaButton
     },
     mixins: [base, orderBase],
@@ -73,7 +74,6 @@ export default {
             title: '评价服务',
             userInfo: null,
             order: null,
-            isReadOnly: false,
             callbackItemList: null,
             serviceStatus: null,
             serviceLevel: null,
@@ -235,14 +235,10 @@ export default {
             this.remark = this.callbackItemList[0].oiCallbackVO.remark
         },
         switchServiceStatus(type) {
-            if (this.isReadOnly) return
-
             this.serviceStatus = type
             this.resetIsSelected()
         },
         selectLeve(item) {
-            if (this.isReadOnly) return
-
             this.serviceLevel = item.level
             this.resetIsSelected()
         },
@@ -255,8 +251,6 @@ export default {
             this.uncompletedList.forEach(item => { item.isSelected = false })
         },
         selectCallback(serviceLevel, index) {
-            if (this.isReadOnly) return
-
             let targetList
             if (serviceLevel == 'satisfy') {
                 targetList = this.satisfyList
@@ -272,22 +266,16 @@ export default {
             }
         },
         selectNormalOtherCallback(index) {
-            if (this.isReadOnly) return
-
             let item = this.normalOtherList[index]
             item.isSelected = !item.isSelected
             this.$set(this.normalOtherList, index, item)
         },
         selectUnSatisfyOtherCallback(index) {
-            if (this.isReadOnly) return
-
             let item = this.unSatisfyOtherList[index]
             item.isSelected = !item.isSelected
             this.$set(this.unSatisfyOtherList, index, item)
         },
         selectUncompletedItem(index) {
-            if (this.isReadOnly) return
-
             let item = this.uncompletedList[index]
             item.isSelected = !item.isSelected
             this.$set(this.uncompletedList, index, item)
@@ -435,22 +423,6 @@ export default {
                     }).catch((error) => {
                         nativeService.toast(nativeService.getErrorMessage(error))
                     })
-                } else if (this.order.callbackStatus == "12") {
-                    this.isReadOnly = true
-                    //查看评价
-                    let param = {
-                        interfaceSource: this.order.interfaceSource,
-                        serviceOrderNo: this.order.serviceOrderNo,
-                        orgCode: this.order.orgCode,
-                        customerPhone: this.order.customerMobilephone1
-                    }
-                    nativeService.queryserviceuserdemanddispatch(param).then((data) => {
-                        this.callbackItemList = data.callbackDetailInfoVOList
-                        this.convertViewCallbackList()
-                    }).catch((error) => {
-                        nativeService.toast(nativeService.getErrorMessage(error))
-                    })
-
                 }
             }
         })
@@ -602,19 +574,11 @@ export default {
   padding: 8px;
   background-color: #fafafa;
 }
-.action-button {
-  font-family: PingFangSC-Regular;
-  font-size: 32px;
-  color: #ffffff;
+.action-bar {
+  background-color: #ffffff;
   text-align: center;
-  background-color: #267aff;
-  text-align: center;
-  margin-top: 24px;
-  margin-left: 24px;
-  margin-right: 24px;
-  margin-bottom: 48px;
-  border-radius: 4px;
-  padding-top: 22px;
-  padding-bottom: 22px;
+  padding-bottom: 50px;
+  padding-left: 32px;
+  padding-right: 32px;
 }
 </style>

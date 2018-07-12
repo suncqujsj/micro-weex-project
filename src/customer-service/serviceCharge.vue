@@ -67,32 +67,34 @@ export default {
     computed: {
         sortedFreePlocy() {
             let result = []
-            let classACodeIndexs = {}, classBCodeIndexs = {}
+            let classAIndexs = {}, classBIndexs = {}
             if (this.chargeStandardList && this.chargeStandardList.length > 0) {
                 for (let index = 0; index < this.chargeStandardList.length; index++) {
                     const item = this.chargeStandardList[index];
-                    let Aindex = classACodeIndexs[item.classACode]
+                    let Aindex = classAIndexs[item.classA]
                     if (!Aindex) {
                         result.push({
-                            "classACode": item.classACode,
+                            "classA": item.classA,
                             "classAProject": item.classAProject,
                             "children": []
                         })
-                        Aindex = classACodeIndexs[item.classACode] = result.length - 1
+                        Aindex = String(result.length - 1)
+                        classAIndexs[item.classA] = String(result.length - 1)
                     }
 
-                    let Bindex = classBCodeIndexs[item.classBCode]
+                    let Bindex = classBIndexs[item.classB]
                     if (!Bindex) {
                         result[Aindex]["children"].push({
-                            "classBCode": item.classBCode,
+                            "classB": item.classB,
                             "classBProject": item.classBProject,
                             "children": []
                         })
-                        Bindex = classBCodeIndexs[item.classBCode] = result[Aindex]["children"].length - 1
+                        Bindex = String(result[Aindex]["children"].length - 1)
+                        classBIndexs[item.classB] = String(result[Aindex]["children"].length - 1)
                     }
 
                     result[Aindex]["children"][Bindex]["children"].push({
-                        "classCCode": item.classCCode,
+                        "classC": item.classC,
                         "classCProject": item.classCProject,
                         "unit": item.unit,
                         "chargeStandard": item.chargeStandard,
@@ -107,7 +109,17 @@ export default {
     methods: {
         search() {
             nativeService.getChargeStandardList(this.queryParam).then((data) => {
-                this.chargeStandardList = data.data
+                this.chargeStandardList = data.data.sort(function (a, b) {
+                    if (a.classA === b.classA) {
+                        if (a.classB === b.classB) {
+                            return b.classC - a.classC
+                        } else {
+                            return a.classB - b.classB
+                        }
+                    } else {
+                        return a.classA - b.classA
+                    }
+                })
             }).catch((error) => {
                 nativeService.toast(nativeService.getErrorMessage(error))
             })

@@ -5,7 +5,7 @@
             <div class="midea-actionsheet-top">
                 <text v-if="title" class="midea-actionsheet-title">{{title}}</text>
                 <div class="midea-actionsheet-content">
-                    <div class="midea-actionsheet-list" v-for="(item,index) in items" :key="index" @click="actionsheetItemClick(item,index)">
+                    <div v-bind:class="[index==0?'midea-actionsheet-list-first':'midea-actionsheet-list']" v-for="(item,index) in items" :key="index" @click="actionsheetItemClick(item,index)">
                         <slot :name="'item-'+index">
                             <text class="midea-actionsheet-text">{{item}}</text>
                         </slot>
@@ -135,6 +135,11 @@ export default {
 .midea-actionsheet-content {
   flex-direction: column;
   flex: 1;
+}
+.midea-actionsheet-list-first {
+}
+.midea-actionsheet-list-first:active {
+  background-color: #f5f5f5;
 }
 .midea-actionsheet-list {
   border-top-width: 1px;

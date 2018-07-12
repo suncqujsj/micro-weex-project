@@ -65,7 +65,7 @@
                     <text class="selected-selected-desc">选择需安装的产品</text>
                 </div>
             </div>
-            <text v-bind:class="['action-btn',selectedProductArray.length>0?'':'disable-btn']" @click="submit">完成</text>
+            <midea-button text="完成" :btnStyle="{width: '120px', height: '60px'}" :textStyle="{'font-size': '28px'}" :disabled="selectedProductArray.length>0?false:true" @mideaButtonClicked="submit"></midea-button>
         </div>
     </div>
 </template>
@@ -73,14 +73,14 @@
 <script>
 import base from './base'
 import nativeService from './settings/nativeService'
-import { MideaDialog } from '@/index'
+import { MideaButton } from '@/index'
 
 const animation = weex.requireModule('animation')
 const dom = weex.requireModule('dom')
 
 export default {
     components: {
-        MideaDialog
+        MideaButton
     },
     mixins: [base],
     data() {
@@ -90,7 +90,6 @@ export default {
             isLoaded: false,
             productList: [],
             selectedBrandIndex: 0,
-            dialogShow: false,
             isMultiMode: false,
             enableAnimation: true,
             isShowingAnimation: false,
@@ -258,13 +257,7 @@ export default {
                 this.appPageDataChannel.postMessage({ page: this.fromPage, key: "selectedProduct", data: this.selectedProductArray })
                 this.back()
             }
-        },
-        submitConfirm() {
-            this.dialogShow = false;
-        },
-        submitOrderConfirm() {
-            this.dialogShow = false;
-        },
+        }
     },
     created() {
 

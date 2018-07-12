@@ -148,6 +148,7 @@ export default {
                     nativeService.querywarrantydescbycodeorsn(param).then((data) => {
                         this.result = data
                     }).catch((error) => {
+                        this.result = null
                         nativeService.toast(nativeService.getErrorMessage(error))
                     })
                 }

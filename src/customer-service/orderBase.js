@@ -84,14 +84,21 @@ export default {
                     //已接单-送修
                     others.statusDesc = "已接单"
                     others.statusIcon = "./assets/img/service_ic_order_ongoing@3x.png"
-                    others.isAbleToCancel = true
-                    others.isAbleToCheckBranch = true
+
+                    if (order.interfaceSource == "SMART") {
+                        others.isAbleToCancel = true
+                    }
+                    if (order.unitCode) {
+                        others.isAbleToCheckBranch = true
+                    }
                     break;
                 case 2:
                     //已接单-上门
                     others.statusDesc = "已接单"
                     others.statusIcon = "./assets/img/service_ic_order_ongoing@3x.png"
-                    others.isAbleToCancel = true
+                    if (order.interfaceSource == "SMART") {
+                        others.isAbleToCancel = true
+                    }
                     if (this.checkPassTime(order)) {
                         others.isAbleToUrgeOrder = true
                     }
@@ -100,7 +107,9 @@ export default {
                     //已接单
                     others.statusDesc = "已接单"
                     others.statusIcon = "./assets/img/service_ic_order_ongoing@3x.png"
-                    others.isAbleToCancel = true
+                    if (order.interfaceSource == "SMART") {
+                        others.isAbleToCancel = true
+                    }
                     break;
                 case 3:
                     // 已取消
@@ -124,7 +133,9 @@ export default {
                     // 待服务
                     others.statusDesc = "待服务"
                     others.statusIcon = "./assets/img/service_ic_order_new@3x.png"
-                    others.isAbleToCancel = true
+                    if (order.interfaceSource == "SMART") {
+                        others.isAbleToCancel = true
+                    }
                     others.isAbleToCallService = true
                     break;
             }

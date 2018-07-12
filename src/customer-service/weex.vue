@@ -136,7 +136,7 @@ export default {
                     this.order = data.list[0]
                 }
             }).catch((error) => {
-                nativeService.toast(nativeService.getErrorMessage(error))
+                // nativeService.toast(nativeService.getErrorMessage(error))
             })
         },
         itemClicked(item) {
@@ -194,7 +194,6 @@ export default {
     created() {
         debugUtil.cleanDebugLog()
         this.resetStorage()
-        this.refreshPage()
     }
 }
 </script>
@@ -323,7 +322,7 @@ export default {
 }
 .service-item-title {
   font-family: PingFangSC-Regular;
-  font-size: 32px;
+  font-size: 28px;
   color: #000000;
 }
 .actionsheet-popup {

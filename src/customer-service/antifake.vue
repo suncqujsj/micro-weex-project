@@ -21,13 +21,12 @@
             </div>
 
             <div class="action-bar">
-                <div class="action-btn" v-bind:class="[isDataReady?'':'action-btn-disable']" @click="submit">
-                    <text class="action-btn-text" v-bind:class="[isDataReady?'':'action-btn-text-disable']">查询</text>
-                </div>
+                <midea-button text="查询" type="secondary" :disabled="!isDataReady" @mideaButtonClicked="submit"></midea-button>
             </div>
         </scroller>
         <midea-dialog :title="result.message" mainBtnColor="#267AFF" secondBtnColor="#267AFF" :show="dialogShow" cancelText="否" confirmText="确认" @mideaDialogCancelBtnClicked="dialogConfirm" @mideaDialogConfirmBtnClicked="dialogConfirm" single=true>
         </midea-dialog>
+
     </div>
 </template>
 

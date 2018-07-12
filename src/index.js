@@ -8,7 +8,7 @@ import MideaRadioList from '@/component/radioList.vue'
 
 import MideaAccordion from '@/midea-component/accordion.vue'
 import MideaActionsheet from '@/midea-component/actionsheet.vue'
-import MideaButton from '@/midea-component/button.vue'
+import MideaButton from '@/midea-component/button2.vue'
 import MideaCell from '@/midea-component/cell.vue'
 import MideaCheckbox from '@/midea-component/checkbox.vue'
 import MideaCheckboxList from '@/midea-component/checkboxList.vue'

@@ -26,17 +26,16 @@
                     <div class="scene-info">
                         <text class="scene-name">{{scene.name}}</text>
                         <div v-if="scene.roomType == 1 || scene.roomType == 2" class="row-s">
-                            <text v-if="scene.indicator.temperature" class="scene-desc">室温{{scene.indicator.temperature}}, </text>
-                            <text v-if="scene.indicator.humidity" class="scene-desc">湿度{{scene.indicator.humidity}}, </text>
-                            <text v-if="scene.indicator.pm25" class="scene-desc">空气质量{{scene.indicator.pm25}} </text>
+                            <text v-if="isLogin && scene.indicator.temperature" class="scene-desc">室温{{scene.indicator.temperature}}, </text>
+                            <text v-if="isLogin && scene.indicator.humidity" class="scene-desc">湿度{{scene.indicator.humidity}}, </text>
+                            <text v-if="isLogin && scene.indicator.pm25" class="scene-desc">空气质量{{scene.indicator.pm25}} </text>
                         </div>
                         <div v-if="scene.roomType == 3" class="scene-desc">
-                            <text class="scene-desc">{{feel[scene.indicator.level]}}</text>
+                            <text v-if="isLogin && scene.indicator.level" class="scene-desc">{{feel[scene.indicator.level]}}</text>
                         </div>
                         <div v-if="scene.roomType == 4" class="scene-dexc">
-                            <text class="scene-desc">{{scene.indicator.work_stats}}</text>
+                            <text v-if="isLogin && scene.indicator.work_stats" class="scene-desc">{{scene.indicator.work_stats}}</text>
                         </div>
-                        <!-- <image v-if="scene.applianceCount>0" class="next" :src="icon.next"></image> -->
                         <image class="next" :src="icon.next"></image>
                     </div>
                 </div>
@@ -116,6 +115,7 @@
         mixins: [base],
         data(){
             return {
+                isLogin: false,
                 uid: '',
                 homegroupId: '',
                 icon: {
@@ -131,10 +131,10 @@
                     }
                 },
                 sceneImg: {
-                    1: 'assets/img/parlour.png',
-                    2: 'assets/img/bed.png',
-                    3: 'assets/img/bath.png',
-                    4: 'assets/img/balcony.png',
+                    1: 'assets/img/s1.png',
+                    2: 'assets/img/s2.png',
+                    3: 'assets/img/s3.png',
+                    4: 'assets/img/s4.png',
                 },
                 feel: {
                     1: '未知',
@@ -143,7 +143,56 @@
                     5: '热水充足'
                 },
                 autoList: [],
-                sceneList: null,
+                autoListTmpl: [
+                    {
+                        isAdd: true,
+                        image: 'assets/img/man.png',
+                        sceneType: 2,
+                        name: '新增-手动'
+                    },
+                    {
+                        isAdd: true,
+                        image: 'assets/img/arrive.png',
+                        sceneType: 3,
+                        direction: 1,
+                        name: '新增-到达某地'
+                    },
+                    {
+                        isAdd: true,
+                        image: 'assets/img/arrive.png',
+                        sceneType: 3,
+                        direction: 2,
+                        name: '新增-离开某地'
+                    },
+                    {
+                        isAdd: true,
+                        image: 'assets/img/clock.png',
+                        sceneType: 4,
+                        name: '新增-在某个时间'
+                    },
+                    {
+                        isAdd: true,
+                        image: 'assets/img/slweather.png',
+                        sceneType: 6,
+                        name: '新增-在某个天气'
+                    }
+                ],
+                sceneList: [],
+                sceneListTmpl: [
+                    {
+                        "name": "客厅",
+                        "roomType": 1
+                    }, {
+                        "name": "卧室",
+                        "roomType": 2
+                    }, {
+                        "name": "卫浴",
+                        "roomType": 3
+                    }, {
+                        "name": "阳台",
+                        "roomType": 4
+                    }
+                ],
                 userDevices: '',
                 user: null,
                 autoTemplate: {},
@@ -153,228 +202,245 @@
             }
         },
         methods: { 
-            editAuto(auto){
-                if (auto.isAdd){
-                    let params = {
-                        from: 'addAuto',
-                        uid: this.uid,
-                        homegroupId: this.homegroupId,
-                        sceneType: auto.sceneType,
-                        userDevices: this.userDevices
-                    }
-                    if (auto.sceneType == 3) {
-                        params.direction = auto.direction
-                    }
-                    if (auto.sceneType == 2) {
-                        this.goTo("autoBindDevices", {}, params)
+            initData(){
+                nativeService.getUserInfo().then((res)=>{
+                    if (res.uid == '' || res.uid == undefined){
+                        this.sceneList = this.sceneListTmpl
+                        this.autoList = this.autoListTmpl
                     }else{
-                        this.goTo('autoTypeSet',{}, params)
+                        nativeService.getCurrentHomeInfo().then( (res)=>{
+                            this.homegroupId = res.homeId
+                            this.userDevices = ''
+                            if (res.deviceList) {
+                                this.userDevices = encodeURIComponent(JSON.stringify(res.deviceList))
+                            }
+                            // this.uid = 'ac70d2636c0c4dd5b86bc97bbc8166c6'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
+                            // this.homegroupId = '150366'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
+                            // this.userDevices = encodeURIComponent(JSON.stringify([// 这里用的是模拟数据,等他调好bug后再改回真实数据
+                            //     {
+                            //         deviceId: '2222222',
+                            //         deviceName: '设备二',
+                            //         deviceType: '0xFD',
+                            //         isOnline: 1
+                            //     },{
+                            //         deviceId: '111111',
+                            //         deviceName: '设备一',
+                            //         deviceType: '0xAC',
+                            //         isOnline: 1
+                            //     }
+                            // ]))
+
+                            this.getSceneList()
+                            this.getAutoList()
+                        })
                     }
-                }else{
-                    let params = {
-                        uid: this.uid,
-                        homegroupId: this.homegroupId,
-                        sceneType: auto.sceneType,
-                        sceneId: auto.sceneId,
-                        userDevices: this.userDevices
+                })
+            },
+            editAuto(auto){
+                this.checkLogin().then( (uid) => {
+                    if (auto.isAdd){
+                        let params = {
+                            from: 'addAuto',
+                            uid: uid,
+                            homegroupId: this.homegroupId,
+                            sceneType: auto.sceneType,
+                            userDevices: this.userDevices
+                        }
+                        if (auto.sceneType == 3) {
+                            params.direction = auto.direction
+                        }
+                        if (auto.sceneType == 2) {
+                            this.goTo("autoBindDevices", {}, params)
+                        }else{
+                            this.goTo('autoTypeSet',{}, params)
+                        }
+                    }else{
+                        let params = {
+                            uid: uid,
+                            homegroupId: this.homegroupId,
+                            sceneType: auto.sceneType,
+                            sceneId: auto.sceneId,
+                            userDevices: this.userDevices
+                        }
+                        this.goTo("autoEdit", {}, params)
                     }
-                    this.goTo("autoEdit", {}, params)
-                }
+                })
             },
             executeAuto(sceneId){
-                let reqUrl = url.auto.execute
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneId: sceneId
-                }
-                let codeDesc = {
-                    '1000': '未知系统错误',
-                    '1001': '参数格式错误',
-                    '1002': '参数为空',
-                    '1105': '账户不存在',
-                    '1200': '用户不在家庭',
-                    '1701': '自动化项目不存在'                
-                }
-                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
-                    if (rtnData.code == 0) {
-                        this.checkExecuteAuto(sceneId,rtnData.data.resultId)
-                    }else{
-                        nativeService.toast(codeDesc[rtnData.code])
+                this.checkLogin().then( (uid) => {
+                    let reqUrl = url.auto.execute
+                    let reqParams = {
+                        uid: uid,
+                        homegroupId: this.homegroupId,
+                        sceneId: sceneId
                     }
-                }).catch( (error )=>{
-                    nativeService.alert(error)
+                    this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                        if (rtnData.code == 0) {
+                            this.checkExecuteAuto(sceneId,rtnData.data.resultId)
+                        }else{
+                            let codeDesc = {
+                                '1000': '未知系统错误',
+                                '1001': '参数格式错误',
+                                '1002': '参数为空',
+                                '1105': '账户不存在',
+                                '1200': '用户不在家庭',
+                                '1701': '自动化项目不存在'                
+                            }
+                            if (codeDesc.hasOwnProperty(rtnData.code)) {
+                                nativeService.toast(codeDesc[rtnData.code])
+                            }else{
+                                nativeService.toast(rtnData.msg)
+                            }
+                        }
+                    }).catch( (error )=>{
+                        nativeService.alert(error)
+                    })
                 })
             },
             checkExecuteAuto(sceneId, resultId){
-                if (this.checkAutoExeTimes < 20) {//最多查20次
-                    this.checkAutoExeTimes += 1
-                    let reqUrl = url.auto.executeStatus
-                    let reqParams = {
-                        uid: this.uid,
-                        homegroupId: this.homegroupId,
-                        sceneId: sceneId,
-                        resultId: resultId
-                    }
-                    
-                    this.webRequest(reqUrl, reqParams, false).then((res)=>{
-                        
-                        if (res.code == 0) {
-                            this.showToastDialog = true
-                            this.autoExecuteDevices = res.data.list
-                            
-                            for (var x in this.autoExecuteDevices) {
-                                if (this.autoExecuteDevices[x].status == 2 || this.autoExecuteDevices[x].status == 3) {
-                                    setTimeout(()=>{
-                                        this.checkExecuteAuto(sceneId, resultId)
-                                    },1000)
-                                } else{
-                                    setTimeout(()=>{
-                                        this.showToastDialog = false
-                                    },2000)
-                                    break
-                                }
-                            }
-                        }else{
+                this.checkLogin().then( (uid) => {
+                    if (this.checkAutoExeTimes < 20) {//最多查20次
+                        this.checkAutoExeTimes += 1
+                        let reqUrl = url.auto.executeStatus
+                        let reqParams = {
+                            uid: uid,
+                            homegroupId: this.homegroupId,
+                            sceneId: sceneId,
+                            resultId: resultId
                         }
-                    })
-                }else{
-                    this.showToastDialog = false
-                    nativeService.toast('自动化执行失败，请再试一次')
-                }
+                        
+                        this.webRequest(reqUrl, reqParams, false).then((res)=>{
+                            
+                            if (res.code == 0) {
+                                this.showToastDialog = true
+                                this.autoExecuteDevices = res.data.list
+                                
+                                for (var x in this.autoExecuteDevices) {
+                                    if (this.autoExecuteDevices[x].status == 2 || this.autoExecuteDevices[x].status == 3) {
+                                        setTimeout(()=>{
+                                            this.checkExecuteAuto(sceneId, resultId)
+                                        },1000)
+                                    } else{
+                                        setTimeout(()=>{
+                                            this.showToastDialog = false
+                                        },2000)
+                                        break
+                                    }
+                                }
+                            }else{
+                            }
+                        })
+                    }else{
+                        this.showToastDialog = false
+                        nativeService.toast('自动化执行失败，请再试一次')
+                    }
+                })
             },
             goAddAuto(){
-                let params = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    userDevices: this.userDevices
-                }
-                this.goTo('addAuto', {}, params)
+                this.checkLogin().then( (uid) => {
+                    let params = {
+                        uid: uid,
+                        homegroupId: this.homegroupId,
+                        userDevices: this.userDevices
+                    }
+                    this.goTo('addAuto', {}, params)
+                })
             },
             getAutoList(){
-                let reqUrl = url.auto.list
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId
-                }
-                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
-                    if (rtnData.code == 0) {
-                        this.autoList = rtnData.data.list
-                        let basicTemplate = {
-                            '2': {
-                                isAdd: true,
-                                image: 'assets/img/man.png',
-                                sceneType: 2,
-                                name: '新增-手动'
-                            },
-                            '3.1':{
-                                isAdd: true,
-                                image: 'assets/img/arrive.png',
-                                sceneType: 3,
-                                direction: 1,
-                                name: '新增-到达某地'
-                            },
-                            '3.2': {
-                                isAdd: true,
-                                image: 'assets/img/arrive.png',
-                                sceneType: 3,
-                                direction: 2,
-                                name: '新增-离开某地'
-                            },
-                            '4': {
-                                isAdd: true,
-                                image: 'assets/img/clock.png',
-                                sceneType: 4,
-                                name: '新增-在某个时间'
-                            },
-                            '6': {
-                                isAdd: true,
-                                image: 'assets/img/slweather.png',
-                                sceneType: 6,
-                                name: '新增-在某个天气'
-                            }
-                        }
-                        let templateName = ['2', '3.1', '3.2', '4', '6'], tmpTemp =  []
-                        for (var i in this.autoList) {
-                            let sType = String(this.autoList[i].sceneType)
-                            if (sType == '3') {
-                                sType = sType + '.' +this.autoList[i].location.direction
-                            }
-                            templateName.splice(templateName.indexOf(sType), 1)
-                        }
-                        for (var x in templateName) {
-                            tmpTemp.push(basicTemplate[templateName[x]])
-                        }
-                        this.autoList = this.autoList.concat(tmpTemp)
-                        
+                this.checkLogin().then( (uid) => {
+                    let reqUrl = url.auto.list
+                    let reqParams = {
+                        uid: uid,
+                        homegroupId: this.homegroupId
                     }
-                }).catch( (error )=>{
+                    this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                        if (rtnData.code == 0) {
+                            this.autoList = rtnData.data.list
+                            let basicTemplate = {
+                                '2': {
+                                    isAdd: true,
+                                    image: 'assets/img/man.png',
+                                    sceneType: 2,
+                                    name: '新增-手动'
+                                },
+                                '3.1':{
+                                    isAdd: true,
+                                    image: 'assets/img/arrive.png',
+                                    sceneType: 3,
+                                    direction: 1,
+                                    name: '新增-到达某地'
+                                },
+                                '3.2': {
+                                    isAdd: true,
+                                    image: 'assets/img/arrive.png',
+                                    sceneType: 3,
+                                    direction: 2,
+                                    name: '新增-离开某地'
+                                },
+                                '4': {
+                                    isAdd: true,
+                                    image: 'assets/img/clock.png',
+                                    sceneType: 4,
+                                    name: '新增-在某个时间'
+                                },
+                                '6': {
+                                    isAdd: true,
+                                    image: 'assets/img/slweather.png',
+                                    sceneType: 6,
+                                    name: '新增-在某个天气'
+                                }
+                            }
+                            let templateName = ['2', '3.1', '3.2', '4', '6'], tmpTemp =  []
+                            for (var i in this.autoList) {
+                                let sType = String(this.autoList[i].sceneType)
+                                if (sType == '3') {
+                                    sType = sType + '.' +this.autoList[i].location.direction
+                                }
+                                templateName.splice(templateName.indexOf(sType), 1)
+                            }
+                            for (var x in templateName) {
+                                tmpTemp.push(basicTemplate[templateName[x]])
+                            }
+                            this.autoList = this.autoList.concat(tmpTemp)
+                            
+                        }
+                    }).catch( (error )=>{
+                    })
                 })
             },
             getSceneList(){
-                let reqUrl = url.scene.list
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId
-                }
-                
-                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
-                    if (rtnData.code == 0) {
-                        this.sceneList = rtnData.data.list
-                    }else{
-                        nativeService.toast(rtnData.msg)
+                this.checkLogin().then( (uid) => {
+                    let reqUrl = url.scene.list
+                    let reqParams = {
+                        uid: uid,
+                        homegroupId: this.homegroupId
                     }
-                }).catch( (error )=>{
-                    nativeService.alert(error)
+                    this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                        if (rtnData.code == 0) {
+                            this.sceneList = rtnData.data.list
+                        }else{
+                            nativeService.toast(rtnData.msg)
+                        }
+                    }).catch( (error )=>{
+                        nativeService.alert(error)
+                    })
                 })
             },
             goScene(scene){
-                if (scene.applianceCount <= 0 ) {
-                    nativeService.toast('无法获取相关数据，点击右上角设置设备')
-                }
-                let params = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    roomType:scene.roomType,
-                    sceneId: scene.sceneId,
-                    userDevices: this.userDevices
-                }             
-                this.goTo("scene", {}, params)
-                
-            },
-            initData(){
-                nativeService.getUserInfo().then((res)=>{
-                    this.uid = res.uid
-
-                    nativeService.getCurrentHomeInfo().then( (res)=>{
-                        this.homegroupId = res.homeId
-                        this.userDevices = ''
-                        if (res.deviceList) {
-                            this.userDevices = encodeURIComponent(JSON.stringify(res.deviceList))
-                        }
-                        // this.uid = 'ac70d2636c0c4dd5b86bc97bbc8166c6'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
-                        // this.homegroupId = '150366'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
-                        // this.userDevices = encodeURIComponent(JSON.stringify([// 这里用的是模拟数据,等他调好bug后再改回真实数据
-                        //     {
-                        //         deviceId: '2222222',
-                        //         deviceName: '设备二',
-                        //         deviceType: '0xFD',
-                        //         isOnline: 1
-                        //     },{
-                        //         deviceId: '111111',
-                        //         deviceName: '设备一',
-                        //         deviceType: '0xAC',
-                        //         isOnline: 1
-                        //     }
-                        // ]))
-
-                        this.getSceneList()
-                        this.getAutoList()
-                    }).catch((err)=>{
-                        nativeService.toast(err)
-                    })
+                this.checkLogin().then( (uid) => {
+                    if (scene.applianceCount <= 0 ) {
+                        nativeService.toast('无法获取相关数据，点击右上角设置设备')
+                    }
+                    let params = {
+                        uid: uid,
+                        homegroupId: this.homegroupId,
+                        roomType:scene.roomType,
+                        sceneId: scene.sceneId,
+                        userDevices: this.userDevices
+                    }             
+                    this.goTo("scene", {}, params)
                 })
-             }
+            }
         },
         created(){
         }

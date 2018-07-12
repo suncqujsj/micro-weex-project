@@ -43,6 +43,13 @@ export default {
         },
         isipx: function () {//是否是iphoneX
             return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6')
+        },
+        platform() {
+            if (weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6')) {
+                return 'iphoneX'
+            } else {
+                return weex.config.env.platform.toLowerCase()
+            }
         }
     },
     methods: {
@@ -146,23 +153,24 @@ export default {
         },
         webRequest(reqUrl, reqParams, isShowLoading = true) {
             return new Promise((resolve, reject) => {
-            //     let reqBody = this.generateReqBody(reqParams)
-            //     stream.fetch({
-            //         method: 'post',
-            //         url: reqUrl,
-            //         mode: 'cors',
-            //         headers: {
-            //             'Content-Type': 'application/json;charset=utf-8',
-            //         },
-            //         type: 'json',
-            //         body: reqBody
-            //     }, (rtnData) => {
-            //         if (rtnData.ok) {
-            //             resolve(rtnData.data)
-            //         } else {
-            //             reject(rtnData)
-            //         }
-            //     })
+                /*     let reqBody = this.generateReqBody(reqParams)
+                    //     stream.fetch({
+                    //         method: 'post',
+                    //         url: reqUrl,
+                    //         mode: 'cors',
+                    //         headers: {
+                    //             'Content-Type': 'application/json;charset=utf-8',
+                    //         },
+                    //         type: 'json',
+                    //         body: reqBody
+                    //     }, (rtnData) => {
+                    //         if (rtnData.ok) {
+                    //             resolve(rtnData.data)
+                    //         } else {
+                    //             reject(rtnData)
+                    //         }
+                    //     })
+                */
                 let requestOption = {
                     method: "POST",
                     isShowLoading: isShowLoading
@@ -184,6 +192,21 @@ export default {
         },
         reload() {
             bridgeModule.reload({}, result => {}, err => {})
+        },
+        checkLogin(){
+            return new Promise((resolve, reject)=>{
+                nativeService.getUserInfo().then((res) => {
+                    if (res.uid == '' || res.uid == undefined) {
+                        nativeService.alert('您还没有登录，点击确定前往登录', function () {
+                            nativeService.jumpNativePage({
+                                pageName: 'login'
+                            })
+                        })
+                    } else {
+                        resolve(res.uid)
+                    }
+                })
+            })
         }
     },
     created() {

@@ -74,7 +74,7 @@
         flex-wrap: wrap;
     }
     .device{
-        width: 333.75px;
+        width: 333px;
         padding: 20px;
         margin-right: 18px;
         margin-bottom: 14px;
@@ -88,6 +88,7 @@
         position: relative;
     }
     .device-name{
+        height: 36px;
         font-size: 32px;
         margin-bottom: 4px;
     }
@@ -198,7 +199,6 @@
                 nativeService.goBack()
             },
             initData(){
-                this.uid = nativeService.getParameters('uid')
                 this.homegroupId = nativeService.getParameters('homegroupId')
                 this.sceneType = nativeService.getParameters('sceneType')
                 this.from = nativeService.getParameters('from')
@@ -260,22 +260,18 @@
                             desiredAccuracy: "10",
                             distanceFilter: "10",
                             alwaysAuthorization: "0" 
-                        }).then( (res) => {
-                            this.gpsInfo = res
-
-                            if( res.city){
-                                nativeService.getCityInfo({cityName: res.city}).then((res)=>{
-                                    if ( res.cityNo ) {
-                                        this.cityNo = res.cityNo
-                                    }
-                                }).catch((err)=>{
-                                    nativeService.toast(err)
-                                })
-                            }else {
+                        }).then( (gps) => {
+                            this.gpsInfo = gps
+                            nativeService.getCityInfo({cityName: gps.city}).then((city)=>{
+                                if ( city.cityNo ) {
+                                    this.cityWeatherNo = city.cityNo
+                                }
+                            }).catch((err)=>{
                                 nativeService.alert('获取不到当前设置天气城市，请检查是否开启定位权限')
-                            }
+                            })
                         }).catch((error) => {
                             nativeService.alert(error)
+                            nativeService.alert('获取不到当前设置天气城市，请检查是否开启定位权限')
                         })
                     }
                 }else if (this.from == 'editAuto'){
@@ -370,68 +366,70 @@
                 this.inputAutoName = val;
             },
             setNewAuto(){
-                let reqUrl = url.auto.add
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneType: this.sceneType,
-                    image: this.icon.auto[this.sceneType],
-                    name: this.inputAutoName,
-                    enable: 1
-                }
-                let tmpTask = []
-                
-                for (var key in this.checkedDevices) {//key: applianceCode
-                    let tmpCommand = {}
-                    if ( this.checkedDevices[key] ) {
-                        for (var x in this.allDeviceActions[key]) { 
-                            tmpCommand[this.allDeviceActions[key][x].property] = this.allDeviceActions[key][x].currentStatus || this.allDeviceActions[key][x].default
-                        }
+                this.checkLogin().then( (uid) => {
+                    let reqUrl = url.auto.add
+                    let reqParams = {
+                        uid: uid,
+                        homegroupId: this.homegroupId,
+                        sceneType: this.sceneType,
+                        image: this.icon.auto[this.sceneType],
+                        name: this.inputAutoName,
+                        enable: 1
                     }
-                    tmpTask.push({
-                        applianceCode: key,
-                        command: tmpCommand
-                    })
-                }
-                
-                reqParams.task = JSON.stringify(tmpTask)
-                reqParams.weekly = this.weekly
-
-                if (this.sceneType == 3) {
-                    reqParams.location = JSON.stringify({
-                        address: this.destination.key,
-                        latitude: this.destination.latitude,
-                        longitude: this.destination.longitude,
-                        distance: '500',
-                        direction: this.direction,
-                        directionName: ['接近位置', '靠近位置'][this.direction]
-                    })
+                    let tmpTask = []
                     
-                }
-
-                if (this.sceneType == 4) {
-                    reqParams.startTime = this.startTime
-                }
-                
-                if (this.sceneType == 6) {
-                    let tmp = JSON.stringify({
-                        cityNo: this.cityWeatherNo,
-                        temperature: this.weatherTemperature,
-                        latitude: this.gpsInfo.latitude,
-                        longitude: this.gpsInfo.longitude,
-                        weatherStatus: this.weatherStatus,
-                        logical: this.logical
-                    })
-                    reqParams.weather = tmp
-                }
-                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
-                    if (rtnData.code == 0) {
-                        nativeService.alert('新增成功！', function(){
-                            nativeService.backToNative()
+                    for (var key in this.checkedDevices) {//key: applianceCode
+                        let tmpCommand = {}
+                        if ( this.checkedDevices[key] ) {
+                            for (var x in this.allDeviceActions[key]) { 
+                                tmpCommand[this.allDeviceActions[key][x].property] = this.allDeviceActions[key][x].currentStatus || this.allDeviceActions[key][x].default
+                            }
+                        }
+                        tmpTask.push({
+                            applianceCode: key,
+                            command: tmpCommand
                         })
                     }
-                }).catch( (error )=>{
+                    
+                    reqParams.task = JSON.stringify(tmpTask)
+                    reqParams.weekly = this.weekly
 
+                    if (this.sceneType == 3) {
+                        reqParams.location = JSON.stringify({
+                            address: this.destination.key,
+                            latitude: this.destination.latitude,
+                            longitude: this.destination.longitude,
+                            distance: '500',
+                            direction: this.direction,
+                            directionName: ['接近位置', '靠近位置'][this.direction]
+                        })
+                        
+                    }
+                    if (this.sceneType == 4) {
+                        reqParams.startTime = this.startTime
+                    }
+                    if (this.sceneType == 6) {
+                        let tmp = JSON.stringify({
+                            cityNo: this.cityWeatherNo,
+                            temperature: this.weatherTemperature,
+                            latitude: this.gpsInfo.latitude,
+                            longitude: this.gpsInfo.longitude,
+                            weatherStatus: this.weatherStatus,
+                            logical: this.logical
+                        })
+                        reqParams.weather = tmp
+                    }
+                    this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                        if (rtnData.code == 0) {
+                            if (this.sceneType == 3) {
+                                this.updateAutoList()//通知原生位置类型自动化列表需要更新
+                            }
+                            nativeService.alert('新增成功！', function(){
+                                nativeService.backToNative()
+                            })
+                        }
+                    }).catch( (error )=>{
+                    })
                 })
             }
         },

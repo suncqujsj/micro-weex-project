@@ -136,25 +136,26 @@
                 this.activeTypeIndex = index
             },
             goNext(){
-                let params = {
-                    from: 'addAuto',
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneType: this.autos[this.activeTypeIndex].sceneType,
-                    userDevices: nativeService.getParameters('userDevices')
-                }
-                if (this.autos[this.activeTypeIndex].sceneType == 2){
-                    this.goTo('autoBindDevices', {}, params)
-                }else if ( this.autos[this.activeTypeIndex].sceneType == 3){
-                    params.direction = this.autos[this.activeTypeIndex].direction
-                    this.goTo('autoTypeSet', {}, params)
-                }else{
-                    this.goTo('autoTypeSet', {}, params)
-                }
+                this.checkLogin().then( (uid) => {
+                    let params = {
+                        from: 'addAuto',
+                        uid: uid,
+                        homegroupId: this.homegroupId,
+                        sceneType: this.autos[this.activeTypeIndex].sceneType,
+                        userDevices: nativeService.getParameters('userDevices')
+                    }
+                    if (this.autos[this.activeTypeIndex].sceneType == 2){
+                        this.goTo('autoBindDevices', {}, params)
+                    }else if ( this.autos[this.activeTypeIndex].sceneType == 3){
+                        params.direction = this.autos[this.activeTypeIndex].direction
+                        this.goTo('autoTypeSet', {}, params)
+                    }else{
+                        this.goTo('autoTypeSet', {}, params)
+                    }
+                })
             }
         },
         created(){
-            this.uid = nativeService.getParameters('uid')
             this.homegroupId = nativeService.getParameters('homegroupId')
         }
     }

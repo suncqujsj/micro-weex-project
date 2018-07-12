@@ -126,6 +126,7 @@ module.exports = {
             { title: 'storage数据', link: "storage" },
             { title: 'takePhoto照相', link: "takePhoto" },
             { title: 'updateDeviceInfo更新当前设备信息', link: "updateDeviceInfo" },
+            { title: 'updateAutoList更新自动化列表', link: "updateAutoList" },
             { title: 'weexBundleToWeb跳转web页面', link: "weexBundleToWeb" },
             { title: 'weex环境变量', link: "weexEnv" }
         ]

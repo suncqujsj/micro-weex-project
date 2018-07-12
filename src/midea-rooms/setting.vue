@@ -236,7 +236,6 @@
                 nativeService.goBack()
             },
             initData(){
-                this.uid = nativeService.getParameters('uid')
                 this.homegroupId = nativeService.getParameters('homegroupId')
                 this.sceneId = nativeService.getParameters('sceneId')
                 this.roomType = nativeService.getParameters('roomType')
@@ -277,20 +276,22 @@
             },
             getSupportDevices(){//获取此房间可绑定的设备以及该房间的指标数据（温度、湿度、水温、人数等）
                 return new Promise((resolve,reject)=>{
-                    let reqUrl = url.scene.supportList
-                    let reqParams = {
-                        uid: this.uid,
-                        homegroupId: this.homegroupId,
-                        sceneId: this.sceneId
-                    }
-                    this.webRequest(reqUrl, reqParams).then((res)=>{
-                        if (res.code == 0) {
-                            resolve(res.data)
-                        }else{
-                            reject(res.msg)
+                    this.checkLogin().then( (uid) => {
+                        let reqUrl = url.scene.supportList
+                        let reqParams = {
+                            uid: uid,
+                            homegroupId: this.homegroupId,
+                            sceneId: this.sceneId
                         }
-                    }).catch( (err )=>{
-                        reject(err)
+                        this.webRequest(reqUrl, reqParams).then((res)=>{
+                            if (res.code == 0) {
+                                resolve(res.data)
+                            }else{
+                                reject(res.msg)
+                            }
+                        }).catch( (err )=>{
+                            reject(err)
+                        })
                     })
                 })
             },
@@ -317,66 +318,77 @@
                         nativeService.toast('绑定成功！')
                     })
                 }
-        
             },
             addSceneAppliance(applianceCode){
                 return new Promise((resolve,reject)=>{
-                    let reqUrl = url.scene.applianceAdd
-                    let reqParams = {
-                        uid: this.uid,
-                        homegroupId: this.homegroupId,
-                        sceneId: this.sceneId,
-                        applianceCode: applianceCode
-                    }
-                    
-                    this.webRequest(reqUrl, reqParams).then((res)=>{
-                        if (res.code == 0) {
-                            resolve(res)
-                        }else{
-                            let codeMsg = {
-                                1000: '未知系统错误',
-                                1002: '参数为空',
-                                1105: '账户不存在',
-                                1200: '用户不在家庭',
-                                1202: '用户不是家庭的管理员',
-                                1212: '房间不在家庭里面',
-                                1300: '设备不存在',
-                                1305: '用户不是设备的管理员'
-                            }
-                            nativeService.alert(codeMsg[res.code])
+                    this.checkLogin().then( (uid) => {
+                        let reqUrl = url.scene.applianceAdd
+                        let reqParams = {
+                            uid: uid,
+                            homegroupId: this.homegroupId,
+                            sceneId: this.sceneId,
+                            applianceCode: applianceCode
                         }
-                    }).catch( (err )=>{
-                        nativeService.alert(err)
+                        
+                        this.webRequest(reqUrl, reqParams).then((res)=>{
+                            if (res.code == 0) {
+                                resolve(res)
+                            }else{
+                                let codeDesc = {
+                                    1000: '未知系统错误',
+                                    1002: '参数为空',
+                                    1105: '账户不存在',
+                                    1200: '用户不在家庭',
+                                    1202: '用户不是家庭的管理员',
+                                    1212: '房间不在家庭里面',
+                                    1300: '设备不存在',
+                                    1305: '用户不是设备的管理员'
+                                }
+                                if (codeDesc.hasOwnProperty(res.code)) {
+                                    nativeService.toast(codeDesc[res.code])
+                                }else{
+                                    nativeService.toast(res.msg)
+                                }
+                            }
+                        }).catch( (err )=>{
+                            nativeService.alert(err)
+                        })
                     })
                 })
             },
             deleteSceneAppliance(applianceCode){
                 return new Promise((resolve,reject)=>{
-                    let reqUrl = url.scene.applianceDelete
-                    let reqParams = {
-                        uid: this.uid,
-                        homegroupId: this.homegroupId,
-                        sceneId: this.sceneId,
-                        applianceCode: applianceCode
-                    }
-                    this.webRequest(reqUrl, reqParams).then((res)=>{
-                        if (res.code == 0) {
-                            resolve(res)
-                        }else{
-                            let codeMsg = {
-                                '1000':	'未知系统错误',
-                                '1001':	'参数格式错误',
-                                '1002':	'参数为空',
-                                '1105':	'账户不存在',
-                                '1202':	'用户不是家庭的管理员',
-                                '1300':	'设备不存在',
-                                '1701':	'场景不存在',
-                                '1700':	'无操作权限'
-                            }
-                            nativeService.alert(codeMsg[res.code])
+                    this.checkLogin().then( (uid) => {
+                        let reqUrl = url.scene.applianceDelete
+                        let reqParams = {
+                            uid: uid,
+                            homegroupId: this.homegroupId,
+                            sceneId: this.sceneId,
+                            applianceCode: applianceCode
                         }
-                    }).catch( (err )=>{
-                        nativeService.alert(err)
+                        this.webRequest(reqUrl, reqParams).then((res)=>{
+                            if (res.code == 0) {
+                                resolve(res)
+                            }else{
+                                let codeDesc = {
+                                    '1000':	'未知系统错误',
+                                    '1001':	'参数格式错误',
+                                    '1002':	'参数为空',
+                                    '1105':	'账户不存在',
+                                    '1202':	'用户不是家庭的管理员',
+                                    '1300':	'设备不存在',
+                                    '1701':	'场景不存在',
+                                    '1700':	'无操作权限'
+                                }
+                                if (codeDesc.hasOwnProperty(res.code)) {
+                                    nativeService.toast(codeDesc[res.code])
+                                }else{
+                                    nativeService.toast(res.msg)
+                                }
+                            }
+                        }).catch( (err )=>{
+                            nativeService.alert(err)
+                        })
                     })
                 })
             },
@@ -412,107 +424,113 @@
                 this.closePropPop(propType)
             },
             confirmProp(propType){
-                let reqUrl = url.scene.modelSet
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneId: this.sceneId
-                }
-                /*
-                1.scrollPick-> set ActiveProp 
-                    * scrollPick只有一个值的时候，无法选中这个值，将scrollPick里的值直接赋给activeProp
-                    * 
-                2.comfirmPop -> sendRequest
-                */
-                if (this.roomType == 1 || this.roomType == 2) {
-                    if (propType == 'temperatureMin') {
-                        if (this.temperatureMinList.length == 1) {
-                           this.activeProp[propType] = this.temperatureMinList[0].value
-                        } else {
-                            if ( !this.activeProp[propType]) {
-                                nativeService.alert('您还没有设置属性值哦')
-                                return
+                this.checkLogin().then( (uid) => {
+                    let reqUrl = url.scene.modelSet
+                    let reqParams = {
+                        uid: uid,
+                        homegroupId: this.homegroupId,
+                        sceneId: this.sceneId
+                    }
+                    /*
+                    1.scrollPick-> set ActiveProp 
+                        * scrollPick只有一个值的时候，无法选中这个值，将scrollPick里的值直接赋给activeProp
+                        * 
+                    2.comfirmPop -> sendRequest
+                    */
+                    if (this.roomType == 1 || this.roomType == 2) {
+                        if (propType == 'temperatureMin') {
+                            if (this.temperatureMinList.length == 1) {
+                            this.activeProp[propType] = this.temperatureMinList[0].value
+                            } else {
+                                if ( !this.activeProp[propType]) {
+                                    nativeService.alert('您还没有设置属性值哦')
+                                    return
+                                }
                             }
                         }
-                    }
-                    if (propType == 'temperatureMax') {
-                        if (this.temperatureMaxList.length == 1) {
-                           this.activeProp[propType] = this.temperatureMaxList[0].value
-                        } else {
-                            if ( !this.activeProp[propType]) {
-                                nativeService.alert('您还没有设置属性值哦')
-                                return
+                        if (propType == 'temperatureMax') {
+                            if (this.temperatureMaxList.length == 1) {
+                            this.activeProp[propType] = this.temperatureMaxList[0].value
+                            } else {
+                                if ( !this.activeProp[propType]) {
+                                    nativeService.alert('您还没有设置属性值哦')
+                                    return
+                                }
                             }
                         }
-                    }
-                    if (propType == 'humidityMin') {
-                        if (this.humidityMinList.length == 1) {
-                           this.activeProp[propType] = this.humidityMinList[0].value
-                        } else {
-                            if ( !this.activeProp[propType]) {
-                                nativeService.alert('您还没有设置属性值哦')
-                                return
+                        if (propType == 'humidityMin') {
+                            if (this.humidityMinList.length == 1) {
+                            this.activeProp[propType] = this.humidityMinList[0].value
+                            } else {
+                                if ( !this.activeProp[propType]) {
+                                    nativeService.alert('您还没有设置属性值哦')
+                                    return
+                                }
                             }
                         }
-                    }
-                    if (propType == 'humidityMax') {
-                        if (this.humidityMaxList.length == 1) {
-                            this.activeProp[propType] = this.humidityMaxList[0].value
-                        } else {
-                            if ( !this.activeProp[propType]) {
-                                nativeService.alert('您还没有设置属性值哦')
-                                return
+                        if (propType == 'humidityMax') {
+                            if (this.humidityMaxList.length == 1) {
+                                this.activeProp[propType] = this.humidityMaxList[0].value
+                            } else {
+                                if ( !this.activeProp[propType]) {
+                                    nativeService.alert('您还没有设置属性值哦')
+                                    return
+                                }
                             }
                         }
+                        
+                        let tmpTemp = {
+                            min: this.activeProp.temperatureMin || this.temperatureRange.min,
+                            max: this.activeProp.temperatureMax || this.temperatureRange.max
+                        }
+                        let tmpHumid = {
+                            min :this.activeProp.humidityMin || this.humidityRange.min,
+                            max: this.activeProp.humidityMax || this.humidityRange.max
+                        }
+                        reqParams.prop = JSON.stringify({
+                            temperature: tmpTemp.min + ',' + tmpTemp.max,
+                            humidity: tmpHumid.min + ',' + tmpHumid.max
+                        })
+                    }else if( this.roomType == 3 ){
+                        let propTypeList = propType + 'List'
+                        if (this[propTypeList].length == 1) {
+                            this.activeProp[propType] = this[propTypeList][0].value
+                        } else if (!this.activeProp[propType]){
+                            nativeService.alert('您还没有设置属性值哦')
+                            return
+                        }
+                        reqParams.prop = JSON.stringify({
+                            use: this.activeProp.use || this.sceneProp.use,
+                            comfortable: this.activeProp.comfortable || this.sceneProp.comfortable,
+                            save: this.activeProp.save || this.sceneProp.save,
+                        })
                     }
-                    
-                    let tmpTemp = {
-                        min: this.activeProp.temperatureMin || this.temperatureRange.min,
-                        max: this.activeProp.temperatureMax || this.temperatureRange.max
-                    }
-                    let tmpHumid = {
-                        min :this.activeProp.humidityMin || this.humidityRange.min,
-                        max: this.activeProp.humidityMax || this.humidityRange.max
-                    }
-                    reqParams.prop = JSON.stringify({
-                        temperature: tmpTemp.min + ',' + tmpTemp.max,
-                        humidity: tmpHumid.min + ',' + tmpHumid.max
+                    this.webRequest(reqUrl, reqParams).then((res)=>{
+                        this.closePropPop(propType)
+                        if (res.code == 0) {
+                            setTimeout(()=>{
+                                nativeService.toast('修改成功！')
+                                this.initData()
+                            },500)
+                        }else{
+                            let codeDesc = {
+                                "1000": "未知系统错误",
+                                "1001": "参数格式错误",
+                                "1002": "参数为空",
+                                "1003": "参数类型不支持",
+                                "1105": "账户不存在",
+                                "1202": "用户不是家庭的管理员",
+                                "1701": "场景不存在"
+                            }
+                            if (codeDesc.hasOwnProperty(res.code)) {
+                                nativeService.toast(codeDesc[res.code])
+                            }else{
+                                nativeService.toast(res.msg)
+                            }
+                        }
+                    }).catch( (err )=>{
+                        nativeService.alert('设置场景属性失败')
                     })
-                }else if( this.roomType == 3 ){
-                    let propTypeList = propType + 'List'
-                    if (this[propTypeList].length == 1) {
-                        this.activeProp[propType] = this[propTypeList][0].value
-                    } else if (!this.activeProp[propType]){
-                        nativeService.alert('您还没有设置属性值哦')
-                        return
-                    }
-                    reqParams.prop = JSON.stringify({
-                        use: this.activeProp.use || this.sceneProp.use,
-                        comfortable: this.activeProp.comfortable || this.sceneProp.comfortable,
-                        save: this.activeProp.save || this.sceneProp.save,
-                    })
-                }
-                this.webRequest(reqUrl, reqParams).then((res)=>{
-                    this.closePropPop(propType)
-                    if (res.code == 0) {
-                        setTimeout(()=>{
-                            nativeService.toast('修改成功！')
-                            this.initData()
-                        },500)
-                    }else{
-                        let codeMsg = {
-                            "1000": "未知系统错误",
-                            "1001": "参数格式错误",
-                            "1002": "参数为空",
-                            "1003": "参数类型不支持",
-                            "1105": "账户不存在",
-                            "1202": "用户不是家庭的管理员",
-                            "1701": "场景不存在"
-                        }
-                        nativeService.alert(codeMsg[res.code])
-                    }
-                }).catch( (err )=>{
-                    nativeService.alert('设置场景属性失败')
                 })
             },
         },

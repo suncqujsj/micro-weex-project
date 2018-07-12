@@ -343,7 +343,6 @@
             initData(){
                 this.from = nativeService.getParameters('from')
                 this.sceneType = nativeService.getParameters('sceneType')
-                this.uid = nativeService.getParameters('uid')
                 this.homegroupId = nativeService.getParameters('homegroupId')
                 if (this.from == 'editAuto') {
                     let tmpWeely = nativeService.getParameters('weekly')
@@ -465,14 +464,13 @@
             searchLocation(searchKey){
                 let searchParam = {
                     keyword: searchKey,
-                    operation: 'searchMapAddress'
                 }
-                if (!this.gpsInfo) {
+                
+                if (Object.keys(this.gpsInfo).length == 0) {
                     nativeService.alert('获取不到当前城市，请检查是否开启定位权限')
                 }else{
                     searchParam.city = this.gpsInfo.city
                 }
-
                 nativeService.searchMapAddress(searchParam).then( (res) => {
                     if (res.status == 0) {
                         this.mapSearchResult = res.resultList
@@ -489,9 +487,13 @@
             searchInputReturned(e){
                 this.searchLocation(e.value)
             },
+            searchInputBlur(e){
+                // this.searchLocation(e.value)
+            },
             searchInputOnInput(e){
             },
-            searchClose(e){ },
+            searchClose(e){
+            },
             searchInputFocus(e){
                 this.showMapSearchResult = false
                 this.mapSearchResult = []
@@ -513,9 +515,6 @@
                     this.goNext(tmpDestination)
                 }
             },
-            searchInputBlur(e){
-                this.searchLocation(e.value)
-            },
             goCurrentLocation(){
                 this.showMapSearchResult = false
                 let tmp = {
@@ -526,8 +525,8 @@
                 this.mapCenter = tmp
                 this.markers = [{
                     icon: {
-                        normal: icon.mapNormal,
-                        click: icon.mapClick
+                        normal: this.icon.mapNormal,
+                        click: this.icon.mapClick
                     },
                     list: [{ latitude: this.gpsInfo.latitude, longitude: this.gpsInfo.longitude, id: 1 }]
                 }]
@@ -569,7 +568,6 @@
                     return
                 }
                 let params = {
-                    uid: this.uid,
                     homegroupId: this.homegroupId,
                     sceneType: this.sceneType,
                     weekly: weeklyString,

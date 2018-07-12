@@ -515,7 +515,6 @@
             },
             goSetting(){
                 let params = {
-                    uid: this.uid,
                     homegroupId: this.homegroupId,
                     roomType: this.roomType,
                     sceneId: this.sceneId,
@@ -527,212 +526,212 @@
                 this.showToastDialog = false
             },
             buyShampoo(){
-                let params = {
-                    uid: this.uid
-                }
-                this.goTo('buyShampoo', {}, params)
+                this.goTo('buyShampoo')
             },
             getSceneDetail(){
                 return new Promise((resolve, reject)=>{
-                    let reqUrl = url.scene.detail
-                    let reqParams = {
-                        uid: this.uid,
-                        homegroupId: this.homegroupId,
-                        sceneId: this.sceneId
-                    }
-                    
-                    this.webRequest(reqUrl, reqParams).then( (res) => {
-                        if (res.code == '0') {
-                            this.scene = res.data
-                            resolve()
-                        }else{
-                            let codeMsg = {
-                                "1000": "未知系统错误",
-                                "1001": "参数格式错误",
-                                "1002": "参数为空",
-                                "1105": "账户不存在",
-                                "1200": "用户不在家庭"
-                            }
-                            nativeService.toast(codeMsg[res.code])
+                    this.checkLogin().then( (uid) => {
+                        let reqUrl = url.scene.detail
+                        let reqParams = {
+                            uid: uid,
+                            homegroupId: this.homegroupId,
+                            sceneId: this.sceneId
                         }
-                    }).catch( (error )=>{
-                        nativeService.alert(error)
+                        
+                        this.webRequest(reqUrl, reqParams).then( (res) => {
+                            if (res.code == '0') {
+                                this.scene = res.data
+                                resolve()
+                            }else{
+                                let codeDesc = {
+                                    "1000": "未知系统错误",
+                                    "1001": "参数格式错误",
+                                    "1002": "参数为空",
+                                    "1105": "账户不存在",
+                                    "1200": "用户不在家庭"
+                                }
+                                    
+                                if (codeDesc.hasOwnProperty(res.code)) {
+                                    nativeService.toast(codeDesc[res.code])
+                                }else{
+                                    nativeService.toast(res.msg)
+                                }
+                            }
+                        }).catch( (error )=>{
+                            nativeService.alert(error)
+                        })
                     })
                 })
             },
-            getDevices(){
-                return new Promise((resolve,reject)=>{
-                    let reqUrl = url.scene.supportList
+            quickOptimize(){
+                this.checkLogin().then( (uid) => {
+                    let reqUrl = url.scene.optimize
                     let reqParams = {
-                        uid: this.uid,
+                        uid: uid,
                         homegroupId: this.homegroupId,
-                        sceneId: this.sceneId
+                        sceneId: this.sceneId,
+                    }
+                    let codeDesc = {
+                        '1000':"未知系统错误",
+                        '1001':"参数格式错误",
+                        '1002':"参数为空",
+                        '1003':"参数类型不支持",
+                        '1105':"账户不存在",
+                        '1200':"用户不在家庭",
+                        '1701':"场景不存在",
+                        '1704':"场景没有关联设备"
                     }
                     this.webRequest(reqUrl, reqParams).then((res)=>{
                         if (res.code == 0) {
-                            resolve(res.data)
+                            this.checkQuickOptimize(res.data.resultId)
+                            
+                        }else if (res.code == 1711){
+                            nativeService.alert(res.msg)
                         }else{
-                            reject(res.msg)
+                            if (codeDesc.hasOwnProperty(res.code)) {
+                                nativeService.toast(codeDesc[res.code])
+                            }else{
+                                nativeService.toast(res.msg)
+                            }
                         }
                     }).catch( (err )=>{
                         reject(err)
                     })
                 })
             },
-            quickOptimize(){
-                let reqUrl = url.scene.optimize
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneId: this.sceneId,
-                }
-                let codeDesc = {
-                    '1000':"未知系统错误",
-                    '1001':"参数格式错误",
-                    '1002':"参数为空",
-                    '1003':"参数类型不支持",
-                    '1105':"账户不存在",
-                    '1200':"用户不在家庭",
-                    '1701':"场景不存在",
-                    '1704':"场景没有关联设备"
-                }
-                this.webRequest(reqUrl, reqParams).then((res)=>{
-                    
-                    if (res.code == 0) {
-                        this.checkQuickOptimize(res.data.resultId)
-                        
-                    }else if (res.code == 1711){
-                        nativeService.alert(res.msg)
-                    }else{
-                        if (codeDesc.hasOwnProperty(res.code)) {
-                            nativeService.toast(codeDesc[res.code])
-                        }else{
-                            nativeService.toast(res.msg)
-                        }
-                    }
-                }).catch( (err )=>{
-                    reject(err)
-                })
-            },
             checkQuickOptimize(resultId){
                 // status 1-成功，2-执行中，3-失败
-                let reqUrl = url.scene.optimizeStatus
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneId: this.sceneId,
-                    resultId: resultId
-                }
-                this.webRequest(reqUrl, reqParams, false).then((res)=>{
-                    if (res.code == 0) {
-                        this.showToastDialog = true
-                        this.sceneDevices = Object.assign({}, res.data.list[0].actionList)
-                        
-                        for (var x in this.sceneDevices) {
-                            if (this.sceneDevices[x].status == 2 || this.sceneDevices[x].status == 3) {
-                                  setTimeout(()=>{
-                                    this.checkQuickOptimize(resultId)
-                                },1000)
-                            } else{
-                                setTimeout(()=>{
-                                    this.showToastDialog = false
-                                },2000)
-                                break
-                            }
-                        }
-                      
-                    }else{
+                this.checkLogin().then( (uid) => {
+                    let reqUrl = url.scene.optimizeStatus
+                    let reqParams = {
+                        uid: uid,
+                        homegroupId: this.homegroupId,
+                        sceneId: this.sceneId,
+                        resultId: resultId
                     }
+                    this.webRequest(reqUrl, reqParams, false).then((res)=>{
+                        if (res.code == 0) {
+                            this.showToastDialog = true
+                            this.sceneDevices = Object.assign({}, res.data.list[0].actionList)
+                            
+                            for (var x in this.sceneDevices) {
+                                if (this.sceneDevices[x].status == 2 || this.sceneDevices[x].status == 3) {
+                                    setTimeout(()=>{
+                                        this.checkQuickOptimize(resultId)
+                                    },1000)
+                                } else{
+                                    setTimeout(()=>{
+                                        this.showToastDialog = false
+                                    },2000)
+                                    break
+                                }
+                            }
+                        
+                        }else{
+                        }
+                    })
                 })
             },
             executeModel(modelId){
-                let reqUrl = url.scene.modelExecute
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneId: this.sceneId,
-                    modelId: modelId
-                }
-                let codeDesc = {
-                    '1000':	'未知系统错误',
-                    '1001':	'参数格式错误',
-                    '1002':	'参数为空',
-                    '1105':	'账户不存在',
-                    '1200':	'用户不在家庭',
-                    '1701':	'场景不存在',
-                    '1704':	'场景没有关联设备',
-                    '1709':	'模式不存在'
-                }
-                this.webRequest(reqUrl, reqParams).then((res)=>{
-                    if (res.code == 0) {
-                        nativeService.toast('执行成功！')
-                    }else{
-                        nativeService.alert(codeDesc[res.code])
+                this.checkLogin().then( (uid) => {
+                    let reqUrl = url.scene.modelExecute
+                    let reqParams = {
+                        uid: uid,
+                        homegroupId: this.homegroupId,
+                        sceneId: this.sceneId,
+                        modelId: modelId
                     }
-                }).catch( (err)=>{
+                    this.webRequest(reqUrl, reqParams).then((res)=>{
+                        if (res.code == 0) {
+                            nativeService.toast('执行成功！')
+                        }else{
+                            let codeDesc = {
+                                '1000':	'未知系统错误',
+                                '1001':	'参数格式错误',
+                                '1002':	'参数为空',
+                                '1105':	'账户不存在',
+                                '1200':	'用户不在家庭',
+                                '1701':	'场景不存在',
+                                '1704':	'场景没有关联设备',
+                                '1709':	'模式不存在'
+                            }
+                            if (codeDesc.hasOwnProperty(res.code)) {
+                                nativeService.toast(codeDesc[res.code])
+                            }else{
+                                nativeService.toast(res.msg)
+                            }
+                        }
+                    }).catch( (err)=>{
+                    })
                 })
             },
             getWashData(){
-                if (this.washerCode) {
-                    let reqUrl = url.scene.washerConsumption
-                    let reqParams = {
-                        uid: this.uid,
-                        homegroupId: this.homegroupId,
-                        applianceCode: this.washerCode
-                    }
-                    
-                    this.webRequest(reqUrl, reqParams).then((res)=>{
-                        if (res.code == 0) {
-                            let result = res.data.historyConsumptions
-                            let tmpPowerXValue = [], tmpPowerXLabel = [], tmpPowerYValue = [], tmpPowerYLabel = [], 
-                                tmpWaterXValue = [], tmpWaterXLabel = [], tmpWaterYValue = [], tmpWaterYLabel = []
-
-                            for (let i=0; i<result.length; i++) {
-                                tmpPowerXValue[i] = i
-                                tmpPowerXLabel[i] = result[i].date
-
-                                tmpPowerYValue[i] = 0
-                                tmpPowerYLabel[i] = 0
-                                if (result[i].powerConsumption && result[i].powerConsumption != '') {
-                                    tmpPowerYValue[i] = result[i].powerConsumption
-                                     tmpPowerYLabel[i] = result[i].powerConsumption
-                                }
-
-                                tmpWaterXValue[i] = i
-                                tmpWaterXLabel[i] = result[i].date
-                                
-                                tmpWaterYValue[i] = 0
-                                tmpWaterYLabel[i] = 0
-                                if (result[i].waterConsumption && result[i].waterConsumption != '') {
-                                    tmpWaterYValue[i] = result[i].waterConsumption
-                                    tmpWaterYLabel[i] = result[i].waterConsumption
-                                }
-                            }
-
-                            this.washerPowerData['x']['value'] = tmpPowerXValue
-                            this.washerPowerData['x']['label'] = tmpPowerXLabel
-                            this.washerPowerData['y']['value'] = tmpPowerYValue
-                            this.washerPowerData['y']['label'] = tmpPowerYLabel
-                            
-                            this.washerWaterData['x']['value'] = tmpWaterXValue
-                            this.washerWaterData['x']['label'] = tmpWaterXLabel
-                            this.washerWaterData['y']['value'] = tmpWaterYValue
-                            this.washerWaterData['y']['label'] = tmpWaterYLabel
-                            
-                            this.hasWasherPowerData = true
-                            this.hasWasherWaterData = true
-                        }else{
-                            let codeMsg = {
-                                "1000": "未知系统错误",
-                                "1001": "参数格式错误",
-                                "1002": "参数为空",
-                                "1105": "账户不存在"
-                            }
-                            nativeService.alert(codeMsg[res.code])
+                this.checkLogin().then( (uid) => {
+                    if (this.washerCode) {
+                        let reqUrl = url.scene.washerConsumption
+                        let reqParams = {
+                            uid: uid,
+                            homegroupId: this.homegroupId,
+                            applianceCode: this.washerCode
                         }
-                    }).catch((err)=>{
-                    })
-                }
+                        
+                        this.webRequest(reqUrl, reqParams).then((res)=>{
+                            if (res.code == 0) {
+                                let result = res.data.historyConsumptions
+                                let tmpPowerXValue = [], tmpPowerXLabel = [], tmpPowerYValue = [], tmpPowerYLabel = [], 
+                                    tmpWaterXValue = [], tmpWaterXLabel = [], tmpWaterYValue = [], tmpWaterYLabel = []
+
+                                for (let i=0; i<result.length; i++) {
+                                    tmpPowerXValue[i] = i
+                                    tmpPowerXLabel[i] = result[i].date
+
+                                    tmpPowerYValue[i] = 0
+                                    tmpPowerYLabel[i] = 0
+                                    if (result[i].powerConsumption && result[i].powerConsumption != '') {
+                                        tmpPowerYValue[i] = result[i].powerConsumption
+                                        tmpPowerYLabel[i] = result[i].powerConsumption
+                                    }
+
+                                    tmpWaterXValue[i] = i
+                                    tmpWaterXLabel[i] = result[i].date
+                                    
+                                    tmpWaterYValue[i] = 0
+                                    tmpWaterYLabel[i] = 0
+                                    if (result[i].waterConsumption && result[i].waterConsumption != '') {
+                                        tmpWaterYValue[i] = result[i].waterConsumption
+                                        tmpWaterYLabel[i] = result[i].waterConsumption
+                                    }
+                                }
+
+                                this.washerPowerData['x']['value'] = tmpPowerXValue
+                                this.washerPowerData['x']['label'] = tmpPowerXLabel
+                                this.washerPowerData['y']['value'] = tmpPowerYValue
+                                this.washerPowerData['y']['label'] = tmpPowerYLabel
+                                
+                                this.washerWaterData['x']['value'] = tmpWaterXValue
+                                this.washerWaterData['x']['label'] = tmpWaterXLabel
+                                this.washerWaterData['y']['value'] = tmpWaterYValue
+                                this.washerWaterData['y']['label'] = tmpWaterYLabel
+                                
+                                this.hasWasherPowerData = true
+                                this.hasWasherWaterData = true
+                            }else{
+                                let codeDesc = {
+                                    "1000": "未知系统错误",
+                                    "1001": "参数格式错误",
+                                    "1002": "参数为空",
+                                    "1105": "账户不存在"
+                                }
+                                if (codeDesc.hasOwnProperty(res.code)) {
+                                    nativeService.toast(codeDesc[res.code])
+                                }else{
+                                    nativeService.toast(res.msg)
+                                }
+                            }
+                        }).catch((err)=>{
+                        })
+                    }
+                })
             },
             getWeatherInfo(){
                 nativeService.getGPSInfo({
@@ -770,9 +769,7 @@
                     operation: 'luaQuery',
                     applianceId: String(self.washerCode)
                 }
-                nativeService.alert(params)
             	nativeService.sendLuaRequest(params, true).then(function(luaData) {
-                    nativeService.alert('luaData:  ' + JSON.stringify(luaData))
                     self.setWasherStatus(luaData)
             	},function(error) {
                     nativeService.alert('error:  ' + JSON.stringify(error))
@@ -801,7 +798,6 @@
             			data:{ "control_status": "pause" }
             		};
             		nativeService.sendLuaRequest(params,true).then(function(data) {
-            			nativeService.alert(data)
 	            		self.setWasherStatus(data)
 	            	},function(error) {
 	            		nativeService.alert(error)
@@ -821,7 +817,6 @@
             }
         },
         created(){
-            this.uid = nativeService.getParameters('uid')
             this.homegroupId = nativeService.getParameters('homegroupId')
             this.sceneId = nativeService.getParameters('sceneId')
             this.roomType = nativeService.getParameters('roomType')

@@ -84,7 +84,7 @@
                 type: Object,
                 default: function(){
                     return {
-                        height: '100px',
+                        height: '85px',
                         paddingRight: '25px'
                     }
                 }

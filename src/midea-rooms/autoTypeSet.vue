@@ -24,14 +24,14 @@
                     </wxc-searchbar>
                     <midea-map-view class="map" :data="mapData" @marker-pick="mapMarkerPick" @point-pick="mapPointPick"></midea-map-view>
                 </div>
-                <div v-if="sceneType==4" :class="[platform=='android'?'android-scene-type-hd':'']">
+                <div v-if="sceneType==4" :class="[platform=='android' ?'android-scene-type-hd':'']">
                     <text class="hd">时间</text>
                     <div v-if="platform=='ios'" class="time-picker row-sb">
                         <scroll-picker :wrapWidth="375" :listArray="hours" @onChange="setActiveHour"></scroll-picker>
                         <scroll-picker :wrapWidth="375" :listArray="minutes" @onChange="setActiveMinute"></scroll-picker>
                     </div>
                 </div>
-                <div v-if="sceneType==6" :class="[platform=='android'?'android-scene-type-hd':'']">
+                <div v-if="sceneType==6" :class="[platform=='android'?'android-weather-type-hd':'']">
                     <text class="hd">天气</text>
                     <div>
                         <midea-list style="background-color:#fff" v-for="(item,i) in weather.data" :idx="i" :hasWrapBorder="false" leftMargin="25px">
@@ -54,8 +54,14 @@
                     <scroll-picker :wrapWidth="375" :listArray="minutes" @onChange="setActiveMinute"></scroll-picker>
                 </div>
                 <div v-if="sceneType==6 && platform=='android'" class="box weather-picker-android">
-                    <midea-cell title="气温" :hasArrow="true" @mideaCellClick="setWeatherSwitch" :cellStyle="{paddingLeft: '30px'}" :rightText="switchs[weather.activeSwitch]"></midea-cell>
-                    <scroll-picker :listArray="weatherTemperature" @onChange="setActiveWeatherTemperature"></scroll-picker>
+                    <div class="row-sb weather-hd" @click="setWeatherSwitch">
+                        <text class="text">气温</text>
+                        <div class="row-e">
+                            <text class="text">{{switchs[weather.activeSwitch]}}</text>
+                            <image class="next-icon" :src="icon.next"></image>
+                        </div>
+                    </div>
+                    <scroll-picker wrapHeight="280" :listArray="weatherTemperature" @onChange="setActiveWeatherTemperature"></scroll-picker>
                 </div>
             </cell>
         </list>
@@ -83,6 +89,7 @@
 <style>
     .row-sa{ flex-direction: row; align-items: center; justify-content: space-around; }
     .row-sb{ flex-direction: row; align-items: center; justify-content: space-between; }
+    .row-e{ flex-direction: row; align-items: center; justify-content: flex-end; }
     .wrap{
         background-color: #f2f2f2;
     }
@@ -94,6 +101,7 @@
         padding: 10px;
         font-size: 32px;
     }
+    .text{font-size: 28px;}
      .head{
         background-color: #fff;
         width: 750px;
@@ -113,8 +121,14 @@
     .box{
         margin-top: 23px;
     }
+    .content{
+        padding-bottom: 80px;
+    }
     .android-scene-type-hd{
-        margin-bottom: 460px;
+        margin-bottom: 360px;
+    }
+    .android-weather-type-hd{
+        margin-bottom: 360px;
     }
     .time-picker{
         margin-top: 25px;
@@ -128,9 +142,24 @@
         top: 200px;
         width: 750px;
     }
+    .weather-hd{
+        padding-left: 25px;
+        padding-right: 25px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        background-color: #fff;
+        border-bottom-width: 2px;
+        border-bottom-color: #e5e5e5;
+        border-bottom-style: solid;
+    }
+    .next-icon{
+        width: 12px;
+        height: 24px;
+        margin-left: 10px;
+    }
     .weather-picker-android{
         position: fixed;
-        top: 620px;
+        top: 735px;
         width: 750px;
     }
     .hour, .minute{
@@ -249,7 +278,8 @@
                 icon: {
                     map: 'assets/img/location.png',
                     mapNormal: "assets/img/service_ic_pin@3x.png",
-                    mapClick: "assets/img/service_ic_pin@3x.png"
+                    mapClick: "assets/img/service_ic_pin@3x.png",
+                    next: 'assets/img/more.png'
                 },
                 title: '',
                 header: {
@@ -272,7 +302,7 @@
                     { title: '日', repeat: 0 },
                 ],
                 weather: {
-                    data: ['晴','阴天','下雨','下雪'],
+                    data: ['多云','晴','沙尘暴','雾','雪', '雨'],
                     activeTypeIndex: 0,
                     activeSwitch: 'min',
                     showDialog: false

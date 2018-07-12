@@ -131,10 +131,10 @@
                     }
                 },
                 sceneImg: {
-                    1: 'assets/img/parlour.png',
-                    2: 'assets/img/bed.png',
-                    3: 'assets/img/bath.png',
-                    4: 'assets/img/balcony.png',
+                    1: 'assets/img/s1.png',
+                    2: 'assets/img/s2.png',
+                    3: 'assets/img/s3.png',
+                    4: 'assets/img/s4.png',
                 },
                 feel: {
                     1: '未知',

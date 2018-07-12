@@ -94,8 +94,8 @@
                     <text class="down-text">{{washerStatus[washerPower]}}</text>
                 </div>
                 <div @click="controlStartPause">
-                    <image class="down-icon" :src="icon.washer[washerControlStatus]"></image>
-                    <text class="down-text">{{washerStatus[washerControlStatus]}}</text>
+                    <image class="down-icon" :src="icon.washer[washerRunningStatus]"></image>
+                    <text class="down-text">{{washerStatus[washerRunningStatus]}}</text>
                 </div>
             </div>
             <div v-if="scene.roomType != 4" class="down-block row-sa">
@@ -499,8 +499,8 @@
                 },
                 hasWasherPowerData: false,
                 hasWasherWaterData: false,
-                washerPower: 'off',
-                washerControlStatus: 'pause',
+                washerPower: '',//洗衣机电源状态（开机关机）
+                washerRunningStatus: '',//洗衣机运行状态
                 washerStatus: {
                     on: '开机',
                     off: '关机',
@@ -759,10 +759,7 @@
                     this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
                 })
             },
-            setWasherStatus(luaData){
-                // this.washerRunningStatus = luaData.running_status
-            },
-            luaQueryStatus () {
+            luaQueryStatus () {//洗衣机数据的lua查询
             	let self = this;
             	let params = {
                     params:{}, 
@@ -772,21 +769,33 @@
             	nativeService.sendLuaRequest(params, true).then(function(luaData) {
                     self.setWasherStatus(luaData)
             	},function(error) {
-                    nativeService.alert('error:  ' + JSON.stringify(error))
+                    nativeService.alert('查询设备状态时遇到了问题 \n[错误码：' + error.errorCode +']')
             	});
+            },
+            setWasherStatus(luaData){
+                this.washerPower = luaData.result.power
+                if (luaData.result.running_status != 'start') {
+                    this.washerRunningStatus = 'start' //runnig_status不等于start就可以发start命令
+                }else if (luaData.running_status == 'start'){
+                    this.washerRunningStatus = 'pause'
+                }
             },
             powerOnOff(){//控制阳台场景洗衣机的开启关闭
 		        let self = this;
-		        let poweronoff = this.washerPower=='off' ? "on" : "off";
+		        let poweronoff = this.washerPower=='off' ? "on" : "off"
             	let params = {
-            			operation: "luaControl",
-                        applianceId: self.washerCode,
-            			data: { "power": poweronoff },
-            		};
-            	nativeService.sendLuaRequest(params,true).then(function(data) {
-            		self.setWasherStatus(data);
+                    operation: "luaControl",
+                    applianceId:  String(self.washerCode),
+                    params: { "power": poweronoff },
+                }
+            	nativeService.sendLuaRequest(params,true).then(function(luaData) {
+                    nativeService.showLoading()
+                    setTimeout(()=>{
+                        self.luaQueryStatus()
+                        nativeService.hideLoading()
+                    },2000)
             	},function(error) {
-            		nativeService.alert(error);
+                    nativeService.alert('改变设备状态时遇到了问题 \n[错误码：' + error.errorCode +']')
             	});
             },
             controlStartPause(){//控制阳台场景洗衣机的启动暂停
@@ -794,24 +803,32 @@
             	if( self.washerRunningStatus == "work") {
             		let params = {
             			operation:"luaControl",
-                        applianceId: self.washerCode,
-            			data:{ "control_status": "pause" }
-            		};
-            		nativeService.sendLuaRequest(params,true).then(function(data) {
-	            		self.setWasherStatus(data)
+                        applianceId: String(self.washerCode),
+            			params:{ "control_status": "pause" }
+                    }
+            		nativeService.sendLuaRequest(params,true).then(function(luaData) {
+                        nativeService.showLoading()
+                        setTimeout(()=>{
+                            self.luaQueryStatus()
+                            nativeService.hideLoading()
+                        },2000)
 	            	},function(error) {
-	            		nativeService.alert(error)
+                        nativeService.alert('改变设备状态时遇到了问题 \n[错误码：' + error.errorCode +']')
 	            	})
             	} else {
             		let params = {
             			operation: "luaControl",
-                        applianceId: self.washerCode,
-            			data: { control_status: "start" },
-            		};
-            		nativeService.sendLuaRequest(params,true).then(function(data) {
-	            		self.setWasherStatus(data);
+                        applianceId: String(self.washerCode),
+            			params: { control_status: "start" }
+                    }
+            		nativeService.sendLuaRequest(params,true).then(function(luaData) {
+                        nativeService.showLoading()
+                        setTimeout(()=>{
+                            self.luaQueryStatus()
+                            nativeService.hideLoading()
+                        },2000)
 	            	},function(error) {
-	            		nativeService.alert(error)
+                        nativeService.alert('改变设备状态时遇到了问题 \n[错误码：' + error.errorCode +']')
 	            	});
             	}
             }

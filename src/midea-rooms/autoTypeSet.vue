@@ -11,60 +11,44 @@
             <text class="head-text">{{title}}</text>
             <text class="head-text font-grey"  @click="saveChange">确定</text>
         </div>
-        <list class="list-wrap">
-            <cell class="content">
-                <div style="background-color: #fff" v-if="sceneType == 3">
-                    <wxc-searchbar ref="wxc-searchbar" returnKeyType="search"
-                        @wxcSearchbarCancelClicked="searchCancel"
-                        @wxcSearchbarInputReturned="searchInputReturned"
-                        @wxcSearchbarInputOnInput="searchInputOnInput"
-                        @wxcSearchbarCloseClicked="searchClose"
-                        @wxcSearchbarInputOnFocus="searchInputFocus"
-                        @wxcSearchbarInputOnBlur="searchInputBlur">
-                    </wxc-searchbar>
-                    <midea-map-view class="map" :data="mapData" @marker-pick="mapMarkerPick" @point-pick="mapPointPick"></midea-map-view>
-                </div>
-                <div v-if="sceneType==4" :class="[platform=='android' ?'android-scene-type-hd':'']">
-                    <text class="hd">时间</text>
-                    <div v-if="platform=='ios'" class="time-picker row-sb">
-                        <scroll-picker :wrapWidth="375" :listArray="hours" @onChange="setActiveHour"></scroll-picker>
-                        <scroll-picker :wrapWidth="375" :listArray="minutes" @onChange="setActiveMinute"></scroll-picker>
-                    </div>
-                </div>
-                <div v-if="sceneType==6" :class="[platform=='android'?'android-weather-type-hd':'']">
-                    <text class="hd">天气</text>
-                    <div>
-                        <midea-list style="background-color:#fff" v-for="(item,i) in weather.data" :idx="i" :hasWrapBorder="false" leftMargin="25px">
-                            <check-item :title="item" @itemClick="selectWeather(i)" :status="weather.activeTypeIndex==i" mode="radio"></check-item>
-                        </midea-list>
-                    </div>
-                    <div v-if="platform=='ios'" class="box">
-                        <midea-cell title="气温" :hasArrow="true" @mideaCellClick="setWeatherSwitch" :cellStyle="{paddingLeft: '30px'}" :rightText="switchs[weather.activeSwitch]"></midea-cell>
-                        <scroll-picker :listArray="weatherTemperature" @onChange="setActiveWeatherTemperature"></scroll-picker>
-                    </div>
-                </div>
-                <div class="repeat">
-                    <text class="hd">重复</text>
-                    <div class="row-sa repeat-week">
-                        <text :class="['week', item.repeat==1?'week-active':'']" v-for="(item,i) in week" @click="setRepeat(i)">{{item.title}}</text>
-                    </div>
-                </div>
-                <div v-if="sceneType==4 && platform=='android'" class="time-picker row-sb time-picker-android">
+        <scroller class="content-scroller">
+            <div style="background-color: #fff" v-if="sceneType == 3">
+                <wxc-searchbar ref="wxc-searchbar" returnKeyType="search"
+                    @wxcSearchbarCancelClicked="searchCancel"
+                    @wxcSearchbarInputReturned="searchInputReturned"
+                    @wxcSearchbarInputOnInput="searchInputOnInput"
+                    @wxcSearchbarCloseClicked="searchClose"
+                    @wxcSearchbarInputOnFocus="searchInputFocus"
+                    @wxcSearchbarInputOnBlur="searchInputBlur">
+                </wxc-searchbar>
+                <midea-map-view class="map" :data="mapData" @marker-pick="mapMarkerPick" @point-pick="mapPointPick"></midea-map-view>
+            </div>
+            <div v-if="sceneType==4">
+                <text class="hd">时间</text>
+                <div class="time-picker row-sb">
                     <scroll-picker :wrapWidth="375" :listArray="hours" @onChange="setActiveHour"></scroll-picker>
                     <scroll-picker :wrapWidth="375" :listArray="minutes" @onChange="setActiveMinute"></scroll-picker>
                 </div>
-                <div v-if="sceneType==6 && platform=='android'" class="box weather-picker-android">
-                    <div class="row-sb weather-hd" @click="setWeatherSwitch">
-                        <text class="text">气温</text>
-                        <div class="row-e">
-                            <text class="text">{{switchs[weather.activeSwitch]}}</text>
-                            <image class="next-icon" :src="icon.next"></image>
-                        </div>
-                    </div>
-                    <scroll-picker wrapHeight="280" :listArray="weatherTemperature" @onChange="setActiveWeatherTemperature"></scroll-picker>
+            </div>
+            <div v-if="sceneType==6">
+                <text class="hd">天气</text>
+                <div>
+                    <midea-list style="background-color:#fff" v-for="(item,i) in weather.data" :idx="i" :hasWrapBorder="false" leftMargin="25px">
+                        <check-item :title="item" @itemClick="selectWeather(i)" :status="weather.activeTypeIndex==i" mode="radio"></check-item>
+                    </midea-list>
                 </div>
-            </cell>
-        </list>
+                <div class="box">
+                    <midea-cell title="气温" :hasArrow="true" @mideaCellClick="setWeatherSwitch" :cellStyle="{paddingLeft: '30px'}" :rightText="switchs[weather.activeSwitch]"></midea-cell>
+                    <scroll-picker :listArray="weatherTemperature" @onChange="setActiveWeatherTemperature"></scroll-picker>
+                </div>
+            </div>
+            <div class="repeat">
+                <text class="hd">重复</text>
+                <div class="row-sa repeat-week">
+                    <text :class="['week', item.repeat==1?'week-active':'']" v-for="(item,i) in week" @click="setRepeat(i)">{{item.title}}</text>
+                </div>
+            </div>
+        </scroller>
         <scroller v-if="sceneType== 3 && showMapSearchResult" class="map-result">
             <div v-if="mapSearchResult.length > 0">
                 <div v-for="(item,i) in mapSearchResult" @click="selectMapSearchResult(item)">
@@ -126,14 +110,8 @@
     .box{
         margin-top: 23px;
     }
-    .content{
-        padding-bottom: 80px;
-    }
-    .android-scene-type-hd{
-        margin-bottom: 450px;
-    }
-    .android-weather-type-hd{
-        margin-bottom: 360px;
+    .content-scroller{
+        padding-bottom: 100px;
     }
     .time-picker{
         margin-top: 25px;
@@ -141,11 +119,6 @@
         padding-bottom: 40px;
         background-color: #fff;
         height: 434px;
-    }
-    .time-picker-android{
-        position: fixed;
-        top: 200px;
-        width: 750px;
     }
     .weather-hd{
         padding-left: 25px;
@@ -161,11 +134,6 @@
         width: 12px;
         height: 24px;
         margin-left: 10px;
-    }
-    .weather-picker-android{
-        position: fixed;
-        top: 735px;
-        width: 750px;
     }
     .hour, .minute{
         font-size: 40px;

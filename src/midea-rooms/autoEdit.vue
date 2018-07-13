@@ -10,11 +10,11 @@
                 <div v-if="sceneType != 2">
                     <div style="background-color:#fff">
                         <div class="row-sb auto-name-floor">
-                            <text>名称</text>
+                            <text class="text">名称</text>
                             <input class="auto-name" type="text" placeholder="" :value="inputAutoName" @change="editAutoName" @return="editAutoName"/>
                         </div>
                         <div class="row-sb switch-floor auto-switch-floor">
-                            <text>启用</text>
+                            <text class="text">启用</text>
                             <div>
                                 <switch-bar :isActive="autoDetail.enable" @onSwitch="openAuto"></switch-bar>
                             </div>
@@ -35,7 +35,7 @@
                 </div>
                 <div>
                     <text class="sub-hd">设备</text>
-                    <div class="device-box row-sb">
+                    <div v-if="Object.keys(autoBindDevices).length > 0" class="device-box row-sb">
                         <div class="device" v-for="(item, key) in autoBindDevices">
                             <div @click="setDevice(key)">
                                 <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
@@ -44,7 +44,10 @@
                             <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, key)"></image>
                         </div>
                     </div>
-                    <text class="select-btn" @click="goBindNewDevice">选择设备</text>
+                    <div  v-else class="device-box row-sb">
+                        <text class="not-bind-text text">当前快捷操作没有绑定设备，点击选择设备进行添加</text>
+                    </div>
+                    <text class="select-btn text" @click="goBindNewDevice">选择设备</text>
                 </div>
             </cell>
         </list>
@@ -78,13 +81,19 @@
     .font-grey {
         color: #666;
     }
+    .text{
+        font-size: 30px;
+    }
+    .not-bind-text{
+        color: #666;
+    }
     .content{
         margin-top: 16px;
         padding-bottom: 150px;
     }
     .sub-hd{
         color: #666;
-        font-size: 28px;
+        font-size: 30px;
         margin-top: 33px;
         margin-left:30px;
         margin-bottom: 14px;
@@ -189,7 +198,7 @@
     .condition-desc{
         width: 600px;
         text-overflow: ellipsis;
-        font-size: 28px;
+        font-size: 30px;
     }
     
     /* .wrap{background-color: #3af} */

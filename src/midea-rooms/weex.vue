@@ -60,7 +60,7 @@
     .row-e { flex-direction: row; align-items: center; justify-content: flex-end; }
     .hd { margin-top: 24px; margin-bottom: 24px; }
     .hd-name{ font-weight: bold; font-size: 36px; color: #000; }
-    .hd-btn{ font-size: 24px; color: #666; padding: 10px;}
+    .hd-btn{ font-size: 26px; color: #666; padding: 10px;}
     .scroller{ flex-direction: row; height: 276px;}
     .icon { width: 82px; height: 82px; margin-right: 20px; }
     .auto-btn{ width: 50px; height: 50px; }
@@ -72,7 +72,7 @@
         margin-right: 16px;
         padding: 20px;
     }
-    .auto-name{ width: 120px; font-size: 28px; color: #666666; margin-bottom: 8px; text-overflow: clip; }
+    .auto-name{ width: 120px; font-size: 30px; color: #666666; margin-bottom: 8px; text-overflow: clip; }
     /* .auto-desc{ width: 120px; font-size: 24px; color: #C7C7CC; lines:1; } */
     .scene-list{ height: 1200px;}
     .scene { width: 690px; height: 206px; padding-bottom: 16px; position: relative; }

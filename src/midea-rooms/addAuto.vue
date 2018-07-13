@@ -1,6 +1,6 @@
 <template>
    <div class="wrap" :style="wrapStyle">
-        <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
+        <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" @leftImgClick="goBack"></midea-header>
         <div class="next" @click="goNext()">
             <text class="next-text white">下一步</text>
         </div>

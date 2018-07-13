@@ -1,6 +1,6 @@
 <template>
     <div :style="wrapStyle">
-        <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
+        <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" @leftImgClick="goBack"></midea-header>
         <list class="scroller" :style="scrollerStyle">
             <cell>
                 <div class="block"  style="background-color:#fff">

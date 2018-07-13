@@ -1,11 +1,11 @@
 <template>
    <div class="wrap" :style="wrapStyle">
-        <div v-if="from=='addAuto'" class="row-sb head">
-            <image class="back" :src="header.leftImg" @click="goBack"></image>
-            <text class="head-text">{{title}}</text>
-            <text v-if="sceneType != 3" class="next-text white"  @click="goNext">下一步</text>
-            <text v-else class="next-text white"></text>  <!-- 占位用，防止标题跑偏 -->
-        </div>
+        <div v-if="from=='addAuto'" class="addauto-hd">
+            <midea-header :title="title" :bgColor="header.bgColor" :titleText="header.color" @leftImgClick="goBack"></midea-header>
+            <div v-if="sceneType != 3" class="next" @click="goNext">
+                <text class="next-text white"  @click="goNext">下一步</text>
+            </div>
+        </div>  
         <div v-if="from=='editAuto'" class="row-sb head">
             <text class="head-text font-grey" @click="goBack">取消</text>
             <text class="head-text">{{title}}</text>
@@ -97,8 +97,12 @@
         width: 12px;
         height: 24px;
     }
+    .next{
+        position: absolute;
+        top: 30px;
+        right: 25px;
+    }
     .next-text{
-        padding: 10px;
         font-size: 32px;
     }
     .text{font-size: 28px;}
@@ -109,7 +113,8 @@
         padding-left: 30px;
         padding-right: 30px;
     }
-    .head-text{ font-size: 32px; }
+    .head-text{ font-size: 32px; width: 200px; text-align: center;}
+    .addauto-hd{position: relative;}
     .hd{
         padding-top: 34px;
         padding-left: 25px;

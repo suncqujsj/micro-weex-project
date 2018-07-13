@@ -1,9 +1,8 @@
 <template>
     <div>
-            
         <scroller class="wrap" :style="wrapStyle">
             <div :style="sceneStyle">
-                <midea-header :title="scene.name" bgColor="transparent" titleText="#fff"  @leftImgClick="goBack"></midea-header>
+                <midea-header :title="scene.name" bgColor="transparent" titleText="#fff" :leftImg="icon.back" @leftImgClick="goBack"></midea-header>
                 <div class="setting" @click="goSetting()">
                     <text class="setting-text white">设置</text>
                 </div>
@@ -14,7 +13,7 @@
                         <text class="improve white" @click="quickOptimize">一键优化</text>
                     </div>
                     <div class="up-status row-sa" v-if="scene.roomType=='1' || scene.roomType=='2'">
-                        <div>
+                        <div class="scene-status">
                             <text class="info-text font14 white">温度</text>
                             <div  class="row-c status-value">
                                 <text v-if="scene.indicator.temperature" class="font36 white">{{scene.indicator.temperature}}</text>
@@ -23,7 +22,7 @@
                             </div>
                             <text class="info-text font12 white">{{temperatureStatus}}</text>
                         </div>  
-                        <div>
+                        <div class="scene-status">
                             <text class="info-text font14 white">湿度</text>
                             <div class="row-c status-value">
                                 <text v-if="scene.indicator.humidity" class="font36 white">{{scene.indicator.humidity}}</text>
@@ -32,7 +31,7 @@
                             </div>
                             <text class="info-text font12 white">{{humidityStatus}}</text>
                         </div>  
-                        <div>
+                        <div class="scene-status">
                             <text class="info-text font14 white">空气质量</text>
                             <div class="row-c status-value">
                                 <text v-if="scene.indicator.pm5" class="font36 white">{{scene.indicator.pm5}}</text>
@@ -42,7 +41,7 @@
                         </div>
                     </div>
                     <div class="up-status row-sa" v-if="scene.roomType=='3'">
-                        <div>
+                        <div class="scene-status">
                             <text v-if="scene.indicator.work_stats" class="info-text font14 white">{{scene.indicator.work_stats}}</text>
                             <text v-else class="info-text font14 white">工作状态</text>
                             <div class="row-c status-value">
@@ -51,15 +50,15 @@
                                 <text v-else class="font36 white">-</text>
                             </div>
                         </div>  
-                        <div>
+                        <div class="scene-status">
                             <text class="info-text font14 white">热水量</text>
                             <div class="row-c status-value">
                                 <text v-if="scene.indicator.water_capacity" class="font36 white">{{scene.indicator.water_capacity}}</text>
                                 <text v-if="scene.indicator.water_capacity" class="font16 white mgb-10">%</text>
                                 <text v-else class="font36 white">-</text>
                             </div>
-                        </div>  
-                        <div v-if="scene.roomType=='3' ">
+                        </div>
+                        <div class="scene-status">
                             <text class="info-text font14 white">还需加热</text>
                             <div class="row-c status-value">
                                 <text v-if="scene.indicator.remain_time" class="font36 white">{{scene.indicator.remain_time}}</text>
@@ -176,7 +175,7 @@
         text-align: center;
     }
     .weather{
-        font-size: 28px;
+        font-size: 30px;
         margin-bottom: 25px;
     }
     .improve{
@@ -197,11 +196,14 @@
         padding-left: 20px;
         padding-right: 20px;
     }
+    .scene-status{
+        width: 220px;
+    }
     .status-value{
         align-items: flex-end;
     }
     .info-text{
-        width: 180px;
+        width: 220px;
         text-align: center;
         margin-bottom: 2px;
     }
@@ -261,6 +263,7 @@
         color: #fff;
         text-align: center;
         padding-top: 80px;
+        font-size: 30px;
     }
  
 </style>
@@ -384,6 +387,7 @@
                 homegroupId: '',
                 scene: {},
                 icon:{
+                    back: 'assets/img/b_white.png',
                     next: 'assets/img/more_w.png',
                     success: '',
                     fail: '',

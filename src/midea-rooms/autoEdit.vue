@@ -23,7 +23,7 @@
                     <div>
                         <text class="sub-hd">当如下条件满足时</text>
                         <div @click="goAutoTypeSet" class="row-sb floor">
-                            <div class="row-s ">
+                            <div class="row-s">
                                 <image class="icon" :src="autoDetail.image"></image>
                                 <text class="condition-desc" v-if="sceneType==3">在{{weekDesc}} {{directionText[autoDetail.location.direction]}} {{autoDetail.location.address}}时</text>
                                 <text class="condition-desc" v-if="sceneType==4">在{{weekDesc}} {{autoDetail.startTime}}时</text>
@@ -188,7 +188,8 @@
     }
     .condition-desc{
         width: 600px;
-        text-overflow: ellipsis
+        text-overflow: ellipsis;
+        font-size: 28px;
     }
     
     /* .wrap{background-color: #3af} */

@@ -125,7 +125,7 @@
         padding-bottom: 80px;
     }
     .android-scene-type-hd{
-        margin-bottom: 360px;
+        margin-bottom: 450px;
     }
     .android-weather-type-hd{
         margin-bottom: 360px;

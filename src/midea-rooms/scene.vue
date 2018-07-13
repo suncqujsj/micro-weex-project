@@ -274,7 +274,7 @@
     import mideaCell from '@/component/cell.vue'
     import mideaList from '@/midea-rooms/components/list.vue'
 
-    import { url } from './config/config.js'
+    import { url, codeDesc } from './config/config.js'
 
     export default {
         components:{ MideaHeader, MideaVote, ToastDialog, mideaCell, mideaList },
@@ -543,16 +543,8 @@
                                 this.scene = res.data
                                 resolve()
                             }else{
-                                let codeDesc = {
-                                    "1000": "未知系统错误",
-                                    "1001": "参数格式错误",
-                                    "1002": "参数为空",
-                                    "1105": "账户不存在",
-                                    "1200": "用户不在家庭"
-                                }
-                                    
-                                if (codeDesc.hasOwnProperty(res.code)) {
-                                    nativeService.toast(codeDesc[res.code])
+                                if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                    nativeService.toast(codeDesc.scene[res.code])
                                 }else{
                                     nativeService.toast(res.msg)
                                 }
@@ -588,8 +580,8 @@
                         }else if (res.code == 1711){
                             nativeService.alert(res.msg)
                         }else{
-                            if (codeDesc.hasOwnProperty(res.code)) {
-                                nativeService.toast(codeDesc[res.code])
+                            if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                nativeService.toast(codeDesc.scene[res.code])
                             }else{
                                 nativeService.toast(res.msg)
                             }
@@ -626,8 +618,12 @@
                                     break
                                 }
                             }
-                        
                         }else{
+                            if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                nativeService.toast(codeDesc.scene[res.code])
+                            }else{
+                                nativeService.toast(res.msg)
+                            }
                         }
                     })
                 })
@@ -645,18 +641,8 @@
                         if (res.code == 0) {
                             nativeService.toast('执行成功！')
                         }else{
-                            let codeDesc = {
-                                '1000':	'未知系统错误',
-                                '1001':	'参数格式错误',
-                                '1002':	'参数为空',
-                                '1105':	'账户不存在',
-                                '1200':	'用户不在家庭',
-                                '1701':	'场景不存在',
-                                '1704':	'场景没有关联设备',
-                                '1709':	'模式不存在'
-                            }
-                            if (codeDesc.hasOwnProperty(res.code)) {
-                                nativeService.toast(codeDesc[res.code])
+                            if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                nativeService.toast(codeDesc.scene[res.code])
                             }else{
                                 nativeService.toast(res.msg)
                             }
@@ -716,14 +702,8 @@
                                 this.hasWasherPowerData = true
                                 this.hasWasherWaterData = true
                             }else{
-                                let codeDesc = {
-                                    "1000": "未知系统错误",
-                                    "1001": "参数格式错误",
-                                    "1002": "参数为空",
-                                    "1105": "账户不存在"
-                                }
-                                if (codeDesc.hasOwnProperty(res.code)) {
-                                    nativeService.toast(codeDesc[res.code])
+                                if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                    nativeService.toast(codeDesc.scene[res.code])
                                 }else{
                                     nativeService.toast(res.msg)
                                 }

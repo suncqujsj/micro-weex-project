@@ -137,7 +137,7 @@
     import mideaList from '@/midea-rooms/components/list.vue'
     import mideaPromt from '@/component/promt.vue'
 
-    import { url, applianceImgPath, autoSupportActions } from './config/config.js'
+    import { url, applianceImgPath, autoSupportActions, codeDesc } from './config/config.js'
     const channelBindDevice = new BroadcastChannel('autoBroadcast')
 
     export default {
@@ -427,6 +427,12 @@
                             nativeService.alert('新增成功！', function(){
                                 nativeService.backToNative()
                             })
+                        }else{
+                            if (codeDesc.auto.hasOwnProperty(rtnData.code)){
+                                nativeService.toast(codeDesc.auto[rtnData.code])
+                            }else{
+                                nativeService.toast(rtnData.msg)
+                            }
                         }
                     }).catch( (error )=>{
                     })

@@ -72,7 +72,7 @@
         margin-right: 16px;
         padding: 20px;
     }
-    .auto-name{ width: 120px; font-size: 28px; color: #666666; margin-bottom: 8px; text-overflow: clip; lines: 1  }
+    .auto-name{ width: 120px; font-size: 28px; color: #666666; margin-bottom: 8px; text-overflow: clip; }
     /* .auto-desc{ width: 120px; font-size: 24px; color: #C7C7CC; lines:1; } */
     .scene-list{ height: 1200px;}
     .scene { width: 690px; height: 206px; padding-bottom: 16px; position: relative; }
@@ -91,7 +91,7 @@
 </style>
 
 <script>
-    import { url } from './config/config.js'
+    import { url, codeDesc } from './config/config.js'
     import base from './base'
     import nativeService from '@/common/services/nativeService.js'
     import ToastDialog from '@/midea-component/toastDialog.vue'
@@ -278,16 +278,8 @@
                         if (rtnData.code == 0) {
                             this.checkExecuteAuto(sceneId,rtnData.data.resultId)
                         }else{
-                            let codeDesc = {
-                                '1000': '未知系统错误',
-                                '1001': '参数格式错误',
-                                '1002': '参数为空',
-                                '1105': '账户不存在',
-                                '1200': '用户不在家庭',
-                                '1701': '自动化项目不存在'                
-                            }
-                            if (codeDesc.hasOwnProperty(rtnData.code)) {
-                                nativeService.toast(codeDesc[rtnData.code])
+                            if (codeDesc.auto.hasOwnProperty(rtnData.code)) {
+                                nativeService.toast(codeDesc.auto[rtnData.code])
                             }else{
                                 nativeService.toast(rtnData.msg)
                             }
@@ -309,8 +301,7 @@
                             resultId: resultId
                         }
                         
-                        this.webRequest(reqUrl, reqParams, false).then((res)=>{
-                            
+                        this.webRequest(reqUrl, reqParams, false).then((res)=>{                           
                             if (res.code == 0) {
                                 this.showToastDialog = true
                                 this.autoExecuteDevices = res.data.list
@@ -328,6 +319,11 @@
                                     }
                                 }
                             }else{
+                                if (codeDesc.auto.hasOwnProperty(rtnData.code)) {
+                                    nativeService.toast(codeDesc.auto[rtnData.code])
+                                }else{
+                                    nativeService.toast(rtnData.msg)
+                                }
                             }
                         })
                     }else{
@@ -403,6 +399,12 @@
                             }
                             this.autoList = this.autoList.concat(tmpTemp)
                             
+                        }else{
+                            if (codeDesc.auto.hasOwnProperty(rtnData.code)) {
+                                nativeService.toast(codeDesc.auto[rtnData.code])
+                            }else{
+                                nativeService.toast(rtnData.msg)
+                            }
                         }
                     }).catch( (error )=>{
                     })
@@ -419,7 +421,11 @@
                         if (rtnData.code == 0) {
                             this.sceneList = rtnData.data.list
                         }else{
-                            nativeService.toast(rtnData.msg)
+                            if (codeDesc.scene.hasOwnProperty(rtnData.code)) {
+                                nativeService.toast(codeDesc.scene[rtnData.code])
+                            }else{
+                                nativeService.toast(rtnData.msg)
+                            }
                         }
                     }).catch( (error )=>{
                         nativeService.alert(error)

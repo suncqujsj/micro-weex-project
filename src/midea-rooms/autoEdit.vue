@@ -195,7 +195,7 @@
 </style>
 
 <script>
-    import { url, applianceActions, applianceImgPath, autoSupportActions } from './config/config.js'
+    import { url, applianceActions, applianceImgPath, autoSupportActions, codeDesc } from './config/config.js'
     import base from './base'
 
     import nativeService from '@/common/services/nativeService.js'
@@ -339,7 +339,12 @@
                             this.generateBindDeviceActions()
                             this.generateUnbindDevices()
                             this.generateWeek()
-                        
+                        }else{
+                            if (codeDesc.auto.hasOwnProperty(rtnData.code)){
+                                nativeService.toast(codeDesc.auto[rtnData.code])
+                            }else{
+                                nativeService.toast(rtnData.msg)
+                            }
                         }
                     }).catch( (error )=>{
                     })
@@ -439,6 +444,12 @@
                             nativeService.alert('删除成功!', function(){
                                 nativeService.backToNative()
                             })
+                        }else{
+                            if (codeDesc.auto.hasOwnProperty(rtnData.code)){
+                                nativeService.toast(codeDesc.auto[rtnData.code])
+                            }else{
+                                nativeService.toast(rtnData.msg)
+                            }
                         }
                     }).catch( (err)=>{
                         nativeService.alert(err)
@@ -574,6 +585,12 @@
                             nativeService.alert('修改成功', function(){
                                 nativeService.backToNative()
                             })
+                        }else{
+                            if (codeDesc.auto.hasOwnProperty(rtnData.code)){
+                                nativeService.toast(codeDesc.auto[rtnData.code])
+                            }else{
+                                nativeService.toast(rtnData.msg)
+                            }
                         }
                     }).catch( (error )=>{
                     })

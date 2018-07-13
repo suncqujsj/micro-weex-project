@@ -15,7 +15,7 @@
 		        	</div>
 		        	<div class="card-right">
 		        		<div class="card-control">
-		        			<image class="card-control-img" :src="charge" @click="clickCharge" v-if="work_status=='work'"></image>
+		        			<image class="card-control-img" :src="charge" @click="clickCharge" style="margin-right: 35px" ></image>
 		        			<image class="card-control-img" :src="startPause" @click="clickStartPause"></image>
 		        		</div>
 		        		<div class="card-icon" @click="showControlPanelPage">
@@ -162,6 +162,10 @@
             },
             clickCharge() {
 		        let self = this;
+		        if(this.work_status == "charge") {
+		        	nativeService.toast("正在充电中");
+		        	return;
+		        }
             	let params = {
             			"operation":"luaControl",
             			"name":"charge",
@@ -180,12 +184,13 @@
 		        let name = this.work_status == "work"? "pause":"work";
 		        let startPause = this.work_status == "work"? "stop" : "work";
             	let params = {
-            			"operation":"luaControl",
-            			"name":name,
-            			"data":{
-            				"power": startPause,
-            			}
-            		};
+        			"operation":"luaControl",
+        			"name":name,
+        			"data":{
+        				"work_status": startPause,
+        				"move_direction": "none"
+        			}
+        		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);
             	},function(error) {
@@ -236,12 +241,12 @@
 		            return img;
 		        },
 		        charge() {
-		        	let img = "";
-		            if(this.work_status == "work") {
-		                img = "./assets/img/smart_ic_off@2x.png";
-		            } else {
-		                img = "";
-		            }
+		        	let img = "./assets/img/smart_ic_charge@2x.png";
+//		            if(this.work_status == "work") {
+//		                img = "./assets/img/smart_ic_charge@2x.png";
+//		            } else {
+//		                img = "./assets/img/smart_ic_charge@2x.png";
+//		            }
 		            return img;
 		        }
         },
@@ -336,6 +341,8 @@
 	.icon-offline {
 		width: 314px;
 		height: 314px;
+		opacity: 0.3;
+		box-shadow: 0 5px 6px 0 rgba(0,0,0,0.12);
 	}
 	.card-icon {
 		align-items: flex-end;

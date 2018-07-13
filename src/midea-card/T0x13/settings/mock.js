@@ -6,10 +6,8 @@ export const all = [
         data: {
             "errorCode": 0,
 		    "params": {
-		        "power": "on",
-		        "minutes": "40",
-		        "gear":"4",
-		        "light":"on"
+		       "power": "on",
+		       "scene_light": "film"
 		    }
         }
     },
@@ -18,10 +16,8 @@ export const all = [
         data: {
             "errorCode": 0,
 		    "params": {
-		        "power": "off",
-		        "minutes": "40",
-		        "gear":"4",
-		        "light":"on"
+		       "power": "off",
+		       "scene_light": "read"
 		    }
         }
     },
@@ -31,33 +27,7 @@ export const all = [
             "errorCode": 0,
 		    "params": {
 		        "power": "on",
-		        "minutes": "50",
-		        "gear":"4",
-		        "light":"off"
-		    }
-        }
-    },
-    {
-        path: 'on',
-        data: {
-            "errorCode": 0,
-		    "params": {
-		        "power": "on",
-		        "minutes": "50",
-		        "gear":"4",
-		        "light":"on"
-		    }
-        }
-    },
-    {
-        path: 'off',
-        data: {
-            "errorCode": 0,
-		    "params": {
-		        "power": "on",
-		        "minutes": "50",
-		        "gear":"4",
-		        "light":"off"
+		        "scene_light": "life"
 		    }
         }
     },

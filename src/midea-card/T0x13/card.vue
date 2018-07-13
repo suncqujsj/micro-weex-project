@@ -5,26 +5,20 @@
 		    	 <div class="card" v-if="onoff == 'on'">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
-	        				<text class="main-status" :class="[work_status != 'work'?'main-status-simple':'']">{{display_value1}}</text>
-	        				<text class="danwei">{{danwei}}</text>
+	        				<text class="main-status main-status-simple" >{{display_value1}}</text>
+	        				<text class="danwei"></text>
 	        			</div>
-	        			<text class="main-status-second">{{main_detail}}</text>
+	        			<text class="main-status-second"></text>
 		        		<div class="card-status-detail">
-		        			<text class="main-status-third">{{display_value2}}</text>
+		        			<text class="main-status-third"></text>
 		        		</div>
 		        	</div>
 		        	<div class="card-right">
-		        		<div class="card-control" v-if="work_status=='work'">
-		        			<image v-if="work_status=='work'" class="card-control-img" :src="startPause" @click="controlStartPause"></image>
-		        			<image v-if="work_status=='work'" class="card-control-img" src="./assets/img/smart_ic_cancelwork@2x.png" @click="cancelWork"></image>
-		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
+		        		<div class="card-control" @click="poweronoff(0)">
+		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png"></image>
 		        		</div>
-		        		<div class="card-control" v-else>
-		        			<image v-if="work_status!='work'" class="card-control-img" style="margin-left:50px" src="./assets/img/smart_ic_play@2x.png" @click="startWork"></image>
-		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
-		        		</div>
-		        		<div class="card-icon" >
-		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip029@2x.png" @click="showControlPanelPage()"></image>
+		        		<div class="card-icon" @click="showControlPanelPage">
+		        			<image class="card-icon-img"  src="./assets/img/smart_img_equip013@2x.png"></image>
 		        		</div>
 		        	</div>
 		        </div>
@@ -33,18 +27,18 @@
 		        		<image class="card-control-img" :src="powerIcon_poweroff"  @click="poweronoff(1)"></image>
 		        		<text class="text-offline">电源</text>
 		        	</div>
-		        	<div>
-		        		<image class="icon-offline" src="./assets/img/smart_img_equip029@2x.png" @click="showControlPanelPage"></image>
+		        	<div >
+		        		<image class="icon-offline" @click="showControlPanelPage" src="./assets/img/smart_img_equip013@2x.png"></image>
 		        	</div>
 		        </div>
 	        </div>
 	        <div class="card-power-off" v-else>
-	        	<div class="control-div-offline" @click="reload()">
+	        	<div class="control-div-offline" @click="reload">
 	        		<image class="card-control-img" :src="powerIcon_offline"></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
-	        		<image class="icon-offline" src="./assets/img/smart_img_equip029@2x.png"></image>
+	        		<image class="icon-offline" src="./assets/img/smart_img_equip013@2x.png"></image>
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
@@ -54,8 +48,6 @@
 		        	<image class="smart-img" src="./assets/img/smart_ic_more@2x.png"></image>
 		        </div>
 	      	</div>
-	      	<!--downloading by zhouhg-->
-		      <midea-download></midea-download>
 	        <midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="true" :checked="mideaChecked2" :data="data3"></midea-smart>
 	    </div>
     </scroller>
@@ -66,20 +58,17 @@
 	import mideaSwitch from '@/midea-component/switch.vue'
 	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
 	import mideaItem from '@/midea-component/item.vue'
-	//downloading by zhouhg
-	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
-	const stream = weex.requireModule('stream');
+	var stream = weex.requireModule('stream');
 	const globalEvent = weex.requireModule('globalEvent');
 	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
             mideaSwitch,
             mideaSmart,
-            mideaItem,
-            mideaDownload   //downloading by zhouhg
+            mideaItem
         },
         data() {
             return {
@@ -94,46 +83,18 @@
             	pushKeyOnline: "receiveMessageFromApp",
                 mideaChecked: true,
                 mideaChecked2: false,
-                
-                work_status:"",
-                mode: "",
-                wash_stage: "",
-                left_time: "",
-                operator: "",
-                onoff: "",
-                danwei: "",
-                
-                display_value1: "",
-                main_detail: "",
-	            display_value2: "",
-	            return_work_status:{
-				    power_on: "开机",
-					power_off: "关机",
-					cancel: "取消工作",
-					work: "开始工作",
-					order: "预约",
-					error: "错误",
-					soft_gear: "软水档位设置中"
-	            },
-	            return_mode: {
-	            	auto_wash: "自动洗/智能洗",   
-					strong_wash: "强力洗 ",
-					standard_wash: "及时洗/标准洗",
-					eco_wash: "节能洗/经济洗",
-					glass_wash: "玻璃洗",
-					fast_wash: "快速洗",
-					self_define: "自定义洗"
-	            },
-	            return_wash_stage: {
-	            	0: "未洗涤",
-					1: "预洗",
-					2: "主洗",
-					3: "漂洗",
-					4: "干燥",
-					5: "结束"
-	            },
-	            powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
+	            onoff: "",//localStorage.getItem("A1power") || "on",
+	            scene_light: "",
+	            display_value1: "",
+	            powerIcon_poweroff: "./assets/img/smart_ic_off@2x.png",
                 powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
+                return_scene_light: {
+                	life: "生活模式",
+					read: "阅读模式",
+					mild: "柔和模式",
+					film: "影院模式",
+					light: "夜灯模式"
+                },
                 data:{
                  	title:"室内温度高于28°度时候，自动开启空调。",
                  	detail:"模式制冷，温度23."
@@ -171,29 +132,11 @@
             updateUI(data) {
             	if(data.errorCode == 0) {
 	            	let params = data.params || data.result;
-	                this.work_status = params.work_status;
-	                this.mode = params.mode;
-	                this.wash_stage = params.wash_stage;
-	                this.left_time = params.left_time;
-	                this.operator = params.operator;
-	                if(this.work_status == "power_off") {
-	                	this.onoff = "off";
-	                } else {
-	                	this.onoff = "on";
-	                	if(this.work_status == "work") {
-	                		this.display_value1 = this.left_time;
-	                		this.main_detail = "工作剩余时间";
-	                		this.display_value2 = this.return_mode[this.mode] + " " + this.return_wash_stage[params.wash_stage];
-	                		this.danwei = "分"
-	                	} else {
-	                		this.display_value1 = this.return_work_status[this.work_status];
-	                		this.main_detail = "";
-	                		this.display_value2 = this.return_mode[this.mode] || "--";
-	                		this.danwei = "";
-	                	}
-	                }
+	                this.onoff = params.power;
+	                this.scene_light = params.scene_light;
+	                this.display_value1 = this.return_scene_light[this.scene_light];
 	            }else {
-	                modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+	                nativeService.toast("连接设备超时");
 	            }
             },
             updateDeviceInfo(data) {
@@ -206,83 +149,16 @@
             },
             poweronoff(flag) {
 		    	let self = this;
-		    	if(flag != 1 && this.work_status == "work") {
-		    		nativeService.toast("工作中不可以直接关机");
-		    		return;
-		    	}
 		        let name = flag == 1? "poweron":"poweroff";
-		        let poweronoff = this.work_status == "power_off"?"power_on":"power_off";
+		        let poweronoff = flag == 1? "on" : "off";
             	let params = {
-        			"operation":"luaControl",
-        			"name":name,
-        			"data":{
-        				"work_status": poweronoff
-        			}
-        		};
+            			"operation":"luaControl",
+            			"name":name,
+            			"data":{
+            				"power": poweronoff,
+            			}
+            		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
-            		self.updateUI(data);
-            	},function(error) {
-            		console.log("error");
-            	});
-            },
-            controlStartPause() {
-            	let self = this;
-            	if(this.operator == "start") {
-            		//pause logic
-            		let params = {
-            			"operation":"luaControl",
-            			"name":"pause",
-            			"data":{
-            				"operator": "pause"
-            			}
-            		};
-            		nativeService.sendLuaRequest(params,true).then(function(data) {
-	            		self.updateUI(data);
-	            	},function(error) {
-	            		console.log("error");
-	            	});
-            	} else {
-            		//start logic
-            		let params = {
-            			"operation":"luaControl",
-            			"name":"start",
-            			"data":{
-            				"operator": "start",
-            			}
-            		};
-            		nativeService.sendLuaRequest(params,true).then(function(data) {
-	            		self.updateUI(data);
-	            	},function(error) {
-	            		console.log("error");
-	            	});
-            	}
-            },
-            cancelWork() {
-            	let self = this;
-            	let params = {
-        			"operation":"luaControl",
-        			"name":"cancelWork",
-        			"data":{
-        				"work_status": "cancel"
-        			}
-        		};
-        		nativeService.sendLuaRequest(params,true).then(function(data) {
-            		self.updateUI(data);
-            	},function(error) {
-            		console.log("error");
-            	});
-            },
-            startWork() {
-            	let self = this;
-            	let params = {
-        			"operation":"luaControl",
-        			"name":"startWork",
-        			"data":{
-        				"work_status": "work",
-        				"mode": this.return_mode[this.mode] ? this.mode : "auto_wash"
-        			}
-        		};
-        		nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);
             	},function(error) {
             		console.log("error");
@@ -306,7 +182,7 @@
             		}
 		        });
             },
-	        showControlPanelPage() {
+            showControlPanelPage() {
             	let params = {
             		controlPanelName:"controlPanel.html"
             	};
@@ -319,18 +195,10 @@
             	},function(error) {
             		//fail
             	});
-            }
+            },
         },
         computed: {
-        	startPause() {
-	        	let img = "";
-	            if(this.operator == "start") {
-	                img = "./assets/img/smart_ic_pause@2x.png";
-	            } else {
-	                img = "./assets/img/smart_ic_play@2x.png";
-	            }
-	            return img;
-	        }
+        	
         },
         mounted() {
 	       let self = this;
@@ -403,8 +271,9 @@
 	.card-control {
 		align-items: flex-end;
 		margin-top:44px;
+		margin-right:44px;
 		flex-direction: row;
-		justify-content: space-around;
+		justify-content: flex-end;
 	}
 	.card-control-temp-div {
 		flex-direction: row;

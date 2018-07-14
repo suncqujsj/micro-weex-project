@@ -240,7 +240,7 @@
 		color: #FFFFFF;
 		letter-spacing: 0;
 		text-align: center;
-		line-height: 18px;
+		/*line-height: 18px;*/
 	}
 	.danwei {
 		font-family: PingFangSC-Light;
@@ -262,7 +262,7 @@
 		color: #FFFFFF;
 		letter-spacing: 0;
 		text-align: center;
-		line-height: 24px;
+		/*line-height: 24px;*/
 	}
 	.main-status-detail {
 		width: 30px;

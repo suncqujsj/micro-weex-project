@@ -167,6 +167,10 @@
 	            	nativeService.toast("关机状态无法设置温度");
 	                return;
 	            }
+	            if(this.temperature == "--") {
+	            	this.queryStatus();
+	            	return;
+	            }
 	            let temperature = this.temperature;
 	            if(temperature <= 17 && value == -1) {
 	            	nativeService.toast("最低设置温度17度");
@@ -214,7 +218,7 @@
 	                this.onoff = params.power;
 	                this.mode = params.mode;
 	                // this.temperature = parseInt(params.temperature) + parseFloat(params.small_temperature);
-	                this.temperature = parseInt(params.temperature); //不显示小数位
+	                this.temperature = parseInt(params.temperature) || "--"; //不显示小数位
 	                this.tmpTemperatureValue = this.temperature; //记录临时温度值
 	                this.danwei = "°";
 	
@@ -471,7 +475,7 @@
 		color: #FFFFFF;
 		letter-spacing: 0;
 		text-align: center;
-		line-height: 18px;
+		/*line-height: 18px;*/
 	}
 	.danwei {
 		font-family: PingFangSC-Light;
@@ -499,7 +503,7 @@
 		color: #FFFFFF;
 		letter-spacing: 0;
 		text-align: center;
-		line-height: 24px;
+		/*line-height: 24px;*/
 	}
 	.main-status-detail {
 		width: 30px;

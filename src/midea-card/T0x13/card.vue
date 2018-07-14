@@ -96,7 +96,8 @@
 					read: "阅读模式",
 					mild: "柔和模式",
 					film: "影院模式",
-					light: "夜灯模式"
+					light: "夜灯模式",
+					manual: "手动模式"
                 },
                 data:{
                  	title:"室内温度高于28°度时候，自动开启空调。",
@@ -127,7 +128,6 @@
             			"params":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
-     
             		self.updateUI(data);
             	},function(error) {
             		console.log("error");
@@ -138,7 +138,7 @@
 	            	let params = data.params || data.result;
 	                this.onoff = params.power;
 	                this.scene_light = params.scene_light;
-	                this.display_value1 = this.return_scene_light[this.scene_light];
+	                this.display_value1 = this.return_scene_light[this.scene_light] || "--";
 	            }else {
 	                nativeService.toast("连接设备超时");
 	            }
@@ -163,7 +163,8 @@
             			}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
-            		self.updateUI(data);
+            		//self.updateUI(data);
+            		self.queryStatus();
             	},function(error) {
             		console.log("error");
             	});

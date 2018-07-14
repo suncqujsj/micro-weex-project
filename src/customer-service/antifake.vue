@@ -14,7 +14,12 @@
             </div>
 
             <div class="item-group">
-                <input class="item-input" type="text" placeholder="请输入4位验证码" :autofocus=false v-model="validCode" :return-key-type="isDataReady?'search':'text'" maxlength="4" @return="submit" />
+                <input class="item-input" type="number" placeholder="请输入4位验证码" :autofocus=false v-model="validCode" :return-key-type="isDataReady?'search':'text'" maxlength="4" @return="submit" />
+            </div>
+
+            <div class="item-group" v-if="failedCount>=3">
+                <input class="item-input" type="text" placeholder="请输入图形验证码" :autofocus=false v-model="picCode" :return-key-type="isDataReady?'search':'text'" maxlength="4" @return="submit" />
+                <image class="validate-img" :src="picCodeSrc + picCodeSrcRadom" resize='contain' @click="refreshPicCode()"></image>
             </div>
             <div class="item-group">
                 <text class="info-label">适用于生产日期2017年7月1日之后的滤芯</text>
@@ -49,6 +54,10 @@ export default {
             title: '滤芯防伪',
             code: '',
             validCode: '',
+            failedCount: 3,
+            picCode: '',
+            picCodeSrc: 'http://wap.cjm.so/Common/ValidateCode.ashx?Type=&Demand=&w=&h=&r=',
+            picCodeSrcRadom: '',
             result: {
                 message: ''
             },
@@ -57,29 +66,43 @@ export default {
     },
     computed: {
         isDataReady() {
-            return this.code && this.validCode
+            return this.code && this.validCode && (this.failedCount < 3 || this.picCode)
         }
     },
     methods: {
         scanCode(result) {
             this.code = result.substr(result.lastIndexOf('/') + 1)
         },
+        refreshPicCode() {
+            this.picCodeSrcRadom = Math.random().toString().replace('.', '')
+        },
         submit() {
             if (!this.isDataReady) return
 
+            if (this.validCode.length != 4) {
+                this.result.message = "验证码必须为4位"
+                this.dialogShow = true
+                return
+            }
             let param = {
                 Code: this.code + this.validCode
+            }
+            if (this.failedCount > 2) {
+                param.Validate = this.picCode
             }
             nativeService.antiFakeQuery(param).then(
                 (resp) => {
                     this.result = resp
                     if (resp.success && resp.result.ResultID) {
+                        this.failedCount = 0
                         nativeService.setItem(this.SERVICE_STORAGE_KEYS.antifakeResult, Object.assign({
                             code: this.code
                         }, resp), (resp) => {
                             this.goTo('antifakeResult')
                         })
                     } else {
+                        this.refreshPicCode()
+                        this.failedCount++
                         this.dialogShow = true
                     }
                 }
@@ -113,12 +136,14 @@ export default {
   background-color: #f2f2f2;
 }
 .item-group {
+  flex-direction: row;
   padding-left: 32px;
   padding-right: 32px;
   padding-top: 32px;
   background-color: #ffffff;
 }
 .item-input {
+  flex: 1;
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #000000;
@@ -129,6 +154,16 @@ export default {
   padding-left: 22px;
   padding-right: 60px;
   background-color: #fafafa;
+}
+.validate-img {
+  border-color: #e5e5e8;
+  border-top-width: 1px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  flex: 180px;
+  height: 72px;
+  width: 180px;
+  margin-left: 22px;
 }
 .info-title {
   font-family: PingFangSC-Medium;

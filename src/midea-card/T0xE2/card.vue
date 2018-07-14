@@ -61,6 +61,7 @@
 	      	</div>
 	      	<midea-smart @change="onMideachange2" :checked="mideaChecked2" :data="data2"></midea-smart>     
 	        <midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="true" :checked="mideaChecked2" :data="data3"></midea-smart>
+	        <midea-download></midea-download>
 	    </div>
     </scroller>
 </template>
@@ -71,6 +72,7 @@
 	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
 	import scrollerBar from '@/midea-card/T0xAC/components/scroller-bar.vue'
 	import mideaItem from '@/midea-component/item.vue'
+	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
@@ -82,7 +84,8 @@
             mideaSwitch,
             mideaSmart,
             mideaItem,
-            scrollerBar
+            scrollerBar,
+            mideaDownload
         },
         data() {
             return {
@@ -161,7 +164,7 @@
             	let params = {
             			"operation":"luaControl",
             			"name":"update",
-            			"data":{
+            			"params":{
             				"mode":"custom",
                				"temperature": value
             			}
@@ -185,7 +188,7 @@
             	let params = {
             			"operation":"luaQuery",
             			"name":"deviceinfo",
-            			"data":{}
+            			"params":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);
@@ -221,7 +224,7 @@
             	let params = {
             			"operation":"luaControl",
             			"name":name,
-            			"data":{
+            			"params":{
             				"power": poweronoff,
             			}
             		};
@@ -244,7 +247,7 @@
 	            let params = {
                 	"operation":"luaControl",
         			"name":"up",
-        			"data":{
+        			"params":{
         				"mode":"custom",
 	            		"temperature":parseInt(this.temperature) + 5
         			}
@@ -266,7 +269,7 @@
 	            let params = {
                 	"operation":"luaControl",
         			"name":"down",
-        			"data":{
+        			"params":{
         				"mode":"custom",
 	            		"temperature": parseInt(this.temperature) - 5
         			}

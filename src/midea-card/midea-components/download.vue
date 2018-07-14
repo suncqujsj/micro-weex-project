@@ -109,7 +109,7 @@
             getNetworkStatus(){
             	nativeService.getNetworkStatus().then(
 	                (resp) => {
-	                	nativeService.toast(resp,20)
+//	                	nativeService.toast(resp,20)
 						let res = JSON.parse(resp);
 						if(parseInt(res.statue)){
 							if(parseInt(res.type)){

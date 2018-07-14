@@ -81,11 +81,11 @@
 		        	<image class="smart-img" :src="moreImg"></image>
 		        </div>
 		        <midea-smart @change="onMideachange" :checked="mideaChecked" :data="data"></midea-smart>
-		      </div>
-		      <!--downloading by zhouhg-->
-		      <midea-download></midea-download>
-		      <midea-smart @change="onMideachange2" :checked="mideaChecked2" :data="data2"></midea-smart>     
+	        </div>
+		    <midea-smart @change="onMideachange2" :checked="mideaChecked2" :data="data2"></midea-smart>     
 	        <midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="false" :checked="mideaChecked2" :data="data3"></midea-smart>
+	        <!--downloading by zhouhg-->
+		    <midea-download></midea-download>
 	    </div>
     </scroller>
 </template>
@@ -186,7 +186,7 @@
                 let params = {
                 	"operation":"luaControl",
         			"name":"temperatureControl",
-        			"data":{
+        			"params":{
         				temperature: me.temperature,
         			}
                 }
@@ -199,7 +199,7 @@
             	let params = {
             			"operation":"luaQuery",
             			"name":"deviceinfo",
-            			"data":{}
+            			"params":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);
@@ -258,7 +258,7 @@
             	let params = {
             			"operation":"luaControl",
             			"name":name,
-            			"data":{
+            			"params":{
             				"power": poweronoff,
             			}
             		};

@@ -1,6 +1,6 @@
 <template>
     <div :style="wrapStyle">
-        <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" @leftImgClick="goBack"></midea-header>
+        <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
         <list class="scroller" :style="scrollerStyle">
             <cell>
                 <div class="block"  style="background-color:#fff">
@@ -193,7 +193,7 @@
                     title: '设置',
                     bgColor: '#fff',
                     color: '#111',
-                    leftImg: 'assets/img/b.png'
+                    leftImg: 'assets/img/public_ic_back@3x.png'
                 },
                 icon: {
                     next: 'assets/img/more.png'

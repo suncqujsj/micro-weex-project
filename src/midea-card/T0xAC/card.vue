@@ -81,11 +81,11 @@
 		        	<image class="smart-img" :src="moreImg"></image>
 		        </div>
 		        <midea-smart @change="onMideachange" :checked="mideaChecked" :data="data"></midea-smart>
-		      </div>
-		      <!--downloading by zhouhg-->
-		      <midea-download></midea-download>
-		      <midea-smart @change="onMideachange2" :checked="mideaChecked2" :data="data2"></midea-smart>     
+	        </div>
+		    <midea-smart @change="onMideachange2" :checked="mideaChecked2" :data="data2"></midea-smart>     
 	        <midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="false" :checked="mideaChecked2" :data="data3"></midea-smart>
+	        <!--downloading by zhouhg-->
+		    <midea-download></midea-download>
 	    </div>
     </scroller>
 </template>
@@ -167,6 +167,10 @@
 	            	nativeService.toast("关机状态无法设置温度");
 	                return;
 	            }
+	            if(this.temperature == "--") {
+	            	this.queryStatus();
+	            	return;
+	            }
 	            let temperature = this.temperature;
 	            if(temperature <= 17 && value == -1) {
 	            	nativeService.toast("最低设置温度17度");
@@ -186,7 +190,7 @@
                 let params = {
                 	"operation":"luaControl",
         			"name":"temperatureControl",
-        			"data":{
+        			"params":{
         				temperature: me.temperature,
         			}
                 }
@@ -199,7 +203,7 @@
             	let params = {
             			"operation":"luaQuery",
             			"name":"deviceinfo",
-            			"data":{}
+            			"params":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);
@@ -214,7 +218,7 @@
 	                this.onoff = params.power;
 	                this.mode = params.mode;
 	                // this.temperature = parseInt(params.temperature) + parseFloat(params.small_temperature);
-	                this.temperature = parseInt(params.temperature); //不显示小数位
+	                this.temperature = parseInt(params.temperature) || "--"; //不显示小数位
 	                this.tmpTemperatureValue = this.temperature; //记录临时温度值
 	                this.danwei = "°";
 	
@@ -258,7 +262,7 @@
             	let params = {
             			"operation":"luaControl",
             			"name":name,
-            			"data":{
+            			"params":{
             				"power": poweronoff,
             			}
             		};
@@ -410,6 +414,7 @@
 		width: 534px;
 		height: 248px;
 		opacity: 0.3;
+		box-shadow: 0 5px 6px 0 rgba(0,0,0,0.12);
 	}
 	.card-hot {
 		background-color: #FFBD00;
@@ -470,7 +475,7 @@
 		color: #FFFFFF;
 		letter-spacing: 0;
 		text-align: center;
-		line-height: 18px;
+		/*line-height: 18px;*/
 	}
 	.danwei {
 		font-family: PingFangSC-Light;
@@ -498,7 +503,7 @@
 		color: #FFFFFF;
 		letter-spacing: 0;
 		text-align: center;
-		line-height: 24px;
+		/*line-height: 24px;*/
 	}
 	.main-status-detail {
 		width: 30px;

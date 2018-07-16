@@ -45,6 +45,7 @@
         <div style="flex-direction: row;flex-wrap: wrap;">
         	<cookbook v-for="(item3,index) in cookbook" :data="item3" @cookbookclick="mideaClick"></cookbook>
         </div>
+        <midea-download></midea-download>
     </div>
     </scroller>
 </template>
@@ -55,6 +56,7 @@
 	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
 	import mideaItem from '@/midea-component/item.vue'
 	import cookbook from '@/midea-card/T0xAC/components/cookbook.vue'
+	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
@@ -66,7 +68,8 @@
             mideaSwitch,
             mideaSmart,
             mideaItem,
-            cookbook
+            cookbook,
+            mideaDownload
         },
         data() {
             return {
@@ -358,7 +361,7 @@
             	let params = {
             			"operation":"luaQuery",
             			"name":"deviceinfo",
-            			"data":{}
+            			"params":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);
@@ -411,7 +414,7 @@
             		let params = {
 	                	"operation":"luaControl",
 	        			"name":"pause",
-	        			"data":{
+	        			"params":{
 	        				"work_status": "cancel",
 		                	"name": "pause"
 	        			}
@@ -548,6 +551,8 @@
 	.icon-offline {
 		width: 314px;
 		height: 314px;
+		opacity: 0.3;
+		box-shadow: 0 5px 6px 0 rgba(0,0,0,0.12);
 	}
 	.card-icon {
 		align-items: flex-end;

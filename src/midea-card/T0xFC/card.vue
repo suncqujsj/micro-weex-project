@@ -51,7 +51,8 @@
 		        </div>
 		        <midea-smart @change="onMideachange" :checked="mideaChecked" :data="data"></midea-smart>
 		      </div>
-		      <midea-smart @change="onMideachange2" :checked="mideaChecked2" :data="data2"></midea-smart>     
+		      <midea-smart @change="onMideachange2" :checked="mideaChecked2" :data="data2"></midea-smart>
+		      <midea-download></midea-download>
 	    </div>
     </scroller>
 </template>
@@ -62,6 +63,7 @@
 	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
 	import scrollerBar from '@/midea-card/T0xAC/components/scroller-bar.vue'
 	import mideaItem from '@/midea-component/item.vue'
+	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
@@ -73,7 +75,8 @@
             mideaSwitch,
             mideaSmart,
             mideaItem,
-            scrollerBar
+            scrollerBar,
+            mideaDownload
         },
         data() {
             return {
@@ -121,7 +124,7 @@
             	let params = {
             			"operation":"luaQuery",
             			"name":"deviceinfo",
-            			"data":{}
+            			"params":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);
@@ -159,7 +162,7 @@
             	let params = {
             			"operation":"luaControl",
             			"name":name,
-            			"data":{
+            			"params":{
             				"power": poweronoff,
             			}
             		};
@@ -276,6 +279,8 @@
 	.icon-offline {
 		width: 314px;
 		height: 314px;
+		opacity: 0.3;
+		box-shadow: 0 5px 6px 0 rgba(0,0,0,0.12);
 	}
 	.card-control {
 		align-items: flex-end;

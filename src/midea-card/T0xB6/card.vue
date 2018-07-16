@@ -16,10 +16,11 @@
 		        		</div>
 		        	</div>
 		        	<div class="card-right">
-		        		<div class="card-control" @click="poweronoff(0)">
-		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png"></image>
+		        		<div class="card-control" >
+		        			<image class="card-control-img" @click="lightSwitch" style="margin-right: 35px" :src="lightImg"></image>
+		        			<image class="card-control-img" @click="poweronoff(0)" src="./assets/img/smart_ic_off@2x.png"></image>
 		        		</div>
-		        		<div class="card-icon">
+		        		<div class="card-icon" @click="showControlPanelPage">
 		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip030@2x.png"></image>
 		        		</div>
 		        	</div>
@@ -30,13 +31,13 @@
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image class="icon-offline" src="./assets/img/smart_img_equip030@2x.png" @click="queryStatus"></image>
+		        		<image class="icon-offline" src="./assets/img/smart_img_equip030@2x.png" @click="showControlPanelPage"></image>
 		        	</div>
 		        </div>
 	        </div>
 	        <div class="card-power-off" v-else>
 	        	<div class="control-div-offline">
-	        		<image class="card-control-img" :src="powerIcon_offline"  @click="poweronoff(1)"></image>
+	        		<image class="card-control-img" :src="powerIcon_offline"  @click="reload"></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
@@ -51,6 +52,7 @@
 		        </div>
 	      	</div>
 	        <midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="true" :checked="mideaChecked2" :data="data3"></midea-smart>
+	        <midea-download></midea-download>
 	    </div>
     </scroller>
 </template>
@@ -60,6 +62,7 @@
 	import mideaSwitch from '@/midea-component/switch.vue'
 	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
 	import mideaItem from '@/midea-component/item.vue'
+	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
@@ -68,7 +71,8 @@
         components: {
             mideaSwitch,
             mideaSmart,
-            mideaItem
+            mideaItem,
+            mideaDownload
         },
         data() {
             return {
@@ -116,18 +120,15 @@
             	let params = {
             			"operation":"luaQuery",
             			"name":"deviceinfo",
-            			"data":{}
+            			"params":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
-            		nativeService.alert(data);
             		self.updateUI(data);
             	},function(error) {
-            		nativeService.alert(error);
             		console.log("error");
             	});
             },
             updateUI(data) {
-            	nativeService.alert(data);
             	if(data.errorCode == 0) {
 	                let params = data.params || data.result;
 	                this.onoff = params.power;
@@ -157,31 +158,91 @@
 		        let name = flag == 1? "poweron":"poweroff";
 		        let poweronoff = flag == 1? "on" : "off";
             	let params = {
+        			"operation":"luaControl",
+        			"name":name,
+        			"params":{
+        				"power": poweronoff,
+        			}
+        		};
+            	if(flag == 1) {
+            		params.data.gear = this.gear || 1;
+            	}
+            	nativeService.sendLuaRequest(params,true).then(function(data) {
+//            		self.updateUI(data);
+					self.queryStatus();
+            	},function(error) {
+            		console.log("error");
+            	});
+            },
+            lightSwitch() {
+            	let self = this;
+            	let name = this.light == 'on'? "off":"on";
+            	let lightSwitch = this.light == 'on'? "off":"on";
+            	if(this.light == "on") {
+            		
+            	}
+            	let params = {
             			"operation":"luaControl",
             			"name":name,
-            			"data":{
-            				"power": poweronoff,
-//							"light":"on",
-//							"intelligent":"on"
+            			"params":{
+            				"light": lightSwitch,
             			}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
-            		nativeService.alert(data);
-            		//self.updateUI(data);
-//					self.queryStatus();
+              		self.updateUI(data);
             	},function(error) {
-            		nativeService.alert(error);
             		console.log("error");
+            	});
+            },
+            handleNotification() {
+            	console.log("handleNotification Yoram");
+            	let me = this;
+            	globalEvent.addEventListener(this.pushKey, (data) => {
+            		me.queryStatus();
+		        });
+		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
+            		if(data && data.messageType == "deviceOnlineStatus") {
+            			if(data.messageBody && data.messageBody.onlineStatus == "online") {
+            				me.onlineStatus = "1";
+            			} else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+            				me.onlineStatus = "0";
+            			} else {
+            				me.onlineStatus = "0";
+            			}
+            		}
+		        });
+            },
+            showControlPanelPage() {
+            	let params = {
+            		controlPanelName:"controlPanel.html"
+            	};
+            	bridgeModule.showControlPanelPage(params);
+            },
+            reload() {
+            	let params = {};
+            	bridgeModule.reload(params,function(result) {
+            		//successful
+            	},function(error) {
+            		//fail
             	});
             },
         },
         computed: {
-        	
+        	lightImg() {
+	        	let img = "";
+	            if(this.light == "on") {
+	                img = "./assets/img/smart_ic_lightoff@2x.png";
+	            } else {
+	                img = "./assets/img/smart_ic_lighton@2x.png";
+	            }
+	            return img;
+	        }
         },
         mounted() {
 	       let self = this;
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
+            	self.handleNotification();
             	if(data.result.isOnline == 1) {
             		self.queryStatus();
             	}

@@ -38,6 +38,30 @@ export const all = [
         }
     },
     {
+        path: 'on',
+        data: {
+            "errorCode": 0,
+		    "params": {
+		        "power": "on",
+		        "minutes": "50",
+		        "gear":"4",
+		        "light":"on"
+		    }
+        }
+    },
+    {
+        path: 'off',
+        data: {
+            "errorCode": 0,
+		    "params": {
+		        "power": "on",
+		        "minutes": "50",
+		        "gear":"4",
+		        "light":"off"
+		    }
+        }
+    },
+    {
         path: 'getDeviceInfo',
         data: {
             "msg": "",

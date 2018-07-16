@@ -40,6 +40,7 @@
 		        </div>
 	      	</div>
 	        <midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="true" :checked="mideaChecked2" :data="data3"></midea-smart>
+	        <midea-download></midea-download>
 	    </div>
     </scroller>
 </template>
@@ -50,6 +51,7 @@
 	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
 	import mideaItem from '@/midea-component/item.vue'
 	import { DEVICE_INFO } from './settings/deviceStatus'
+	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
@@ -58,7 +60,8 @@
         components: {
             mideaSwitch,
             mideaSmart,
-            mideaItem
+            mideaItem,
+            mideaDownload
         },
         data() {
             return {
@@ -215,6 +218,7 @@
 		width: 314px;
 		height: 314px;
 		opacity: 0.3;
+		box-shadow: 0 5px 6px 0 rgba(0,0,0,0.12);
 	}
 	.card-icon {
 		align-items: flex-end;
@@ -236,7 +240,7 @@
 		color: #FFFFFF;
 		letter-spacing: 0;
 		text-align: center;
-		line-height: 18px;
+		/*line-height: 18px;*/
 	}
 	.danwei {
 		font-family: PingFangSC-Light;
@@ -258,7 +262,7 @@
 		color: #FFFFFF;
 		letter-spacing: 0;
 		text-align: center;
-		line-height: 24px;
+		/*line-height: 24px;*/
 	}
 	.main-status-detail {
 		width: 30px;

@@ -83,6 +83,7 @@ export default {
             }
         },
         resetResult(event) {
+            this.productModel = null
             this.date = null
             this.result = null
         },

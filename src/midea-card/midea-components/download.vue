@@ -44,6 +44,7 @@
             	isloading: false,
             	iswifi: true,
 				nodeviceInfo: [],
+				deviceId: "",
 				deviceInfo: {
 					'deviceId': '',
 					'version': ''
@@ -59,48 +60,63 @@
 			　　	return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
 			},
         	giveup() {
-     		    this.ismark = false;
-				for(let i = 0; i < this.nodeviceInfo.length;i++){
-					if(this.nodeviceInfo[i].deviceId == this.deviceInfo.deviceId){
-						this.nodeviceInfo[i] = this.deviceInfo;
-					}else{
-						this.nodeviceInfo.push(this.deviceInfo);
-					}
-				}
-				nativeService.setItem("downDeviceData",this.nodeviceInfo);
+        		nativeService.alert("确定忽略此版本？",() => {
+        			this.ismark = false;
+	     		    if(this.nodeviceInfo.length > 0){
+	     		    	for(let i = 0; i < this.nodeviceInfo.length;i++){
+							if(this.nodeviceInfo[i].deviceId === this.deviceInfo.deviceId){
+								this.nodeviceInfo[i] = this.deviceInfo;
+							}else{
+								this.nodeviceInfo.push(this.deviceInfo);
+							}
+						}
+	     		    }else{
+	     		    	this.nodeviceInfo.push(this.deviceInfo);
+	     		    }
+					nativeService.setItem("downDeviceData",this.nodeviceInfo,(data) => {
+						nativeService.toast("忽略成功");
+					});
+        		})
+     		    
         	},
         	downloading() {
         		this.isloading = true;
         		this.downLoadDevicePlugin();
         	},
             getDevicePluginInfo(){
-            	nativeService.getDevicePluginInfo({'deviceId':this.deviceInfo.deviceId}).then((resp) => {
+            	nativeService.getDevicePluginInfo({'deviceId':this.deviceId}).then((resp) => {
+            		nativeService.hideLoading();
             		let res = JSON.parse(resp);
 						let that = this;
 						let isshow = [];
-						this.bytes = res.packageSize;
-						this.deviceInfo.version = res.version;
+						that.bytes = res.packageSize;
+						that.deviceInfo.version = res.version;
 						if(res.needUpdate){
-							for(let i = 0; i < this.nodeviceInfo.length;i++){
-									if(this.nodeviceInfo[i].deviceId == this.deviceInfo.deviceId){
-										if(this.nodeviceInfo[i].version != res.version){
-											this.ismark = true;
-											return;
+							if(that.nodeviceInfo.length > 0){
+								for(let i = 0; i < that.nodeviceInfo.length;i++){
+									if(that.nodeviceInfo[i].deviceId === that.deviceInfo.deviceId){
+										if(that.nodeviceInfo[i].version === res.version){
+											that.ismark = false;
 										}else{
-											this.ismark = false;
+											
+											that.ismark = true;
 										}
 									}else{
 										isshow.push(i);
 									}
+								}
+							}else{
+								that.ismark = true;
+								
 							}
 						}else{
-							this.ismark = false;
+							that.ismark = false;
 						}
-						nativeService.alert(res);
-						if(isshow.length = this.nodeviceInfo.length){
-							this.ismark = true;
+						
+						if(isshow.length === that.nodeviceInfo.length){
+							that.ismark = true;
 						}
-						nativeService.hideLoading();
+						
             	}).catch((error) => {
             		nativeService.hideLoading();
 		            this.ismark = false;
@@ -109,10 +125,9 @@
             getNetworkStatus(){
             	nativeService.getNetworkStatus().then(
 	                (resp) => {
-//	                	nativeService.toast(resp,20)
-						let res = JSON.parse(resp);
-						if(parseInt(res.statue)){
-							if(parseInt(res.type)){
+//						let res = JSON.parse(resp);
+						if(resp.status === "1" || resp.status === 1){
+							if(resp.type === "1" || resp.type === 1){
 		                    	this.iswifi = true;
 		                    }else{
 		                    	this.iswifi = false;
@@ -124,11 +139,12 @@
 	                }
 	            ).catch((error) => {
 	            	nativeService.hideLoading();
+	            	nativeService.toast(error)
 	            	this.iswifi = false;
 	            })
             },
             download(){
-				nativeService.downLoadDevicePlugin({'deviceId':this.deviceInfo.deviceId},(resp) => {
+				nativeService.downLoadDevicePlugin({'deviceId':this.deviceId},(resp) => {
 					let res = JSON.parse(resp);
 				    // let status = parseInt(res.status);
 				    switch (res.status){
@@ -155,31 +171,31 @@
 				})
             },
             downLoadDevicePlugin(){
-            	this.download();
-//          	nativeService.getNetworkStatus().then(
-//	                (resp) => {
-//						let res = JSON.parse(resp);
-//						if(parseInt(res.statue) == 1){
-//							if(parseInt(res.type) != 1){
-//		                    	if(this.iswifi){
-//		                    		this.iswifi = false;
-//		                    		nativeService.toast('您已切换到非WiFi模式，确定继续下载？',(val) => {
-//		                    			this.download();
-//		                    		})
-//		                    	}
-//		                    }else{
-//		                    	this.download();
-//		                    }
-//						}else{
-//							nativeService.toast('当前网络不可用')
-//						}
-//	                }
-//	            ).catch((error) => {
-//					nativeService.toast(error)
-//	            	this.iswifi = false;
-//	            })
+//          	this.download();
+            	nativeService.getNetworkStatus().then(
+	                (resp) => {
+						if(resp.status === "1" || resp.status === 1){
+							if(resp.type != "1" && resp.type != 1){
+		                    	if(this.iswifi){
+		                    		this.iswifi = false;
+		                    		nativeService.alert('您已切换到非WiFi模式，确定继续下载？',(val) => {
+		                    			this.download();
+		                    		})
+		                    	}
+		                    }else{
+		                    	this.download();
+		                    }
+						}else{
+							nativeService.toast('当前网络不可用')
+						}
+	                }
+	            ).catch((error) => {
+					nativeService.toast(error)
+	            	this.iswifi = false;
+	            })
             },
 			getDeviceInfor(){
+				nativeService.showLoading();
 				nativeService.getDeviceInfo().then(
 					(resp) => {
 						let result;
@@ -188,9 +204,10 @@
 						}else{
 							result = resp;
 						}
-						this.deviceInfo.deviceId = result.deviceId;
-						this.getDevicePluginInfo();
-//						this.getNetworkStatus();
+						this.deviceId = result.deviceId;
+						this.deviceInfo.deviceId = result.deviceType;
+//						this.getDevicePluginInfo();
+						this.getNetworkStatus();
 				}).catch((error) => {
 					nativeService.hideLoading();
 					nativeService.toast(error)
@@ -204,6 +221,7 @@
         	
         },
         created(){
+//      	nativeService.removeItem("downDeviceData");
 			nativeService.getItem("downDeviceData",(resp) => {
 				if(resp.result == 'success'){
 					let res = JSON.parse(resp.data);
@@ -212,10 +230,10 @@
 							this.nodeviceInfo.push(res[i])
 						}
 					}
+					this.getDeviceInfor();
 				}
 			})
-			nativeService.showLoading();
-			this.getDeviceInfor();
+			
         }
     }
 </script>

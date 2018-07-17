@@ -8,11 +8,13 @@
         </div>
         <div class="item-group">
             <text class="text-label">测试模块:</text>
-            <text class="text-input" @click="isShowModuleList=true">{{module}}</text>
+            <input class="text-input" type="text" placeholder="请输入测试模块" v-model="module" @input="moduleChange" />
+            <midea-button text="选择" :btnStyle="{width: '120px', height: '60px'}" @mideaButtonClicked="isShowModuleList=true">
+            </midea-button>
         </div>
         <midea-title-bar title="输入远端目标页面地址"></midea-title-bar>
         <textarea type="text" placeholder="输入远端目标页面地址" class="textarea" v-model="url" rows=3 />
-        <midea-button text="进入远端目标页面" type="green" @mideaButtonClicked="mideaButtonClicked">
+        <midea-button text="进入远端目标页面" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
 
         <midea-title-bar title="历史记录"></midea-title-bar>
@@ -104,6 +106,7 @@ module.exports = {
             { key: 0, value: "midea-demo" },
             { key: 1, value: "customer-service" },
             { key: 2, value: "midea-rooms" },
+            { key: 3, value: "midea-card" }
         ],
         url: "",
         history: []
@@ -130,6 +133,9 @@ module.exports = {
             nativeService.setItem('demo_target_history', this.history, () => { })
         },
         hostChange() {
+            this.url = this.generateUrl()
+        },
+        moduleChange() {
             this.url = this.generateUrl()
         },
         selectModule(event) {

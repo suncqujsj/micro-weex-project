@@ -14,7 +14,7 @@
 				        		<div class="card-status-detail">
 				        			<text class="main-status-third">{{mode}}</text>
 				        		</div>
-				        		<div class="card-control-temp-div" v-if="1==2">
+				        		<div class="card-control-temp-div">
 				        			<image @click="down" class="cart-control-temp-img" src="./assets/img/smart_ic_reduce_huge@2x.png"></image>
 				        			<image @click="up" class="cart-control-temp-img cart-control-temp-img-right" src="./assets/img/smart_ic_increase_huge@2x.png"></image>
 				        		</div>
@@ -23,7 +23,7 @@
 				        		<div class="card-control">
 				        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
 				        		</div>
-				        		<div class="card-icon">
+				        		<div class="card-icon" @click="showControlPanelPage">
 				        			<image class="card-icon-img" src="./assets/img/smart_img_equip036@2x.png"></image>
 				        		</div>
 				        	</div>
@@ -39,13 +39,13 @@
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image class="icon-offline" src="./assets/img/smart_img_equip036@2x.png"></image>
+		        		<image @click="showControlPanelPage" class="icon-offline" src="./assets/img/smart_img_equip036@2x.png"></image>
 		        	</div>
 		        </div>
 		    </div>
 		    <div class="card-power-off" v-else>
 	        	<div class="control-div-offline">
-	        		<image class="card-control-img" :src="powerIcon_offline"  @click="poweronoff(1)"></image>
+	        		<image class="card-control-img" :src="powerIcon_offline"  @click="reload"></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
@@ -77,6 +77,8 @@
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
 	var stream = weex.requireModule('stream');
+	const globalEvent = weex.requireModule('globalEvent');
+	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
             mideaSwitch,
@@ -94,6 +96,8 @@
             	deviceSn: "",
             	onlineStatus:"",
             	
+            	pushKey: "receiveMessage",
+            	pushKeyOnline: "receiveMessageFromApp",
                 mideaChecked: true,
                 mideaChecked2: false,
                 
@@ -193,11 +197,11 @@
             },
             up () {
 	        	if(this.deviceTip) {
-	        		modal.toast({ 'message': "设备故障，暂无法操作", 'duration': 2 });
+	        		nativeService.toast("设备故障，暂无法操作");
 	           		return;
 	           	}
-	        	if(this.temperature >= 75) {
-	        		modal.toast({ 'message': "已达到最高温度", 'duration': 2 });
+	        	if(this.temperature >= 65) {
+	        		nativeService.toast("已达到最高温度");
 	           		return;
 	           	}
 	            let me = this;
@@ -205,8 +209,8 @@
                 	"operation":"luaControl",
         			"name":"up",
         			"params":{
-        				"mode":"custom",
-	            		"temperature":parseInt(this.temperature) + 5
+        				"mode":"shower",
+	            		"temperature":parseInt(this.temperature) + 1
         			}
                 }
                 nativeService.sendLuaRequest(params,true).then(function(data) {
@@ -215,11 +219,11 @@
 	        },
 	        down () {
 	        	if(this.deviceTip) {
-	           		modal.toast({ 'message': "设备故障，暂无法操作", 'duration': 2 });
+	           		nativeService.toast("设备故障，暂无法操作");
 	           		return;
 	           	}
-	        	if(this.temperature <= 30) {
-	        		modal.toast({ 'message': "已达到最低温度", 'duration': 2 });
+	        	if(this.temperature <= 35) {
+	        		nativeService.toast("已达到最低温度");
 	           		return;
 	           	}
 	            let me = this;
@@ -227,14 +231,46 @@
                 	"operation":"luaControl",
         			"name":"down",
         			"params":{
-        				"mode":"custom",
-	            		"temperature": parseInt(this.temperature) - 5
+        				"mode":"shower",
+	            		"temperature": parseInt(this.temperature) - 1
         			}
                 }
                 nativeService.sendLuaRequest(params,true).then(function(data) {
                     me.updateUI(data);
                 })
 	        },
+	         handleNotification() {
+            	console.log("handleNotification Yoram");
+            	let me = this;
+            	globalEvent.addEventListener(this.pushKey, (data) => {
+            		me.queryStatus();
+		        });
+		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
+            		if(data && data.messageType == "deviceOnlineStatus") {
+            			if(data.messageBody && data.messageBody.onlineStatus == "online") {
+            				me.onlineStatus = "1";
+            			} else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+            				me.onlineStatus = "0";
+            			} else {
+            				me.onlineStatus = "0";
+            			}
+            		}
+		        });
+            },
+            showControlPanelPage() {
+            	let params = {
+            		controlPanelName:"controlPanel.html"
+            	};
+            	bridgeModule.showControlPanelPage(params);
+            },
+            reload() {
+            	let params = {};
+            	bridgeModule.reload(params,function(result) {
+            		//successful
+            	},function(error) {
+            		//fail
+            	});
+            },
         },
         computed: {
         	
@@ -243,6 +279,7 @@
 	        let self = this;
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
+            	self.handleNotification();
             	if(data.result.isOnline == 1) {
             		self.queryStatus();
             	}
@@ -328,7 +365,6 @@
 	.card-status-detail {
 		flex-direction: row;
 		justify-content: center;
-		margin-bottom: 60px;
 	}
 	.card-status-detail-img {
 		width:56px;
@@ -378,7 +414,6 @@
 	.main-status-third {
 		font-size: 28px;
 		margin-left:10px;
-		margin-top:8px;
 		color: #FFFFFF;
 	}
 	.card-left {

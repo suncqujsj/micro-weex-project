@@ -405,6 +405,20 @@ let customizeNativeService = Object.assign(nativeService, {
             })
         })
     },
+    antiValidateCode(urlParam) {
+        return new Promise((resolve, reject) => {
+            let url = urlParam || ("http://wap.cjm.so/Common/ValidateCode.ashx?Type=&Demand=&w=&h=&r=" + Math.random().toString().replace('.', ''))
+            let params = {
+                method: 'GET',
+                url: url,
+                // type: 'text',
+                type: 'arraybuffer'
+            }
+            weex.requireModule('stream').fetch(params, (resp) => {
+                resolve(resp)
+            })
+        })
+    },
 
 
     //扫描条形/二维码

@@ -25,9 +25,9 @@
                         <div @click="goAutoTypeSet" class="row-sb floor">
                             <div class="row-s">
                                 <image class="icon" :src="autoDetail.image"></image>
-                                <text class="condition-desc" v-if="sceneType==3">在{{weekDesc}} {{directionText[autoDetail.location.direction]}} {{autoDetail.location.address}}时</text>
+                                <text class="condition-desc" v-if="autoDetail.location && sceneType==3">在{{weekDesc}} {{directionText[autoDetail.location.direction]}} {{autoDetail.location.address}}时</text>
                                 <text class="condition-desc" v-if="sceneType==4">在{{weekDesc}} {{autoDetail.startTime}}时</text>
-                                <text class="condition-desc" v-if="sceneType==6"> 在{{weekDesc}} 天气{{autoDetail.weather.weatherStatus}}, 气温{{temperatureLoginText[autoDetail.weather.logical]}} {{autoDetail.weather.temperature}}℃ 时</text>
+                                <text class="condition-desc" v-if="autoDetail.weather && sceneType==6"> 在{{weekDesc}} 天气{{autoDetail.weather.weatherStatus}}, 气温{{temperatureLoginText[autoDetail.weather.logical]}} {{autoDetail.weather.temperature}}℃ 时</text>
                             </div>
                             <image class="icon-next" :src="icon.next"></image>
                         </div>
@@ -356,8 +356,11 @@
                                 nativeService.toast(rtnData.msg)
                             }
                         }
-                    }).catch( (error )=>{
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
                     })
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             },
             generateBindDevices(){//生成已绑定设备列表
@@ -461,9 +464,11 @@
                                 nativeService.toast(rtnData.msg)
                             }
                         }
-                    }).catch( (err)=>{
-                        nativeService.alert(err)
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
                     })
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             },
             setDevice(deviceId){
@@ -526,6 +531,8 @@
                     }else{
                         nativeService.alert('此快捷操作已经选择了所有设备哦')
                     }
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             },
             sendAutoEdit(){
@@ -602,8 +609,11 @@
                                 nativeService.toast(rtnData.msg)
                             }
                         }
-                    }).catch( (error )=>{
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
                     })
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             }
         },

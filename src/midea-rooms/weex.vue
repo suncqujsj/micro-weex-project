@@ -232,8 +232,12 @@
 
                             this.getSceneList()
                             this.getAutoList()
+                        }).catch((err)=>{
+                            nativeService.toast(this.getErrorMessage(err))
                         })
                     }
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             },
             editAuto(auto){
@@ -264,6 +268,8 @@
                         }
                         this.goTo("autoEdit", {}, params)
                     }
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             },
             executeAuto(sceneId){
@@ -284,9 +290,11 @@
                                 nativeService.toast(rtnData.msg)
                             }
                         }
-                    }).catch( (error )=>{
-                        nativeService.alert(error)
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
                     })
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             },
             checkExecuteAuto(sceneId, resultId){
@@ -325,11 +333,15 @@
                                     nativeService.toast(rtnData.msg)
                                 }
                             }
-                        })
+                        }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
+                    })
                     }else{
                         this.showToastDialog = false
                         nativeService.toast('自动化执行失败，请再试一次')
                     }
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             },
             goAddAuto(){
@@ -340,6 +352,8 @@
                         userDevices: this.userDevices
                     }
                     this.goTo('addAuto', {}, params)
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             },
             getAutoList(){
@@ -406,8 +420,11 @@
                                 nativeService.toast(rtnData.msg)
                             }
                         }
-                    }).catch( (error )=>{
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
                     })
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             },
             getSceneList(){
@@ -427,9 +444,11 @@
                                 nativeService.toast(rtnData.msg)
                             }
                         }
-                    }).catch( (error )=>{
-                        nativeService.alert(error)
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
                     })
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             },
             goScene(scene){
@@ -445,6 +464,8 @@
                         userDevices: this.userDevices
                     }             
                     this.goTo("scene", {}, params)
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             }
         },

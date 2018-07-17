@@ -207,6 +207,23 @@ export default {
                     }
                 })
             })
+        },
+        getErrorMessage(error) {
+            let msg = "请求失败，请稍后重试。",
+                errorCode
+            if (error) {
+                errorCode = error.code || error.errorCode
+                let unNormalErrorCode = ['error_system']
+                if (unNormalErrorCode.indexOf(errorCode) < 0) {
+                    //若是正常的错误码，则显示错误信息
+                    msg = error.msg || error.errorMsg || error.returnMsg || error.errorMessage || "请求失败，请稍后重试。"
+                }
+                if (errorCode) {
+                    msg += "(" + errorCode + ")"
+                }
+            }
+            debugUtil.debugLog(error)
+            return msg
         }
     },
     created() {

@@ -1,7 +1,7 @@
 <template>
     <div class="wrap" :style="wrapStyle">
         <div class="select-area"></div>
-        <scroller class="scroller" show-scrollbar=false @scroll="scroll" @scrollend="scrollEnd">
+        <scroller class="scroller" :style="scrollerStyle" :show-scrollbar="false" @scroll="scroll" @scrollend="scrollEnd">
             <div v-for="(item, index) in listArray" :key="index" ref="item">
                 <text v-bind:class="[
                     'list-item',
@@ -50,6 +50,12 @@ export default {
                 height: this.wrapHeight
             }
         },
+        scrollerStyle(){
+            return {
+                width: this.wrapWidth,
+                height: this.wrapHeight
+            }
+        }
     },
     data() {
         return {

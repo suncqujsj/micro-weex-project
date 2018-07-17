@@ -6,18 +6,18 @@
                 <div class="setting" @click="goSetting()">
                     <text class="setting-text white">设置</text>
                 </div>
-                <div v-if="scene.roomType=='1' || scene.roomType=='2' || scene.roomType=='3' " class="up-block" >
+                <div v-if="roomType=='1' || roomType=='2' || roomType=='3' " class="up-block" >
                     <div class="up-desc">
                         <text class="desc white">{{temperatureStatus}} {{pm25Status}}</text>
-                        <midea-vote :defaulSelectd="Number(scene.indicator.level)" :disabled="true" :styles="style.vote" :imgPath="voteImg"></midea-vote>
+                        <midea-vote :defaulSelectd="Number(indicator.level)" :disabled="true" :styles="style.vote" :imgPath="voteImg"></midea-vote>
                         <text class="improve white" @click="quickOptimize">一键优化</text>
                     </div>
-                    <div class="up-status row-sa" v-if="scene.roomType=='1' || scene.roomType=='2'">
+                    <div class="up-status row-sa" v-if="roomType=='1' || roomType=='2'">
                         <div class="scene-status">
                             <text class="info-text font14 white">温度</text>
                             <div  class="row-c status-value">
-                                <text v-if="scene.indicator.temperature" class="font36 white">{{scene.indicator.temperature}}</text>
-                                <text v-if="scene.indicator.temperature" class="font16 white mgb-10">℃</text>
+                                <text v-if="indicator.temperature" class="font36 white">{{indicator.temperature}}</text>
+                                <text v-if="indicator.temperature" class="font16 white mgb-10">℃</text>
                                 <text v-else class="font36 white">-</text>
                             </div>
                             <text class="info-text font12 white">{{temperatureStatus}}</text>
@@ -25,8 +25,8 @@
                         <div class="scene-status">
                             <text class="info-text font14 white">湿度</text>
                             <div class="row-c status-value">
-                                <text v-if="scene.indicator.humidity" class="font36 white">{{scene.indicator.humidity}}</text>
-                                <text v-if="scene.indicator.humidity" class="font16 white mgb-10">%</text>
+                                <text v-if="indicator.humidity" class="font36 white">{{indicator.humidity}}</text>
+                                <text v-if="indicator.humidity" class="font16 white mgb-10">%</text>
                                 <text v-else class="font36 white">-</text>
                             </div>
                             <text class="info-text font12 white">{{humidityStatus}}</text>
@@ -34,41 +34,41 @@
                         <div class="scene-status">
                             <text class="info-text font14 white">空气质量</text>
                             <div class="row-c status-value">
-                                <text v-if="scene.indicator.pm5" class="font36 white">{{scene.indicator.pm5}}</text>
+                                <text v-if="indicator.pm5" class="font36 white">{{indicator.pm5}}</text>
                                 <text v-else class="font36 white">-</text>
                             </div>
                             <text class="info-text font12 white">{{pm25Status}}</text>
                         </div>
                     </div>
-                    <div class="up-status row-sa" v-if="scene.roomType=='3'">
+                    <div class="up-status row-sa" v-if="roomType=='3'">
                         <div class="scene-status">
-                            <text v-if="scene.indicator.work_stats" class="info-text font14 white">{{scene.indicator.work_stats}}</text>
+                            <text v-if="indicator.work_stats" class="info-text font14 white">{{indicator.work_stats}}</text>
                             <text v-else class="info-text font14 white">工作状态</text>
                             <div class="row-c status-value">
-                                <text v-if="scene.indicator.water_temperature" class="font36 white">{{scene.indicator.water_temperature}}</text>
-                                <text v-if="scene.indicator.water_temperature" class="font16 white mgb-10">℃</text>
+                                <text v-if="indicator.water_temperature" class="font36 white">{{indicator.water_temperature}}</text>
+                                <text v-if="indicator.water_temperature" class="font16 white mgb-10">℃</text>
                                 <text v-else class="font36 white">-</text>
                             </div>
                         </div>  
                         <div class="scene-status">
                             <text class="info-text font14 white">热水量</text>
                             <div class="row-c status-value">
-                                <text v-if="scene.indicator.water_capacity" class="font36 white">{{scene.indicator.water_capacity}}</text>
-                                <text v-if="scene.indicator.water_capacity" class="font16 white mgb-10">%</text>
+                                <text v-if="indicator.water_capacity" class="font36 white">{{indicator.water_capacity}}</text>
+                                <text v-if="indicator.water_capacity" class="font16 white mgb-10">%</text>
                                 <text v-else class="font36 white">-</text>
                             </div>
                         </div>
                         <div class="scene-status">
                             <text class="info-text font14 white">还需加热</text>
                             <div class="row-c status-value">
-                                <text v-if="scene.indicator.remain_time" class="font36 white">{{scene.indicator.remain_time}}</text>
-                                <text v-if="scene.indicator.remain_time" class="font16 white mgb-10">分</text>
+                                <text v-if="indicator.remain_time" class="font36 white">{{indicator.remain_time}}</text>
+                                <text v-if="indicator.remain_time" class="font16 white mgb-10">分</text>
                                 <text v-else class="font36 white">-</text>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div v-if="scene.roomType=='4'" class="up-block balcony-block">
+                <div v-if="roomType=='4'" class="up-block balcony-block">
                     <text class="weather white">{{weatherDesc}}</text>
                     <slider v-if="hasWasherWaterData || hasWasherPowerData">
                         <div v-if="hasWasherWaterData">
@@ -82,12 +82,12 @@
                         <text class="no-washdata">暂无数据</text>
                     </div>
                 </div>
-                <!-- <div v-if="scene.roomType=='4'" class="wash-list wash-item row-sb" @click="buyShampoo">
+                <!-- <div v-if="roomType=='4'" class="wash-list wash-item row-sb" @click="buyShampoo">
                     <text class="font16 white">购买洗涤剂</text>
                     <image class="next" :src="icon.next"></image>
                 </div> -->
             </div>
-            <div v-if="scene.roomType == 4" class="down-block row-sa">
+            <div v-if="roomType == 4" class="down-block row-sa">
                 <div @click="powerOnOff">
                     <image class="down-icon" :src="icon.washer[washerPower]"></image>
                     <text class="down-text">{{washerStatus[washerPower]}}</text>
@@ -97,7 +97,7 @@
                     <text class="down-text">{{washerStatus[washerRunningStatus]}}</text>
                 </div>
             </div>
-            <div v-if="scene.roomType != 4" class="down-block row-sa">
+            <div v-if="roomType != 4" class="down-block row-sa">
                 <div v-for="model in scene.modeList" @click="executeModel(model.modelId)">
                     <image class="down-icon" :src="icon.actions[model.modelId]"></image>
                     <text class="down-text">{{model.modelName}}</text>
@@ -303,7 +303,7 @@
                 }
             },
             temperatureStatus(){
-                let temperature = this.scene.indicator.temperature
+                let temperature = this.indicator.temperature
                 let desc
                 if (temperature){
                     if (temperature <=10){
@@ -326,7 +326,7 @@
                 return desc
             },
             humidityStatus(){
-                let humidity = this.scene.indicator.humidity
+                let humidity = this.indicator.humidity
                 let desc
                 if (humidity){
                      if (humidity <=30){
@@ -343,8 +343,8 @@
                 return desc
             },
             pm25Status(){
-                let pm25 = this.scene.indicator.pm25
-                let humidity = this.scene.indicator.humidity
+                let pm25 = this.indicator.pm25
+                let humidity = this.indicator.humidity
                 let desc
                 if (pm25){
                     if (humidity <=30){
@@ -373,7 +373,7 @@
             },
             sceneStyle(){
                 return { 
-                    backgroundImage: this.style.linearBg[this.scene.roomType],
+                    backgroundImage: this.style.linearBg[this.roomType],
                     height: this.pageHeight*0.75 + 'px',
                     position: 'relative',
                     overflow: 'hidden'
@@ -511,6 +511,7 @@
                     start: '启动',
                     pause: '暂停'
                 },
+                indicator: {}
             }
         },
         methods: {
@@ -545,6 +546,7 @@
                         this.webRequest(reqUrl, reqParams).then( (res) => {
                             if (res.code == '0') {
                                 this.scene = res.data
+                                this.indicator = res.data.indicator || {}
                                 resolve()
                             }else{
                                 if (codeDesc.scene.hasOwnProperty(res.code)) {
@@ -553,9 +555,11 @@
                                     nativeService.toast(res.msg)
                                 }
                             }
-                        }).catch( (error )=>{
-                            nativeService.alert(error)
+                        }).catch((err)=>{
+                            nativeService.toast(this.getErrorMessage(err))
                         })
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
                     })
                 })
             },
@@ -590,9 +594,11 @@
                                 nativeService.toast(res.msg)
                             }
                         }
-                    }).catch( (err )=>{
-                        reject(err)
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
                     })
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             },
             checkQuickOptimize(resultId){
@@ -629,7 +635,11 @@
                                 nativeService.toast(res.msg)
                             }
                         }
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
                     })
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             },
             executeModel(modelId){
@@ -651,8 +661,11 @@
                                 nativeService.toast(res.msg)
                             }
                         }
-                    }).catch( (err)=>{
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
                     })
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             },
             getWashData(){
@@ -713,8 +726,11 @@
                                 }
                             }
                         }).catch((err)=>{
+                            nativeService.toast(this.getErrorMessage(err))
                         })
                     }
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             },
             getWeatherInfo(){
@@ -832,6 +848,8 @@
                     this.getWeatherInfo()
                     this.luaQueryStatus()
                 }
+            }).catch((err)=>{
+                nativeService.toast(this.getErrorMessage(err))
             })
         }
     }

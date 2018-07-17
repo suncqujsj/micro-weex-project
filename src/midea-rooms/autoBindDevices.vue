@@ -433,7 +433,8 @@
                                 nativeService.toast(rtnData.msg)
                             }
                         }
-                    }).catch( (error )=>{
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
                     })
                 })
             }

@@ -359,7 +359,11 @@ export default {
                             this.hideLoading()
                         }
                         if (typeof error == 'string') {
-                            error = JSON.parse(error)
+                            try {
+                                error = JSON.parse(error)
+                            }catch (e){
+                                console.log(e)
+                            }
                         }
                         reject(error);
                     }

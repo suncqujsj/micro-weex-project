@@ -26,7 +26,7 @@
                             <div class="row-s">
                                 <image class="icon" :src="autoDetail.image"></image>
                                 <text class="condition-desc" v-if="autoDetail.location && sceneType==3">在{{weekDesc}} {{directionText[autoDetail.location.direction]}} {{autoDetail.location.address}}时</text>
-                                <text class="condition-desc" v-if="sceneType==4">在{{weekDesc}} {{autoDetail.startTime}}时</text>
+                                <text class="condition-desc" v-if="autoDetail.startTime && sceneType==4">在{{weekDesc}} {{autoDetail.startTime}}时</text>
                                 <text class="condition-desc" v-if="autoDetail.weather && sceneType==6"> 在{{weekDesc}} 天气{{autoDetail.weather.weatherStatus}}, 气温{{temperatureLoginText[autoDetail.weather.logical]}} {{autoDetail.weather.temperature}}℃ 时</text>
                             </div>
                             <image class="icon-next" :src="icon.next"></image>
@@ -348,7 +348,6 @@
                             this.generateBindDevices()
                             this.generateBindDeviceActions()
                             this.generateUnbindDevices()
-                            this.generateWeek()
                         }else{
                             if (codeDesc.auto.hasOwnProperty(rtnData.code)){
                                 nativeService.toast(codeDesc.auto[rtnData.code])

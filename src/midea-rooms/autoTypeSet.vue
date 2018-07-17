@@ -99,7 +99,7 @@
         padding-left: 30px;
         padding-right: 30px;
     }
-    .head-text{ font-size: 32px; width: 200px; text-align: center;}
+    .head-text{ font-size: 32px; }
     .addauto-hd{position: relative;}
     .hd{
         padding-top: 34px;

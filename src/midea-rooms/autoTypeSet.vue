@@ -1,7 +1,7 @@
 <template>
    <div class="wrap" :style="wrapStyle">
         <div v-if="from=='addAuto'" class="addauto-hd">
-            <midea-header :title="title" :bgColor="header.bgColor" :titleText="header.color" @leftImgClick="goBack"></midea-header>
+            <midea-header :title="title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
             <div v-if="sceneType != 3" class="next" @click="goNext">
                 <text class="next-text white"  @click="goNext">下一步</text>
             </div>
@@ -258,8 +258,7 @@
                 header: {
                     bgColor: '#fff',
                     color: '#111',
-                    leftImg: 'assets/img/b.png',
-                    rightImg: 'assets/img/b.png'
+                    leftImg: 'assets/img/public_ic_back@3x.png'
                 },
                 sceneType: '',
                 direction: '',

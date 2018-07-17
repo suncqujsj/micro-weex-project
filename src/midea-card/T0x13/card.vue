@@ -49,6 +49,7 @@
 		        </div>
 	      	</div>
 	        <midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="true" :checked="mideaChecked2" :data="data3"></midea-smart>
+	        <midea-download></midea-download>
 	    </div>
     </scroller>
 </template>
@@ -58,6 +59,7 @@
 	import mideaSwitch from '@/midea-component/switch.vue'
 	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
 	import mideaItem from '@/midea-component/item.vue'
+	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
@@ -68,7 +70,8 @@
         components: {
             mideaSwitch,
             mideaSmart,
-            mideaItem
+            mideaItem,
+            mideaDownload
         },
         data() {
             return {
@@ -93,7 +96,8 @@
 					read: "阅读模式",
 					mild: "柔和模式",
 					film: "影院模式",
-					light: "夜灯模式"
+					light: "夜灯模式",
+					manual: "手动模式"
                 },
                 data:{
                  	title:"室内温度高于28°度时候，自动开启空调。",
@@ -121,7 +125,7 @@
             	let params = {
             			"operation":"luaQuery",
             			"name":"deviceinfo",
-            			"data":{}
+            			"params":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);
@@ -134,7 +138,7 @@
 	            	let params = data.params || data.result;
 	                this.onoff = params.power;
 	                this.scene_light = params.scene_light;
-	                this.display_value1 = this.return_scene_light[this.scene_light];
+	                this.display_value1 = this.return_scene_light[this.scene_light] || "--";
 	            }else {
 	                nativeService.toast("连接设备超时");
 	            }
@@ -154,12 +158,13 @@
             	let params = {
             			"operation":"luaControl",
             			"name":name,
-            			"data":{
+            			"params":{
             				"power": poweronoff,
             			}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
-            		self.updateUI(data);
+            		//self.updateUI(data);
+            		self.queryStatus();
             	},function(error) {
             		console.log("error");
             	});

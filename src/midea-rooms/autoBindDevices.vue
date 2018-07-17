@@ -1,6 +1,6 @@
 <template>
    <div class="wrap" :style="wrapStyle">
-        <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" @leftImgClick="goBack"></midea-header>
+        <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
         <div class="done" @click="getDone()">
             <text class="done-text white">完成</text>
         </div>
@@ -172,8 +172,7 @@
                     title: '要控制的电器',
                     bgColor: '#fff',
                     color: '#111',
-                    leftImg: 'assets/img/b.png',
-                    rightImg: 'assets/img/b.png'
+                    leftImg: 'assets/img/public_ic_back@3x.png'
                 },
                 applianceImgPath: applianceImgPath,
                 userDevices: [],

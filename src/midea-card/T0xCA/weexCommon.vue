@@ -118,7 +118,7 @@
             	let self = this;
             	let params = {
             			"operation":"luaQuery",
-            			"data":{}
+            			"params":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);

@@ -5,8 +5,8 @@
 		    	 <div class="card card-hot">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
-	        				<text class="main-status">{{display_value1}}</text>
-	        				<text class="danwei">{{danwei}}</text>
+	        				<text class="main-status" :class="[danwei == ''?'main-status-only':'']">{{display_value1}}</text>
+	        				<text class="danwei"></text>
 	        			</div>
 	        			<text class="main-status-second">{{main_detail}}</text>
 		        		<div class="card-status-detail">
@@ -14,9 +14,9 @@
 		        		</div>
 		        	</div>
 		        	<div class="card-right">
-		        		<div class="card-control" >
+		        		<div class="card-control" @click="poweronoff(0)">
 		        		</div>
-		        		<div class="card-icon">
+		        		<div class="card-icon" @click="showControlPanelPage">
 		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip038@2x.png"></image>
 		        		</div>
 		        	</div>
@@ -24,7 +24,7 @@
 	        </div>
 	        <div class="card-power-off" v-else>
 	        	<div class="control-div-offline">
-	        		<image class="card-control-img" :src="powerIcon_offline"  @click="poweronoff(1)"></image>
+	        		<image class="card-control-img" :src="powerIcon_offline"  @click="reload"></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
@@ -39,6 +39,7 @@
 		        </div>
 	      	</div>
 	        <midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="true" :checked="mideaChecked2" :data="data3"></midea-smart>
+	        <midea-download></midea-download>
 	    </div>
     </scroller>
 </template>
@@ -48,15 +49,19 @@
 	import mideaSwitch from '@/midea-component/switch.vue'
 	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
 	import mideaItem from '@/midea-component/item.vue'
+	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
 	var stream = weex.requireModule('stream');
+	const globalEvent = weex.requireModule('globalEvent');
+	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
             mideaSwitch,
             mideaSmart,
-            mideaItem
+            mideaItem,
+            mideaDownload
         },
         data() {
             return {
@@ -67,6 +72,8 @@
             	deviceSn: "",
             	onlineStatus:"",
             	
+            	pushKey: "receiveMessage",
+            	pushKeyOnline: "receiveMessageFromApp",
                 mideaChecked: true,
                 mideaChecked2: false,
                 
@@ -104,7 +111,24 @@
             	let params = {
             			"operation":"luaQuery",
             			"name":"deviceinfo",
-            			"data":{}
+            			"params":{}
+            		};
+            	nativeService.sendLuaRequest(params,true).then(function(data) {
+            		self.updateUI(data);
+            	},function(error) {
+            		console.log("error");
+            	});
+            },
+            poweronoff(flag) {
+		        let self = this;
+		        let name = flag == 1? "poweron":"poweroff";
+		        let poweronoff = flag == 1? "on" : "off";
+            	let params = {
+            			"operation":"luaControl",
+            			"name":name,
+            			"params":{
+            				"power": poweronoff,
+            			}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);
@@ -125,12 +149,12 @@
 						this.display_value1 = this.return_display_time(params.appoint_time);
 						this.main_detail = "完成时间";
 						this.display_value2 = "已预约";
-						this.danwei = "";
+						this.danwei = "分";
 					} else if(this.work_status == "2") {//制作中
-						this.display_value1 = this.return_display_time(params.appoint_time);
+						this.display_value1 = this.return_display_time(params.current_time);
 						this.main_detail = "已工作时间";
 						this.display_value2 = "工作中";
-						this.danwei = "";
+						this.danwei = "分";
 					} else if(this.work_status == "3") {//制作完成
 						this.display_value1 = "空闲";
 						this.main_detail = "";
@@ -140,20 +164,23 @@
 						this.display_value1 = this.return_display_time(params.current_time);
 						this.main_detail = "已工作时间";
 						this.display_value2 = "已工作";
-						this.danwei = "";
+						this.danwei = "分";
 					}else {//设备异常
 						this.display_value1 = "设备异常";
 						this.main_detail = "";
-						this.display_value2 = "";
+						this.display_value2 = "--";
 						this.danwei = "";
 					}
 	            }else {
-	                modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+	                nativeService.toast("连接设备超时");
 	            }
             },
             return_display_time(allMin) {
 	        	var hour = parseInt(allMin/60);
 	            var minute = allMin%60;
+	             if(hour<10){
+	            	hour="0"+hour;
+	            }
 	            if(minute<10){
 	            	minute="0"+minute;
 	            }
@@ -167,6 +194,38 @@
             	this.deviceSn = data.deviceSn;
             	this.onlineStatus = data.isOnline;
             },
+            handleNotification() {
+            	console.log("handleNotification Yoram");
+            	let me = this;
+            	globalEvent.addEventListener(this.pushKey, (data) => {
+            		me.queryStatus();
+		        });
+		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
+            		if(data && data.messageType == "deviceOnlineStatus") {
+            			if(data.messageBody && data.messageBody.onlineStatus == "online") {
+            				me.onlineStatus = "1";
+            			} else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+            				me.onlineStatus = "0";
+            			} else {
+            				me.onlineStatus = "0";
+            			}
+            		}
+		        });
+            },
+	        showControlPanelPage() {
+            	let params = {
+            		controlPanelName:"controlPanel.html"
+            	};
+            	bridgeModule.showControlPanelPage(params);
+            },
+            reload() {
+            	let params = {};
+            	bridgeModule.reload(params,function(result) {
+            		//successful
+            	},function(error) {
+            		//fail
+            	});
+            },
         },
         computed: {
         	
@@ -175,6 +234,7 @@
 	       let self = this;
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
+            	self.handleNotification();
             	if(data.result.isOnline == 1) {
             		self.queryStatus();
             	}
@@ -293,6 +353,10 @@
 	.main-status {
 		font-size: 128px;
 		color: #FFFFFF;
+	}
+	.main-status-only {
+		font-size: 75px;
+		margin-top: 74px;
 	}
 	.danwei {
 		font-family: PingFangSC-Light;

@@ -60,6 +60,7 @@
 	      	</div>
 	      	<midea-smart @change="onMideachange2" :checked="mideaChecked2" :data="data2"></midea-smart>     
 	        <midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="false" :checked="mideaChecked2" :data="data3"></midea-smart>
+	        <midea-download></midea-download>
 	    </div>
     </scroller>
 </template>
@@ -69,6 +70,7 @@
 	import mideaSwitch from '@/midea-component/switch.vue'
 	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
 	import mideaItem from '@/midea-component/item.vue'
+	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
@@ -79,7 +81,8 @@
         components: {
             mideaSwitch,
             mideaSmart,
-            mideaItem
+            mideaItem,
+            mideaDownload
         },
         data() {
             return {
@@ -133,7 +136,7 @@
             	let params = {
             			"operation":"luaQuery",
             			"name":"deviceinfo",
-            			"data":{}
+            			"params":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);
@@ -191,7 +194,7 @@
             	let params = {
             			"operation":"luaControl",
             			"name":name,
-            			"data":{
+            			"params":{
             				"power": poweronoff,
             			}
             		};

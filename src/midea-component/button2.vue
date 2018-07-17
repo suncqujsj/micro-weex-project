@@ -2,7 +2,7 @@
     <div class="btn-wrapper">
         <div class="midea-btn" :class="[type]" :style="defaultBtnStyle" @click="onClicked">
             <text class="btn-text" :style="defaultTextStyle">{{text}}</text>
-            <div v-if="!disabled" :class="['btn-cover',type+'-cover']"></div>
+            <div v-if="!disabled" :class="['btn-cover']"></div>
         </div>
     </div>
 </template>

@@ -116,7 +116,6 @@ module.exports = {
             nativeService.goBack()
         },
         mideaButtonClicked() {
-            nativeService.toast(this.url)
             if (this.history.indexOf(this.url) < 0) {
                 this.history.push(this.url)
                 nativeService.setItem('demo_target_history', this.history, () => {

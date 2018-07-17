@@ -101,6 +101,7 @@ module.exports = {
         interfacelist: [
             { title: 'callTel打电话', link: "callTel" },
             { title: 'choosePhoto选相片', link: "choosePhoto" },
+            { title: 'downloadImageWithCookie', link: "downloadImageWithCookie" },
             { title: 'getCurrentHomeInfo获取当前家庭信息', link: "getCurrentHomeInfo" },
             { title: 'getDeviceInfo获取当前设备信息', link: "getDeviceInfo" },
             { title: 'getGPSInfo获取GPS定位信息', link: "getGPSInfo" },

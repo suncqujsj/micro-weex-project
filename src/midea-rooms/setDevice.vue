@@ -83,6 +83,7 @@
     .property-name{
         padding-top: 30px;
         padding-bottom: 30px;
+        font-size: 30px;
     }
     .property-text{
         color: #666;

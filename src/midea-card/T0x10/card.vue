@@ -58,7 +58,6 @@
 		import mideaSwitch from '@/midea-component/switch.vue'
 		import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
 		import mideaItem from '@/midea-component/item.vue'
-		import download from '@/midea-card/T0xAC/components/download.vue'
 		import Mock from './settings/mock'
 		const modal = weex.requireModule('modal');
 		const dom = weex.requireModule('dom');
@@ -68,7 +67,6 @@
             mideaSwitch,
             mideaSmart,
             mideaItem,
-            download
         },
         data() {
             return {

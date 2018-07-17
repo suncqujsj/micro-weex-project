@@ -1,5 +1,5 @@
 <template>
-	<div :class="['smart-content', hasBottomBorder && 'cell-bottom-border']">
+	<div :class="['smart-content', hasBottomBorder && 'cell-bottom-border']" @click="onClick">
 		<div class="title-div">
 			<image :src="checked?icon_img_on:icon_img_off" class="index-img"></image>
 			<text style="margin-left:20px">{{data.title}}</text>
@@ -27,7 +27,7 @@ export default {
 		},
 		width: {
 			type: String,
-			default: '120',
+			default: '100',
 		},
 		height: {
 			type: String,
@@ -55,7 +55,11 @@ export default {
 	},
 	methods: {
 		onMideachange(event) {
+			this.checked = event.value
 			this.$emit('change', { value: event.value })
+		},
+		onClick(event) {
+			this.$emit('click', event)
 		}
 	},
 	computed: {
@@ -67,9 +71,8 @@ export default {
 
 <style>
 .smart-content {
-  margin-top: 30px;
-  margin-left: 32px;
-  margin-right: 32px;
+  padding-top: 30px;
+  padding-bottom: 30px;
 }
 .index-img {
   width: 40px;
@@ -86,21 +89,18 @@ export default {
 .smart-detail {
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   margin-left: 60px;
   align-items: center;
+  padding-top: 24px;
 }
 .smart-detail-content {
   flex: 1;
   font-family: PingFangSC-Regular;
   font-size: 24px;
   color: #8a8a8f;
-  letter-spacing: 0;
 }
 .switch-div {
-  width: 80px;
-  height: 60px;
-  margin-top: 50px;
   margin-left: 32px;
-  margin-right: 32px;
 }
 </style>

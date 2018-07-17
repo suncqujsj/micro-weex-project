@@ -19,7 +19,8 @@
 
             <div class="item-group" v-if="failedCount>=3">
                 <input class="item-input" type="text" placeholder="请输入图形验证码" :autofocus=false v-model="picCode" :return-key-type="isDataReady?'search':'text'" maxlength="4" @return="submit" />
-                <image class="validate-img" :src="picCodeSrc + picCodeSrcRadom" resize='contain' @click="refreshPicCode()"></image>
+                <!-- <image class="validate-img" :src="picCodeSrc + picCodeSrcRadom" resize='contain' @click="refreshPicCode()"></image> -->
+                <image class="validate-img" :src="picCodeSrc" resize='contain' @click="antiValidateCode()"></image>
             </div>
             <div class="item-group">
                 <text class="info-label">适用于生产日期2017年7月1日之后的滤芯</text>
@@ -29,7 +30,7 @@
                 <midea-button text="查询" type="secondary" :disabled="!isDataReady" @mideaButtonClicked="submit"></midea-button>
             </div>
         </scroller>
-        <midea-dialog :title="result.message" mainBtnColor="#267AFF" secondBtnColor="#267AFF" :show="dialogShow" cancelText="否" confirmText="确认" @mideaDialogCancelBtnClicked="dialogConfirm" @mideaDialogConfirmBtnClicked="dialogConfirm" single=true>
+        <midea-dialog :title="result.message" mainBtnColor="#267AFF" secondBtnColor="#267AFF" :show="dialogShow" cancelText="否" confirmText="确认" @mideaDialogCancelBtnClicked="dialogConfirm" @mideaDialogConfirmBtnClicked="dialogConfirm" :single="true">
         </midea-dialog>
 
     </div>
@@ -54,9 +55,9 @@ export default {
             title: '滤芯防伪',
             code: '',
             validCode: '',
-            failedCount: 3,
+            failedCount: 0,
             picCode: '',
-            picCodeSrc: 'http://wap.cjm.so/Common/ValidateCode.ashx?Type=&Demand=&w=&h=&r=',
+            picCodeSrc: '', //http://wap.cjm.so/Common/ValidateCode.ashx?Type=&Demand=&w=&h=&r=
             picCodeSrcRadom: '',
             result: {
                 message: ''
@@ -75,6 +76,26 @@ export default {
         },
         refreshPicCode() {
             this.picCodeSrcRadom = Math.random().toString().replace('.', '')
+        },
+        antiValidateCode() {
+            let param = {
+                url: "http://wap.cjm.so/Common/ValidateCode.ashx?Type=&Demand=&w=&h=&r=" + Math.random().toString().replace('.', '')
+            }
+            nativeService.downloadImageWithCookie(param).then((resp) => {
+                try {
+                    nativeService.toast(0)
+                    var blob = new Blob([resp.data || '']);
+                    nativeService.toast(1)
+                    var a = new FileReader()
+                    nativeService.toast(2)
+                    a.onload = function (e) {
+                        this.picCodeSrc = e.target.result
+                    }
+                    a.readAsDataURL(blob);
+                } catch (error) {
+                    nativeService.toast(error)
+                }
+            })
         },
         submit() {
             if (!this.isDataReady) return
@@ -101,8 +122,10 @@ export default {
                             this.goTo('antifakeResult')
                         })
                     } else {
-                        this.refreshPicCode()
                         this.failedCount++
+                        if (this.failedCount > 2) {
+                            this.antiValidateCode()
+                        }
                         this.dialogShow = true
                     }
                 }
@@ -116,7 +139,8 @@ export default {
         }
     },
     created() {
-
+        // debugger
+        this.antiValidateCode()
     }
 }
 </script>

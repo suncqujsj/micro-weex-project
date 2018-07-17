@@ -359,7 +359,9 @@ export default {
                             this.hideLoading()
                         }
                         if (typeof error == 'string') {
-                            error = JSON.parse(error)
+                            try {
+                                error = JSON.parse(error)
+                            } catch (e) { }
                         }
                         reject(error);
                     }
@@ -936,6 +938,14 @@ export default {
         }
         return this.commandInterfaceWrapper(param)
     },
+
+    downloadImageWithCookie(params) {
+        let param = Object.assign(params, {
+            operation: 'downloadImageWithCookie'
+        })
+        return this.commandInterfaceWrapper(param)
+    },
+
     //调用第三方SDK统一接口
     interfaceForThirdParty(...args) {
         bridgeModule.interfaceForThirdParty(...args)

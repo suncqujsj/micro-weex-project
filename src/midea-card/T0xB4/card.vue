@@ -365,6 +365,7 @@
 		width: 314px;
 		height: 314px;
 		opacity: 0.3;
+		box-shadow: 0 5px 6px 0 rgba(0,0,0,0.12);
 	}
 	.scroller-item {
 		height:120px;

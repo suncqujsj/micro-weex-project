@@ -5,10 +5,10 @@
 		    	 <div class="card" v-if="onoff == 'on'">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
-	        				<text class="main-status">{{display_value2}}</text>
+	        				<text class="main-status" :class="[danwei==''? 'main-status-simple' :'']">{{display_value2}}</text>
 	        				<text class="danwei">{{danwei}}</text>
 	        			</div>
-	        			<text class="main-status-second">剩余时间</text>
+	        			<text class="main-status-second">{{main_detail}}</text>
 		        		<div class="card-status-detail">
 		        			<text class="main-status-third">{{display_value1}}</text>
 		        		</div>
@@ -138,10 +138,21 @@
 				},
                 mideaChecked: true,
                 mideaChecked2: false,
+                
+                wash_level: "",
+				rinse_level: "",
+				wash_strength: "",
+				dehydration_speed: "",
+				rinse_count: "",
+				temperature: "",
+				dehydration_time: "",
+				wash_time: "",
+                
                 running_status:"",
 	            danwei: "",//localStorage.getItem("DAdanwei") || "",
 	            display_value1: "",//localStorage.getItem("DAdisplay_value1") || "",
 	            display_value2: "",//localStorage.getItem("DAdisplay_value2") || "",
+	            main_detail: "",
                 onoff: "",
                 deviceLock:"",
                 powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
@@ -180,15 +191,12 @@
             			"data":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
-            		nativeService.alert(data);
             		self.updateUI(data);
             	},function(error) {
-            		nativeService.alert(error);
             		console.log("error");
             	});
             },
             updateUI(data) {
-            	nativeService.alert(data);
             	if(data.errorCode == 0) {
 	                let params = data.params || data.result;
 	                this.onoff = params.power;
@@ -196,50 +204,67 @@
 					this.remain_time = this.caculateTime(params.remain_time);
 					this.program = params.program;
 					this.deviceLock = params.lock;
+					
+					this.wash_level = params.wash_level;
+					this.rinse_level = params.rinse_level;
+					this.wash_strength = params.wash_strength;
+					this.dehydration_speed = params.dehydration_speed;
+					this.rinse_count = params.rinse_count;
+					this.temperature = params.temperature;
+					this.dehydration_time = params.dehydration_time;
+					this.wash_time = params.wash_time;
 				
 					if(this.onoff == "on" && this.running_status == "work") {
 						if(params.intelligent_wash && params.intelligent_wash == "on") {
 							if(!this.program || this.program == "invalid") {
 								this.display_value1 = "智能洗";
 								this.display_value2 = "正在为您智能选择洗衣程序";
+								this.main_detail = "";
 								this.danwei = "";
 							} else {
 								this.display_value1 = this.return_program[params.program];
-								this.display_value2 = this.remain_time;
-								this.danwei = "剩余";
+								this.display_value2 = params.remain_time;//this.remain_time;
+								this.danwei = "分";
+								this.main_detail = "剩余时间";
 							}
 						} else {
 							this.display_value1 = this.return_program[params.program];
-							this.display_value2 = this.remain_time;
-							this.danwei = "剩余";
+							this.display_value2 = params.remain_time;//this.remain_time;
+							this.danwei = "分";
+							this.main_detail = "剩余时间";
 						}
 					} else if (this.onoff == "on" && this.running_status == "order") {
 						this.display_value1 = "";
 						this.display_value2 = "预约中";
 						this.danwei = "";
+						this.main_detail = "";
 					} else if(this.onoff == "on" && this.running_status == "standby") {
 						if(params.intelligent_wash && params.intelligent_wash == "on") {
 							if(!this.program || this.program == "invalid") {
 								this.display_value1 = "智能洗";
 								this.display_value2 = "将为您智能选择洗衣程序";
 								this.danwei = "";
+								this.main_detail = "";
 							} else {
-								this.display_value1 = "";
+								this.display_value1 = this.return_program[params.program] || "--";
 								this.display_value2 = this.return_running_status[this.running_status];
 								this.danwei = "";
+								this.main_detail = "";
 							}
 						} else {
-							this.display_value1 = "";
+							this.display_value1 = this.return_program[params.program] || "--";
 							this.display_value2 = this.return_running_status[this.running_status];
 							this.danwei = "";
+							this.main_detail = "";
 						}
 					} else {
-						this.display_value1 = "";
+						this.display_value1 = this.return_program[params.program] || "--";
 						this.display_value2 = this.return_running_status[this.running_status];
 						this.danwei = "";
+						this.main_detail = "";
 					}
 	            }else {
-	            	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+	            	nativeService.toast("连接设备超时");
 	            }
             },
              updateDeviceInfo(data) {
@@ -262,9 +287,12 @@
             			}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
-            		self.updateUI(data);
+            		if(flag != 1) {
+            			self.queryStatus();
+            		} else {
+            			self.updateUI(data);	
+            		}
             	},function(error) {
-            		nativeService.alert(data);
             		console.log("error");
             	});
             },
@@ -280,7 +308,6 @@
             			}
             		};
             		nativeService.sendLuaRequest(params,true).then(function(data) {
-            			nativeService.alert(nativeService);
 	            		self.updateUI(data);
 	            	},function(error) {
 	            		console.log("error");
@@ -292,11 +319,19 @@
             			"name":"start",
             			"data":{
             				"control_status": "start",
+            				"wash_level": this.wash_level,
+							"rinse_level": this.rinse_level,
+							"wash_strength": this.wash_strength,
+							"dehydration_speed": this.dehydration_speed,
+							"rinse_count": this.rinse_count,
+							"temperature": this.temperature,
+							"dehydration_time": this.dehydration_time,
+							"wash_time": this.wash_time
             			}
             		};
             		nativeService.sendLuaRequest(params,true).then(function(data) {
-            			nativeService.alert(nativeService);
-	            		self.updateUI(data);
+	            		//self.updateUI(data);
+	            		self.queryStatus();
 	            	},function(error) {
 	            		console.log("error");
 	            	});
@@ -436,6 +471,8 @@
 	.icon-offline {
 		width: 314px;
 		height: 314px;
+		opacity: 0.3;
+		box-shadow: 0 5px 6px 0 rgba(0,0,0,0.12);
 	}
 	.card-icon {
 		align-items: flex-end;
@@ -454,6 +491,10 @@
 	.main-status {
 		font-size: 128px;
 		color: #FFFFFF;
+	}
+	.main-status-simple {
+		font-size: 75px;
+		margin-top: 74px;
 	}
 	.danwei {
 		font-family: PingFangSC-Light;

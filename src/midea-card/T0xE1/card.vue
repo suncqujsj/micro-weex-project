@@ -54,6 +54,8 @@
 		        	<image class="smart-img" src="./assets/img/smart_ic_more@2x.png"></image>
 		        </div>
 	      	</div>
+	      	<!--downloading by zhouhg-->
+		      <midea-download></midea-download>
 	        <midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="true" :checked="mideaChecked2" :data="data3"></midea-smart>
 	    </div>
     </scroller>
@@ -64,6 +66,8 @@
 	import mideaSwitch from '@/midea-component/switch.vue'
 	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
 	import mideaItem from '@/midea-component/item.vue'
+	//downloading by zhouhg
+	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
@@ -74,7 +78,8 @@
         components: {
             mideaSwitch,
             mideaSmart,
-            mideaItem
+            mideaItem,
+            mideaDownload   //downloading by zhouhg
         },
         data() {
             return {
@@ -215,10 +220,8 @@
         			}
         		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
-            		nativeService.alert(data);
             		self.updateUI(data);
             	},function(error) {
-            		nativeService.alert(error);
             		console.log("error");
             	});
             },
@@ -234,10 +237,8 @@
             			}
             		};
             		nativeService.sendLuaRequest(params,true).then(function(data) {
-            			nativeService.alert(data);
 	            		self.updateUI(data);
 	            	},function(error) {
-	            		nativeService.alert(error);
 	            		console.log("error");
 	            	});
             	} else {
@@ -250,10 +251,8 @@
             			}
             		};
             		nativeService.sendLuaRequest(params,true).then(function(data) {
-            			nativeService.alert(data);
 	            		self.updateUI(data);
 	            	},function(error) {
-	            		nativeService.alert(error);
 	            		console.log("error");
 	            	});
             	}
@@ -268,10 +267,8 @@
         			}
         		};
         		nativeService.sendLuaRequest(params,true).then(function(data) {
-        			nativeService.alert(data);
             		self.updateUI(data);
             	},function(error) {
-            		nativeService.alert(error);
             		console.log("error");
             	});
             },
@@ -286,10 +283,8 @@
         			}
         		};
         		nativeService.sendLuaRequest(params,true).then(function(data) {
-        			nativeService.alert(data);
             		self.updateUI(data);
             	},function(error) {
-            		nativeService.alert(error);
             		console.log("error");
             	});
             },

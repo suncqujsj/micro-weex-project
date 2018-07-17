@@ -1,6 +1,6 @@
 <template>
     <div :style="wrapStyle">
-        <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
+        <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" @leftImgClick="goBack"></midea-header>
         <list class="scroller" :style="scrollerStyle">
             <cell>
                 <div class="block"  style="background-color:#fff">
@@ -138,7 +138,7 @@
     import scrollPicker from '@/midea-rooms/components/scrollPicker.vue'
     import mideaRange from '@/midea-rooms/components/range.vue'
 
-    import { url } from './config/config.js'
+    import { url, codeDesc } from './config/config.js'
 
     export default {
         components:{ mideaCell, MideaHeader, MideaPopup, checkItem, mideaList, scrollPicker, mideaRange },
@@ -287,7 +287,11 @@
                             if (res.code == 0) {
                                 resolve(res.data)
                             }else{
-                                reject(res.msg)
+                                if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                    nativeService.toast(codeDesc.scene[res.code])
+                                }else{
+                                    nativeService.toast(res.msg)
+                                }
                             }
                         }).catch( (err )=>{
                             reject(err)
@@ -334,18 +338,8 @@
                             if (res.code == 0) {
                                 resolve(res)
                             }else{
-                                let codeDesc = {
-                                    1000: '未知系统错误',
-                                    1002: '参数为空',
-                                    1105: '账户不存在',
-                                    1200: '用户不在家庭',
-                                    1202: '用户不是家庭的管理员',
-                                    1212: '房间不在家庭里面',
-                                    1300: '设备不存在',
-                                    1305: '用户不是设备的管理员'
-                                }
-                                if (codeDesc.hasOwnProperty(res.code)) {
-                                    nativeService.toast(codeDesc[res.code])
+                                if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                    nativeService.toast(codeDesc.scene[res.code])
                                 }else{
                                     nativeService.toast(res.msg)
                                 }
@@ -370,18 +364,8 @@
                             if (res.code == 0) {
                                 resolve(res)
                             }else{
-                                let codeDesc = {
-                                    '1000':	'未知系统错误',
-                                    '1001':	'参数格式错误',
-                                    '1002':	'参数为空',
-                                    '1105':	'账户不存在',
-                                    '1202':	'用户不是家庭的管理员',
-                                    '1300':	'设备不存在',
-                                    '1701':	'场景不存在',
-                                    '1700':	'无操作权限'
-                                }
-                                if (codeDesc.hasOwnProperty(res.code)) {
-                                    nativeService.toast(codeDesc[res.code])
+                                if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                    nativeService.toast(codeDesc.scene[res.code])
                                 }else{
                                     nativeService.toast(res.msg)
                                 }
@@ -513,17 +497,8 @@
                                 this.initData()
                             },500)
                         }else{
-                            let codeDesc = {
-                                "1000": "未知系统错误",
-                                "1001": "参数格式错误",
-                                "1002": "参数为空",
-                                "1003": "参数类型不支持",
-                                "1105": "账户不存在",
-                                "1202": "用户不是家庭的管理员",
-                                "1701": "场景不存在"
-                            }
-                            if (codeDesc.hasOwnProperty(res.code)) {
-                                nativeService.toast(codeDesc[res.code])
+                            if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                nativeService.toast(codeDesc.scene[res.code])
                             }else{
                                 nativeService.toast(res.msg)
                             }

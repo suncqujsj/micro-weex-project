@@ -81,27 +81,24 @@
 						this.bytes = res.packageSize;
 						this.deviceInfo.version = res.version;
 						if(res.needUpdate){
-							let num = 0;
-							for(let i = 0; i < that.nodeviceInfo.length;i++){
-								num = num + 1;
-								let str = 'item.deviceId' + that.nodeviceInfo[i].deviceId + 'deviceInfo.deviceId' + that.deviceInfo.deviceId;
-									if(that.nodeviceInfo[i].deviceId == that.deviceInfo.deviceId){
-										if(that.nodeviceInfo[i].version != res.version){
-											nativeService.alert(that.nodeviceInfo[i])
-											that.ismark = true;
+							for(let i = 0; i < this.nodeviceInfo.length;i++){
+									if(this.nodeviceInfo[i].deviceId == this.deviceInfo.deviceId){
+										if(this.nodeviceInfo[i].version != res.version){
+											this.ismark = true;
 											return;
 										}else{
-											that.ismark = false;
+											this.ismark = false;
 										}
 									}else{
-										that.isshow.push(index);
+										isshow.push(i);
 									}
 							}
 						}else{
-							that.ismark = false;
+							this.ismark = false;
 						}
-						if(that.isshow.length = that.nodeviceInfo){
-							that.ismark = true;
+						nativeService.alert(res);
+						if(isshow.length = this.nodeviceInfo.length){
+							this.ismark = true;
 						}
 						nativeService.hideLoading();
             	}).catch((error) => {
@@ -112,7 +109,7 @@
             getNetworkStatus(){
             	nativeService.getNetworkStatus().then(
 	                (resp) => {
-	                	nativeService.toast(resp,20)
+//	                	nativeService.toast(resp,20)
 						let res = JSON.parse(resp);
 						if(parseInt(res.statue)){
 							if(parseInt(res.type)){
@@ -127,7 +124,6 @@
 	                }
 	            ).catch((error) => {
 	            	nativeService.hideLoading();
-					nativeService.toast(error,20)
 	            	this.iswifi = false;
 	            })
             },
@@ -218,6 +214,7 @@
 					}
 				}
 			})
+			nativeService.showLoading();
 			this.getDeviceInfor();
         }
     }

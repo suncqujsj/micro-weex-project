@@ -6,6 +6,33 @@ export const all = [
         data: {
             "errorCode": 0,
 		    "params": {
+		    	"power": "on",
+		       "work_status": "1",
+		        "appoint_time": "222",
+		        "current_temp": "55",
+		        "current_time":"333"
+		    }
+        }
+    },
+    {
+        path: 'poweron',
+        data: {
+            "errorCode": 0,
+		    "params": {
+		    	"power": "on",
+		       "work_status": "0",
+		        "appoint_time": "222",
+		        "current_temp": "55",
+		        "current_time":"333"
+		    }
+        }
+    },
+    {
+        path: 'poweroff',
+        data: {
+            "errorCode": 0,
+		    "params": {
+		    	"power": "off",
 		       "work_status": "1",
 		        "appoint_time": "222",
 		        "current_temp": "55",

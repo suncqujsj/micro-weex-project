@@ -256,7 +256,6 @@ export default {
                     this.gpsInfo = data
                     resolve(data)
                 }).catch((error) => {
-                    // nativeService.toast("定位失败")
                     this.locateFailed = true
                     nativeService.hideLoadingWithMsg()
                     reject(error)
@@ -276,7 +275,6 @@ export default {
                     if (temp && temp.length > 0) {
                         provinceObj = temp[0]
                     } else {
-                        throw { msg: '地域定位失败' }
                     }
                     nativeService.getAreaList({
                         regionCode: provinceObj.regionCode

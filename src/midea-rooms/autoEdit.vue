@@ -10,11 +10,11 @@
                 <div v-if="sceneType != 2">
                     <div style="background-color:#fff">
                         <div class="row-sb auto-name-floor">
-                            <text>名称</text>
+                            <text class="text">名称</text>
                             <input class="auto-name" type="text" placeholder="" :value="inputAutoName" @change="editAutoName" @return="editAutoName"/>
                         </div>
                         <div class="row-sb switch-floor auto-switch-floor">
-                            <text>启用</text>
+                            <text class="text">启用</text>
                             <div>
                                 <switch-bar :isActive="autoDetail.enable" @onSwitch="openAuto"></switch-bar>
                             </div>
@@ -23,7 +23,7 @@
                     <div>
                         <text class="sub-hd">当如下条件满足时</text>
                         <div @click="goAutoTypeSet" class="row-sb floor">
-                            <div class="row-s ">
+                            <div class="row-s">
                                 <image class="icon" :src="autoDetail.image"></image>
                                 <text class="condition-desc" v-if="sceneType==3">在{{weekDesc}} {{directionText[autoDetail.location.direction]}} {{autoDetail.location.address}}时</text>
                                 <text class="condition-desc" v-if="sceneType==4">在{{weekDesc}} {{autoDetail.startTime}}时</text>
@@ -35,7 +35,7 @@
                 </div>
                 <div>
                     <text class="sub-hd">设备</text>
-                    <div class="device-box row-sb">
+                    <div v-if="Object.keys(autoBindDevices).length > 0" class="device-box row-sb">
                         <div class="device" v-for="(item, key) in autoBindDevices">
                             <div @click="setDevice(key)">
                                 <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
@@ -44,7 +44,10 @@
                             <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, key)"></image>
                         </div>
                     </div>
-                    <text class="select-btn" @click="goBindNewDevice">选择设备</text>
+                    <div  v-else class="device-box row-sb">
+                        <text class="not-bind-text text">当前快捷操作没有绑定设备，点击选择设备进行添加</text>
+                    </div>
+                    <text class="select-btn text" @click="goBindNewDevice">选择设备</text>
                 </div>
             </cell>
         </list>
@@ -78,13 +81,19 @@
     .font-grey {
         color: #666;
     }
+    .text{
+        font-size: 30px;
+    }
+    .not-bind-text{
+        color: #666;
+    }
     .content{
         margin-top: 16px;
         padding-bottom: 150px;
     }
     .sub-hd{
         color: #666;
-        font-size: 28px;
+        font-size: 30px;
         margin-top: 33px;
         margin-left:30px;
         margin-bottom: 14px;
@@ -114,7 +123,7 @@
         flex-wrap: wrap;
     }
     .device{
-        width: 333.75px;
+        width: 333px;
         padding: 20px;
         margin-right: 18px;
         margin-bottom: 14px;
@@ -188,14 +197,15 @@
     }
     .condition-desc{
         width: 600px;
-        text-overflow: ellipsis
+        text-overflow: ellipsis;
+        font-size: 30px;
     }
     
     /* .wrap{background-color: #3af} */
 </style>
 
 <script>
-    import { url, applianceActions, applianceImgPath, autoSupportActions } from './config/config.js'
+    import { url, applianceActions, applianceImgPath, autoSupportActions, codeDesc } from './config/config.js'
     import base from './base'
 
     import nativeService from '@/common/services/nativeService.js'
@@ -302,12 +312,8 @@
             closeDialog(dialogType){
                 this.show[dialogType] = false
             },
-            goHomePage(){
-                this.goTo('weex')
-            },
             initData(){
                 this.pageStamp = +new Date()
-                this.uid = nativeService.getParameters('uid')
                 this.homegroupId = nativeService.getParameters('homegroupId')
                 this.sceneType = nativeService.getParameters('sceneType')
                 this.sceneId = nativeService.getParameters('sceneId')
@@ -324,27 +330,34 @@
                 this.getAutoDetail()
             },
             getAutoDetail(){
-                let reqUrl = url.auto.detail
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneId: this.sceneId
-                }
-                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
-                    if (rtnData.code == 0) {
-                        this.autoDetail = Object.assign({}, this.autoDetail, rtnData.data)
-                        
-                        this.inputAutoName = this.autoDetail.name
-                        this.autoEnable = this.autoDetail.enable
-                        this.task = this.autoDetail.task
-
-                        this.generateBindDevices()
-                        this.generateBindDeviceActions()
-                        this.generateUnbindDevices()
-                        this.generateWeek()
-                     
+                this.checkLogin().then( (uid) => {
+                    let reqUrl = url.auto.detail
+                    let reqParams = {
+                        uid: uid,
+                        homegroupId: this.homegroupId,
+                        sceneId: this.sceneId
                     }
-                }).catch( (error )=>{
+                    this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                        if (rtnData.code == 0) {
+                            this.autoDetail = Object.assign({}, this.autoDetail, rtnData.data)
+                            
+                            this.inputAutoName = this.autoDetail.name
+                            this.autoEnable = this.autoDetail.enable
+                            this.task = this.autoDetail.task
+
+                            this.generateBindDevices()
+                            this.generateBindDeviceActions()
+                            this.generateUnbindDevices()
+                            this.generateWeek()
+                        }else{
+                            if (codeDesc.auto.hasOwnProperty(rtnData.code)){
+                                nativeService.toast(codeDesc.auto[rtnData.code])
+                            }else{
+                                nativeService.toast(rtnData.msg)
+                            }
+                        }
+                    }).catch( (error )=>{
+                    })
                 })
             },
             generateBindDevices(){//生成已绑定设备列表
@@ -425,24 +438,32 @@
             },
             deleteAuto(){
                 this.closeDialog('delete')
-                let reqUrl = url.auto.delete
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneId: this.sceneId,
-                    enable: '2'
-                }
-                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
-                    if (rtnData.code == 0) {
-                        if (this.sceneType == 3) {
-                            this.updateAutoList()//通知原生位置类型自动化列表需要更新
-                        }
-                        nativeService.alert('删除成功!', function(){
-                            nativeService.backToNative()
-                        })
+                this.checkLogin().then( (uid) => {
+                    let reqUrl = url.auto.delete
+                    let reqParams = {
+                        uid: uid,
+                        homegroupId: this.homegroupId,
+                        sceneId: this.sceneId,
+                        enable: '2'
                     }
-                }).catch( (err)=>{
-                    nativeService.alert(err)
+                    this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                        if (rtnData.code == 0) {
+                            if (this.sceneType == 3) {
+                                this.updateAutoList()//通知原生位置类型自动化列表需要更新
+                            }
+                            nativeService.alert('删除成功!', function(){
+                                nativeService.backToNative()
+                            })
+                        }else{
+                            if (codeDesc.auto.hasOwnProperty(rtnData.code)){
+                                nativeService.toast(codeDesc.auto[rtnData.code])
+                            }else{
+                                nativeService.toast(rtnData.msg)
+                            }
+                        }
+                    }).catch( (err)=>{
+                        nativeService.alert(err)
+                    })
                 })
             },
             setDevice(deviceId){
@@ -490,90 +511,99 @@
                 this.editParams.task = JSON.stringify(tmpTask)
             },
             goBindNewDevice(){
-                if (Object.keys(this.unbindDevices).length > 0) {
-                    let params = {
-                        from: 'editAuto',
-                        uid: this.uid,
-                        homegroupId: this.homegroupId,
-                        sceneType: this.sceneType,
-                        userDevices: nativeService.getParameters('userDevices'),
-                        unbindDevices: encodeURIComponent(JSON.stringify(this.unbindDevices)),
-                        unbindDevicesActions:  encodeURIComponent(JSON.stringify(this.unbindDevicesActions))
+                this.checkLogin().then( (uid) => {
+                    if (Object.keys(this.unbindDevices).length > 0) {
+                        let params = {
+                            from: 'editAuto',
+                            uid: uid,
+                            homegroupId: this.homegroupId,
+                            sceneType: this.sceneType,
+                            userDevices: nativeService.getParameters('userDevices'),
+                            unbindDevices: encodeURIComponent(JSON.stringify(this.unbindDevices)),
+                            unbindDevicesActions:  encodeURIComponent(JSON.stringify(this.unbindDevicesActions))
+                        }
+                        this.goTo('autoBindDevices', {}, params)
+                    }else{
+                        nativeService.alert('此快捷操作已经选择了所有设备哦')
                     }
-                    this.goTo('autoBindDevices', {}, params)
-                }else{
-                    nativeService.alert('此快捷操作已经选择了所有设备哦')
-                }
+                })
             },
             sendAutoEdit(){
-                let reqUrl = url.auto.update
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneType: this.sceneType,
-                    sceneId: this.sceneId,
-                    image: this.autoDetail.image,
-                }
-
-                let tmpTask = []
-                for (var key in this.bindDeviceActions) { //key: applianceCode
-                    let tmpCommand = {}
-                    for (var i in this.bindDeviceActions[key]) {
-                        tmpCommand[this.bindDeviceActions[key][i].property] = this.bindDeviceActions[key][i].currentStatus || this.bindDeviceActions[key][i].default
-                        
+                this.checkLogin().then( (uid) => {
+                    let reqUrl = url.auto.update
+                    let reqParams = {
+                        uid: uid,
+                        homegroupId: this.homegroupId,
+                        sceneType: this.sceneType,
+                        sceneId: this.sceneId,
+                        image: this.autoDetail.image,
                     }
-                    tmpTask.push({
-                        applianceCode: key,
-                        command: tmpCommand
-                    })
-                }
-                reqParams.task = JSON.stringify(tmpTask) || JSON.stringify(this.autoDetail.task)
-                if (Object.keys(this.editParams).length === 0 && !reqParams.task) {
-                    nativeService.alert('没有改动哦')
-                    return
-                }
 
-                reqParams.name = this.editParams.name || this.autoDetail.name
-                reqParams.enable = this.editParams.enable || this.autoDetail.enable
-                reqParams.weekly = this.editParams.weekly || this.autoDetail.weekly
-               
-                if (this.sceneType == 3) {
-                    let tmpLocation = {
-                        address: this.editParams.locationAddress || this.autoDetail.location.address,
-                        latitude: this.editParams.locationLatitude || this.autoDetail.location.latitude,
-                        longitude: this.editParams.locationLongitude || this.autoDetail.location.longitude,
-                        distance: this.autoDetail.location.distance,
-                        direction: this.autoDetail.location.direction,
-                        directionName: this.autoDetail.location.directionName,
-                    }
-                    reqParams.location = JSON.stringify(tmpLocation)
-                }
-                if (this.sceneType == 4) {
-                    reqParams.startTime = this.editParams.startTime || this.autoDetail.startTime
-                }
-                if (this.sceneType == 6) {
-                    let tmpWeather = {
-                        cityNo: this.autoDetail.weather.cityNo,
-                        latitude: this.autoDetail.weather.latitude,
-                        longitude: this.autoDetail.weather.longitude,
-                        weatherStatus: this.editParams.weatherStatus || this.autoDetail.weather.weatherStatus,
-                        temperature: this.editParams.weatherTemperature || this.autoDetail.weather.temperature,
-                        logical: this.editParams.logical || this.autoDetail.weather.logical,
-                    }
-                    reqParams.weather = JSON.stringify(tmpWeather)
-                }
-
-                this.webRequest(reqUrl, reqParams).then((rtnData)=>{
-                    if (rtnData.code == 0) {
-                        if (this.sceneType == 3) {
-                            this.updateAutoList()//通知原生位置类型自动化列表需要更新
+                    let tmpTask = []
+                    for (var key in this.bindDeviceActions) { //key: applianceCode
+                        let tmpCommand = {}
+                        for (var i in this.bindDeviceActions[key]) {
+                            tmpCommand[this.bindDeviceActions[key][i].property] = this.bindDeviceActions[key][i].currentStatus || this.bindDeviceActions[key][i].default
+                            
                         }
-                        nativeService.alert('修改成功', function(){
-                            nativeService.backToNative()
+                        tmpTask.push({
+                            applianceCode: key,
+                            command: tmpCommand
                         })
                     }
-                }).catch( (error )=>{
+                    reqParams.task = JSON.stringify(tmpTask) || JSON.stringify(this.autoDetail.task)
+                    if (Object.keys(this.editParams).length === 0 && !reqParams.task) {
+                        nativeService.alert('没有改动哦')
+                        return
+                    }
 
+                    reqParams.name = this.editParams.name || this.autoDetail.name
+                    reqParams.enable = this.editParams.enable || this.autoDetail.enable
+                    reqParams.weekly = this.editParams.weekly || this.autoDetail.weekly
+                
+                    if (this.sceneType == 3) {
+                        let tmpLocation = {
+                            address: this.editParams.locationAddress || this.autoDetail.location.address,
+                            latitude: this.editParams.locationLatitude || this.autoDetail.location.latitude,
+                            longitude: this.editParams.locationLongitude || this.autoDetail.location.longitude,
+                            distance: this.autoDetail.location.distance,
+                            direction: this.autoDetail.location.direction,
+                            directionName: this.autoDetail.location.directionName,
+                        }
+                        reqParams.location = JSON.stringify(tmpLocation)
+                    }
+                    if (this.sceneType == 4) {
+                        reqParams.startTime = this.editParams.startTime || this.autoDetail.startTime
+                    }
+                    if (this.sceneType == 6) {
+                        let tmpWeather = {
+                            cityNo: this.autoDetail.weather.cityNo,
+                            latitude: this.autoDetail.weather.latitude,
+                            longitude: this.autoDetail.weather.longitude,
+                            weatherStatus: this.editParams.weatherStatus || this.autoDetail.weather.weatherStatus,
+                            temperature: this.editParams.weatherTemperature || this.autoDetail.weather.temperature,
+                            logical: this.editParams.logical || this.autoDetail.weather.logical,
+                        }
+                        reqParams.weather = JSON.stringify(tmpWeather)
+                    }
+
+                    this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                        if (rtnData.code == 0) {
+                            if (this.sceneType == 3) {
+                                this.updateAutoList()//通知原生位置类型自动化列表需要更新
+                            }
+                            nativeService.alert('修改成功', function(){
+                                nativeService.backToNative()
+                            })
+                        }else{
+                            if (codeDesc.auto.hasOwnProperty(rtnData.code)){
+                                nativeService.toast(codeDesc.auto[rtnData.code])
+                            }else{
+                                nativeService.toast(rtnData.msg)
+                            }
+                        }
+                    }).catch( (error )=>{
+                    })
                 })
             }
         },

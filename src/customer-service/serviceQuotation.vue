@@ -48,10 +48,8 @@
             <text class="order-footer-label">未出现在报价单里的收费项，您有权拒绝付款</text>
 
             <div class="action-bar">
-                <midea-button v-if="!isConfirmed" text="我确认收费内容和报价" type="green" :btnStyle="{'background-color': '#267AFF','border-radius': '4px'}" @mideaButtonClicked="submit">
-                </midea-button>
-                <midea-button v-if="isConfirmed" text="查看工单详情" type="green" :btnStyle="{'background-color': '#267AFF','border-radius': '4px'}" @mideaButtonClicked="goToOrderDetail">
-                </midea-button>
+                <midea-button v-if="isConfirmed" text="查看工单详情" @mideaButtonClicked="goToOrderDetail"></midea-button>
+                <midea-button v-else text="我确认收费内容和报价" @mideaButtonClicked="submit"></midea-button>
             </div>
         </scroller>
     </div>

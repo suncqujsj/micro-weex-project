@@ -1,9 +1,8 @@
 <template>
     <div>
-            
         <scroller class="wrap" :style="wrapStyle">
             <div :style="sceneStyle">
-                <midea-header :title="scene.name" bgColor="transparent" titleText="#fff"  @leftImgClick="goBack"></midea-header>
+                <midea-header :title="scene.name" bgColor="transparent" titleText="#fff" :leftImg="icon.back" @leftImgClick="goBack"></midea-header>
                 <div class="setting" @click="goSetting()">
                     <text class="setting-text white">设置</text>
                 </div>
@@ -14,7 +13,7 @@
                         <text class="improve white" @click="quickOptimize">一键优化</text>
                     </div>
                     <div class="up-status row-sa" v-if="scene.roomType=='1' || scene.roomType=='2'">
-                        <div>
+                        <div class="scene-status">
                             <text class="info-text font14 white">温度</text>
                             <div  class="row-c status-value">
                                 <text v-if="scene.indicator.temperature" class="font36 white">{{scene.indicator.temperature}}</text>
@@ -23,7 +22,7 @@
                             </div>
                             <text class="info-text font12 white">{{temperatureStatus}}</text>
                         </div>  
-                        <div>
+                        <div class="scene-status">
                             <text class="info-text font14 white">湿度</text>
                             <div class="row-c status-value">
                                 <text v-if="scene.indicator.humidity" class="font36 white">{{scene.indicator.humidity}}</text>
@@ -32,7 +31,7 @@
                             </div>
                             <text class="info-text font12 white">{{humidityStatus}}</text>
                         </div>  
-                        <div>
+                        <div class="scene-status">
                             <text class="info-text font14 white">空气质量</text>
                             <div class="row-c status-value">
                                 <text v-if="scene.indicator.pm5" class="font36 white">{{scene.indicator.pm5}}</text>
@@ -42,7 +41,7 @@
                         </div>
                     </div>
                     <div class="up-status row-sa" v-if="scene.roomType=='3'">
-                        <div>
+                        <div class="scene-status">
                             <text v-if="scene.indicator.work_stats" class="info-text font14 white">{{scene.indicator.work_stats}}</text>
                             <text v-else class="info-text font14 white">工作状态</text>
                             <div class="row-c status-value">
@@ -51,15 +50,15 @@
                                 <text v-else class="font36 white">-</text>
                             </div>
                         </div>  
-                        <div>
+                        <div class="scene-status">
                             <text class="info-text font14 white">热水量</text>
                             <div class="row-c status-value">
                                 <text v-if="scene.indicator.water_capacity" class="font36 white">{{scene.indicator.water_capacity}}</text>
                                 <text v-if="scene.indicator.water_capacity" class="font16 white mgb-10">%</text>
                                 <text v-else class="font36 white">-</text>
                             </div>
-                        </div>  
-                        <div v-if="scene.roomType=='3' ">
+                        </div>
+                        <div class="scene-status">
                             <text class="info-text font14 white">还需加热</text>
                             <div class="row-c status-value">
                                 <text v-if="scene.indicator.remain_time" class="font36 white">{{scene.indicator.remain_time}}</text>
@@ -94,8 +93,8 @@
                     <text class="down-text">{{washerStatus[washerPower]}}</text>
                 </div>
                 <div @click="controlStartPause">
-                    <image class="down-icon" :src="icon.washer[washerControlStatus]"></image>
-                    <text class="down-text">{{washerStatus[washerControlStatus]}}</text>
+                    <image class="down-icon" :src="icon.washer[washerRunningStatus]"></image>
+                    <text class="down-text">{{washerStatus[washerRunningStatus]}}</text>
                 </div>
             </div>
             <div v-if="scene.roomType != 4" class="down-block row-sa">
@@ -176,7 +175,7 @@
         text-align: center;
     }
     .weather{
-        font-size: 28px;
+        font-size: 30px;
         margin-bottom: 25px;
     }
     .improve{
@@ -197,11 +196,14 @@
         padding-left: 20px;
         padding-right: 20px;
     }
+    .scene-status{
+        width: 220px;
+    }
     .status-value{
         align-items: flex-end;
     }
     .info-text{
-        width: 180px;
+        width: 220px;
         text-align: center;
         margin-bottom: 2px;
     }
@@ -261,6 +263,7 @@
         color: #fff;
         text-align: center;
         padding-top: 80px;
+        font-size: 30px;
     }
  
 </style>
@@ -274,7 +277,7 @@
     import mideaCell from '@/component/cell.vue'
     import mideaList from '@/midea-rooms/components/list.vue'
 
-    import { url } from './config/config.js'
+    import { url, codeDesc } from './config/config.js'
 
     export default {
         components:{ MideaHeader, MideaVote, ToastDialog, mideaCell, mideaList },
@@ -384,6 +387,7 @@
                 homegroupId: '',
                 scene: {},
                 icon:{
+                    back: 'assets/img/b_white.png',
                     next: 'assets/img/more_w.png',
                     success: '',
                     fail: '',
@@ -499,8 +503,8 @@
                 },
                 hasWasherPowerData: false,
                 hasWasherWaterData: false,
-                washerPower: 'off',
-                washerControlStatus: 'pause',
+                washerPower: '',//洗衣机电源状态（开机关机）
+                washerRunningStatus: '',//洗衣机运行状态
                 washerStatus: {
                     on: '开机',
                     off: '关机',
@@ -515,7 +519,6 @@
             },
             goSetting(){
                 let params = {
-                    uid: this.uid,
                     homegroupId: this.homegroupId,
                     roomType: this.roomType,
                     sceneId: this.sceneId,
@@ -527,221 +530,199 @@
                 this.showToastDialog = false
             },
             buyShampoo(){
-                let params = {
-                    uid: this.uid
-                }
-                this.goTo('buyShampoo', {}, params)
+                this.goTo('buyShampoo')
             },
             getSceneDetail(){
                 return new Promise((resolve, reject)=>{
-                    let reqUrl = url.scene.detail
-                    let reqParams = {
-                        uid: this.uid,
-                        homegroupId: this.homegroupId,
-                        sceneId: this.sceneId
-                    }
-                    
-                    this.webRequest(reqUrl, reqParams).then( (res) => {
-                        if (res.code == '0') {
-                            this.scene = res.data
-                            resolve()
-                        }else{
-                            let codeMsg = {
-                                "1000": "未知系统错误",
-                                "1001": "参数格式错误",
-                                "1002": "参数为空",
-                                "1105": "账户不存在",
-                                "1200": "用户不在家庭"
-                            }
-                            nativeService.toast(codeMsg[res.code])
+                    this.checkLogin().then( (uid) => {
+                        let reqUrl = url.scene.detail
+                        let reqParams = {
+                            uid: uid,
+                            homegroupId: this.homegroupId,
+                            sceneId: this.sceneId
                         }
-                    }).catch( (error )=>{
-                        nativeService.alert(error)
+                        
+                        this.webRequest(reqUrl, reqParams).then( (res) => {
+                            if (res.code == '0') {
+                                this.scene = res.data
+                                resolve()
+                            }else{
+                                if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                    nativeService.toast(codeDesc.scene[res.code])
+                                }else{
+                                    nativeService.toast(res.msg)
+                                }
+                            }
+                        }).catch( (error )=>{
+                            nativeService.alert(error)
+                        })
                     })
                 })
             },
-            getDevices(){
-                return new Promise((resolve,reject)=>{
-                    let reqUrl = url.scene.supportList
+            quickOptimize(){
+                this.checkLogin().then( (uid) => {
+                    let reqUrl = url.scene.optimize
                     let reqParams = {
-                        uid: this.uid,
+                        uid: uid,
                         homegroupId: this.homegroupId,
-                        sceneId: this.sceneId
+                        sceneId: this.sceneId,
+                    }
+                    let codeDesc = {
+                        '1000':"未知系统错误",
+                        '1001':"参数格式错误",
+                        '1002':"参数为空",
+                        '1003':"参数类型不支持",
+                        '1105':"账户不存在",
+                        '1200':"用户不在家庭",
+                        '1701':"场景不存在",
+                        '1704':"场景没有关联设备"
                     }
                     this.webRequest(reqUrl, reqParams).then((res)=>{
                         if (res.code == 0) {
-                            resolve(res.data)
+                            this.checkQuickOptimize(res.data.resultId)
+                            
+                        }else if (res.code == 1711){
+                            nativeService.alert(res.msg)
                         }else{
-                            reject(res.msg)
+                            if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                nativeService.toast(codeDesc.scene[res.code])
+                            }else{
+                                nativeService.toast(res.msg)
+                            }
                         }
                     }).catch( (err )=>{
                         reject(err)
                     })
                 })
             },
-            quickOptimize(){
-                let reqUrl = url.scene.optimize
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneId: this.sceneId,
-                }
-                let codeDesc = {
-                    '1000':"未知系统错误",
-                    '1001':"参数格式错误",
-                    '1002':"参数为空",
-                    '1003':"参数类型不支持",
-                    '1105':"账户不存在",
-                    '1200':"用户不在家庭",
-                    '1701':"场景不存在",
-                    '1704':"场景没有关联设备"
-                }
-                this.webRequest(reqUrl, reqParams).then((res)=>{
-                    
-                    if (res.code == 0) {
-                        this.checkQuickOptimize(res.data.resultId)
-                        
-                    }else if (res.code == 1711){
-                        nativeService.alert(res.msg)
-                    }else{
-                        if (codeDesc.hasOwnProperty(res.code)) {
-                            nativeService.toast(codeDesc[res.code])
-                        }else{
-                            nativeService.toast(res.msg)
-                        }
-                    }
-                }).catch( (err )=>{
-                    reject(err)
-                })
-            },
             checkQuickOptimize(resultId){
                 // status 1-成功，2-执行中，3-失败
-                let reqUrl = url.scene.optimizeStatus
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneId: this.sceneId,
-                    resultId: resultId
-                }
-                this.webRequest(reqUrl, reqParams, false).then((res)=>{
-                    if (res.code == 0) {
-                        this.showToastDialog = true
-                        this.sceneDevices = Object.assign({}, res.data.list[0].actionList)
-                        
-                        for (var x in this.sceneDevices) {
-                            if (this.sceneDevices[x].status == 2 || this.sceneDevices[x].status == 3) {
-                                  setTimeout(()=>{
-                                    this.checkQuickOptimize(resultId)
-                                },1000)
-                            } else{
-                                setTimeout(()=>{
-                                    this.showToastDialog = false
-                                },2000)
-                                break
+                this.checkLogin().then( (uid) => {
+                    let reqUrl = url.scene.optimizeStatus
+                    let reqParams = {
+                        uid: uid,
+                        homegroupId: this.homegroupId,
+                        sceneId: this.sceneId,
+                        resultId: resultId
+                    }
+                    this.webRequest(reqUrl, reqParams, false).then((res)=>{
+                        if (res.code == 0) {
+                            this.showToastDialog = true
+                            this.sceneDevices = Object.assign({}, res.data.list[0].actionList)
+                            
+                            for (var x in this.sceneDevices) {
+                                if (this.sceneDevices[x].status == 2 || this.sceneDevices[x].status == 3) {
+                                    setTimeout(()=>{
+                                        this.checkQuickOptimize(resultId)
+                                    },1000)
+                                } else{
+                                    setTimeout(()=>{
+                                        this.showToastDialog = false
+                                    },2000)
+                                    break
+                                }
+                            }
+                        }else{
+                            if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                nativeService.toast(codeDesc.scene[res.code])
+                            }else{
+                                nativeService.toast(res.msg)
                             }
                         }
-                      
-                    }else{
-                    }
+                    })
                 })
             },
             executeModel(modelId){
-                let reqUrl = url.scene.modelExecute
-                let reqParams = {
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneId: this.sceneId,
-                    modelId: modelId
-                }
-                let codeDesc = {
-                    '1000':	'未知系统错误',
-                    '1001':	'参数格式错误',
-                    '1002':	'参数为空',
-                    '1105':	'账户不存在',
-                    '1200':	'用户不在家庭',
-                    '1701':	'场景不存在',
-                    '1704':	'场景没有关联设备',
-                    '1709':	'模式不存在'
-                }
-                this.webRequest(reqUrl, reqParams).then((res)=>{
-                    if (res.code == 0) {
-                        nativeService.toast('执行成功！')
-                    }else{
-                        nativeService.alert(codeDesc[res.code])
+                this.checkLogin().then( (uid) => {
+                    let reqUrl = url.scene.modelExecute
+                    let reqParams = {
+                        uid: uid,
+                        homegroupId: this.homegroupId,
+                        sceneId: this.sceneId,
+                        modelId: modelId
                     }
-                }).catch( (err)=>{
+                    this.webRequest(reqUrl, reqParams).then((res)=>{
+                        if (res.code == 0) {
+                            nativeService.toast('执行成功！')
+                        }else{
+                            if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                nativeService.toast(codeDesc.scene[res.code])
+                            }else{
+                                nativeService.toast(res.msg)
+                            }
+                        }
+                    }).catch( (err)=>{
+                    })
                 })
             },
             getWashData(){
-                if (this.washerCode) {
-                    let reqUrl = url.scene.washerConsumption
-                    let reqParams = {
-                        uid: this.uid,
-                        homegroupId: this.homegroupId,
-                        applianceCode: this.washerCode
-                    }
-                    
-                    this.webRequest(reqUrl, reqParams).then((res)=>{
-                        if (res.code == 0) {
-                            let result = res.data.historyConsumptions
-                            let tmpPowerXValue = [], tmpPowerXLabel = [], tmpPowerYValue = [], tmpPowerYLabel = [], 
-                                tmpWaterXValue = [], tmpWaterXLabel = [], tmpWaterYValue = [], tmpWaterYLabel = []
-
-                            for (let i=0; i<result.length; i++) {
-                                tmpPowerXValue[i] = i
-                                tmpPowerXLabel[i] = result[i].date
-
-                                tmpPowerYValue[i] = 0
-                                tmpPowerYLabel[i] = 0
-                                if (result[i].powerConsumption && result[i].powerConsumption != '') {
-                                    tmpPowerYValue[i] = result[i].powerConsumption
-                                     tmpPowerYLabel[i] = result[i].powerConsumption
-                                }
-
-                                tmpWaterXValue[i] = i
-                                tmpWaterXLabel[i] = result[i].date
-                                
-                                tmpWaterYValue[i] = 0
-                                tmpWaterYLabel[i] = 0
-                                if (result[i].waterConsumption && result[i].waterConsumption != '') {
-                                    tmpWaterYValue[i] = result[i].waterConsumption
-                                    tmpWaterYLabel[i] = result[i].waterConsumption
-                                }
-                            }
-
-                            this.washerPowerData['x']['value'] = tmpPowerXValue
-                            this.washerPowerData['x']['label'] = tmpPowerXLabel
-                            this.washerPowerData['y']['value'] = tmpPowerYValue
-                            this.washerPowerData['y']['label'] = tmpPowerYLabel
-                            
-                            this.washerWaterData['x']['value'] = tmpWaterXValue
-                            this.washerWaterData['x']['label'] = tmpWaterXLabel
-                            this.washerWaterData['y']['value'] = tmpWaterYValue
-                            this.washerWaterData['y']['label'] = tmpWaterYLabel
-                            
-                            this.hasWasherPowerData = true
-                            this.hasWasherWaterData = true
-                        }else{
-                            let codeMsg = {
-                                "1000": "未知系统错误",
-                                "1001": "参数格式错误",
-                                "1002": "参数为空",
-                                "1105": "账户不存在"
-                            }
-                            nativeService.alert(codeMsg[res.code])
+                this.checkLogin().then( (uid) => {
+                    if (this.washerCode) {
+                        let reqUrl = url.scene.washerConsumption
+                        let reqParams = {
+                            uid: uid,
+                            homegroupId: this.homegroupId,
+                            applianceCode: this.washerCode
                         }
-                    }).catch((err)=>{
-                    })
-                }
+                        
+                        this.webRequest(reqUrl, reqParams).then((res)=>{
+                            if (res.code == 0) {
+                                let result = res.data.historyConsumptions
+                                let tmpPowerXValue = [], tmpPowerXLabel = [], tmpPowerYValue = [], tmpPowerYLabel = [], 
+                                    tmpWaterXValue = [], tmpWaterXLabel = [], tmpWaterYValue = [], tmpWaterYLabel = []
+
+                                for (let i=0; i<result.length; i++) {
+                                    tmpPowerXValue[i] = i
+                                    tmpPowerXLabel[i] = result[i].date
+
+                                    tmpPowerYValue[i] = 0
+                                    tmpPowerYLabel[i] = 0
+                                    if (result[i].powerConsumption && result[i].powerConsumption != '') {
+                                        tmpPowerYValue[i] = result[i].powerConsumption
+                                        tmpPowerYLabel[i] = result[i].powerConsumption
+                                    }
+
+                                    tmpWaterXValue[i] = i
+                                    tmpWaterXLabel[i] = result[i].date
+                                    
+                                    tmpWaterYValue[i] = 0
+                                    tmpWaterYLabel[i] = 0
+                                    if (result[i].waterConsumption && result[i].waterConsumption != '') {
+                                        tmpWaterYValue[i] = result[i].waterConsumption
+                                        tmpWaterYLabel[i] = result[i].waterConsumption
+                                    }
+                                }
+
+                                this.washerPowerData['x']['value'] = tmpPowerXValue
+                                this.washerPowerData['x']['label'] = tmpPowerXLabel
+                                this.washerPowerData['y']['value'] = tmpPowerYValue
+                                this.washerPowerData['y']['label'] = tmpPowerYLabel
+                                
+                                this.washerWaterData['x']['value'] = tmpWaterXValue
+                                this.washerWaterData['x']['label'] = tmpWaterXLabel
+                                this.washerWaterData['y']['value'] = tmpWaterYValue
+                                this.washerWaterData['y']['label'] = tmpWaterYLabel
+                                
+                                this.hasWasherPowerData = true
+                                this.hasWasherWaterData = true
+                            }else{
+                                if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                    nativeService.toast(codeDesc.scene[res.code])
+                                }else{
+                                    nativeService.toast(res.msg)
+                                }
+                            }
+                        }).catch((err)=>{
+                        })
+                    }
+                })
             },
             getWeatherInfo(){
-            	nativeService.alert(1)
                 nativeService.getGPSInfo({
                     desiredAccuracy: "10",
                     distanceFilter: "10",
                     alwaysAuthorization: "0" 
                 }).then((gps)=>{
-            	nativeService.alert(2)
                     nativeService.getCityInfo({cityName: gps.city}).then( (city)=>{
                         nativeService.getWeatherInfo({cityNo: city.cityNo}).then((weather)=>{
                             let tmpDesc = ''
@@ -751,7 +732,7 @@
                             if (weather.grade) {
                                 tmpDesc += ' , 气温' + weather.grade + '℃'
                             }
-                            this.weatherDesc = tmpDesc || '无法获取天气，请在系统设置中打开定位服务'
+                            this.weatherDesc = tmpDesc || '无法获取天气，可能因为未开启定位服务'
                         }).catch(()=>{
                             this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
                         })
@@ -762,37 +743,43 @@
                     this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
                 })
             },
-            setWasherStatus(luaData){
-                // this.washerRunningStatus = luaData.running_status
-            },
-            luaQueryStatus () {
+            luaQueryStatus () {//洗衣机数据的lua查询
             	let self = this;
             	let params = {
-                    data:{}, 
+                    params:{}, 
                     operation: 'luaQuery',
-                    applianceId: String(self.washerCode),
+                    applianceId: String(self.washerCode)
                 }
-                nativeService.alert('params:  ' + JSON.stringify(params))
-
             	nativeService.sendLuaRequest(params, true).then(function(luaData) {
-                    nativeService.alert('luaData:  ' + JSON.stringify(luaData))
                     self.setWasherStatus(luaData)
             	},function(error) {
-                    nativeService.alert('error:  ' + JSON.stringify(error))
+                    nativeService.alert('查询设备状态时遇到了问题 \n[错误码：' + error.errorCode +']')
             	});
+            },
+            setWasherStatus(luaData){
+                this.washerPower = luaData.result.power
+                if (luaData.result.running_status != 'start') {
+                    this.washerRunningStatus = 'start' //runnig_status不等于start就可以发start命令
+                }else if (luaData.running_status == 'start'){
+                    this.washerRunningStatus = 'pause'
+                }
             },
             powerOnOff(){//控制阳台场景洗衣机的开启关闭
 		        let self = this;
-		        let poweronoff = this.washerPower=='off' ? "on" : "off";
+		        let poweronoff = this.washerPower=='off' ? "on" : "off"
             	let params = {
-            			operation: "luaControl",
-                        applianceId: self.washerCode,
-            			data: { "power": poweronoff },
-            		};
-            	nativeService.sendLuaRequest(params,true).then(function(data) {
-            		self.setWasherStatus(data);
+                    operation: "luaControl",
+                    applianceId:  String(self.washerCode),
+                    params: { "power": poweronoff },
+                }
+            	nativeService.sendLuaRequest(params,true).then(function(luaData) {
+                    nativeService.showLoading()
+                    setTimeout(()=>{
+                        self.luaQueryStatus()
+                        nativeService.hideLoading()
+                    },2000)
             	},function(error) {
-            		nativeService.alert(data);
+                    nativeService.alert('改变设备状态时遇到了问题 \n[错误码：' + error.errorCode +']')
             	});
             },
             controlStartPause(){//控制阳台场景洗衣机的启动暂停
@@ -800,31 +787,37 @@
             	if( self.washerRunningStatus == "work") {
             		let params = {
             			operation:"luaControl",
-                        applianceId: self.washerCode,
-            			data:{ "control_status": "pause" }
-            		};
-            		nativeService.sendLuaRequest(params,true).then(function(data) {
-            			nativeService.alert(data)
-	            		self.setWasherStatus(data)
+                        applianceId: String(self.washerCode),
+            			params:{ "control_status": "pause" }
+                    }
+            		nativeService.sendLuaRequest(params,true).then(function(luaData) {
+                        nativeService.showLoading()
+                        setTimeout(()=>{
+                            self.luaQueryStatus()
+                            nativeService.hideLoading()
+                        },2000)
 	            	},function(error) {
-	            		nativeService.alert(error)
+                        nativeService.alert('改变设备状态时遇到了问题 \n[错误码：' + error.errorCode +']')
 	            	})
             	} else {
             		let params = {
             			operation: "luaControl",
-                        applianceId: self.washerCode,
-            			data: { control_status: "start" },
-            		};
-            		nativeService.sendLuaRequest(params,true).then(function(data) {
-	            		self.setWasherStatus(data);
+                        applianceId: String(self.washerCode),
+            			params: { control_status: "start" }
+                    }
+            		nativeService.sendLuaRequest(params,true).then(function(luaData) {
+                        nativeService.showLoading()
+                        setTimeout(()=>{
+                            self.luaQueryStatus()
+                            nativeService.hideLoading()
+                        },2000)
 	            	},function(error) {
-	            		nativeService.alert(error)
+                        nativeService.alert('改变设备状态时遇到了问题 \n[错误码：' + error.errorCode +']')
 	            	});
             	}
             }
         },
         created(){
-            this.uid = nativeService.getParameters('uid')
             this.homegroupId = nativeService.getParameters('homegroupId')
             this.sceneId = nativeService.getParameters('sceneId')
             this.roomType = nativeService.getParameters('roomType')

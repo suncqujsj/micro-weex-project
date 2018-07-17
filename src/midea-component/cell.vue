@@ -41,8 +41,8 @@
     position: relative;
     flex-direction: row;
     align-items: center;
-    padding-left: 24px;
-    padding-right: 24px;
+    padding-left: 32px;
+    padding-right: 32px;
     background-color: #ffffff;
   }
 

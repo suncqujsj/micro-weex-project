@@ -5,7 +5,7 @@
                 <image v-if="showLeftImg" class="header-left-image" :src="leftImg"></image>
             </div>
             <div @click="headerClick">
-                <text :style="{color:titleText, fontSize:fontSize+'px'}">{{title}}</text>
+                <text class="header-title" :style="{color:titleText, fontSize:fontSize+'px'}">{{title}}</text>
             </div>
             <div class="header-right-image-wrapper" @click="rightImgClick">
                 <slot name="rightContent">
@@ -34,6 +34,9 @@
 .immersion {
   padding-top: 40px;
   height: 128px;
+}
+.header-title {
+  font-family: PingFangSC-Regular;
 }
 .header-left-image-wrapper {
   width: 88px;
@@ -72,7 +75,7 @@ export default {
         },
         fontSize: {
             type: String,
-            default: '36'
+            default: '32'
         },
         titleText: {
             type: String,

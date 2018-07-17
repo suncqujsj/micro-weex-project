@@ -37,7 +37,7 @@ export const all = [
                 "deviceName": "空调541F",
                 "deviceType": "0xAC",
                 "deviceSubType": "5",
-                "isOnline": "0",
+                "isOnline": "1",
                 "deviceSn": "",
             },
             "errorCode": "0"

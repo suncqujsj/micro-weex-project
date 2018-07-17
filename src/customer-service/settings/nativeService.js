@@ -73,7 +73,9 @@ let customizeNativeService = Object.assign(nativeService, {
                 //若是正常的错误码，则显示错误信息
                 msg = error.msg || error.errorMsg || error.returnMsg || error.errorMessage || "请求失败，请稍后重试。"
             }
-            msg += "(" + errorCode + ")"
+            if (errorCode) {
+                msg += "(" + errorCode + ")"
+            }
         }
         debugUtil.debugLog(error)
         return msg

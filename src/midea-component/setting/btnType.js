@@ -1,6 +1,6 @@
 export const STYLE_MAP = {
   green: {
-    backgroundColor: '#00B9EF'
+    backgroundColor: '#267aff'
   },
   gray: {
     backgroundColor: '#CCC'
@@ -16,6 +16,20 @@ export const STYLE_MAP = {
   refresh: {
     backgroundColor: '#FFFFFF',
     borderColor: '#9FA0A0',
+    borderWidth: '1px'
+  },
+
+  primary: {
+    backgroundColor: '#267aff',
+    borderWidth: 0
+  },
+  secondary: {
+    borderColor: '#267aff',
+    borderWidth: '1px',
+    opacity: 0.9
+  },
+  normal: {
+    borderColor: '#666666',
     borderWidth: '1px'
   }
 };
@@ -34,6 +48,15 @@ export const TEXT_STYLE_MAP = {
     color: '#FFF'
   },
   disabled: {
-   color: '#FFF'
+    color: '#FFF'
+  },
+  primary: {
+    color: '#FFFFFF'
+  },
+  secondary: {
+    color: '#267aff'
+  },
+  normal: {
+    color: '#000000'
   }
 };

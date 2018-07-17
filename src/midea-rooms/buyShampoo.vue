@@ -13,7 +13,6 @@
         mixins: [base],
         data(){
             return {
-                uid: ''
             }
         },
         computed:{
@@ -34,7 +33,6 @@
             }
         },
         created() {
-            this.uid = nativeService.getParameters('uid')
         },
     }
 </script>

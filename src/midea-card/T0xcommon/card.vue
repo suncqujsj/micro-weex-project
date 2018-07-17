@@ -7,7 +7,7 @@
 	        			<div class="main-status-div">
 	        				<text class="main-status">设备在线</text>
 	        			</div>
-		        		<div class="card-status-detail">
+		        		<div class="card-status-detail" @click="showControlPanelPage">
 		        			<text class="main-status-third">进入详情</text>
 		        			<image class="main-status-detail" src="./assets/img/smart_ic_arrow_forward@2x.png"></image>
 		        		</div>
@@ -17,7 +17,7 @@
 		        	<div class="card-right">
 		        		<div class="card-control" >
 		        		</div>
-		        		<div class="card-icon">
+		        		<div class="card-icon" @click="showControlPanelPage">
 		        			<image class="card-icon-img" resize="contain" :src="device_icon"></image>
 		        		</div>
 		        	</div>
@@ -25,7 +25,7 @@
 	        </div>
 	        <div class="card-power-off" v-else>
 	        	<div class="control-div-offline">
-	        		<image class="card-control-img" :src="powerIcon_offline"  @click="poweronoff(1)"></image>
+	        		<image class="card-control-img" :src="powerIcon_offline"  @click="reload"></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
@@ -40,6 +40,7 @@
 		        </div>
 	      	</div>
 	        <midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="true" :checked="mideaChecked2" :data="data3"></midea-smart>
+	        <midea-download></midea-download>
 	    </div>
     </scroller>
 </template>
@@ -50,15 +51,19 @@
 	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
 	import mideaItem from '@/midea-component/item.vue'
 	import { DEVICE_INFO } from './settings/deviceStatus'
+	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
 	var stream = weex.requireModule('stream');
+	const globalEvent = weex.requireModule('globalEvent');
+	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
             mideaSwitch,
             mideaSmart,
-            mideaItem
+            mideaItem,
+            mideaDownload
         },
         data() {
             return {
@@ -70,6 +75,9 @@
             	onlineStatus:"",
             	
             	device_info: "",
+            	
+            	pushKey: "receiveMessage",
+            	pushKeyOnline: "receiveMessageFromApp",
                 mideaChecked: true,
                 mideaChecked2: false,
 	            powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
@@ -103,7 +111,39 @@
             	this.deviceSn = data.deviceSn;
             	this.onlineStatus = data.isOnline;
             	this.device_info = DEVICE_INFO[this.deviceType];
-            }
+            },
+            handleNotification() {
+            	console.log("handleNotification Yoram");
+            	let me = this;
+//          	globalEvent.addEventListener(this.pushKey, (data) => {
+//          		me.queryStatus();
+//		        });
+		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
+            		if(data && data.messageType == "deviceOnlineStatus") {
+            			if(data.messageBody && data.messageBody.onlineStatus == "online") {
+            				me.onlineStatus = "1";
+            			} else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+            				me.onlineStatus = "0";
+            			} else {
+            				me.onlineStatus = "0";
+            			}
+            		}
+		        });
+            },
+            showControlPanelPage() {
+            	let params = {
+            		controlPanelName:"controlPanel.html"
+            	};
+            	bridgeModule.showControlPanelPage(params);
+            },
+            reload() {
+            	let params = {};
+            	bridgeModule.reload(params,function(result) {
+            		//successful
+            	},function(error) {
+            		//fail
+            	});
+            },
         },
         computed: {
         	device_icon() {
@@ -118,6 +158,7 @@
 	       let self = this;
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
+            	self.handleNotification();
             },function(error) {
             	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
             })
@@ -215,6 +256,7 @@
 		width: 314px;
 		height: 314px;
 		opacity: 0.3;
+		box-shadow: 0 5px 6px 0 rgba(0,0,0,0.12);
 	}
 	.card-icon {
 		align-items: flex-end;
@@ -236,7 +278,7 @@
 		color: #FFFFFF;
 		letter-spacing: 0;
 		text-align: center;
-		line-height: 18px;
+		/*line-height: 18px;*/
 	}
 	.danwei {
 		font-family: PingFangSC-Light;
@@ -258,7 +300,7 @@
 		color: #FFFFFF;
 		letter-spacing: 0;
 		text-align: center;
-		line-height: 24px;
+		/*line-height: 24px;*/
 	}
 	.main-status-detail {
 		width: 30px;

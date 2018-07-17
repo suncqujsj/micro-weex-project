@@ -1,5 +1,5 @@
 <template>
-    <div class="order-block">
+    <div v-if="formattedOrder" class="order-block">
         <div class="order-block-header">
             <div class="order-block-icon">
                 <image class="order-block-channel-icon" src="./assets/img/logo/OW.png" resize='contain'>

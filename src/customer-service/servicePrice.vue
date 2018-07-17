@@ -13,13 +13,11 @@
                 </div>
 
                 <div class="item-group scan-group group-bottom-border">
-                    <input class="item-input" placeholder="请输入配件名称" :autofocus=false v-model="materialName"  maxlength="50"/>
+                    <input class="item-input" placeholder="请输入配件名称" :autofocus=false v-model="materialName" maxlength="50" />
                 </div>
 
                 <div class="action-bar">
-                    <div class="action-btn" v-bind:class="[isDataReady?'':'action-btn-disable']" @click="search">
-                        <text class="action-btn-text" v-bind:class="[isDataReady?'':'action-btn-text-disable']">查询</text>
-                    </div>
+                    <midea-button text="查询" type="secondary" :disabled="!isDataReady" @mideaButtonClicked="search"></midea-button>
                 </div>
             </div>
 
@@ -46,17 +44,19 @@ import base from './base'
 import nativeService from './settings/nativeService'
 import util from '@/common/util/util'
 
+import { MideaButton } from '@/index'
 import ScanInput from '@/customer-service/components/scanInput.vue'
 
 export default {
     components: {
+        MideaButton,
         ScanInput
     },
     mixins: [base],
     data() {
         return {
             title: '配件价格',
-            barcode: '',
+            barCode: '',
             orgCode: "",
             productCode: '',
             productModel: '',
@@ -132,7 +132,9 @@ export default {
 
             }
             nativeService.getChargePriceForMaterial(param).then((data) => {
-                this.materialList = data.data || []
+                this.materialList = (data.data || []).filter((item) => {
+                    return item.priceCustomer
+                })
                 this.isLoaded = true
             }).catch((error) => {
                 nativeService.toast(nativeService.getErrorMessage(error))

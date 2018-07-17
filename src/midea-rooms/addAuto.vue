@@ -71,8 +71,7 @@
                     title: '新建快捷操作',
                     bgColor: '#fff',
                     color: '#111',
-                    leftImg: 'assets/img/b.png',
-                    rightImg: 'assets/img/b.png'
+                    leftImg: 'assets/img/public_ic_back@3x.png'
                 },
                 autos: [ // 自动化项目类型，1-设备事件，2-手动执行， 3-距离触发， 4-定时执行 ， 5-区域， 6-天气变化
                     {
@@ -136,25 +135,26 @@
                 this.activeTypeIndex = index
             },
             goNext(){
-                let params = {
-                    from: 'addAuto',
-                    uid: this.uid,
-                    homegroupId: this.homegroupId,
-                    sceneType: this.autos[this.activeTypeIndex].sceneType,
-                    userDevices: nativeService.getParameters('userDevices')
-                }
-                if (this.autos[this.activeTypeIndex].sceneType == 2){
-                    this.goTo('autoBindDevices', {}, params)
-                }else if ( this.autos[this.activeTypeIndex].sceneType == 3){
-                    params.direction = this.autos[this.activeTypeIndex].direction
-                    this.goTo('autoTypeSet', {}, params)
-                }else{
-                    this.goTo('autoTypeSet', {}, params)
-                }
+                this.checkLogin().then( (uid) => {
+                    let params = {
+                        from: 'addAuto',
+                        uid: uid,
+                        homegroupId: this.homegroupId,
+                        sceneType: this.autos[this.activeTypeIndex].sceneType,
+                        userDevices: nativeService.getParameters('userDevices')
+                    }
+                    if (this.autos[this.activeTypeIndex].sceneType == 2){
+                        this.goTo('autoBindDevices', {}, params)
+                    }else if ( this.autos[this.activeTypeIndex].sceneType == 3){
+                        params.direction = this.autos[this.activeTypeIndex].direction
+                        this.goTo('autoTypeSet', {}, params)
+                    }else{
+                        this.goTo('autoTypeSet', {}, params)
+                    }
+                })
             }
         },
         created(){
-            this.uid = nativeService.getParameters('uid')
             this.homegroupId = nativeService.getParameters('homegroupId')
         }
     }

@@ -50,7 +50,7 @@ export default {
             } else {
                 return weex.config.env.platform.toLowerCase()
             }
-        }
+        },
     },
     methods: {
         viewappear() {

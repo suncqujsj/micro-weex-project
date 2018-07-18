@@ -264,6 +264,7 @@
                             homegroupId: this.homegroupId,
                             sceneType: auto.sceneType,
                             sceneId: auto.sceneId,
+                            enable: auto.enable,
                             userDevices: this.userDevices
                         }
                         this.goTo("autoEdit", {}, params)

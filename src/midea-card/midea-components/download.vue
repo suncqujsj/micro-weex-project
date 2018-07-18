@@ -230,8 +230,8 @@
 							this.nodeviceInfo.push(res[i])
 						}
 					}
-					this.getDeviceInfor();
 				}
+				this.getDeviceInfor();
 			})
 			
         }

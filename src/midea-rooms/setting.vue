@@ -264,6 +264,8 @@
                             max: this.sceneProp.humidity.split(',')[1]
                         }
                     }
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             },
             generateListArray(min, max){
@@ -293,9 +295,11 @@
                                     nativeService.toast(res.msg)
                                 }
                             }
-                        }).catch( (err )=>{
-                            reject(err)
+                        }).catch((err)=>{
+                            nativeService.toast(this.getErrorMessage(err))
                         })
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
                     })
                 })
             },
@@ -314,12 +318,16 @@
                         // this.initData()
                         this.reload()
                         nativeService.toast('解绑成功！')
-                     })
+                     }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
+                    })
                 } else if (appliance.isRelation == 2) {
                     this.addSceneAppliance(appliance.applianceCode).then((res)=>{
                         // this.initData()
                         this.reload()
                         nativeService.toast('绑定成功！')
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
                     })
                 }
             },
@@ -344,9 +352,11 @@
                                     nativeService.toast(res.msg)
                                 }
                             }
-                        }).catch( (err )=>{
-                            nativeService.alert(err)
+                        }).catch((err)=>{
+                            nativeService.toast(this.getErrorMessage(err))
                         })
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
                     })
                 })
             },
@@ -370,9 +380,11 @@
                                     nativeService.toast(res.msg)
                                 }
                             }
-                        }).catch( (err )=>{
-                            nativeService.alert(err)
+                        }).catch((err)=>{
+                            nativeService.toast(this.getErrorMessage(err))
                         })
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
                     })
                 })
             },

@@ -37,9 +37,11 @@
                         <check-item :title="item" @itemClick="selectWeather(i)" :status="weather.activeTypeIndex==i" mode="radio"></check-item>
                     </midea-list>
                 </div>
+            </div>
+            <div v-if="sceneType==6">
                 <div class="box">
                     <midea-cell title="气温" :hasArrow="true" @mideaCellClick="setWeatherSwitch" :cellStyle="{paddingLeft: '30px'}" :rightText="switchs[weather.activeSwitch]"></midea-cell>
-                    <scroll-picker :listArray="weatherTemperature" @onChange="setActiveWeatherTemperature"></scroll-picker>
+                    <scroll-picker :listArray="weatherTemperature"  @onChange="setActiveWeatherTemperature"></scroll-picker>
                 </div>
             </div>
             <div class="repeat">
@@ -61,10 +63,10 @@
             </div>
         </scroller>
         <image v-if="sceneType==3" class="map-icon" :src="icon.map" @click="goCurrentLocation"></image>
-        <div class="modal">
+        <div v-if="sceneType==6" class="modal">
             <!-- 天气弹窗 -->
             <midea-dialog  :show="weather.showDialog" @close="closeDialog('weather')" @mideaDialogCancelBtnClicked="dialogCancel('weather')" @mideaDialogConfirmBtnClicked="weatherDialogConfirm" >
-                <text slot="content">需要切换模式为{{switchs[switchTo[weather.activeSwitch]] }}某个温度吗？</text>
+                <text class="text" slot="content">需要切换模式为{{switchs[switchTo[weather.activeSwitch]] }}某个温度吗？</text>
             </midea-dialog>
         </div>
    </div>
@@ -97,7 +99,7 @@
         padding-left: 30px;
         padding-right: 30px;
     }
-    .head-text{ font-size: 32px; width: 200px; text-align: center;}
+    .head-text{ font-size: 32px; }
     .addauto-hd{position: relative;}
     .hd{
         padding-top: 34px;
@@ -111,6 +113,7 @@
         margin-top: 23px;
     }
     .content-scroller{
+        flex: 1;
         padding-bottom: 100px;
     }
     .time-picker{
@@ -214,6 +217,7 @@
         border-top-width: 2px;
         border-top-style: solid;
         border-top-color: #e5e5e5;
+        font-size: 28px;
     }
     .noborder{
         border-top-color: transparent;

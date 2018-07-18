@@ -14,7 +14,6 @@
              ref="search-input"
              :type="inputType"
              :placeholder="placeholder"
-             :style="{ width: needShowCancel ? '624px' : '710px' }"
              :class="['search-bar-input','search-bar-input-'+theme]" />
       <div v-if="disabled"
            @click="inputDisabledClicked"
@@ -27,10 +26,10 @@
              :aria-hidden="true"
              @click="closeClicked"
              :src="closeIcon"></image>
-      <text :class="['search-bar-button','search-bar-button-'+theme]"
+      <!-- <text :class="['search-bar-button','search-bar-button-'+theme]"
             :style="buttonStyle"
             v-if="needShowCancel"
-            @click="cancelClicked">{{cancelLabel}}</text>
+            @click="cancelClicked">{{cancelLabel}}</text> -->
     </div>
     <div :class="['wxc-search-bar','wxc-search-bar-'+theme]"
          :style="barStyle"
@@ -82,8 +81,8 @@
     padding-bottom: 0;
     padding-right: 40px;
     padding-left: 60px;
-    font-size: 26px;
-    width: 624px;
+    font-size: 28px;
+    width: 710px;
     height: 64px;
     line-height: 64px;
     background-color: #E5E5E5;
@@ -103,7 +102,7 @@
     position: absolute;
     width: 30px;
     height: 30px;
-    right: 120px;
+    right: 40px;
     top: 28px;
   }
   .search-bar-button {
@@ -146,7 +145,7 @@
   .dep-text {
     flex: 1;
     text-align: center;
-    font-size: 26px;
+    font-size: 28px;
     color: #666666;
     margin-right: 6px;
     lines: 1;

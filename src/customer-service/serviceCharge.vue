@@ -109,7 +109,8 @@ export default {
     methods: {
         search() {
             nativeService.getChargeStandardList(this.queryParam).then((data) => {
-                this.chargeStandardList = data.data.sort(function (a, b) {
+                let result = data.data || []
+                this.chargeStandardList = result.sort(function (a, b) {
                     if (a.classA === b.classA) {
                         if (a.classB === b.classB) {
                             return b.classC - a.classC

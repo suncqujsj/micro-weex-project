@@ -163,7 +163,8 @@ export default {
             title: '维修服务',
             isRenew: false,
             applianceSN: '',  //一键报修
-            oneStepFaultDesc: '', //一键报修
+            oneStepMsgCode: '', //一键报修
+            oneStepTips: '', //一键报修
             selectedProduct: [],
 
             isShowProductUse: false,
@@ -749,7 +750,7 @@ export default {
                     prodCode: product.prodCode,  //产品品类
                     prodName: product.prodName,  //产品品类名称
                     productAmount: 1,  //默认填1
-                    serviceDesc: this.oneStepFaultDesc || '', //服务描述
+                    serviceDesc: this.this.applianceSN?((this.oneStepTips || '') + '； 故障代码：'+(this.oneStepMsgCode||'')):'', //服务描述
                     productUse: product.userTypeCode == "U99" ? this.order.productUse : '',
                     productCode: this.typeSelectedIndex == 1 ? this.code : '',
                     productModel: this.typeSelectedIndex == 0 ? this.code : ''
@@ -790,7 +791,8 @@ export default {
             this.applianceSN = nativeService.getParameters('applianceSN') || ''
             if (this.applianceSN) {
                 //一键报修
-                this.oneStepFaultDesc = decodeURIComponent(nativeService.getParameters('faultDesc') || '')
+                this.oneStepMsgCode = nativeService.getParameters('msgCode') || ''
+                this.oneStepTips = decodeURIComponent(nativeService.getParameters('tips') || '')
                 this.claimBySN(this.applianceSN)
             }
         }

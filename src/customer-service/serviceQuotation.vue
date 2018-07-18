@@ -48,8 +48,8 @@
             <text class="order-footer-label">未出现在报价单里的收费项，您有权拒绝付款</text>
 
             <div class="action-bar">
-                <midea-button v-if="isConfirmed" text="查看工单详情" @mideaButtonClicked="goToOrderDetail"></midea-button>
-                <midea-button v-else text="我确认收费内容和报价" @mideaButtonClicked="submit"></midea-button>
+                <midea-button v-if="chargeStatus>'10'" text="查看工单详情" @mideaButtonClicked="goToOrderDetail"></midea-button>
+                <midea-button v-if="chargeStatus=='10'" text="我确认收费内容和报价" @mideaButtonClicked="submit"></midea-button>
             </div>
         </scroller>
     </div>
@@ -72,9 +72,10 @@ export default {
         return {
             title: '服务报价单',
             serviceOrderNo: '',
+            archivesNo: '',
             order: null,
             chargeList: [],
-            isConfirmed: false
+            chargeStatus: false
         }
     },
     computed: {
@@ -91,6 +92,26 @@ export default {
         convertTimeDesc(time) {
             return time ? util.dateFormat(new Date(time), "yyyy年MM月dd日 hh:mm") : ''
         },
+        querychargedetails() {
+            let chargeDetailParam = {
+                interfaceSource: this.order.interfaceSource,
+                serviceOrderNo: this.order.serviceOrderNo,
+                archivesNo: this.archivesNo,
+                orgCode: this.order.orgCode
+            }
+            nativeService.querychargedetails(chargeDetailParam).then((resp) => {
+                this.chargeList = resp.chargeList
+                if (this.chargeList && this.chargeList.length > 0) {
+                    /*  收费状态	WOM_CHARGE_STATUS	待用户确认	10
+                        收费状态	WOM_CHARGE_STATUS	用户确认	11
+                        收费状态	WOM_CHARGE_STATUS	支付成功	14
+                        收费状态	WOM_CHARGE_STATUS	支付失败	15 */
+                    this.chargeStatus = this.chargeList[0].chargeStatus
+                }
+            }).catch((error) => {
+                nativeService.toast(nativeService.getErrorMessage(error))
+            })
+        },
         submit() {
             nativeService.getUserInfo().then((userInfo) => {
                 let param = {
@@ -103,7 +124,7 @@ export default {
                 }
                 nativeService.dochargecomfirm(param).then((resp) => {
                     nativeService.toast("确认成功")
-                    this.isConfirmed = true
+                    this.querychargedetails()
                 }).catch((error) => {
                     nativeService.toast(nativeService.getErrorMessage(error))
                 })
@@ -117,6 +138,7 @@ export default {
     },
     created() {
         this.serviceOrderNo = nativeService.getParameters('id') || null
+        this.archivesNo = nativeService.getParameters('archivesNo') || null
         let param = {
             interfaceSource: "SMART",
             filterOrderNos: this.serviceOrderNo,
@@ -126,27 +148,7 @@ export default {
         nativeService.queryserviceorder(param).then((data) => {
             if (data.list && data.list.length > 0) {
                 this.order = data.list[0]
-                let chargeDetailParam = {
-                    interfaceSource: this.order.interfaceSource,
-                    serviceOrderNo: this.order.serviceOrderNo,
-                    orgCode: this.order.orgCode
-                }
-                nativeService.querychargedetails(chargeDetailParam).then((resp) => {
-                    this.chargeList = resp.chargeList
-                    if (this.chargeList && this.chargeList.length > 0) {
-                        /*  收费状态	WOM_CHARGE_STATUS	待用户确认	10
-                            收费状态	WOM_CHARGE_STATUS	用户确认	11
-                            收费状态	WOM_CHARGE_STATUS	支付成功	14
-                            收费状态	WOM_CHARGE_STATUS	支付失败	15 */
-                        if (this.chargeList[0].chargeStatus == "10") {
-                            this.isConfirmed = false
-                        } else {
-                            this.isConfirmed = true
-                        }
-                    }
-                }).catch((error) => {
-                    nativeService.toast(nativeService.getErrorMessage(error))
-                })
+                this.querychargedetails()
             }
         }).catch((error) => {
             nativeService.toast(nativeService.getErrorMessage(error))

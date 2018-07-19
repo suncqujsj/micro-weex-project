@@ -121,6 +121,7 @@ export default {
             })
         },
         testfunc() {
+            nativeService.setNavBarHidden()
         }
     },
     created() {

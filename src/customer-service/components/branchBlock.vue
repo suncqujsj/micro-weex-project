@@ -56,7 +56,8 @@ export default {
         makeCall(telNo) {
             nativeService.callTel({
                 tel: telNo,
-                title: '服务热线'
+                title: '服务热线',
+                desc: telNo
             }).then(
                 (resp) => { }
             )

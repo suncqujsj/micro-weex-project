@@ -32,7 +32,7 @@
 
 <script>
     import nativeService from '@/common/services/nativeService.js'
-	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
+	import mideaSmart from '@/midea-card/midea-components/smart.vue'
 	import extendSelection from '@/midea-card/T0xAC/components/extend-selection.vue'
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');

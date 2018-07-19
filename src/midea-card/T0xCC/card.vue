@@ -53,15 +53,6 @@
 		        	<text class="text-offline-center">已离线</text>
 		        </div>
 	        </div>
-	        <div class="smart">
-		        <div class="smart-title">
-		        	<text class="smart-text">智能</text>
-		        	<image class="smart-img" :src="moreImg"></image>
-		        </div>
-		        <midea-smart @change="onMideachange" :checked="mideaChecked" :data="data"></midea-smart>
-		      </div>
-		      <midea-smart @change="onMideachange2" :checked="mideaChecked2" :data="data2"></midea-smart>     
-	        <midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="false" :checked="mideaChecked2" :data="data3"></midea-smart>
 	        <midea-download></midea-download>
 	    </div>
     </scroller>
@@ -70,7 +61,6 @@
 <script>
     import nativeService from '@/common/services/nativeService.js'
 	import mideaSwitch from '@/midea-component/switch.vue'
-	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
 	import mideaItem from '@/midea-component/item.vue'
 	import mideaButton from '@/midea-component/button.vue';
 	import mideaDownload from '@/midea-card/midea-components/download.vue';
@@ -83,7 +73,6 @@
     export default {
         components: {
             mideaSwitch,
-            mideaSmart,
             mideaItem,
             mideaButton,
             mideaDownload
@@ -99,8 +88,6 @@
             	
             	pushKey: "receiveMessage",
             	pushKeyOnline: "receiveMessageFromApp",
-                mideaChecked: true,
-                mideaChecked2: false,
                 
 	            promptStr:"",//蜂鸣声,需要从控制页的localStorage里拿
 	            onoff: "on",//localStorage.getItem("AConoff") || "on", //当前设备开关机状态
@@ -114,27 +101,9 @@
                 powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
                 deviceIcon: "./assets/img/smart_img_equip023@2x.png",
                 moreImg: "./assets/img/smart_ic_more@2x.png",
-                data:{
-                 	title:"室内温度高于28°度时候，自动开启空调。",
-                 	detail:"模式制冷，温度23."
-                },
-                data2:{
-                 	title:"宝宝最适宜温度",
-                 	detail:"温度28C，风速最小"
-                },
-                data3:{
-                 	title:"宝宝最适宜温度",
-                 	detail:""
-                }
             }
         },
         methods: {
-            onMideachange(event) {
-            		//modal.toast({ 'message': event.value, 'duration': 2 });
-            },
-             onMideachange2(event) {
-            		//modal.toast({ 'message': event.value, 'duration': 2 });
-            },
             temperatureControl (value) {// -1 or 1
 	            if(this.onoff == 'off') {
 	            	nativeService.toast("关机状态无法设置温度");
@@ -486,50 +455,6 @@
 		height:392px;
 		background-color: white;
 		margin-left: 9px;
-	}
-	.smart {
-		flex-direction: column;
-		justify-content: space-between;
-		margin-top:20px;
-	}
-	.smart-title {
-		flex-direction: row;
-		justify-content: space-between;
-		margin-left:32px;
-		margin-right:32px;
-	}
-	.smart-content {
-		margin-top:50px;
-		margin-left:32px;
-		margin-right:32px;
-		border-bottom: inset
-	}
-	.smart-content-last {
-		margin-top:50px;
-		margin-left:32px;
-		margin-right:32px;
-	}
-	.smart-text {
-		font-family: PingFangSC-Regular;
-		font-size: 36px;
-		color: #000000;
-		letter-spacing: 0;
-	}
-	.smart-img {
-		width:48px;
-		height: 48px;
-	}
-	.smart-detail {
-		flex-direction: row;
-		justify-content: space-between;
-		margin-top:30px;
-		padding-bottom: 20px;
-	}
-	.smart-detail-content {
-		font-family: PingFangSC-Regular;
-		font-size: 24px;
-		color: #8A8A8F;
-		letter-spacing: 0;
 	}
 	.mark{
 		position: absolute;

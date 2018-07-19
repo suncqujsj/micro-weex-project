@@ -9,7 +9,7 @@
             <text class="info-address" @click="changeArea">{{areaObject.county?(areaObject.cityName+ ' '+areaObject.countyName):'请选择位置'}}</text>
             <image class="arraw-down-icon" src="./assets/img/service_ic_hide@3x.png" resize='contain' @click="changeArea">
             </image>
-            <div class="info-product" @click="switchMode">
+            <div class="info-product">
                 <midea-rich-text class="search-result-desc" :hasTextMargin="false" :config-list="richDesc"></midea-rich-text>
             </div>
         </div>
@@ -362,7 +362,8 @@ export default {
         makeCall(telNo) {
             nativeService.callTel({
                 tel: telNo,
-                title: '服务热线'
+                title: '服务热线',
+                desc: telNo
             }).then(
                 (resp) => { }
             )

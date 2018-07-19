@@ -53,7 +53,6 @@
 <script>
     import nativeService from '@/common/services/nativeService.js'
 	import mideaSwitch from '@/midea-component/switch.vue'
-	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
 	import mideaItem from '@/midea-component/item.vue'
 	import cookbook from '@/midea-card/T0xAC/components/cookbook.vue'
 	import mideaDownload from '@/midea-card/midea-components/download.vue';
@@ -64,7 +63,6 @@
     export default {
         components: {
             mideaSwitch,
-            mideaSmart,
             mideaItem,
             cookbook,
             mideaDownload
@@ -99,20 +97,6 @@
 					12: "已开盖（中途开盖）"
 				},
             	
-                mideaChecked: true,
-                mideaChecked2: false,
-                data:{
-                 	title:"连续烹饪次数过多，提醒饮食多样性",
-                 	detail:"次数30次以上"
-                },
-                data2:{
-                 	title:"宝宝最适宜温度",
-                 	detail:"温度28C，风速最小"
-                },
-                data3:{
-                 	title:"宝宝最适宜温度",
-                 	detail:"空调/客厅"
-                },
                 list: [
                 { 
                 	"name": "电饭煲食谱",
@@ -150,12 +134,6 @@
             }
         },
         methods: {
-            onMideachange(event) {
-            		//modal.toast({ 'message': event.value, 'duration': 2 });
-            },
-             onMideachange2(event) {
-            		//modal.toast({ 'message': event.value, 'duration': 2 });
-            },
             queryStatus () {
             	let self = this;
             	let params = {
@@ -346,50 +324,6 @@
 		right:32px;
 		top:32px;
 		align-items: center;
-	}
-	.smart {
-		flex-direction: column;
-		justify-content: space-between;
-		margin-top:20px;
-	}
-	.smart-title {
-		flex-direction: row;
-		justify-content: space-between;
-		margin-left:32px;
-		margin-right:32px;
-	}
-	.smart-content {
-		margin-top:50px;
-		margin-left:32px;
-		margin-right:32px;
-		border-bottom: inset
-	}
-	.smart-content-last {
-		margin-top:50px;
-		margin-left:32px;
-		margin-right:32px;
-	}
-	.smart-text {
-		font-family: PingFangSC-Regular;
-		font-size: 36px;
-		color: #000000;
-		letter-spacing: 0;
-	}
-	.smart-img {
-		width:48px;
-		height: 48px;
-	}
-	.smart-detail {
-		flex-direction: row;
-		justify-content: space-between;
-		margin-top:30px;
-		padding-bottom: 20px;
-	}
-	.smart-detail-content {
-		font-family: PingFangSC-Regular;
-		font-size: 24px;
-		color: #8A8A8F;
-		letter-spacing: 0;
 	}
 	.main-status-div {
 		flex-direction: row;

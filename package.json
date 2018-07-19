@@ -10,6 +10,7 @@
     "dev_customer": "webpack --watch --env=customer-service",
     "dev_helpcenter": "webpack --watch --env=help-center",
     "dev_rooms": "webpack --watch --env=midea-rooms",
+    "dev_card": "webpack --watch --env=midea-card",
     "serve": "serve -p 8080",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -665,7 +665,7 @@ export default {
 
         },
 
-        claimBySN(applianceSN) {
+        oneStepClaim(applianceSN) {
             let param = {
                 serialNo: applianceSN
             }
@@ -682,21 +682,14 @@ export default {
                 })
 
                 //故障类型
-                let param = {
-                    interfaceSource: "SMART",
-                    depth: 3,
-                    parentServiceRequireCode: "BX01016",
-                    brandCode: deviceInfo.brandCode, //查询品牌
-                    prodCode: deviceInfo.productTypeId, //查询品类
+                this.selectedFault = {
+                    serviceRequireItemCode: "BX01016",
+                    serviceRequireItemName: "其它（请说明）",
+                    serviceMainTypeCode: "11",
+                    serviceMainTypeName: "维修",
+                    serviceSubTypeCode: "1111",
+                    serviceSubTypeName: "维修"
                 }
-                nativeService.queryservicerequireproduct(param).then((data) => {
-                    let faultList = data.list
-                    if (faultList && faultList.length > 0) {
-                        this.selectedFault = faultList[0]
-                    }
-                }).catch((error) => {
-                    nativeService.toast(nativeService.getErrorMessage(error))
-                })
 
             })
         },
@@ -750,7 +743,7 @@ export default {
                     prodCode: product.prodCode,  //产品品类
                     prodName: product.prodName,  //产品品类名称
                     productAmount: 1,  //默认填1
-                    serviceDesc: this.this.applianceSN?((this.oneStepTips || '') + '； 故障代码：'+(this.oneStepMsgCode||'')):'', //服务描述
+                    serviceDesc: this.applianceSN ? (this.oneStepTips + '- 故障代码：' + this.oneStepMsgCode) : '', //服务描述
                     productUse: product.userTypeCode == "U99" ? this.order.productUse : '',
                     productCode: this.typeSelectedIndex == 1 ? this.code : '',
                     productModel: this.typeSelectedIndex == 0 ? this.code : ''
@@ -792,8 +785,9 @@ export default {
             if (this.applianceSN) {
                 //一键报修
                 this.oneStepMsgCode = nativeService.getParameters('msgCode') || ''
-                this.oneStepTips = decodeURIComponent(nativeService.getParameters('tips') || '')
-                this.claimBySN(this.applianceSN)
+                this.oneStepTips = nativeService.getParameters('tips') || ''
+                nativeService.toast(this.oneStepTips)
+                this.oneStepClaim(this.applianceSN)
             }
         }
 

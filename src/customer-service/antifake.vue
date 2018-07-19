@@ -78,23 +78,8 @@ export default {
             this.picCodeSrcRadom = Math.random().toString().replace('.', '')
         },
         antiValidateCode() {
-            let param = {
-                url: "http://wap.cjm.so/Common/ValidateCode.ashx?Type=&Demand=&w=&h=&r=" + Math.random().toString().replace('.', '')
-            }
-            nativeService.downloadImageWithCookie(param).then((resp) => {
-                try {
-                    nativeService.toast(0)
-                    var blob = new Blob([resp.data || '']);
-                    nativeService.toast(1)
-                    var a = new FileReader()
-                    nativeService.toast(2)
-                    a.onload = function (e) {
-                        this.picCodeSrc = e.target.result
-                    }
-                    a.readAsDataURL(blob);
-                } catch (error) {
-                    nativeService.toast(error)
-                }
+            nativeService.antiValidateCode().then((resp) => {
+                this.picCodeSrc = resp.data
             })
         },
         submit() {
@@ -139,8 +124,6 @@ export default {
         }
     },
     created() {
-        // debugger
-        this.antiValidateCode()
     }
 }
 </script>

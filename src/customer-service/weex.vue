@@ -101,8 +101,8 @@ export default {
             }],
 
             showBar: false,
-            actionsheetItems: ['美的：400-899-935', '小天鹅：400-822-8228'],
-            actionsheetItemsValue: ['400899935', '4008228228'],
+            actionsheetItems: ['美的', '小天鹅'],
+            actionsheetItemsValue: ['4008999315', '4008228228'],
             order: null
         }
     },

@@ -259,7 +259,6 @@ export default {
     created() {
         this.serviceOrderNo = nativeService.getParameters('id') || null
 
-
         if (this.fromPage == "orderList") {
             //从订单列表进入
             nativeService.getItem(this.SERVICE_STORAGE_KEYS.currentOrder, (resp) => {
@@ -270,7 +269,7 @@ export default {
             })
         } else {
             //其他入口进入
-            param = {
+            let param = {
                 interfaceSource: "SMART",
                 serviceOrderCode: this.serviceOrderNo,
                 page: 0,
@@ -282,6 +281,7 @@ export default {
             }).catch((error) => {
                 nativeService.toast(nativeService.getErrorMessage(error))
             })
+
         }
     }
 }

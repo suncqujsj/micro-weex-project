@@ -14,8 +14,7 @@
         </div>
         <midea-title-bar title="输入远端目标页面地址"></midea-title-bar>
         <textarea type="text" placeholder="输入远端目标页面地址" class="textarea" v-model="url" rows=3 />
-        <midea-button text="进入远端目标页面" @mideaButtonClicked="mideaButtonClicked">
-        </midea-button>
+        <midea-button text="进入远端目标页面" @mideaButtonClicked="mideaButtonClicked"></midea-button>
 
         <midea-title-bar title="历史记录"></midea-title-bar>
 
@@ -151,7 +150,7 @@ module.exports = {
             if (resp.result == 'success' && resp.data) {
                 this.history = JSON.parse(resp.data)
                 if (this.history && this.history.length > 0) {
-                    this.url = this.history[0]
+                    this.url = this.history[this.history.length - 1]
                 }
             }
 

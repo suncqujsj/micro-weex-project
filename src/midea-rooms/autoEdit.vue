@@ -24,10 +24,10 @@
                         <text class="sub-hd">当如下条件满足时</text>
                         <div @click="goAutoTypeSet" class="row-sb floor">
                             <div class="row-s">
-                                <image class="icon" :src="autoDetail.image"></image>
+                                <image class="type-img" :src="autoTypeImg[sceneType]"></image>
                                 <text class="condition-desc" v-if="autoDetail.location && sceneType==3">在{{weekDesc}} {{directionText[autoDetail.location.direction]}} {{autoDetail.location.address}}时</text>
                                 <text class="condition-desc" v-if="autoDetail.startTime && sceneType==4">在{{weekDesc}} {{autoDetail.startTime}}时</text>
-                                <text class="condition-desc" v-if="autoDetail.weather && sceneType==6"> 在{{weekDesc}} 天气{{autoDetail.weather.weatherStatus}}, 气温{{temperatureLoginText[autoDetail.weather.logical]}} {{autoDetail.weather.temperature}}℃ 时</text>
+                                <text class="condition-desc" v-if="autoDetail.weather && sceneType==6"> 在{{weekDesc}} 天气为{{autoDetail.weather.weatherStatus}}, 气温{{temperatureLoginText[autoDetail.weather.logical]}} {{autoDetail.weather.temperature}}℃ 时</text>
                             </div>
                             <image class="icon-next" :src="icon.next"></image>
                         </div>
@@ -40,6 +40,11 @@
                             <div @click="setDevice(key)">
                                 <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
                                 <text class="device-name">{{item.deviceName}}</text>
+                                <!-- <div class="row-s device-desc">
+                                     <text class="device-desc-text" v-for="(action, key) in taskActions[item.deviceId]">
+                                        {{applianceActions[item.deviceType].actions[key].value[action]}}
+                                    </text>
+                                </div> -->
                             </div>
                             <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, key)"></image>
                         </div>
@@ -54,7 +59,7 @@
         <div class="delete" :style="deleteStyle"><text class="delete-text"  @click="showDialog('delete')">删除快捷操作</text></div>
         <!-- 删除自动化弹窗提示 -->
         <midea-dialog  :show="show.delete" @close="closeDialog('delete')" @mideaDialogCancelBtnClicked="closeDialog('delete')" @mideaDialogConfirmBtnClicked="deleteAuto" >
-            <text slot="content">确定要删除此快捷操作？</text>
+            <text class="·" slot="content">确定要删除此快捷操作？</text>
         </midea-dialog>
    </div>
 </template>
@@ -69,6 +74,7 @@
         height: 88px;
         padding-left: 30px;
         padding-right: 30px;
+        margin-bottom: 25px;
     }
     .hd-text{ font-size: 32px; }
     .floor{ 
@@ -140,8 +146,10 @@
         margin-bottom: 4px;
     }
     .device-desc{
+    }
+    .device-desc-text{
         color:#c7c7c7;
-        font-size: 24px;
+        font-size: 26px;
     }
     .check-icon{
         position: absolute;
@@ -175,6 +183,13 @@
         text-align: center;
         font-size: 32px;
     }
+    .type-img{
+        width: 82px;
+        height: 82px;
+        margin-right: 18px;
+        margin-top: 14px;
+        margin-bottom: 10px;
+    }
     .icon-next{
         width: 12px;
         height: 24px;
@@ -196,8 +211,11 @@
         padding-bottom: 20px;
     }
     .condition-desc{
-        width: 600px;
+        width: 570px;
         text-overflow: ellipsis;
+        font-size: 30px;
+    }
+    .delete-text{
         font-size: 30px;
     }
     
@@ -237,6 +255,13 @@
                 },
                 autoDetail: {
                 },
+                autoTypeImg: {
+                    2: 'assets/img/hand.png',
+                    3: 'assets/img/location.png',
+                    4: 'assets/img/time.png',
+                    6: 'assets/img/slweather.png',
+                },
+                applianceActions: applianceActions,
                 autoEnable: null,
                 inputAutoName: '',
                 conditionName: null,
@@ -404,14 +429,21 @@
                 for (var x in this.autoBindDevices) {
                     
                     if (this.autoBindDevices[x].isCheck == 'check'){
+                        
                         if (this.userSetActions[x]) {
                             tmpBindDeviceActions[x] = this.userSetActions[x]
                         }else{
                             let tmpAction = []
                             let staticActions = this.autoSupportActions[this.autoBindDevices[x].deviceType].actions
+                            
                             for (var i in staticActions) {
-                                tmpAction[i] = Object.assign({}, {currentStatus: this.taskActions[this.autoBindDevices[x].deviceId][staticActions[i].property]}, staticActions[i])
+                                if ( Object.keys(this.taskActions).indexOf(this.autoBindDevices[x].deviceId) > -1 ) {
+                                    tmpAction[i] = Object.assign({}, {currentStatus: this.taskActions[this.autoBindDevices[x].deviceId][staticActions[i].property]}, staticActions[i])
+                                }else{
+                                    tmpAction[i] = Object.assign({}, {currentStatus:  staticActions[i].default},  staticActions[i])
+                                }
                             }
+                            
                             tmpBindDeviceActions[x] = tmpAction
                         }
                     }
@@ -469,7 +501,7 @@
                     this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                         if (rtnData.code == 0) {
                             if (this.sceneType == 3) {
-                                this.updateAutoList()//通知原生位置类型自动化列表需要更新
+                                nativeService.updateAutoList()//通知原生位置类型自动化列表需要更新
                             }
                             nativeService.alert('删除成功!', function(){
                                 nativeService.backToNative()
@@ -598,7 +630,7 @@
                     this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                         if (rtnData.code == 0) {
                             if (this.sceneType == 3) {
-                                this.updateAutoList()//通知原生位置类型自动化列表需要更新
+                                nativeService.updateAutoList()//通知原生位置类型自动化列表需要更新
                             }
                             nativeService.alert('修改成功', function(){
                                 nativeService.backToNative()

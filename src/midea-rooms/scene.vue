@@ -374,7 +374,7 @@
             sceneStyle(){
                 return { 
                     backgroundImage: this.style.linearBg[this.roomType],
-                    height: this.pageHeight*0.75 + 'px',
+                    height: this.pageHeight*0.7 + 'px',
                     position: 'relative',
                     overflow: 'hidden'
                 }
@@ -424,8 +424,8 @@
                 style: {
                     vote: {
                         box: {
-                            width: '290px',
-                            marginLeft: '230px',
+                            width: '220px',
+                            marginLeft: '265px',
                         }
                     },
                     linearBg: {
@@ -436,16 +436,12 @@
                     },
                 },
                 voteImg:{
-                    star: 'assets/img/rate.png',
-                    unstar: 'assets/img/unrate.png'
+                    star: 'assets/img/star.png',
+                    unstar: 'assets/img/unstar.png'
                 },
                 unit: {
                     temperature: '℃',
                     percent: '%'
-                },
-                voteImg:{
-                    star: 'assets/img/rate.png',
-                    unstar: 'assets/img/unrate.png'
                 },
                 activeModeDevices: [],
                 applianceList: {},

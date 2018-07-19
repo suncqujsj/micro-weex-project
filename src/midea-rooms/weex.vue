@@ -58,16 +58,16 @@
     .row-sb{ flex-direction: row; align-items: center; justify-content: space-between; }
     .row-sa{ flex-direction: row; align-items: center; justify-content: space-around; }
     .row-e { flex-direction: row; align-items: center; justify-content: flex-end; }
-    .hd { margin-top: 24px; margin-bottom: 24px; }
+    .hd { margin-top: 44px; margin-bottom: 24px; }
     .hd-name{ font-weight: bold; font-size: 36px; color: #000; }
     .hd-btn{ font-size: 26px; color: #666; padding: 10px;}
     .scroller{ flex-direction: row; height: 276px;}
     .icon { width: 82px; height: 82px; margin-right: 20px; }
     .auto-btn{ width: 50px; height: 50px; }
     .auto{
-        width: 320px;
+        width: 406px;
         height: 122px;
-        background-color: #F6F6F6;
+        background-color: #f9f9f9;
         margin-bottom: 16px;
         margin-right: 16px;
         padding: 20px;
@@ -77,7 +77,7 @@
     .scene-list{ height: 1200px;}
     .scene { width: 690px; height: 206px; padding-bottom: 16px; position: relative; }
     .scene-bg{ width: 690px; height: 185px; position: absolute; }
-    .next { width: 16px; height: 32px; position:absolute; top:77px; right: 25px;}
+    .next { width: 8px; height: 16px; position:absolute; top:77px; right: 25px;}
     .scene-name, .scene-desc{ color: #fff; }
     .scene-name{ font-size: 32px; margin-top: 50px; margin-left: 32px; margin-bottom: 30px;}
     .scene-desc{ margin-left: 24px; font-size: 24px; }
@@ -131,10 +131,10 @@
                     }
                 },
                 sceneImg: {
-                    1: 'assets/img/s1.png',
-                    2: 'assets/img/s2.png',
-                    3: 'assets/img/s3.png',
-                    4: 'assets/img/s4.png',
+                    1: 'assets/img/sence_pic_parlour@2x.png',
+                    2: 'assets/img/sence_pic_bedroom@2x.png',
+                    3: 'assets/img/sence_pic_bathroom@2x.png',
+                    4: 'assets/img/sence_pic_sun@2x.png',
                 },
                 feel: {
                     1: '未知',

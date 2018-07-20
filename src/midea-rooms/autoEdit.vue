@@ -11,7 +11,7 @@
                     <div style="background-color:#fff">
                         <div class="row-sb auto-name-floor">
                             <text class="text">名称</text>
-                            <input class="auto-name" type="text" placeholder="" :value="inputAutoName" @change="editAutoName" @return="editAutoName"/>
+                            <input class="auto-name" type="text" placeholder="" :value="inputAutoName" @input="editAutoName" @change="editAutoName" />
                         </div>
                         <div class="row-sb switch-floor auto-switch-floor">
                             <text class="text">启用</text>

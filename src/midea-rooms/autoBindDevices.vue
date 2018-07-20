@@ -164,7 +164,7 @@
                     auto: {
                         2: 'assets/img/man.png',
                         3: 'assets/img/arrive.png',
-                        4: 'assets/img/clock.png',
+                        4: 'assets/img/time.png',
                         6: 'assets/img/slweather.png',
                     }
                 },
@@ -376,8 +376,10 @@
                         name: this.inputAutoName,
                         enable: 1
                     }
+                    if (nativeService.getParameters('templateCode')) {
+                        reqParams.templateCode = nativeService.getParameters('templateCode')
+                    }
                     let tmpTask = []
-                    
                     for (var key in this.checkedDevices) {//key: applianceCode
                         let tmpCommand = {}
                         if ( this.checkedDevices[key] ) {

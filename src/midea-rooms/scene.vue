@@ -8,7 +8,8 @@
                 </div>
                 <div v-if="roomType=='1' || roomType=='2' || roomType=='3' " class="up-block" >
                     <div class="up-desc">
-                        <text class="desc white">{{temperatureStatus}} {{pm25Status}}</text>
+                        <text v-if="roomType=='1'||roomType=='2'" class="desc white">{{temperatureStatus}} {{pm25Status}}</text>
+                        <text v-if="roomType=='3'" class="desc white">{{waterStatus}}</text>
                         <midea-vote :defaulSelectd="Number(indicator.level)" :disabled="true" :styles="style.vote" :imgPath="voteImg"></midea-vote>
                         <text class="improve white" @click="quickOptimize">一键优化</text>
                     </div>
@@ -18,7 +19,7 @@
                             <div  class="row-c status-value">
                                 <text v-if="indicator.temperature" class="font36 white">{{indicator.temperature}}</text>
                                 <text v-if="indicator.temperature" class="font16 white mgb-10">℃</text>
-                                <text v-else class="font36 white">-</text>
+                                <text v-else class="font36 white">？</text>
                             </div>
                             <text class="info-text font12 white">{{temperatureStatus}}</text>
                         </div>  
@@ -27,7 +28,7 @@
                             <div class="row-c status-value">
                                 <text v-if="indicator.humidity" class="font36 white">{{indicator.humidity}}</text>
                                 <text v-if="indicator.humidity" class="font16 white mgb-10">%</text>
-                                <text v-else class="font36 white">-</text>
+                                <text v-else class="font36 white">？</text>
                             </div>
                             <text class="info-text font12 white">{{humidityStatus}}</text>
                         </div>  
@@ -35,7 +36,7 @@
                             <text class="info-text font14 white">空气质量</text>
                             <div class="row-c status-value">
                                 <text v-if="indicator.pm5" class="font36 white">{{indicator.pm5}}</text>
-                                <text v-else class="font36 white">-</text>
+                                <text v-else class="font36 white">？</text>
                             </div>
                             <text class="info-text font12 white">{{pm25Status}}</text>
                         </div>
@@ -47,7 +48,7 @@
                             <div class="row-c status-value">
                                 <text v-if="indicator.water_temperature" class="font36 white">{{indicator.water_temperature}}</text>
                                 <text v-if="indicator.water_temperature" class="font16 white mgb-10">℃</text>
-                                <text v-else class="font36 white">-</text>
+                                <text v-else class="font36 white">？</text>
                             </div>
                         </div>  
                         <div class="scene-status">
@@ -55,7 +56,7 @@
                             <div class="row-c status-value">
                                 <text v-if="indicator.water_capacity" class="font36 white">{{indicator.water_capacity}}</text>
                                 <text v-if="indicator.water_capacity" class="font16 white mgb-10">%</text>
-                                <text v-else class="font36 white">-</text>
+                                <text v-else class="font36 white">？</text>
                             </div>
                         </div>
                         <div class="scene-status">
@@ -63,7 +64,7 @@
                             <div class="row-c status-value">
                                 <text v-if="indicator.remain_time" class="font36 white">{{indicator.remain_time}}</text>
                                 <text v-if="indicator.remain_time" class="font16 white mgb-10">分</text>
-                                <text v-else class="font36 white">-</text>
+                                <text v-else class="font36 white">？</text>
                             </div>
                         </div>
                     </div>
@@ -337,7 +338,8 @@
                         desc = '适宜'
                     }
                 }else{
-                    desc = '未知'
+                    // desc = '未知'
+                    desc = ''
                 }
                
                 return desc
@@ -366,10 +368,25 @@
                         }
                     }
                 }else{
-                    desc = '未知'
+                    // desc = '未知'
+                    desc = ''
                 }
              
                 return desc
+            },
+            waterStatus(){
+                if(this.scene.applianceList && this.scene.applianceList.length > 0) {
+                    if (this.scene.indicator.work_status == 'warm') {
+                        return '热水充足'
+                    }else if (this.scene.indicator.work_status) {
+                        return '加热中'
+                    }else{
+                        return '未知'
+                    }
+                }else{
+                    return '无相关设备'
+                }
+                
             },
             sceneStyle(){
                 return { 
@@ -378,7 +395,7 @@
                     position: 'relative',
                     overflow: 'hidden'
                 }
-            },
+            }
         },
         mixins: [base],
         data(){
@@ -446,7 +463,6 @@
                 activeModeDevices: [],
                 applianceList: {},
                 showToastDialog: false,
-                userDevices: '',
                 userSupportDevices: [],
                 showMall: false,
                 weatherDesc: '',
@@ -519,7 +535,6 @@
                     homegroupId: this.homegroupId,
                     roomType: this.roomType,
                     sceneId: this.sceneId,
-                    userDevices: nativeService.getParameters('userDevices')
                 }
                 this.goTo('setting', {}, params)
             },
@@ -639,30 +654,35 @@
                 })
             },
             executeModel(modelId){
-                this.checkLogin().then( (uid) => {
-                    let reqUrl = url.scene.modelExecute
-                    let reqParams = {
-                        uid: uid,
-                        homegroupId: this.homegroupId,
-                        sceneId: this.sceneId,
-                        modelId: modelId
-                    }
-                    this.webRequest(reqUrl, reqParams).then((res)=>{
-                        if (res.code == 0) {
-                            nativeService.toast('执行成功！')
-                        }else{
-                            if (codeDesc.scene.hasOwnProperty(res.code)) {
-                                nativeService.toast(codeDesc.scene[res.code])
-                            }else{
-                                nativeService.toast(res.msg)
-                            }
+                if (this.scene.applianceList && this.scene.applianceList.length > 0) {
+                    this.checkLogin().then( (uid) => {
+                        let reqUrl = url.scene.modelExecute
+                        let reqParams = {
+                            uid: uid,
+                            homegroupId: this.homegroupId,
+                            sceneId: this.sceneId,
+                            modelId: modelId
                         }
+                        this.webRequest(reqUrl, reqParams).then((res)=>{
+                            if (res.code == 0) {
+                                nativeService.toast('执行成功！')
+                            }else{
+                                if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                    nativeService.toast(codeDesc.scene[res.code])
+                                }else{
+                                    nativeService.toast(res.msg)
+                                }
+                            }
+                        }).catch((err)=>{
+                            nativeService.toast(this.getErrorMessage(err))
+                        })
                     }).catch((err)=>{
                         nativeService.toast(this.getErrorMessage(err))
                     })
-                }).catch((err)=>{
-                    nativeService.toast(this.getErrorMessage(err))
-                })
+                }else{
+                    nativeService.toast('当前场景未绑定设备，无法执行此场景模式')
+                }
+                
             },
             getWashData(){
                 this.checkLogin().then( (uid) => {
@@ -834,8 +854,26 @@
             this.sceneId = nativeService.getParameters('sceneId')
             this.roomType = nativeService.getParameters('roomType')
             
-            if (nativeService.getParameters('userDevices')) {
-                this.userDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
+            if (this.roomType == 1){
+                this.scene.modeList = [
+                    { modelName: '回家', modelId: '1001' },
+                    { modelName: '舒适', modelId: '1002' },
+                    { modelName: '节能', modelId: '1003' },
+                    { modelName: '全关', modelId: '1004' },
+                ]
+            }else if (this.roomType == 2) {
+                this.scene.modeList = [
+                    { modelName: '回家', modelId: '1005' },
+                    { modelName: '舒适', modelId: '1006' },
+                    { modelName: '节能', modelId: '1007' },
+                    { modelName: '全关', modelId: '1008' },
+                ]
+            }else if (this.roomType == 3) {
+                this.scene.modeList = [
+                    { modelName: '舒适', modelId: '1009' },
+                    { modelName: '省电', modelId: '1010' },
+                    { modelName: '停用', modelId: '1011' },
+                ]
             }
             this.getSceneDetail().then(()=>{
                 if (this.roomType == 4 && this.scene.applianceList.length > 0) {

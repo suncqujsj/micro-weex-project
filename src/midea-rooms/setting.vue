@@ -228,7 +228,6 @@
                     use: '',  
                 },
                 activeGroupDevice: {},
-                userDevices: {}
             }
         },
         methods: {
@@ -239,7 +238,6 @@
                 this.homegroupId = nativeService.getParameters('homegroupId')
                 this.sceneId = nativeService.getParameters('sceneId')
                 this.roomType = nativeService.getParameters('roomType')
-                this.userDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
 
                 this.getSupportDevices().then((res)=>{
                     if (res.applianceList.length == 0) {

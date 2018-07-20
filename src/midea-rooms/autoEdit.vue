@@ -11,7 +11,7 @@
                     <div style="background-color:#fff">
                         <div class="row-sb auto-name-floor">
                             <text class="text">名称</text>
-                            <input class="auto-name" type="text" placeholder="" :value="inputAutoName" @change="editAutoName" @return="editAutoName"/>
+                            <input class="auto-name" type="text" placeholder="" :value="inputAutoName" @input="editAutoName" @change="editAutoName" />
                         </div>
                         <div class="row-sb switch-floor auto-switch-floor">
                             <text class="text">启用</text>
@@ -40,11 +40,11 @@
                             <div @click="setDevice(key)">
                                 <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
                                 <text class="device-name">{{item.deviceName}}</text>
-                                <!-- <div class="row-s device-desc">
-                                     <text class="device-desc-text" v-for="(action, key) in taskActions[item.deviceId]">
-                                        {{applianceActions[item.deviceType].actions[key].value[action]}}
-                                    </text>
-                                </div> -->
+                                <div class="row-s device-desc">
+                                    <div v-for="(action, key) in taskActions[item.deviceId]">
+                                         <text v-if="applianceActions[item.deviceType].actions[key].value" class="device-desc-text"> {{applianceActions[item.deviceType].actions[key].value[action]}}</text>
+                                    </div>
+                                </div>
                             </div>
                             <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, key)"></image>
                         </div>
@@ -146,10 +146,14 @@
         margin-bottom: 4px;
     }
     .device-desc{
+         align-items: flex-start;
+         margin-top: 6px;
     }
     .device-desc-text{
         color:#c7c7c7;
         font-size: 26px;
+        margin-right: 6px;
+        text-align: left;
     }
     .check-icon{
         position: absolute;
@@ -429,7 +433,6 @@
                 for (var x in this.autoBindDevices) {
                     
                     if (this.autoBindDevices[x].isCheck == 'check'){
-                        
                         if (this.userSetActions[x]) {
                             tmpBindDeviceActions[x] = this.userSetActions[x]
                         }else{

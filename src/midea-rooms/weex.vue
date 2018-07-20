@@ -146,35 +146,29 @@
                 autoListTmpl: [
                     {
                         isAdd: true,
-                        image: 'assets/img/man.png',
-                        sceneType: 2,
-                        name: '新增-手动'
-                    },
-                    {
-                        isAdd: true,
                         image: 'assets/img/arrive.png',
                         sceneType: 3,
                         direction: 1,
-                        name: '新增-到达某地'
+                        name: '回家'
                     },
                     {
                         isAdd: true,
                         image: 'assets/img/arrive.png',
                         sceneType: 3,
                         direction: 2,
-                        name: '新增-离开某地'
+                        name: '离家'
                     },
                     {
                         isAdd: true,
-                        image: 'assets/img/clock.png',
+                        image: 'assets/img/time.png',
                         sceneType: 4,
-                        name: '新增-在某个时间'
+                        name: '晚安'
                     },
                     {
                         isAdd: true,
                         image: 'assets/img/slweather.png',
                         sceneType: 6,
-                        name: '新增-在某个天气'
+                        name: '天气变化'
                     }
                 ],
                 sceneList: [],
@@ -198,7 +192,13 @@
                 autoTemplate: {},
                 showToastDialog: false,
                 autoExecuteDevices: [],
-                checkAutoExeTimes: 0
+                checkAutoExeTimes: 0,
+                templateCode: {
+                    '3.1': '1005',
+                    '3.2': '1007',
+                    '4': '1006',
+                    '6': '1008'
+                }
             }
         },
         methods: { 
@@ -248,7 +248,8 @@
                             uid: uid,
                             homegroupId: this.homegroupId,
                             sceneType: auto.sceneType,
-                            userDevices: this.userDevices
+                            userDevices: this.userDevices,
+                            templateCode: this.templateCode[auto.sceneType]
                         }
                         if (auto.sceneType == 3) {
                             params.direction = auto.direction
@@ -368,46 +369,43 @@
                         if (rtnData.code == 0) {
                             this.autoList = rtnData.data.list
                             let basicTemplate = {
-                                '2': {
-                                    isAdd: true,
-                                    image: 'assets/img/man.png',
-                                    sceneType: 2,
-                                    name: '新增-手动'
-                                },
                                 '3.1':{
                                     isAdd: true,
                                     image: 'assets/img/arrive.png',
                                     sceneType: 3,
                                     direction: 1,
-                                    name: '新增-到达某地'
+                                    name: '回家'
                                 },
                                 '3.2': {
                                     isAdd: true,
                                     image: 'assets/img/arrive.png',
                                     sceneType: 3,
                                     direction: 2,
-                                    name: '新增-离开某地'
+                                    name: '离家'
                                 },
                                 '4': {
                                     isAdd: true,
-                                    image: 'assets/img/clock.png',
+                                    image: 'assets/img/time.png',
                                     sceneType: 4,
-                                    name: '新增-在某个时间'
+                                    name: '晚安'
                                 },
                                 '6': {
                                     isAdd: true,
                                     image: 'assets/img/slweather.png',
                                     sceneType: 6,
-                                    name: '新增-在某个天气'
+                                    name: '天气变化'
                                 }
                             }
-                            let templateName = ['2', '3.1', '3.2', '4', '6'], tmpTemp =  []
+                            let templateName = ['3.1', '3.2', '4', '6'], tmpTemp =  []
+                            
                             for (var i in this.autoList) {
                                 let sType = String(this.autoList[i].sceneType)
                                 if (sType == '3') {
                                     sType = sType + '.' +this.autoList[i].location.direction
                                 }
-                                templateName.splice(templateName.indexOf(sType), 1)
+                                if (templateName.indexOf(sType) > -1 && ['1005', '1006', '1007', '1008'].indexOf(this.autoList[i].templateCode) == -1) {
+                                    templateName.splice(templateName.indexOf(sType), 1)
+                                }
                             }
                             for (var x in templateName) {
                                 tmpTemp.push(basicTemplate[templateName[x]])

@@ -579,6 +579,9 @@
                     weekly: weeklyString,
                     from: this.from
                 }
+                if (nativeService.getParameters('templateCode')) {
+                    params.templateCode = nativeService.getParameters('templateCode')
+                }
                 if (this.sceneType == 3) {
                     params.destination = destination
                     params.direction = this.direction

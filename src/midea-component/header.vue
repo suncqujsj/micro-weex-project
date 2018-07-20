@@ -71,7 +71,7 @@ export default {
         },
         bgColor: {
             type: String,
-            default: '#0E90FF'
+            default: '#ffffff'
         },
         fontSize: {
             type: String,
@@ -79,7 +79,7 @@ export default {
         },
         titleText: {
             type: String,
-            default: '#fff'
+            default: '#000000'
         },
         isImmersion: {
             type: Boolean,
@@ -87,11 +87,11 @@ export default {
         },
         leftImg: {
             type: String,
-            default: '../img/header/public_ic_back@3x.png'
+            default: './img/header/public_ic_back@3x.png'
         },
         rightImg: {
             type: String,
-            default: '../img/header/tab_seting.png'
+            default: './img/header/tab_seting.png'
         },
         showLeftImg: {
             type: Boolean,

@@ -158,7 +158,19 @@ export default {
                 headerClickCount = 0
                 this.goTo('debugInfo')
             }
+        },
+        getNativeParam() {
+            let params = this.$getConfig().params || {}
+            if (params) {
+                try {
+                    if (typeof params == 'string') {
+                        params = JSON.parse(params)
+                    }
+                } catch (error) { }
+            }
+            return params
         }
+
     },
     created() {
         console.log("created")

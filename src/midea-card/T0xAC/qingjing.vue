@@ -5,21 +5,16 @@
 				<div class="close-wrapper" @click="close">
 					<image class="close-icon" src="./assets/img/smart_ic_deletesmall@2x.png"></image>
 				</div>
-				<midea-smart @change="onMideachange2" :hasBottomBorder="false" :checked="mideaChecked2" :data="data"></midea-smart>
+				<midea-smart @change="onMideachange" :hasBottomBorder="false" :checked="mideaChecked" :data="data"></midea-smart>
 			</div>
 			<div class="box-detail">
-				<text class="setting-title">如果室温 {{selectValue}}</text>
+				<text class="setting-title">如果室温</text>
 				<midea-radio-list :list="list" :cellStyle="cellStyle" :needShowTopBorder="true" @mideaRadioItemChecked="itemChecked"></midea-radio-list>
 
-				<scroller scroll-direction="horizontal" style="height:530px;width:700px;background-color:red;">
-						<scroller slot="detail" :offset-accuracy="43" @scroll="myScroll" style="width:750px;height:430px">
-							<div v-for="n in 35">
-								<text style="text-align: center;height:43px" v-if="n>12 && n<17" :ref="'item'+n"></text>
-								<text style="text-align: center;height:43px" v-if="n>=17 && n<=30" :ref="'item'+n">{{n}}</text>
-								<text style="text-align: center;height:43px" v-if="n>=30 && n<35" :ref="'item'+n"></text>
-							</div>
-						</scroller>
-					<!-- <extend-selection class="setting-selection" :menus="menus" @makeSwitch="mySwitch">
+				<midea-picker-view style="height:530px;width:700px;background-color:red;">
+
+				</midea-picker-view>
+				<!-- <extend-selection class="setting-selection" :menus="menus" @makeSwitch="mySwitch">
 						<div slot="selected" class="cell-highline"></div>
 						<scroller slot="detail" :offset-accuracy="43" @scroll="myScroll" style="width:750px;height:430px">
 							<div v-for="n in 35">
@@ -29,9 +24,8 @@
 							</div>
 						</scroller>
 					</extend-selection> -->
-				</scroller>
 
-				<text class="setting-title">就开启 {{selectValue}}</text>
+				<text class="setting-title">就开启</text>
 				<midea-radio-list :list="list2" :cellStyle="cellStyle" :needShowTopBorder="true" @mideaRadioItemChecked="itemChecked2"></midea-radio-list>
 				<extend-selection :menus="menus" @makeSwitch="mySwitch">
 					<div slot="selected" class="cell-highline" style="flex-direction: row;">
@@ -78,8 +72,7 @@ export default {
 	},
 	data() {
 		return {
-			mideaChecked: true,
-			mideaChecked2: false,
+			mideaChecked: false,
 			currentTemperture: 19,
 			checkedInfo: { title: '选项2', value: 2 },
 			checkedInfo2: { title: '选项2', value: 2 },
@@ -112,9 +105,6 @@ export default {
 			nativeService.goBack()
 		},
 		onMideachange(event) {
-			//modal.toast({ 'message': event.value, 'duration': 2 });
-		},
-		onMideachange2(event) {
 			//modal.toast({ 'message': event.value, 'duration': 2 });
 		},
 		itemChecked(e) {

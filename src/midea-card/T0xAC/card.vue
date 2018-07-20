@@ -79,10 +79,14 @@
                 <div class="smart-title">
                     <text class="smart-text">智能</text>
                 </div>
-                <midea-smart @click="goTo('qingjing.js')" @change="onMideachange" :checked="mideaChecked" :data="data"></midea-smart>
-                <midea-smart @click="goTo('qingjing2.js')" @change="onMideachange2" :checked="mideaChecked2" :data="data2"></midea-smart>
-                <midea-smart @change="onMideachange3" :checked="mideaChecked3" :data="data3"></midea-smart>
-                <midea-smart @change="onMideachange4" :hasBottomBorder="false" :checked="mideaChecked4" :data="data4"></midea-smart>
+                <midea-smart @click="goTo('qingjing.js')" @change="onMideachange" :checked="situation1.checked" :data="situation1"></midea-smart>
+                <midea-smart @click="goTo('qingjing2.js')" @change="onMideachange2" :checked="situation2.checked" :data="situation2">
+                    <div slot="smart-action">
+                        <text class="smart-action">立即启动</text>
+                    </div>
+                </midea-smart>
+                <midea-smart @change="onMideachange3" :checked="situation3.checked" :data="situation3"></midea-smart>
+                <midea-smart @change="onMideachange4" :hasBottomBorder="false" :checked="situation4.checked" :data="situation4"></midea-smart>
             </div>
             <!--downloading by zhouhg-->
             <midea-download></midea-download>
@@ -139,41 +143,44 @@ export default {
             powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
             deviceIcon: "./assets/img/smart_img_equip001@2x.png",
             moreImg: "./assets/img/smart_ic_more@2x.png",
-            situationList: [],
-            mideaChecked: false,
-            data: {
-                title: "自动开启",
-                detail: "模式制冷，温度23."
-            },
-            mideaChecked2: false,
-            data2: {
-                title: "我的最舒适",
-                detail: "温度28C，风速最小"
-            },
-            mideaChecked3: false,
-            data3: {
-                title: "滤网保养",
-                detail: "开启后，启动滤网推送；关闭后，不再推送；"
-            },
-            mideaChecked4: false,
-            data4: {
-                title: "故障推送",
-                detail: "开启后，启动故障推送；关闭后，不再推送；"
-            }
+            situationList: []
         }
     },
     methods: {
         onMideachange(event) {
-            this.mideaChecked = event.value
+            this.updateSituation(1, event.value).then((resp) => {
+                if (resp.code == 0) {
+                    nativeService.toast("更新成功")
+                } else {
+                    nativeService.toast("更新失败")
+                }
+            }).catch((error) => {
+                nativeService.toast("更新失败")
+            })
         },
         onMideachange2(event) {
-            this.mideaChecked2 = event.value
         },
         onMideachange3(event) {
-            this.mideaChecked3 = event.value
+            this.updateSituation(3, event.value).then((resp) => {
+                if (resp.code == 0) {
+                    nativeService.toast("更新成功")
+                } else {
+                    nativeService.toast("更新失败")
+                }
+            }).catch((error) => {
+                nativeService.toast("更新失败")
+            })
         },
         onMideachange4(event) {
-            this.mideaChecked4 = event.value
+            this.updateSituation(4, event.value).then((resp) => {
+                if (resp.code == 0) {
+                    nativeService.toast("更新成功")
+                } else {
+                    nativeService.toast("更新失败")
+                }
+            }).catch((error) => {
+                nativeService.toast("更新失败")
+            })
         },
         goTo(path) {
             nativeService.goTo(path, { animatedType: 'slide_bottomToTop' })
@@ -182,7 +189,8 @@ export default {
             nativeService.getUserInfo().then((data) => {
                 let param = {
                     uid: data.uid,
-                    applianceCode: this.deviceId
+                    applianceCode: this.deviceId,
+                    stamp: Math.round(new Date().getTime() / 1000) //时间戳
                 }
                 nativeService.sendCentralCloundRequest("/v1/situation/list", param).then((resp) => {
                     if (resp.code == 0) {
@@ -191,8 +199,17 @@ export default {
                 })
             })
         },
-        updateSituation() {
-
+        updateSituation(moduleCode, enable) {
+            nativeService.getUserInfo().then((data) => {
+                let param = {
+                    uid: data.uid,
+                    applianceCode: this.deviceId,
+                    stamp: Math.round(new Date().getTime() / 1000), //时间戳
+                    moduleCode: moduleCode,
+                    enable: enable
+                }
+                return nativeService.sendCentralCloundRequest("/v1/situation/update", param)
+            })
         },
         temperatureControl(value) {// -1 or 1
             if (this.onoff == 'off') {
@@ -375,6 +392,109 @@ export default {
                 status = "";
             }
             return status;
+        },
+
+        situation1() {
+            let result = {
+                "moduleCode": 1,
+                "enable": "1",
+                "props": {
+                    "conditions": [
+                        {
+                            "attr": "temperature",
+                            "value": "28",
+                            "operator": "1"
+                        }
+                    ]
+                },
+                "logic": "1",
+                "target": {
+                    "model": "cool",
+                    "temperature": "26"
+                },
+                title: '',
+                detail: ''
+            }
+            if (this.situationList) {
+                let temp = this.situationList.filter((item) => {
+                    return item.moduleCode == 1
+                })
+                if (temp && temp.length > 0) {
+                    result = temp
+                }
+            }
+            let conditions1 = (result.props.conditions[0].operator == 1 ? "高于" : "低于") + result.props.conditions[0].value
+            result.title = "室内温度" + conditions1 + "°度时，自动开启"
+            result.detail = "模式" + (result.target.model == 'cool' ? "制冷" : "制热") + "，温度" + result.target.temperature + "."
+            result.checked = result.enable == '1' ? true : false
+
+            return result
+        },
+
+        situation2() {
+            let result = {
+                "moduleCode": 2,
+                "enable": "0",
+                "props": {
+                    model: "cool",
+                    temperature: "27",
+                    wind_speed: "1",
+                    wind_swing_lr: "on",
+                    wind_swing_ud: "on"
+                },
+                title: '我的最舒适',
+                detail: ''
+            }
+            if (this.situationList) {
+                let temp = this.situationList.filter((item) => {
+                    return item.moduleCode == 2
+                })
+                if (temp && temp.length > 0) {
+                    result = temp
+                }
+            }
+
+            let windSpeedDesc
+            switch (result.wind_speed) {
+                case "1":
+                    windSpeedDesc = "最小"
+                    break;
+                case "50":
+                    windSpeedDesc = "中"
+                    break;
+                case "100":
+                    windSpeedDesc = "最大"
+                    break;
+                default:
+                    windSpeedDesc = "中"
+                    break;
+            }
+            result.detail = "模式" + (result.props.model == 'cool' ? "制冷" : "制热") + "，温度" + result.props.temperature + "°，风速" + windSpeedDesc + (result.props.wind_swing_ud == 'on' ? "，上下摆风" : "") + (result.props.wind_swing_lr == 'on' ? "，左右摆风" : "")
+            result.checked = result.enable == '1' ? true : false
+
+            return result
+        },
+        situation3() {
+            let result = {
+                "moduleCode": "3",
+                "enable": "0",
+                title: "滤网保养",
+                detail: "开启后，启动滤网推送；关闭后，不再推送；"
+            }
+            result.checked = result.enable == '1' ? true : false
+
+            return result
+        },
+        situation4() {
+            let result = {
+                "moduleCode": "4",
+                "enable": "0",
+                title: "故障推送",
+                detail: "开启后，启动故障推送；关闭后，不再推送；"
+            }
+            result.checked = result.enable == '1' ? true : false
+
+            return result
         }
     },
     mounted() {
@@ -584,7 +704,12 @@ export default {
   color: #000000;
   letter-spacing: 0;
 }
-
+.smart-action {
+  font-family: PingFangSC-Medium;
+  font-size: 28px;
+  color: #267aff;
+  width: 120px;
+}
 .mark {
   position: absolute;
   top: 28px;

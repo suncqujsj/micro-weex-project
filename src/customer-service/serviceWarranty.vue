@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller>
             <div class="base-group">
@@ -66,6 +66,7 @@ export default {
     methods: {
         handlePageData(data) {
             if (data.page == "serviceWarranty") {
+                this.resetResult()
                 if (data.key == "selectedMachine") {
                     //条码解析选择
                     let machine = data.data
@@ -79,7 +80,6 @@ export default {
                     this.productCode = machine.product.salesCode
                     this.productModel = machine.product.productModel
                 }
-                this.resetResult()
             }
         },
         resetResult(event) {
@@ -124,9 +124,10 @@ export default {
                 nativeService.toast('请输入型号或扫机身条码')
                 return
             }
+            let today = util.dateFormat(new Date(), "yyyy-MM-dd")
             picker.pickDate({
-                'value': this.date,
-                'max': util.dateFormat(new Date(), "yyyy-MM-dd"),
+                'value': this.date || today,
+                'max': today,
                 'min': '2000-01-01',
                 'title': '选择日期', //取消和确定中间那标题
                 'cancelTxt': '取消', //取消按钮文字

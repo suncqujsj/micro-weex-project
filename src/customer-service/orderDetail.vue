@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back"></midea-header>
+        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back"></midea-header>
         <scroller class="scroller" v-if="formattedOrder">
             <div class="order-detail-header">
                 <div class="order-detail-background"></div>
@@ -257,7 +257,8 @@ export default {
         }
     },
     created() {
-        this.serviceOrderNo = nativeService.getParameters('id') || null
+        let param = this.getNativeParam()
+        this.serviceOrderNo = nativeService.getParameters('id') || param.cssInfoId || null
 
         if (this.fromPage == "orderList") {
             //从订单列表进入

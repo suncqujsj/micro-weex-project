@@ -1,64 +1,61 @@
 <template>
-	<scroller class="content" show-scrollbar="false">
-		<div class="box">
-			<div style="background-color: white">
-				<div style="height:100px;align-items: flex-end;justify-content: center;margin-right: 32px">
-					<image style="width:45px;height: 45px" src="./assets/img/smart_ic_deletesmall@2x.png"></image>
-				</div>
-				<midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="false" :checked="mideaChecked2" :data="data"></midea-smart>
-			</div>
-			<div style="margin-top: 24px;background-color: white;">
-				<div style="margin-left: 34px">
-					<div style="height: 100px;justify-content: center;">
-						<text>设置 {{selectValue}}</text>
-					</div>
-				</div>
-			</div>
-			<div style="background-color: white;">
-				<div style="background-color:#F6F6F6;margin-top: 10px;opacity: 0.5">
-					<extend-selection :menus="menus" @makeSwitch="mySwitch">
-						<div slot="selected" class="cell-highline"></div>
-						<scroller slot="detail" :offset-accuracy="43" @scroll="myScroll" style="width:750px;height:430px">
-							<div v-for="n in 35">
-								<text style="text-align: center;height:43px" v-if="n>12 && n<17" :ref="'item'+n"></text>
-								<text style="text-align: center;height:43px" v-if="n>=17 && n<=30" :ref="'item'+n">{{n}}</text>
-								<text style="text-align: center;height:43px" v-if="n>=30 && n<35" :ref="'item'+n"></text>
-							</div>
-						</scroller>
-					</extend-selection>
-				</div>
-			</div>
-			<div style="background-color: white;">
-				<div style="background-color:#F6F6F6;margin-top: 10px;opacity: 0.5">
-					<extend-selection :menus="menus2" @makeSwitch="mySwitch">
-						<div slot="selected" class="cell-highline"></div>
-						<scroller slot="detail" :offset-accuracy="43" @scroll="myScroll" style="width:750px;height:430px">
-							<div v-for="n in 35">
-								<text style="text-align: center;height:43px" v-if="n>12 && n<17" :ref="'item'+n"></text>
-								<text style="text-align: center;height:43px" v-if="n>=17 && n<=30" :ref="'item'+n">{{n}}</text>
-								<text style="text-align: center;height:43px" v-if="n>=30 && n<35" :ref="'item'+n"></text>
-							</div>
-						</scroller>
-					</extend-selection>
-				</div>
-			</div>
-			<div style="background-color: white;">
-				<div style="background-color:#F6F6F6;margin-top: 10px;opacity: 0.5">
-					<extend-selection :menus="menus3" @makeSwitch="mySwitch">
-						<div slot="detail">
-							<div style="">
-								<midea-radio-list :list="list" :cellStyle="cellStyle" :needShowTopBorder="true" @mideaRadioItemChecked="itemChecked"></midea-radio-list>
-							</div>
-						</div>
-					</extend-selection>
-				</div>
-			</div>
-			<div style="background-color: white">
-				<midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="false" :checked="mideaChecked2" :data="data2"></midea-smart>
-				<midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="false" :checked="mideaChecked2" :data="data3"></midea-smart>
+	<div class="box">
+		<div class="box-header">
+			<div class="close-wrapper" @click="close">
+				<image class="close-icon" src="./assets/img/smart_ic_deletesmall@2x.png"></image>
 			</div>
 		</div>
-	</scroller>
+		<scroller class="content" show-scrollbar="false">
+			<div class="box-title">
+				<midea-smart @change="onMideachange" :hasBottomBorder="false" :checked="mideaChecked" :data="data"></midea-smart>
+			</div>
+			<div class="box-detail">
+				<text class="setting-title">设置</text>
+				<div style="background-color: white;">
+					<div style="background-color:#F6F6F6;margin-top: 10px;opacity: 0.5">
+						<extend-selection :menus="menus" @makeSwitch="mySwitch">
+							<div slot="selected" class="cell-highline"></div>
+							<scroller slot="detail" :offset-accuracy="43" @scroll="myScroll" style="width:750px;height:430px">
+								<div v-for="n in 35">
+									<text style="text-align: center;height:43px" v-if="n>12 && n<17" :ref="'item'+n"></text>
+									<text style="text-align: center;height:43px" v-if="n>=17 && n<=30" :ref="'item'+n">{{n}}</text>
+									<text style="text-align: center;height:43px" v-if="n>=30 && n<35" :ref="'item'+n"></text>
+								</div>
+							</scroller>
+						</extend-selection>
+					</div>
+				</div>
+				<div style="background-color: white;">
+					<div style="background-color:#F6F6F6;margin-top: 10px;opacity: 0.5">
+						<extend-selection :menus="menus2" @makeSwitch="mySwitch">
+							<div slot="selected" class="cell-highline"></div>
+							<scroller slot="detail" :offset-accuracy="43" @scroll="myScroll" style="width:750px;height:430px">
+								<div v-for="n in 35">
+									<text style="text-align: center;height:43px" v-if="n>12 && n<17" :ref="'item'+n"></text>
+									<text style="text-align: center;height:43px" v-if="n>=17 && n<=30" :ref="'item'+n">{{n}}</text>
+									<text style="text-align: center;height:43px" v-if="n>=30 && n<35" :ref="'item'+n"></text>
+								</div>
+							</scroller>
+						</extend-selection>
+					</div>
+				</div>
+				<div style="background-color: white;">
+					<div style="background-color:#F6F6F6;margin-top: 10px;opacity: 0.5">
+						<extend-selection :menus="menus3" @makeSwitch="mySwitch">
+							<div slot="detail">
+								<div style="">
+									<midea-radio-list :list="list" :cellStyle="cellStyle" :needShowTopBorder="true" @mideaRadioItemChecked="itemChecked"></midea-radio-list>
+								</div>
+							</div>
+						</extend-selection>
+					</div>
+				</div>
+
+				<midea-smart @change="onMideachange2" :hasBottomBorder="false" :checked="mideaChecked2" :data="data2"></midea-smart>
+				<midea-smart @change="onMideachange3" :hasBottomBorder="false" :checked="mideaChecked3" :data="data3"></midea-smart>
+			</div>
+		</scroller>
+	</div>
 </template>
 
 <script>
@@ -77,8 +74,9 @@ export default {
 	},
 	data() {
 		return {
-			mideaChecked: true,
+			mideaChecked: false,
 			mideaChecked2: false,
+			mideaChecked3: false,
 			checkedInfo: { title: '选项2', value: 2 },
 			checkedInfo2: { title: '选项2', value: 2 },
 			selectValue: "",
@@ -125,6 +123,9 @@ export default {
 		}
 	},
 	methods: {
+		close() {
+			nativeService.goBack()
+		},
 		onMideachange(event) {
 			//modal.toast({ 'message': event.value, 'duration': 2 });
 		},
@@ -151,14 +152,56 @@ export default {
 </script>
 
 <style>
+.box {
+  flex: 1;
+  width: 750px;
+  background-color: #f2f2f2;
+}
+.box-header {
+  margin-top: 40px;
+  background-color: #ffffff;
+  padding-left: 32px;
+  padding-right: 32px;
+
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+  border-top-color: #e2e2e2;
+  border-top-width: 1px;
+}
+.close-wrapper {
+  height: 80px;
+  align-items: flex-end;
+  justify-content: center;
+}
+.close-icon {
+  width: 45px;
+  height: 45px;
+}
+
 .content {
   flex: 1;
   width: 750px;
-  scroll-direction: vertical;
 }
-.box {
-  margin-bottom: 290px;
-  background-color: #f2f2f2;
+.box-title {
+  background-color: white;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+.box-detail {
+  margin-top: 24px;
+  background-color: white;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+.setting-title {
+  font-family: PingFangSC-Medium;
+  font-size: 32px;
+  color: #000000;
+  margin-top: 72px;
+  margin-bottom: 40px;
+}
+.setting-selection {
+  margin-top: 16px;
 }
 .cell-highline {
   border-top-width: 2px;

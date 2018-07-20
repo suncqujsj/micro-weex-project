@@ -45,7 +45,7 @@
 <script>
     import nativeService from '@/common/services/nativeService.js'
 		import mideaSwitch from '@/midea-component/switch.vue'
-		import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
+	import mideaSmart from '@/midea-card/midea-components/smart.vue'
 		import food from '@/midea-card/T0xAC/components/food.vue'
 		import mideaItem from '@/midea-component/item.vue'
 		import extend from '@/midea-card/T0xAC/components/extend.vue'

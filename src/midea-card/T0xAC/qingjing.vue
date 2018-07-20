@@ -11,53 +11,48 @@
 				<text class="setting-title">如果室温 {{selectValue}}</text>
 				<midea-radio-list :list="list" :cellStyle="cellStyle" :needShowTopBorder="true" @mideaRadioItemChecked="itemChecked"></midea-radio-list>
 
+				<scroller scroll-direction="horizontal" style="height:530px;width:700px;background-color:red;">
+						<scroller slot="detail" :offset-accuracy="43" @scroll="myScroll" style="width:750px;height:430px">
+							<div v-for="n in 35">
+								<text style="text-align: center;height:43px" v-if="n>12 && n<17" :ref="'item'+n"></text>
+								<text style="text-align: center;height:43px" v-if="n>=17 && n<=30" :ref="'item'+n">{{n}}</text>
+								<text style="text-align: center;height:43px" v-if="n>=30 && n<35" :ref="'item'+n"></text>
+							</div>
+						</scroller>
+					<!-- <extend-selection class="setting-selection" :menus="menus" @makeSwitch="mySwitch">
+						<div slot="selected" class="cell-highline"></div>
+						<scroller slot="detail" :offset-accuracy="43" @scroll="myScroll" style="width:750px;height:430px">
+							<div v-for="n in 35">
+								<text style="text-align: center;height:43px" v-if="n>12 && n<17" :ref="'item'+n"></text>
+								<text style="text-align: center;height:43px" v-if="n>=17 && n<=30" :ref="'item'+n">{{n}}</text>
+								<text style="text-align: center;height:43px" v-if="n>=30 && n<35" :ref="'item'+n"></text>
+							</div>
+						</scroller>
+					</extend-selection> -->
+				</scroller>
+
+				<text class="setting-title">就开启 {{selectValue}}</text>
+				<midea-radio-list :list="list2" :cellStyle="cellStyle" :needShowTopBorder="true" @mideaRadioItemChecked="itemChecked2"></midea-radio-list>
 				<extend-selection :menus="menus" @makeSwitch="mySwitch">
-					<div slot="selected" class="cell-highline"></div>
-					<scroller slot="detail" :offset-accuracy="43" @scroll="myScroll" style="width:750px;height:430px">
-						<div v-for="n in 35">
+					<div slot="selected" class="cell-highline" style="flex-direction: row;">
+						<text style="margin-left:345px">时</text>
+						<text style="margin-left:105px">分</text>
+					</div>
+					<scroller slot="detail" :offset-accuracy="43" @scroll="myScroll" show-scrollbar="false" style="width:375px;height:430px;">
+						<div v-for="n in 35" style="align-items: flex-end;margin-right:60px">
+							<text style="text-align: center;height:43px" v-if="n>12 && n<17" :ref="'item'+n"></text>
+							<text style="text-align: center;height:43px" v-if="n>=17 && n<=30" :ref="'item'+n">{{n}}</text>
+							<text style="text-align: center;height:43px" v-if="n>=30 && n<35" :ref="'item'+n"></text>
+						</div>
+					</scroller>
+					<scroller slot="detail" :offset-accuracy="43" @scroll="myScroll" show-scrollbar="false" style="width:375px;height:430px;">
+						<div v-for="n in 35" style="align-items: flex-start;margin-left:60px">
 							<text style="text-align: center;height:43px" v-if="n>12 && n<17" :ref="'item'+n"></text>
 							<text style="text-align: center;height:43px" v-if="n>=17 && n<=30" :ref="'item'+n">{{n}}</text>
 							<text style="text-align: center;height:43px" v-if="n>=30 && n<35" :ref="'item'+n"></text>
 						</div>
 					</scroller>
 				</extend-selection>
-				<div style="background-color: white;">
-					<div style="margin-left: 34px">
-						<div style="height: 100px;justify-content: center;">
-							<text>就开启</text>
-						</div>
-
-					</div>
-					<div>
-						<div style="background-color:  #F6F6F6;;">
-							<midea-radio-list :list="list2" :cellStyle="cellStyle" :needShowTopBorder="true" @mideaRadioItemChecked="itemChecked2"></midea-radio-list>
-						</div>
-					</div>
-				</div>
-				<div style="background-color: white;">
-					<div style="background-color:#F6F6F6;margin-top: 10px;opacity: 0.5">
-						<extend-selection :menus="menus" @makeSwitch="mySwitch">
-							<div slot="selected" class="cell-highline" style="flex-direction: row;">
-								<text style="margin-left:345px">时</text>
-								<text style="margin-left:105px">分</text>
-							</div>
-							<scroller slot="detail" :offset-accuracy="43" @scroll="myScroll" show-scrollbar="false" style="width:375px;height:430px;">
-								<div v-for="n in 35" style="align-items: flex-end;margin-right:60px">
-									<text style="text-align: center;height:43px" v-if="n>12 && n<17" :ref="'item'+n"></text>
-									<text style="text-align: center;height:43px" v-if="n>=17 && n<=30" :ref="'item'+n">{{n}}</text>
-									<text style="text-align: center;height:43px" v-if="n>=30 && n<35" :ref="'item'+n"></text>
-								</div>
-							</scroller>
-							<scroller slot="detail" :offset-accuracy="43" @scroll="myScroll" show-scrollbar="false" style="width:375px;height:430px;">
-								<div v-for="n in 35" style="align-items: flex-start;margin-left:60px">
-									<text style="text-align: center;height:43px" v-if="n>12 && n<17" :ref="'item'+n"></text>
-									<text style="text-align: center;height:43px" v-if="n>=17 && n<=30" :ref="'item'+n">{{n}}</text>
-									<text style="text-align: center;height:43px" v-if="n>=30 && n<35" :ref="'item'+n"></text>
-								</div>
-							</scroller>
-						</extend-selection>
-					</div>
-				</div>
 			</div>
 		</div>
 	</scroller>
@@ -66,7 +61,7 @@
 <script>
 import nativeService from '@/common/services/nativeService.js'
 import mideaSwitch from '@/midea-component/switch.vue'
-import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
+import mideaSmart from '@/midea-card/midea-components/smart.vue'
 import mideaRadioList from '@/midea-card/T0xAC/components/radioList.vue'
 import extendSelection from '@/midea-card/T0xAC/components/extend-selection.vue'
 import mideaItem from '@/midea-component/item.vue'
@@ -182,6 +177,9 @@ export default {
   color: #000000;
   margin-top: 72px;
   margin-bottom: 40px;
+}
+.setting-selection {
+  margin-top: 16px;
 }
 .cell-highline {
   border-top-width: 2px;

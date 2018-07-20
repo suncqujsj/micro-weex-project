@@ -393,7 +393,7 @@ let customizeNativeService = Object.assign(nativeService, {
             let params = {
                 method: 'GET',
                 url: url,
-                type: 'jsonp',
+                type: 'json',
                 headers: { 'Content-Type': 'application/json' }
             }
             nativeService.sendHttpRequest(params).then(
@@ -405,17 +405,24 @@ let customizeNativeService = Object.assign(nativeService, {
             })
         })
     },
-    antiValidateCode(urlParam) {
+    antiValidateCode() {
         return new Promise((resolve, reject) => {
-            let url = urlParam || ("http://wap.cjm.so/Common/ValidateCode.ashx?Type=&Demand=&w=&h=&r=" + Math.random().toString().replace('.', ''))
+            let url = ("http://wap.cjm.so/Common/ValidateCode.ashx?Type=&Demand=&w=&h=&r=" + Math.random().toString().replace('.', ''))
             let params = {
                 method: 'GET',
                 url: url,
-                // type: 'text',
-                type: 'arraybuffer'
+                type: 'json',
+                headers: { 'Content-Type': 'application/json' }
             }
-            weex.requireModule('stream').fetch(params, (resp) => {
-                resolve(resp)
+            // weex.requireModule('stream').fetch(params, (resp) => {
+            //     resolve(resp)
+            // })
+            nativeService.sendHttpRequest(params).then(
+                (resp) => {
+                    resolve(resp)
+                }
+            ).catch((error) => {
+                reject(error)
             })
         })
     },

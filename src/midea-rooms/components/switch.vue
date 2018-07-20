@@ -1,5 +1,6 @@
 <template>
     <div class="wrap" @click="onSwitch">
+        <text></text>
         <div v-if="isActive" class="row-s content" ref="switchBar" style="transform: translateX(0px)">
             <div class="left-bar"></div>
             <div class="right-bar"></div>
@@ -52,7 +53,7 @@
         props: {
             isActive: {
                 type: Boolean,
-                default: false
+                default: true
             },
         },
         computed(){

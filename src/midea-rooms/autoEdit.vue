@@ -11,12 +11,12 @@
                     <div style="background-color:#fff">
                         <div class="row-sb auto-name-floor">
                             <text class="text">名称</text>
-                            <input class="auto-name" type="text" placeholder="" :value="inputAutoName" @change="editAutoName" @return="editAutoName"/>
+                            <input class="auto-name" type="text" placeholder="" :value="inputAutoName" @input="editAutoName" @change="editAutoName" />
                         </div>
                         <div class="row-sb switch-floor auto-switch-floor">
                             <text class="text">启用</text>
                             <div>
-                                <switch-bar :isActive="autoDetail.enable" @onSwitch="openAuto"></switch-bar>
+                                <switch-bar :isActive="autoEnable == 1" @onSwitch="openAuto"></switch-bar>
                             </div>
                         </div>
                     </div>
@@ -24,10 +24,10 @@
                         <text class="sub-hd">当如下条件满足时</text>
                         <div @click="goAutoTypeSet" class="row-sb floor">
                             <div class="row-s">
-                                <image class="icon" :src="autoDetail.image"></image>
+                                <image class="type-img" :src="autoTypeImg[sceneType]"></image>
                                 <text class="condition-desc" v-if="autoDetail.location && sceneType==3">在{{weekDesc}} {{directionText[autoDetail.location.direction]}} {{autoDetail.location.address}}时</text>
                                 <text class="condition-desc" v-if="autoDetail.startTime && sceneType==4">在{{weekDesc}} {{autoDetail.startTime}}时</text>
-                                <text class="condition-desc" v-if="autoDetail.weather && sceneType==6"> 在{{weekDesc}} 天气{{autoDetail.weather.weatherStatus}}, 气温{{temperatureLoginText[autoDetail.weather.logical]}} {{autoDetail.weather.temperature}}℃ 时</text>
+                                <text class="condition-desc" v-if="autoDetail.weather && sceneType==6"> 在{{weekDesc}} 天气为{{autoDetail.weather.weatherStatus}}, 气温{{temperatureLoginText[autoDetail.weather.logical]}} {{autoDetail.weather.temperature}}℃ 时</text>
                             </div>
                             <image class="icon-next" :src="icon.next"></image>
                         </div>
@@ -40,6 +40,11 @@
                             <div @click="setDevice(key)">
                                 <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
                                 <text class="device-name">{{item.deviceName}}</text>
+                                <!-- <div class="row-s device-desc">
+                                     <text class="device-desc-text" v-for="(action, key) in taskActions[item.deviceId]">
+                                        {{applianceActions[item.deviceType].actions[key].value[action]}}
+                                    </text>
+                                </div> -->
                             </div>
                             <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, key)"></image>
                         </div>
@@ -54,7 +59,7 @@
         <div class="delete" :style="deleteStyle"><text class="delete-text"  @click="showDialog('delete')">删除快捷操作</text></div>
         <!-- 删除自动化弹窗提示 -->
         <midea-dialog  :show="show.delete" @close="closeDialog('delete')" @mideaDialogCancelBtnClicked="closeDialog('delete')" @mideaDialogConfirmBtnClicked="deleteAuto" >
-            <text slot="content">确定要删除此快捷操作？</text>
+            <text class="·" slot="content">确定要删除此快捷操作？</text>
         </midea-dialog>
    </div>
 </template>
@@ -69,6 +74,7 @@
         height: 88px;
         padding-left: 30px;
         padding-right: 30px;
+        margin-bottom: 25px;
     }
     .hd-text{ font-size: 32px; }
     .floor{ 
@@ -140,8 +146,10 @@
         margin-bottom: 4px;
     }
     .device-desc{
+    }
+    .device-desc-text{
         color:#c7c7c7;
-        font-size: 24px;
+        font-size: 26px;
     }
     .check-icon{
         position: absolute;
@@ -175,6 +183,13 @@
         text-align: center;
         font-size: 32px;
     }
+    .type-img{
+        width: 82px;
+        height: 82px;
+        margin-right: 18px;
+        margin-top: 14px;
+        margin-bottom: 10px;
+    }
     .icon-next{
         width: 12px;
         height: 24px;
@@ -196,8 +211,11 @@
         padding-bottom: 20px;
     }
     .condition-desc{
-        width: 600px;
+        width: 570px;
         text-overflow: ellipsis;
+        font-size: 30px;
+    }
+    .delete-text{
         font-size: 30px;
     }
     
@@ -235,7 +253,16 @@
                     leftImg: 'assets/img/b.png',
                     rightImg: 'assets/img/b.png'
                 },
-                autoDetail: {},
+                autoDetail: {
+                },
+                autoTypeImg: {
+                    2: 'assets/img/hand.png',
+                    3: 'assets/img/location.png',
+                    4: 'assets/img/time.png',
+                    6: 'assets/img/slweather.png',
+                },
+                applianceActions: applianceActions,
+                autoEnable: null,
                 inputAutoName: '',
                 conditionName: null,
                 temperatureLoginText: {
@@ -250,15 +277,16 @@
                     delete: false
                 },
                 active: [],
-                userDevices: {},
-                autoBindDevices: {},
-                autoSupportActions: {},
-                editParams: {},
-                userSetActions: {},
-                unbindDevices: {},
-                unbindDevicesActions: {},
+                userDevices: {},//用户名下设备
+                autoBindDevices: {},//此场景绑定的设备（随勾选操作更新）
+                autoSupportActions: {},//此场景可用设备的动作指令的值
+                editParams: {},//用户改动的编辑项
+                userSetActions: {},//用户改动的设备动作指令值
+                unbindDevices: {},//用户未绑定的可用设备
+                unbindDevicesActions: {},//用户未绑定的可用设备的动作指令的值
                 bindDeviceActions: {},
                 newDevices: {},
+                taskActions: {}, //前端自己处理过格式的{deviceId:动作指令值}的对象，数据来源：后端返回的task字段
                 pageStamp: ''//进入编辑页时的时间戳
             }
         },
@@ -318,8 +346,14 @@
                 this.sceneType = nativeService.getParameters('sceneType')
                 this.sceneId = nativeService.getParameters('sceneId')
                 this.autoSupportActions = autoSupportActions[this.sceneType]
+                this.autoEnable = nativeService.getParameters('enable')
+
+                this.generateSceneSupportDevices()
+                this.getAutoDetail()
+            },
+            generateSceneSupportDevices(){//生成此场景支持的此用户的设备列表
                 let tmpUserDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
-                let tmpSceneSupoortDevices = []//生成此场景支持的此用户的设备列表
+                let tmpSceneSupoortDevices = []
                 for (var i in tmpUserDevices) {
                     this.userDevices[tmpUserDevices[i].deviceId] = tmpUserDevices[i]
                     if (this.autoSupportActions.hasOwnProperty(tmpUserDevices[i].deviceType)){
@@ -327,9 +361,8 @@
                     }
                 }
                 this.sceneSupoortDevices = tmpSceneSupoortDevices
-                this.getAutoDetail()
             },
-            getAutoDetail(){
+            getAutoDetail(){//请求自动化详情
                 this.checkLogin().then( (uid) => {
                     let reqUrl = url.auto.detail
                     let reqParams = {
@@ -340,12 +373,10 @@
                     this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                         if (rtnData.code == 0) {
                             this.autoDetail = Object.assign({}, this.autoDetail, rtnData.data)
-                            
                             this.inputAutoName = this.autoDetail.name
-                            this.autoEnable = this.autoDetail.enable
                             this.task = this.autoDetail.task
 
-                            this.generateBindDevices()
+                            this.initBindDevices()
                             this.generateBindDeviceActions()
                             this.generateUnbindDevices()
                         }else{
@@ -362,16 +393,20 @@
                     nativeService.toast(this.getErrorMessage(err))
                 })
             },
-            generateBindDevices(){//生成已绑定设备列表
-                let tmpAutoBindDevices = {}
-
+            initBindDevices(){
+                let tmpAutoBindDevices = {}//根据后台返回的task字段初始化已绑定设备列表
+                let tmpActions = {}//转换后台返回的task中设备属性的格式
                 for (var i in this.task) {
                     tmpAutoBindDevices[this.task[i].applianceCode] = Object.assign({isCheck:'check'},this.userDevices[this.task[i].applianceCode])
+                    tmpActions[this.task[i].applianceCode] = this.task[i].command
                 }
                 this.autoBindDevices  = Object.assign({}, this.autoBindDevices, tmpAutoBindDevices)
+                this.taskActions = tmpActions
             },
-            generateUnbindDevices(){//生成未绑定设备列表
-                let bindApplianceCode = [],  tmpUnbindDevices = {},  tmpUnbindDevicesAction = {}
+            generateUnbindDevices(){//生成未绑定设备列表及其动作指令值
+                let bindApplianceCode = [], //已绑定的设备号
+                    tmpUnbindDevices = {},
+                    tmpUnbindDevicesAction = {}
               
                 for (var x in this.autoBindDevices) {
                     bindApplianceCode.push(x)
@@ -392,11 +427,24 @@
             generateBindDeviceActions(){//生成已绑定设备的actions
                 let tmpBindDeviceActions = {}
                 for (var x in this.autoBindDevices) {
+                    
                     if (this.autoBindDevices[x].isCheck == 'check'){
+                        
                         if (this.userSetActions[x]) {
-                            tmpBindDeviceActions[x] = Object.assign({}, tmpBindDeviceActions[x], this.userSetActions[x])
+                            tmpBindDeviceActions[x] = this.userSetActions[x]
                         }else{
-                            tmpBindDeviceActions[x] = this.autoSupportActions[this.autoBindDevices[x].deviceType].actions
+                            let tmpAction = []
+                            let staticActions = this.autoSupportActions[this.autoBindDevices[x].deviceType].actions
+                            
+                            for (var i in staticActions) {
+                                if ( Object.keys(this.taskActions).indexOf(this.autoBindDevices[x].deviceId) > -1 ) {
+                                    tmpAction[i] = Object.assign({}, {currentStatus: this.taskActions[this.autoBindDevices[x].deviceId][staticActions[i].property]}, staticActions[i])
+                                }else{
+                                    tmpAction[i] = Object.assign({}, {currentStatus:  staticActions[i].default},  staticActions[i])
+                                }
+                            }
+                            
+                            tmpBindDeviceActions[x] = tmpAction
                         }
                     }
                 }
@@ -405,8 +453,10 @@
             openAuto(e){
                 if (this.autoDetail.enable == 1) {
                     this.autoDetail.enable = 0
+                    this.autoEnable = 0
                 }else if (this.autoDetail.enable == 0) {
                     this.autoDetail.enable = 1
+                    this.autoEnable = 1
                 }
                 this.editParams.enable = Number(e.value)
             },
@@ -451,7 +501,7 @@
                     this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                         if (rtnData.code == 0) {
                             if (this.sceneType == 3) {
-                                this.updateAutoList()//通知原生位置类型自动化列表需要更新
+                                nativeService.updateAutoList()//通知原生位置类型自动化列表需要更新
                             }
                             nativeService.alert('删除成功!', function(){
                                 nativeService.backToNative()
@@ -478,7 +528,6 @@
                     }
                 }
                 tmpTask = JSON.stringify(tmpTask)
-                
                 let params = {
                     from: 'editAuto',
                     sceneId: this.autoDetail.sceneId,
@@ -499,20 +548,6 @@
                 this.autoBindDevices[item.deviceId].isCheck = tmpStatus[this.autoBindDevices[item.deviceId].isCheck]
 
                 this.generateBindDeviceActions()
-                this.updateTask()//勾选或取消时需要更新task数据
-            },
-            updateTask(){
-                let tmpTask = []
-                for (var key in this.autoBindDevices) {
-                    if (this.autoBindDevices[key].isCheck == 'check') {
-                        for (var x in this.autoDetail.task) {
-                            if (this.autoDetail.task[x].applianceCode == key) {
-                                tmpTask.push(this.autoDetail.task[x])
-                            }
-                        }
-                    }
-                }
-                this.editParams.task = JSON.stringify(tmpTask)
             },
             goBindNewDevice(){
                 this.checkLogin().then( (uid) => {
@@ -562,7 +597,6 @@
                         nativeService.alert('没有改动哦')
                         return
                     }
-
                     reqParams.name = this.editParams.name || this.autoDetail.name
                     reqParams.enable = this.editParams.enable || this.autoDetail.enable
                     reqParams.weekly = this.editParams.weekly || this.autoDetail.weekly
@@ -596,7 +630,7 @@
                     this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                         if (rtnData.code == 0) {
                             if (this.sceneType == 3) {
-                                this.updateAutoList()//通知原生位置类型自动化列表需要更新
+                                nativeService.updateAutoList()//通知原生位置类型自动化列表需要更新
                             }
                             nativeService.alert('修改成功', function(){
                                 nativeService.backToNative()
@@ -617,8 +651,8 @@
             }
         },
         created(){
-            let that = this
             this.initData()
+            let that = this
             channelAutoEdit.onmessage = function(e) {
                 if (e.data.page == 'setDevice') {
                     let tmpUserSetActions = {}
@@ -656,6 +690,6 @@
                     }
                 }
             }
-        }
+        },
     }
 </script>

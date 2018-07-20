@@ -56,7 +56,7 @@ export default {
             queryString = bundleUrl.substr(bundleUrl.indexOf("?") + 1);
             let strs = queryString.split("&");
             for (let i = 0; i < strs.length; i++) {
-                theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                theRequest[strs[i].split("=")[0]] = decodeURIComponent(strs[i].split("=")[1]);
             }
         }
         return key ? theRequest[key] : theRequest
@@ -262,6 +262,13 @@ export default {
             bridgeModule.hideLoadingWithMsg();
         }
     },
+    //隐藏系统导航栏
+    setNavBarHidden() {
+        navigator.setNavBarHidden({
+            hidden: '1',
+            animated: "false"
+        }, event => { })
+    },
     //**********非APP业务接口***************END
 
     //**********网络请求接口***************START
@@ -352,7 +359,9 @@ export default {
                         debugUtil.debugLog(debugLogSeperator, `request(${msgid}): `, sendData)
                         debugUtil.debugLog(`response(${msgid}): `, resData, debugLogSeperator)
                         if (typeof resData == 'string') {
-                            resData = JSON.parse(resData)
+                            try {
+                                resData = JSON.parse(resData)
+                            } catch (e) { }
                         }
                         if (options.isShowLoading) {
                             this.hideLoading()

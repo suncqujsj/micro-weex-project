@@ -291,7 +291,7 @@
                     min: 'max',
                     max: 'min'
                 },
-                activeHour: '',
+                activeHour: '00',
                 activeMinute: '00',
                 activeWeatherTemperature: '',
                 activeWeatherStatus: '',

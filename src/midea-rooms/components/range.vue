@@ -27,11 +27,11 @@
     .line { margin-left: 26px; margin-right: 26px; }
     .less, .range, .bigger{ height: 4px; }
     .less, .bigger{ background-color: #E3E3E6; }
-    .range{ background-color: #5D75F6; }
+    .range{ background-color: #267AFF; }
     .range-min-btn, .range-max-btn{ position: absolute; top: 0px; text-align: center; }
     .desc{ margin-top: 25px; }
     .text{ color: #666666 }
-    .active-text{ color: #5D75F6 }
+    .active-text{ color: #267AFF }
 </style>
 <<script>
     import nativeService from '@/common/services/nativeService.js'

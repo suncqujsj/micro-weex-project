@@ -332,9 +332,9 @@
                     nativeService.alert('没有选择绑定设备哦')
                     return
                 }
-                if (this.from == 'addAuto') {
+                if (this.from == 'addAuto') {//为新增就直接弹窗命名，下一步请求新增接口
                     this.showPrompt = true
-                }else if(this.from == 'editAuto'){
+                }else if(this.from == 'editAuto'){ //为编辑时，提交数据到edit页面并返回
                     let tmpCheckedDevice = {}
                     
                     for(var i in this.checkedDevices) {
@@ -346,6 +346,7 @@
                         page: 'autoBindDevices',
                         newDevices: tmpCheckedDevice
                     })
+                    
                     this.goBack()
                 }
             },
@@ -421,7 +422,7 @@
                     this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                         if (rtnData.code == 0) {
                             if (this.sceneType == 3) {
-                                this.updateAutoList()//通知原生位置类型自动化列表需要更新
+                                nativeService.updateAutoList()//通知原生位置类型自动化列表需要更新
                             }
                             nativeService.alert('新增成功！', function(){
                                 nativeService.backToNative()

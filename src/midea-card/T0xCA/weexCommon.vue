@@ -45,15 +45,6 @@
 		        	
 		        </div>
 	        </div>
-	        <div class="smart">
-		        <div class="smart-title">
-		        	<text class="smart-text">智能</text>
-		        	<image class="smart-img" src="./assets/img/smart_ic_more@2x.png"></image>
-		        </div>
-		        <midea-smart @change="onMideachange" :checked="mideaChecked" :data="data"></midea-smart>
-		      </div>
-		      <midea-smart @change="onMideachange2" :checked="mideaChecked2" :data="data2"></midea-smart>     
-	        <midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="false" :checked="mideaChecked2" :data="data3"></midea-smart>
 	    </div>
     </scroller>
 </template>
@@ -61,7 +52,6 @@
 <script>
     import nativeService from '@/common/services/nativeService.js'
 	import mideaSwitch from '@/midea-component/switch.vue'
-	import mideaSmart from '@/midea-card/T0xAC/components/smart.vue'
 	import scrollerBar from '@/midea-card/T0xAC/components/scroller-bar.vue'
 	import mideaItem from '@/midea-component/item.vue'
 	const modal = weex.requireModule('modal');
@@ -70,41 +60,20 @@
     export default {
         components: {
             mideaSwitch,
-            mideaSmart,
             mideaItem,
             scrollerBar
         },
         data() {
             return {
-                mideaChecked: true,
-                mideaChecked2: false,
                 currentTemperture:19,
                 power:"off",
                 currentStatus:"auto",
                 powerIcon: "./assets/img/smart_ic_off@3x.png",
                 deviceIcon: "./assets/img/smart_img_equip001@2x.png",
                 rightArrow: "./assets/img/smart_ic_arrow_forward@2x.png",
-                data:{
-                 	title:"室内温度高于28°度时候，自动开启空调。",
-                 	detail:"模式制冷，温度23."
-                },
-                data2:{
-                 	title:"宝宝最适宜温度",
-                 	detail:"温度28C，风速最小"
-                },
-                data3:{
-                 	title:"宝宝最适宜温度",
-                 	detail:""
-                }
             }
         },
         methods: {
-            onMideachange(event) {
-            		//modal.toast({ 'message': event.value, 'duration': 2 });
-            },
-             onMideachange2(event) {
-            		//modal.toast({ 'message': event.value, 'duration': 2 });
-            },
             changeTemperture(event) {
 	            	let currentSetTemperture = Math.ceil(event.contentOffset.x/52) +29;
 	            	if(currentSetTemperture <= 17) {

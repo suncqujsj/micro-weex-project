@@ -36,7 +36,7 @@
   height: 128px;
 }
 .header-title {
-  font-family: PingFangSC-Regular;
+  font-family: PingFangSC-Medium;
 }
 .header-left-image-wrapper {
   width: 88px;

@@ -263,6 +263,7 @@ export default {
         updateUI(data) {
             let self = this;
             if (data.errorCode == 0) {
+            	this.onlineStatus = "1";
                 let params = data.params || data.result;
                 this.onoff = params.power;
                 this.mode = params.mode;
@@ -325,7 +326,7 @@ export default {
             console.log("handleNotification Yoram");
             let me = this;
             globalEvent.addEventListener(this.pushKey, (data) => {
-                me.queryStatus();
+                me.updateUI(data);
             });
             globalEvent.addEventListener(this.pushKeyOnline, (data) => {
                 if (data && data.messageType == "deviceOnlineStatus") {
@@ -523,21 +524,21 @@ export default {
   margin-bottom: 290px;
 }
 .card {
-  width: 694px;
+  width: 686px;
   height: 392px;
-  margin-left: 28px;
-  margin-right: 28px;
-  margin-top: 28px;
+  margin-left: 32px;
+  margin-right: 32px;
+  margin-top: 32px;
   background-color: #5d75f6;
   flex-direction: row;
   border-radius: 6px;
 }
 .card-power-off {
-  width: 694px;
+  width: 686px;
   height: 392px;
-  margin-left: 28px;
-  margin-right: 28px;
-  margin-top: 28px;
+  margin-left: 32px;
+  margin-right: 32px;
+  margin-top: 32px;
   background-color: #d8d8de;
   flex-direction: row;
   border-radius: 6px;
@@ -546,7 +547,7 @@ export default {
 }
 .text-offline {
   font-family: PingFangSC-Regular;
-  font-size: 28px;
+  font-size: 20px;
   color: #5d75f6;
   letter-spacing: 0;
   text-align: center;
@@ -567,7 +568,6 @@ export default {
   width: 534px;
   height: 248px;
   opacity: 0.3;
-  box-shadow: 0 5px 6px 0 rgba(0, 0, 0, 0.12);
 }
 .card-hot {
   background-color: #ffbd00;
@@ -583,8 +583,8 @@ export default {
   margin-bottom: 25px;
 }
 .cart-control-temp-img {
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
 }
 .cart-control-temp-img-right {
   margin-left: 100px;
@@ -598,17 +598,16 @@ export default {
   margin-left: 60px;
 }
 .card-status-detail-img {
-  width: 56px;
-  height: 56px;
+  width: 36px;
+  height: 36px;
 }
 .card-control-img {
-  width: 60px;
-  height: 60px;
+  width: 58px;
+  height: 58px;
 }
 .card-icon {
   align-items: flex-start;
   margin-top: -60px;
-  margin-right: -24px;
 }
 .card-icon-img {
   width: 534px;
@@ -620,6 +619,7 @@ export default {
   margin-left: 50px;
 }
 .main-status {
+  font-family: Roboto-Light;
   font-size: 128px;
   color: #ffffff;
 }
@@ -647,7 +647,6 @@ export default {
 .main-status-third {
   font-size: 28px;
   margin-left: 10px;
-  margin-top: 8px;
   color: #ffffff;
 }
 .main-status-third-simple {
@@ -682,10 +681,9 @@ export default {
   justify-content: space-between;
 }
 .card-right-margin {
-  width: 30px;
+  width: 32px;
   height: 392px;
   background-color: white;
-  margin-left: 9px;
 }
 .smart {
   flex-direction: column;

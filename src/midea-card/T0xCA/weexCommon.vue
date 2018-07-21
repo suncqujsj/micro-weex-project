@@ -151,11 +151,11 @@
 		margin-bottom:290px;
 	}
 	.card {
-		width:694px;
+		width:686px;
 		height:392px;
-		margin-left:28px;
-		margin-right:28px;
-		margin-top:28px;
+		margin-left:32px;
+		margin-right:32px;
+		margin-top:32px;
 		background-color: #5D75F6;
 		flex-direction: column;
 		border-radius: 6px;
@@ -227,13 +227,12 @@
 		height:56px;
 	}
 	.card-control-img {
-		width:48px;
-		height:50px
+		width:58px;
+		height:58px
 	}
 	.card-icon {
 		align-items: flex-start;
 		margin-top:-60px;
-		margin-right:-24px
 	}
 	.card-icon-img {
 		width:534px;

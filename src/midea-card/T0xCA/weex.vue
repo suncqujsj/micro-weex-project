@@ -282,7 +282,7 @@
 		height:300px
 	}
 	.card {
-		width:686;
+		width:686px;
 		height:392px;
 		margin-left:32px;
 		margin-right:32px;
@@ -306,13 +306,12 @@
 		height:56px
 	}
 	.card-control-img {
-		width:48px;
-		height:50px
+		width:58px;
+		height:58px
 	}
 	.card-icon {
 		align-items: flex-end;
 		margin-top:-60px;
-		margin-right:-24px
 	}
 	.card-icon-img {
 		width:282px;

@@ -15,17 +15,19 @@
 		        	</div>
 		        	<div class="card-right">
 		        		<div class="card-control">
-		        			<image class="card-control-img" style="margin-right:35px" :src="startPause" @click="controlStartPause"></image>
-		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
+		        			<div class="card-control-div">
+			        			<image class="card-control-img" style="margin-right:35px" :src="startPause" @click="controlStartPause"></image>
+			        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
+		        			</div>
 		        		</div>
-		        		<div class="card-icon" @click="showControlPanelPage">
-		        			<image class="card-icon-img" src="./assets/img/smart_pic_equip032@2x.png"></image>
+		        		<div class="card-icon" >
+		        			<image class="card-icon-img" @click="showControlPanelPage" src="./assets/img/smart_pic_equip032@2x.png"></image>
 		        		</div>
 		        	</div>
 		        </div>
 		        <div class="card-power-off" v-else>
-		        	<div class="control-div-offline">
-		        		<image class="card-control-img" :src="powerIcon_poweroff"  @click="poweronoff(1)"></image>
+		        	<div class="control-div-offline" >
+		        		<image class="card-control-img" :src="powerIcon_poweroff" @click="poweronoff(1)" ></image>
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
@@ -179,6 +181,7 @@
             updateUI(data) {
 	            this.lock = false;
 	            if(data.errorCode == 0) {
+	            	this.onlineStatus = "1";
 	                let params = data.params || data.result;
 	                let errorCode = parseInt(params.error_code);
 	                this.onoff = params.power;
@@ -206,7 +209,7 @@
 //					localStorage.setItem('DBprogram',this.program);
 //					localStorage.setItem('DBstartPause',this.startPause);
 	            }else {
-	                this.showToast('连接设备超时');
+	                nativeService.toast('连接设备超时');
 	            }
             },
             updateDeviceInfo(data) {
@@ -229,7 +232,11 @@
             			}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
-            		self.updateUI(data);
+            		if(self.flag == '1') {
+            			self.updateUI(data);
+            		} else {
+            			self.queryStatus();
+            		}
             	},function(error) {
             		console.log("error");
             	});
@@ -246,7 +253,8 @@
             			}
             		};
             		nativeService.sendLuaRequest(params,true).then(function(data) {
-	            		self.updateUI(data);
+//	            		self.updateUI(data);
+						self.queryStatus();
 	            	},function(error) {
 	            		console.log("error");
 	            	});
@@ -293,7 +301,7 @@
             	console.log("handleNotification Yoram");
             	let me = this;
             	globalEvent.addEventListener(this.pushKey, (data) => {
-            		me.queryStatus();
+            		me.updateUI(data);
 		        });
 		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
             		if(data && data.messageType == "deviceOnlineStatus") {
@@ -338,11 +346,9 @@
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
             	self.handleNotification();
-            	if(data.result.isOnline == 1) {
-            		self.queryStatus();
-            	}
+        		self.queryStatus();
             },function(error) {
-            	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+            	nativeService.toast("连接设备超时");
             })
         }
     }
@@ -358,21 +364,21 @@
 		margin-bottom:450px
 	}
 	.card {
-		width:694;
+		width:686px;
 		height:392px;
-		margin-left:28px;
-		margin-right:28px;
-		margin-top:28px;
+		margin-left:32px;
+		margin-right:32px;
+		margin-top:32px;
 		background-color: #5D75F6;
 		flex-direction: row;
 		border-radius: 6px;
 	}
 	.card-power-off {
-		width:694px;
+		width:686px;
 		height:392px;
-		margin-left:28px;
-		margin-right:28px;
-		margin-top:28px;
+		margin-left:32px;
+		margin-right:32px;
+		margin-top:32px;
 		background-color: #D8D8DE;
 		flex-direction: row;
 		border-radius: 6px;
@@ -381,7 +387,7 @@
 	}
 	.text-offline {
 		font-family: PingFangSC-Regular;
-		font-size: 28px;
+		font-size: 20px;
 		color: #5D75F6;
 		letter-spacing: 0;
 		text-align: center;
@@ -402,21 +408,26 @@
 		width: 314px;
 		height: 314px;
 		opacity: 0.3;
-		box-shadow: 0 5px 6px 0 rgba(0,0,0,0.12);
 	}
 	.card-control-img {
-		width:60px;
-		height:60px
+		width:58px;
+		height:58px
 	}
 	.card-hot {
 		background-color: #FFBD00;
 	}
 	.card-control {
-		align-items: flex-end;
-		margin-top:44px;
-		margin-right:44px;
+		align-items: center;
+		margin-top:38px;
+		margin-right:38px;
 		flex-direction: row;
 		justify-content: flex-end;
+		z-index: 2;
+		height:100px;
+	}
+	.card-control-div {
+		margin-top:-60px;
+		flex-direction: row;
 	}
 	.card-status-detail {
 		flex-direction: row;
@@ -427,14 +438,9 @@
 		width:56px;
 		height:56px;
 	}
-	.card-control-img {
-		width:48px;
-		height:50px
-	}
 	.card-icon {
 		align-items: flex-end;
 		margin-top:-60px;
-		margin-right:-24px
 	}
 	.card-icon-img {
 		width:314px;

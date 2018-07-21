@@ -60,7 +60,7 @@
 			　　	return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
 			},
         	giveup() {
-        		nativeService.alert("确定忽略此版本？",() => {
+//      		nativeService.alert("确定忽略此版本？",() => {
         			this.ismark = false;
 	     		    if(this.nodeviceInfo.length > 0){
 	     		    	for(let i = 0; i < this.nodeviceInfo.length;i++){
@@ -76,7 +76,7 @@
 					nativeService.setItem("downDeviceData",this.nodeviceInfo,(data) => {
 						nativeService.toast("忽略成功");
 					});
-        		})
+//      		})
      		    
         	},
         	downloading() {
@@ -113,10 +113,11 @@
 							that.ismark = false;
 						}
 						
-						if(isshow.length === that.nodeviceInfo.length){
-							that.ismark = true;
+						if(that.nodeviceInfo.length > 0){
+							if(isshow.length === that.nodeviceInfo.length){
+								that.ismark = true;
+							}
 						}
-						
             	}).catch((error) => {
             		nativeService.hideLoading();
 		            this.ismark = false;

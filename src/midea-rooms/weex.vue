@@ -71,13 +71,14 @@
         margin-bottom: 16px;
         margin-right: 16px;
         padding: 20px;
+        border-radius: 4px;
     }
     .auto-name{ width: 120px; font-size: 30px; color: #666666; margin-bottom: 8px; text-overflow: clip; }
     /* .auto-desc{ width: 120px; font-size: 24px; color: #C7C7CC; lines:1; } */
     .scene-list{ height: 1200px;}
     .scene { width: 690px; height: 206px; padding-bottom: 16px; position: relative; }
     .scene-bg{ width: 690px; height: 185px; position: absolute; }
-    .next { width: 8px; height: 16px; position:absolute; top:77px; right: 25px;}
+    .next { width: 8px; height: 16px; position:absolute; top:84px; right: 25px;}
     .scene-name, .scene-desc{ color: #fff; }
     .scene-name{ font-size: 32px; margin-top: 50px; margin-left: 32px; margin-bottom: 30px;}
     .scene-desc{ margin-left: 24px; font-size: 24px; }

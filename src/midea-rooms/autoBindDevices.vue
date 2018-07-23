@@ -2,7 +2,7 @@
    <div class="wrap" :style="wrapStyle">
         <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
         <div class="done" @click="getDone()">
-            <text class="done-text white">完成</text>
+            <text class="done-text">完成</text>
         </div>
         <list>
             <cell class="content">
@@ -56,10 +56,10 @@
     }
     .done{
         position:absolute;
-        right: 10px;
+        right: 25px;
         top: 30px;
     }
-    .done-text{ font-size: 32px; }
+    .done-text{ font-size: 32px; color: #666; }
     .font-grey { color: #666; }
     .content{ margin-top: 16px; }
     .sub-hd{
@@ -67,6 +67,7 @@
         font-size: 28px;
         margin-left:30px;
         margin-bottom: 18px;
+        margin-top: 25px;
     }
     .device-box{
         padding-left: 32.25px;
@@ -317,7 +318,6 @@
                     deviceName: encodeURIComponent(device.deviceName),
                     deviceId: device.deviceId
                 }
-                
                 this.goTo('setDevice', {}, params)
             },
             generateAllDeviceActions(){

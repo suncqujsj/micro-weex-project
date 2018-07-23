@@ -155,11 +155,11 @@
     .mgb-10{ margin-bottom: 10px; }
     .setting{
         position:absolute;
-        right: 10px;
-        top: 30px;
+        right: 25px;
+        top: 69px;
     }
     .setting-text{
-        font-size: 32px;
+        font-size: 28px;
     }
     .up-block{
         padding-top: 208px;
@@ -205,11 +205,12 @@
     }
     .info-text{
         width: 220px;
+        height: 50px;
         text-align: center;
         margin-bottom: 2px;
     }
     .down-block{
-        padding-top: 70px;
+        padding-top: 90px;
         align-items: center;
         padding-left:30px;
         padding-right:30px;
@@ -284,13 +285,13 @@
         components:{ MideaHeader, MideaVote, ToastDialog, mideaCell, mideaList },
         computed:{
             wrapStyle(){
-                let tmp = {}
-                if (this.isipx) {
-                    tmp.marginTop = '64px'
-                }else{
-                    tmp.marginTop = '40px'
-                }
-                return tmp
+                // let tmp = {}
+                // if (this.isipx) {
+                //     tmp.marginTop = '64px'
+                // }else{
+                //     tmp.marginTop = '40px'
+                // }
+                // return tmp
             },
             webStyle(){
                 return {
@@ -389,12 +390,18 @@
                 
             },
             sceneStyle(){
-                return { 
+                let tmp = {
                     backgroundImage: this.style.linearBg[this.roomType],
                     height: this.pageHeight*0.7 + 'px',
                     position: 'relative',
                     overflow: 'hidden'
                 }
+                if (this.isipx) {
+                    tmp.paddingTop = '64px'
+                }else{
+                    tmp.paddingTop = '40px'
+                }
+                return tmp
             }
         },
         mixins: [base],

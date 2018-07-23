@@ -143,6 +143,11 @@
                 let tmp = {
                     height: this.pageHeight+'px'
                 }
+                if (this.isipx) {
+                    tmp.marginTop = '64px'
+                }else{
+                    tmp.marginTop = '40px'
+                }
                 return tmp
             },
         },

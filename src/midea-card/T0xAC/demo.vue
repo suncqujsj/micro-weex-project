@@ -288,7 +288,7 @@ export default {
   flex: 1;
 }
 .card {
-  width: 686;
+  width: 686px;
   height: 392px;
   margin-left: 32px;
   margin-right: 32px;

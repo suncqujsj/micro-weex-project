@@ -822,6 +822,7 @@ export default {
 }
 .base-group {
   margin-top: 24px;
+  padding-left: 24px;
 }
 .cell-title {
   flex: 1;

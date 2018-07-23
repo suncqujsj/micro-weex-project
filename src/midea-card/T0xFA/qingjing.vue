@@ -8,9 +8,9 @@
 				<text class="header-desc">{{situationDesc.detail}}</text>
 			</div>
 			<div class="base-group">
-				<midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectConditionTemp">
+				<midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectSleepTemp">
 					<div slot="title" class="cell-title">
-						<text class="cell-label">提醒间隔</text>
+						<text class="cell-label">睡眠时间</text>
 					</div>
 					<div slot="rightText">
 						<text class="right-text">{{situactionData.props.value}}</text>
@@ -23,13 +23,14 @@
 			</div>
 		</scroller>
 
-		<midea-select :show="isShowConditionTemp" title="选择间隔" :items="temperatureList" :index="conditionTempIndex" @close="isShowConditionTemp=false" @itemClick="conditionTempItemClick"></midea-select>
+		<midea-select :show="isShowSleepTemp" title="选择时间" :items="temperatureList" :index="conditionTempIndex" @close="isShowSleepTemp=false" @itemClick="conditionTempItemClick"></midea-select>
 	</div>
 </template>
 
 <script>
 import nativeService from '@/common/services/nativeService.js'
 import util from '@/common/util/util'
+const picker = weex.requireModule('picker')
 
 import { MideaHeader, MideaCell, MideaButton, MideaSelect } from '@/index'
 
@@ -45,7 +46,7 @@ export default {
 			title: '情境设置',
 			situactionData: null,
 
-			isShowConditionTemp: false,
+			isShowSleepTemp: false,
 			conditionTempIndex: null,
 			temperatureList: []
 		}
@@ -60,8 +61,8 @@ export default {
 			if (this.situactionData) {
 
 				result = {
-					title: "每" + this.situactionData.props.value + "周提醒清晰冰箱内侧",
-					detail: "开启后， 每" + this.situactionData.props.value + "周提醒一次待清洁信息；关闭后，不再显示"
+					title: "睡觉时自动启用睡眠模式",
+					detail: ""
 				}
 			}
 
@@ -74,8 +75,23 @@ export default {
 			nativeService.goBack(options);
 		},
 
-		selectConditionTemp() {
-			this.isShowConditionTemp = true
+		selectSleepTemp() {
+
+			picker.pickTime({
+				'value': this.situactionData.props.value,
+				'title': '选择时间', //取消和确定中间那标题
+				'cancelTxt': '取消', //取消按钮文字
+				'confirmTxt': '确定', //确定按钮文字,
+				'cancelTxtColor': '#020F13', //取消颜色
+				'confirmTxtColor': '#020F13', //标题颜色
+				'titleColor': '#020F13', //标题颜色
+				'titleBgColor': '#E7EDEF' //标题栏颜色
+			}, event => {
+				if (event.result === 'success') {
+					this.situactionData.props.value = event.data;
+				}
+			})
+			// this.isShowSleepTemp = true
 		},
 		conditionTempItemClick(event) {
 			this.conditionTempIndex = event.index

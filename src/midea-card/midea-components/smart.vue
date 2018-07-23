@@ -113,6 +113,6 @@ export default {
   color: #8a8a8f;
 }
 .smart-action {
-  margin-left: 32px;
+  padding-left: 32px;
 }
 </style>

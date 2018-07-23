@@ -1,216 +1,294 @@
 <template>
-	<div class="box">
-		<div class="box-header">
-			<div class="close-wrapper" @click="close">
-				<image class="close-icon" src="./assets/img/smart_ic_deletesmall@2x.png"></image>
+	<div class="wrapper">
+		<midea-header :title="title" :isImmersion="isipx?false:true" @leftImgClick="back">
+		</midea-header>
+		<scroller class="content-wrapper">
+			<div class="base-group">
+				<text class="header-title">{{situationDesc.title}}</text>
+				<text class="header-desc">{{situationDesc.detail}}</text>
 			</div>
-		</div>
-		<scroller class="content" show-scrollbar="false">
-			<div class="box-title">
-				<midea-smart @change="onMideachange" :hasBottomBorder="false" :checked="mideaChecked" :data="data"></midea-smart>
+			<div class="base-group">
+				<midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectModel">
+					<div slot="title" class="cell-title">
+						<text class="cell-label">模式</text>
+					</div>
+					<div slot="rightText">
+						<text class="right-text">{{situationDesc.modelDesc}}</text>
+					</div>
+				</midea-cell>
+				<midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectModelTemp">
+					<div slot="title" class="cell-title">
+						<text class="cell-label">温度</text>
+					</div>
+					<div slot="rightText">
+						<text class="right-text">{{situactionData.props.temperature}}</text>
+					</div>
+				</midea-cell>
+				<midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectWindSpeed">
+					<div slot="title" class="cell-title">
+						<text class="cell-label">风速</text>
+					</div>
+					<div slot="rightText">
+						<text class="right-text">{{situationDesc.windSpeedDesc}}</text>
+					</div>
+				</midea-cell>
+				<div class="item-group">
+					<text class="cell-label">上下摆风</text>
+					<midea-switch2 :checked="situactionData.props.wind_swing_ud == 'on'?true:false" @change="changeWindSwingUD"></midea-switch2>
+				</div>
+				<div class="item-group">
+					<text class="cell-label">左右摆风</text>
+					<midea-switch2 :checked="situactionData.props.wind_swing_lr == 'on'?true:false" @change="changeWindSwingLR"></midea-switch2>
+				</div>
 			</div>
-			<div class="box-detail">
-				<text class="setting-title">设置</text>
-				<div style="background-color: white;">
-					<div style="background-color:#F6F6F6;margin-top: 10px;opacity: 0.5">
-						<extend-selection :menus="menus" @makeSwitch="mySwitch">
-							<div slot="selected" class="cell-highline"></div>
-							<scroller slot="detail" :offset-accuracy="43" @scroll="myScroll" style="width:750px;height:430px">
-								<div v-for="n in 35">
-									<text style="text-align: center;height:43px" v-if="n>12 && n<17" :ref="'item'+n"></text>
-									<text style="text-align: center;height:43px" v-if="n>=17 && n<=30" :ref="'item'+n">{{n}}</text>
-									<text style="text-align: center;height:43px" v-if="n>=30 && n<35" :ref="'item'+n"></text>
-								</div>
-							</scroller>
-						</extend-selection>
-					</div>
-				</div>
-				<div style="background-color: white;">
-					<div style="background-color:#F6F6F6;margin-top: 10px;opacity: 0.5">
-						<extend-selection :menus="menus2" @makeSwitch="mySwitch">
-							<div slot="selected" class="cell-highline"></div>
-							<scroller slot="detail" :offset-accuracy="43" @scroll="myScroll" style="width:750px;height:430px">
-								<div v-for="n in 35">
-									<text style="text-align: center;height:43px" v-if="n>12 && n<17" :ref="'item'+n"></text>
-									<text style="text-align: center;height:43px" v-if="n>=17 && n<=30" :ref="'item'+n">{{n}}</text>
-									<text style="text-align: center;height:43px" v-if="n>=30 && n<35" :ref="'item'+n"></text>
-								</div>
-							</scroller>
-						</extend-selection>
-					</div>
-				</div>
-				<div style="background-color: white;">
-					<div style="background-color:#F6F6F6;margin-top: 10px;opacity: 0.5">
-						<extend-selection :menus="menus3" @makeSwitch="mySwitch">
-							<div slot="detail">
-								<div style="">
-									<midea-radio-list :list="list" :cellStyle="cellStyle" :needShowTopBorder="true" @mideaRadioItemChecked="itemChecked"></midea-radio-list>
-								</div>
-							</div>
-						</extend-selection>
-					</div>
-				</div>
-
-				<midea-smart @change="onMideachange2" :hasBottomBorder="false" :checked="mideaChecked2" :data="data2"></midea-smart>
-				<midea-smart @change="onMideachange3" :hasBottomBorder="false" :checked="mideaChecked3" :data="data3"></midea-smart>
+			<div class="action-bar">
+				<midea-button text="保存" @mideaButtonClicked="submit"></midea-button>
 			</div>
 		</scroller>
+
+		<midea-actionsheet :items="modelItems" :show="isShowModel" @close="closeModelActionsheet" @itemClick="modeltItemClick" @btnClick="modelBtnClick" ref="modelActionsheet">
+		</midea-actionsheet>
+
+		<midea-select :show="isShowModelTemp" title="选择温度" :items="temperatureList" :index="modelTempIndex" @close="isShowModelTemp=false" @itemClick="modelTempItemClick"></midea-select>
+
+		<midea-actionsheet :items="windSpeedItems" :show="isShowWindSpeed" @close="closeWindSpeedActionsheet" @itemClick="windSpeedtItemClick" @btnClick="windSpeedBtnClick" ref="windSpeedActionsheet">
+		</midea-actionsheet>
 	</div>
 </template>
 
 <script>
 import nativeService from '@/common/services/nativeService.js'
-import mideaSmart from '@/midea-card/midea-components/smart.vue'
-import mideaRadioList from '@/midea-card/T0xAC/components/radioList.vue'
-import extendSelection from '@/midea-card/T0xAC/components/extend-selection.vue'
-const modal = weex.requireModule('modal');
-const dom = weex.requireModule('dom');
-var stream = weex.requireModule('stream');
+import util from '@/common/util/util'
+
+import { MideaHeader, MideaCell, MideaButton, MideaActionsheet, MideaSelect, MideaSwitch2 } from '@/index'
+
 export default {
 	components: {
-		mideaSmart,
-		mideaRadioList,
-		extendSelection
+		MideaHeader,
+		MideaCell,
+		MideaButton,
+		MideaActionsheet,
+		MideaSelect,
+		MideaSwitch2
 	},
 	data() {
 		return {
-			mideaChecked: false,
-			mideaChecked2: false,
-			mideaChecked3: false,
-			checkedInfo: { title: '选项2', value: 2 },
-			checkedInfo2: { title: '选项2', value: 2 },
-			selectValue: "",
-			cellStyle: {
-				backgroundColor: "#F6F6F6",
-				opacity: 0.5,
-			},
-			data: {
-				title: "宝宝最适合。",
-				detail: "温度28C，风速最小."
-			},
-			data2: {
-				title: "上下摆风",
-				detail: ""
-			},
-			data3: {
-				title: "左右摆风",
-				detail: ""
-			},
-			list: [
-				{ title: '高', value: 1 },
-				{ title: '中', value: 2 },
-				{ title: '低', value: 3, checked: true },
+			title: '情境设置',
+			situactionData: null,
+
+			isShowModel: false,
+			modelOptions: [
+				{ value: 'cool', desc: '制冷' },
+				{ value: 'heat', desc: '制热' }
 			],
-			list2: [
-				{ title: '制冷', value: 1, checked: true },
-				{ title: '制热', value: 2 },
+
+			isShowModelTemp: false,
+			modelTempIndex: null,
+			temperatureList: [],
+
+			isShowWindSpeed: false,
+			windSpeedOptions: [
+				{ value: '1', desc: '最小' },
+				{ value: '50', desc: '中' },
+				{ value: '100', desc: '最强' }
 			],
-			menus: [{
-				name: '模式',
-				rightText: "制冷",
-				iconPath: '',
-			}],
-			menus2: [{
-				name: '温度',
-				rightText: "28",
-				iconPath: '',
-			}],
-			menus3: [{
-				name: '风速',
-				rightText: "中",
-				iconPath: '',
-			}]
-		}
-	},
-	methods: {
-		close() {
-			nativeService.goBack()
-		},
-		onMideachange(event) {
-			//modal.toast({ 'message': event.value, 'duration': 2 });
-		},
-		onMideachange2(event) {
-			//modal.toast({ 'message': event.value, 'duration': 2 });
-		},
-		itemChecked(e) {
-			this.checkedInfo = e;
-		},
-		itemChecked2(e) {
-			this.checkedInfo2 = e;
-		},
-		mySwitch(event) {
-			let el = this.$refs.item25[0];
-			dom.scrollToElement(el, {})
-			//modal.toast({ 'message': "hello world", 'duration': 2 });
 		}
 	},
 	computed: {
+		isipx: function () {
+			return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6');
+		},
+		modelItems() {
+			return this.modelOptions.map((item) => {
+				return item.desc
+			})
+		},
+		windSpeedItems() {
+			return this.windSpeedOptions.map((item) => {
+				return item.desc
+			})
+		},
+		situationDesc() {
+			let result
+			if (this.situactionData) {
+				let modelDesc = (this.situactionData.props.model == 'cool' ? "制冷" : "制热")
+
+				let windSpeed, windSpeedDesc
+				let temp = this.windSpeedOptions.filter((item) => {
+					return item.value == this.situactionData.props.wind_speed
+				})
+				if (temp && temp.length > 0) {
+					windSpeed = temp[0]
+					windSpeedDesc = windSpeed.desc
+				}
+
+
+				result = {
+					modelDesc: modelDesc,
+					windSpeedDesc: windSpeedDesc,
+					title: "宝宝最适合",
+					detail: "模式" + modelDesc + "，温度" + this.situactionData.props.temperature + "°，风速" + windSpeedDesc + (this.situactionData.props.wind_swing_ud == 'on' ? "，上下摆风" : "") + (this.situactionData.props.wind_swing_lr == 'on' ? "，左右摆风" : "")
+				}
+			}
+
+			return result
+		},
 	},
-	mounted() {
+	methods: {
+		back(options = {}) {
+			//返回上一页
+			nativeService.goBack(options);
+		},
+
+		selectModel() {
+			this.isShowModel = true
+			this.$nextTick(e => {
+				this.$refs.modelActionsheet.open();
+			});
+		},
+		closeModelActionsheet() {
+			this.isShowModel = false
+		},
+		modeltItemClick(event) {
+			this.isShowModel = false
+			this.situactionData.props.model = this.modelOptions[event.index].value
+		},
+		modelBtnClick() {
+			this.isShowModel = false
+		},
+
+		selectModelTemp() {
+			this.isShowModelTemp = true
+		},
+		modelTempItemClick(event) {
+			this.modelTempIndex = event.index
+			this.situactionData.props.temperature = event.key
+		},
+
+		selectWindSpeed() {
+			this.isShowWindSpeed = true
+			this.$nextTick(e => {
+				this.$refs.windSpeedActionsheet.open();
+			});
+		},
+		closeWindSpeedActionsheet() {
+			this.isShowWindSpeed = false
+		},
+		windSpeedtItemClick(event) {
+			this.isShowWindSpeed = false
+			this.situactionData.props.wind_speed = this.windSpeedOptions[event.index].value
+		},
+		windSpeedBtnClick() {
+			this.isShowWindSpeed = false
+		},
+		changeWindSwingUD(event) {
+			this.situactionData.props.wind_swing_ud = event.value ? "on" : "off"
+		},
+		changeWindSwingLR(event) {
+			this.situactionData.props.wind_swing_lr = event.value ? "on" : "off"
+		},
+		submit() {
+			nativeService.getUserInfo().then((data) => {
+				let param = {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json;charset=utf-8"
+					},
+					data: {
+						uid: data.uid,
+						applianceCode: this.situactionData.deviceId || "",
+						stamp: Math.round(new Date().getTime() / 1000), //时间戳
+						moduleCode: "1",
+						enable: this.situactionData.enable,
+						props: this.situactionData.props
+					}
+				}
+				nativeService.isDummy = false
+				nativeService.sendCentralCloundRequest("/v1/situation/update", param).then((resp) => {
+					if (resp.code == 0) {
+						nativeService.toast("更新成功")
+						this.back()
+					} else {
+						throw resp
+					}
+				}).catch((error) => {
+					let msg = "请求失败，请稍后重试。"
+					if (error.msg) {
+						msg = error.msg
+					}
+					if (error.code) {
+						msg += "(" + error.code + ")"
+					}
+					nativeService.toast(msg)
+				})
+			})
+		}
+	},
+	created() {
+		for (let index = 17; index <= 30; index++) {
+			this.temperatureList.push({ value: index, key: index }, )
+		}
+		nativeService.getItem("CARD_STORAGE_SITUATION", (resp) => {
+			if (resp.result == 'success') {
+				this.situactionData = JSON.parse(resp.data) || {}
+			}
+		})
 	}
 }
 </script>
 
 <style>
-.box {
+.wrapper {
   flex: 1;
-  width: 750px;
   background-color: #f2f2f2;
+  position: relative;
 }
-.box-header {
-  margin-top: 40px;
-  background-color: #ffffff;
-  padding-left: 32px;
-  padding-right: 32px;
-
-  border-top-left-radius: 50px;
-  border-top-right-radius: 50px;
-  border-top-color: #e2e2e2;
-  border-top-width: 1px;
-}
-.close-wrapper {
-  height: 80px;
-  align-items: flex-end;
-  justify-content: center;
-}
-.close-icon {
-  width: 45px;
-  height: 45px;
-}
-
-.content {
-  flex: 1;
-  width: 750px;
-}
-.box-title {
-  background-color: white;
-  padding-left: 32px;
-  padding-right: 32px;
-}
-.box-detail {
+.base-group {
   margin-top: 24px;
-  background-color: white;
   padding-left: 32px;
-  padding-right: 32px;
+  background-color: #ffffff;
 }
-.setting-title {
-  font-family: PingFangSC-Medium;
+.header-title {
+  font-family: PingFangSC-Regular;
   font-size: 32px;
   color: #000000;
-  margin-top: 72px;
-  margin-bottom: 40px;
+  padding-top: 30px;
+  padding-right: 32px;
 }
-.setting-selection {
-  margin-top: 16px;
+.header-desc {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #8a8a8f;
+  padding-top: 32px;
+  padding-bottom: 32px;
+  padding-right: 32px;
 }
-.cell-highline {
-  border-top-width: 2px;
-  border-top-color: #cdcdcd;
-  border-bottom-width: 2px;
-  border-bottom-color: #cdcdcd;
-  height: 43px;
-  width: 750px;
-  bottom: 215px;
-  position: absolute;
+.cell-title {
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+}
+.cell-label {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #000000;
+}
+.right-text {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #666666;
+  padding-right: 24px;
+  text-align: right;
+  width: 430px;
+}
+.item-group {
+  padding-top: 30px;
+  padding-left: 32px;
+  padding-right: 32px;
+  padding-bottom: 30px;
+  background-color: #ffffff;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

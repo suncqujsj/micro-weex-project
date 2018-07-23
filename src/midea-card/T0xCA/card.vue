@@ -44,14 +44,7 @@
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
-	        <div class="smart">
-		        <div class="smart-title">
-		        	<text class="smart-text">智能</text>
-		        	<image class="smart-img" src="./assets/img/smart_ic_more@2x.png"></image>
-		        </div>
-	      	</div>
-	      	<midea-smart @change="onMideachange2" :checked="mideaChecked2" :data="data2"></midea-smart>     
-	        <midea-smart :showSwitchIcon="true" @change="onMideachange2" :hasBottomBorder="true" :checked="mideaChecked2" :data="data3"></midea-smart>
+            <situation></situation>
 	        <midea-download></midea-download>
 	    </div>
     </scroller>
@@ -59,8 +52,7 @@
 
 <script>
     import nativeService from '@/common/services/nativeService.js'
-	import mideaSwitch from '@/midea-component/switch.vue'
-	import mideaSmart from '@/midea-card/midea-components/smart.vue'
+	import situation from '@/midea-card/T0xCA/components/situation.vue'
 	import mideaItem from '@/midea-component/item.vue'
 	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	import Mock from './settings/mock'
@@ -69,9 +61,8 @@
 	var stream = weex.requireModule('stream');
     export default {
         components: {
-            mideaSwitch,
-            mideaSmart,
-            mideaItem,
+			mideaItem,
+			situation,
             mideaDownload
         },
         data() {
@@ -83,38 +74,13 @@
             	deviceSn: "",
             	onlineStatus:"",
             	
-                mideaChecked: true,
-                mideaChecked2: false,
                 storage_temperature:"",
                 freezing_temperature:"",
                 powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
-                powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
-                data:{
-                 	title:"室内温度高于28°度时候，自动开启空调。",
-                 	detail:"模式制冷，温度23."
-                },
-                data2:{
-                 	title:"每周三提醒清洗冰箱内侧。。",
-                 	detail:"每隔1个月提醒。"
-                },
-                data3:{
-                 	title:"缺少消毒剂，柔顺剂提醒。",
-                 	detail:""
-                },
-                list: [
-                { 
-                	"name": "电饭煲食谱",
-                	"rightText":"更多"
-                }],
+                powerIcon_offline: "./assets/img/smart_ic_reline@2x.png"
             }
         },
         methods: {
-            onMideachange(event) {
-            		//modal.toast({ 'message': event.value, 'duration': 2 });
-            },
-             onMideachange2(event) {
-            		//modal.toast({ 'message': event.value, 'duration': 2 });
-            },
             queryStatus () {
             	let self = this;
             	let params = {
@@ -349,50 +315,6 @@
 		width:343px;
 		height:392px;
 		justify-content: space-between;
-	}
-	.smart {
-		flex-direction: column;
-		justify-content: space-between;
-		margin-top:50px;
-	}
-	.smart-title {
-		flex-direction: row;
-		justify-content: space-between;
-		margin-left:32px;
-		margin-right:32px;
-	}
-	.smart-content {
-		margin-top:50px;
-		margin-left:32px;
-		margin-right:32px;
-		border-bottom: inset
-	}
-	.smart-content-last {
-		margin-top:50px;
-		margin-left:32px;
-		margin-right:32px;
-	}
-	.smart-text {
-		font-family: PingFangSC-Regular;
-		font-size: 36px;
-		color: #000000;
-		letter-spacing: 0;
-	}
-	.smart-img {
-		width:48px;
-		height: 48px;
-	}
-	.smart-detail {
-		flex-direction: row;
-		justify-content: space-between;
-		margin-top:30px;
-		padding-bottom: 20px;
-	}
-	.smart-detail-content {
-		font-family: PingFangSC-Regular;
-		font-size: 24px;
-		color: #8A8A8F;
-		letter-spacing: 0;
 	}
 	.scroller-bar {
 		margin-top:-72px;

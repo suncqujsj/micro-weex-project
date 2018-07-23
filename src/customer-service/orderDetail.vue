@@ -257,8 +257,7 @@ export default {
         }
     },
     created() {
-        let param = this.getNativeParam()
-        this.serviceOrderNo = nativeService.getParameters('id') || param.cssInfoId || null
+        this.serviceOrderNo = nativeService.getParameters('id') || null
 
         if (this.fromPage == "orderList") {
             //从订单列表进入

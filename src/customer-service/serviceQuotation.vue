@@ -20,7 +20,7 @@
                             <text class="charge-detail-label">{{detailItem.chargeCProject}}</text>
                             <div class="charge-detail-row-wrapper">
                                 <text class="charge-detail-item-desc">{{detailItem.pubRemark}}</text>
-                                <text class="charge-detail-item-price">{{detailItem.chargeStandard}}{{detailItem.chargeUnit}}</text>
+                                <text class="charge-detail-item-price">{{detailItem.chargeFee}}{{detailItem.chargeUnit||'元'}} x {{detailItem.useAmount || 1}}</text>
                             </div>
                         </div>
                         <text class="charge-detail-item-sum">总价：{{item.chargeFee}}元</text>
@@ -133,14 +133,19 @@ export default {
             })
         },
         goToOrderDetail() {
-            nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, this.order, () => {
-                this.goTo("orderDetail", {}, { from: 'serviceQuotation', id: this.order.serviceOrderNo })
-            })
+            // nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, this.order, () => {
+            this.goTo("orderDetail", {}, { from: 'serviceQuotation', id: this.notificationData.cssInfoId })
+            // })
         }
     },
     created() {
         //获取从APP传来的参数
-        this.notificationData = this.getNativeParam()
+        let notificationData = nativeService.getParameters('param')
+        if (notificationData && typeof notificationData == 'string') {
+            try {
+                this.notificationData = JSON.parse(notificationData)
+            } catch (error) { }
+        }
         this.querychargedetails()
 
         // this.serviceOrderNo = nativeService.getParameters('id') || null

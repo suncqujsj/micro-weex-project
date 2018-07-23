@@ -1,184 +1,290 @@
 <template>
-	<scroller class="content" show-scrollbar="false">
-		<div class="box">
-			<div class="box-header">
-				<div class="close-wrapper" @click="close">
-					<image class="close-icon" src="./assets/img/smart_ic_deletesmall@2x.png"></image>
-				</div>
-				<midea-smart @change="onMideachange" :hasBottomBorder="false" :checked="mideaChecked" :data="data"></midea-smart>
+	<div class="wrapper">
+		<midea-header :title="title" :isImmersion="isipx?false:true" @leftImgClick="back">
+		</midea-header>
+		<scroller class="content-wrapper">
+			<div class="base-group">
+				<text class="header-title">{{situationDesc.title}}</text>
+				<text class="header-desc">{{situationDesc.detail}}</text>
 			</div>
-			<div class="box-detail">
-				<text class="setting-title">如果室温</text>
-				<midea-radio-list :list="list" :cellStyle="cellStyle" :needShowTopBorder="true" @mideaRadioItemChecked="itemChecked"></midea-radio-list>
-
-				<midea-picker-view style="height:530px;width:700px;background-color:red;">
-
-				</midea-picker-view>
-				<!-- <extend-selection class="setting-selection" :menus="menus" @makeSwitch="mySwitch">
-						<div slot="selected" class="cell-highline"></div>
-						<scroller slot="detail" :offset-accuracy="43" @scroll="myScroll" style="width:750px;height:430px">
-							<div v-for="n in 35">
-								<text style="text-align: center;height:43px" v-if="n>12 && n<17" :ref="'item'+n"></text>
-								<text style="text-align: center;height:43px" v-if="n>=17 && n<=30" :ref="'item'+n">{{n}}</text>
-								<text style="text-align: center;height:43px" v-if="n>=30 && n<35" :ref="'item'+n"></text>
-							</div>
-						</scroller>
-					</extend-selection> -->
-
-				<text class="setting-title">就开启</text>
-				<midea-radio-list :list="list2" :cellStyle="cellStyle" :needShowTopBorder="true" @mideaRadioItemChecked="itemChecked2"></midea-radio-list>
-				<extend-selection :menus="menus" @makeSwitch="mySwitch">
-					<div slot="selected" class="cell-highline" style="flex-direction: row;">
-						<text style="margin-left:345px">时</text>
-						<text style="margin-left:105px">分</text>
+			<div class="base-group">
+				<midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectCondition">
+					<div slot="title" class="cell-title">
+						<text class="cell-label">如果室温</text>
 					</div>
-					<scroller slot="detail" :offset-accuracy="43" @scroll="myScroll" show-scrollbar="false" style="width:375px;height:430px;">
-						<div v-for="n in 35" style="align-items: flex-end;margin-right:60px">
-							<text style="text-align: center;height:43px" v-if="n>12 && n<17" :ref="'item'+n"></text>
-							<text style="text-align: center;height:43px" v-if="n>=17 && n<=30" :ref="'item'+n">{{n}}</text>
-							<text style="text-align: center;height:43px" v-if="n>=30 && n<35" :ref="'item'+n"></text>
-						</div>
-					</scroller>
-					<scroller slot="detail" :offset-accuracy="43" @scroll="myScroll" show-scrollbar="false" style="width:375px;height:430px;">
-						<div v-for="n in 35" style="align-items: flex-start;margin-left:60px">
-							<text style="text-align: center;height:43px" v-if="n>12 && n<17" :ref="'item'+n"></text>
-							<text style="text-align: center;height:43px" v-if="n>=17 && n<=30" :ref="'item'+n">{{n}}</text>
-							<text style="text-align: center;height:43px" v-if="n>=30 && n<35" :ref="'item'+n"></text>
-						</div>
-					</scroller>
-				</extend-selection>
+					<div slot="rightText">
+						<text class="right-text">{{situationDesc.conditionsDesc}}</text>
+					</div>
+				</midea-cell>
+				<midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectConditionTemp">
+					<div slot="title" class="cell-title">
+						<text class="cell-label">温度</text>
+					</div>
+					<div slot="rightText">
+						<text class="right-text">{{situactionData.props.conditions[0].value}}</text>
+					</div>
+				</midea-cell>
 			</div>
-		</div>
-	</scroller>
+
+			<div class="base-group">
+				<midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectModel">
+					<div slot="title" class="cell-title">
+						<text class="cell-label">就开启</text>
+					</div>
+					<div slot="rightText">
+						<text class="right-text">{{situationDesc.modelDesc}}</text>
+					</div>
+				</midea-cell>
+				<midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectModelTemp">
+					<div slot="title" class="cell-title">
+						<text class="cell-label">温度</text>
+					</div>
+					<div slot="rightText">
+						<text class="right-text">{{situactionData.props.target.temperature}}</text>
+					</div>
+				</midea-cell>
+			</div>
+			<div class="action-bar">
+				<midea-button text="保存" @mideaButtonClicked="submit"></midea-button>
+			</div>
+		</scroller>
+
+		<midea-actionsheet :items="conditionItems" :show="isShowCondition" @close="closeConditionActionsheet" @itemClick="conditiontItemClick" @btnClick="conditionBtnClick" ref="conditionActionsheet">
+		</midea-actionsheet>
+
+		<midea-select :show="isShowConditionTemp" title="选择温度" :items="temperatureList" :index="conditionTempIndex" @close="isShowConditionTemp=false" @itemClick="conditionTempItemClick"></midea-select>
+
+		<midea-actionsheet :items="modelItems" :show="isShowModel" @close="closeModelActionsheet" @itemClick="modeltItemClick" @btnClick="modelBtnClick" ref="modelActionsheet">
+		</midea-actionsheet>
+
+		<midea-select :show="isShowModelTemp" title="选择温度" :items="temperatureList" :index="modelTempIndex" @close="isShowModelTemp=false" @itemClick="modelTempItemClick"></midea-select>
+	</div>
 </template>
 
 <script>
 import nativeService from '@/common/services/nativeService.js'
-import mideaSwitch from '@/midea-component/switch.vue'
-import mideaSmart from '@/midea-card/midea-components/smart.vue'
-import mideaRadioList from '@/midea-card/T0xAC/components/radioList.vue'
-import extendSelection from '@/midea-card/T0xAC/components/extend-selection.vue'
-import mideaItem from '@/midea-component/item.vue'
-const modal = weex.requireModule('modal');
-const dom = weex.requireModule('dom');
-var stream = weex.requireModule('stream');
+import util from '@/common/util/util'
+
+import { MideaHeader, MideaCell, MideaButton, MideaActionsheet, MideaSelect } from '@/index'
+
 export default {
 	components: {
-		mideaSwitch,
-		mideaSmart,
-		mideaItem,
-		mideaRadioList,
-		extendSelection
+		MideaHeader,
+		MideaCell,
+		MideaButton,
+		MideaActionsheet,
+		MideaSelect
 	},
 	data() {
 		return {
-			mideaChecked: false,
-			currentTemperture: 19,
-			checkedInfo: { title: '选项2', value: 2 },
-			checkedInfo2: { title: '选项2', value: 2 },
-			selectValue: "",
-			cellStyle: {
-				backgroundColor: "#F6F6F6",
-				opacity: 0.5
-			},
-			data: {
-				title: "室内温度高于28°度时候，自动开启空调。",
-				detail: "模式制冷，温度23."
-			},
-			list: [
-				{ title: '高于', value: 1 },
-				{ title: '低于', value: 2, checked: true },
+			title: '情境设置',
+			situactionData: null,
+
+			isShowCondition: false,
+			conditionOptions: [
+				{ value: '1', desc: '高于' },
+				{ value: '0', desc: '低于' }
 			],
-			list2: [
-				{ title: '制冷', value: 1, checked: true },
-				{ title: '制热', value: 2 },
+
+			isShowConditionTemp: false,
+			conditionTempIndex: null,
+			temperatureList: [],
+
+			isShowModel: false,
+			modelOptions: [
+				{ value: 'cool', desc: '制冷' },
+				{ value: 'heat', desc: '制热' }
 			],
-			menus: [{
-				name: '温度',
-				rightText: this.selectValue || "28",
-				iconPath: '',
-			}]
-		}
-	},
-	methods: {
-		close() {
-			nativeService.goBack()
-		},
-		onMideachange(event) {
-			//modal.toast({ 'message': event.value, 'duration': 2 });
-		},
-		itemChecked(e) {
-			this.checkedInfo = e;
-		},
-		itemChecked2(e) {
-			this.checkedInfo2 = e;
-		},
-		mySwitch(event) {
-			let el = this.$refs.item25[0];
-			dom.scrollToElement(el, {})
-			//modal.toast({ 'message': "hello world", 'duration': 2 });
+
+			isShowModelTemp: false,
+			modelTempIndex: null,
 		}
 	},
 	computed: {
+		isipx: function () {
+			return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6');
+		},
+		conditionItems() {
+			return this.conditionOptions.map((item) => {
+				return item.desc
+			})
+		},
+		modelItems() {
+			return this.modelOptions.map((item) => {
+				return item.desc
+			})
+		},
+		situationDesc() {
+			let result
+
+			if (this.situactionData) {
+				let conditionsDesc = (this.situactionData.props.conditions[0].operator == 1 ? "高于" : "低于")
+				let modelDesc = (this.situactionData.props.target.model == 'cool' ? "制冷" : "制热")
+
+				result = {
+					conditionsDesc: conditionsDesc,
+					modelDesc: modelDesc,
+					title: "室内温度" + conditionsDesc + this.situactionData.props.conditions[0].value + "°度时，自动开启",
+					detail: "模式" + modelDesc + "，温度" + this.situactionData.props.target.temperature + "."
+				}
+			}
+
+			return result
+		},
 	},
-	mounted() {
+	methods: {
+		back(options = {}) {
+			//返回上一页
+			nativeService.goBack(options);
+		},
+		selectCondition() {
+			this.isShowCondition = true
+			this.$nextTick(e => {
+				this.$refs.conditionActionsheet.open();
+			});
+		},
+		closeConditionActionsheet() {
+			this.isShowCondition = false
+		},
+		conditiontItemClick(event) {
+			this.isShowCondition = false
+			this.situactionData.props.conditions[0].operator = this.conditionOptions[event.index].value
+		},
+		conditionBtnClick() {
+			this.isShowCondition = false
+		},
+
+		selectConditionTemp() {
+			this.isShowConditionTemp = true
+		},
+		conditionTempItemClick(event) {
+			this.conditionTempIndex = event.index
+			this.situactionData.props.conditions[0].value = event.key
+		},
+
+		selectModel() {
+			this.isShowModel = true
+			this.$nextTick(e => {
+				this.$refs.modelActionsheet.open();
+			});
+		},
+		closeModelActionsheet() {
+			this.isShowModel = false
+		},
+		modeltItemClick(event) {
+			this.isShowModel = false
+			this.situactionData.props.target.model = this.modelOptions[event.index].value
+		},
+		modelBtnClick() {
+			this.isShowModel = false
+		},
+
+		selectModelTemp() {
+			this.isShowModelTemp = true
+		},
+		modelTempItemClick(event) {
+			this.modelTempIndex = event.index
+			this.situactionData.props.target.temperature = event.key
+		},
+
+		submit() {
+			nativeService.getUserInfo().then((data) => {
+				let param = {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json;charset=utf-8"
+					},
+					data: {
+						uid: data.uid,
+						applianceCode: this.situactionData.deviceId || "",
+						stamp: Math.round(new Date().getTime() / 1000), //时间戳
+						moduleCode: "1",
+						enable: this.situactionData.enable,
+						props: this.situactionData.props
+					}
+				}
+				nativeService.isDummy = false
+				nativeService.sendCentralCloundRequest("/v1/situation/update", param).then((resp) => {
+					if (resp.code == 0) {
+						nativeService.toast("更新成功")
+						this.back()
+					} else {
+						throw resp
+					}
+				}).catch((error) => {
+					let msg = "请求失败，请稍后重试。"
+					if (error.msg) {
+						msg = error.msg
+					}
+					if (error.code) {
+						msg += "(" + error.code + ")"
+					}
+					nativeService.toast(msg)
+				})
+			})
+		}
+	},
+	created() {
+		for (let index = 17; index <= 30; index++) {
+			this.temperatureList.push({ value: index, key: index }, )
+		}
+		nativeService.getItem("CARD_STORAGE_SITUATION", (resp) => {
+			if (resp.result == 'success') {
+				this.situactionData = JSON.parse(resp.data) || {}
+			}
+		})
 	}
 }
 </script>
 
 <style>
-.content {
+.wrapper {
   flex: 1;
-  width: 750px;
   background-color: #f2f2f2;
-  scroll-direction: vertical;
+  position: relative;
 }
-.box {
-  margin-top: 40px;
-  margin-bottom: 290px;
-}
-.box-header {
-  background-color: #ffffff;
-  padding-left: 32px;
-  padding-right: 32px;
-
-  border-top-left-radius: 50px;
-  border-top-right-radius: 50px;
-  border-top-color: #e2e2e2;
-  border-top-width: 1px;
-}
-.close-wrapper {
-  height: 100px;
-  align-items: flex-end;
-  justify-content: center;
-}
-.close-icon {
-  width: 45px;
-  height: 45px;
-}
-.box-detail {
+.base-group {
   margin-top: 24px;
-  background-color: white;
-  padding-left: 34px;
+  padding-left: 32px;
+  background-color: #ffffff;
 }
-.setting-title {
-  font-family: PingFangSC-Medium;
+.header-title {
+  font-family: PingFangSC-Regular;
   font-size: 32px;
   color: #000000;
-  margin-top: 72px;
-  margin-bottom: 40px;
+  padding-top: 30px;
+  padding-right: 32px;
 }
-.setting-selection {
-  margin-top: 16px;
+.header-desc {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #8a8a8f;
+  padding-top: 32px;
+  padding-bottom: 32px;
+  padding-right: 32px;
 }
-.cell-highline {
-  border-top-width: 2px;
-  border-top-color: #cdcdcd;
-  border-bottom-width: 2px;
-  border-bottom-color: #cdcdcd;
-  height: 43px;
-  width: 750px;
-  bottom: 215px;
-  position: absolute;
+.cell-title {
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+}
+.cell-label {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #000000;
+}
+.right-text {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #666666;
+  padding-right: 24px;
+  text-align: right;
+  width: 430px;
+}
+.item-group {
+  padding-top: 32px;
+  padding-left: 32px;
+  padding-right: 32px;
+  background-color: #ffffff;
 }
 </style>

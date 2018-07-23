@@ -53,11 +53,12 @@
         },
         methods: {
         	bytesToSize(bytes) {  
-			　　	if (bytes === 0) return '0 B';
+        		let byteS = bytes * 1024;
+			　　	if (byteS === 0) return '0 B';
 			　　	var k = 1024;
 			　　	let sizes = ['B','KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-			　　	let i = Math.floor(Math.log(bytes) / Math.log(k))　　
-			　　	return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+			　　	let i = Math.floor(Math.log(byteS) / Math.log(k))　　
+			　　	return (byteS / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
 			},
         	giveup() {
 //      		nativeService.alert("确定忽略此版本？",() => {

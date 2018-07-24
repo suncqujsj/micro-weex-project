@@ -173,7 +173,7 @@
                     check:  'assets/img/check_on.png',
                     uncheck: 'assets/img/check_off.png',
                     auto: {
-                        2: 'assets/img/man.png',
+                        2: 'assets/img/smart_ic_hand@2x.png',
                         3: 'assets/img/arrive.png',
                         4: 'assets/img/time.png',
                         6: 'assets/img/slweather.png',

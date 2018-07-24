@@ -1,7 +1,7 @@
 <template>
     <div class="wrap" v-if="show">
         <div class="mask" :style="maskStyle" @click="close"></div>
-        <div class="content" :style="contentStyle" ref="box">
+        <div class="content" :style="contentStyle">
             <slot></slot>
         </div>
     </div>

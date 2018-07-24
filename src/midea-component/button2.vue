@@ -2,7 +2,7 @@
     <div class="btn-wrapper">
         <div class="midea-btn" :class="[type]" :style="defaultBtnStyle" @click="onClicked">
             <text class="btn-text" :style="defaultTextStyle">{{text}}</text>
-            <div v-if="!disabled" :class="[defaultConver]"></div>
+            <div v-if="!disabled" :class="['btn-cover', defaultConver]" @click="onClicked"></div>
         </div>
     </div>
 </template>
@@ -77,28 +77,20 @@ export default {
   font-size: 32px;
   color: #ffffff;
 }
-.primary-cover:active {
+.btn-cover {
   position: absolute;
   top: 0px;
   left: 0px;
   right: 0px;
   bottom: 0px;
+}
+.primary-cover:active {
   background-color: rgba(0, 0, 0, 0.2);
 }
 .secondary-cover:active {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
   background-color: rgba(38, 122, 255, 0.05);
 }
 .normal-cover:active {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
   background-color: rgba(138, 138, 143, 0.05);
 }
 </style>

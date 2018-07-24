@@ -2,7 +2,7 @@
    <div class="wrap" :style="wrapStyle">
         <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
         <div class="done" @click="getDone()">
-            <text class="done-text white">完成</text>
+            <text class="done-text">完成</text>
         </div>
         <list>
             <cell class="content">
@@ -12,26 +12,28 @@
                     <text v-if="sceneType == 4" class="hd-text">在{{weekDesc}}的{{startTime}}自动操控</text>
                     <text v-if="sceneType == 6" class="hd-text">在{{weekDesc}}天气{{weatherStatus}}，气温{{logical}} {{weatherTemperature}}℃时自动操控</text>
                 </div>
-                <text class="sub-hd">选择要控制的电器，点击更改具体控制</text>
-                <div v-if="from == 'addAuto'" class="device-box row-sb">
-                    <div class="device" v-for="(item, idx) in sceneSupportDevices">
-                        <div @click="goSetDevice(item)">
-                            <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
-                            <text class="device-name">{{item.deviceName}}</text>
-                            <!-- <text class="device-desc">{{device.desc}}</text> -->
+                <div v-if="sceneSupportDevices.length > 0">
+                    <text class="sub-hd">选择要控制的电器，点击更改具体控制</text>
+                    <div v-if="from == 'addAuto'" class="device-box row-sb">
+                        <div class="device" v-for="(item, idx) in sceneSupportDevices">
+                            <div @click="goSetDevice(item)">
+                                <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
+                                <text class="device-name">{{item.deviceName}}</text>
+                                <!-- <text class="device-desc">{{device.desc}}</text> -->
+                            </div>
+                            <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, idx)"></image>
                         </div>
-                        <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, idx)"></image>
                     </div>
-                </div>
-                <div v-if="from == 'editAuto'" class="device-box row-sb">
-                    <div class="device" v-for="(item, idx) in unbindDevices">
-                        <div @click="goSetDevice(item)">
-                            <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
-                            <text class="device-name">{{item.deviceName}}</text>
+                    <div v-if="from == 'editAuto'" class="device-box row-sb">
+                        <div class="device" v-for="(item, idx) in unbindDevices">
+                            <div @click="goSetDevice(item)">
+                                <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
+                                <text class="device-name">{{item.deviceName}}</text>
+                            </div>
+                            <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, idx)"></image>
                         </div>
-                        <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, idx)"></image>
                     </div>
-                </div>
+                </div>                
             </cell>
         </list>
         <midea-promt title="快捷操作名称" ref="promt" placeholder="" :inputValue="inputAutoName" :show="showPrompt" @okClicked="promptConfirm" @onPromtClose="promptClose" @onPromtInput="promptInput"></midea-promt>
@@ -41,7 +43,6 @@
 <style>
     .row-s { flex-direction: row; align-items: center; justify-content: flex-start; }
     .row-sb{ flex-direction: row; align-items: center; justify-content: space-between; }
-    
     .wrap{ background-color: #f2f2f2; }
     .hd{
         width: 750px;
@@ -56,10 +57,10 @@
     }
     .done{
         position:absolute;
-        right: 10px;
+        right: 25px;
         top: 30px;
     }
-    .done-text{ font-size: 32px; }
+    .done-text{ font-size: 32px; color: #666; }
     .font-grey { color: #666; }
     .content{ margin-top: 16px; }
     .sub-hd{
@@ -67,6 +68,7 @@
         font-size: 28px;
         margin-left:30px;
         margin-bottom: 18px;
+        margin-top: 25px;
     }
     .device-box{
         padding-left: 32.25px;
@@ -154,6 +156,15 @@
                     tmp.marginTop = '40px'
                 }
                 return tmp
+            },
+            sceneTypeName(){
+                let tmp = {
+                    2: '手动',
+                    3: '位置',
+                    4: '时间',
+                    6: '天气'
+                }
+                return  tmp[this.sceneType]
             }
         },
         data(){
@@ -164,7 +175,7 @@
                     auto: {
                         2: 'assets/img/man.png',
                         3: 'assets/img/arrive.png',
-                        4: 'assets/img/clock.png',
+                        4: 'assets/img/time.png',
                         6: 'assets/img/slweather.png',
                     }
                 },
@@ -190,7 +201,6 @@
                 autoSupportActions: {},
                 unbindDevicesActions: {},
                 sceneSupportDevices: []
-
             }
         },
         methods: {
@@ -213,6 +223,12 @@
                 }
                 this.userDevices = tmpUserDevices
                 this.sceneSupportDevices = tmpSceneSupoortDevices
+
+                if (this.sceneSupportDevices.length == 0) {
+                    nativeService.alert('您当前无可用于' + this.sceneTypeName + '类型快捷操作的设备，请绑定设备后重试!', function(){
+                        nativeService.goBack()
+                    })
+                }
 
                 if (this.from == 'addAuto'){
                     this.generateAllDeviceActions()
@@ -317,7 +333,6 @@
                     deviceName: encodeURIComponent(device.deviceName),
                     deviceId: device.deviceId
                 }
-                
                 this.goTo('setDevice', {}, params)
             },
             generateAllDeviceActions(){
@@ -376,8 +391,10 @@
                         name: this.inputAutoName,
                         enable: 1
                     }
+                    if (nativeService.getParameters('templateCode')) {
+                        reqParams.templateCode = nativeService.getParameters('templateCode')
+                    }
                     let tmpTask = []
-                    
                     for (var key in this.checkedDevices) {//key: applianceCode
                         let tmpCommand = {}
                         if ( this.checkedDevices[key] ) {

@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
             <div slot="customerContent" class="header-right" v-if="!isCreate">
                 <text class="header-right-text" @click="deleteAddress">删除</text>
             </div>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller class="scroller">
             <div class="charge-detail-header">
@@ -16,11 +16,11 @@
 
                 <div v-if="chargeList">
                     <div class="charge-detail-item" v-for="(item, index) in chargeList" :key="index">
-                        <div v-for="(detailItem, detailIndex) in item" :key="detailIndex">
+                        <div v-for="(detailItem, detailIndex) in item.chargeDetail" :key="detailIndex">
                             <text class="charge-detail-label">{{detailItem.chargeCProject}}</text>
                             <div class="charge-detail-row-wrapper">
                                 <text class="charge-detail-item-desc">{{detailItem.pubRemark}}</text>
-                                <text class="charge-detail-item-price">{{detailItem.chargeStandard}}{{detailItem.chargeUnit}}</text>
+                                <text class="charge-detail-item-price">{{detailItem.chargeFee}}{{detailItem.chargeUnit||'元'}} x {{detailItem.useAmount || 1}}</text>
                             </div>
                         </div>
                         <text class="charge-detail-item-sum">总价：{{item.chargeFee}}元</text>
@@ -32,21 +32,20 @@
                 <text class="charge-detail-body-label">安装美的燃气热水器</text>
                 <div class="charge-detail-body-row">
                     <text class="order-body-label">服务单号：</text>
-                    <text class="order-body-desc">{{serviceOrderNo}}</text>
+                    <text class="order-body-desc">{{notificationData.cssInfoId}}</text>
                 </div>
                 <div class="charge-detail-body-row">
                     <text class="order-body-label">请求时间：</text>
-                    <text class="order-body-desc">{{convertTimeDesc(formattedOrder.contactTime)}}</text>
+                    <text class="order-body-desc">{{notificationData.pushTime}}</text>
                 </div>
                 <div class="charge-detail-body-row top-line">
-                    <text class="order-customer">{{formattedOrder.servCustomerName}} {{formattedOrder.servCustomerMobilephone1}}</text>
+                    <text class="order-customer">{{notificationData.customerName}} {{notificationData.mobile}}</text>
                 </div>
                 <div class="charge-detail-body-row">
-                    <text class="order-address">{{formattedOrder.servCustomerAddress}}</text>
+                    <text class="order-address">{{notificationData.customerAddress}}</text>
                 </div>
             </div>
             <text class="order-footer-label">未出现在报价单里的收费项，您有权拒绝付款</text>
-
             <div class="action-bar">
                 <midea-button v-if="chargeStatus>'10'" text="查看工单详情" @mideaButtonClicked="goToOrderDetail"></midea-button>
                 <midea-button v-if="chargeStatus=='10'" text="我确认收费内容和报价" @mideaButtonClicked="submit"></midea-button>
@@ -71,22 +70,25 @@ export default {
     data() {
         return {
             title: '服务报价单',
+            notificationData: {
+                "customerName": "",
+                "pushTime": "",
+                "archivesNo": "",
+                "interfaceSource": "",
+                "orgCode": "",
+                "cssInfoId": "",
+                "chargeFlag": "",
+                "noticeType": "",
+                "mobile": ""
+            },
             serviceOrderNo: '',
             archivesNo: '',
             order: null,
-            chargeList: [],
-            chargeStatus: false
+            chargeList: null,
+            chargeStatus: ''
         }
     },
     computed: {
-        formattedOrder() {
-            let result = {}
-            if (this.order) {
-                result = this.formatOrder(this.order)
-            }
-
-            return result
-        }
     },
     methods: {
         convertTimeDesc(time) {
@@ -94,10 +96,10 @@ export default {
         },
         querychargedetails() {
             let chargeDetailParam = {
-                interfaceSource: this.order.interfaceSource,
-                serviceOrderNo: this.order.serviceOrderNo,
-                archivesNo: this.archivesNo,
-                orgCode: this.order.orgCode
+                interfaceSource: this.notificationData.interfaceSource,
+                serviceOrderNo: this.notificationData.cssInfoId,
+                archivesNo: this.notificationData.archivesNo,
+                orgCode: this.notificationData.orgCode
             }
             nativeService.querychargedetails(chargeDetailParam).then((resp) => {
                 this.chargeList = resp.chargeList
@@ -115,12 +117,12 @@ export default {
         submit() {
             nativeService.getUserInfo().then((userInfo) => {
                 let param = {
-                    interfaceSource: this.order.interfaceSource,
+                    interfaceSource: this.notificationData.interfaceSource,
+                    serviceOrderNo: this.notificationData.cssInfoId,
+                    archivesNo: this.notificationData.archivesNo,
+                    orgCode: this.notificationData.orgCode,
                     webConfirmNo: userInfo.uid, //外部确认号码???
-                    confirmIphone: userInfo.mobile,
-                    archivesNo: this.chargeList[0].archivesNo,
-                    serviceOrderNo: this.order.serviceOrderNo,
-                    orgCode: this.order.orgCode
+                    confirmIphone: userInfo.mobile
                 }
                 nativeService.dochargecomfirm(param).then((resp) => {
                     nativeService.toast("确认成功")
@@ -131,28 +133,37 @@ export default {
             })
         },
         goToOrderDetail() {
-            nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, this.order, () => {
-                this.goTo("orderDetail", {}, { from: 'serviceQuotation', id: this.order.serviceOrderNo })
-            })
+            // nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, this.order, () => {
+            this.goTo("orderDetail", {}, { from: 'serviceQuotation', id: this.notificationData.cssInfoId })
+            // })
         }
     },
     created() {
-        this.serviceOrderNo = nativeService.getParameters('id') || null
-        this.archivesNo = nativeService.getParameters('archivesNo') || null
-        let param = {
-            interfaceSource: "SMART",
-            filterOrderNos: this.serviceOrderNo,
-            page: 0,
-            resultNum: 1
+        //获取从APP传来的参数
+        let notificationData = nativeService.getParameters('param')
+        if (notificationData && typeof notificationData == 'string') {
+            try {
+                this.notificationData = JSON.parse(notificationData)
+            } catch (error) { }
         }
-        nativeService.queryserviceorder(param).then((data) => {
-            if (data.list && data.list.length > 0) {
-                this.order = data.list[0]
-                this.querychargedetails()
-            }
-        }).catch((error) => {
-            nativeService.toast(nativeService.getErrorMessage(error))
-        })
+        this.querychargedetails()
+
+        // this.serviceOrderNo = nativeService.getParameters('id') || null
+        // this.archivesNo = nativeService.getParameters('archivesNo') || null
+        // let param = {
+        //     interfaceSource: "SMART",
+        //     filterOrderNos: this.serviceOrderNo,
+        //     page: 0,
+        //     resultNum: 1
+        // }
+        // nativeService.queryserviceorder(param).then((data) => {
+        //     if (data.list && data.list.length > 0) {
+        //         this.order = data.list[0]
+        //         this.querychargedetails()
+        //     }
+        // }).catch((error) => {
+        //     nativeService.toast(nativeService.getErrorMessage(error))
+        // })
     }
 }
 </script>
@@ -245,14 +256,17 @@ export default {
   border-bottom-width: 1px;
 }
 .charge-detail-item-desc {
+  flex: 1;
   font-family: PingFangSC-Regular;
   font-size: 24px;
   color: #8a8a8f;
 }
 .charge-detail-item-price {
+  width: 130px;
   font-family: PingFangSC-Regular;
   font-size: 24px;
   color: #000000;
+  text-align: right;
 }
 .charge-detail-item-sum {
   font-family: PingFangSC-Medium;

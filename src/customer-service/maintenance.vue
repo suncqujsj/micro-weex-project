@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
             <div slot="customerContent" class="header-right">
                 <text class="header-right-text" @click="goToServiceCharge">收费标准</text>
             </div>
@@ -786,7 +786,6 @@ export default {
                 //一键报修
                 this.oneStepMsgCode = nativeService.getParameters('msgCode') || ''
                 this.oneStepTips = nativeService.getParameters('tips') || ''
-                nativeService.toast(this.oneStepTips)
                 this.oneStepClaim(this.applianceSN)
             }
         }
@@ -823,6 +822,7 @@ export default {
 }
 .base-group {
   margin-top: 24px;
+  padding-left: 24px;
 }
 .cell-title {
   flex: 1;

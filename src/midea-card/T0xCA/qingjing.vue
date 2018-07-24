@@ -1,103 +1,185 @@
 <template>
-	<scroller class="content" show-scrollbar="false">
-    <div class="box">
-    	<div style="background-color: white">
-    		<div style="height:100px;align-items: flex-end;justify-content: center;margin-right: 32px">
-    			<image style="width:45px;height: 45px" src="./assets/img/smart_ic_deletesmall@2x.png"></image>
-    		</div>
-        	<midea-smart :showSwitchIcon="true" @change="onMideachange" :hasBottomBorder="false" :checked="mideaChecked" :data="data"></midea-smart>
-   		</div>
-	    <div style="margin-top: 24px;background-color: white;">
-	    	<div style="margin-left: 34px">
-		    	<div style="height: 100px;justify-content: center;"><text>设置 {{selectValue}}</text></div>
-	    	</div>
-	    </div>
-	    <div style="background-color: white;">
-		    <div>
-		    	<extend-selection :menus="menus" @makeSwitch="mySwitch">
-		    		<div slot="selected" class="cell-highline"></div>
-		    		<scroller slot="detail" :offset-accuracy="43" @scroll="myScroll" style="width:750px;height:430px">
-		    			<div v-for="n in 35">
-		    				<text style="text-align: center;height:43px" v-if="n>12 && n<17" :ref="'item'+n"></text>
-		    				<text style="text-align: center;height:43px" v-if="n>=17 && n<=30" :ref="'item'+n">{{n}}</text>
-		    				<text style="text-align: center;height:43px" v-if="n>=30 && n<35" :ref="'item'+n"></text>
-		    			</div>
-		    		</scroller>
-		    	</extend-selection>
-		    </div>
-		</div>
+	<div class="wrapper">
+		<midea-header :title="title" :isImmersion="isipx?false:true" @leftImgClick="back">
+		</midea-header>
+		<scroller class="content-wrapper">
+			<div class="base-group">
+				<text class="header-title">{{situationDesc.title}}</text>
+				<text class="header-desc">{{situationDesc.detail}}</text>
+			</div>
+			<div class="base-group">
+				<midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectConditionTemp">
+					<div slot="title" class="cell-title">
+						<text class="cell-label">提醒间隔</text>
+					</div>
+					<div slot="rightText">
+						<text class="right-text">{{situactionData.props.value}}</text>
+					</div>
+				</midea-cell>
+			</div>
+
+			<div class="action-bar">
+				<midea-button text="保存" @mideaButtonClicked="submit"></midea-button>
+			</div>
+		</scroller>
+
+		<midea-select :show="isShowConditionTemp" title="选择间隔" :items="temperatureList" :index="conditionTempIndex" @close="isShowConditionTemp=false" @itemClick="conditionTempItemClick"></midea-select>
 	</div>
-    </scroller>
 </template>
 
 <script>
-    import nativeService from '@/common/services/nativeService.js'
-	import mideaSmart from '@/midea-card/midea-components/smart.vue'
-	import extendSelection from '@/midea-card/T0xAC/components/extend-selection.vue'
-	const modal = weex.requireModule('modal');
-	const dom = weex.requireModule('dom');
-	var stream = weex.requireModule('stream');
-    export default {
-        components: {
-            mideaSmart,
-            extendSelection
-        },
-        data() {
-            return {
-                mideaChecked: true,
-                checkedInfo: { title: '选项2', value: 2 },
-                checkedInfo2: { title: '选项2', value: 2 },
-                selectValue: "",
-                cellStyle: {
-                	backgroundColor: "#F6F6F6",
-                	opacity: 0.5,
-                },
-                data:{
-                 	title:"每周三提醒清洗冰箱内侧。",
-                 	detail:""
-                },
-	            menus : [{
-                        name: '提醒间隔',
-                        rightText: "5周",
-                        iconPath: '',
-                    }],
-            }
-        },
-        methods: {
-          onMideachange(event) {
-            		//modal.toast({ 'message': event.value, 'duration': 2 });
-          },
-	        mySwitch(event) {
-	        	let el = this.$refs.item25[0];
-	        	dom.scrollToElement(el,{})
-	        	//modal.toast({ 'message': "hello world", 'duration': 2 });
-	        }
-        },
-        computed: {
-        },
-        mounted() {
-        }
-    }
+import nativeService from '@/common/services/nativeService.js'
+import util from '@/common/util/util'
+
+import { MideaHeader, MideaCell, MideaButton, MideaSelect } from '@/index'
+
+export default {
+	components: {
+		MideaHeader,
+		MideaCell,
+		MideaButton,
+		MideaSelect
+	},
+	data() {
+		return {
+			title: '情境设置',
+			situactionData: null,
+
+			isShowConditionTemp: false,
+			conditionTempIndex: null,
+			temperatureList: []
+		}
+	},
+	computed: {
+		isipx: function () {
+			return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6');
+		},
+		situationDesc() {
+			let result
+
+			if (this.situactionData) {
+
+				result = {
+					title: "每" + this.situactionData.props.value + "周提醒清晰冰箱内侧",
+					detail: "开启后， 每" + this.situactionData.props.value + "周提醒一次待清洁信息；关闭后，不再显示"
+				}
+			}
+
+			return result
+		},
+	},
+	methods: {
+		back(options = {}) {
+			//返回上一页
+			nativeService.goBack(options);
+		},
+
+		selectConditionTemp() {
+			this.isShowConditionTemp = true
+		},
+		conditionTempItemClick(event) {
+			this.conditionTempIndex = event.index
+			this.situactionData.props.conditions[0].value = event.key
+		},
+
+		submit() {
+			nativeService.getUserInfo().then((data) => {
+				let param = {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json;charset=utf-8"
+					},
+					data: {
+						uid: data.uid,
+						applianceCode: this.situactionData.deviceId || "",
+						stamp: Math.round(new Date().getTime() / 1000), //时间戳
+						moduleCode: "1",
+						enable: this.situactionData.enable,
+						props: this.situactionData.props
+					}
+				}
+				nativeService.isDummy = false
+				nativeService.sendCentralCloundRequest("/v1/situation/update", param).then((resp) => {
+					if (resp.code == 0) {
+						nativeService.toast("更新成功")
+						this.back()
+					} else {
+						throw resp
+					}
+				}).catch((error) => {
+					let msg = "请求失败，请稍后重试。"
+					if (error.msg) {
+						msg = error.msg
+					}
+					if (error.code) {
+						msg += "(" + error.code + ")"
+					}
+					nativeService.toast(msg)
+				})
+			})
+		}
+	},
+	created() {
+		for (let index = 17; index <= 30; index++) {
+			this.temperatureList.push({ value: index, key: index }, )
+		}
+		nativeService.getItem("CARD_STORAGE_SITUATION", (resp) => {
+			if (resp.result == 'success') {
+				this.situactionData = JSON.parse(resp.data) || {}
+			}
+		})
+	}
+}
 </script>
 
 <style>
-	.content {
-		flex:1;
-		width:750px;
-		scroll-direction: vertical;
-	}
-	.box {
-		margin-bottom:290px;
-		background-color: #F2F2F2;
-	}
-	.cell-highline {
-		border-top-width: 2px;
-		border-top-color: #CDCDCD;
-		border-bottom-width: 2px;
-		border-bottom-color: #CDCDCD;
-		height: 43px;
-		width:750px;
-		bottom:215px;
-		position:absolute;
-	}
+.wrapper {
+  flex: 1;
+  background-color: #f2f2f2;
+  position: relative;
+}
+.base-group {
+  margin-top: 24px;
+  padding-left: 32px;
+  background-color: #ffffff;
+}
+.header-title {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #000000;
+  padding-top: 30px;
+  padding-right: 32px;
+}
+.header-desc {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #8a8a8f;
+  padding-top: 32px;
+  padding-bottom: 32px;
+  padding-right: 32px;
+}
+.cell-title {
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+}
+.cell-label {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #000000;
+}
+.right-text {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #666666;
+  padding-right: 24px;
+  text-align: right;
+  width: 430px;
+}
+.item-group {
+  padding-top: 32px;
+  padding-left: 32px;
+  padding-right: 32px;
+  background-color: #ffffff;
+}
 </style>

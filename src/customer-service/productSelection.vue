@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <div class="search-bar">
             <div class="search-bar-content" @click="searchProduct">

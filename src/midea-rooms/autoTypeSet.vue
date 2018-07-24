@@ -3,7 +3,7 @@
         <div v-if="from=='addAuto'" class="addauto-hd">
             <midea-header :title="title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
             <div v-if="sceneType != 3" class="next" @click="goNext">
-                <text class="next-text white"  @click="goNext">下一步</text>
+                <text class="next-text"  @click="goNext">下一步</text>
             </div>
         </div>  
         <div v-if="from=='editAuto'" class="row-sb head">
@@ -90,9 +90,10 @@
     }
     .next-text{
         font-size: 32px;
+        color: #666;
     }
     .text{font-size: 28px;}
-     .head{
+    .head{
         background-color: #fff;
         width: 750px;
         height: 88px;
@@ -101,6 +102,7 @@
     }
     .head-text{ font-size: 32px; }
     .addauto-hd{position: relative;}
+    .font-grey{ color: #666; }
     .hd{
         padding-top: 34px;
         padding-left: 25px;
@@ -578,6 +580,9 @@
                     sceneType: this.sceneType,
                     weekly: weeklyString,
                     from: this.from
+                }
+                if (nativeService.getParameters('templateCode')) {
+                    params.templateCode = nativeService.getParameters('templateCode')
                 }
                 if (this.sceneType == 3) {
                     params.destination = destination

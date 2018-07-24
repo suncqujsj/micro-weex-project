@@ -143,6 +143,11 @@
                 let tmp = {
                     height: this.pageHeight+'px'
                 }
+                if (this.isipx) {
+                    tmp.marginTop = '64px'
+                }else{
+                    tmp.marginTop = '40px'
+                }
                 return tmp
             },
         },
@@ -212,6 +217,7 @@
                     'off': 'on'
                 }
                 this.actions[i].currentStatus = tmp[this.actions[i].currentStatus]
+                this.actions[i].currentStatusName = action.value[ this.actions[i].currentStatus]
                 this.editProperties[this.actions[i].property] =  this.actions[i].currentStatus
             },
             generateListArray(min, max){

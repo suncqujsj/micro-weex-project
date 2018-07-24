@@ -1,6 +1,6 @@
 // 美居场景首页
 <template>
-    <scroller class="wrap"  :show-scrollbar="false" @viewappear="initData">
+    <scroller class="wrapper"  :show-scrollbar="false" @viewappear="initData">
         <div>
             <div class="hd row-sb">
                 <text class="hd-name">快捷操作</text>
@@ -41,8 +41,8 @@
                 </div>
             </div>
         </div>
-        <toast-dialog :show="showToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}">
-            <div class="row-sb" v-for="item in autoExecuteDevices">
+        <toast-dialog :show="showToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}" contentPadding="0px">
+            <div class="auto-toast" v-for="item in autoExecuteDevices">
                 <div class="row-sb toast-line">
                     <text class="toast-hd">{{item.applianceName}}</text>
                     <image class="toast-icon" :src="icon.exe[item.status]"></image>
@@ -53,7 +53,7 @@
 </template>
 
 <style>
-    .wrap { padding-left:30px; padding-right:30px; flex-direction: column;}
+    .wrapper { padding-left:30px; padding-right:30px; flex-direction: column;}
     .row-s { flex-direction: row; align-items: center; justify-content: flex-start; }
     .row-sb{ flex-direction: row; align-items: center; justify-content: space-between; }
     .row-sa{ flex-direction: row; align-items: center; justify-content: space-around; }
@@ -71,17 +71,23 @@
         margin-bottom: 16px;
         margin-right: 16px;
         padding: 20px;
+        border-radius: 4px;
     }
     .auto-name{ width: 120px; font-size: 30px; color: #666666; margin-bottom: 8px; text-overflow: clip; }
     /* .auto-desc{ width: 120px; font-size: 24px; color: #C7C7CC; lines:1; } */
     .scene-list{ height: 1200px;}
     .scene { width: 690px; height: 206px; padding-bottom: 16px; position: relative; }
     .scene-bg{ width: 690px; height: 185px; position: absolute; }
-    .next { width: 8px; height: 16px; position:absolute; top:77px; right: 25px;}
+    .next { width: 8px; height: 16px; position:absolute; top:84px; right: 25px;}
     .scene-name, .scene-desc{ color: #fff; }
     .scene-name{ font-size: 32px; margin-top: 50px; margin-left: 32px; margin-bottom: 30px;}
     .scene-desc{ margin-left: 24px; font-size: 24px; }
-    .toast-line{ padding: 10px; }
+    .auto-toast{
+        width: 550px;
+        padding: 25px;
+    }
+    .toast-line{
+    }
     .toast-hd{
         font-size: 32px;
         width: 400px;
@@ -146,35 +152,29 @@
                 autoListTmpl: [
                     {
                         isAdd: true,
-                        image: 'assets/img/man.png',
-                        sceneType: 2,
-                        name: '新增-手动'
-                    },
-                    {
-                        isAdd: true,
                         image: 'assets/img/arrive.png',
                         sceneType: 3,
                         direction: 1,
-                        name: '新增-到达某地'
+                        name: '回家'
                     },
                     {
                         isAdd: true,
                         image: 'assets/img/arrive.png',
                         sceneType: 3,
                         direction: 2,
-                        name: '新增-离开某地'
+                        name: '离家'
                     },
                     {
                         isAdd: true,
-                        image: 'assets/img/clock.png',
+                        image: 'assets/img/time.png',
                         sceneType: 4,
-                        name: '新增-在某个时间'
+                        name: '晚安'
                     },
                     {
                         isAdd: true,
                         image: 'assets/img/slweather.png',
                         sceneType: 6,
-                        name: '新增-在某个天气'
+                        name: '天气变化'
                     }
                 ],
                 sceneList: [],
@@ -198,7 +198,13 @@
                 autoTemplate: {},
                 showToastDialog: false,
                 autoExecuteDevices: [],
-                checkAutoExeTimes: 0
+                checkAutoExeTimes: 0,
+                templateCode: {
+                    '3.1': '1005',
+                    '3.2': '1007',
+                    '4': '1006',
+                    '6': '1008'
+                }
             }
         },
         methods: { 
@@ -248,7 +254,8 @@
                             uid: uid,
                             homegroupId: this.homegroupId,
                             sceneType: auto.sceneType,
-                            userDevices: this.userDevices
+                            userDevices: this.userDevices,
+                            templateCode: this.templateCode[auto.sceneType]
                         }
                         if (auto.sceneType == 3) {
                             params.direction = auto.direction
@@ -310,22 +317,19 @@
                             resultId: resultId
                         }
                         
-                        this.webRequest(reqUrl, reqParams, false).then((res)=>{                           
+                        this.webRequest(reqUrl, reqParams, false).then((res)=>{
                             if (res.code == 0) {
                                 this.showToastDialog = true
                                 this.autoExecuteDevices = res.data.list
                                 
-                                for (var x in this.autoExecuteDevices) {
-                                    if (this.autoExecuteDevices[x].status == 2 || this.autoExecuteDevices[x].status == 3) {
-                                        setTimeout(()=>{
-                                            this.checkExecuteAuto(sceneId, resultId)
-                                        },1000)
-                                    } else{
-                                        setTimeout(()=>{
-                                            this.showToastDialog = false
-                                        },2000)
-                                        break
-                                    }
+                                if (res.data.status == 2 || res.data.status == 3) {
+                                    setTimeout(()=>{
+                                        this.checkExecuteAuto(sceneId, resultId)
+                                    },1000)
+                                } else{
+                                    setTimeout(()=>{
+                                        this.showToastDialog = false
+                                    },2000)
                                 }
                             }else{
                                 if (codeDesc.auto.hasOwnProperty(rtnData.code)) {
@@ -368,46 +372,43 @@
                         if (rtnData.code == 0) {
                             this.autoList = rtnData.data.list
                             let basicTemplate = {
-                                '2': {
-                                    isAdd: true,
-                                    image: 'assets/img/man.png',
-                                    sceneType: 2,
-                                    name: '新增-手动'
-                                },
                                 '3.1':{
                                     isAdd: true,
                                     image: 'assets/img/arrive.png',
                                     sceneType: 3,
                                     direction: 1,
-                                    name: '新增-到达某地'
+                                    name: '回家'
                                 },
                                 '3.2': {
                                     isAdd: true,
                                     image: 'assets/img/arrive.png',
                                     sceneType: 3,
                                     direction: 2,
-                                    name: '新增-离开某地'
+                                    name: '离家'
                                 },
                                 '4': {
                                     isAdd: true,
-                                    image: 'assets/img/clock.png',
+                                    image: 'assets/img/time.png',
                                     sceneType: 4,
-                                    name: '新增-在某个时间'
+                                    name: '晚安'
                                 },
                                 '6': {
                                     isAdd: true,
                                     image: 'assets/img/slweather.png',
                                     sceneType: 6,
-                                    name: '新增-在某个天气'
+                                    name: '天气变化'
                                 }
                             }
-                            let templateName = ['2', '3.1', '3.2', '4', '6'], tmpTemp =  []
+                            let templateName = ['3.1', '3.2', '4', '6'], tmpTemp =  []
+                            
                             for (var i in this.autoList) {
                                 let sType = String(this.autoList[i].sceneType)
                                 if (sType == '3') {
                                     sType = sType + '.' +this.autoList[i].location.direction
                                 }
-                                templateName.splice(templateName.indexOf(sType), 1)
+                                if (templateName.indexOf(sType) > -1 && ['1005', '1006', '1007', '1008'].indexOf(this.autoList[i].templateCode) == -1) {
+                                    templateName.splice(templateName.indexOf(sType), 1)
+                                }
                             }
                             for (var x in templateName) {
                                 tmpTemp.push(basicTemplate[templateName[x]])
@@ -454,16 +455,14 @@
             },
             goScene(scene){
                 this.checkLogin().then( (uid) => {
-                    if (scene.applianceCount <= 0 ) {
-                        nativeService.toast('无法获取相关数据，点击右上角设置设备')
-                    }
                     let params = {
                         uid: uid,
                         homegroupId: this.homegroupId,
                         roomType:scene.roomType,
                         sceneId: scene.sceneId,
-                        userDevices: this.userDevices
-                    }             
+                        userDevices: this.userDevices,
+                        sceneLevel: scene.indicator.level
+                    }
                     this.goTo("scene", {}, params)
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))

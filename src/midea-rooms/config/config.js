@@ -388,8 +388,7 @@ export const applianceActions = {
 */
 export const autoSupportActions = {
     '2': {
-        "0xAC": {
-            "name": "空调",
+        "0xAC": { "name": "空调",   
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -425,8 +424,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xCC": {
-            "name": "中央空调",
+        "0xCC": { "name": "中央空调",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -462,8 +460,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xE1": {
-            "name": "洗碗机",
+        "0xE1": { "name": "洗碗机",
             "actions": [{
                     "property": "work_status",
                     "propertyName": "工作状态",
@@ -496,8 +493,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xE2": {
-            "name": "热水器",
+        "0xE2": { "name": "热水器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -520,8 +516,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xE3": {
-            "name": "燃热水器",
+        "0xE3": { "name": "燃热水器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -544,8 +539,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xFA": {
-            "name": "风扇",
+        "0xFA": { "name": "风扇",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -573,8 +567,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xFB": {
-            "name": "电暖器",
+        "0xFB": { "name": "电暖器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -597,8 +590,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xFC": {
-            "name": "空气净化器",
+        "0xFC": { "name": "空气净化器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -633,8 +625,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xFD": {
-            "name": "加湿器",
+        "0xFD": { "name": "加湿器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -659,8 +650,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xB6": {
-            "name": "抽油烟机",
+        "0xB6": { "name": "抽油烟机",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -685,8 +675,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xB8": {
-            "name": "吸尘器",
+        "0xB8": { "name": "吸尘器",
             "actions": [{
                     "property": "work_status",
                     "propertyName": "工作状态",
@@ -714,8 +703,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xA1": {
-            "name": "除湿机",
+        "0xA1": { "name": "除湿机",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -741,8 +729,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0x10": {
-            "name": "插座",
+        "0x10": { "name": "插座",
             "actions": [{
                 "property": "power",
                 "propertyName": "电源",
@@ -754,8 +741,7 @@ export const autoSupportActions = {
                 "default": "off"
             }]
         },
-        "0x13": {
-            "name": "WiFi吸顶灯",
+        "0x13": { "name": "WiFi吸顶灯",
             "actions": [{
                 "property": "power",
                 "propertyName": "电源",
@@ -769,8 +755,7 @@ export const autoSupportActions = {
         }
     },
     '3': {
-        "0xAC": {
-            "name": "空调",
+        "0xAC": { "name": "空调",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -901,8 +886,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xE3": {
-            "name": "燃热水器",
+        "0xE3": { "name": "燃热水器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -925,8 +909,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xFA": {
-            "name": "风扇",
+        "0xFA": { "name": "风扇",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -954,8 +937,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xFB": {
-            "name": "电暖器",
+        "0xFB": { "name": "电暖器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -978,8 +960,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xFC": {
-            "name": "空气净化器",
+        "0xFC": { "name": "空气净化器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1014,8 +995,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xFD": {
-            "name": "加湿器",
+        "0xFD": { "name": "加湿器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1040,8 +1020,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xB6": {
-            "name": "抽油烟机",
+        "0xB6": { "name": "抽油烟机",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1066,8 +1045,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xB8": {
-            "name": "吸尘器",
+        "0xB8": { "name": "吸尘器",
             "actions": [{
                     "property": "work_status",
                     "propertyName": "工作状态",
@@ -1095,8 +1073,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xA1": {
-            "name": "除湿机",
+        "0xA1": { "name": "除湿机",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1122,8 +1099,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0x10": {
-            "name": "插座",
+        "0x10": { "name": "插座",
             "actions": [{
                 "property": "power",
                 "propertyName": "电源",
@@ -1135,8 +1111,7 @@ export const autoSupportActions = {
                 "default": "off"
             }]
         },
-        "0x13": {
-            "name": "WiFi吸顶灯",
+        "0x13": { "name": "WiFi吸顶灯",
             "actions": [{
                 "property": "power",
                 "propertyName": "电源",
@@ -1150,8 +1125,7 @@ export const autoSupportActions = {
         }
     },
     '4': {
-        "0xAC": {
-            "name": "空调",
+        "0xAC": { "name": "空调",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1187,8 +1161,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xCC": {
-            "name": "中央空调",
+        "0xCC": { "name": "中央空调",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1224,8 +1197,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xE1": {
-            "name": "洗碗机",
+        "0xE1": { "name": "洗碗机",
             "actions": [{
                     "property": "work_status",
                     "propertyName": "工作状态",
@@ -1258,8 +1230,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xE2": {
-            "name": "热水器",
+        "0xE2": { "name": "热水器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1282,8 +1253,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xE3": {
-            "name": "燃热水器",
+        "0xE3": { "name": "燃热水器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1306,8 +1276,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xFA": {
-            "name": "风扇",
+        "0xFA": { "name": "风扇",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1335,8 +1304,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xFB": {
-            "name": "电暖器",
+        "0xFB": { "name": "电暖器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1359,8 +1327,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xFC": {
-            "name": "空气净化器",
+        "0xFC": { "name": "空气净化器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1395,8 +1362,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xFD": {
-            "name": "加湿器",
+        "0xFD": { "name": "加湿器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1421,8 +1387,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xB6": {
-            "name": "抽油烟机",
+        "0xB6": { "name": "抽油烟机",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1447,8 +1412,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xB8": {
-            "name": "吸尘器",
+        "0xB8": { "name": "吸尘器",
             "actions": [{
                     "property": "work_status",
                     "propertyName": "工作状态",
@@ -1476,8 +1440,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xA1": {
-            "name": "除湿机",
+        "0xA1": { "name": "除湿机",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1503,8 +1466,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0x10": {
-            "name": "插座",
+        "0x10": { "name": "插座",
             "actions": [{
                 "property": "power",
                 "propertyName": "电源",
@@ -1516,8 +1478,7 @@ export const autoSupportActions = {
                 "default": "off"
             }]
         },
-        "0x13": {
-            "name": "WiFi吸顶灯",
+        "0x13": { "name": "WiFi吸顶灯",
             "actions": [{
                 "property": "power",
                 "propertyName": "电源",
@@ -1531,8 +1492,7 @@ export const autoSupportActions = {
         }
     },
     '6': {
-        "0xAC": {
-            "name": "空调",
+        "0xAC": { "name": "空调",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1568,8 +1528,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xCC": {
-            "name": "中央空调",
+        "0xCC": { "name": "中央空调",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1605,8 +1564,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xE2": {
-            "name": "热水器",
+        "0xE2": { "name": "热水器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1629,8 +1587,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xE3": {
-            "name": "燃热水器",
+        "0xE3": { "name": "燃热水器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1653,8 +1610,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xFA": {
-            "name": "风扇",
+        "0xFA": { "name": "风扇",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1682,8 +1638,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xFB": {
-            "name": "电暖器",
+        "0xFB": { "name": "电暖器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1706,8 +1661,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xFC": {
-            "name": "空气净化器",
+        "0xFC": { "name": "空气净化器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1741,8 +1695,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xFD": {
-            "name": "加湿器",
+        "0xFD": { "name": "加湿器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1767,8 +1720,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xA1": {
-            "name": "除湿机",
+        "0xA1": { "name": "除湿机",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -1794,8 +1746,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0x10": {
-            "name": "插座",
+        "0x10": { "name": "插座",
             "actions": [{
                 "property": "power",
                 "propertyName": "电源",

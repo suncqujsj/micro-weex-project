@@ -75,15 +75,7 @@
                     <text class="text-offline-center">已离线</text>
                 </div>
             </div>
-            <div class="smart">
-                <div class="smart-title">
-                    <text class="smart-text">智能</text>
-                </div>
-                <midea-smart @click="goTo('qingjing.js')" @change="onMideachange" :checked="mideaChecked" :data="data"></midea-smart>
-                <midea-smart @click="goTo('qingjing2.js')" @change="onMideachange2" :checked="mideaChecked2" :data="data2"></midea-smart>
-                <midea-smart @change="onMideachange3" :checked="mideaChecked3" :data="data3"></midea-smart>
-                <midea-smart @change="onMideachange4" :hasBottomBorder="false" :checked="mideaChecked4" :data="data4"></midea-smart>
-            </div>
+            <situation></situation>
             <!--downloading by zhouhg-->
             <midea-download></midea-download>
         </div>
@@ -96,6 +88,7 @@ import mideaSwitch from '@/midea-component/switch.vue'
 import mideaSmart from '@/midea-card/midea-components/smart.vue'
 import mideaItem from '@/midea-component/item.vue'
 import mideaButton from '@/midea-component/button.vue';
+import situation from '@/midea-card/T0xAC/components/situation.vue'
 //downloading by zhouhg
 import mideaDownload from '@/midea-card/midea-components/download.vue';
 
@@ -111,6 +104,7 @@ export default {
         mideaSmart,
         mideaItem,
         mideaButton,
+        situation,
         mideaDownload   //downloading by zhouhg
     },
     data() {
@@ -138,62 +132,10 @@ export default {
             powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
             powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
             deviceIcon: "./assets/img/smart_img_equip001@2x.png",
-            moreImg: "./assets/img/smart_ic_more@2x.png",
-            situationList: [],
-            mideaChecked: false,
-            data: {
-                title: "自动开启",
-                detail: "模式制冷，温度23."
-            },
-            mideaChecked2: false,
-            data2: {
-                title: "我的最舒适",
-                detail: "温度28C，风速最小"
-            },
-            mideaChecked3: false,
-            data3: {
-                title: "滤网保养",
-                detail: "开启后，启动滤网推送；关闭后，不再推送；"
-            },
-            mideaChecked4: false,
-            data4: {
-                title: "故障推送",
-                detail: "开启后，启动故障推送；关闭后，不再推送；"
-            }
+            moreImg: "./assets/img/smart_ic_more@2x.png"
         }
     },
     methods: {
-        onMideachange(event) {
-            this.mideaChecked = event.value
-        },
-        onMideachange2(event) {
-            this.mideaChecked2 = event.value
-        },
-        onMideachange3(event) {
-            this.mideaChecked3 = event.value
-        },
-        onMideachange4(event) {
-            this.mideaChecked4 = event.value
-        },
-        goTo(path) {
-            nativeService.goTo(path, { animatedType: 'slide_bottomToTop' })
-        },
-        getSituationList() {
-            nativeService.getUserInfo().then((data) => {
-                let param = {
-                    uid: data.uid,
-                    applianceCode: this.deviceId
-                }
-                nativeService.sendCentralCloundRequest("/v1/situation/list", param).then((resp) => {
-                    if (resp.code == 0) {
-                        this.situationList = resp.list || []
-                    }
-                })
-            })
-        },
-        updateSituation() {
-
-        },
         temperatureControl(value) {// -1 or 1
             if (this.onoff == 'off') {
                 nativeService.toast("关机状态无法设置温度");
@@ -246,6 +188,7 @@ export default {
         updateUI(data) {
             let self = this;
             if (data.errorCode == 0) {
+            	this.onlineStatus = "1";
                 let params = data.params || data.result;
                 this.onoff = params.power;
                 this.mode = params.mode;
@@ -308,7 +251,7 @@ export default {
             console.log("handleNotification Yoram");
             let me = this;
             globalEvent.addEventListener(this.pushKey, (data) => {
-                me.queryStatus();
+                me.updateUI(data);
             });
             globalEvent.addEventListener(this.pushKeyOnline, (data) => {
                 if (data && data.messageType == "deviceOnlineStatus") {
@@ -381,7 +324,6 @@ export default {
         let self = this;
         nativeService.getDeviceInfo().then(function (data) {
             self.updateDeviceInfo(data.result);
-            self.getSituationList()
             self.handleNotification();
             if (data.result.isOnline || data.result.isOnline == "1") {
                 self.queryStatus();
@@ -403,21 +345,21 @@ export default {
   margin-bottom: 290px;
 }
 .card {
-  width: 694px;
+  width: 686px;
   height: 392px;
-  margin-left: 28px;
-  margin-right: 28px;
-  margin-top: 28px;
+  margin-left: 32px;
+  margin-right: 32px;
+  margin-top: 32px;
   background-color: #5d75f6;
   flex-direction: row;
   border-radius: 6px;
 }
 .card-power-off {
-  width: 694px;
+  width: 686px;
   height: 392px;
-  margin-left: 28px;
-  margin-right: 28px;
-  margin-top: 28px;
+  margin-left: 32px;
+  margin-right: 32px;
+  margin-top: 32px;
   background-color: #d8d8de;
   flex-direction: row;
   border-radius: 6px;
@@ -426,7 +368,7 @@ export default {
 }
 .text-offline {
   font-family: PingFangSC-Regular;
-  font-size: 28px;
+  font-size: 20px;
   color: #5d75f6;
   letter-spacing: 0;
   text-align: center;
@@ -447,7 +389,6 @@ export default {
   width: 534px;
   height: 248px;
   opacity: 0.3;
-  box-shadow: 0 5px 6px 0 rgba(0, 0, 0, 0.12);
 }
 .card-hot {
   background-color: #ffbd00;
@@ -463,8 +404,8 @@ export default {
   margin-bottom: 25px;
 }
 .cart-control-temp-img {
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
 }
 .cart-control-temp-img-right {
   margin-left: 100px;
@@ -478,17 +419,16 @@ export default {
   margin-left: 60px;
 }
 .card-status-detail-img {
-  width: 56px;
-  height: 56px;
+  width: 36px;
+  height: 36px;
 }
 .card-control-img {
-  width: 60px;
-  height: 60px;
+  width: 58px;
+  height: 58px;
 }
 .card-icon {
   align-items: flex-start;
   margin-top: -60px;
-  margin-right: -24px;
 }
 .card-icon-img {
   width: 534px;
@@ -500,6 +440,7 @@ export default {
   margin-left: 50px;
 }
 .main-status {
+  font-family: Roboto-Light;
   font-size: 128px;
   color: #ffffff;
 }
@@ -527,7 +468,6 @@ export default {
 .main-status-third {
   font-size: 28px;
   margin-left: 10px;
-  margin-top: 8px;
   color: #ffffff;
 }
 .main-status-third-simple {
@@ -562,10 +502,9 @@ export default {
   justify-content: space-between;
 }
 .card-right-margin {
-  width: 30px;
+  width: 32px;
   height: 392px;
   background-color: white;
-  margin-left: 9px;
 }
 .smart {
   flex-direction: column;
@@ -584,7 +523,15 @@ export default {
   color: #000000;
   letter-spacing: 0;
 }
-
+.smart-action {
+  font-family: PingFangSC-Medium;
+  font-size: 28px;
+  color: #267aff;
+  width: 132px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: right;
+}
 .mark {
   position: absolute;
   top: 28px;

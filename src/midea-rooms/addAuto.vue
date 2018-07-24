@@ -2,7 +2,7 @@
    <div class="wrap" :style="wrapStyle">
         <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
         <div class="next" @click="goNext()">
-            <text class="next-text white">下一步</text>
+            <text class="next-text">下一步</text>
         </div>
         <div class="content">
             <text class="hd">选择条件</text>
@@ -26,6 +26,8 @@
     }
     .next-text{
         font-size: 32px;
+        color: #666;
+        margin-right: 25px;
     }
     .hd{
         padding: 25px;

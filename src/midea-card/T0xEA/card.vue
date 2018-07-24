@@ -349,6 +349,7 @@
             },
             updateUI(data) {
             	if(data.errorCode == 0) {
+            		this.onlineStatus = "1";
 	                let params = data.params || data.result;
 	                this.mode = params.mode;
 					this.work_status = params.work_status;
@@ -394,7 +395,6 @@
 	        			"name":"pause",
 	        			"params":{
 	        				"work_status": "cancel",
-		                	"name": "pause"
 	        			}
 	                }
             		nativeService.sendLuaRequest(params,true).then(function(data) {
@@ -407,9 +407,9 @@
             		let params = {
 	                	"operation":"luaControl",
 	        			"name":"start",
-	        			"data":{
+	        			"params":{
 	        				"work_status": "cooking",
-		                	"name": "start"
+		                	"mode": this.mode || 'cook_rice'
 	        			}
 	                }
             		nativeService.sendLuaRequest(params,true).then(function(data) {
@@ -423,7 +423,7 @@
             	console.log("handleNotification Yoram");
             	let me = this;
             	globalEvent.addEventListener(this.pushKey, (data) => {
-            		me.queryStatus();
+            		me.updateUI(data);
 		        });
 		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
             		if(data && data.messageType == "deviceOnlineStatus") {
@@ -468,9 +468,7 @@
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
             	self.handleNotification();
-            	if(data.result.isOnline == 1) {
-            		self.queryStatus();
-            	}
+        		self.queryStatus();
             },function(error) {
             	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
             })
@@ -487,7 +485,7 @@
 		margin-bottom: 150px;
 	}
 	.card {
-		width:686;
+		width:686px;
 		height:392px;
 		margin-left:32px;
 		margin-right:32px;
@@ -523,14 +521,13 @@
 		height:56px
 	}
 	.card-control-img {
-		width:60px;
-		height:60px
+		width:58px;
+		height:58px
 	}
 	.icon-offline {
 		width: 314px;
 		height: 314px;
 		opacity: 0.3;
-		box-shadow: 0 5px 6px 0 rgba(0,0,0,0.12);
 	}
 	.card-icon {
 		align-items: flex-end;
@@ -541,11 +538,11 @@
 		height:314px
 	}
 	.card-power-off {
-		width:694px;
+		width:686px;
 		height:392px;
-		margin-left:28px;
-		margin-right:28px;
-		margin-top:28px;
+		margin-left:32px;
+		margin-right:32px;
+		margin-top:32px;
 		background-color: #D8D8DE;
 		flex-direction: row;
 		border-radius: 6px;
@@ -554,7 +551,7 @@
 	}
 	.text-offline {
 		font-family: PingFangSC-Regular;
-		font-size: 28px;
+		font-size: 20px;
 		color: #5D75F6;
 		letter-spacing: 0;
 		text-align: center;

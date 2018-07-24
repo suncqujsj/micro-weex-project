@@ -2,7 +2,7 @@
     <div class="wrapper">
         <midea-header title="Button按钮" :isImmersion="false" @leftImgClick="back"></midea-header>
 
-        <midea-button text="默认按钮" type="green" @mideaButtonClicked="mideaButtonClicked">
+        <midea-button text="默认按钮" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
 
         <midea-button text="灰色按钮" type="gray" @mideaButtonClicked="mideaButtonClicked">
@@ -31,7 +31,7 @@
 <script>  
 
 import base from '../base'
-import mideaButton from '@/midea-component/button.vue'
+import mideaButton from '@/midea-component/button2.vue'
 import mideaDualButton from '@/midea-component/dualButton.vue'
 import nativeService from '@/common/services/nativeService'
 

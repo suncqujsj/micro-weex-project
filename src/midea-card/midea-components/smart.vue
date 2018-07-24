@@ -1,16 +1,17 @@
 <template>
     <div :class="['smart-content', hasBottomBorder && 'cell-bottom-border']" @click="onClick">
         <div class="title-div">
-            <image :src="checked?icon_img_on:icon_img_off" class="index-img"></image>
             <text class="smart-title">{{data.title}}</text>
         </div>
         <div class="smart-detail">
             <div class="smart-detail-content-wrapper">
                 <text class="smart-detail-content">{{data.detail}}</text>
             </div>
-            <div class="switch-div">
-                <midea-switch v-if="showSwitchIcon" :checked="checked" @change="onMideachange" :width="width" :height="height"></midea-switch>
-            </div>
+            <slot name="smart-action">
+                <div class="smart-action">
+                    <midea-switch v-if="showSwitchIcon" :checked="checked" @change="onMideachange" :width="width" :height="height"></midea-switch>
+                </div>
+            </slot>
         </div>
     </div>
 </template>
@@ -59,7 +60,7 @@ export default {
     },
     methods: {
         onMideachange(event) {
-            this.checked = event.value
+            // this.checked = event.value
             this.$emit('change', { value: event.value })
         },
         onClick(event) {
@@ -75,8 +76,8 @@ export default {
 
 <style>
 .smart-content {
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 .index-img {
   width: 40px;
@@ -87,7 +88,6 @@ export default {
   align-items: center;
 }
 .smart-title {
-  margin-left: 20px;
   font-family: PingFangSC-Regular;
   font-size: 32px;
   color: #000000;
@@ -100,9 +100,8 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-left: 60px;
   align-items: center;
-  padding-top: 24px;
+  padding-top: 10px;
 }
 
 .smart-detail-content-wrapper {
@@ -110,11 +109,10 @@ export default {
 }
 .smart-detail-content {
   font-family: PingFangSC-Regular;
-  font-size: 24px;
+  font-size: 28px;
   color: #8a8a8f;
 }
-.switch-div {
-  padding: 10px;
-  margin-left: 32px;
+.smart-action {
+  padding-left: 32px;
 }
 </style>

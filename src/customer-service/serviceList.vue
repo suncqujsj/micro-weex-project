@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <list class="list-item">
             <midea-item height="160" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('productSelection', {}, { from: 'serviceList', to:'serviceCharge'})">

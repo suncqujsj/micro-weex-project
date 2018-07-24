@@ -7,20 +7,20 @@
         </div>
         <list>
             <cell class="content">
-                <div v-if="sceneType != 2">
+                <div>
                     <div style="background-color:#fff">
                         <div class="row-sb auto-name-floor">
                             <text class="text">名称</text>
                             <input class="auto-name" type="text" placeholder="" :value="inputAutoName" @input="editAutoName" @change="editAutoName" />
                         </div>
-                        <div class="row-sb switch-floor auto-switch-floor">
+                        <div v-if="sceneType != 2" class="row-sb switch-floor">
                             <text class="text">启用</text>
                             <div>
                                 <switch-bar :isActive="autoEnable == 1" @onSwitch="openAuto"></switch-bar>
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div v-if="sceneType != 2">
                         <text class="sub-hd">当如下条件满足时</text>
                         <div @click="goAutoTypeSet" class="row-sb floor">
                             <div class="row-s">
@@ -40,11 +40,11 @@
                             <div @click="setDevice(key)">
                                 <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
                                 <text class="device-name">{{item.deviceName}}</text>
-                                <!-- <div class="row-s device-desc">
-                                     <text class="device-desc-text" v-for="(action, key) in taskActions[item.deviceId]">
-                                        {{applianceActions[item.deviceType].actions[key].value[action]}}
-                                    </text>
-                                </div> -->
+                                <div class="row-s device-desc">
+                                    <div v-for="actions in bindDeviceActions[item.deviceId]">
+                                        <text v-if="actions.currentStatusName" class="device-desc-text">{{actions.currentStatusName}}</text>
+                                    </div>
+                                </div>
                             </div>
                             <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, key)"></image>
                         </div>
@@ -115,13 +115,13 @@
         padding-right: 25px;
         padding-top: 10px;
         padding-bottom: 10px;
-        border-bottom-color: #e5e5e5;
-        border-bottom-style: solid;
-        border-bottom-width: 2px;
     }
     .switch-floor{
         margin-left: 25px;
         padding-right: 25px;
+        border-top-color: #e5e5e5;
+        border-top-style: solid;
+        border-top-width: 2px;
     }
     .device-box{
         padding-left: 32.25px;
@@ -146,10 +146,14 @@
         margin-bottom: 4px;
     }
     .device-desc{
+         align-items: flex-start;
+         margin-top: 6px;
     }
     .device-desc-text{
         color:#c7c7c7;
         font-size: 26px;
+        margin-right: 6px;
+        text-align: left;
     }
     .check-icon{
         position: absolute;
@@ -296,9 +300,9 @@
                     height: this.pageHeight+'px'
                 }
                 if (this.isipx) {
-                    tmp.marginTop = '64px'
-                }else{
-                    tmp.marginTop = '40px'
+                    tmp.paddingTop = '64px'
+                }else if (this.platform != 'android'){
+                    tmp.paddingTop = '40px'
                 }
                 return tmp
             },
@@ -387,7 +391,8 @@
                             }
                         }
                     }).catch((err)=>{
-                        nativeService.toast(this.getErrorMessage(err))
+                        nativeService.alert(err)
+                        // nativeService.toast(this.getErrorMessage(err))
                     })
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
@@ -429,21 +434,26 @@
                 for (var x in this.autoBindDevices) {
                     
                     if (this.autoBindDevices[x].isCheck == 'check'){
-                        
                         if (this.userSetActions[x]) {
                             tmpBindDeviceActions[x] = this.userSetActions[x]
-                        }else{
+                         }else{
                             let tmpAction = []
                             let staticActions = this.autoSupportActions[this.autoBindDevices[x].deviceType].actions
-                            
                             for (var i in staticActions) {
                                 if ( Object.keys(this.taskActions).indexOf(this.autoBindDevices[x].deviceId) > -1 ) {
-                                    tmpAction[i] = Object.assign({}, {currentStatus: this.taskActions[this.autoBindDevices[x].deviceId][staticActions[i].property]}, staticActions[i])
+                                    let current = {
+                                        currentStatus: this.taskActions[this.autoBindDevices[x].deviceId][staticActions[i].property],
+                                        currentStatusName: staticActions[i].hasOwnProperty('value') ? staticActions[i].value[this.taskActions[this.autoBindDevices[x].deviceId][staticActions[i].property]] : undefined
+                                    }
+                                    tmpAction[i] = Object.assign({}, current,  staticActions[i])
                                 }else{
-                                    tmpAction[i] = Object.assign({}, {currentStatus:  staticActions[i].default},  staticActions[i])
+                                    let current = {
+                                        currentStatus: staticActions[i].default,
+                                        currentStatusName: staticActions[i].hasOwnProperty('value')? staticActions[i].value[staticActions[i].default] : undefined
+                                    }
+                                    tmpAction[i] = Object.assign({}, current,  staticActions[i])
                                 }
                             }
-                            
                             tmpBindDeviceActions[x] = tmpAction
                         }
                     }

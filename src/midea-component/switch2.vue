@@ -118,7 +118,7 @@ export default {
   height: 6px;
 }
 .selected {
-  background-color: #5d75f6;
+  background-color: #267aff;
 }
 .unselected {
   background-color: #e5e5e8;

@@ -70,10 +70,13 @@ export default {
 
             //产品图片
             others.imageUrl = 'http://fcmms.midea.com/ccrm-uat/productImg/1000美的家用空调.jpg'//'./assets/img/product/default.png'
-            //订单描述
-            let prodName
+            let prodName, archivesNumber = 0
             if (order.serviceUserDemandVOs && order.serviceUserDemandVOs.length > 0) {
+                //订单描述
                 prodName = order.serviceUserDemandVOs[0].prodName
+
+                //档案数
+                archivesNumber = order.serviceUserDemandVOs[0].archivesNumber || 0
             }
             others.orderDesc = order.serviceSubTypeName + prodName
 
@@ -85,7 +88,7 @@ export default {
                     others.statusDesc = "已接单"
                     others.statusIcon = "./assets/img/service_ic_order_ongoing@3x.png"
 
-                    if (order.interfaceSource == "SMART") {
+                    if (order.interfaceSource == "SMART" && archivesNumber <= 0) {
                         others.isAbleToCancel = true
                     }
                     if (order.unitCode) {
@@ -96,7 +99,7 @@ export default {
                     //已接单-上门
                     others.statusDesc = "已接单"
                     others.statusIcon = "./assets/img/service_ic_order_ongoing@3x.png"
-                    if (order.interfaceSource == "SMART") {
+                    if (order.interfaceSource == "SMART" && archivesNumber <= 0) {
                         others.isAbleToCancel = true
                     }
                     if (this.checkPassTime(order)) {
@@ -107,7 +110,7 @@ export default {
                     //已接单
                     others.statusDesc = "已接单"
                     others.statusIcon = "./assets/img/service_ic_order_ongoing@3x.png"
-                    if (order.interfaceSource == "SMART") {
+                    if (order.interfaceSource == "SMART" && archivesNumber <= 0) {
                         others.isAbleToCancel = true
                     }
                     break;
@@ -133,7 +136,7 @@ export default {
                     // 待服务
                     others.statusDesc = "待服务"
                     others.statusIcon = "./assets/img/service_ic_order_new@3x.png"
-                    if (order.interfaceSource == "SMART") {
+                    if (order.interfaceSource == "SMART" && archivesNumber <= 0) {
                         others.isAbleToCancel = true
                     }
                     others.isAbleToCallService = true

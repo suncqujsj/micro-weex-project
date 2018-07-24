@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header v-if="!isIos" :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back">
+        <midea-header v-if="!isIos" :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <div class="search-bar" :style="{'height':isIos?'136px':'96px','padding-top':isIos?'40px':'0px'}">
             <div class="search-bar-content" v-bind:class="[isIos?'':'search-bar-top']">

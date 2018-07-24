@@ -18,13 +18,13 @@
 	        			<image class="card-control-img" :src="controlStartPauseImg"></image>
 	        		</div>
 	        		<div class="card-icon">
-	        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip041@2x.png"></image>
+	        			<image class="card-icon-img" @click="showControlPanelPage" resize="contain" src="./assets/img/smart_img_equip041@2x.png"></image>
 	        		</div>
 	        	</div>
 	        </div>
 	        <div class="card-power-off" v-else>
 	        	<div class="control-div-offline">
-	        		<image class="card-control-img" :src="powerIcon_offline"></image>
+	        		<image class="card-control-img" :src="powerIcon_offline" @click="reload"></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
@@ -60,6 +60,8 @@
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
 	var stream = weex.requireModule('stream');
+	const globalEvent = weex.requireModule('globalEvent');
+	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
             mideaSwitch,
@@ -76,6 +78,8 @@
             	deviceSn: "",
             	onlineStatus:"",
             	
+            	pushKey: "receiveMessage",
+            	pushKeyOnline: "receiveMessageFromApp",
             	workStatus: "",
 	            temperature: "",//localStorage.getItem("ECtemperature") || "--",
 	            workstatusNum: "",
@@ -149,6 +153,7 @@
             },
             updateUI(data) {
             	if(data.errorCode == 0) {
+            		this.onlineStatus = "1";
 	                let params = data.params || data.result;
 	                this.workStatus = this.work_status[params.work_status] || "";
 	                this.workstatusNum = params.work_status;
@@ -206,6 +211,38 @@
 	            	});
             	}
             },
+            handleNotification() {
+            	console.log("handleNotification Yoram");
+            	let me = this;
+            	globalEvent.addEventListener(this.pushKey, (data) => {
+            		me.updateUI(data);
+		        });
+		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
+            		if(data && data.messageType == "deviceOnlineStatus") {
+            			if(data.messageBody && data.messageBody.onlineStatus == "online") {
+            				me.onlineStatus = "1";
+            			} else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+            				me.onlineStatus = "0";
+            			} else {
+            				me.onlineStatus = "0";
+            			}
+            		}
+		        });
+            },
+            showControlPanelPage() {
+            	let params = {
+            		controlPanelName:"controlPanel.html"
+            	};
+            	bridgeModule.showControlPanelPage(params);
+            },
+            reload() {
+            	let params = {};
+            	bridgeModule.reload(params,function(result) {
+            		//successful
+            	},function(error) {
+            		//fail
+            	});
+            },
         },
         computed: {
         	controlStartPauseImg () {
@@ -222,9 +259,8 @@
             let self = this;
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
-            	if(data.result.isOnline == 1) {
-            		self.queryStatus();
-            	}
+            	self.handleNotification();
+        		self.queryStatus();
             },function(error) {
             	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
             })
@@ -241,7 +277,7 @@
 		margin-bottom: 150px;
 	}
 	.card {
-		width:686;
+		width:686px;
 		height:392px;
 		margin-left:32px;
 		margin-right:32px;
@@ -277,8 +313,8 @@
 		height:56px
 	}
 	.card-control-img {
-		width:60px;
-		height:60px
+		width:58px;
+		height:58px
 	}
 	.card-icon {
 		align-items: flex-end;
@@ -288,18 +324,17 @@
 		width: 314px;
 		height: 314px;
 		opacity: 0.3;
-		box-shadow: 0 4px 7px 0 rgba(0,0,0,0.12);
 	}
 	.card-icon-img {
 		width:314px;
 		height:314px
 	}
 	.card-power-off {
-		width:694px;
+		width:686px;
 		height:392px;
-		margin-left:28px;
-		margin-right:28px;
-		margin-top:28px;
+		margin-left:32px;
+		margin-right:32px;
+		margin-top:32px;
 		background-color: #D8D8DE;
 		flex-direction: row;
 		border-radius: 6px;
@@ -308,7 +343,7 @@
 	}
 	.text-offline {
 		font-family: PingFangSC-Regular;
-		font-size: 28px;
+		font-size: 20px;
 		color: #5D75F6;
 		letter-spacing: 0;
 		text-align: center;

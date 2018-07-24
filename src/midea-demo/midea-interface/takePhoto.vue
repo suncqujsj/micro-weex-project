@@ -76,7 +76,6 @@ module.exports = {
         mideaButtonClicked() {
             nativeService.takePhoto(this.messageParam).then(
                 (resp) => {
-                    nativeService.toast(resp)
                     this.result = resp
                 }
             ).catch((error) => {

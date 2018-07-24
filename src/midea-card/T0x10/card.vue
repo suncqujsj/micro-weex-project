@@ -28,13 +28,13 @@
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image class="icon-offline" src="./assets/img/smart_img_equip025@2x.png"></image>
+		        		<image class="icon-offline" @click="showControlPanelPage" src="./assets/img/smart_img_equip025@2x.png"></image>
 		        	</div>
 		        </div>
 	        </div>
 	        <div class="card-power-off" v-else>
 	        	<div class="control-div-offline">
-	        		<image class="card-control-img" :src="powerIcon_offline"  @click="poweronoff(1)"></image>
+	        		<image class="card-control-img" :src="powerIcon_offline"  @click="reload"></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
@@ -57,6 +57,8 @@
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
 	var stream = weex.requireModule('stream');
+	const globalEvent = weex.requireModule('globalEvent');
+	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
             mideaSwitch,
@@ -72,6 +74,8 @@
             	deviceSn: "",
             	onlineStatus:"",
             	
+            	pushKey: "receiveMessage",
+            	pushKeyOnline: "receiveMessageFromApp",
 	            onoff: "",//localStorage.getItem("A1power") || "on",
 	            display_value1: "",
 	            powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
@@ -94,6 +98,7 @@
             },
             updateUI(data) {
             	if(data.errorCode == 0) {
+            		this.onlineStatus = "1";
 	            	let params = data.params || data.result;
 	                this.onoff = params.power;
 	                if(this.onoff == "on") {
@@ -130,71 +135,38 @@
             		console.log("error");
             	});
             },
-            up () {
-				this.deviceSubtype = parseInt(this.deviceSubtype);
-	        	if(this.deviceSubtype == 10) {
-	        		if(!(this.mode == "normal" || this.mode == "sleep")) {
-	        			modal.toast({ 'message': '只有正常风或睡眠风模式下可以设置档位', 'duration': 2 });
-		                return;
-		        	} 
-	        	} else {
-	        		if(this.mode != "normal") {
-		        		modal.toast({ 'message': '只有正常风模式下可以设置档位', 'duration': 2 });
-		                return;
-		        	} 
-	        	}
-	        	
-	            let gear = 'up';
-	            let set_gear = "";
-	            if(this.gear >= 26) {
-	            	modal.toast({ 'message': '风速已达最大值', 'duration': 2 });
-	                return;
-	            } else {
-	            	set_gear = parseInt(this.gear) + 1;
-	            }
-	            let params = {
-                	"operation":"luaControl",
-        			"name":"up",
-        			"params":{
-        				"gear":set_gear
-        			}
-                }
-	            let me = this;
-	            nativeService.sendLuaRequest(params,true).then(function(data) {
-                    me.updateUI(data);
-                })
-	        },
-	        down () {
-	        	if(this.deviceSubtype == 10) {
-	        		if(!(this.mode == "normal" || this.mode == "sleep")) {
-	        			modal.toast({ 'message': '只有正常风或睡眠风模式下可以设置档位', 'duration': 2 });
-		                return;
-		        	} 
-	        	} else {
-	        		if(this.mode != "normal") {
-	        			modal.toast({ 'message': '只有正常风模式下可以设置档位', 'duration': 2 });
-		                return;
-		        	} 
-	        	}
-	            let set_gear = "";
-	            if(this.gear == 1) {
-	            	modal.toast({ 'message': '风速已达最小值', 'duration': 2 });
-	                return;
-	            } else {
-	            	set_gear = parseInt(this.gear) -1;
-	            }
-	            let params = {
-                	"operation":"luaControl",
-        			"name":"down",
-        			"params":{
-        				"gear":set_gear
-        			}
-                }
-	            let me = this;
-	            nativeService.sendLuaRequest(params,true).then(function(data) {
-                    me.updateUI(data);
-                })
-	        },
+            handleNotification() {
+            	console.log("handleNotification Yoram");
+            	let me = this;
+            	globalEvent.addEventListener(this.pushKey, (data) => {
+            		me.updateUI(data);
+		        });
+		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
+            		if(data && data.messageType == "deviceOnlineStatus") {
+            			if(data.messageBody && data.messageBody.onlineStatus == "online") {
+            				me.onlineStatus = "1";
+            			} else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+            				me.onlineStatus = "0";
+            			} else {
+            				me.onlineStatus = "0";
+            			}
+            		}
+		        });
+            },
+            showControlPanelPage() {
+            	let params = {
+            		controlPanelName:"controlPanel.html"
+            	};
+            	bridgeModule.showControlPanelPage(params);
+            },
+            reload() {
+            	let params = {};
+            	bridgeModule.reload(params,function(result) {
+            		//successful
+            	},function(error) {
+            		//fail
+            	});
+            },
         },
         computed: {
         	
@@ -203,9 +175,8 @@
 	       let self = this;
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
-            	if(data.result.isOnline == 1) {
-            		self.queryStatus();
-            	}
+            	self.handleNotification();
+            	self.queryStatus();
             },function(error) {
             	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
             })
@@ -223,11 +194,11 @@
 		margin-bottom:650px
 	}
 	.card {
-		width:694;
+		width:686px;
 		height:392px;
-		margin-left:28px;
-		margin-right:28px;
-		margin-top:28px;
+		margin-left:32px;
+		margin-right:32px;
+		margin-top:32px;
 		background-color: #5D75F6;
 		flex-direction: row;
 		border-radius: 6px;
@@ -236,11 +207,11 @@
 		background-color: #FFBD00;
 	}
 	.card-power-off {
-		width:694px;
+		width:686px;
 		height:392px;
-		margin-left:28px;
-		margin-right:28px;
-		margin-top:28px;
+		margin-left:32px;
+		margin-right:32px;
+		margin-top:32px;
 		background-color: #D8D8DE;
 		flex-direction: row;
 		border-radius: 6px;
@@ -249,7 +220,7 @@
 	}
 	.text-offline {
 		font-family: PingFangSC-Regular;
-		font-size: 28px;
+		font-size: 20px;
 		color: #5D75F6;
 		letter-spacing: 0;
 		text-align: center;
@@ -279,8 +250,8 @@
 		margin-bottom: 25px;
 	}
 	.cart-control-temp-img {
-		width: 56px;
-		height: 56px
+		width: 64px;
+		height: 64px
 	}
 	.cart-control-temp-img-right {
 		margin-left: 100px
@@ -295,19 +266,17 @@
 		height:56px;
 	}
 	.card-control-img {
-		width:60px;
-		height:60px
+		width:58px;
+		height:58px
 	}
 	.icon-offline {
 		width: 314px;
 		height: 314px;
 		opacity: 0.3;
-		box-shadow: 0 5px 6px 0 rgba(0,0,0,0.12);
 	}
 	.card-icon {
 		align-items: flex-end;
 		margin-top:-60px;
-		margin-right:-10px
 	}
 	.card-icon-img {
 		width:314px;

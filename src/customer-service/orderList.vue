@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" @headerClick="headerClick" leftImg="./assets/img/public_ic_back@3x.png" titleText="#000000" @leftImgClick="back"></midea-header>
+        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back"></midea-header>
         <scroller class="scroller" ref="orderListScroller" loadmoreoffset=300 @loadmore="loadmore">
             <refresh v-if="isLoaded" class="refresh" @refresh="onrefresh" :display="refreshing ? 'show' : 'hide'">
                 <text class="indicator-text">刷新列表 ...</text>

@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <scroller class="wrap" :style="wrapStyle">
+    <div @viewappear="initData">
+        <scroller class="wrap">
             <div :style="sceneStyle">
                 <midea-header :title="scene.name" bgColor="transparent" titleText="#fff" :leftImg="icon.back" @leftImgClick="goBack"></midea-header>
                 <div class="setting" @click="goSetting()">
@@ -10,7 +10,8 @@
                     <div class="up-desc">
                         <text v-if="roomType=='1'||roomType=='2'" class="desc white">{{temperatureStatus}} {{pm25Status}}</text>
                         <text v-if="roomType=='3'" class="desc white">{{waterStatus}}</text>
-                        <midea-vote :defaulSelectd="Number(indicator.level)" :disabled="true" :styles="style.vote" :imgPath="voteImg"></midea-vote>
+                        
+                        <midea-vote :defaulSelectd="sceneLevel" :disabled="true" :styles="style.vote" :imgPath="voteImg"></midea-vote>
                         <text class="improve white" @click="quickOptimize">一键优化</text>
                     </div>
                     <div class="up-status row-sa" v-if="roomType=='1' || roomType=='2'">
@@ -18,8 +19,8 @@
                             <text class="info-text font14 white">温度</text>
                             <div  class="row-c status-value">
                                 <text v-if="indicator.temperature" class="font36 white">{{indicator.temperature}}</text>
-                                <text v-if="indicator.temperature" class="font16 white mgb-10">℃</text>
-                                <text v-else class="font36 white">？</text>
+                                <text v-if="indicator.temperature" class="font16 white mgb-20">℃</text>
+                                <text v-else class="font36 white">?</text>
                             </div>
                             <text class="info-text font12 white">{{temperatureStatus}}</text>
                         </div>  
@@ -27,8 +28,8 @@
                             <text class="info-text font14 white">湿度</text>
                             <div class="row-c status-value">
                                 <text v-if="indicator.humidity" class="font36 white">{{indicator.humidity}}</text>
-                                <text v-if="indicator.humidity" class="font16 white mgb-10">%</text>
-                                <text v-else class="font36 white">？</text>
+                                <text v-if="indicator.humidity" class="font16 white mgb-20">%</text>
+                                <text v-else class="font36 white">?</text>
                             </div>
                             <text class="info-text font12 white">{{humidityStatus}}</text>
                         </div>  
@@ -36,7 +37,7 @@
                             <text class="info-text font14 white">空气质量</text>
                             <div class="row-c status-value">
                                 <text v-if="indicator.pm5" class="font36 white">{{indicator.pm5}}</text>
-                                <text v-else class="font36 white">？</text>
+                                <text v-else class="font36 white">?</text>
                             </div>
                             <text class="info-text font12 white">{{pm25Status}}</text>
                         </div>
@@ -47,30 +48,30 @@
                             <text v-else class="info-text font14 white">工作状态</text>
                             <div class="row-c status-value">
                                 <text v-if="indicator.water_temperature" class="font36 white">{{indicator.water_temperature}}</text>
-                                <text v-if="indicator.water_temperature" class="font16 white mgb-10">℃</text>
-                                <text v-else class="font36 white">？</text>
+                                <text v-if="indicator.water_temperature" class="font16 white mgb-20">℃</text>
+                                <text v-else class="font36 white">?</text>
                             </div>
                         </div>  
                         <div class="scene-status">
                             <text class="info-text font14 white">热水量</text>
                             <div class="row-c status-value">
                                 <text v-if="indicator.water_capacity" class="font36 white">{{indicator.water_capacity}}</text>
-                                <text v-if="indicator.water_capacity" class="font16 white mgb-10">%</text>
-                                <text v-else class="font36 white">？</text>
+                                <text v-if="indicator.water_capacity" class="font16 white mgb-20">%</text>
+                                <text v-else class="font36 white">?</text>
                             </div>
                         </div>
                         <div class="scene-status">
                             <text class="info-text font14 white">还需加热</text>
                             <div class="row-c status-value">
                                 <text v-if="indicator.remain_time" class="font36 white">{{indicator.remain_time}}</text>
-                                <text v-if="indicator.remain_time" class="font16 white mgb-10">分</text>
-                                <text v-else class="font36 white">？</text>
+                                <text v-if="indicator.remain_time" class="font16 white mgb-20">分</text>
+                                <text v-else class="font36 white">?</text>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div v-if="roomType=='4'" class="up-block balcony-block">
-                    <text class="weather white">{{weatherDesc}}</text>
+                    <!-- <text class="weather white">{{weatherDesc}}</text> -->
                     <slider v-if="hasWasherWaterData || hasWasherPowerData">
                         <div v-if="hasWasherWaterData">
                             <midea-barchart-view class="barchart" :data="washData"></midea-barchart-view>
@@ -88,7 +89,13 @@
                     <image class="next" :src="icon.next"></image>
                 </div> -->
             </div>
-            <div v-if="roomType == 4" class="down-block row-sa">
+            <div v-if="roomType != 4" class="down-block row-sa" :style="downBlockStyle">
+                <div v-for="model in scene.modeList" @click="executeModel(model.modelId)">
+                    <image class="down-icon" :src="icon.actions[model.modelId]"></image>
+                    <text class="down-text">{{model.modelName}}</text>
+                </div>
+            </div>
+            <div v-if="roomType == 4" class="down-block row-sa" :style="downBlockStyle">
                 <div @click="powerOnOff">
                     <image class="down-icon" :src="icon.washer[washerPower]"></image>
                     <text class="down-text">{{washerStatus[washerPower]}}</text>
@@ -96,12 +103,6 @@
                 <div @click="controlStartPause">
                     <image class="down-icon" :src="icon.washer[washerRunningStatus]"></image>
                     <text class="down-text">{{washerStatus[washerRunningStatus]}}</text>
-                </div>
-            </div>
-            <div v-if="roomType != 4" class="down-block row-sa">
-                <div v-for="model in scene.modeList" @click="executeModel(model.modelId)">
-                    <image class="down-icon" :src="icon.actions[model.modelId]"></image>
-                    <text class="down-text">{{model.modelName}}</text>
                 </div>
             </div>
             <toast-dialog :show="showToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}">
@@ -153,6 +154,7 @@
     .font36{ font-size: 72px; }
     .white{ color: #fff; }
     .mgb-10{ margin-bottom: 10px; }
+    .mgb-20{ margin-bottom: 20px; }
     .setting{
         position:absolute;
         right: 25px;
@@ -162,7 +164,7 @@
         font-size: 28px;
     }
     .up-block{
-        padding-top: 208px;
+        padding-top: 188px;
     }
     .balcony-block{
         padding-top: 100px;
@@ -193,7 +195,7 @@
         font-size: 28px;
     }
     .up-status{
-        margin-top: 155px;
+        margin-top: 145px;
         padding-left: 20px;
         padding-right: 20px;
     }
@@ -210,7 +212,7 @@
         margin-bottom: 2px;
     }
     .down-block{
-        padding-top: 90px;
+        /* padding-top: 100px; */
         align-items: center;
         padding-left:30px;
         padding-right:30px;
@@ -284,26 +286,6 @@
     export default {
         components:{ MideaHeader, MideaVote, ToastDialog, mideaCell, mideaList },
         computed:{
-            wrapStyle(){
-                // let tmp = {}
-                // if (this.isipx) {
-                //     tmp.marginTop = '64px'
-                // }else{
-                //     tmp.marginTop = '40px'
-                // }
-                // return tmp
-            },
-            webStyle(){
-                return {
-                    width: '750px',
-                    height: this.pageHeight + 'px',
-                    position: 'fixed',
-                    top: '0px',
-                    left: '0px',
-                    bottom: '0px',
-                    right: '0px'
-                }
-            },
             temperatureStatus(){
                 let temperature = this.indicator.temperature
                 let desc
@@ -402,6 +384,11 @@
                     tmp.paddingTop = '40px'
                 }
                 return tmp
+            },
+            downBlockStyle(){
+                return {
+                    paddingTop: (this.pageHeight*0.3- 170)/2+ 'px',
+                }
             }
         },
         mixins: [base],
@@ -442,7 +429,9 @@
                         on: 'assets/img/power_on.png',
                         off: 'assets/img/power_off.png',
                         start: 'assets/img/start_on.png',
-                        pause: 'assets/img/stop_on.png'
+                        pause: 'assets/img/stop_on.png',
+                        powerDisabled: 'assets/img/power_off.png',
+                        statusDisabled: 'assets/img/start_off.png'
                     }
                 },
                 style: {
@@ -522,15 +511,18 @@
                 },
                 hasWasherPowerData: false,
                 hasWasherWaterData: false,
-                washerPower: '',//洗衣机电源状态（开机关机）
-                washerRunningStatus: '',//洗衣机运行状态
+                washerPower: 'powerDisabled',//洗衣机电源状态（开机关机）
+                washerRunningStatus: 'statusDisabled',//洗衣机运行状态
                 washerStatus: {
                     on: '开机',
                     off: '关机',
+                    powerDisabled: '',
                     start: '启动',
-                    pause: '暂停'
+                    pause: '暂停',
+                    statusDisabled: ''
                 },
-                indicator: {}
+                indicator: {},
+                sceneLevel: 1
             }
         },
         methods: {
@@ -550,6 +542,42 @@
             },
             buyShampoo(){
                 this.goTo('buyShampoo')
+            },
+            initData(){
+                if (this.roomType == 1){
+                    this.scene.modeList = [
+                        { modelName: '回家', modelId: '1001' },
+                        { modelName: '舒适', modelId: '1002' },
+                        { modelName: '节能', modelId: '1003' },
+                        { modelName: '全关', modelId: '1004' },
+                    ]
+                }else if (this.roomType == 2) {
+                    this.scene.modeList = [
+                        { modelName: '回家', modelId: '1005' },
+                        { modelName: '舒适', modelId: '1006' },
+                        { modelName: '节能', modelId: '1007' },
+                        { modelName: '全关', modelId: '1008' },
+                    ]
+                }else if (this.roomType == 3) {
+                    this.scene.modeList = [
+                        { modelName: '舒适', modelId: '1009' },
+                        { modelName: '省电', modelId: '1010' },
+                        { modelName: '停用', modelId: '1011' },
+                    ]
+                }
+                this.getSceneDetail().then(()=>{
+                    if (this.scene.applianceList.length <= 0 ) {
+                        nativeService.toast('无法获取相关数据，点击右上角设置设备')
+                    }
+                    if (this.roomType == 4 && this.scene.applianceList.length > 0) {
+                        this.washerCode = this.scene.applianceList[0].applianceCode
+                        this.getWashData()
+                        // this.getWeatherInfo()
+                        this.luaQueryStatus()
+                    }
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
+                })
             },
             getSceneDetail(){
                 return new Promise((resolve, reject)=>{
@@ -589,20 +617,9 @@
                         homegroupId: this.homegroupId,
                         sceneId: this.sceneId,
                     }
-                    let codeDesc = {
-                        '1000':"未知系统错误",
-                        '1001':"参数格式错误",
-                        '1002':"参数为空",
-                        '1003':"参数类型不支持",
-                        '1105':"账户不存在",
-                        '1200':"用户不在家庭",
-                        '1701':"场景不存在",
-                        '1704':"场景没有关联设备"
-                    }
                     this.webRequest(reqUrl, reqParams).then((res)=>{
                         if (res.code == 0) {
                             this.checkQuickOptimize(res.data.resultId)
-                            
                         }else if (res.code == 1711){
                             nativeService.alert(res.msg)
                         }else{
@@ -804,94 +821,71 @@
                 }
             },
             powerOnOff(){//控制阳台场景洗衣机的开启关闭
-		        let self = this;
-		        let poweronoff = this.washerPower=='off' ? "on" : "off"
-            	let params = {
-                    operation: "luaControl",
-                    applianceId:  String(self.washerCode),
-                    params: { "power": poweronoff },
+                if (this.washerPower == 'powerDisabled') {
+                    return
+                }else{
+                    let self = this;
+                    let poweronoff = this.washerPower=='off' ? "on" : "off"
+                    let params = {
+                        operation: "luaControl",
+                        applianceId:  String(self.washerCode),
+                        params: { "power": poweronoff },
+                    }
+                    nativeService.sendLuaRequest(params,true).then(function(luaData) {
+                        nativeService.showLoading()
+                        setTimeout(()=>{
+                            self.luaQueryStatus()
+                            nativeService.hideLoading()
+                        },2000)
+                    },function(error) {
+                        nativeService.alert('改变设备状态时遇到了问题 \n[错误码：' + error.errorCode +']')
+                    });
                 }
-            	nativeService.sendLuaRequest(params,true).then(function(luaData) {
-                    nativeService.showLoading()
-                    setTimeout(()=>{
-                        self.luaQueryStatus()
-                        nativeService.hideLoading()
-                    },2000)
-            	},function(error) {
-                    nativeService.alert('改变设备状态时遇到了问题 \n[错误码：' + error.errorCode +']')
-            	});
             },
             controlStartPause(){//控制阳台场景洗衣机的启动暂停
-            	let self = this;
-            	if( self.washerRunningStatus == "work") {
-            		let params = {
-            			operation:"luaControl",
-                        applianceId: String(self.washerCode),
-            			params:{ "control_status": "pause" }
+                if (this.washerRunningStatus == 'statusDisabled') {
+                    return
+                }else{
+                    let self = this;
+                    if( self.washerRunningStatus == "work") {
+                        let params = {
+                            operation:"luaControl",
+                            applianceId: String(self.washerCode),
+                            params:{ "control_status": "pause" }
+                        }
+                        nativeService.sendLuaRequest(params,true).then(function(luaData) {
+                            nativeService.showLoading()
+                            setTimeout(()=>{
+                                self.luaQueryStatus()
+                                nativeService.hideLoading()
+                            },2000)
+                        },function(error) {
+                            nativeService.alert('改变设备状态时遇到了问题 \n[错误码：' + error.errorCode +']')
+                        })
+                    } else {
+                        let params = {
+                            operation: "luaControl",
+                            applianceId: String(self.washerCode),
+                            params: { control_status: "start" }
+                        }
+                        nativeService.sendLuaRequest(params,true).then(function(luaData) {
+                            nativeService.showLoading()
+                            setTimeout(()=>{
+                                self.luaQueryStatus()
+                                nativeService.hideLoading()
+                            },2000)
+                        },function(error) {
+                            nativeService.alert('改变设备状态时遇到了问题 \n[错误码：' + error.errorCode +']')
+                        });
                     }
-            		nativeService.sendLuaRequest(params,true).then(function(luaData) {
-                        nativeService.showLoading()
-                        setTimeout(()=>{
-                            self.luaQueryStatus()
-                            nativeService.hideLoading()
-                        },2000)
-	            	},function(error) {
-                        nativeService.alert('改变设备状态时遇到了问题 \n[错误码：' + error.errorCode +']')
-	            	})
-            	} else {
-            		let params = {
-            			operation: "luaControl",
-                        applianceId: String(self.washerCode),
-            			params: { control_status: "start" }
-                    }
-            		nativeService.sendLuaRequest(params,true).then(function(luaData) {
-                        nativeService.showLoading()
-                        setTimeout(()=>{
-                            self.luaQueryStatus()
-                            nativeService.hideLoading()
-                        },2000)
-	            	},function(error) {
-                        nativeService.alert('改变设备状态时遇到了问题 \n[错误码：' + error.errorCode +']')
-	            	});
-            	}
+                }
             }
         },
         created(){
             this.homegroupId = nativeService.getParameters('homegroupId')
             this.sceneId = nativeService.getParameters('sceneId')
             this.roomType = nativeService.getParameters('roomType')
-            
-            if (this.roomType == 1){
-                this.scene.modeList = [
-                    { modelName: '回家', modelId: '1001' },
-                    { modelName: '舒适', modelId: '1002' },
-                    { modelName: '节能', modelId: '1003' },
-                    { modelName: '全关', modelId: '1004' },
-                ]
-            }else if (this.roomType == 2) {
-                this.scene.modeList = [
-                    { modelName: '回家', modelId: '1005' },
-                    { modelName: '舒适', modelId: '1006' },
-                    { modelName: '节能', modelId: '1007' },
-                    { modelName: '全关', modelId: '1008' },
-                ]
-            }else if (this.roomType == 3) {
-                this.scene.modeList = [
-                    { modelName: '舒适', modelId: '1009' },
-                    { modelName: '省电', modelId: '1010' },
-                    { modelName: '停用', modelId: '1011' },
-                ]
-            }
-            this.getSceneDetail().then(()=>{
-                if (this.roomType == 4 && this.scene.applianceList.length > 0) {
-                    this.washerCode = this.scene.applianceList[0].applianceCode
-                    this.getWashData()
-                    this.getWeatherInfo()
-                    this.luaQueryStatus()
-                }
-            }).catch((err)=>{
-                nativeService.toast(this.getErrorMessage(err))
-            })
+            this.sceneLevel = nativeService.getParameters('sceneLevel')
         }
     }
 </script>

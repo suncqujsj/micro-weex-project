@@ -6,7 +6,8 @@
                 <div class="block"  style="background-color:#fff">
                     <text class="sub-hd">关联设备</text>
                     <midea-list v-for="(item,idx) in userSupportDevices" :idx="idx" :hasWrapBorder="false" leftMargin="25px">
-                        <check-item  :title="item.applianceName" :status="item.isRelation == 1" @itemClick="switchBindSceneDevice(item)"></check-item>
+                        <check-item v-if="roomType != 4" :title="item.applianceName" :status="item.isRelation == 1" @itemClick="switchBindSceneDevice(item)"></check-item>
+                        <check-item v-if="roomType == 4" mode="radio" :title="item.applianceName" :status="item.isRelation == 1" @itemClick="switchBindSceneDevice(item)"></check-item>
                     </midea-list>
                 </div>
                 <div class="block" v-if="roomType == 1 || roomType == 2">
@@ -199,6 +200,7 @@
                     next: 'assets/img/more.png'
                 },
                 userSupportDevices: [],
+                settingDetail: [],
                 temperatureRange: {},
                 humidityRange: {},
                 sceneProp: {},
@@ -235,10 +237,6 @@
                 nativeService.goBack()
             },
             initData(){
-                this.homegroupId = nativeService.getParameters('homegroupId')
-                this.sceneId = nativeService.getParameters('sceneId')
-                this.roomType = nativeService.getParameters('roomType')
-
                 this.getSupportDevices().then((res)=>{
                     if (res.applianceList.length == 0) {
                         nativeService.toast('您在该场景下没有可以绑定的设备哦')
@@ -265,14 +263,6 @@
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
                 })
-            },
-            generateListArray(min, max){
-                let tmp = []
-                let len  = max-min+1
-                for (let i=0; i<len; i++){
-                    tmp[i] = { index: i, value: i+min }
-                }
-                return tmp
             },
             getSupportDevices(){//获取此房间可绑定的设备以及该房间的指标数据（温度、湿度、水温、人数等）
                 return new Promise((resolve,reject)=>{
@@ -301,6 +291,14 @@
                     })
                 })
             },
+            generateListArray(min, max){
+                let tmp = []
+                let len  = max-min+1
+                for (let i=0; i<len; i++){
+                    tmp[i] = { index: i, value: i+min }
+                }
+                return tmp
+            },
             jsonToArray(jsonObj){
                 var tmp= []
                 for (var key in jsonObj) {
@@ -313,16 +311,14 @@
             switchBindSceneDevice(appliance){//解绑、绑定设备到房间
                 if (appliance.isRelation == 1) {
                     this.deleteSceneAppliance(appliance.applianceCode).then((res)=>{
-                        // this.initData()
-                        this.reload()
+                        this.initData()
                         nativeService.toast('解绑成功！')
                      }).catch((err)=>{
                         nativeService.toast(this.getErrorMessage(err))
                     })
                 } else if (appliance.isRelation == 2) {
                     this.addSceneAppliance(appliance.applianceCode).then((res)=>{
-                        // this.initData()
-                        this.reload()
+                        this.initData()
                         nativeService.toast('绑定成功！')
                     }).catch((err)=>{
                         nativeService.toast(this.getErrorMessage(err))
@@ -520,6 +516,9 @@
             },
         },
         created(){
+            this.homegroupId = nativeService.getParameters('homegroupId')
+            this.sceneId = nativeService.getParameters('sceneId')
+            this.roomType = nativeService.getParameters('roomType')
             this.initData()
         }
     }

@@ -217,6 +217,7 @@
                     'off': 'on'
                 }
                 this.actions[i].currentStatus = tmp[this.actions[i].currentStatus]
+                this.actions[i].currentStatusName = action.value[ this.actions[i].currentStatus]
                 this.editProperties[this.actions[i].property] =  this.actions[i].currentStatus
             },
             generateListArray(min, max){

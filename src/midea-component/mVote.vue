@@ -21,7 +21,7 @@
                 default: 5
             },
             defaulSelectd: {
-                type: Number,
+                type: [Number, String],
                 default: 5
             },
             disabled: {

@@ -1,6 +1,6 @@
 // 美居场景首页
 <template>
-    <scroller class="wrap"  :show-scrollbar="false" @viewappear="initData">
+    <scroller class="wrapper"  :show-scrollbar="false" @viewappear="initData">
         <div>
             <div class="hd row-sb">
                 <text class="hd-name">快捷操作</text>
@@ -41,8 +41,8 @@
                 </div>
             </div>
         </div>
-        <toast-dialog :show="showToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}">
-            <div class="row-sb" v-for="item in autoExecuteDevices">
+        <toast-dialog :show="showToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}" contentPadding="0px">
+            <div class="auto-toast" v-for="item in autoExecuteDevices">
                 <div class="row-sb toast-line">
                     <text class="toast-hd">{{item.applianceName}}</text>
                     <image class="toast-icon" :src="icon.exe[item.status]"></image>
@@ -53,7 +53,7 @@
 </template>
 
 <style>
-    .wrap { padding-left:30px; padding-right:30px; flex-direction: column;}
+    .wrapper { padding-left:30px; padding-right:30px; flex-direction: column;}
     .row-s { flex-direction: row; align-items: center; justify-content: flex-start; }
     .row-sb{ flex-direction: row; align-items: center; justify-content: space-between; }
     .row-sa{ flex-direction: row; align-items: center; justify-content: space-around; }
@@ -82,7 +82,12 @@
     .scene-name, .scene-desc{ color: #fff; }
     .scene-name{ font-size: 32px; margin-top: 50px; margin-left: 32px; margin-bottom: 30px;}
     .scene-desc{ margin-left: 24px; font-size: 24px; }
-    .toast-line{ padding: 10px; }
+    .auto-toast{
+        width: 550px;
+        padding: 25px;
+    }
+    .toast-line{
+    }
     .toast-hd{
         font-size: 32px;
         width: 400px;
@@ -312,22 +317,19 @@
                             resultId: resultId
                         }
                         
-                        this.webRequest(reqUrl, reqParams, false).then((res)=>{                           
+                        this.webRequest(reqUrl, reqParams, false).then((res)=>{
                             if (res.code == 0) {
                                 this.showToastDialog = true
                                 this.autoExecuteDevices = res.data.list
                                 
-                                for (var x in this.autoExecuteDevices) {
-                                    if (this.autoExecuteDevices[x].status == 2 || this.autoExecuteDevices[x].status == 3) {
-                                        setTimeout(()=>{
-                                            this.checkExecuteAuto(sceneId, resultId)
-                                        },1000)
-                                    } else{
-                                        setTimeout(()=>{
-                                            this.showToastDialog = false
-                                        },2000)
-                                        break
-                                    }
+                                if (res.data.status == 2 || res.data.status == 3) {
+                                    setTimeout(()=>{
+                                        this.checkExecuteAuto(sceneId, resultId)
+                                    },1000)
+                                } else{
+                                    setTimeout(()=>{
+                                        this.showToastDialog = false
+                                    },2000)
                                 }
                             }else{
                                 if (codeDesc.auto.hasOwnProperty(rtnData.code)) {
@@ -453,16 +455,14 @@
             },
             goScene(scene){
                 this.checkLogin().then( (uid) => {
-                    if (scene.applianceCount <= 0 ) {
-                        nativeService.toast('无法获取相关数据，点击右上角设置设备')
-                    }
                     let params = {
                         uid: uid,
                         homegroupId: this.homegroupId,
                         roomType:scene.roomType,
                         sceneId: scene.sceneId,
-                        userDevices: this.userDevices
-                    }             
+                        userDevices: this.userDevices,
+                        sceneLevel: scene.indicator.level
+                    }
                     this.goTo("scene", {}, params)
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))

@@ -83,6 +83,7 @@ export default {
                         "Content-Type": "application/json;charset=utf-8"
                     },
                     data: {
+                        reqId: nativeService.genMessageId(),
                         uid: this.uid,
                         applianceCode: this.deviceId || "",
                         stamp: Math.round(new Date().getTime() / 1000) //时间戳
@@ -115,6 +116,7 @@ export default {
                     "Content-Type": "application/json;charset=utf-8"
                 },
                 data: {
+                    reqId: nativeService.genMessageId(),
                     uid: this.uid,
                     applianceCode: this.deviceId || "",
                     stamp: Math.round(new Date().getTime() / 1000), //时间戳
@@ -133,6 +135,7 @@ export default {
                     "Content-Type": "application/json;charset=utf-8"
                 },
                 data: {
+                    reqId: nativeService.genMessageId(),
                     uid: this.uid,
                     applianceCode: this.deviceId || "",
                     stamp: Math.round(new Date().getTime() / 1000), //时间戳
@@ -150,6 +153,7 @@ export default {
                     "Content-Type": "application/json;charset=utf-8"
                 },
                 data: {
+                    reqId: nativeService.genMessageId(),
                     uid: this.uid,
                     applianceCode: this.deviceId || "",
                     stamp: Math.round(new Date().getTime() / 1000), //时间戳

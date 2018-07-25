@@ -13,7 +13,7 @@
 						<text class="cell-label">睡眠时间</text>
 					</div>
 					<div slot="rightText">
-						<text class="right-text">{{situactionData.props.value}}</text>
+						<text class="right-text">{{situactionData.props.time}}</text>
 					</div>
 				</midea-cell>
 			</div>
@@ -88,7 +88,7 @@ export default {
 				'titleBgColor': '#E7EDEF' //标题栏颜色
 			}, event => {
 				if (event.result === 'success') {
-					this.situactionData.props.value = event.data;
+					this.situactionData.props.time = event.data;
 				}
 			})
 			// this.isShowSleepTemp = true

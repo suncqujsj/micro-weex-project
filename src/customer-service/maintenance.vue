@@ -648,8 +648,8 @@ export default {
             //服务地址
             let customerAddressArray = order.customerAddress.split(" ")
             this.userAddress = {
-                receiverName: order.customerName,
-                receiverMobile: order.customerMobilephone1,
+                receiverName: order.servCustomerName,
+                receiverMobile: order.servCustomerMobilephone1,
                 province: '',
                 provinceName: customerAddressArray[0] || '',
                 city: '',
@@ -822,7 +822,6 @@ export default {
 }
 .base-group {
   margin-top: 24px;
-  padding-left: 24px;
 }
 .cell-title {
   flex: 1;

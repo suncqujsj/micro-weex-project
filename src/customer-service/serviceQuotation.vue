@@ -133,9 +133,13 @@ export default {
             })
         },
         goToOrderDetail() {
-            // nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, this.order, () => {
-            this.goTo("orderDetail", {}, { from: 'serviceQuotation', id: this.notificationData.cssInfoId })
-            // })
+            this.goTo("orderDetail", {}, {
+                from: 'serviceQuotation',
+                id: this.notificationData.cssInfoId,
+                orgCode: this.notificationData.orgCode,
+                interfaceSource: this.notificationData.interfaceSource,
+                mobile: this.notificationData.mobile
+            })
         }
     },
     created() {
@@ -147,23 +151,6 @@ export default {
             } catch (error) { }
         }
         this.querychargedetails()
-
-        // this.serviceOrderNo = nativeService.getParameters('id') || null
-        // this.archivesNo = nativeService.getParameters('archivesNo') || null
-        // let param = {
-        //     interfaceSource: "SMART",
-        //     filterOrderNos: this.serviceOrderNo,
-        //     page: 0,
-        //     resultNum: 1
-        // }
-        // nativeService.queryserviceorder(param).then((data) => {
-        //     if (data.list && data.list.length > 0) {
-        //         this.order = data.list[0]
-        //         this.querychargedetails()
-        //     }
-        // }).catch((error) => {
-        //     nativeService.toast(nativeService.getErrorMessage(error))
-        // })
     }
 }
 </script>

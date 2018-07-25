@@ -161,7 +161,9 @@
             			} else {
             				me.onlineStatus = "0";
             			}
-            		}
+            		} else if(data && data.messageType == "queryStatusFromApp") {
+	                	me.queryStatus();
+	                }
 		        });
             },
             showControlPanelPage() {

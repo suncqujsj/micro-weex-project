@@ -33,6 +33,7 @@
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
         </div>
+      	<situation></situation>
 	    <scroller class="scroller-item" scroll-direction="horizontal">
 		    <list class="scroller-list-item">
 	        	<!--带向右箭头的链接 -->
@@ -54,6 +55,7 @@
     import nativeService from '@/common/services/nativeService.js'
 	import mideaSwitch from '@/midea-component/switch.vue'
 	import mideaItem from '@/midea-component/item.vue'
+	import situation from '@/midea-card/midea-components/situation.vue'
 	import cookbook from '@/midea-card/T0xAC/components/cookbook.vue'
 	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	import Mock from './settings/mock'
@@ -66,6 +68,7 @@
         components: {
             mideaSwitch,
             mideaItem,
+			situation,
             cookbook,
             mideaDownload
         },

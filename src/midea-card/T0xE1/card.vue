@@ -273,7 +273,9 @@
             			} else {
             				me.onlineStatus = "0";
             			}
-            		}
+            		} else if(data && data.messageType == "queryStatusFromApp") {
+	                	me.queryStatus();
+	                }
 		        });
             },
 	        showControlPanelPage() {
@@ -342,7 +344,7 @@
 		height:392px;
 		margin-left:32px;
 		margin-right:32px;
-		margin-top:323px;
+		margin-top:32px;
 		background-color: #D8D8DE;
 		flex-direction: row;
 		border-radius: 6px;

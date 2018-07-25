@@ -3,169 +3,109 @@
         <div class="smart-title">
             <text class="smart-text">智能</text>
         </div>
-        <midea-smart @click="goToSituation('qingjing.js', situation1)" @change="onMideachange($event, situation1)" :checked="situation1.checked" :data="situation1"></midea-smart>
+        <midea-smart @click="goToSituation('qingjing.js', situation1)" @change="switchEnable($event, situation1)" :checked="situation1.checked" :data="situation1"></midea-smart>
     </div>
 </template>
 
 <script>
 import nativeService from '@/common/services/nativeService.js'
+import situationBase from '@/midea-card/midea-components/situationBase'
 import mideaSmart from '@/midea-card/midea-components/smart.vue'
 
 export default {
     components: {
         mideaSmart
     },
+    mixins: [situationBase],
     data() {
         return {
             uid: "",
             deviceId: "",
-            situationList: [],
-            isSituationListLoaded: false
+            situationList: []
         }
     },
     methods: {
-        onMideachange(event, situation) {
-            let enable = event.value ? "1" : "0"
-            if (situation.isCreated) {
-                this.updateSituation(situation.moduleCode, enable).then((resp) => {
-                    if (resp.code == 0) {
-                        nativeService.toast("更新成功")
-                    } else {
-                        throw resp
-                    }
-                }).catch((error) => {
-                    let msg = "请求失败，请稍后重试。"
-                    if (error.msg) {
-                        msg = error.msg
-                    }
-                    if (error.code) {
-                        msg += "(" + error.code + ")"
-                    }
-                    nativeService.toast(msg)
-                })
-            } else {
-                this.addSituation(situation.moduleCode, enable, situation).then((resp) => {
-                    if (resp.code == 0) {
-                        nativeService.toast("更新成功")
-                        situation.isCreated = true
-                    } else {
-                        throw resp
-                    }
-                }).catch((error) => {
-                    let msg = "请求失败，请稍后重试。"
-                    if (error.msg) {
-                        msg = error.msg
-                    }
-                    if (error.code) {
-                        msg += "(" + error.code + ")"
-                    }
-                    nativeService.toast(msg)
-                })
+        handlePageData(data) {
+            //处理页面传递的信息
+            if (data.deviceId == this.deviceId) {
+                if (data.key == "situation") {
+                    this.getSituationList()
+                }
             }
         },
-        goToSituation(path, data) {
-            nativeService.setItem("CARD_STORAGE_SITUATION", Object.assign(data, { deviceId: this.deviceId }), () => {
+        goToSituation(path, situation) {
+            nativeService.setItem("CARD_STORAGE_SITUATION", Object.assign(situation, { deviceId: this.deviceId }), () => {
                 nativeService.goTo(path)
             })
         },
         getSituationList() {
-            nativeService.getUserInfo().then((data) => {
-                let param = {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json;charset=utf-8"
-                    },
-                    data: {
-                        uid: this.uid,
-                        applianceCode: this.deviceId || "",
-                        stamp: Math.round(new Date().getTime() / 1000) //时间戳
-                    }
-                }
-                nativeService.isDummy = false
-                nativeService.sendCentralCloundRequest("/v1/situation/list", param).then((resp) => {
-                    if (resp.code == 0) {
-                        this.situationList = resp.list || []
-                        this.isSituationListLoaded = true
-                    } else {
-                        throw resp
-                    }
-                }).catch((error) => {
-                    let msg = "请求失败，请稍后重试。"
-                    if (error.msg) {
-                        msg = error.msg
-                    }
-                    if (error.code) {
-                        msg += "(" + error.code + ")"
-                    }
-                    nativeService.toast(msg)
-                })
-            })
-        },
-        addSituation(moduleCode, enable, situation) {
-            let param = {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json;charset=utf-8"
-                },
-                data: {
-                    uid: this.uid,
-                    applianceCode: this.deviceId || "",
-                    stamp: Math.round(new Date().getTime() / 1000), //时间戳
-                    moduleCode: moduleCode,
-                    enable: enable,
-                    props: situation.props
-                }
-            }
-            nativeService.isDummy = false
-            return nativeService.sendCentralCloundRequest("/v1/situation/add", param)
-        },
-        updateSituation(moduleCode, enable) {
-            let param = {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json;charset=utf-8"
-                },
-                data: {
-                    uid: this.uid,
-                    applianceCode: this.deviceId || "",
-                    stamp: Math.round(new Date().getTime() / 1000), //时间戳
-                    moduleCode: moduleCode,
-                    enable: enable
-                }
-            }
-            nativeService.isDummy = false
-            return nativeService.sendCentralCloundRequest("/v1/situation/update", param)
-        },
-        executeSituation(moduleCode) {
-            let param = {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json;charset=utf-8"
-                },
-                data: {
-                    uid: this.uid,
-                    applianceCode: this.deviceId || "",
-                    stamp: Math.round(new Date().getTime() / 1000), //时间戳
-                    moduleCode: moduleCode
-                }
-            }
-            nativeService.isDummy = false
-            return nativeService.sendCentralCloundRequest("/v1/situation/execute", param).then((resp) => {
-                if (resp.code == 0) {
-                    nativeService.toast("执行成功")
+            this.getSituationListService().then((resp) => {
+                if (resp.code == 0 && resp.data) {
+                    this.situationList = resp.data.list || []
                 } else {
                     throw resp
                 }
             }).catch((error) => {
-                let msg = "请求失败，请稍后重试。"
-                if (error.msg) {
-                    msg = error.msg
-                }
-                if (error.code) {
-                    msg += "(" + error.code + ")"
-                }
-                nativeService.toast(msg)
+                nativeService.toast(this.getErrorMessage(error))
             })
+        },
+        switchEnable(event, situation) {
+            let enable = event.value ? "1" : "0"
+            if (situation.isCreated) {
+                //更新
+                let index = this.situationList.findIndex((item) => (item.moduleCode == situation.moduleCode))
+                this.updateSituationEnableService(situation.moduleCode, enable).then((resp) => {
+                    if (resp.code == 0) {
+                        situation.enable = enable
+                        this.$set(this.situationList, index, situation)
+                    } else {
+                        throw resp
+                    }
+                }).catch((error) => {
+                    this.$set(this.situationList, index, situation)
+                    nativeService.toast(this.getErrorMessage(error))
+                })
+            } else {
+                //新增
+                this.addSituationService(situation.moduleCode, enable, situation).then((resp) => {
+                    if (resp.code == 0) {
+                        situation.enable = enable
+                        this.situationList.push(situation)
+                    } else {
+                        throw resp
+                    }
+                }).catch((error) => {
+                    nativeService.toast(this.getErrorMessage(error))
+                })
+            }
+        },
+        executeSituation(situation) {
+            if (situation.isCreated) {
+                //直接执行
+                return nativeService.executeSituationService(situation).then((resp) => {
+                    if (resp.code == 0) {
+                        nativeService.toast("执行成功")
+                    } else {
+                        throw resp
+                    }
+                }).catch((error) => {
+                    nativeService.toast(this.getErrorMessage(error))
+                })
+            } else {
+                //先新增，再执行
+                this.addSituationService(situation.moduleCode, enable, situation).then((resp) => {
+                    if (resp.code == 0) {
+                        this.situationList.push(situation)
+
+                        situation.isCreated = true
+                        this.executeSituation(situation)
+                    } else {
+                        throw resp
+                    }
+                }).catch((error) => {
+                    nativeService.toast(this.getErrorMessage(error))
+                })
+            }
         }
     },
     computed: {
@@ -187,7 +127,7 @@ export default {
             }
             if (this.situationList) {
                 let temp = this.situationList.filter((item) => {
-                    return item.moduleCode == 1
+                    return item.moduleCode == result.moduleCode
                 })
                 if (temp && temp.length > 0) {
                     result = temp[0]

@@ -7,7 +7,7 @@
                 <image class="order-detail-img" :src="formattedOrder.statusIcon" resize='cover'>
                 </image>
                 <div class="order-detail-content">
-                    <text class="order-detail-label">{{formattedOrder.statusDesc}}{{'('+formattedOrder.serviceSubTypeName+')'}}</text>
+                    <text class="order-detail-label">{{formattedOrder.statusDesc}}{{'('+(formattedOrder.serviceSubTypeName||formattedOrder.serviceMainTypeName)+')'}}</text>
                 </div>
             </div>
             <div v-if="progressList" class="order-detail-step">
@@ -237,7 +237,7 @@ export default {
                 interfaceSource: order.interfaceSource,
                 serviceOrderNo: order.serviceOrderNo,
                 orgCode: order.orgCode,
-                customerPhone: order.customerMobilephone1
+                customerPhone: order.servCustomerMobilephone1
             }
             nativeService.queryserviceuserdemanddispatch(param).then((data) => {
                 if (data.unitTel) {
@@ -257,9 +257,9 @@ export default {
         }
     },
     created() {
-        this.serviceOrderNo = nativeService.getParameters('id') || null
 
         if (this.fromPage == "orderList") {
+            this.serviceOrderNo = nativeService.getParameters('id') || null
             //从订单列表进入
             nativeService.getItem(this.SERVICE_STORAGE_KEYS.currentOrder, (resp) => {
                 if (resp.result == 'success') {
@@ -268,20 +268,42 @@ export default {
                 }
             })
         } else {
-            //其他入口进入
-            let param = {
-                interfaceSource: "SMART",
-                serviceOrderCode: this.serviceOrderNo,
-                page: 0,
-                resultNum: 1
+            let orgCode = '', interfaceSource = '', mobile = ''
+            if (this.fromPage == "serviceQuotation") {
+                //从报价单进入
+                this.serviceOrderNo = nativeService.getParameters('id') || null
+                orgCode = nativeService.getParameters('orgCode') || null
+                interfaceSource = nativeService.getParameters('interfaceSource') || null
+                mobile = nativeService.getParameters('mobile') || null
+            } else {
+                //其他入口进入
+                let notificationData = nativeService.getParameters('param') || {}
+                if (notificationData && typeof notificationData == 'string') {
+                    try {
+                        notificationData = JSON.parse(notificationData)
+                    } catch (error) { }
+                }
+                this.serviceOrderNo = notificationData.cssInfoId
+                orgCode = notificationData.orgCode
+                interfaceSource = notificationData.systemCode
+                mobile = notificationData.mobile
             }
-            nativeService.queryserviceorder(param).then((data) => {
-                this.order = data.list[0]
+
+            let param = {
+                interfaceSource: interfaceSource,
+                serviceOrderNo: this.serviceOrderNo,
+                orgCode: orgCode,
+                customerPhone: mobile
+            }
+            nativeService.queryserviceuserdemanddispatch(param).then((data) => {
+                this.order = data
+                this.order.serviceUserDemandVOs = data.userDemandDispatchVOList
+                this.order.interfaceSource = interfaceSource
+                this.order.allowCallbackWX = data.userDemandDispatchVOList[0].allowCallbackWX
                 this.getOrderProgress()
             }).catch((error) => {
                 nativeService.toast(nativeService.getErrorMessage(error))
             })
-
         }
     }
 }

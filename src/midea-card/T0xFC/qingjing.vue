@@ -13,7 +13,7 @@
 						<text class="cell-label">PM2.5高于</text>
 					</div>
 					<div slot="rightText">
-						<text class="right-text">{{situactionData.props.value}}</text>
+						<text class="right-text">{{situactionData.props.conditions[0].value}}</text>
 					</div>
 				</midea-cell>
 			</div>
@@ -30,6 +30,7 @@
 <script>
 import nativeService from '@/common/services/nativeService.js'
 import util from '@/common/util/util'
+import situationBase from '@/midea-card/midea-components/situationBase'
 
 import { MideaHeader, MideaCell, MideaButton, MideaSelect } from '@/index'
 
@@ -40,6 +41,7 @@ export default {
 		MideaButton,
 		MideaSelect
 	},
+	mixins: [situationBase],
 	data() {
 		return {
 			title: '情境设置',
@@ -58,7 +60,6 @@ export default {
 			let result
 
 			if (this.situactionData) {
-
 				result = {
 					title: "PM2.5高于70时，自动打开净化器",
 					detail: ""
@@ -69,11 +70,6 @@ export default {
 		},
 	},
 	methods: {
-		back(options = {}) {
-			//返回上一页
-			nativeService.goBack(options);
-		},
-
 		selectSleepTemp() {
 			this.isShowSleepTemp = true
 		},
@@ -83,39 +79,16 @@ export default {
 		},
 
 		submit() {
-			nativeService.getUserInfo().then((data) => {
-				let param = {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json;charset=utf-8"
-					},
-					data: {
-						uid: data.uid,
-						applianceCode: this.situactionData.deviceId || "",
-						stamp: Math.round(new Date().getTime() / 1000), //时间戳
-						moduleCode: "1",
-						enable: this.situactionData.enable,
-						props: this.situactionData.props
-					}
+			this.updateSituationService(this.situactionData).then((resp) => {
+				if (resp.code == 0) {
+					nativeService.toast("更新成功")
+					this.appPageDataChannel.postMessage({ key: "situation", deviceId: this.deviceId, data: {} })
+					this.back()
+				} else {
+					throw resp
 				}
-				nativeService.isDummy = false
-				nativeService.sendCentralCloundRequest("/v1/situation/update", param).then((resp) => {
-					if (resp.code == 0) {
-						nativeService.toast("更新成功")
-						this.back()
-					} else {
-						throw resp
-					}
-				}).catch((error) => {
-					let msg = "请求失败，请稍后重试。"
-					if (error.msg) {
-						msg = error.msg
-					}
-					if (error.code) {
-						msg += "(" + error.code + ")"
-					}
-					nativeService.toast(msg)
-				})
+			}).catch((error) => {
+				nativeService.toast(this.getErrorMessage(error))
 			})
 		}
 	},
@@ -123,11 +96,19 @@ export default {
 		for (let index = 1; index <= 99; index++) {
 			this.temperatureList.push({ value: index * 10, key: index * 10 }, )
 		}
-		nativeService.getItem("CARD_STORAGE_SITUATION", (resp) => {
-			if (resp.result == 'success') {
-				this.situactionData = JSON.parse(resp.data) || {}
-			}
-		})
+
+		nativeService.getUserInfo().then((data) => {
+			this.uid = data.uid
+			nativeService.getItem("CARD_STORAGE_SITUATION", (resp) => {
+				if (resp.result == 'success') {
+					this.situactionData = JSON.parse(resp.data) || {}
+					this.deviceId = this.situactionData.deviceId
+
+					//设置默认值
+					this.conditionTempIndex = ((this.situactionData.props.conditions[0].value || 0) / 10) - 1
+				}
+			})
+		}).catch((error) => { })
 	}
 }
 </script>

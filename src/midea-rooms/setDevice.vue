@@ -1,32 +1,35 @@
 <template>
    <div class="wrap" :style="wrapStyle">
-        <div class="row-sb hd">
-            <text class="hd-text font-grey" @click="goBack">取消</text>
-            <text class="hd-text">{{deviceName}}</text>
-            <text class="hd-text font-grey"  @click="save">确定</text>
-        </div>
+        <div class="header-floor">
+            <midea-header :title="deviceName" bgColor="#fff" titleText="#000" @leftImgClick="goBack"></midea-header>
+            <div v-if="from == 'editAuto'" class="delete" @click="cancelDevice">
+                <text class="delete-text">删除</text>
+            </div>
+       </div>
         <list>
-        <cell class="content">
-            <text class="sub-hd">设置为</text>
-            <div class="ability-list" v-for="(item,i) in actions">
-                <div v-if="item.type == 'switch'" :class="['row-sb','floor', i=='0'?'no-border':'']">
-                    <text class="property-name">{{item.propertyName}}</text>
-                    <div>
-                        <switch-bar :isActive="item.currentStatus =='on'" @onSwitch="switchAction(item,i)"></switch-bar>
+            <cell class="content">
+                <text class="sub-hd">设置为</text>
+                <div class="ability-list" v-for="(item,i) in actions">
+                    <div v-if="item.type == 'switch'" :class="['row-sb','floor', i=='0'?'no-border':'']">
+                        <text class="property-name">{{item.propertyName}}</text>
+                        <div>
+                            <switch-bar :isActive="item.currentStatus =='on'" @onSwitch="switchAction(item,i)"></switch-bar>
+                        </div>
                     </div>
-                </div>
-                <div v-if="item.type == 'list' || item.type=='range'" :class="['row-sb','floor', i=='0'?'no-border':'']"  @click="showPop(item.property)">
-                    <text class="property-name">{{item.propertyName}}</text>
-                    <div>
-                        <div class="row-e">
-                            <text v-if="item.type == 'list'" class="property-text">{{item.currentStatusName}}</text>
-                            <text v-if="item.type=='range'" class="property-text">{{item.currentStatus}}</text>
-                            <image class="icon" :src="icon.more"></image>
+                    <div v-if="(item.type == 'list' || item.type=='range') && showOtherActions" :class="['row-sb','floor', i=='0'?'no-border':'']"  @click="showPop(item.property)">
+                        <text class="property-name">{{item.propertyName}}</text>
+                        <div>
+                            <div class="row-e">
+                                <text v-if="item.type == 'list'" class="property-text">{{item.currentStatusName}}</text>
+                                <text v-if="item.type=='range'" class="property-text">{{item.currentStatus}}</text>
+                                <image class="icon" :src="icon.more"></image>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </cell>
+                <text class="save-btn" @click="save">确定</text>
+                
+            </cell>
         </list>
         <div class="pop-floor" v-for="(item,idx) in actions">
             <midea-popup v-if="item.type == 'list' || item.type=='range'" :show="show[item.property]" :height="600" @mideaPopupOverlayClicked="closePop(item.property)">
@@ -51,15 +54,8 @@
     .row-e { flex-direction: row; align-items: center; justify-content: flex-end; }
     
     .wrap{ background-color: #f2f2f2; }
+    .header-floor{ position: relative; }
     .font-grey { color: #666; }
-    .hd{
-        background-color: #fff;
-        width: 750px;
-        height: 88px;
-        padding-left: 30px;
-        padding-right: 30px;
-    }
-    .hd-text{ font-size: 32px; }
     .content{ padding-top: 50px;}
     .sub-hd{
         color: #666;
@@ -77,6 +73,15 @@
     .no-border{
         border-top-color: transparent;
     }
+    .delete{
+        position: absolute;
+        top: 30px;
+        right: 25px;
+    }
+    .delete-text{
+        font-size: 28px;
+        color: #666;
+    }
     .ability-list{
         background-color: #fff;
     }
@@ -88,6 +93,17 @@
     .property-text{
         color: #666;
         font-size: 30px;
+    }
+    .save-btn{
+        width: 690px;
+        margin-top: 48px;
+        padding: 25px;
+        background-color: #267AFF;
+        color: #fff;
+        border-radius: 8px;
+        margin-left: 30px;
+        text-align: center;
+        font-size: 32px;
     }
     .icon{
         width: 12px;
@@ -104,6 +120,7 @@
 
     import base from './base'
     import nativeService from '@/common/services/nativeService.js'
+    import MideaHeader from '@/midea-component/header.vue'
     import MideaCell from '@/midea-component/cell.vue'
     import MideaPopup from '@/midea-component/popup.vue'
 	import switchBar from '@/midea-rooms/components/switch.vue'
@@ -113,7 +130,7 @@
     const channelSetDevice = new BroadcastChannel('autoBroadcast')
 
     export default {
-        components:{ switchBar, MideaPopup, scrollPicker },
+        components:{ MideaHeader, switchBar, MideaPopup, scrollPicker },
         mixins: [base],
         data(){
             return {
@@ -135,7 +152,8 @@
                     windSpeed: []
                 },
                 pageStamp: '',
-                editProperties: {}
+                editProperties: {},
+                isCheck: ''
             }
         },
         computed: {
@@ -150,6 +168,16 @@
                 }
                 return tmp
             },
+            showOtherActions(){
+                let tmp = false
+                for (var i in this.actions) {
+                    if (this.actions[i].property == 'power' && this.actions[i].currentStatus == 'on') {
+                        tmp = true
+                    }
+                    break
+                }
+                return tmp
+            }
         },
         methods: {
             goBack(){
@@ -207,7 +235,7 @@
                     this.actions = tmpActions
                     this.show = Object.assign({}, this.show, tmpShow)
                     this.activeKey = Object.assign({}, this.activeKey, tmpActiveKey)
-
+                    // nativeService.alert(this.actions)
                 })
                 
             },
@@ -258,13 +286,21 @@
 
                 this.editProperties[this.actions[propertyIdx].property] = this.actions[propertyIdx].currentStatus
             },
+            cancelDevice(){
+                this.isCheck = 'uncheck'
+                this.postMessageAndBack()
+            },
             save(){
+                nativeService.setItem('mideaRoom'+this.deviceId+this.pageStamp, JSON.stringify(this.editProperties))
+                this.postMessageAndBack()
+            },
+            postMessageAndBack(){
                 channelSetDevice.postMessage({
                     page: 'setDevice',
                     applianceCode: this.deviceId,
-                    actions: this.actions
+                    actions: this.actions,
+                    isCheck: this.isCheck
                 })
-                nativeService.setItem('mideaRoom'+this.deviceId+this.pageStamp, JSON.stringify(this.editProperties))
                 this.goBack()
             }
         },

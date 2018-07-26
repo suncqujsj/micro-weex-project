@@ -1,15 +1,10 @@
 <template>
    <div class="wrap" :style="wrapStyle">
-        <div v-if="from=='addAuto'" class="addauto-hd">
+        <div class="addauto-hd">
             <midea-header :title="title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
-            <div v-if="sceneType != 3" class="next" @click="goNext">
+            <div v-if="from=='addAuto' && sceneType != 3" class="next" @click="goNext">
                 <text class="next-text"  @click="goNext">下一步</text>
             </div>
-        </div>  
-        <div v-if="from=='editAuto'" class="row-sb head">
-            <text class="head-text font-grey" @click="goBack">取消</text>
-            <text class="head-text">{{title}}</text>
-            <text class="head-text font-grey"  @click="saveChange">确定</text>
         </div>
         <scroller class="content-scroller">
             <div style="background-color: #fff" v-if="sceneType == 3">
@@ -24,24 +19,27 @@
                 <midea-map-view class="map" :data="mapData" @marker-pick="mapMarkerPick" @point-pick="mapPointPick"></midea-map-view>
             </div>
             <div v-if="sceneType==4">
-                <text class="hd">时间</text>
-                <div class="time-picker row-sb">
-                    <scroll-picker :wrapWidth="375" :listArray="hours" @onChange="setActiveHour"></scroll-picker>
-                    <scroll-picker :wrapWidth="375" :listArray="minutes" @onChange="setActiveMinute"></scroll-picker>
+                <text class="hd">设置为</text>
+                <div class="row-sb time-floor"  @click="showPop('time')">
+                    <text class="text">时间</text>
+                    <div class="row-sb">
+                        <text class="font-grey text">{{startTime}}</text>
+                        <image class="icon-next" :src="icon.next"></image>
+                    </div>
                 </div>
             </div>
             <div v-if="sceneType==6">
                 <text class="hd">天气</text>
                 <div>
-                    <midea-list style="background-color:#fff" v-for="(item,i) in weather.data" :idx="i" :hasWrapBorder="false" leftMargin="25px">
+                    <midea-list style="background-color:#fff" v-for="(item,i) in weather.type" :idx="i" :hasWrapBorder="false" leftMargin="25px">
                         <check-item :title="item" @itemClick="selectWeather(i)" :status="weather.activeTypeIndex==i" mode="radio"></check-item>
                     </midea-list>
                 </div>
             </div>
             <div v-if="sceneType==6">
                 <div class="box">
-                    <midea-cell title="气温" :hasArrow="true" @mideaCellClick="setWeatherSwitch" :cellStyle="{paddingLeft: '30px'}" :rightText="switchs[weather.activeSwitch]"></midea-cell>
-                    <scroll-picker :listArray="weatherTemperature"  @onChange="setActiveWeatherTemperature"></scroll-picker>
+                    <!-- <midea-cell title="气温" :hasArrow="true" @mideaCellClick="setWeatherSwitch" :cellStyle="{paddingLeft: '30px'}" :rightText="switchs[weather.activeSwitch]"></midea-cell> -->
+                    <midea-cell title="气温" :hasArrow="true" @mideaCellClick="showPop('weather')" :cellStyle="{paddingLeft: '30px'}" :rightText="weatherTemperatureDesc"></midea-cell>
                 </div>
             </div>
             <div class="repeat">
@@ -50,6 +48,7 @@
                     <text :class="['week', item.repeat==1?'week-active':'']" v-for="(item,i) in week" @click="setRepeat(i)">{{item.title}}</text>
                 </div>
             </div>
+            <text v-if="from=='editAuto'" class="save-btn" @click="saveChange">确定</text>
         </scroller>
         <scroller v-if="sceneType== 3 && showMapSearchResult" class="map-result">
             <div v-if="mapSearchResult.length > 0">
@@ -63,8 +62,27 @@
             </div>
         </scroller>
         <image v-if="sceneType==3" class="map-icon" :src="icon.map" @click="goCurrentLocation"></image>
+        <div v-if="sceneType==4" class="modal">
+            <!-- 时间弹窗 -->
+            <midea-confirm2 height="600" :show="popStatus.time" @leftBtnClick="cancelPop('time')" @rightBtnClick="confirmPop('time')" @mideaPopupOverlayClicked="closePop('time')">
+                <div class="time-picker row-sb">
+                    <scroll-picker :wrapWidth="375" :listArray="hours" @onChange="setActiveHour"></scroll-picker>
+                    <scroll-picker :wrapWidth="375" :listArray="minutes" @onChange="setActiveMinute"></scroll-picker>
+                    <div class="line1" ></div>
+                    <div class="line2"></div>
+                </div>
+            </midea-confirm2>
+        </div>
         <div v-if="sceneType==6" class="modal">
             <!-- 天气弹窗 -->
+            <midea-confirm2 height="600" :show="popStatus.weather" @leftBtnClick="cancelPop('weather')" @rightBtnClick="confirmPop('weather')" @mideaPopupOverlayClicked="closePop('weather')">
+                <div class="time-picker row-sb">
+                    <scroll-picker :wrapWidth="375" :listArray="weatherLogicalList" @onChange="setActiveLogical"></scroll-picker>
+                    <scroll-picker :wrapWidth="375" :listArray="weatherTemperature"  @onChange="setActiveWeatherTemperature"></scroll-picker>
+                    <div class="line1" ></div>
+                    <div class="line2"></div>
+                </div>
+            </midea-confirm2>
             <midea-dialog  :show="weather.showDialog" @close="closeDialog('weather')" @mideaDialogCancelBtnClicked="dialogCancel('weather')" @mideaDialogConfirmBtnClicked="weatherDialogConfirm" >
                 <text class="text" slot="content">需要切换模式为{{switchs[switchTo[weather.activeSwitch]] }}某个温度吗？</text>
             </midea-dialog>
@@ -92,6 +110,11 @@
         font-size: 32px;
         color: #666;
     }
+    .icon-next{
+        width: 12px;
+        height: 24px;
+        margin-left: 12px;
+    }
     .text{font-size: 28px;}
     .head{
         background-color: #fff;
@@ -118,10 +141,14 @@
         flex: 1;
         padding-bottom: 100px;
     }
+    .time-floor{
+        background-color: #fff;
+        padding-top: 30px;
+        padding-bottom: 30px;
+        padding-left: 25px;
+        padding-right: 25px;
+    }
     .time-picker{
-        margin-top: 25px;
-        padding-top: 40px;
-        padding-bottom: 40px;
         background-color: #fff;
         height: 434px;
     }
@@ -225,9 +252,34 @@
         border-top-color: transparent;
     }
     .no-more{
-        padding:25px;
+        padding: 25px;
         text-align: center;
         color: #777;
+    }
+    .line1, .line2{
+        background-color: #e2e2e2;
+        width: 750px;
+        height: 1px;
+        position: absolute;
+        left: 0;
+        right: 0;
+    }
+    .line1{
+        top: 165px;
+    }
+    .line2{
+        top: 245px;
+    }
+    .save-btn{
+        width: 690px;
+        margin-top: 48px;
+        padding: 25px;
+        background-color: #267AFF;
+        color: #fff;
+        border-radius: 8px;
+        margin-left: 30px;
+        text-align: center;
+        font-size: 32px;
     }
 </style>
 
@@ -239,6 +291,7 @@
     import MideaHeader from '@/midea-component/header.vue'
     import MideaCell from '@/midea-component/cell.vue'
     import mideaDialog from '@/midea-component/dialog.vue'
+    import mideaConfirm2 from '@/midea-component/confirm2.vue'
     import mideaList from '@/midea-rooms/components/list.vue'
     import checkItem from '@/midea-rooms/components/checkItem.vue'
     import scrollPicker from '@/midea-rooms/components/scrollPicker.vue'
@@ -248,7 +301,7 @@
     
     export default {
         components:{
-            MideaHeader, MideaCell, mideaDialog, WxcSearchbar,
+            MideaHeader, MideaCell, mideaDialog, WxcSearchbar, mideaConfirm2,
             mideaList, scrollPicker, checkItem
         },
         mixins: [base],
@@ -280,11 +333,19 @@
                     { title: '日', repeat: 0 },
                 ],
                 weather: {
-                    data: ['多云','晴','沙尘暴','雾','雪', '雨'],
+                    type: ['多云','晴','沙尘暴','雾','雪', '雨'],
                     activeTypeIndex: 0,
                     activeSwitch: 'min',
-                    showDialog: false
+                    showDialog: false,
+                    logicals: {
+                        min: '低于',
+                        max: '高于'
+                    }
                 },
+                weatherLogicalList: [
+                    { name: 'min', value: '低于' },
+                    { name: 'max', value: '高于' },
+                ],
                 switchs: {
                     min: '低于',
                     max: '高于'
@@ -308,6 +369,10 @@
                 mapMarkers: [],
                 from: '', // 页面来源于编辑还是新增
                 editParams: {},
+                popStatus: {
+                    time: false,
+                    weather: false
+                }
             }
         },
         computed: {
@@ -316,9 +381,9 @@
                     height: this.pageHeight+'px'
                 }
                 if (this.isipx) {
-                    tmp.marginTop = '64px'
-                }else{
-                    tmp.marginTop = '40px'
+                    tmp.paddingTop = '64px'
+                }else if (this.platform != 'android'){
+                    tmp.paddingTop = '40px'
                 }
                 return tmp
             },
@@ -340,6 +405,15 @@
                 }
                 if (this.mapMarkers) {
                     tmp.markers = this.mapMarkers
+                }
+                return tmp
+            },
+            weatherTemperatureDesc(){
+                let tmp = ''
+                if (this.from == 'addAuto' && this.activeWeatherTemperature == '') {
+                    tmp = '点击设置温度'                    
+                }else{
+                    tmp = this.weather.logicals[this.weather.activeSwitch] + this.activeWeatherTemperature + '℃'                    
                 }
                 return tmp
             }
@@ -375,13 +449,16 @@
                         this.mapCenter.latitude = nativeService.getParameters('locationLatitude') ||  this.gpsInfo.latitude
                         this.mapCenter.longitude = nativeService.getParameters('locationLongitude') || this.gpsInfo.longitude
                     }
-                    if (this.sceneType == 4) {}
+                    if (this.sceneType == 4) {
+                        this.startTime = nativeService.getParameters('startTime')
+                    }
                     if (this.sceneType == 6) {
                         let tmpWeatherStatus = decodeURIComponent(nativeService.getParameters('weatherStatus'))
                         let tmpWeatherLogical = decodeURIComponent(nativeService.getParameters('logical'))
+                        this.activeWeatherTemperature = nativeService.getParameters('weatherTemperature')
                         this.weather.activeSwitch = tmpWeatherLogical == '<' ? 'min':'max'
-                        for (var w in this.weather.data) {
-                            if (this.weather.data[w] == tmpWeatherStatus) {
+                        for (var w in this.weather.type) {
+                            if (this.weather.type[w] == tmpWeatherStatus) {
                                 this.weather.activeTypeIndex = w
                             }
                         }
@@ -440,7 +517,7 @@
                 let tmp = []
                 let len  = max-min+1
                 for (let i=0; i<len; i++){
-                    tmp[i] = { index: i, value: ( (i+min)<9 && (i+min)>=0 )?'0'+(i+min):(i+min) }
+                    tmp[i] = { index: i, value: ( (i+min)<10 && (i+min)>=0 )?'0'+(i+min):(i+min) }
                 }
                 return tmp
             },
@@ -449,6 +526,26 @@
             },
             closeDialog(type){
                 this[type].showDialog = false
+            },
+            showPop(autoTypeName){
+                this.popStatus[autoTypeName] = true
+            },
+            closePop(autoTypeName) {
+                this.popStatus[autoTypeName] = false
+            },
+            cancelPop(autoTypeName){
+                if (autoTypeName == 'time') {
+                    this.activeHour == '00'
+                    this.activeMinute = '00'
+                    if (this.from == 'editAuto') {
+                        delete this.editParams.hour
+                    }
+                }
+                this.closePop(autoTypeName)
+            },
+            confirmPop(autoTypeName) {
+                this.startTime = this.activeHour + ':' + this.activeMinute
+                this.closePop(autoTypeName)
             },
             // 时间 start
             setActiveHour(hour){
@@ -544,16 +641,11 @@
             selectWeather(index){
                 this.weather.activeTypeIndex = index
                 if (this.from == 'editAuto') {
-                    this.editParams.weatherStatus = this.weather.data[this.weather.activeTypeIndex]
+                    this.editParams.weatherStatus = this.weather.type[this.weather.activeTypeIndex]
                 }
             },
-            setWeatherSwitch(){
-                this.weather.showDialog = true
-            },
-            weatherDialogConfirm(){
-                this.weather.activeSwitch = this.switchTo[this.weather.activeSwitch]
-                this.weather.showDialog = false
-                
+            setActiveLogical(e){
+                this.weather.activeSwitch = e.name
                 if (this.from == 'editAuto') {
                     this.editParams.logical =  this.weather.activeSwitch=='min'?'<':'>'
                 }
@@ -602,7 +694,7 @@
                         return
                     }
                     params.weatherTemperature = this.activeWeatherTemperature
-                    params.weatherStatus = encodeURIComponent(this.weather.data[this.weather.activeTypeIndex])
+                    params.weatherStatus = encodeURIComponent(this.weather.type[this.weather.activeTypeIndex])
                     let logical = this.weather.activeSwitch=='低于'?'<':'>'
                     params.logical = logical
                 }

@@ -213,88 +213,97 @@
                 this.from = nativeService.getParameters('from')
                 this.autoSupportActions = Object.assign({}, this.autoSupportActions, autoSupportActions[this.sceneType])
 
-                let tmpUserDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices')))
-                let tmpSceneSupoortDevices = []
-                for (var i in tmpUserDevices) {
-                    tmpUserDevices[i].isCheck = 'uncheck'
-                    if (this.autoSupportActions.hasOwnProperty(tmpUserDevices[i].deviceType)){
-                        tmpSceneSupoortDevices.push(tmpUserDevices[i])
+                if (nativeService.getParameters('userDevices')) {
+                    let tmpUserDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices'))) || []
+                    
+                    let tmpSceneSupoortDevices = []
+                    for (var i in tmpUserDevices) {
+                        tmpUserDevices[i].isCheck = 'uncheck'
+                        if (this.autoSupportActions.hasOwnProperty(tmpUserDevices[i].deviceType)){
+                            tmpSceneSupoortDevices.push(tmpUserDevices[i])
+                        }
                     }
-                }
-                this.userDevices = tmpUserDevices
-                this.sceneSupportDevices = tmpSceneSupoortDevices
+                    
+                    this.userDevices = tmpUserDevices
+                    this.sceneSupportDevices = tmpSceneSupoortDevices
 
-                if (this.sceneSupportDevices.length == 0) {
-                    nativeService.alert('您当前无可用于' + this.sceneTypeName + '类型快捷操作的设备，请绑定设备后重试!', function(){
+                    if (this.sceneSupportDevices.length == 0) {
+                        nativeService.alert('您当前无可用于' + this.sceneTypeName + '类型快捷操作的设备，请绑定设备后重试!', function(){
+                            nativeService.goBack()
+                        })
+                    }
+
+                    if (this.from == 'addAuto'){
+                        this.generateAllDeviceActions()
+                        if ( this.sceneType == 2 ){
+                            this.weekly = '1111111'
+                        }else {
+                            this.weekly = nativeService.getParameters('weekly')
+                            let weekText = {
+                                0: '周一',
+                                1: '周二',
+                                2: '周三',
+                                3: '周四',
+                                4: '周五',
+                                5: '周六',
+                                6: '周日',
+                            }
+                            let weekTmp = []
+                            let week = this.weekly.split('')
+                            for (let i=0; i<week.length; i++) {
+                                if (week[i] == '1' ) {
+                                    weekTmp.push(weekText[i])
+                                }
+                            }
+                            this.weekDesc = weekTmp.join('、')
+                        }
+                        if ( this.sceneType == 3 ) {
+                            this.direction = nativeService.getParameters('direction')
+                            this.destination = decodeURIComponent(nativeService.getParameters('destination'))
+                            let destArray = this.destination.split('&'), tmpDest = {}
+                            destArray.map((x)=>{
+                                tmpDest[x.split('=')[0]] = x.split('=')[1]
+                            })
+                            this.destination = tmpDest
+                        }
+                        if ( this.sceneType == 4 ) {
+                            this.startTime = nativeService.getParameters('startTimeHour') + ':'+ nativeService.getParameters('startTimeMinute')
+                        }
+                        if( this.sceneType == 6 ) {
+                            this.weatherTemperature = nativeService.getParameters('weatherTemperature')
+                            this.weatherStatus = decodeURIComponent(nativeService.getParameters('weatherStatus'))
+                            this.logical = nativeService.getParameters('logical')
+
+                            nativeService.getGPSInfo({
+                                desiredAccuracy: "10",
+                                distanceFilter: "10",
+                                alwaysAuthorization: "0" 
+                            }).then( (gps) => {
+                                this.gpsInfo = gps
+                                nativeService.getCityInfo({cityName: gps.city}).then((city)=>{
+                                    if ( city.cityNo ) {
+                                        this.cityWeatherNo = city.cityNo
+                                    }
+                                }).catch((err)=>{
+                                    nativeService.alert('获取不到当前设置天气城市，请检查是否开启定位权限')
+                                })
+                            }).catch((error) => {
+                                nativeService.alert(error)
+                                nativeService.alert('获取不到当前设置天气城市，请检查是否开启定位权限')
+                            })
+                        }
+                    }else if (this.from == 'editAuto'){
+                        let tmpUnbindDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('unbindDevices')))
+                        this.unbindDevices = Object.assign({}, this.unbindDevices, tmpUnbindDevices)
+                        let tmpUnbindDevicesActions = JSON.parse(decodeURIComponent(nativeService.getParameters('unbindDevicesActions')))
+                        this.unbindDevicesActions = Object.assign({}, this.unbindDevicesActions, tmpUnbindDevicesActions)
+                    }
+                }else{
+                    nativeService.alert('您当前无设备，请绑定设备后重试!', function(){
                         nativeService.goBack()
                     })
                 }
-
-                if (this.from == 'addAuto'){
-                    this.generateAllDeviceActions()
-                    if ( this.sceneType == 2 ){
-                        this.weekly = '1111111'
-                    }else {
-                        this.weekly = nativeService.getParameters('weekly')
-                        let weekText = {
-                            0: '周一',
-                            1: '周二',
-                            2: '周三',
-                            3: '周四',
-                            4: '周五',
-                            5: '周六',
-                            6: '周日',
-                        }
-                        let weekTmp = []
-                        let week = this.weekly.split('')
-                        for (let i=0; i<week.length; i++) {
-                            if (week[i] == '1' ) {
-                                weekTmp.push(weekText[i])
-                            }
-                        }
-                        this.weekDesc = weekTmp.join('、')
-                    }
-                    if ( this.sceneType == 3 ) {
-                        this.direction = nativeService.getParameters('direction')
-                        this.destination = decodeURIComponent(nativeService.getParameters('destination'))
-                        let destArray = this.destination.split('&'), tmpDest = {}
-                        destArray.map((x)=>{
-                            tmpDest[x.split('=')[0]] = x.split('=')[1]
-                        })
-                        this.destination = tmpDest
-                    }
-                    if ( this.sceneType == 4 ) {
-                        this.startTime = nativeService.getParameters('startTimeHour') + ':'+ nativeService.getParameters('startTimeMinute')
-                    }
-                    if( this.sceneType == 6 ) {
-                        this.weatherTemperature = nativeService.getParameters('weatherTemperature')
-                        this.weatherStatus = decodeURIComponent(nativeService.getParameters('weatherStatus'))
-                        this.logical = nativeService.getParameters('logical')
-
-                        nativeService.getGPSInfo({
-                            desiredAccuracy: "10",
-                            distanceFilter: "10",
-                            alwaysAuthorization: "0" 
-                        }).then( (gps) => {
-                            this.gpsInfo = gps
-                            nativeService.getCityInfo({cityName: gps.city}).then((city)=>{
-                                if ( city.cityNo ) {
-                                    this.cityWeatherNo = city.cityNo
-                                }
-                            }).catch((err)=>{
-                                nativeService.alert('获取不到当前设置天气城市，请检查是否开启定位权限')
-                            })
-                        }).catch((error) => {
-                            nativeService.alert(error)
-                            nativeService.alert('获取不到当前设置天气城市，请检查是否开启定位权限')
-                        })
-                    }
-                }else if (this.from == 'editAuto'){
-                    let tmpUnbindDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('unbindDevices')))
-                    this.unbindDevices = Object.assign({}, this.unbindDevices, tmpUnbindDevices)
-                    let tmpUnbindDevicesActions = JSON.parse(decodeURIComponent(nativeService.getParameters('unbindDevicesActions')))
-                    this.unbindDevicesActions = Object.assign({}, this.unbindDevicesActions, tmpUnbindDevicesActions)
-                }
+               
             },
             checkOn(device, index){
                 let tmp = {
@@ -321,19 +330,20 @@
             },
             goSetDevice(device){
                 let from
-                if (this.from == 'addAuto') {
-                    from = 'addAuto'
-                }else if (this.from == 'editAuto') {
+                if (this.from == 'editAuto') {
                     from = 'addEdit' //编辑页面新增设备
+                    return
+                }else if (this.from == 'addAuto') {
+                    from = 'addAuto'
+                    let params = {
+                        from: from,
+                        sceneType: this.sceneType,
+                        deviceType: device.deviceType,
+                        deviceName: encodeURIComponent(device.deviceName),
+                        deviceId: device.deviceId
+                    }
+                    this.goTo('setDevice', {}, params)
                 }
-                let params = {
-                    from: from,
-                    sceneType: this.sceneType,
-                    deviceType: device.deviceType,
-                    deviceName: encodeURIComponent(device.deviceName),
-                    deviceId: device.deviceId
-                }
-                this.goTo('setDevice', {}, params)
             },
             generateAllDeviceActions(){
                 let tmpAllDeviceActions = {}

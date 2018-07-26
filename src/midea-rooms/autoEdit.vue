@@ -6,7 +6,7 @@
                 <text class="delete-text">删除</text>
             </div>
        </div>
-        <list>
+        <list class="content-list">
             <cell class="content">
                 <div>
                     <div class="content-hd">
@@ -39,8 +39,8 @@
                 </div>
                 <div>
                     <text class="sub-hd">设备</text>
-                    <div v-if="Object.keys(autoBindDevices).length > 0" class="device-box row-sb">
-                        <div class="device" v-for="(item, key) in autoBindDevices">
+                    <div class="device-box row-sb">
+                        <div v-if="Object.keys(autoBindDevices).length > 0" class="device" v-for="(item, key) in autoBindDevices">
                             <div @click="setDevice(key)">
                                 <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
                                 <text class="device-name">{{item.deviceName}}</text>
@@ -56,9 +56,6 @@
                             <image class="icon-add" :src="icon.addDevice"></image>
                             <text class="add-device-text">添加设备</text>
                         </div>
-                    </div>
-                    <div  v-else class="device-box row-sb">
-                        <text class="not-bind-text text">当前快捷操作没有绑定设备，点击选择设备进行添加</text>
                     </div>
                     <text class="save-btn" @click="sendAutoEdit">保存</text>
                 </div>
@@ -104,8 +101,10 @@
     .not-bind-text{
         color: #666;
     }
-    .content{
+    .content-list{
         margin-top: 25px;
+    }
+    .content{
         padding-bottom: 150px;
     }
     .content-hd{
@@ -309,7 +308,7 @@
                 active: [],
                 userDevices: {},//用户名下设备
                 autoBindDevices: {},//此场景绑定的设备（随勾选操作更新）
-                autoSupportActions: {},//此场景可用设备的动作指令的值
+                autoSupportActions: {},//此场景支持的所有设备的动作指令的值
                 editParams: {},//用户改动的编辑项
                 userSetActions: {},//用户改动的设备动作指令值
                 unbindDevices: {},//用户未绑定的可用设备
@@ -524,6 +523,7 @@
                 if (this.sceneType == 6){
                     params.weatherStatus = encodeURIComponent(this.autoDetail.weather.weatherStatus)
                     params.logical = encodeURIComponent(this.autoDetail.weather.logical)
+                    params.weatherTemperature = this.autoDetail.weather.temperature
                 }
                 this.goTo('autoTypeSet', {}, params)
             },
@@ -602,7 +602,7 @@
                         }
                         this.goTo('autoBindDevices', {}, params)
                     }else{
-                        nativeService.alert('此快捷操作已经选择了所有设备哦')
+                        nativeService.alert('没有更多设备可以绑定了')
                     }
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
@@ -693,16 +693,21 @@
             this.initData()
             let that = this
             channelAutoEdit.onmessage = function(e) {
-                if (e.data.page == 'setAutoName') {
+                if (e.data.page == 'setAutoName') {//修改快捷操作名称
                     that.autoName = e.data.autoName
                 }
-                if (e.data.page == 'setDevice') {
+                if (e.data.page == 'setDevice') {//修改设备操作属性和设备绑定状态
+                    if (e.data.isCheck == 'uncheck') {
+                        delete that.autoBindDevices[e.data.applianceCode]
+                    }
+                    
                     let tmpUserSetActions = {}
                     tmpUserSetActions[e.data.applianceCode] = e.data.actions
                     that.userSetActions = Object.assign({}, that.userSetActions, tmpUserSetActions)
+                    that.generateUnbindDevices()
                     that.generateBindDeviceActions()
                 }
-                if (e.data.page == 'autoBindDevices') {
+                if (e.data.page == 'autoBindDevices') {//修改设备绑定状态
                     that.autoBindDevices = Object.assign({}, that.autoBindDevices, e.data.newDevices)
                     that.generateUnbindDevices()
                     that.generateBindDeviceActions()

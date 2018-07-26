@@ -461,8 +461,7 @@
                         homegroupId: this.homegroupId,
                         roomType:scene.roomType,
                         sceneId: scene.sceneId,
-                        userDevices: this.userDevices,
-                        sceneLevel: scene.indicator.level
+                        userDevices: this.userDevices
                     }
                     this.goTo("scene", {}, params)
                 }).catch((err)=>{
@@ -471,7 +470,6 @@
             }
         },
         created(){
-            this.initData()
         }
     }
 </script>

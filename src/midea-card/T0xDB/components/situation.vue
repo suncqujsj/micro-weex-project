@@ -4,6 +4,8 @@
             <text class="smart-text">智能</text>
         </div>
         <midea-smart @change="switchEnable($event, situation1)" :checked="situation1.checked" :data="situation1"></midea-smart>
+        <midea-smart @change="switchEnable($event, situation2)" :checked="situation2.checked" :data="situation2"></midea-smart>
+        <midea-smart @change="switchEnable($event, situation3)" :checked="situation3.checked" :data="situation3"></midea-smart>
     </div>
 </template>
 
@@ -111,7 +113,34 @@ export default {
     computed: {
         situation1() {
             let result = {
-                "moduleCode": "1",
+                "moduleCode": 1,
+                "enable": "0",
+                "props": {
+                    "code": "R04"
+                },
+                title: '',
+                detail: '',
+                isCreated: false
+            }
+            if (this.situationList) {
+                let temp = this.situationList.filter((item) => {
+                    return item.moduleCode == result.moduleCode
+                })
+                if (temp && temp.length > 0) {
+                    result = temp[0]
+                    result["isCreated"] = true
+                }
+            }
+            result.checked = result.enable == '1' ? true : false
+
+            result.title = "清洁提醒"
+            result.detail = "开启后，启动清洁提醒；关闭后，不再推送；"
+
+            return result
+        },
+        situation2() {
+            let result = {
+                "moduleCode": "2",
                 "enable": "0",
                 "props": {
                     "code": "R00"
@@ -129,9 +158,37 @@ export default {
                     result["isCreated"] = true
                 }
             }
+            result.checked = result.enable == '1' ? true : false
+
             result.title = "故障推送"
             result.detail = "开启后，启动故障推送；关闭后，不再推送；"
+
+            return result
+        },
+        situation3() {
+            let result = {
+                "moduleCode": "3",
+                "enable": "0",
+                "props": {
+                    "code": "R05"
+                },
+                title: "",
+                detail: "",
+                isCreated: false
+            }
+            if (this.situationList) {
+                let temp = this.situationList.filter((item) => {
+                    return item.moduleCode == result.moduleCode
+                })
+                if (temp && temp.length > 0) {
+                    result = temp[0]
+                    result["isCreated"] = true
+                }
+            }
             result.checked = result.enable == '1' ? true : false
+
+            result.title = "耗材提醒"
+            result.detail = "开启后，启动耗材提醒；关闭后，不再推送；"
 
             return result
         }

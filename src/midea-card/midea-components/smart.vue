@@ -60,7 +60,7 @@ export default {
     },
     methods: {
         onMideachange(event) {
-            // this.checked = event.value
+            this.checked = event.value
             this.$emit('change', { value: event.value })
         },
         onClick(event) {

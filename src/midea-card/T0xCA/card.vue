@@ -52,7 +52,7 @@
 
 <script>
     import nativeService from '@/common/services/nativeService.js'
-	import situation from '@/midea-card/T0xCA/components/situation.vue'
+	import situation from './components/situation.vue'
 	import mideaItem from '@/midea-component/item.vue'
 	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	import Mock from './settings/mock'

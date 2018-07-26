@@ -29,7 +29,7 @@
                         <div class="product-appliance-wrapper" v-for="(myProductItem,myProductIndex) in convertedMyProductList" :key="myProductIndex" @click="selectProductItem($event, myProductItem)">
                             <div class="product-appliance">
                                 <image class="appliance-img" :src="myProductItem.productImgUrl" resize="contain"></image>
-                                <text class="appliance-name">{{myProductItem.productName}}</text>
+                                <text class="appliance-name">{{myProductItem.prodName}}</text>
                             </div>
                         </div>
                     </div>

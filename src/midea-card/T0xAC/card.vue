@@ -262,6 +262,8 @@ export default {
                     } else {
                         me.onlineStatus = "0";
                     }
+                } else if(data && data.messageType == "queryStatusFromApp") {
+                	me.queryStatus();
                 }
             });
         },
@@ -315,7 +317,7 @@ export default {
             } else if (this.mode == 'fan') {
                 status = "送风";
             } else {
-                status = "";
+                status = "--";
             }
             return status;
         }

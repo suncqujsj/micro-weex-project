@@ -78,7 +78,7 @@ export default {
                 //档案数
                 archivesNumber = order.serviceUserDemandVOs[0].archivesNumber || 0
             }
-            others.orderDesc = order.serviceSubTypeName + prodName
+            others.orderDesc = (order.serviceSubTypeName || order.serviceMainTypeName) + prodName
 
             //订单状态
             others.calcServiceOrderStatus = this.convertServiceOrderStatus(order)

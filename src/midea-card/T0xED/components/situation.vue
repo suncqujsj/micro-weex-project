@@ -114,7 +114,7 @@ export default {
                 "moduleCode": "1",
                 "enable": "0",
                 "props": {
-                    "code": "R00"
+                    "code": "R07"
                 },
                 title: "",
                 detail: "",
@@ -129,8 +129,8 @@ export default {
                     result["isCreated"] = true
                 }
             }
-            result.title = "故障推送"
-            result.detail = "开启后，启动故障推送；关闭后，不再推送；"
+            result.title = "滤芯更换提醒"
+            result.detail = "开启后，启动滤芯更换提醒；关闭后，不再推送；"
             result.checked = result.enable == '1' ? true : false
 
             return result

@@ -141,9 +141,10 @@ export default {
                     result["isCreated"] = true
                 }
             }
+            result.checked = result.enable == '1' ? true : false
+            
             result.title = "PM2.5高于" + result.props.conditions[0].value + "时，自动打开净化器"
             result.detail = ""
-            result.checked = result.enable == '1' ? true : false
 
             return result
         },
@@ -167,9 +168,10 @@ export default {
                     result["isCreated"] = true
                 }
             }
+            result.checked = result.enable == '1' ? true : false
+
             result.title = "故障推送"
             result.detail = "开启后，启动故障推送；关闭后，不再推送；"
-            result.checked = result.enable == '1' ? true : false
 
             return result
         }

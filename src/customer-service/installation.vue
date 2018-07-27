@@ -408,7 +408,7 @@ export default {
                 6: "六",
             }
             for (let index = 0; index < 31; index++) {
-                let theDate = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate() + index)
+                let theDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + index)
                 let theDateDesc = theDate.getMonth() + '月' + theDate.getDate() + '日'
                 this.serviePeriodDate.push({
                     'index': index,

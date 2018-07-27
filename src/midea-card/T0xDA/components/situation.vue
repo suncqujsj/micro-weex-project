@@ -3,7 +3,8 @@
         <div class="smart-title">
             <text class="smart-text">智能</text>
         </div>
-        <midea-smart @click="goToSituation('qingjing.js', situation1)" @change="switchEnable($event, situation1)" :checked="situation1.checked" :data="situation1"></midea-smart>
+        <midea-smart @change="switchEnable($event, situation1)" :checked="situation1.checked" :data="situation1"></midea-smart>
+        <midea-smart @change="switchEnable($event, situation2)" :checked="situation2.checked" :data="situation2"></midea-smart>
     </div>
 </template>
 
@@ -114,13 +115,7 @@ export default {
                 "moduleCode": 1,
                 "enable": "0",
                 "props": {
-                    "time": "2300",
-                    "unit": "2",
-                    "value": "1",
-                    "target": {
-                        "model": "sleep",
-                        "swing_angle": "90"
-                    }
+                    "code": "R04"
                 },
                 title: '',
                 detail: '',
@@ -135,9 +130,37 @@ export default {
                     result["isCreated"] = true
                 }
             }
-            result.title = "睡觉时自动启用睡眠模式"
-            result.detail = "自然风，摇头"
             result.checked = result.enable == '1' ? true : false
+
+            result.title = "清洁提醒"
+            result.detail = "开启后，启动清洁提醒；关闭后，不再推送；"
+
+            return result
+        },
+        situation2() {
+            let result = {
+                "moduleCode": "2",
+                "enable": "0",
+                "props": {
+                    "code": "R00"
+                },
+                title: "",
+                detail: "",
+                isCreated: false
+            }
+            if (this.situationList) {
+                let temp = this.situationList.filter((item) => {
+                    return item.moduleCode == result.moduleCode
+                })
+                if (temp && temp.length > 0) {
+                    result = temp[0]
+                    result["isCreated"] = true
+                }
+            }
+            result.checked = result.enable == '1' ? true : false
+
+            result.title = "故障推送"
+            result.detail = "开启后，启动故障推送；关闭后，不再推送；"
 
             return result
         }

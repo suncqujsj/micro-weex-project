@@ -2,7 +2,7 @@
 	<div class="wrapper">
 		<midea-header :title="title" :isImmersion="isipx?false:true" @leftImgClick="back">
 		</midea-header>
-		<scroller class="content-wrapper">
+		<scroller class="content-wrapper" v-if="situactionData">
 			<div class="base-group">
 				<text class="header-title">{{situationDesc.title}}</text>
 				<text class="header-desc">{{situationDesc.detail}}</text>
@@ -29,7 +29,6 @@
 
 <script>
 import nativeService from '@/common/services/nativeService.js'
-import util from '@/common/util/util'
 import situationBase from '@/midea-card/midea-components/situationBase'
 
 import { MideaHeader, MideaCell, MideaButton, MideaSelect } from '@/index'
@@ -57,11 +56,14 @@ export default {
 			return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6');
 		},
 		situationDesc() {
-			let result
+			let result = {
+				title: '',
+				detail: ''
+			}
 
 			if (this.situactionData) {
 				result = {
-					title: "PM2.5高于70时，自动打开净化器",
+					title: "PM2.5高于" + this.situactionData.props.conditions[0].value + "时，自动打开净化器",
 					detail: ""
 				}
 			}
@@ -79,9 +81,9 @@ export default {
 		},
 
 		submit() {
-			this.updateSituationService(this.situactionData).then((resp) => {
+			this.submitSituationService(this.situactionData).then((resp) => {
 				if (resp.code == 0) {
-					nativeService.toast("更新成功")
+					nativeService.toast("保存成功")
 					this.appPageDataChannel.postMessage({ key: "situation", deviceId: this.deviceId, data: {} })
 					this.back()
 				} else {
@@ -93,7 +95,7 @@ export default {
 		}
 	},
 	created() {
-		for (let index = 1; index <= 99; index++) {
+		for (let index = 1; index <= 50; index++) {
 			this.temperatureList.push({ value: index * 10, key: index * 10 }, )
 		}
 

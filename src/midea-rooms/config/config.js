@@ -791,8 +791,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xCC": {
-            "name": "中央空调",
+        "0xCC": { "name": "中央空调",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",
@@ -828,8 +827,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xE1": {
-            "name": "洗碗机",
+        "0xE1": { "name": "洗碗机",
             "actions": [{
                     "property": "work_status",
                     "propertyName": "工作状态",
@@ -862,8 +860,7 @@ export const autoSupportActions = {
                 }
             ]
         },
-        "0xE2": {
-            "name": "热水器",
+        "0xE2": { "name": "热水器",
             "actions": [{
                     "property": "power",
                     "propertyName": "电源",

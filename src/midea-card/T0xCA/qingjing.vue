@@ -2,7 +2,7 @@
 	<div class="wrapper">
 		<midea-header :title="title" :isImmersion="isipx?false:true" @leftImgClick="back">
 		</midea-header>
-		<scroller class="content-wrapper">
+		<scroller class="content-wrapper" v-if="situactionData">
 			<div class="base-group">
 				<text class="header-title">{{situationDesc.title}}</text>
 				<text class="header-desc">{{situationDesc.detail}}</text>
@@ -29,7 +29,7 @@
 
 <script>
 import nativeService from '@/common/services/nativeService.js'
-import util from '@/common/util/util'
+import situationBase from '@/midea-card/midea-components/situationBase'
 
 import { MideaHeader, MideaCell, MideaButton, MideaSelect } from '@/index'
 
@@ -40,6 +40,7 @@ export default {
 		MideaButton,
 		MideaSelect
 	},
+	mixins: [situationBase],
 	data() {
 		return {
 			title: '情境设置',
@@ -55,10 +56,12 @@ export default {
 			return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6');
 		},
 		situationDesc() {
-			let result
+			let result = {
+				title: '',
+				detail: ''
+			}
 
 			if (this.situactionData) {
-
 				result = {
 					title: "每" + this.situactionData.props.value + "周提醒清晰冰箱内侧",
 					detail: "开启后， 每" + this.situactionData.props.value + "周提醒一次待清洁信息；关闭后，不再显示"
@@ -69,10 +72,6 @@ export default {
 		},
 	},
 	methods: {
-		back(options = {}) {
-			//返回上一页
-			nativeService.goBack(options);
-		},
 
 		selectConditionTemp() {
 			this.isShowConditionTemp = true
@@ -83,39 +82,15 @@ export default {
 		},
 
 		submit() {
-			nativeService.getUserInfo().then((data) => {
-				let param = {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json;charset=utf-8"
-					},
-					data: {
-						uid: data.uid,
-						applianceCode: this.situactionData.deviceId || "",
-						stamp: Math.round(new Date().getTime() / 1000), //时间戳
-						moduleCode: "1",
-						enable: this.situactionData.enable,
-						props: this.situactionData.props
-					}
+			this.submitSituationService(this.situactionData).then((resp) => {
+				if (resp.code == 0) {
+					nativeService.toast("保存成功")
+					this.back()
+				} else {
+					throw resp
 				}
-				nativeService.isDummy = false
-				nativeService.sendCentralCloundRequest("/v1/situation/update", param).then((resp) => {
-					if (resp.code == 0) {
-						nativeService.toast("更新成功")
-						this.back()
-					} else {
-						throw resp
-					}
-				}).catch((error) => {
-					let msg = "请求失败，请稍后重试。"
-					if (error.msg) {
-						msg = error.msg
-					}
-					if (error.code) {
-						msg += "(" + error.code + ")"
-					}
-					nativeService.toast(msg)
-				})
+			}).catch((error) => {
+				nativeService.toast(this.getErrorMessage(error))
 			})
 		}
 	},
@@ -123,11 +98,15 @@ export default {
 		for (let index = 17; index <= 30; index++) {
 			this.temperatureList.push({ value: index, key: index }, )
 		}
-		nativeService.getItem("CARD_STORAGE_SITUATION", (resp) => {
-			if (resp.result == 'success') {
-				this.situactionData = JSON.parse(resp.data) || {}
-			}
-		})
+		nativeService.getUserInfo().then((data) => {
+			this.uid = data.uid
+			nativeService.getItem("CARD_STORAGE_SITUATION", (resp) => {
+				if (resp.result == 'success') {
+					this.situactionData = JSON.parse(resp.data) || {}
+					this.deviceId = this.situactionData.deviceId
+				}
+			})
+		}).catch((error) => { })
 	}
 }
 </script>

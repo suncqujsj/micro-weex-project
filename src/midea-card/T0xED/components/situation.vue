@@ -3,7 +3,7 @@
         <div class="smart-title">
             <text class="smart-text">智能</text>
         </div>
-        <midea-smart @click="goToSituation('qingjing.js', situation1)" @change="switchEnable($event, situation1)" :checked="situation1.checked" :data="situation1"></midea-smart>
+        <midea-smart @change="switchEnable($event, situation1)" :checked="situation1.checked" :data="situation1"></midea-smart>
     </div>
 </template>
 
@@ -111,19 +111,13 @@ export default {
     computed: {
         situation1() {
             let result = {
-                "moduleCode": 1,
+                "moduleCode": "1",
                 "enable": "0",
                 "props": {
-                    "time": "2300",
-                    "unit": "2",
-                    "value": "1",
-                    "target": {
-                        "model": "sleep",
-                        "swing_angle": "90"
-                    }
+                    "code": "R07"
                 },
-                title: '',
-                detail: '',
+                title: "",
+                detail: "",
                 isCreated: false
             }
             if (this.situationList) {
@@ -135,8 +129,8 @@ export default {
                     result["isCreated"] = true
                 }
             }
-            result.title = "睡觉时自动启用睡眠模式"
-            result.detail = "自然风，摇头"
+            result.title = "滤芯更换提醒"
+            result.detail = "开启后，启动滤芯更换提醒；关闭后，不再推送；"
             result.checked = result.enable == '1' ? true : false
 
             return result

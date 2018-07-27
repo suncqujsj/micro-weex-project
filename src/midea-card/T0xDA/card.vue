@@ -45,6 +45,7 @@
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
+            <situation></situation>
 	        <midea-download></midea-download>
 	    </div>
     </scroller>
@@ -52,8 +53,8 @@
 
 <script>
     import nativeService from '@/common/services/nativeService.js'
-	import mideaSwitch from '@/midea-component/switch.vue'
 	import mideaItem from '@/midea-component/item.vue'
+	import situation from './components/situation.vue'
 	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
@@ -63,8 +64,8 @@
 	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
-            mideaSwitch,
             mideaItem,
+			situation,
             mideaDownload
         },
         data() {
@@ -356,7 +357,9 @@
             			} else {
             				me.onlineStatus = "0";
             			}
-            		}
+            		} else if(data && data.messageType == "queryStatusFromApp") {
+	                	me.queryStatus();
+	                }
 		        });
             },
             showControlPanelPage() {

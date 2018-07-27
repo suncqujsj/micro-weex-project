@@ -79,7 +79,7 @@
                     {
                         title: '手动',
                         desc: '',
-                        icon: 'assets/img/man.png',
+                        icon: 'assets/img/smart_ic_hand@2x.png',
                         sceneType: 2
                     },
                     {

@@ -7,8 +7,8 @@
       titleText="black" 
       :isImmersion="true"
       bgColor="#ffffff"
-      leftImg="img/home_btn_bace@2x.png" 
-      rightImg="img/home_btn_more@2x.png"
+      leftImg="assets/img/home_btn_bace@2x.png" 
+      rightImg="assets/img/home_btn_more@2x.png"
       :showRightImg="false"  
       @leftImgClick="backClick" 
       @centerClick="centerClick"
@@ -89,8 +89,8 @@ export default {
       slideWidth: '628',
       slideHeight: '900',
        posters: [
-          {url:'img/tips/img_attention1@2x.png',order:'01',slideWidth:'628px',slideHeight:'910px'},
-            {url:'img/tips/img_attention2@2x.png',order:'02',slideWidth:'673px',slideHeight:'972px'},                   
+          {url:'assets/img/tips/img_attention1@2x.png',order:'01',slideWidth:'628px',slideHeight:'910px'},
+            {url:'assets/img/tips/img_attention2@2x.png',order:'02',slideWidth:'673px',slideHeight:'972px'},                   
         ]
     };
   },

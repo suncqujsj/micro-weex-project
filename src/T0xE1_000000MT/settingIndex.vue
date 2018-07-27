@@ -6,8 +6,8 @@
       titleText="black" 
       :isImmersion="true"
       bgColor="#ffffff"
-      leftImg="img/home_btn_bace@2x.png" 
-      rightImg="img/home_btn_more@2x.png"
+      leftImg="assets/img/home_btn_bace@2x.png" 
+      rightImg="assets/img/home_btn_more@2x.png"
       :showRightImg="false"  
       @leftImgClick="backClick" 
       @rightImgClick="rightImgClick"></midea-header>
@@ -20,7 +20,7 @@
             <text class="guide_item_text">
               {{item.name}}
             </text>
-            <image style="width:12px;height:23px;" src="img/arrow_right.png"></image>
+            <image style="width:12px;height:23px;" src="assets/img/arrow_right.png"></image>
           </div>
         </scroller>
 </div>

@@ -6,8 +6,8 @@
       titleText="black" 
       :isImmersion="true"
       bgColor="#ffffff"
-      leftImg="img/home_btn_bace@2x.png" 
-      rightImg="img/home_btn_more@2x.png"
+      leftImg="assets/img/home_btn_bace@2x.png" 
+      rightImg="assets/img/home_btn_more@2x.png"
       :showRightImg="false"  
       @leftImgClick="backClick" 
       @rightImgClick="rightImgClick"></midea-header>
@@ -16,9 +16,9 @@
       
     </div>
 
-    <image class="large_wave" src="img/large_wave.gif"></image>
+    <image class="large_wave" src="assets/img/large_wave.gif"></image>
     <div class="working_box" ref="modeBox">
-        <image class="standby_icon" src="img/img_working_ball_2x.png"></image>
+        <image class="standby_icon" src="assets/img/img_working_ball_2x.png"></image>
       <image class="working_icon" :src="modeImg"></image>
    
     </div>
@@ -278,8 +278,8 @@ export default {
   data() {
     return {
       mideaChecked: false,
-      iconOn: "img/check/switch_on.png",
-      iconOff: "img/check/switch_off.png",
+      iconOn: "assets/img/check/switch_on.png",
+      iconOff: "assets/img/check/switch_off.png",
       value: 22,
       val: 0,
       cancleBtnStyle: {
@@ -369,45 +369,45 @@ export default {
       var program = analysisObj.program.value;
       switch (program) {
         case 1:
-          self.modeImg = "img/sel_mode/program_all_icon_auto@2x.png";
+          self.modeImg = "assets/img/sel_mode/program_all_icon_auto@2x.png";
           self.yuXi = self.yuXiNext = self.zhuXi = self.zhuXiNext = self.piaoXi = self.piaoXiNext = self.gaoZao = true;
           break;
         case 2:
-          self.modeImg = "img/sel_mode/program_all_icon_intensive@2x.png";
+          self.modeImg = "assets/img/sel_mode/program_all_icon_intensive@2x.png";
           self.yuXi = self.yuXiNext = self.zhuXi = self.zhuXiNext = self.piaoXi = self.piaoXiNext = self.gaoZao = true;
           break;
         case 3:
-          self.modeImg = "img/sel_mode/program_all_icon_normal@2x.png";
+          self.modeImg = "assets/img/sel_mode/program_all_icon_normal@2x.png";
           self.zhuXi = self.zhuXiNext = self.piaoXi = self.piaoXiNext = self.gaoZao = true;
           self.yuXi = self.yuXiNext = false;
           break;
         case 4:
-          self.modeImg = "img/sel_mode/program_all_icon_ECO@2x.png";
+          self.modeImg = "assets/img/sel_mode/program_all_icon_ECO@2x.png";
           self.yuXi = self.yuXiNext = self.zhuXi = self.zhuXiNext = self.piaoXi = self.piaoXiNext = self.gaoZao = true;
           break;
         case 5:
-          self.modeImg = "img/sel_mode/program_all_icon_glass@2x.png";
+          self.modeImg = "assets/img/sel_mode/program_all_icon_glass@2x.png";
           self.yuXi = self.yuXiNext = self.zhuXi = self.zhuXiNext = self.piaoXi = self.piaoXiNext = self.gaoZao = true;
           break;
         case 7:
-          self.modeImg = "img/sel_mode/program_all_icon_rapid@2x.png";
+          self.modeImg = "assets/img/sel_mode/program_all_icon_rapid@2x.png";
           self.zhuXi = self.zhuXiNext = self.piaoXi = true;
           self.yuXi = self.yuXiNext = self.gaoZao = self.piaoXiNext = false;
           break;
         case 8:
           self.modeImg =
-            "img/sel_mode/program_all_icon_pre-wash_Soak@2x.png";
+            "assets/img/sel_mode/program_all_icon_pre-wash_Soak@2x.png";
           self.yuXi = true;
           self.yuXiNext = self.zhuXi = self.zhuXiNext = self.piaoXi = self.piaoXiNext = self.gaoZao = false;
           break;
         case 10:
           self.modeImg =
-            "img/sel_mode/program_all_icon_self-cleaning@2x.png";
+            "assets/img/sel_mode/program_all_icon_self-cleaning@2x.png";
           self.zhuXi = self.zhuXiNext = self.piaoXi = self.piaoXiNext = self.gaoZao = true;
           self.yuXi = self.yuXiNext = false;
           break;
         case 9:
-          self.modeImg = "img/sel_mode/90min@2x.png";
+          self.modeImg = "assets/img/sel_mode/90min@2x.png";
           self.zhuXi = self.zhuXiNext = self.piaoXi = self.piaoXiNext = self.gaoZao = true;
           self.yuXi = self.yuXiNext = false;
           break;
@@ -444,7 +444,7 @@ export default {
       }
       if (step == 5) {
         self.preActive = self.mainActive = self.piaoActive = self.endActive = false;
-        self.modeImg = "img/working_icon_finish@2x.png";
+        self.modeImg = "assets/img/working_icon_finish@2x.png";
         self.workEnd = true;
 
         //洗涤完成，新增经验值

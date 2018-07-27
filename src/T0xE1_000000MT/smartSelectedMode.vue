@@ -7,28 +7,28 @@
       titleText="black" 
       :isImmersion="true"
       bgColor="#ffffff"
-      leftImg="img/home_btn_bace@2x.png" 
-      rightImg="img/home_btn_more@2x.png"
+      leftImg="assets/img/home_btn_bace@2x.png" 
+      rightImg="assets/img/home_btn_more@2x.png"
       :showRightImg="false"  
       @leftImgClick="backClick" 
       @centerClick="centerClick"
       @rightImgClick="rightImgClick"></midea-header>
     </div>
-    <div class="bg_section"><image class="bg_img" src="img/bg_program.gif"></image></div>
+    <div class="bg_section"><image class="bg_img" src="assets/img/bg_program.gif"></image></div>
     
     <div class="select_section">
       
      
       <div class="select_item select_bg">
         <div class="status_section">
-            <!-- <div class="slider_prev"><image class="header-left-image" src="../src/img/header/tab_back.png"></image></div> -->
+            <!-- <div class="slider_prev"><image class="header-left-image" src="../src/assets/img/header/tab_back.png"></image></div> -->
             <div class="slider">
                 <div class="select_content">
                   <image class="mode_img" :src="currentRecord.src"></image>
                 </div>
                 <div class="flex_center"><text class="status_text">{{currentRecord.text}}</text></div>
               </div>
-            <!-- <div class="slider_next"><image class="header-right-image" src="../src/img/arrow_right.png"></image></div> -->
+            <!-- <div class="slider_next"><image class="header-right-image" src="../src/assets/img/arrow_right.png"></image></div> -->
         </div>
       </div>
        
@@ -49,7 +49,7 @@
         <div class="example" v-if="currentRecord.showAdditional">
           <text class="info">{{currentRecord.additionalTitle}}</text>
           
-          <image class="help_img" @click="helpShow" src="img/program_help@2x.png"></image>
+          <image class="help_img" @click="helpShow" src="assets/img/program_help@2x.png"></image>
           <!-- <div>
           <wxc-icon name="help" @wxcIconClicked="helpShow" style="color:#9b9b9b;font-size:50px;margin-left:20px;margin-top:6px;"></wxc-icon>
           </div> -->
@@ -326,8 +326,8 @@ export default {
       smartSelectedModeObj:{},
       checked: false,
       mideaChecked: false,
-      iconOn: "img/check/switch_on.png",
-      iconOff: "img/check/switch_off.png",
+      iconOn: "assets/img/check/switch_on.png",
+      iconOff: "assets/img/check/switch_off.png",
       value: 22,
       time: "",
       isTopShow: false,
@@ -335,7 +335,7 @@ export default {
       index: 0,
       selectContent: [
         {
-          src: "img/sel_mode/program_all_icon_auto@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_auto@2x.png",
           text: "智能洗",
           mode: 1,
           additionalMode: 0,
@@ -343,7 +343,7 @@ export default {
           temp: 70
         },
         {
-          src: "img/sel_mode/program_all_icon_ECO@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_ECO@2x.png",
           text: "节能洗",
           mode: 4,
           dec: "更充分的，省水省电",
@@ -354,7 +354,7 @@ export default {
           temp: 70
         },
         {
-          src: "img/sel_mode/program_all_icon_fruits@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_fruits@2x.png",
           text: "水果洗",
           mode: 11,
           additionalMode: 0,
@@ -362,7 +362,7 @@ export default {
           temp: 36
         },
         {
-          src: "img/sel_mode/program_all_icon_glass@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_glass@2x.png",
           text: "玻璃洗",
           mode: 5,
           additionalMode: 0,
@@ -370,7 +370,7 @@ export default {
           temp: 60
         },
         {
-          src: "img/sel_mode/program_all_icon_intensive@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_intensive@2x.png",
           text: "强力洗",
           mode: 2,
           dec:'重油污餐具清洗',
@@ -379,7 +379,7 @@ export default {
           temp: 70
         },
         {
-          src: "img/sel_mode/program_all_icon_normal@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_normal@2x.png",
           text: "即时洗",
           mode: 3,
           additionalMode: 0,
@@ -387,7 +387,7 @@ export default {
           temp: 70
         },
         {
-          src: "img/sel_mode/program_all_icon_pre-wash_Soak@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_pre-wash_Soak@2x.png",
           text: "预冲洗",
           mode: 8,
           additionalMode: 0,
@@ -395,7 +395,7 @@ export default {
           temp: 36
         },
         {
-          src: "img/sel_mode/program_all_icon_rapid@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_rapid@2x.png",
           text: "超快洗",
           mode: 7,
           additionalMode: 0,
@@ -403,7 +403,7 @@ export default {
           temp: 66
         },
         {
-          src: "img/sel_mode/program_all_icon_self-cleaning@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_self-cleaning@2x.png",
           text: "自清洁洗",
           mode: 10,
           additionalMode: 0,

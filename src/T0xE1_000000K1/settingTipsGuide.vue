@@ -7,8 +7,8 @@
       titleText="black" 
       :isImmersion="true"
       bgColor="#ffffff"
-      leftImg="img/home_btn_bace@2x.png" 
-      rightImg="img/home_btn_more@2x.png"
+      leftImg="assets/img/home_btn_bace@2x.png" 
+      rightImg="assets/img/home_btn_more@2x.png"
       :showRightImg="false"  
       @leftImgClick="backClick" 
       @centerClick="centerClick"
@@ -90,12 +90,12 @@ export default {
       slideWidth: '600',
       slideHeight: '800',
        posters: [
-          {url:'img/tips/img_tips1@2x.png',order:'01',slideWidth:'720px',slideHeight:'800px'},
-            {url:'img/tips/img_tips2@2x.png',order:'02',slideWidth:'520px',slideHeight:'742px'},
-            {url:'img/tips/img_tips3@2x.png',order:'03',slideWidth:'750px',slideHeight:'682px'},
-            {url:'img/tips/img_tips4@2x.png',order:'04',slideWidth:'750px',slideHeight:'987px'},
-            {url:'img/tips/img_tips5@2x.png',order:'05',slideWidth:'600px',slideHeight:'750px'},    
-            {url:'img/tips/img_tips6@2x.png',order:'06',slideWidth:'750px',slideHeight:'750px'},                    
+          {url:'assets/img/tips/img_tips1@2x.png',order:'01',slideWidth:'720px',slideHeight:'800px'},
+            {url:'assets/img/tips/img_tips2@2x.png',order:'02',slideWidth:'520px',slideHeight:'742px'},
+            {url:'assets/img/tips/img_tips3@2x.png',order:'03',slideWidth:'750px',slideHeight:'682px'},
+            {url:'assets/img/tips/img_tips4@2x.png',order:'04',slideWidth:'750px',slideHeight:'987px'},
+            {url:'assets/img/tips/img_tips5@2x.png',order:'05',slideWidth:'600px',slideHeight:'750px'},    
+            {url:'assets/img/tips/img_tips6@2x.png',order:'06',slideWidth:'750px',slideHeight:'750px'},                    
         ]
     };
   },

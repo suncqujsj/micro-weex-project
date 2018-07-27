@@ -6,8 +6,8 @@
       titleText="black" 
       :isImmersion="true"
       bgColor="#ffffff"
-      leftImg="img/home_btn_bace@2x.png" 
-      rightImg="img/home_btn_more@2x.png"
+      leftImg="assets/img/home_btn_bace@2x.png" 
+      rightImg="assets/img/home_btn_more@2x.png"
       :showRightImg="false"  
       @leftImgClick="backClick" 
       @rightImgClick="rightImgClick"></midea-header>
@@ -28,7 +28,7 @@
                 </text>
             </div>
            
-            <image style="width:12px;height:23px;" src="img/arrow_right.png"></image>
+            <image style="width:12px;height:23px;" src="assets/img/arrow_right.png"></image>
           </div>
         </scroller>
       </div>
@@ -122,12 +122,12 @@ export default {
       //nativeService.toast(dataJson);
       self.guideObj = dataJson;
       if (dataJson.type == "quickGuide") {
-        self.guideImg = "img/setting/qiuck@2x.png";
+        self.guideImg = "assets/img/setting/qiuck@2x.png";
         self.guideWidth = "680px";
         self.guideHeight = "1100px";
       }
       if (dataJson.type == "safeKeepGuide") {
-        self.guideImg = "img/setting/safeKeep@2x.png";
+        self.guideImg = "assets/img/setting/safeKeep@2x.png";
         self.guideWidth = "682px";
         self.guideHeight = "226px";
       }
@@ -137,7 +137,7 @@ export default {
           "用户输入就餐情况（餐具，油污程度，放置时长），智能助手将自动推荐出合适的洗涤程序。";
       }
       if (dataJson.type == "howWorkGuide") {
-        self.guideImg = "img/tips/howWork@2x.png";
+        self.guideImg = "assets/img/tips/howWork@2x.png";
         self.guideWidth = "668px";
         self.guideHeight = "1076px";
       }

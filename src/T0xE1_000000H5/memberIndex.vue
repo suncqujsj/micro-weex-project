@@ -6,14 +6,14 @@
       titleText="black" 
       :isImmersion="true"
       bgColor="#ffffff"
-      leftImg="img/home_btn_bace@2x.png" 
-      rightImg="img/setting.png"
+      leftImg="assets/img/home_btn_bace@2x.png" 
+      rightImg="assets/img/setting.png"
       :showRightImg="false"  
       @leftImgClick="backClick" 
       @rightImgClick="rightImgClick"></midea-header>
     </div>
     <div class="member_section">
-      <image class="member_bg" src="img/member_bg.png"></image>
+      <image class="member_bg" src="assets/img/member_bg.png"></image>
       <div class="member_item">
         <div class="flex_center">
           <image class="member_icon" :src="memberIcon"></image>
@@ -43,7 +43,7 @@
            
            <div class="flex_center">
             <text v-if="item.subTitle" class="item_tel">{{item.subTitle}}</text>
-            <image style="width:12px;height:23px;" src="img/arrow_right.png"></image>
+            <image style="width:12px;height:23px;" src="assets/img/arrow_right.png"></image>
            </div>
             
           </div>
@@ -153,13 +153,13 @@ export default {
       guideHeight: "300px",
       guideText: "",
       list: [
-        { name: "用户指南", type: "problem1",icon:'img/setting/setting_icon_guide@2x.png' },
-          { name: "软水盐档位", type: "problem2",icon:'img/setting/setting_icon_ruanshuiyan@2x.png' },
-          { name: "亮碟剂档位", type: "problem3",icon:'img/setting/setting_icon_liangdieji@2x.png' },
-          { name: "联系客服",subTitle:'400-889-9315', type: "problem4",icon:'img/setting/setting_icon_contact@2x.png' },
-          { name: "水电统计", type: "problem5",icon:'img/share/warm_actived.png' },
+        { name: "用户指南", type: "problem1",icon:'assets/img/setting/setting_icon_guide@2x.png' },
+          { name: "软水盐档位", type: "problem2",icon:'assets/img/setting/setting_icon_ruanshuiyan@2x.png' },
+          { name: "亮碟剂档位", type: "problem3",icon:'assets/img/setting/setting_icon_liangdieji@2x.png' },
+          { name: "联系客服",subTitle:'400-889-9315', type: "problem4",icon:'assets/img/setting/setting_icon_contact@2x.png' },
+          { name: "水电统计", type: "problem5",icon:'assets/img/share/warm_actived.png' },
       ],
-      memberIcon: "img/setting/touxiang_new@2x.png",
+      memberIcon: "assets/img/setting/touxiang_new@2x.png",
       memberName: "小白用户",
       expValue: 0
     };
@@ -222,11 +222,11 @@ export default {
                 // nativeService.toast(callbackData);
                 if(parseInt(callbackData.userLevel)==1){
                   self.memberName = "小白用户";
-                  self.memberIcon = "img/setting/touxiang_new@2x.png";
+                  self.memberIcon = "assets/img/setting/touxiang_new@2x.png";
                 }
                 if(parseInt(callbackData.userLevel)==2){
                   self.memberName = "资深用户";
-                  self.memberIcon = "img/setting/touxiang_old@@2x.png";
+                  self.memberIcon = "assets/img/setting/touxiang_old@@2x.png";
                 }
                 self.expValue = callbackData.exp;
               }

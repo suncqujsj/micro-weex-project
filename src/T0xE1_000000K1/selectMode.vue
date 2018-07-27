@@ -7,15 +7,15 @@
       titleText="black" 
       :isImmersion="true"
       bgColor="#ffffff"
-      leftImg="img/home_btn_bace@2x.png" 
-      rightImg="img/home_btn_more@2x.png"
+      leftImg="assets/img/home_btn_bace@2x.png" 
+      rightImg="assets/img/home_btn_more@2x.png"
       rightText=""
       :showRightImg="false"  
       @leftImgClick="backClick" 
       @centerClick="centerClick"
       @rightImgClick="rightImgClick"></midea-header>
     </div>
-    <div class="bg_section"><image class="bg_img" src="img/bg_program.gif"></image></div>
+    <div class="bg_section"><image class="bg_img" src="assets/img/bg_program.gif"></image></div>
     
     <!-- 不要用阿里的slider组件和美居的slider组件，不然出现图标重叠的问题 ，直接通过swipe手势事件判断操作（parker） -->
     <div class="select_section"  @swipe="changeSelect" >
@@ -35,7 +35,7 @@
       </div>
       <div class="select_item select_bg">
         <div class="status_section">
-            <!-- <div class="slider_prev"><image class="header-left-image" src="../src/img/header/tab_back.png"></image></div> -->
+            <!-- <div class="slider_prev"><image class="header-left-image" src="../src/assets/img/header/tab_back.png"></image></div> -->
             <div class="slider">
               <div class="slider_section">
                 <div class="select_content">
@@ -44,7 +44,7 @@
                 <div class="flex_center"><text class="status_text">{{currentRecord.text}}</text></div>
               </div>
             </div>
-            <!-- <div class="slider_next"><image class="header-right-image" src="../src/img/arrow_right.png"></image></div> -->
+            <!-- <div class="slider_next"><image class="header-right-image" src="../src/assets/img/arrow_right.png"></image></div> -->
         </div>
       </div>
         <div class="select_item select_prev" @click="nextHandle">
@@ -81,7 +81,7 @@
           <div style="margin-top:10px;margin-left:5px;">
             <midea-switch2 :checked="mideaChecked"  @change="onMideachange" width="70" height="38" :iconOn="iconOn" :iconOff="iconOff"   slot="value"></midea-switch2>                               
           </div>
-          <image class="help_img" @click="helpShow" src="img/program_help@2x.png"></image>
+          <image class="help_img" @click="helpShow" src="assets/img/program_help@2x.png"></image>
           <!-- <div>
           <wxc-icon name="help" @wxcIconClicked="helpShow" style="color:#9b9b9b;font-size:50px;margin-left:20px;margin-top:6px;"></wxc-icon>
           </div> -->
@@ -407,8 +407,8 @@ export default {
       isLock: 0,
       checked: false,
       mideaChecked: false,
-      iconOn: "img/check/switch_on.png",
-      iconOff: "img/check/switch_off.png",
+      iconOn: "assets/img/check/switch_on.png",
+      iconOff: "assets/img/check/switch_off.png",
       value: 22,
       time: "",
       isTopShow: false,
@@ -416,7 +416,7 @@ export default {
       index: 0,
       selectContent: [
         {
-          src: "img/sel_mode/program_all_icon_ECO@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_ECO@2x.png",
           text: "节能洗",
           mode: 4,
           dec: "更充分的浸泡，省水省电",
@@ -428,7 +428,7 @@ export default {
           isDiyMode: false
         },
         {
-          src: "img/sel_mode/program_all_icon_intensive@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_intensive@2x.png",
           text: "强力洗",
           mode: 2,
           dec: "重油污餐具清洗",
@@ -438,7 +438,7 @@ export default {
           isDiyMode: false
         },
         {
-          src: "img/sel_mode/program_all_icon_rapid@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_rapid@2x.png",
           text: "超快洗",
           mode: 7,
           dec: "清污餐具，短时间洗涤",
@@ -448,7 +448,7 @@ export default {
           isDiyMode: false
         },
         {
-          src: "img/sel_mode/setting_diy.png",
+          src: "assets/img/sel_mode/setting_diy.png",
           text: "自定义洗",
           mode: 12,
           additionalMode: 0,

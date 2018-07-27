@@ -7,8 +7,8 @@
       titleText="black" 
       :isImmersion="true"
       bgColor="#ffffff"
-      leftImg="img/home_btn_bace@2x.png" 
-      rightImg="img/home_btn_more@2x.png"
+      leftImg="assets/img/home_btn_bace@2x.png" 
+      rightImg="assets/img/home_btn_more@2x.png"
       :showRightImg="false"  
       @leftImgClick="backClick" 
       @centerClick="centerClick"
@@ -92,14 +92,14 @@ export default {
       lackTypeObj: {},
       posters: [
         {
-          url: "img/tips/step_ruanshuiyan_1@2x.png",
+          url: "assets/img/tips/step_ruanshuiyan_1@2x.png",
           slideWidth: "240px",
           slideHeight: "355px",
           order: "01",
           dec: "逆时针旋转,打开软水器盖"
         },
         {
-          url: "img/tips/step_ruanshuiyan_2@2x.png",
+          url: "assets/img/tips/step_ruanshuiyan_2@2x.png",
           slideWidth: "492px",
           slideHeight: "396px",
           order: "02",
@@ -107,21 +107,21 @@ export default {
             "插入盐斗,加入洗碗机专用盐,最好每次加满所需的容量,一次添加可多次使用"
         },
         {
-          url: "img/tips/step_ruanshuiyan_3@2x.png",
+          url: "assets/img/tips/step_ruanshuiyan_3@2x.png",
           slideWidth: "461px",
           slideHeight: "424px",
           order: "03",
           dec: "加盐后,向软水器中加满水,不要溢出"
         },
         {
-          url: "img/tips/step_ruanshuiyan_4@2x.png",
+          url: "assets/img/tips/step_ruanshuiyan_4@2x.png",
           slideWidth: "240px",
           slideHeight: "355px",
           order: "04",
           dec: "顺时针扭紧软水器盖,防止漏盐,漏盐会腐蚀内胆"
         },
         {
-          url: "img/tips/step_ruanshuiyan_5@2x.png",
+          url: "assets/img/tips/step_ruanshuiyan_5@2x.png",
           slideWidth: "340px",
           slideHeight: "230px",
           order: "05",

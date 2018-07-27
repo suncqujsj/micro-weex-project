@@ -6,8 +6,8 @@
       titleText="black" 
       :isImmersion="true"
       bgColor="#ffffff"
-      leftImg="img/home_btn_bace@2x.png" 
-      rightImg="img/home_btn_more@2x.png"
+      leftImg="assets/img/home_btn_bace@2x.png" 
+      rightImg="assets/img/home_btn_more@2x.png"
       :showRightImg="false"  
       @leftImgClick="backClick" 
       @rightImgClick="rightImgClick"></midea-header>
@@ -134,10 +134,10 @@ export default {
   },
   data() {
     return {
-      iconOn: "img/check/switch_on.png",
-      iconOff: "img/check/switch_off.png",
+      iconOn: "assets/img/check/switch_on.png",
+      iconOff: "assets/img/check/switch_off.png",
       value: 22,
-      orderImg: 'img/order/1@2x.png',
+      orderImg: 'assets/img/order/1@2x.png',
       imgList:[],
       orderHour: "0",
       orderMinute: "00",
@@ -195,22 +195,22 @@ export default {
        self.mode = program;
       switch (program) {
         case 1:
-          self.modeImg = "img/mode_icon/delay_auto@2x.png";
+          self.modeImg = "assets/img/mode_icon/delay_auto@2x.png";
           self.modeDec = '智能洗';
           self.modeTime = '-:--';
           break;
         case 2:
-          self.modeImg = "img/mode_icon/delay_intensive@2x.png";
+          self.modeImg = "assets/img/mode_icon/delay_intensive@2x.png";
           self.modeDec = '强力洗';  
           self.modeTime = 110;        
           break;
         case 3:
-          self.modeImg = "img/mode_icon/delay_normal@2x.png";
+          self.modeImg = "assets/img/mode_icon/delay_normal@2x.png";
           self.modeDec = '即时洗'; 
           self.modeTime = 50;         
           break;
         case 4:
-          self.modeImg = "img/mode_icon/delay_ECO@2x.png";
+          self.modeImg = "assets/img/mode_icon/delay_ECO@2x.png";
           self.modeDec = '节能洗';
           self.modeTime = 178;
           if(analysisObj.functionOptions.value==7){
@@ -218,32 +218,32 @@ export default {
           }
           break;
         case 5:
-          self.modeImg = "img/mode_icon/delay_glass@2x.png";
+          self.modeImg = "assets/img/mode_icon/delay_glass@2x.png";
           self.modeDec = '玻璃洗';
           self.modeTime = 56;
           break;
         case 7:
-          self.modeImg = "img/mode_icon/delay_rapid@2x.png";
+          self.modeImg = "assets/img/mode_icon/delay_rapid@2x.png";
           self.modeDec = '超快洗';
           self.modeTime = 29;
           break;
         case 8:
-          self.modeImg ="img/mode_icon/delay_pre-wash_Soak@2x.png";
+          self.modeImg ="assets/img/mode_icon/delay_pre-wash_Soak@2x.png";
           self.modeDec = '预冲洗';
            self.modeTime = 12; 
           break;
         case 10:
-          self.modeImg ="img/mode_icon/delay_self-cleaning@2x.png";
+          self.modeImg ="assets/img/mode_icon/delay_self-cleaning@2x.png";
           self.modeDec = '自清洁洗';
           self.modeTime = 75;
           break;
         case 11:
-          self.modeImg = "img/mode_icon/delay_fruits@2x.png";
+          self.modeImg = "assets/img/mode_icon/delay_fruits@2x.png";
           self.modeDec = '水果洗';
           self.modeTime = 12;
           break;
         case 12:
-          self.modeImg = "img/mode_icon/delay_diy.png";
+          self.modeImg = "assets/img/mode_icon/delay_diy.png";
           self.modeDec = '自定义洗';
            if (diyData == 1) {
               diyModeTime = 18;
@@ -275,7 +275,7 @@ export default {
 
       // if(self.isFirstView){
       //   self.isFirstView = false;
-      self.imgList.push("img/order/"+orderIndex+"@2x.png");
+      self.imgList.push("assets/img/order/"+orderIndex+"@2x.png");
 
       //}
       
@@ -451,7 +451,7 @@ export default {
     //       clearInterval(intTime);
     //       return;
     //     }
-    //   self.orderImg = "img/order/"+index+"@2x.png";
+    //   self.orderImg = "assets/img/order/"+index+"@2x.png";
     // }, 5000);
   }
 };

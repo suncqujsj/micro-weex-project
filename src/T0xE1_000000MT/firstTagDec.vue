@@ -6,8 +6,8 @@
       titleText="black" 
       :isImmersion="true"
       bgColor="#ffffff"
-      leftImg="img/home_btn_bace@2x.png" 
-      rightImg="img/home_btn_more@2x.png"
+      leftImg="assets/img/home_btn_bace@2x.png" 
+      rightImg="assets/img/home_btn_more@2x.png"
       :showLeftImg="true"
       :showRightImg="false"  
       @leftImgClick="backClick" 
@@ -66,10 +66,10 @@ export default {
         //nativeService.toast(dataJson);
         self.instructionobj = dataJson;
          if(dataJson.whichInstruction=='selectInstruction'){
-          self.guideImg = 'img/setting/qiuck@2x.png';
+          self.guideImg = 'assets/img/setting/qiuck@2x.png';
         }
         if(dataJson.whichInstruction=='keepingInstruction'){
-          self.guideImg = 'img/setting/safeKeep@2x.png';
+          self.guideImg = 'assets/img/setting/safeKeep@2x.png';
         }
         if(dataJson.whichInstruction=='helpInstruction'){
           self.guideImg = '';

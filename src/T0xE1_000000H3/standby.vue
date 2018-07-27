@@ -6,8 +6,8 @@
       titleText="black" 
       :isImmersion="true"
       bgColor="#ffffff"
-      leftImg="img/home_btn_bace@2x.png" 
-      rightImg="img/home_btn_more@2x.png"
+      leftImg="assets/img/home_btn_bace@2x.png" 
+      rightImg="assets/img/home_btn_more@2x.png"
       :showLeftImg="true"
       :showRightImg="true"  
       @leftImgClick="backClick" 
@@ -22,7 +22,7 @@
    <div ref="swipeArea" class="swipe-area" v-on:swipe="onSwipe($event,item)">
     <div class="standby_section">
         <div class="" @click="jumpNext('selectMode')">
-          <image class="standby_icon" src="img/standby.gif"></image>
+          <image class="standby_icon" src="assets/img/standby.gif"></image>
           <div class="standby_dec_section">
             <div v-if="isKeepFresh">
                <div class="flex_center">
@@ -34,7 +34,7 @@
             </div>
             
           </div>   
-          <image v-if="!isKeepFresh" class="standby_tip" src="img/tips_first_time@2x.png"></image>
+          <image v-if="!isKeepFresh" class="standby_tip" src="assets/img/tips_first_time@2x.png"></image>
         </div>
         
     </div>
@@ -74,7 +74,7 @@
 
       </div>
     </div>
-        <image class="up_icon" src="img/home_arrow_up@2x.png"></image>
+        <image class="up_icon" src="assets/img/home_arrow_up@2x.png"></image>
     
       <!-- <midea-button text="水电统计" :btnStyle="sureBtnStyle"  @mideaButtonClicked="jumpNext('chart')"></midea-button> -->
     </div> 
@@ -250,8 +250,8 @@ export default {
       isKeepFresh: false,
       mideaChecked: false,
       isDoorOpen: false,
-      iconOn: "img/check/switch_on.png",
-      iconOff: "img/check/switch_off.png",
+      iconOn: "assets/img/check/switch_on.png",
+      iconOff: "assets/img/check/switch_off.png",
       value: 22,
       sendcmd: null,
       time: "",
@@ -263,8 +263,8 @@ export default {
       setKeepTime: 0,
       countSalt: 0, //投放盐次数百分比
       countBrightDishAgent: 0, //投放亮碟剂次数百分比,
-      brightDishAgentImg: "img/percentage/10@2x.png",
-      saltImg: "img/percentage/10@2x.png",
+      brightDishAgentImg: "assets/img/percentage/10@2x.png",
+      saltImg: "assets/img/percentage/10@2x.png",
       isErrorBoxShow: false,
       errorContentList: [],
       errorDec: ""
@@ -502,9 +502,9 @@ export default {
           self.countSalt = 0;
         }
         var saltIndex = parseInt((21 - saltValue) / 21 * 10);
-        self.saltImg = "img/percentage/" + saltIndex * 10 + "@2x.png";
+        self.saltImg = "assets/img/percentage/" + saltIndex * 10 + "@2x.png";
         if (self.countSalt <= 0) {
-          self.saltImg = "img/percentage/10@2x.png";
+          self.saltImg = "assets/img/percentage/10@2x.png";
         }
         if (isNaN(self.countSalt)) {
           self.countSalt = 0;
@@ -528,9 +528,9 @@ export default {
           (75 - brightDishAgentValue) / 75 * 10
         );
         self.brightDishAgentImg =
-          "img/percentage/" + brightDishAgentIndex * 10 + "@2x.png";
+          "assets/img/percentage/" + brightDishAgentIndex * 10 + "@2x.png";
         if (self.countBrightDishAgent <= 0) {
-          self.brightDishAgentImg = "img/percentage/10@2x.png";
+          self.brightDishAgentImg = "assets/img/percentage/10@2x.png";
         }
         if (isNaN(self.countBrightDishAgent)) {
           self.countBrightDishAgent = 0;

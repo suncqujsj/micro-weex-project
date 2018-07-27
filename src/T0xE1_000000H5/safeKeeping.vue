@@ -6,14 +6,14 @@
       titleText="black" 
       :isImmersion="true"
       bgColor="#ffffff"
-      leftImg="../img/home_btn_bace@2x.png" 
-      rightImg="../img/home_btn_more@2x.png"
+      leftImg="../assets/img/home_btn_bace@2x.png" 
+      rightImg="../assets/img/home_btn_more@2x.png"
       :showRightImg="true"  
       @leftImgClick="backClick" 
       @rightImgClick="rightImgClick"></midea-header>
     </div>
         <div class="flex_center">
-          <image class="standby_icon" src="../img/standby.gif"></image>
+          <image class="standby_icon" src="../assets/img/standby.gif"></image>
         </div>
           <div class="standby_dec_section">
             <div class="flex_center">
@@ -28,7 +28,7 @@
       <div class="lack_section">
         <div class="item_section left_item">
             <div class="flex_center">
-               <image style="width:55px;height:76px;" src="../img/40_2x.png"></image>
+               <image style="width:55px;height:76px;" src="../assets/img/40_2x.png"></image>
                <div class="item_dec">
                   <div class="number_section"><text class="title_dec">约</text><text class="number_dec">40%</text></div>
                   <text class="lack_dec">亮碟剂</text>
@@ -37,7 +37,7 @@
         </div>
         <div class="item_section">
            <div class="flex_center">
-               <image style="width:55px;height:76px;" src="../img/40_2x.png"></image>
+               <image style="width:55px;height:76px;" src="../assets/img/40_2x.png"></image>
                <div class="item_dec">
                   <div class="number_section"><text class="title_dec">约</text><text class="number_dec">40%</text></div>
                   <text class="lack_dec">软水盐</text>
@@ -171,8 +171,8 @@ export default {
   data() {
     return {
       mideaChecked: true,
-      iconOn: "../img/check/switch_on.png",
-      iconOff: "../img/check/switch_off.png",
+      iconOn: "../assets/img/check/switch_on.png",
+      iconOff: "../assets/img/check/switch_off.png",
       value: 22,
       uploading: false,
       progressVisible: true,

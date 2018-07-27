@@ -8,8 +8,8 @@
       titleText="black" 
       :isImmersion="true"
       bgColor="#ffffff"
-      leftImg="../img/home_btn_bace@2x.png" 
-      rightImg="../img/home_btn_more@2x.png"
+      leftImg="../assets/img/home_btn_bace@2x.png" 
+      rightImg="../assets/img/home_btn_more@2x.png"
       :showRightImg="true"  
       @leftImgClick="backClick" 
       @centerClick="centerClick"
@@ -54,56 +54,56 @@ export default {
            "hasBg": true,
            "bgColor":"#ffffff",
            "isActive":false,
-           "img":"../img/auto@2x.png",
-           "activeImg":"../img/program_all_icon_auto_sel@2x.png"
+           "img":"../assets/img/auto@2x.png",
+           "activeImg":"../assets/img/program_all_icon_auto_sel@2x.png"
          },
          {
            "title":"节能洗",
            "hasBg": true,
            "bgColor":"#ffffff",
            "isActive":false,
-           "img":"../img/ECO@2x.png",
-           "activeImg":"../img/program_all_icon_ECO_sel@2x.png"
+           "img":"../assets/img/ECO@2x.png",
+           "activeImg":"../assets/img/program_all_icon_ECO_sel@2x.png"
          },
          {
            "title":"水果洗",
            "hasBg": true,
            "isActive":false,
            "bgColor":"#ffffff",
-           "img":"../img/fruits@2x.png",
-           "activeImg":"../img/program_all_icon_fruits_sel@2x.png"
+           "img":"../assets/img/fruits@2x.png",
+           "activeImg":"../assets/img/program_all_icon_fruits_sel@2x.png"
          },
          {
            "title":"玻璃洗",
            "hasBg": true,
            "isActive":false,
            "bgColor":"#ffffff",
-           "img":"../img/glass@2x.png",
-           "activeImg":"../img/program_all_icon_glass_sel@2x.png"
+           "img":"../assets/img/glass@2x.png",
+           "activeImg":"../assets/img/program_all_icon_glass_sel@2x.png"
          },
          {
            "title":"强力洗",
            "hasBg": true,
            "bgColor":"#ffffff",
            "isActive":false,
-           "img":"../img/intensive@2x.png",
-           "activeImg":"../img/program_all_icon_intensive_sel@2x.png"
+           "img":"../assets/img/intensive@2x.png",
+           "activeImg":"../assets/img/program_all_icon_intensive_sel@2x.png"
          },
           {
            "title":"正常洗",
            "hasBg": true,
            "bgColor":"#ffffff",
            "isActive":false,
-           "img":"../img/normal@2x.png",
-           "activeImg":"../img/program_all_icon_normal_sel@2x.png"
+           "img":"../assets/img/normal@2x.png",
+           "activeImg":"../assets/img/program_all_icon_normal_sel@2x.png"
          },
          {
            "title":"1/2洗",
            "hasBg": true,
            "bgColor":"#ffffff",
            "isActive":false,
-           "img":"../img/pre-wash_Soak@2x.png",
-           "activeImg":"../img/program_all_icon_self-cleaning_sel@2x.png"
+           "img":"../assets/img/pre-wash_Soak@2x.png",
+           "activeImg":"../assets/img/program_all_icon_self-cleaning_sel@2x.png"
          },
        ],
        cols:3,

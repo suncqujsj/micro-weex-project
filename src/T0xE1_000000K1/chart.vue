@@ -5,8 +5,8 @@
       titleText="black" 
       :isImmersion="true"
       bgColor="#ffffff"
-      leftImg="img/home_btn_bace@2x.png" 
-      rightImg="img/setting.png"
+      leftImg="assets/img/home_btn_bace@2x.png" 
+      rightImg="assets/img/setting.png"
       :showRightImg="false"  
       @leftImgClick="backClick" 
       @rightImgClick="rightImgClick"></midea-header>
@@ -42,7 +42,7 @@
         <midea-linechart-view class="linechart" :data="chartJson2"></midea-linechart-view>
     </div>
 
-     <image class="up_icon" src="img/home_arrow_up@2x.png"></image>
+     <image class="up_icon" src="assets/img/home_arrow_up@2x.png"></image>
 
     </div>
    

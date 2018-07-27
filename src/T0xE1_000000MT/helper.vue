@@ -6,8 +6,8 @@
       titleText="black" 
       :isImmersion="true"
       bgColor="#ffffff"
-      leftImg="img/home_btn_bace@2x.png" 
-      rightImg="img/home_btn_more@2x.png"
+      leftImg="assets/img/home_btn_bace@2x.png" 
+      rightImg="assets/img/home_btn_more@2x.png"
       :showRightImg="false"  
       @leftImgClick="backClick" 
       @rightImgClick="rightImgClick"></midea-header>
@@ -146,15 +146,15 @@ export default {
         opacity: 0.5
       },
       clickSelRecord: 0,
-      stepImg: 'img/helper/assistant_step_bg_1@2x.png',
+      stepImg: 'assets/img/helper/assistant_step_bg_1@2x.png',
       stepObj:[
         {
           order:'step1',name:'污啧度',
           canGoToNext: false,
           stepIcon:[
-            {"title":"轻度","hasBg": true,"bgColor":"#ffffff","isActive":false,"img":"img/helper/assistant_1_low@2x.png","img_actived":"img/helper/assistant_1_low_sel@2x.png"},
-            {"title":"中度","hasBg": true,"bgColor":"#ffffff","isActive":false,"img":"img/helper/assistant_1_middle@2x.png","img_actived":"img/helper/assistant_1_middle_sel@2x.png"},
-            {"title":"重度","hasBg": true,"bgColor":"#ffffff", "isActive":false,"img":"img/helper/assistant_1_heavy@2x.png","img_actived":"img/helper/assistant_1_heavy_sel@2x.png"},
+            {"title":"轻度","hasBg": true,"bgColor":"#ffffff","isActive":false,"img":"assets/img/helper/assistant_1_low@2x.png","img_actived":"assets/img/helper/assistant_1_low_sel@2x.png"},
+            {"title":"中度","hasBg": true,"bgColor":"#ffffff","isActive":false,"img":"assets/img/helper/assistant_1_middle@2x.png","img_actived":"assets/img/helper/assistant_1_middle_sel@2x.png"},
+            {"title":"重度","hasBg": true,"bgColor":"#ffffff", "isActive":false,"img":"assets/img/helper/assistant_1_heavy@2x.png","img_actived":"assets/img/helper/assistant_1_heavy_sel@2x.png"},
           ],
           isHasPrevStepBtn:false
         },
@@ -162,9 +162,9 @@ export default {
           order:'step2',name:'置放时间',  
           canGoToNext: false,         
           stepIcon:[
-            {"title":"即时","hasBg": true,"bgColor":"#ffffff","isActive":false,"img":"img/helper/assistant_2_now@2x.png","img_actived":"img/helper/assistant_2_now_sel@2x.png"},
-            {"title":"半个小时内","hasBg": true,"bgColor":"#ffffff","isActive":false,"img":"img/helper/assistant_2_half-hour@2x.png","img_actived":"img/helper/assistant_2_half-hour_sel@2x.png"},
-            {"title":"半个小时以上","hasBg": true,"bgColor":"#ffffff","isActive":false,"img":"img/helper/assistant_2_half-hour2@2x.png","img_actived":"img/helper/assistant_2_half-hour2_sel@2x.png"},
+            {"title":"即时","hasBg": true,"bgColor":"#ffffff","isActive":false,"img":"assets/img/helper/assistant_2_now@2x.png","img_actived":"assets/img/helper/assistant_2_now_sel@2x.png"},
+            {"title":"半个小时内","hasBg": true,"bgColor":"#ffffff","isActive":false,"img":"assets/img/helper/assistant_2_half-hour@2x.png","img_actived":"assets/img/helper/assistant_2_half-hour_sel@2x.png"},
+            {"title":"半个小时以上","hasBg": true,"bgColor":"#ffffff","isActive":false,"img":"assets/img/helper/assistant_2_half-hour2@2x.png","img_actived":"assets/img/helper/assistant_2_half-hour2_sel@2x.png"},
           ],
           isHasPrevStepBtn:true
         },
@@ -172,21 +172,21 @@ export default {
           order:'step3',name:'选餐具',   
           canGoToNext: false,        
           stepIcon:[
-           {"title":"碗","hasBg": true, "bgColor":"#ffffff","isActive":false,"img":"img/helper/assistant_3_bowl@2x.png","img_actived":"img/helper/assistant_3_bowl_sel@2x.png"},
-           {"title":"碟子","hasBg": true, "bgColor":"#ffffff","isActive":false,"img":"img/helper/assistant_3_plate@2x.png","img_actived":"img/helper/assistant_3_plate _sel@2x.png"},
-           {"title":"红酒杯","hasBg": true, "bgColor":"#ffffff","isActive":false,"img":"img/helper/assistant_3_wine-glass@2x.png","img_actived":"img/helper/assistant_3_wine-glass_sel@2x.png"},
-           {"title":"玻璃杯","hasBg": true, "bgColor":"#ffffff","isActive":false,"img":"img/helper/assistant_3_glass@2x.png","img_actived":"img/helper/assistant_3_glass_sel@2x.png"},
-           {"title":"炒菜锅","hasBg": true, "bgColor":"#ffffff","isActive":false,"img":"img/helper/assistant_3_pot@2x.png","img_actived":"img/helper/assistant_3_pot_sel@2x.png"},
-           {"title":"奶瓶","hasBg": true, "bgColor":"#ffffff","isActive":false,"img":"img/helper/assistant_3_feeding-bottle@2x.png","img_actived":"img/helper/assistant_3_feeding-bottle_sel@2x.png"},
-           {"title":"水果","hasBg": true, "bgColor":"#ffffff","isActive":false,"img":"img/helper/assistant_3_fruit@2x.png","img_actived":"img/helper/assistant_3_fruit_sel@2x.png"},
+           {"title":"碗","hasBg": true, "bgColor":"#ffffff","isActive":false,"img":"assets/img/helper/assistant_3_bowl@2x.png","img_actived":"assets/img/helper/assistant_3_bowl_sel@2x.png"},
+           {"title":"碟子","hasBg": true, "bgColor":"#ffffff","isActive":false,"img":"assets/img/helper/assistant_3_plate@2x.png","img_actived":"assets/img/helper/assistant_3_plate _sel@2x.png"},
+           {"title":"红酒杯","hasBg": true, "bgColor":"#ffffff","isActive":false,"img":"assets/img/helper/assistant_3_wine-glass@2x.png","img_actived":"assets/img/helper/assistant_3_wine-glass_sel@2x.png"},
+           {"title":"玻璃杯","hasBg": true, "bgColor":"#ffffff","isActive":false,"img":"assets/img/helper/assistant_3_glass@2x.png","img_actived":"assets/img/helper/assistant_3_glass_sel@2x.png"},
+           {"title":"炒菜锅","hasBg": true, "bgColor":"#ffffff","isActive":false,"img":"assets/img/helper/assistant_3_pot@2x.png","img_actived":"assets/img/helper/assistant_3_pot_sel@2x.png"},
+           {"title":"奶瓶","hasBg": true, "bgColor":"#ffffff","isActive":false,"img":"assets/img/helper/assistant_3_feeding-bottle@2x.png","img_actived":"assets/img/helper/assistant_3_feeding-bottle_sel@2x.png"},
+           {"title":"水果","hasBg": true, "bgColor":"#ffffff","isActive":false,"img":"assets/img/helper/assistant_3_fruit@2x.png","img_actived":"assets/img/helper/assistant_3_fruit_sel@2x.png"},
           ],
           isHasPrevStepBtn:true
         },
       ],
       currentStepList:[
-          {"title":"轻度","hasBg": true,"bgColor":"#ffffff","isActive":false,"img":"img/helper/assistant_1_low@2x.png","img_actived":"img/helper/assistant_1_low_sel@2x.png"},
-            {"title":"中度","hasBg": true,"bgColor":"#ffffff","isActive":false,"img":"img/helper/assistant_1_middle@2x.png","img_actived":"img/helper/assistant_1_middle_sel@2x.png"},
-            {"title":"重度","hasBg": true,"bgColor":"#ffffff", "isActive":false,"img":"img/helper/assistant_1_heavy@2x.png","img_actived":"img/helper/assistant_1_heavy_sel@2x.png"},
+          {"title":"轻度","hasBg": true,"bgColor":"#ffffff","isActive":false,"img":"assets/img/helper/assistant_1_low@2x.png","img_actived":"assets/img/helper/assistant_1_low_sel@2x.png"},
+            {"title":"中度","hasBg": true,"bgColor":"#ffffff","isActive":false,"img":"assets/img/helper/assistant_1_middle@2x.png","img_actived":"assets/img/helper/assistant_1_middle_sel@2x.png"},
+            {"title":"重度","hasBg": true,"bgColor":"#ffffff", "isActive":false,"img":"assets/img/helper/assistant_1_heavy@2x.png","img_actived":"assets/img/helper/assistant_1_heavy_sel@2x.png"},
       ],
       currentStepIndex:0,
       isBowl: false, 
@@ -278,10 +278,10 @@ export default {
       if(stepObj[this.currentStepIndex].canGoToNext){               
         this.currentStepIndex = this.currentStepIndex+1;
         if(this.currentStepIndex==1){
-           this.stepImg = 'img/helper/assistant_step_bg_2@2x.png';
+           this.stepImg = 'assets/img/helper/assistant_step_bg_2@2x.png';
         }
         if(this.currentStepIndex==2){
-           this.stepImg = 'img/helper/assistant_step_bg_3@2x.png';
+           this.stepImg = 'assets/img/helper/assistant_step_bg_3@2x.png';
         }
         this.currentStepList = stepObj[this.currentStepIndex].stepIcon;
       }
@@ -290,10 +290,10 @@ export default {
       var {stepObj} = this;
       this.currentStepIndex = this.currentStepIndex-1;
       if(this.currentStepIndex==0){
-           this.stepImg = 'img/helper/assistant_step_bg_1@2x.png';
+           this.stepImg = 'assets/img/helper/assistant_step_bg_1@2x.png';
       }
       if(this.currentStepIndex==1){
-          this.stepImg = 'img/helper/assistant_step_bg_2@2x.png';
+          this.stepImg = 'assets/img/helper/assistant_step_bg_2@2x.png';
       }
        this.currentStepList = stepObj[this.currentStepIndex].stepIcon;
     },

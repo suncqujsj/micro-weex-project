@@ -7,15 +7,15 @@
       titleText="black" 
       :isImmersion="true"
       bgColor="#ffffff"
-      leftImg="img/home_btn_bace@2x.png" 
-      rightImg="img/home_btn_more@2x.png"
+      leftImg="assets/img/home_btn_bace@2x.png" 
+      rightImg="assets/img/home_btn_more@2x.png"
       rightText="智能助手"
       :showRightImg="false"  
       @leftImgClick="backClick" 
       @centerClick="centerClick"
       @rightImgClick="rightImgClick"></midea-header>
     </div>
-    <div class="bg_section"><image class="bg_img" src="img/bg_program.gif"></image></div>
+    <div class="bg_section"><image class="bg_img" src="assets/assets/img/bg_program.gif"></image></div>
     
     <div class="select_section">
       
@@ -34,7 +34,7 @@
       </div>
       <div class="select_item select_bg">
         <div class="status_section">
-            <!-- <div class="slider_prev"><image class="header-left-image" src="../src/img/header/tab_back.png"></image></div> -->
+            <!-- <div class="slider_prev"><image class="header-left-image" src="../src/assets/img/header/tab_back.png"></image></div> -->
             <slider class="slider" :index="index" interval="3000" auto-play="false" @change="changeSelect">
               <div class="slider_section" v-for="(mode, index) in selectContent" :key="index">
                 <div class="select_content">
@@ -43,7 +43,7 @@
                 <div class="flex_center"><text class="status_text">{{mode.text}}</text></div>
               </div>
             </slider>
-            <!-- <div class="slider_next"><image class="header-right-image" src="../src/img/arrow_right.png"></image></div> -->
+            <!-- <div class="slider_next"><image class="header-right-image" src="../src/assets/img/arrow_right.png"></image></div> -->
         </div>
       </div>
         <div class="select_item select_prev" @click="index = (index + 1)%selectContent.length">
@@ -434,8 +434,8 @@ export default {
     return {
       checked: false,
       mideaChecked: false,
-      iconOn: "img/check/switch_on.png",
-      iconOff: "img/check/switch_off.png",
+      iconOn: "assets/img/check/switch_on.png",
+      iconOff: "assets/img/check/switch_off.png",
       value: 22,
       time: "",
       isTopShow: false,
@@ -443,7 +443,7 @@ export default {
       index: 0,
       selectContent: [
         {
-          src: "img/sel_mode/program_all_icon_auto@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_auto@2x.png",
           text: "智能洗",
           mode: 1,
            dec: "智能分析，自动选择，最佳的清洗方式",
@@ -452,7 +452,7 @@ export default {
           temp: 68
         },
         {
-          src: "img/sel_mode/program_all_icon_ECO@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_ECO@2x.png",
           text: "节能洗",
           mode: 4,
            dec: "更充分的浸泡，省水省电",
@@ -467,7 +467,7 @@ export default {
           temp: 68
         },
         {
-          src: "img/sel_mode/90min@2x.png",
+          src: "assets/img/sel_mode/90min@2x.png",
           text: "90min洗",
           mode: 9,
           additionalMode: 0,
@@ -475,7 +475,7 @@ export default {
           temp: 65
         },
         {
-          src: "img/sel_mode/program_all_icon_glass@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_glass@2x.png",
           text: "玻璃洗",
           mode: 5,
           dec: "精致玻璃器皿专用",
@@ -489,7 +489,7 @@ export default {
           temp: 62
         },
         {
-          src: "img/sel_mode/program_all_icon_intensive@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_intensive@2x.png",
           text: "强力洗",
           mode: 2,
            dec: "重油污餐具清洗",
@@ -503,7 +503,7 @@ export default {
           temp: 68
         },
         {
-          src: "img/sel_mode/program_all_icon_normal@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_normal@2x.png",
           text: "即时洗",
           mode: 3,
            dec: "日常饭后及时清洗",
@@ -517,7 +517,7 @@ export default {
           temp: 68
         },
         {
-          src: "img/sel_mode/program_all_icon_pre-wash_Soak@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_pre-wash_Soak@2x.png",
           text: "预冲洗",
           mode: 8,
           additionalMode: 0,
@@ -525,7 +525,7 @@ export default {
           temp: '--'
         },
         {
-          src: "img/sel_mode/program_all_icon_rapid@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_rapid@2x.png",
           text: "超快洗",
           mode: 7,
           dec: "清污餐具，短时间洗涤",
@@ -534,7 +534,7 @@ export default {
           temp: 55
         },
         {
-          src: "img/sel_mode/program_all_icon_self-cleaning@2x.png",
+          src: "assets/img/sel_mode/program_all_icon_self-cleaning@2x.png",
           text: "自清洁洗",
           mode: 10,
           additionalMode: 0,

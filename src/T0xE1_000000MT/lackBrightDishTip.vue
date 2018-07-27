@@ -7,8 +7,8 @@
       titleText="black" 
       :isImmersion="true"
       bgColor="#ffffff"
-      leftImg="img/home_btn_bace@2x.png" 
-      rightImg="img/home_btn_more@2x.png"
+      leftImg="assets/img/home_btn_bace@2x.png" 
+      rightImg="assets/img/home_btn_more@2x.png"
       :showRightImg="false"  
       @leftImgClick="backClick" 
       @centerClick="centerClick"
@@ -91,21 +91,21 @@ export default {
       lackTypeObj: {},
       posters: [
         {
-          url: "img/tips/step_liangdieji_1@2x.png",
+          url: "assets/img/tips/step_liangdieji_1@2x.png",
           slideWidth: "449px",
           slideHeight: "381px",
           order: "01",
           dec: "按箭头方向扮开亮碟剂盒盖"
         },
         {
-          url: "img/tips/step_liangdieji_2@2x.png",
+          url: "assets/img/tips/step_liangdieji_2@2x.png",
           slideWidth: "501px",
           slideHeight: "409px",
           order: "02",
           dec: "添加亮碟剂到容器中"
         },
         {
-          url: "img/tips/step_liangdieji_3@2x.png",
+          url: "assets/img/tips/step_liangdieji_3@2x.png",
           slideWidth: "490px",
           slideHeight: "371px",
           order: "03",

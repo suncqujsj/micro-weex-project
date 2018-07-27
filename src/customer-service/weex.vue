@@ -1,8 +1,10 @@
 <template>
     <div class="wrapper" @viewappear="refreshPage">
-        <midea-header title="" :isImmersion="isipx?false:true" @headerClick="headerClick" :showLeftImg="false" :showRightImg="true" rightImg="./assets/img/service_ic_call@3x.png" @rightImgClick="showHotLine">
-        </midea-header>
         <list>
+            <cell>
+                <midea-header title="" :isImmersion="isipx?false:true" @headerClick="headerClick" :showLeftImg="false" :showRightImg="true" rightImg="./assets/img/service_ic_call@3x.png" @rightImgClick="showHotLine">
+                </midea-header>
+            </cell>
             <cell>
                 <div class="service-desc-wrapper">
                     <text class="service-title">服务</text>

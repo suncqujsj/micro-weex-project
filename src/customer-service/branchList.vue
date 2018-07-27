@@ -14,34 +14,36 @@
             </div>
         </div>
 
-        <div class="empty-page" v-if="isSearchByGPS && locateFailed">
-            <image class="empty-page-icon" src="./assets/img/service_ic_dingwei@3x.png" resize='contain'>
-            </image>
-            <text class="empty-page-text">无法获取地址，请手动定位</text>
-            <text class="empty-page-refresh" @click="initPage">刷新</text>
-            <!-- <text class="empty-page-relocate">重新定位</text> -->
-        </div>
-        <div class="empty-page" v-if="isLoaded && sortedBranchList.length == 0">
+        <template v-if="sortedBranchList && sortedBranchList.length >0">
+            <scroller v-if="isListMode" class="scroller">
+                <div v-for="(branch, index) in sortedBranchList" :key="index">
+                    <branch-block class="branch-block" :data="branch" :index="index" @navigate="navigate(branch)">
+                    </branch-block>
+                </div>
+                <div class="gap-bottom"></div>
+            </scroller>
+            <div v-if="!isListMode" class="map-scroller">
+                <midea-map-view class="map" :data="mapData"></midea-map-view>
+                <slider class="slider" :index="currentAddressIndex" @change="changeBranch" auto-play="false">
+                    <div v-for="(branch, index) in sortedBranchList" :key="index">
+                        <branch-block class="branch-slider-block" ellipsis=true :data="branch" :index="index" @navigate="navigate(branch)">
+                        </branch-block>
+                    </div>
+                </slider>
+            </div>
+        </template>
+        <div class="empty-page" v-else-if="isLoaded && sortedBranchList.length == 0">
             <image class="empty-page-icon" src="./assets/img/default_ic_nobranch@3x.png" resize='contain'>
             </image>
             <text class="empty-page-text">抱歉，亲查询的网点不存在{{'\n'}}您可以拨打24小时服务热线咨询</text>
             <text class="empty-page-text phone" @click="makeCall(4008899315)">400-8899-315</text>
         </div>
-        <scroller v-if="isListMode && sortedBranchList.length >0" class="scroller">
-            <div v-for="(branch, index) in sortedBranchList" :key="index">
-                <branch-block class="branch-block" :data="branch" :index="index" @navigate="navigate(branch)">
-                </branch-block>
-            </div>
-            <div class="gap-bottom"></div>
-        </scroller>
-        <div v-if="!isListMode && sortedBranchList.length >0" class="map-scroller">
-            <midea-map-view class="map" :data="mapData"></midea-map-view>
-            <slider class="slider" :index="currentAddressIndex" @change="changeBranch" auto-play="false">
-                <div v-for="(branch, index) in sortedBranchList" :key="index">
-                    <branch-block class="branch-slider-block" ellipsis=true :data="branch" :index="index" @navigate="navigate(branch)">
-                    </branch-block>
-                </div>
-            </slider>
+        <div class="empty-page" v-else-if="isSearchByGPS && locateFailed">
+            <image class="empty-page-icon" src="./assets/img/service_ic_dingwei@3x.png" resize='contain'>
+            </image>
+            <text class="empty-page-text">无法获取地址，请手动定位</text>
+            <text class="empty-page-refresh" @click="initPage">刷新</text>
+            <!-- <text class="empty-page-relocate">重新定位</text> -->
         </div>
     </div>
 </template>
@@ -251,11 +253,13 @@ export default {
                 }
                 nativeService.showLoadingWithMsg("正在获取位置信息...")
                 nativeService.getGPSInfo(gpsParam).then((data) => {
+                    nativeService.toast("000")
                     this.locateFailed = false
                     nativeService.hideLoadingWithMsg()
                     this.gpsInfo = data
                     resolve(data)
                 }).catch((error) => {
+                    nativeService.toast("111")
                     this.locateFailed = true
                     nativeService.hideLoadingWithMsg()
                     reject(error)

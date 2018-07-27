@@ -26,7 +26,6 @@ export default {
     mixins: [situationBase],
     data() {
         return {
-            uid: "",
             deviceId: "",
             situationList: []
         }
@@ -255,13 +254,10 @@ export default {
         }
     },
     created() {
-        nativeService.getUserInfo().then((data) => {
-            this.uid = data.uid
-            nativeService.getDeviceInfo().then((data) => {
-                this.deviceId = data.result.deviceId
-                this.getSituationList()
-            }, (error) => { })
-        }).catch((error) => { })
+        nativeService.getDeviceInfo().then((data) => {
+            this.deviceId = data.result.deviceId
+            this.getSituationList()
+        }, (error) => { })
     }
 }
 </script>

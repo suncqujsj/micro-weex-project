@@ -409,7 +409,7 @@ export default {
             }
             for (let index = 0; index < 31; index++) {
                 let theDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + index)
-                let theDateDesc = theDate.getMonth() + '月' + theDate.getDate() + '日'
+                let theDateDesc = (theDate.getMonth() + 1) + '月' + theDate.getDate() + '日'
                 this.serviePeriodDate.push({
                     'index': index,
                     'value': util.dateFormat(theDate, "yyyy-MM-dd"),

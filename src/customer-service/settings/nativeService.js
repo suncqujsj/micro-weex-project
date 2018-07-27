@@ -407,7 +407,7 @@ let customizeNativeService = Object.assign(nativeService, {
     },
     antiValidateCode() {
         return new Promise((resolve, reject) => {
-            let url = ("http://wap.cjm.so/Common/ValidateCode.ashx?Type=&Demand=&w=&h=&r=" + Math.random().toString().replace('.', ''))
+            let url = ("http://wap.cjm.so/Common/ValidateCode.ashx?Type=&Demand=base64&w=&h=&r=" + Math.random().toString().replace('.', ''))
             let params = {
                 method: 'GET',
                 url: url,

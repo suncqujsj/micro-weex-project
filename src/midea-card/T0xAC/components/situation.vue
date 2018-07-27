@@ -89,7 +89,7 @@ export default {
         executeSituation(situation) {
             if (situation.isCreated) {
                 //直接执行
-                return nativeService.executeSituationService(situation).then((resp) => {
+                return this.executeSituationService(situation).then((resp) => {
                     if (resp.code == 0) {
                         nativeService.toast("执行成功")
                     } else {
@@ -100,7 +100,7 @@ export default {
                 })
             } else {
                 //先新增，再执行
-                this.addSituationService(situation.moduleCode, enable, situation).then((resp) => {
+                this.addSituationService(situation.moduleCode, "1", situation).then((resp) => {
                     if (resp.code == 0) {
                         this.situationList.push(situation)
 
@@ -196,7 +196,7 @@ export default {
                     windSpeedDesc = "中"
                     break;
             }
-            result.title = "宝宝最适合"
+            result.title = "我的最舒适"
             result.detail = "模式" + (result.props.model == 'cool' ? "制冷" : "制热") + "，温度" + result.props.temperature + "°，风速" + windSpeedDesc + (result.props.wind_swing_ud == 'on' ? "，上下摆风" : "") + (result.props.wind_swing_lr == 'on' ? "，左右摆风" : "")
 
             return result

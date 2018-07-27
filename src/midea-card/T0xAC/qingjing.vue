@@ -188,9 +188,9 @@ export default {
 		},
 
 		submit() {
-			this.updateSituationService(this.situactionData).then((resp) => {
+			this.submitSituationService(this.situactionData).then((resp) => {
 				if (resp.code == 0) {
-					nativeService.toast("更新成功")
+					nativeService.toast("保存成功")
 					this.appPageDataChannel.postMessage({ key: "situation", deviceId: this.deviceId, data: {} })
 					this.back()
 				} else {
@@ -203,7 +203,7 @@ export default {
 	},
 	created() {
 		for (let index = 17; index <= 30; index++) {
-			this.temperatureList.push({ value: index, key: index }, )
+			this.temperatureList.push({ value: index, key: "" + index })
 		}
 		nativeService.getUserInfo().then((data) => {
 			this.uid = data.uid

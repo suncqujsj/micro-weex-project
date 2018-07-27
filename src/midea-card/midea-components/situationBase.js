@@ -119,6 +119,28 @@ export default {
             }
             return nativeService.sendCentralCloundRequest("/v1/situation/update", param)
         },
+        submitSituationService(situation) {
+            let param = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json;charset=utf-8"
+                },
+                data: {
+                    reqId: nativeService.generateUUID(),
+                    uid: this.uid,
+                    applianceCode: this.deviceId || "",
+                    stamp: Math.round(new Date().getTime() / 1000), //时间戳
+                    moduleCode: situation.moduleCode,
+                    enable: situation.enable,
+                    props: situation.props
+                }
+            }
+            let url = "/v1/situation/add"
+            if (situation.isCreated) {
+                url = "/v1/situation/update"
+            }
+            return nativeService.sendCentralCloundRequest(url, param)
+        },
         executeSituationService(situation) {
             let param = {
                 method: "POST",

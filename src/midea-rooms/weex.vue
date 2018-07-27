@@ -73,7 +73,7 @@
         padding: 20px;
         border-radius: 4px;
     }
-    .auto-name{ width: 120px; font-size: 30px; color: #666666; margin-bottom: 8px; text-overflow: clip; }
+    .auto-name{ width: 180px; font-size: 30px; color: #666666; margin-bottom: 8px; text-overflow: clip; }
     /* .auto-desc{ width: 120px; font-size: 24px; color: #C7C7CC; lines:1; } */
     .scene-list{ height: 1200px;}
     .scene { width: 690px; height: 206px; padding-bottom: 16px; position: relative; }
@@ -436,6 +436,7 @@
                         uid: uid,
                         homegroupId: this.homegroupId
                     }
+
                     this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                         if (rtnData.code == 0) {
                             this.sceneList = rtnData.data.list
@@ -460,8 +461,7 @@
                         homegroupId: this.homegroupId,
                         roomType:scene.roomType,
                         sceneId: scene.sceneId,
-                        userDevices: this.userDevices,
-                        sceneLevel: scene.indicator.level
+                        userDevices: this.userDevices
                     }
                     this.goTo("scene", {}, params)
                 }).catch((err)=>{

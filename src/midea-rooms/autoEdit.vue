@@ -1,17 +1,21 @@
 <template>
    <div class="wrap" :style="wrapStyle">
-        <div class="row-sb hd">
-            <text class="hd-text font-grey" @click="goBack">取消</text>
-            <text class="hd-text">{{autoDetail.name}}</text>
-            <text class="hd-text font-grey"  @click="sendAutoEdit">保存</text>
-        </div>
-        <list>
+       <div class="header-floor">
+            <midea-header :title="autoDetail.name" :bgColor="header.bgColor" :titleText="header.color" @leftImgClick="goBack"></midea-header>
+            <div class="delete" @click="showDialog('delete')">
+                <text class="delete-text">删除</text>
+            </div>
+       </div>
+        <list class="content-list">
             <cell class="content">
                 <div>
-                    <div style="background-color:#fff">
-                        <div class="row-sb auto-name-floor">
+                    <div class="content-hd">
+                        <div class="row-sb auto-name-floor"  @click="goSetAutoName">
                             <text class="text">名称</text>
-                            <input class="auto-name" type="text" placeholder="" :value="inputAutoName" @input="editAutoName" @change="editAutoName" />
+                            <div class="row-sb">
+                                <text class="auto-name-text">{{autoName}}</text>
+                               <image class="icon-next" :src="icon.next"></image>
+                            </div>
                         </div>
                         <div v-if="sceneType != 2" class="row-sb switch-floor">
                             <text class="text">启用</text>
@@ -35,8 +39,8 @@
                 </div>
                 <div>
                     <text class="sub-hd">设备</text>
-                    <div v-if="Object.keys(autoBindDevices).length > 0" class="device-box row-sb">
-                        <div class="device" v-for="(item, key) in autoBindDevices">
+                    <div class="device-box row-sb">
+                        <div v-if="Object.keys(autoBindDevices).length > 0" class="device" v-for="(item, key) in autoBindDevices">
                             <div @click="setDevice(key)">
                                 <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
                                 <text class="device-name">{{item.deviceName}}</text>
@@ -46,17 +50,17 @@
                                     </div>
                                 </div>
                             </div>
-                            <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, key)"></image>
+                            <!-- <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, key)"></image> -->
+                        </div>
+                        <div class="device row-c" @click="goBindNewDevice">
+                            <image class="icon-add" :src="icon.addDevice"></image>
+                            <text class="add-device-text">添加设备</text>
                         </div>
                     </div>
-                    <div  v-else class="device-box row-sb">
-                        <text class="not-bind-text text">当前快捷操作没有绑定设备，点击选择设备进行添加</text>
-                    </div>
-                    <text class="select-btn text" @click="goBindNewDevice">选择设备</text>
+                    <text class="save-btn" @click="sendAutoEdit">保存</text>
                 </div>
             </cell>
         </list>
-        <div class="delete" :style="deleteStyle"><text class="delete-text"  @click="showDialog('delete')">删除快捷操作</text></div>
         <!-- 删除自动化弹窗提示 -->
         <midea-dialog  :show="show.delete" @close="closeDialog('delete')" @mideaDialogCancelBtnClicked="closeDialog('delete')" @mideaDialogConfirmBtnClicked="deleteAuto" >
             <text class="·" slot="content">确定要删除此快捷操作？</text>
@@ -67,7 +71,11 @@
 <style>
     .row-sb{ flex-direction: row; align-items: center; justify-content: space-between; }
     .row-s{ flex-direction: row; align-items: center; justify-content: flex-start; }
-    .wrap{ background-color: #f2f2f2; }
+    .row-c{ flex-direction: row; align-items: center; justify-content: center; }
+    .wrap{ background-color: #f2f2f2;}
+    .header-floor{
+        position: relative; 
+    }
     .hd{
         background-color: #fff;
         width: 750px;
@@ -93,9 +101,14 @@
     .not-bind-text{
         color: #666;
     }
+    .content-list{
+        margin-top: 25px;
+    }
     .content{
-        margin-top: 16px;
         padding-bottom: 150px;
+    }
+    .content-hd{
+        background-color: #fff;
     }
     .sub-hd{
         color: #666;
@@ -106,19 +119,23 @@
     }
     .auto-name{
         width: 400px;
-        height: 70px;
-        margin-left: 100px;
-        text-align: right;
+    }
+    .auto-name-text{
+        margin-right: 14px;
+        font-size: 28px;
+        color: #666;
     }
     .auto-name-floor{
         margin-left: 25px;
         padding-right: 25px;
-        padding-top: 10px;
-        padding-bottom: 10px;
+        padding-top: 36px;
+        padding-bottom: 32px;
     }
     .switch-floor{
         margin-left: 25px;
         padding-right: 25px;
+        padding-top: 7px;
+        padding-bottom: 5px;
         border-top-color: #e5e5e5;
         border-top-style: solid;
         border-top-width: 2px;
@@ -135,6 +152,7 @@
         margin-bottom: 14px;
         background-color: #fff;
         border-radius: 4px;
+        height: 220px;
     }
     .device-img{
         width:100px;
@@ -142,12 +160,13 @@
         margin-bottom: 12px;
     }
     .device-name{
+        height: 32px;
         font-size: 32px;
-        margin-bottom: 4px;
+        margin-bottom: 10px;
     }
     .device-desc{
          align-items: flex-start;
-         margin-top: 6px;
+         height: 26px;
     }
     .device-desc-text{
         color:#c7c7c7;
@@ -162,30 +181,25 @@
         width: 50px;
         height: 50px;
     }
-    .select-btn{
-        width: 686px;
+    .save-btn{
+        width: 690px;
         margin-top: 48px;
-        padding: 19px;
-        border-width: 2px;
-        border-color: #666;
-        color: #666;
-        border-style: solid;
-        border-radius: 4px;
-        margin-left: 32px;
-        text-align: center;
-    }
-    .delete{
-        width: 750px;
-        position: absolute;
-        left:0;
-        right:0;
-        background-color: #fff;
-    }
-    .delete-text{
-        color: #FF3B30;
-        padding: 27px;
+        padding: 25px;
+        background-color: #267AFF;
+        color: #fff;
+        border-radius: 8px;
+        margin-left: 30px;
         text-align: center;
         font-size: 32px;
+    }
+    .delete{
+        position: absolute;
+        top: 30px;
+        right: 25px;
+    }
+    .delete-text{
+        font-size: 32px;
+        color: #666;
     }
     .type-img{
         width: 82px;
@@ -222,8 +236,18 @@
     .delete-text{
         font-size: 30px;
     }
-    
-    /* .wrap{background-color: #3af} */
+    .icon-add{
+        width: 32px;
+        height: 32px;
+        margin-right: 18px;
+    }
+    .add-device-text{
+        font-size: 32px;
+    }
+    .next{
+        width: 10px;
+        height: 20px;
+    }
 </style>
 
 <script>
@@ -247,7 +271,8 @@
                 icon: {
                     check:  'assets/img/check_on.png',
                     uncheck: 'assets/img/check_off.png',
-                    next: 'assets/img/more.png'
+                    next: 'assets/img/more.png',
+                    addDevice: 'assets/img/add.png'
                 },
                 applianceImgPath: applianceImgPath,
                 header: {
@@ -260,7 +285,7 @@
                 autoDetail: {
                 },
                 autoTypeImg: {
-                    2: 'assets/img/hand.png',
+                    2: 'assets/img/smart_ic_hand@2x.png',
                     3: 'assets/img/location.png',
                     4: 'assets/img/time.png',
                     6: 'assets/img/slweather.png',
@@ -283,7 +308,7 @@
                 active: [],
                 userDevices: {},//用户名下设备
                 autoBindDevices: {},//此场景绑定的设备（随勾选操作更新）
-                autoSupportActions: {},//此场景可用设备的动作指令的值
+                autoSupportActions: {},//此场景支持的所有设备的动作指令的值
                 editParams: {},//用户改动的编辑项
                 userSetActions: {},//用户改动的设备动作指令值
                 unbindDevices: {},//用户未绑定的可用设备
@@ -291,7 +316,8 @@
                 bindDeviceActions: {},
                 newDevices: {},
                 taskActions: {}, //前端自己处理过格式的{deviceId:动作指令值}的对象，数据来源：后端返回的task字段
-                pageStamp: ''//进入编辑页时的时间戳
+                pageStamp: '',//进入编辑页时的时间戳
+                autoName: ''
             }
         },
         computed: {
@@ -332,7 +358,7 @@
                 }
                 weekTmp = weekTmp.join('、')
                 return weekTmp
-            }
+            },
         },
         methods: {
             goBack(){
@@ -377,7 +403,7 @@
                     this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                         if (rtnData.code == 0) {
                             this.autoDetail = Object.assign({}, this.autoDetail, rtnData.data)
-                            this.inputAutoName = this.autoDetail.name
+                            this.autoName = this.autoDetail.name
                             this.task = this.autoDetail.task
 
                             this.initBindDevices()
@@ -397,6 +423,12 @@
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
                 })
+            },
+            goSetAutoName(){
+                let params = {
+                    autoName: encodeURIComponent(this.autoName)
+                }
+                this.goTo('setAutoName', {}, params)
             },
             initBindDevices(){
                 let tmpAutoBindDevices = {}//根据后台返回的task字段初始化已绑定设备列表
@@ -470,10 +502,6 @@
                 }
                 this.editParams.enable = Number(e.value)
             },
-            editAutoName(input){
-                this.inputAutoName = input.value
-                this.editParams.name = input.value
-            },
             goAutoTypeSet(){
                 let params = {
                     from: 'editAuto',
@@ -495,6 +523,7 @@
                 if (this.sceneType == 6){
                     params.weatherStatus = encodeURIComponent(this.autoDetail.weather.weatherStatus)
                     params.logical = encodeURIComponent(this.autoDetail.weather.logical)
+                    params.weatherTemperature = this.autoDetail.weather.temperature
                 }
                 this.goTo('autoTypeSet', {}, params)
             },
@@ -573,7 +602,7 @@
                         }
                         this.goTo('autoBindDevices', {}, params)
                     }else{
-                        nativeService.alert('此快捷操作已经选择了所有设备哦')
+                        nativeService.alert('没有更多设备可以绑定了')
                     }
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
@@ -607,7 +636,7 @@
                         nativeService.alert('没有改动哦')
                         return
                     }
-                    reqParams.name = this.editParams.name || this.autoDetail.name
+                    reqParams.name = this.autoName || this.autoDetail.name
                     reqParams.enable = this.editParams.enable || this.autoDetail.enable
                     reqParams.weekly = this.editParams.weekly || this.autoDetail.weekly
                 
@@ -664,13 +693,21 @@
             this.initData()
             let that = this
             channelAutoEdit.onmessage = function(e) {
-                if (e.data.page == 'setDevice') {
+                if (e.data.page == 'setAutoName') {//修改快捷操作名称
+                    that.autoName = e.data.autoName
+                }
+                if (e.data.page == 'setDevice') {//修改设备操作属性和设备绑定状态
+                    if (e.data.isCheck == 'uncheck') {
+                        delete that.autoBindDevices[e.data.applianceCode]
+                    }
+                    
                     let tmpUserSetActions = {}
                     tmpUserSetActions[e.data.applianceCode] = e.data.actions
                     that.userSetActions = Object.assign({}, that.userSetActions, tmpUserSetActions)
+                    that.generateUnbindDevices()
                     that.generateBindDeviceActions()
                 }
-                if (e.data.page == 'autoBindDevices') {
+                if (e.data.page == 'autoBindDevices') {//修改设备绑定状态
                     that.autoBindDevices = Object.assign({}, that.autoBindDevices, e.data.newDevices)
                     that.generateUnbindDevices()
                     that.generateBindDeviceActions()

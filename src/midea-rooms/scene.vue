@@ -10,16 +10,15 @@
                     <div class="up-desc">
                         <text v-if="roomType=='1'||roomType=='2'" class="desc white">{{temperatureStatus}} {{pm25Status}}</text>
                         <text v-if="roomType=='3'" class="desc white">{{waterStatus}}</text>
-                        
-                        <midea-vote :defaulSelectd="sceneLevel" :disabled="true" :styles="style.vote" :imgPath="voteImg"></midea-vote>
+                        <my-score class="scene-score" :score="indicator.level" :starWidth="45"></my-score>
                         <text class="improve white" @click="quickOptimize">一键优化</text>
                     </div>
                     <div class="up-status row-sa" v-if="roomType=='1' || roomType=='2'">
                         <div class="scene-status">
                             <text class="info-text font14 white">温度</text>
                             <div  class="row-c status-value">
-                                <text v-if="indicator.temperature" class="font36 white">{{indicator.temperature}}</text>
-                                <text v-if="indicator.temperature" class="font16 white mgb-20">℃</text>
+                                <text v-if="indicator.temperature != ''" class="font36 white">{{indicator.temperature}}</text>
+                                <text v-if="indicator.temperature != ''" class="font16 white mgb-20">℃</text>
                                 <text v-else class="font36 white">?</text>
                             </div>
                             <text class="info-text font12 white">{{temperatureStatus}}</text>
@@ -27,8 +26,8 @@
                         <div class="scene-status">
                             <text class="info-text font14 white">湿度</text>
                             <div class="row-c status-value">
-                                <text v-if="indicator.humidity" class="font36 white">{{indicator.humidity}}</text>
-                                <text v-if="indicator.humidity" class="font16 white mgb-20">%</text>
+                                <text v-if="indicator.humidity != ''" class="font36 white">{{indicator.humidity}}</text>
+                                <text v-if="indicator.humidity != ''" class="font16 white mgb-20">%</text>
                                 <text v-else class="font36 white">?</text>
                             </div>
                             <text class="info-text font12 white">{{humidityStatus}}</text>
@@ -36,51 +35,68 @@
                         <div class="scene-status">
                             <text class="info-text font14 white">空气质量</text>
                             <div class="row-c status-value">
-                                <text v-if="indicator.pm5" class="font36 white">{{indicator.pm5}}</text>
+                                <text v-if="indicator.pm25 != ''" class="font36 white">{{indicator.pm25}}</text>
                                 <text v-else class="font36 white">?</text>
                             </div>
                             <text class="info-text font12 white">{{pm25Status}}</text>
                         </div>
                     </div>
-                    <div class="up-status row-sa" v-if="roomType=='3'">
+                    <div class="up-status row-sa bath-up-status" v-if="roomType=='3'">
                         <div class="scene-status">
-                            <text v-if="indicator.work_stats" class="info-text font14 white">{{indicator.work_stats}}</text>
-                            <text v-else class="info-text font14 white">工作状态</text>
+                            <text class="info-text font14 white">温度</text>
                             <div class="row-c status-value">
-                                <text v-if="indicator.water_temperature" class="font36 white">{{indicator.water_temperature}}</text>
-                                <text v-if="indicator.water_temperature" class="font16 white mgb-20">℃</text>
+                                <text v-if="indicator.water_temperature !== ''" class="font36 white">{{indicator.water_temperature}}</text>
+                                <text v-if="indicator.water_temperature !== ''" class="font16 white mgb-20">℃</text>
                                 <text v-else class="font36 white">?</text>
                             </div>
                         </div>  
-                        <div class="scene-status">
+                        <!-- <div class="scene-status">
                             <text class="info-text font14 white">热水量</text>
                             <div class="row-c status-value">
                                 <text v-if="indicator.water_capacity" class="font36 white">{{indicator.water_capacity}}</text>
                                 <text v-if="indicator.water_capacity" class="font16 white mgb-20">%</text>
                                 <text v-else class="font36 white">?</text>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="scene-status">
                             <text class="info-text font14 white">还需加热</text>
                             <div class="row-c status-value">
-                                <text v-if="indicator.remain_time" class="font36 white">{{indicator.remain_time}}</text>
-                                <text v-if="indicator.remain_time" class="font16 white mgb-20">分</text>
+                                <text v-if="indicator.remain_time != ''" class="font36 white">{{indicator.remain_time}}</text>
+                                <text v-if="indicator.remain_time != ''" class="font16 white mgb-20">分</text>
                                 <text v-else class="font36 white">?</text>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div v-if="roomType=='4'" class="up-block balcony-block">
-                    <!-- <text class="weather white">{{weatherDesc}}</text> -->
+                    <text class="weather white">{{weatherDesc}}</text>
                     <slider v-if="hasWasherWaterData || hasWasherPowerData">
                         <div v-if="hasWasherWaterData">
-                            <midea-barchart-view class="barchart" :data="washData"></midea-barchart-view>
+                            <div class="row-s chart-info">
+                                <text class="font14 white">单位：升</text>
+                                <!-- <div class="row-e">
+                                    <image class="icon-use" :src="icon.water"></image>
+                                    <text class="font14 white">今日用水总量:</text>
+                                    <text class="use-value white">{{todayWaterUse}}</text>
+                                    <text class="font14 white">升</text>
+                                </div> -->
+                            </div>
+                            <midea-barchart-view class="barchart" :data="washerWaterData"></midea-barchart-view>
                         </div>
                         <div v-if="hasWasherPowerData">
-                            <midea-barchart-view class="barchart" :data="washData"></midea-barchart-view>
+                            <div class="row-s chart-info">
+                                <text class="font14 white">单位：度</text>
+                                <!-- <div class="row-e">
+                                    <image class="icon-use" :src="icon.power"></image>
+                                    <text class="font14 white">今日用电总量:</text>
+                                    <text class="use-value white">{{todayPowerUse}}</text>
+                                    <text class="font14 white">度</text>
+                                </div> -->
+                            </div>
+                            <midea-barchart-view class="barchart" :data="washerPowerData"></midea-barchart-view>
                         </div>
                     </slider>
-                    <div v-else>
+                    <div v-if="!hasWasherPowerData && !hasWasherWaterData">
                         <text class="no-washdata">暂无数据</text>
                     </div>
                 </div>
@@ -177,6 +193,11 @@
     .desc, .weather{
         text-align: center;
     }
+    .scene-score{
+        margin-top: 30px;
+        margin-bottom: 70px;
+        margin-left: 260px;
+    }
     .weather{
         font-size: 30px;
         margin-bottom: 25px;
@@ -198,6 +219,10 @@
         margin-top: 145px;
         padding-left: 20px;
         padding-right: 20px;
+    }
+    .bath-up-status{
+        padding-left: 40px;
+        padding-right: 40px;
     }
     .scene-status{
         width: 220px;
@@ -231,6 +256,19 @@
         width: 700px;
         margin-left: 25px;
         height: 500px;
+    }
+    .chart-info{
+        width: 700px;
+        margin-left: 25px;
+    }
+    .icon-use{
+        width: 43px;
+        height: 50px;
+    }
+    .use-value{
+        font-size: 52px;
+        margin-left: 12px;
+        margin-right: 10px;
     }
     .wash-list{
         /* margin-top: 100px; */
@@ -276,15 +314,15 @@
     import base from './base'
     import nativeService from '@/common/services/nativeService.js'
     import MideaHeader from '@/midea-component/header.vue'
-    import MideaVote from '@/midea-component/mVote.vue'
     import ToastDialog from '@/midea-component/toastDialog.vue'
     import mideaCell from '@/component/cell.vue'
     import mideaList from '@/midea-rooms/components/list.vue'
+    import myScore from '@/midea-rooms/components/score.vue'
 
     import { url, codeDesc } from './config/config.js'
 
     export default {
-        components:{ MideaHeader, MideaVote, ToastDialog, mideaCell, mideaList },
+        components:{ MideaHeader, ToastDialog, mideaCell, mideaList, myScore },
         computed:{
             temperatureStatus(){
                 let temperature = this.indicator.temperature
@@ -432,15 +470,11 @@
                         pause: 'assets/img/stop_on.png',
                         powerDisabled: 'assets/img/power_off.png',
                         statusDisabled: 'assets/img/start_off.png'
-                    }
+                    },
+                    water: 'assets/img/equitment_ic_waterdrop@2x.png',
+                    power: 'assets/img/equitment_ic_lightning@2x.png',
                 },
                 style: {
-                    vote: {
-                        box: {
-                            width: '220px',
-                            marginLeft: '265px',
-                        }
-                    },
                     linearBg: {
                         1: 'linear-gradient(to top, #4E69F7,#5D75F6)',
                         2: 'linear-gradient(to top, #4E69F7,#5D75F6)',
@@ -449,8 +483,8 @@
                     },
                 },
                 voteImg:{
-                    star: 'assets/img/star.png',
-                    unstar: 'assets/img/unstar.png'
+                    star: 'assets/img/rate.png',
+                    unstar: 'assets/img/unrate.png'
                 },
                 unit: {
                     temperature: '℃',
@@ -463,29 +497,6 @@
                 showMall: false,
                 weatherDesc: '',
                 sceneDevices: [],
-                washerPowerData: {
-                    x: {
-                        "value": [],
-                        "label": []
-                    },
-                    y: [
-                        {
-                            "value": [],
-                            "title": "用电量",
-                            "color": "#2AD2FC",
-                            "backgroundColor": "#111"
-                        }
-                    ],
-                    description: "",
-                    legend: {
-                        "position": "TOP_LEFT",
-                        "orientation": "HORIZONTAL" 
-                    },
-                    unit: {
-                        "x": "日期",
-                        "y": "度"
-                    }
-                },
                 washerWaterData: {
                     x: {
                         "value": [],
@@ -495,18 +506,49 @@
                         {
                             "value": [],
                             "title": "用水量",
-                            "color": "#2AD2FC",
+                            "color": "#eeeeee",
                             "backgroundColor": "#111"
                         }
                     ],
+                    borderRadius: "3",
+                    description: "",
+                    legend: {
+                        "position": "TOP_CENTER",
+                        "orientation": "HORIZONTAL",
+                        "show": false
+                    },
+                    unit: {
+                        "x": "",
+                        "y": "",
+                        // "x": "日期",
+                        // "y": "单位:吨"
+                    }
+                },
+                washerPowerData: {
+                    x: {
+                        "value": [],
+                        "label": []
+                    },
+                    y: [
+                        {
+                            "value": [],
+                            "title": "用电量",
+                            "color": "#eeeeee",
+                            "backgroundColor": "#111"
+                        }
+                    ],
+                    borderRadius: "3",
                     description: "",
                     legend: {
                         "position": "TOP_LEFT",
-                        "orientation": "HORIZONTAL" 
+                        "orientation": "HORIZONTAL",
+                        "show": false
                     },
                     unit: {
-                        "x": "日期",
-                        "y": "吨"
+                        "x": "",
+                        "y": "",
+                        // "x": "日期",
+                        // "y": "单位:度"
                     }
                 },
                 hasWasherPowerData: false,
@@ -522,7 +564,7 @@
                     statusDisabled: ''
                 },
                 indicator: {},
-                sceneLevel: 1
+                sceneLevel: 1,
             }
         },
         methods: {
@@ -569,11 +611,13 @@
                     if (this.scene.applianceList.length <= 0 ) {
                         nativeService.toast('无法获取相关数据，点击右上角设置设备')
                     }
-                    if (this.roomType == 4 && this.scene.applianceList.length > 0) {
-                        this.washerCode = this.scene.applianceList[0].applianceCode
-                        this.getWashData()
-                        // this.getWeatherInfo()
-                        this.luaQueryStatus()
+                    if (this.roomType == 4){
+                        this.getWeatherInfo()
+                         if ( this.scene.applianceList.length > 0) {
+                            this.washerCode = this.scene.applianceList[0].applianceCode || ''
+                            this.getWashData()
+                            this.luaQueryStatus()
+                         }
                     }
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
@@ -593,6 +637,9 @@
                             if (res.code == '0') {
                                 this.scene = res.data
                                 this.indicator = res.data.indicator || {}
+                                if ( this.indicator.level && this.indicator.level != '' ) {
+                                     this.sceneLevel = this.indicator.level
+                                }
                                 resolve()
                             }else{
                                 if (codeDesc.scene.hasOwnProperty(res.code)) {
@@ -708,71 +755,6 @@
                 }
                 
             },
-            getWashData(){
-                this.checkLogin().then( (uid) => {
-                    if (this.washerCode) {
-                        let reqUrl = url.scene.washerConsumption
-                        let reqParams = {
-                            uid: uid,
-                            homegroupId: this.homegroupId,
-                            applianceCode: this.washerCode
-                        }
-                        
-                        this.webRequest(reqUrl, reqParams).then((res)=>{
-                            if (res.code == 0) {
-                                let result = res.data.historyConsumptions
-                                let tmpPowerXValue = [], tmpPowerXLabel = [], tmpPowerYValue = [], tmpPowerYLabel = [], 
-                                    tmpWaterXValue = [], tmpWaterXLabel = [], tmpWaterYValue = [], tmpWaterYLabel = []
-
-                                for (let i=0; i<result.length; i++) {
-                                    tmpPowerXValue[i] = i
-                                    tmpPowerXLabel[i] = result[i].date
-
-                                    tmpPowerYValue[i] = 0
-                                    tmpPowerYLabel[i] = 0
-                                    if (result[i].powerConsumption && result[i].powerConsumption != '') {
-                                        tmpPowerYValue[i] = result[i].powerConsumption
-                                        tmpPowerYLabel[i] = result[i].powerConsumption
-                                    }
-
-                                    tmpWaterXValue[i] = i
-                                    tmpWaterXLabel[i] = result[i].date
-                                    
-                                    tmpWaterYValue[i] = 0
-                                    tmpWaterYLabel[i] = 0
-                                    if (result[i].waterConsumption && result[i].waterConsumption != '') {
-                                        tmpWaterYValue[i] = result[i].waterConsumption
-                                        tmpWaterYLabel[i] = result[i].waterConsumption
-                                    }
-                                }
-
-                                this.washerPowerData['x']['value'] = tmpPowerXValue
-                                this.washerPowerData['x']['label'] = tmpPowerXLabel
-                                this.washerPowerData['y']['value'] = tmpPowerYValue
-                                this.washerPowerData['y']['label'] = tmpPowerYLabel
-                                
-                                this.washerWaterData['x']['value'] = tmpWaterXValue
-                                this.washerWaterData['x']['label'] = tmpWaterXLabel
-                                this.washerWaterData['y']['value'] = tmpWaterYValue
-                                this.washerWaterData['y']['label'] = tmpWaterYLabel
-                                
-                                this.hasWasherPowerData = true
-                                this.hasWasherWaterData = true
-                            }else{
-                                if (codeDesc.scene.hasOwnProperty(res.code)) {
-                                    nativeService.toast(codeDesc.scene[res.code])
-                                }else{
-                                    nativeService.toast(res.msg)
-                                }
-                            }
-                        }).catch((err)=>{
-                            nativeService.toast(this.getErrorMessage(err))
-                        })
-                    }
-                }).catch((err)=>{
-                    nativeService.toast(this.getErrorMessage(err))
-                })
-            },
             getWeatherInfo(){
                 nativeService.getGPSInfo({
                     desiredAccuracy: "10",
@@ -799,6 +781,82 @@
                     this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
                 })
             },
+            getWashData(){
+                this.checkLogin().then( (uid) => {
+                    if (this.washerCode) {
+                        let reqUrl = url.scene.washerConsumption
+                        let reqParams = {
+                            uid: uid,
+                            homegroupId: this.homegroupId,
+                            applianceCode: this.washerCode
+                        }
+                        
+                        this.webRequest(reqUrl, reqParams).then((res)=>{
+                            if (res.code == 0) {
+                                let result = res.data.historyConsumptions.reverse()//接口数据是倒序的，需要反序过来
+
+                                // x:日期， y:用量
+                                let tmpPowerXValue = [], tmpPowerXLabel = [], tmpPowerYValue = [], tmpPowerYLabel = [], 
+                                    tmpWaterXValue = [], tmpWaterXLabel = [], tmpWaterYValue = [], tmpWaterYLabel = []
+
+                                for (let i=0; i<result.length; i++) {
+                                    tmpPowerXValue[i] = i
+                                    tmpWaterXValue[i] = i
+
+                                    let mm = result[i].date.split('-')[1], dd = result[i].date.split('-')[2]
+                                    if (['05','10', '15', '20', '25','30'].indexOf(dd) > -1) {
+                                        tmpPowerXLabel[i] = mm+'.'+dd
+                                        tmpWaterXLabel[i] = mm+'.'+dd
+                                    }else{
+                                        tmpPowerXLabel[i] =''
+                                        tmpWaterXLabel[i] = ''
+                                    }
+
+                                    tmpPowerYValue[i] = 0
+                                    tmpPowerYLabel[i] = 0
+                                    if (result[i].powerConsumption){
+                                        if ( result[i].powerConsumption != '') {
+                                            tmpPowerYValue[i] = Number(result[i].powerConsumption)
+                                            tmpPowerYLabel[i] = Number(result[i].powerConsumption)
+                                        }
+                                    }
+
+                                    tmpWaterYValue[i] = 0
+                                    tmpWaterYLabel[i] = 0
+                                    if (result[i].waterConsumption && result[i].waterConsumption != '') {
+                                        tmpWaterYValue[i] = Number(result[i].waterConsumption)
+                                        tmpWaterYLabel[i] = Number(result[i].waterConsumption)
+                                    }
+                                }
+
+                                this.washerPowerData['x']['value'] = tmpPowerXValue
+                                this.washerPowerData['x']['label'] = tmpPowerXLabel
+                                this.washerPowerData['y'][0]['value'] = tmpPowerYValue
+                                this.washerPowerData['y'][0]['label'] = tmpPowerYLabel
+                                
+                                this.washerWaterData['x']['value'] = tmpWaterXValue
+                                this.washerWaterData['x']['label'] = tmpWaterXLabel
+                                this.washerWaterData['y'][0]['value'] = tmpWaterYValue
+                                this.washerWaterData['y'][0]['label'] = tmpWaterYLabel
+                                
+                                this.hasWasherPowerData = true
+                                this.hasWasherWaterData = true
+
+                            }else{
+                                if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                    nativeService.toast(codeDesc.scene[res.code])
+                                }else{
+                                    nativeService.toast(res.msg)
+                                }
+                            }
+                        }).catch((err)=>{
+                            nativeService.toast(this.getErrorMessage(err))
+                        })
+                    }
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
+                })
+            },
             luaQueryStatus () {//洗衣机数据的lua查询
             	let self = this;
             	let params = {
@@ -809,7 +867,7 @@
             	nativeService.sendLuaRequest(params, true).then(function(luaData) {
                     self.setWasherStatus(luaData)
             	},function(error) {
-                    nativeService.alert('查询设备状态时遇到了问题 \n[错误码：' + error.errorCode +']')
+                    nativeService.alert('查询洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
             	});
             },
             setWasherStatus(luaData){
@@ -838,7 +896,7 @@
                             nativeService.hideLoading()
                         },2000)
                     },function(error) {
-                        nativeService.alert('改变设备状态时遇到了问题 \n[错误码：' + error.errorCode +']')
+                        nativeService.alert('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
                     });
                 }
             },
@@ -860,7 +918,7 @@
                                 nativeService.hideLoading()
                             },2000)
                         },function(error) {
-                            nativeService.alert('改变设备状态时遇到了问题 \n[错误码：' + error.errorCode +']')
+                            nativeService.alert('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
                         })
                     } else {
                         let params = {
@@ -875,7 +933,7 @@
                                 nativeService.hideLoading()
                             },2000)
                         },function(error) {
-                            nativeService.alert('改变设备状态时遇到了问题 \n[错误码：' + error.errorCode +']')
+                            nativeService.alert('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
                         });
                     }
                 }
@@ -885,7 +943,6 @@
             this.homegroupId = nativeService.getParameters('homegroupId')
             this.sceneId = nativeService.getParameters('sceneId')
             this.roomType = nativeService.getParameters('roomType')
-            this.sceneLevel = nativeService.getParameters('sceneLevel')
         }
     }
 </script>

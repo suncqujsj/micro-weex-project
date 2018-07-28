@@ -1,39 +1,37 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
-            <div slot="customerContent" class="header-right" v-if="!isCreate">
-                <text class="header-right-text" @click="deleteAddress">删除</text>
-            </div>
+        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back" :showRightText="!isNew" rightText="删除" @rightTextClick="deleteAddress">
         </midea-header>
         <scroller>
-            <cell class="group-gap-top"></cell>
-            <div class="item-group">
-                <text class="text-label">姓名</text>
-                <input class="text-input" type="text" placeholder="请输入姓名" v-model="userAddress.receiverName" maxlength="20" />
-                <image class="text-img" src="./assets/img/me_ic_addresslist@3x.png" resize='contain' @click="getAddressBookPerson"></image>
+            <div class="group-gap-top"></div>
+            <div class="scroller-inner">
+                <div class="item-group">
+                    <text class="text-label">姓名</text>
+                    <input class="text-input" type="text" placeholder="请输入姓名" v-model="userAddress.receiverName" maxlength="20" />
+                    <image class="text-img" src="./assets/img/me_ic_addresslist@3x.png" resize='contain' @click="getAddressBookPerson"></image>
+                </div>
+                <div class="item-group">
+                    <text class="text-label">手机号码</text>
+                    <input class="text-input" type="tel" placeholder="请输入手机号码" v-model="userAddress.receiverMobile" maxlength="11" />
+                </div>
+                <div class="item-group">
+                    <text class="text-label">所在区域</text>
+                    <text class="text-desc" v-bind:class="[areaDesc=='请选择所在区域'?'empty-text':'']" @click="isShowAddressPicker=true">{{areaDesc}}</text>
+                    <image class="text-img" src="./assets/img/me_ic_area@3x.png" resize='contain' @click="getPosition"></image>
+                </div>
+                <div class="item-group">
+                    <text class="text-label">详细地址</text>
+                    <input class="text-input" type="text" placeholder="请输入详细地址" v-model="userAddress.addr" maxlength="200" />
+                </div>
+                <div class="item-group">
+                    <text class="text-label">默认地址</text>
+                    <midea-switch2 :checked="userAddress.defaultAddr" @change="changeDefaultAddr"></midea-switch2>
+                </div>
             </div>
-            <div class="item-group">
-                <text class="text-label">手机号码</text>
-                <input class="text-input" type="tel" placeholder="请输入手机号码" v-model="userAddress.receiverMobile" maxlength="11" />
-            </div>
-            <div class="item-group">
-                <text class="text-label">所在区域</text>
-                <text class="text-desc" v-bind:class="[areaDesc=='请选择所在区域'?'empty-text':'']" @click="isShowAddressPicker=true">{{areaDesc}}</text>
-                <image class="text-img" src="./assets/img/me_ic_area@3x.png" resize='contain' @click="getPosition"></image>
-            </div>
-            <div class="item-group">
-                <text class="text-label">详细地址</text>
-                <input class="text-input" type="text" placeholder="请输入详细地址" v-model="userAddress.addr" maxlength="200" />
-            </div>
-            <div class="item-group">
-                <text class="text-label">默认地址</text>
-                <midea-switch2 :checked="userAddress.defaultAddr" @change="changeDefaultAddr"></midea-switch2>
+            <div class="action-bar">
+                <midea-button :text="isNew?'新增':'保存'" :disabled="!isDataReady" @mideaButtonClicked="submit"></midea-button>
             </div>
         </scroller>
-
-        <div class="action-bar">
-            <midea-button :text="isCreate?'新增':'保存'" :disabled="!isDataReady" @mideaButtonClicked="submit"></midea-button>
-        </div>
 
         <address-picker :isShow="isShowAddressPicker" :data="gpsAddress || userAddress" @oncancel="servieAddressCancel" @onchanged="servieAddressSelected">
         </address-picker>
@@ -58,7 +56,7 @@ export default {
     data() {
         return {
             title: '我的地址',
-            isCreate: true,
+            isNew: true,
             userAddress: {
                 receiverName: '',
                 receiverMobile: '',
@@ -243,7 +241,7 @@ export default {
 
         if (this.userAddress.userAddrId) {
             //地址修改
-            this.isCreate = false
+            this.isNew = false
             nativeService.getItem(this.SERVICE_STORAGE_KEYS.userAddress, (resp) => {
                 if (resp.result == 'success') {
                     this.userAddress = JSON.parse(resp.data)
@@ -259,40 +257,31 @@ export default {
   background-color: #f2f2f2;
   position: relative;
 }
-.header-right {
-  position: absolute;
-  right: 0px;
-  width: 160px;
-  height: 88px;
-  display: flex;
-  justify-content: center;
-}
-.header-right-text {
-  font-family: PingFangSC-Regular;
-  font-size: 28px;
-  color: #666666;
-  padding-left: 20px;
-  padding-right: 20px;
-  text-align: right;
+.scroller-inner {
+  background-color: #ffffff;
 }
 .group-gap-top {
   height: 24px;
 }
 .item-group {
-  padding-top: 30px;
-  padding-left: 32px;
+  padding-top: 10px;
+  margin-left: 32px;
   padding-right: 32px;
-  padding-bottom: 30px;
+  padding-bottom: 10px;
   background-color: #ffffff;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  border-bottom-color: #e5e5e8;
+  border-bottom-width: 1px;
 }
 .text-label {
   font-family: PingFangSC-Regular;
   font-size: 32px;
   color: #000000;
   width: 130px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 .text-input {
   flex: 1;
@@ -321,10 +310,9 @@ export default {
   color: #333333;
 }
 .action-bar {
-  position: fixed;
-  bottom: 0px;
   width: 750px;
   text-align: center;
+  padding-top: 8px;
   padding-bottom: 20px;
 }
 .empty-text {

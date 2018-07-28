@@ -1,14 +1,18 @@
 <template>
     <div class="wrapper" @viewappear="refreshPage">
-        <list>
+        <!-- 不可删除此空div行，否则list会自动调整移动至状态栏下 -->
+        <div></div>
+        <list class="list">
             <cell>
-                <midea-header title="" :isImmersion="isipx?false:true" @headerClick="headerClick" :showLeftImg="false" :showRightImg="true" rightImg="./assets/img/service_ic_call@3x.png" @rightImgClick="showHotLine">
-                </midea-header>
-            </cell>
-            <cell>
+                <div class="service-header" :class="[isipx?'':'immersion']">
+                    <div style="flex: 1;"> </div>
+                    <div class="service-header-image-wrapper" @click="showHotLine">
+                        <image class="header-left-image" src="./assets/img/service_ic_call@3x.png"></image>
+                    </div>
+                </div>
                 <div class="service-desc-wrapper">
                     <text class="service-title">服务</text>
-                    <text class="service-desc">在线客服，随时为您提供服务</text>
+                    <text class="service-desc">随时随地为您提供贴心服务</text>
                     <div class="service-desc-img-wrapper">
                         <image class="service-desc-img" src="./assets/img/servie_pic_service@3x.png" resize='contain'></image>
                     </div>
@@ -28,7 +32,7 @@
                         <div class="arraw-triangle"></div>
                     </div>
                 </cell>
-                <midea-item height="150" :hasArrow="true" :clickActivied="true" @mideaCellClick="goToOrderDetail">
+                <midea-item height="150" :hasSubBottomBorder="false" @mideaCellClick="goToOrderDetail">
                     <image slot="itemImg" class="order-img" :src="formattedOrder.imageUrl" resize='contain'>
                     </image>
                     <div slot="title" class="order-content">
@@ -38,20 +42,17 @@
                 </midea-item>
             </template>
             <cell class="group-gap-top"></cell>
-            <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('productSelection', {}, { from: 'rootView', to:'branchList' })">
+            <midea-item title="网点查询" @mideaCellClick="goTo('productSelection', {}, { from: 'rootView', to:'branchList' })">
                 <image slot="itemImg" src="./assets/img/service_ic_location@3x.png" class="service-item-img" resize='contain'>
                 </image>
-                <text slot="title" class="service-item-title">网点查询</text>
             </midea-item>
-            <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('serviceList')">
+            <midea-item title="服务与收费政策" @mideaCellClick="goTo('serviceList')">
                 <image slot="itemImg" src="./assets/img/service_ic_policy@3x.png" class="service-item-img" resize='contain'>
                 </image>
-                <text slot="title" class="service-item-title">服务与收费政策</text>
             </midea-item>
-            <midea-item height="96" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('antifake')">
+            <midea-item title="滤芯防伪" @mideaCellClick="goTo('antifake')" :hasSubBottomBorder="false">
                 <image slot="itemImg" src="./assets/img/service_ic_fake@3x.png" class="service-item-img" resize='contain'>
                 </image>
-                <text slot="title" class="service-item-title">滤芯防伪</text>
             </midea-item>
 
             <cell class="wrapper-gap"></cell>
@@ -206,6 +207,30 @@ export default {
 .wrapper {
   background-color: #f2f2f2;
 }
+.list {
+  flex: 1;
+}
+.service-header {
+  background-color: #ffffff;
+  height: 88px;
+  display: flex;
+  flex-direction: row;
+}
+.immersion {
+  padding-top: 40px;
+  height: 136px;
+}
+.service-header-image-wrapper {
+  height: 88px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-right: 32px;
+}
+.header-left-image {
+  height: 58px;
+  width: 58px;
+}
 .wrapper-gap {
   height: 250px;
 }
@@ -221,7 +246,7 @@ export default {
   font-weight: 600;
   font-size: 56px;
   color: #000000;
-  line-height: 80px;
+  line-height: 68px;
 }
 .service-desc {
   font-family: PingFangSC-Regular;
@@ -324,7 +349,7 @@ export default {
 }
 .service-item-title {
   font-family: PingFangSC-Regular;
-  font-size: 28px;
+  font-size: 32px;
   color: #000000;
 }
 .actionsheet-popup {
@@ -333,6 +358,7 @@ export default {
 .actionsheet-item {
   flex-direction: row;
   justify-content: center;
+  align-items: center;
   padding: 30px;
 }
 .actionsheet-item-label {
@@ -343,10 +369,10 @@ export default {
   color: #000000;
 }
 .actionsheet-item-desc {
-  flex: 1.8;
+  flex: 1.5;
   font-family: PingFangSC-Regular;
   text-align: left;
   font-size: 32px;
-  color: #3399ff;
+  color: #267aff;
 }
 </style>

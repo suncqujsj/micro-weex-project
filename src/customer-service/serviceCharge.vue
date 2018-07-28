@@ -7,13 +7,12 @@
                 <image class="search-bar-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
                 <input class="search-bar-input" placeholder="查询关键字" v-model="queryParam.content" maxlength="20" @return="search" return-key-type="search"></input>
             </div>
-            <text v-if="isIos" class="search-action" @click="back">取消</text>
             <text v-if="!isIos" class="search-action" @click="search">搜索</text>
         </div>
         <list>
             <cell v-for="(itemA, indexA) in sortedFreePlocy" :key="indexA">
                 <div class="cell-item">
-                    <div class="cell-sub-item level-one" @click="levelAClicked(itemA, indexA)">
+                    <div :class="['cell-sub-item','level-one',indexA==sortedFreePlocy.length-1?'last-item':'']" @click="levelAClicked(itemA, indexA)">
                         <text class="cell-item-title">{{itemA.classAProject}}</text>
                         <image class="cell-arrow-icon" :src="expandedAIndex==indexA?'./assets/img/service_ic_show@3x.png':'./assets/img/service_ic_hide@3x.png'" resize="contain"></image>
                     </div>
@@ -48,7 +47,7 @@ export default {
     mixins: [base],
     data() {
         return {
-            title: '', //收费政策
+            title: '', //收费标准
             selectedProduct: null,
             queryParam: {
                 prodCode: '',
@@ -171,7 +170,9 @@ export default {
   align-items: center;
   padding-top: 16px;
   padding-bottom: 16px;
-  border-bottom-color: #e2e2e2;
+  border-top-color: #e5e5e8;
+  border-top-width: 1px;
+  border-bottom-color: #e5e5e8;
   border-bottom-width: 1px;
   background-color: #ffffff;
 }
@@ -184,12 +185,13 @@ export default {
   flex-direction: row;
   align-items: center;
   margin-left: 32px;
+  margin-right: 32px;
 }
 .search-bar-img {
   height: 40px;
   width: 40px;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 8px;
+  margin-right: 8px;
 }
 .search-bar-input {
   flex: 1;
@@ -232,14 +234,17 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+.last-item {
+  border-bottom-width: 0px;
+}
 .level-one {
   background-color: #ffffff;
-  border-bottom-color: #e2e2e2;
+  border-bottom-color: #e5e5e8;
   border-bottom-width: 1px;
 }
 .level-two {
   background-color: #f6f6f6;
-  border-bottom-color: #e2e2e2;
+  border-bottom-color: #e5e5e8;
   border-bottom-width: 1px;
 }
 .cell-item-sub-title {
@@ -260,7 +265,7 @@ export default {
 }
 .level-three {
   background-color: #f6f6f6;
-  border-bottom-color: #e2e2e2;
+  border-bottom-color: #e5e5e8;
   border-bottom-width: 1px;
 }
 .cell-item-desc {

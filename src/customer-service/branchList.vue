@@ -1,9 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
-            <div slot="customerContent" class="header-right">
-                <text class="header-right-text" @click="switchMode">{{isListMode?'地图模式':'列表模式'}}</text>
-            </div>
+        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back" :showRightText="true" :rightText="isListMode?'地图模式':'列表模式'" @rightTextClick="switchMode">
         </midea-header>
         <div v-if="!serviceOrderNo" class="info-bar">
             <text class="info-address" @click="changeArea">{{areaObject.county?(areaObject.cityName+ ' '+areaObject.countyName):'请选择位置'}}</text>
@@ -253,13 +250,11 @@ export default {
                 }
                 nativeService.showLoadingWithMsg("正在获取位置信息...")
                 nativeService.getGPSInfo(gpsParam).then((data) => {
-                    nativeService.toast("000")
                     this.locateFailed = false
                     nativeService.hideLoadingWithMsg()
                     this.gpsInfo = data
                     resolve(data)
                 }).catch((error) => {
-                    nativeService.toast("111")
                     this.locateFailed = true
                     nativeService.hideLoadingWithMsg()
                     reject(error)
@@ -385,22 +380,6 @@ export default {
   background-color: #f2f2f2;
   position: relative;
   flex-direction: column;
-}
-.header-right {
-  position: absolute;
-  right: 0px;
-  width: 160px;
-  height: 88px;
-  display: flex;
-  justify-content: center;
-}
-.header-right-text {
-  font-family: PingFangSC-Regular;
-  font-size: 28px;
-  color: #666666;
-  padding-left: 20px;
-  padding-right: 20px;
-  text-align: right;
 }
 .info-bar {
   flex-direction: row;

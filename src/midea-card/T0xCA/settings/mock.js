@@ -22,7 +22,7 @@ export const all = [
             "errorCode": 0,
 		    "params": {
 		    	 "storage_power": "on",
-		        "storage_temperature":"05",
+		        "storage_temperature":"-5",
                 "freezing_temperature": "-13"
 		    }
         }

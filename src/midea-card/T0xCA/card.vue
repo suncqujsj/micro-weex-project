@@ -21,22 +21,20 @@
 	        					</div>
 	        				</div>
 	        			</div>
-	        			<div style="margin-bottom: 114px;"><text class="main-status-mode">模式速冻</text></div>
+	        			<div style="margin-bottom: 114px;"><text class="main-status-mode">{{mode}}</text></div>
 		        	</div>
 		        	<div class="card-right">
 		        		<div class="card-control">
-		        			<image class="card-control-img" style="margin-right:35px" :src="startPause" @click="controlStartPause"></image>
-		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
 		        		</div>
 		        		<div class="card-icon" style="margin-right:40px">
-		        			<image class="card-icon-img" src="./assets/img/smart_img_equip012@2x.png"></image>
+		        			<image @click="showControlPanelPage" class="card-icon-img" src="./assets/img/smart_img_equip012@2x.png"></image>
 		        		</div>
 		        	</div>
 		        </div>
 	        </div>
 	        <div class="card-power-off" v-else>
 	        	<div class="control-div-offline">
-	        		<image class="card-control-img" :src="powerIcon_offline"  @click="poweronoff(1)"></image>
+	        		<image class="card-control-img" :src="powerIcon_offline"  @click="reload"></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
@@ -57,8 +55,8 @@
 	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
-	const dom = weex.requireModule('dom');
-	var stream = weex.requireModule('stream');
+	const globalEvent = weex.requireModule('globalEvent');
+	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
 			mideaItem,
@@ -74,9 +72,12 @@
             	deviceSn: "",
             	onlineStatus:"",
             	
-                storage_temperature:"",
-                freezing_temperature:"",
-                powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
+            	pushKey: "receiveMessage",
+            	pushKeyOnline: "receiveMessageFromApp",
+            	
+            	mode: "--",
+                storage_temperature:"--",
+                freezing_temperature:"--",
                 powerIcon_offline: "./assets/img/smart_ic_reline@2x.png"
             }
         },
@@ -91,6 +92,9 @@
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);
             	},function(error) {
+            		if(error.errorCode == '331307' || error.errorCode == '1307') {
+            			self.onlineStatus = "0"
+            		}
             		console.log("error");
             	});
             },
@@ -99,8 +103,30 @@
 	            if(data.errorCode == 0) {
 	            	this.onlineStatus = "1";
 	                let params = data.params || data.result;
-	                this.storage_temperature = params.storage_temperature;
-                	this.freezing_temperature = params.freezing_temperature
+	                this.storage_temperature = params.storage_temperature || "--";
+                	this.freezing_temperature = params.freezing_temperature || "--";
+                	if(this.storage_temperature > 0 && this.storage_temperature < 10 && this.storage_temperature.length < 2) {
+                		this.storage_temperature = "0" + this.storage_temperature;
+                	}
+                	if(params.storage_mode == 'on') {
+                		this.mode = "速冷模式";
+                	} else if(params.freezing_mode == 'on') {
+                		this.mode = "速冻模式";
+                	} else if(params.intelligent_mode == 'on') {
+                		this.mode = "智能模式";
+                	} else if(params.energy_saving_mode == 'on') {
+                		this.mode = "节能模式";
+                	} else if(params.holiday_mode == 'on') {
+                		this.mode = "假日模式";
+                	} else if(params.moisturize_mode == 'on') {
+                		this.mode = "高保湿模式";
+                	} else if(params.preservation_mode == 'on') {
+                		this.mode = "光波保鲜模式";
+                	} else if(params.acme_freezing_mode == 'on') {
+                		this.mode = "极冻模式";
+                	} else {
+                		this.mode = "--";
+                	}
 	            }else {
 	                this.showToast('连接设备超时');
 	            }
@@ -113,22 +139,48 @@
             	this.deviceSn = data.deviceSn;
             	this.onlineStatus = data.isOnline;
             },
+            handleNotification() {
+            	console.log("handleNotification Yoram");
+            	let me = this;
+            	globalEvent.addEventListener(this.pushKey, (data) => {
+            		me.updateUI(data);
+		        });
+		        globalEvent.addEventListener(this.pushKeyOnline, (data) => {
+            		if(data && data.messageType == "deviceOnlineStatus") {
+            			if(data.messageBody && data.messageBody.onlineStatus == "online") {
+            				me.onlineStatus = "1";
+            			} else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+            				me.onlineStatus = "0";
+            			} else {
+            				me.onlineStatus = "0";
+            			}
+            		} else if(data && data.messageType == "queryStatusFromApp") {
+	                	me.queryStatus();
+	                }
+		        });
+            },
+            showControlPanelPage() {
+            	let params = {
+            		controlPanelName:"controlPanel.html"
+            	};
+            	bridgeModule.showControlPanelPage(params);
+            },
+            reload() {
+            	let params = {};
+            	bridgeModule.reload(params,function(result) {
+            		//successful
+            	},function(error) {
+            		//fail
+            	});
+            },
         },
         computed: {
-		        startPause() {
-		        	let img = "./assets/img/smart_ic_power@2x.png";
-		            if(this.running_status == "start") {
-		                img = "./assets/img/smart_ic_pause@2x.png";
-		            } else {
-		                img = "./assets/img/smart_ic_play@2x.png";
-		            }
-		            return img;
-		        }
         },
         mounted() {
             let self = this;
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
+            	self.handleNotification();
         		self.queryStatus();
             },function(error) {
             	modal.toast({ 'message': "连接设备超时", 'duration': 2 });

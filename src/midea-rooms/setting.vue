@@ -65,18 +65,14 @@
                     <text class="pop-text" @click="cancelProp('humidityMin')">取消</text>
                     <text class="pop-text" @click="confirmProp('humidityMin')">确定</text>
                 </div>
-                <div class="row-sb">
-                    <scroll-picker :listArray="humidityMinList" @onChange="setHumidityMin"></scroll-picker>
-                </div>
+                <scroll-picker :listArray="humidityMinList" @onChange="setHumidityMin"></scroll-picker>
             </midea-popup>
             <midea-popup :show="show.humidityMax" :height="400" @mideaPopupOverlayClicked="cancelProp('humidityMax')">
                  <div class="row-sb pop-hd">
                     <text class="pop-text" @click="cancelProp('humidityMax')">取消</text>
                     <text class="pop-text" @click="confirmProp('humidityMax')">确定</text>
                 </div>
-                <div class="row-sb">
-                    <scroll-picker :listArray="humidityMaxList" @onChange="setHumidityMax"></scroll-picker>
-                </div>
+                <scroll-picker :listArray="humidityMaxList" @onChange="setHumidityMax"></scroll-picker>
             </midea-popup>
         </div>
         <!-- 卫浴场景指标弹窗 -->
@@ -309,77 +305,35 @@
                 return tmp
             },
             switchBindSceneDevice(appliance){//解绑、绑定设备到房间
-                if (appliance.isRelation == 1) {
-                    this.deleteSceneAppliance(appliance.applianceCode).then((res)=>{
-                        this.initData()
-                        nativeService.toast('解绑成功！')
-                     }).catch((err)=>{
-                        nativeService.toast(this.getErrorMessage(err))
-                    })
-                } else if (appliance.isRelation == 2) {
-                    this.addSceneAppliance(appliance.applianceCode).then((res)=>{
-                        this.initData()
-                        nativeService.toast('绑定成功！')
-                    }).catch((err)=>{
-                        nativeService.toast(this.getErrorMessage(err))
-                    })
-                }
-            },
-            addSceneAppliance(applianceCode){
-                return new Promise((resolve,reject)=>{
-                    this.checkLogin().then( (uid) => {
-                        let reqUrl = url.scene.applianceAdd
-                        let reqParams = {
-                            uid: uid,
-                            homegroupId: this.homegroupId,
-                            sceneId: this.sceneId,
-                            applianceCode: applianceCode
-                        }
-                        
-                        this.webRequest(reqUrl, reqParams).then((res)=>{
-                            if (res.code == 0) {
-                                resolve(res)
-                            }else{
-                                if (codeDesc.scene.hasOwnProperty(res.code)) {
-                                    nativeService.toast(codeDesc.scene[res.code])
-                                }else{
-                                    nativeService.toast(res.msg)
-                                }
+            nativeService.alert(appliance)
+                this.checkLogin().then( (uid) => {
+                    let reqUrl = url.scene.applianceAdd
+                    let reqParams = {
+                        uid: uid,
+                        homegroupId: this.homegroupId,
+                        sceneId: this.sceneId,
+                        applianceCode: appliance.applianceCode
+                    }
+                    this.webRequest(reqUrl, reqParams).then((res)=>{
+                        if (res.code == 0) {
+                            if (appliance.isRelation == 1) {
+                                nativeService.toast('解绑成功！')
+                            }else if (appliance.isRelation == 2) {
+                                nativeService.toast('绑定成功！')
                             }
-                        }).catch((err)=>{
-                            nativeService.toast(this.getErrorMessage(err))
-                        })
-                    }).catch((err)=>{
-                        nativeService.toast(this.getErrorMessage(err))
-                    })
-                })
-            },
-            deleteSceneAppliance(applianceCode){
-                return new Promise((resolve,reject)=>{
-                    this.checkLogin().then( (uid) => {
-                        let reqUrl = url.scene.applianceDelete
-                        let reqParams = {
-                            uid: uid,
-                            homegroupId: this.homegroupId,
-                            sceneId: this.sceneId,
-                            applianceCode: applianceCode
-                        }
-                        this.webRequest(reqUrl, reqParams).then((res)=>{
-                            if (res.code == 0) {
-                                resolve(res)
+                            nativeService.reload()
+                        }else{
+                            if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                nativeService.toast(codeDesc.scene[res.code])
                             }else{
-                                if (codeDesc.scene.hasOwnProperty(res.code)) {
-                                    nativeService.toast(codeDesc.scene[res.code])
-                                }else{
-                                    nativeService.toast(res.msg)
-                                }
+                                nativeService.toast(res.msg)
                             }
-                        }).catch((err)=>{
-                            nativeService.toast(this.getErrorMessage(err))
-                        })
+                        }
                     }).catch((err)=>{
                         nativeService.toast(this.getErrorMessage(err))
                     })
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             },
             showPropPop(propType){
@@ -428,45 +382,9 @@
                     2.comfirmPop -> sendRequest
                     */
                     if (this.roomType == 1 || this.roomType == 2) {
-                        if (propType == 'temperatureMin') {
-                            if (this.temperatureMinList.length == 1) {
-                            this.activeProp[propType] = this.temperatureMinList[0].value
-                            } else {
-                                if ( !this.activeProp[propType]) {
-                                    nativeService.alert('您还没有设置属性值哦')
-                                    return
-                                }
-                            }
-                        }
-                        if (propType == 'temperatureMax') {
-                            if (this.temperatureMaxList.length == 1) {
-                            this.activeProp[propType] = this.temperatureMaxList[0].value
-                            } else {
-                                if ( !this.activeProp[propType]) {
-                                    nativeService.alert('您还没有设置属性值哦')
-                                    return
-                                }
-                            }
-                        }
-                        if (propType == 'humidityMin') {
-                            if (this.humidityMinList.length == 1) {
-                            this.activeProp[propType] = this.humidityMinList[0].value
-                            } else {
-                                if ( !this.activeProp[propType]) {
-                                    nativeService.alert('您还没有设置属性值哦')
-                                    return
-                                }
-                            }
-                        }
-                        if (propType == 'humidityMax') {
-                            if (this.humidityMaxList.length == 1) {
-                                this.activeProp[propType] = this.humidityMaxList[0].value
-                            } else {
-                                if ( !this.activeProp[propType]) {
-                                    nativeService.alert('您还没有设置属性值哦')
-                                    return
-                                }
-                            }
+                        let roomPropValueListArray = propType + 'List'
+                        if (this[roomPropValueListArray].length == 1 || !this.activeProp[propType] ) {
+                            this.activeProp[propType] = this[roomPropValueListArray][0].value
                         }
                         
                         let tmpTemp = {
@@ -483,11 +401,8 @@
                         })
                     }else if( this.roomType == 3 ){
                         let propTypeList = propType + 'List'
-                        if (this[propTypeList].length == 1) {
+                        if (this[propTypeList].length == 1 || !this.activeProp[propType] ) {
                             this.activeProp[propType] = this[propTypeList][0].value
-                        } else if (!this.activeProp[propType]){
-                            nativeService.alert('您还没有设置属性值哦')
-                            return
                         }
                         reqParams.prop = JSON.stringify({
                             use: this.activeProp.use || this.sceneProp.use,

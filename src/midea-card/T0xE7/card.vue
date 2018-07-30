@@ -27,8 +27,8 @@
 		        		<image class="card-control-img" :src="powerIcon_poweroff"  @click="poweronoff(1)"></image>
 		        		<text class="text-offline">电源</text>
 		        	</div>
-		        	<div @click="showControlPanelPage">
-		        		<image class="icon-offline" src="./assets/img/smart_img_equip019@2x.png"></image>
+		        	<div >
+		        		<image @click="showControlPanelPage" class="icon-offline" src="./assets/img/smart_img_equip019@2x.png"></image>
 		        	</div>
 		        </div>
 	        </div>

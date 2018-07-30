@@ -1,14 +1,12 @@
 <template>
     <midea-popup ref="popup" :show="isShow" @mideaPopupOverlayClicked="cancel" pos="bottom" :height="height">
         <div class="period-header-bar">
-            <text class="period-header-action"></text>
             <text class="period-header-text">{{title}}</text>
-            <image class="period-header-action" src="./assets/img/service_ic_cancel@3x.png" resize='contain' @click="buttonCancel"></image>
         </div>
         <text v-if="desc" class="period-head-desc">{{desc}}</text>
         <div class="period-content">
             <div class="period-content-select-area"></div>
-            <scroller class="period-content-wrapper" show-scrollbar=false @scroll="scroll" @scrollend="scrollEnd">
+            <scroller class="period-content-wrapper" scroll-direction="vertical" show-scrollbar=false @scroll="scroll" @scrollend="scrollEnd">
                 <div class="period-content-item-wrapper" v-for="(item, index) in datesArray" :key="index" :ref="'date'+index">
                     <text v-bind:class="['period-content-item',
                     index==0?'first-content-item':'',
@@ -20,8 +18,8 @@
                     index==dateIndex+2?'first-last-visible-item':'']">{{item.desc}}</text>
                 </div>
             </scroller>
-            <scroller class="period-content-wrapper" show-scrollbar=false @scroll="scrollTime" @scrollend="scrollTimeEnd">
-                <div class="period-content-item-wrapper" v-for="(item, index) in timesArray" :key="index" :ref="'time'+index">
+            <scroller class="period-content-wrapper" scroll-direction="vertical" show-scrollbar=false @scroll="scrollTime" @scrollend="scrollTimeEnd">
+                <div class="period-content-time-wrapper" v-for="(item, index) in timesArray" :key="index" :ref="'time'+index">
                     <text v-bind:class="['period-content-item',
                     index==0?'first-content-item':'',
                     index==(timesArray.length-1)?'last-content-item':'',
@@ -34,6 +32,8 @@
             </scroller>
         </div>
         <div class="action-bar">
+            <text class="action-btn action-btn-cancel" @click="buttonCancel">{{cancelButtonText}}</text>
+            <div class="action-split"></div>
             <text class="action-btn" @click="confirm">{{buttonText}}</text>
         </div>
     </midea-popup>
@@ -83,6 +83,10 @@ export default {
             type: String,
             default: "具体上门时间以服务商与您沟通约定为准"
         },
+        cancelButtonText: {
+            type: String,
+            default: "取消"
+        },
         buttonText: {
             type: String,
             default: "确定"
@@ -90,7 +94,7 @@ export default {
     },
     data() {
         return {
-            itemHeight: 70
+            itemHeight: 72
         }
     },
     watch: {
@@ -100,10 +104,10 @@ export default {
                     this.refreshDate()
                     if (!this.dateIndex || this.dateIndex < 0) this.dateIndex = 0
                     const dateEl = this.$refs['date0'][0]
-                    dom.scrollToElement(dateEl, { offset: this.dateIndex * 70 })
+                    dom.scrollToElement(dateEl, { offset: this.dateIndex * this.itemHeight })
                     this.refreshTime()
                     const timeEl = this.$refs['time0'][0]
-                    dom.scrollToElement(timeEl, { offset: this.timeIndex * 70 })
+                    dom.scrollToElement(timeEl, { offset: this.timeIndex * this.itemHeight })
                 })
             }
         }
@@ -124,25 +128,25 @@ export default {
         scroll(event) {
             let offsetY = event.contentOffset.y
             if (offsetY % this.itemHeight != 0) {
-                let firstVisibleItemIndex = Math.abs(Math.round(offsetY / 70))
+                let firstVisibleItemIndex = Math.abs(Math.round(offsetY / this.itemHeight))
                 this.dateIndex = firstVisibleItemIndex
             }
         },
         scrollEnd(event) {
             const el = this.$refs['date0'][0]
-            dom.scrollToElement(el, { offset: this.dateIndex * 70 })
+            dom.scrollToElement(el, { offset: this.dateIndex * this.itemHeight })
             this.refreshTime()
         },
         scrollTime(event) {
             let offsetY = event.contentOffset.y
             if (offsetY % this.itemHeight != 0) {
-                let firstVisibleItemIndex = Math.abs(Math.round(offsetY / 70))
+                let firstVisibleItemIndex = Math.abs(Math.round(offsetY / this.itemHeight))
                 this.timeIndex = firstVisibleItemIndex
             }
         },
         scrollTimeEnd(event) {
             const el = this.$refs['time0'][0]
-            dom.scrollToElement(el, { offset: this.timeIndex * 70 })
+            dom.scrollToElement(el, { offset: this.timeIndex * this.itemHeight })
         },
         refreshDate() {
             if (this.dates) {
@@ -219,7 +223,7 @@ export default {
   display: inline-flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   background-color: #ffffff;
 }
@@ -229,18 +233,13 @@ export default {
   color: #000000;
   background-color: #ffffff;
 }
-.period-header-action {
-  height: 45px;
-  width: 45px;
-  margin-right: 24px;
-}
 .period-head-desc {
   width: 750px;
   text-align: center;
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #8a8a8f;
-  border-bottom-color: #e2e2e2;
+  border-bottom-color: #e5e5e8;
   border-bottom-width: 1px;
   padding-bottom: 24px;
 }
@@ -251,27 +250,38 @@ export default {
   background-color: #ffffff;
 }
 .period-content-wrapper {
-  width: 375px;
+  /* width: 375px; */
+  flex: 1;
+  justify-content: center;
   align-content: center;
   align-items: center;
 }
 .period-content-item-wrapper {
-  width: 300px;
+  flex: 1;
+  /* padding-left: 54px; */
+}
+.period-content-time-wrapper {
+  flex: 1;
+  /* padding-right: 54px; */
 }
 .period-content-item {
-  width: 300px;
-  height: 70px;
+  /* width: 300px; */
+  flex: 1;
+  height: 72px;
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #000000;
-  text-align: center;
+  text-align: right;
   padding: 8px;
 }
+.period-content-time {
+  text-align: left;
+}
 .first-content-item {
-  margin-top: 140px;
+  margin-top: 144px;
 }
 .last-content-item {
-  margin-bottom: 140px;
+  margin-bottom: 144px;
 }
 .first-visible-item {
   opacity: 0.3;
@@ -301,24 +311,31 @@ export default {
   height: 72px;
   padding-left: 120px;
   padding-right: 120px;
-  border-top-color: #e2e2e2;
+  border-top-color: #e5e5e8;
   border-top-width: 1px;
-  border-bottom-color: #e2e2e2;
+  border-bottom-color: #e5e5e8;
   border-bottom-width: 1px;
-  /* background-color: aquamarine; */
 }
 .action-bar {
   background-color: #f2f2f2;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 .action-btn {
+  flex: 1;
   margin-top: 16px;
   font-family: PingFangSC-Regular;
   font-size: 32px;
-  color: #267aff;
+  color: #000000;
   text-align: center;
   background-color: #ffffff;
   text-align: center;
   padding-top: 22px;
   padding-bottom: 22px;
+}
+.action-split {
+  background-color: #e5e5e8;
+  width: 2px;
 }
 </style>

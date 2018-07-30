@@ -82,9 +82,9 @@ export default {
 		},
 
 		submit() {
-			this.updateSituationService(this.situactionData).then((resp) => {
+			this.submitSituationService(this.situactionData).then((resp) => {
 				if (resp.code == 0) {
-					nativeService.toast("更新成功")
+					nativeService.toast("保存成功")
 					this.back()
 				} else {
 					throw resp
@@ -98,15 +98,12 @@ export default {
 		for (let index = 17; index <= 30; index++) {
 			this.temperatureList.push({ value: index, key: index }, )
 		}
-		nativeService.getUserInfo().then((data) => {
-			this.uid = data.uid
-			nativeService.getItem("CARD_STORAGE_SITUATION", (resp) => {
-				if (resp.result == 'success') {
-					this.situactionData = JSON.parse(resp.data) || {}
-					this.deviceId = this.situactionData.deviceId
-				}
-			})
-		}).catch((error) => { })
+		nativeService.getItem("CARD_STORAGE_SITUATION", (resp) => {
+			if (resp.result == 'success') {
+				this.situactionData = JSON.parse(resp.data) || {}
+				this.deviceId = this.situactionData.deviceId
+			}
+		})
 	}
 }
 </script>

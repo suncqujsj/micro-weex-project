@@ -259,7 +259,7 @@ export default {
   background-color: #ffffff;
   width: 750px;
   text-align: center;
-  padding-bottom: 50px;
+  padding-bottom: 10px;
   padding-left: 32px;
   padding-right: 32px;
 }

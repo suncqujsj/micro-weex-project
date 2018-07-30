@@ -160,22 +160,6 @@ export default {
   background-color: #f2f2f2;
   position: relative;
 }
-.header-right {
-  position: absolute;
-  right: 0px;
-  width: 160px;
-  height: 88px;
-  display: flex;
-  justify-content: center;
-}
-.header-right-text {
-  font-family: PingFangSC-Regular;
-  font-size: 28px;
-  color: #666666;
-  padding-left: 20px;
-  padding-right: 20px;
-  text-align: right;
-}
 .scroller {
   background-color: #f2f2f2;
 }

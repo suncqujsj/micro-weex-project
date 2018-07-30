@@ -12,7 +12,7 @@ export const all = [
 		        "small_temperature": "0.5",
 		        "indoor_temperature": "30",
 		        "outdoor_temperature": "-25",
-		        "error_code": "1"
+		        "error_code": "0"
 		    }
         }
     },
@@ -22,12 +22,13 @@ export const all = [
             "errorCode": 0,
 		    "params": {
 		        "power": "on",
-		        "running_status":"delay",
+		        "running_status":"pause",
 		         "program":"cotton",
 		         "remain_time":"25",
 		        "control_status":"start",
 		         "expert_step":2,
-		         "error_code":"0x52"
+		         "error_code":"0x52",
+		         "error_code": "0"
 		    }
         }
     },
@@ -42,7 +43,9 @@ export const all = [
 		         "remain_time":"25",
 		        "control_status":"start",
 		         "expert_step":2,
-		         "error_code":"0x52"
+		         "error_code":"0x52",
+		         "error_code": "0",
+		         "lock":"on"
 		    }
         }
     },
@@ -52,12 +55,13 @@ export const all = [
             "errorCode": 0,
 		    "params": {
 		        "power": "on",
-		        "running_status":"delay",
+		        "running_status":"pause",
 		         "program":"cotton",
 		         "remain_time":"25",
 		        "control_status":"start",
 		         "expert_step":2,
-		         "error_code":"0x52"
+		         "error_code":"0x52",
+		         "error_code": "0"
 		    }
         }
     },
@@ -72,7 +76,8 @@ export const all = [
 		         "remain_time":"25",
 		        "control_status":"start",
 		         "expert_step":2,
-		         "error_code":"0x52"
+		         "error_code":"0x52",
+		         "error_code": "0"
 		    }
         }
     },
@@ -102,7 +107,8 @@ export const all = [
 		         "remain_time":"50",
 		        "control_status":"start",
 		         "expert_step":2,
-		         "error_code":"0x52"
+		         "error_code":"0x52",
+		         "error_code": "0"
 		    }
         }
     },

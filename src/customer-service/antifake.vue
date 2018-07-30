@@ -79,7 +79,7 @@ export default {
         },
         antiValidateCode() {
             nativeService.antiValidateCode().then((resp) => {
-                this.picCodeSrc = resp.data
+                this.picCodeSrc = "data:image/png;base64," + resp.data.ValidateCode
             })
         },
         submit() {

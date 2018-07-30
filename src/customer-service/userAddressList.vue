@@ -19,8 +19,8 @@
                     </div>
                     <text class="text-desc">{{item.provinceName}} {{item.cityName}} {{item.countyName}} {{item.streetName}} {{item.addr}}</text>
                 </div>
-                <div class="edit-block">
-                    <image class="edit-img" src="./assets/img/service_ic_edit@3x.png" resize='contain' @click="goToAddressDetail(item)"></image>
+                <div class="edit-block" @click="goToAddressDetail(item)">
+                    <image class="edit-img" src="./assets/img/service_ic_edit@3x.png" resize='contain'></image>
                 </div>
             </div>
             <div class="list-end" v-if="isLoaded">
@@ -135,12 +135,12 @@ export default {
 .address-block {
   background-color: #ffffff;
   margin-top: 24px;
-  padding-top: 38px;
-  padding-right: 32px;
+  padding-top: 24px;
   padding-left: 32px;
-  padding-bottom: 36px;
+  padding-bottom: 24px;
   flex-direction: row;
   align-items: center;
+  /* height: 160px; */
 }
 .group-gap-top {
   height: 24px;
@@ -163,9 +163,9 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 32px;
   color: #000000;
-  padding-top: 6px;
+  padding-top: 12px;
   padding-right: 28px;
-  padding-bottom: 6px;
+  padding-bottom: 12px;
   text-align: left;
 }
 .text-tag {
@@ -174,10 +174,10 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 24px;
   color: #267aff;
-  padding-top: 6px;
+  padding-top: 12px;
   padding-left: 28px;
   padding-right: 28px;
-  padding-bottom: 6px;
+  padding-bottom: 12px;
   text-align: center;
 }
 .text-desc {
@@ -190,7 +190,7 @@ export default {
 }
 .edit-block {
   align-self: stretch;
-  padding: 25px;
+  padding: 32px;
   flex-direction: row;
   align-items: center;
 }

@@ -66,7 +66,7 @@ export default {
 
 <style>
 .order-block {
-  padding-bottom: 14px;
+  /* padding-bottom: 14px; */
   border-radius: 8px;
   background-color: #ffffff;
   overflow: hidden;
@@ -77,7 +77,7 @@ export default {
   align-items: center;
   padding-top: 24px;
   padding-bottom: 22px;
-  border-bottom-color: #e5e5e8;
+  border-bottom-color: #f2f2f2;
   border-bottom-width: 1px;
   border-bottom-style: solid;
   overflow: visible;
@@ -123,13 +123,13 @@ export default {
   color: #666666;
 }
 .order-block-body {
-  height: 200px;
+  /* height: 200px; */
   flex-direction: row;
   justify-content: center;
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding-top: 28px;
+  padding-bottom: 28px;
   align-items: center;
-  border-bottom-color: #e5e5e8;
+  border-bottom-color: #f2f2f2;
   border-bottom-width: 1px;
   border-bottom-style: solid;
 }

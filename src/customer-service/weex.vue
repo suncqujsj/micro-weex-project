@@ -1,10 +1,10 @@
 <template>
     <div class="wrapper" @viewappear="refreshPage">
         <!-- 不可删除此空div行，否则list会自动调整移动至状态栏下 -->
-        <div></div>
+        <div style="height: 40px; background-color: #ffffff;"></div>
         <list class="list">
             <cell>
-                <div class="service-header" :class="[isipx?'':'immersion']">
+                <div class="service-header">
                     <div style="flex: 1;"> </div>
                     <div class="service-header-image-wrapper" @click="showHotLine">
                         <image class="header-left-image" src="./assets/img/service_ic_call@3x.png"></image>
@@ -218,18 +218,20 @@ export default {
 }
 .immersion {
   padding-top: 40px;
-  height: 136px;
+  height: 128px;
+  /* background-color: blue; */
 }
 .service-header-image-wrapper {
   height: 88px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   padding-right: 32px;
+  /* background-color: red; */
 }
 .header-left-image {
-  height: 58px;
-  width: 58px;
+  height: 56px;
+  width: 56px;
 }
 .wrapper-gap {
   height: 250px;
@@ -290,14 +292,14 @@ export default {
 .arraw-line {
   width: 750px;
   height: 15px;
-  border-top-color: #e5e5e8;
-  border-top-width: 1px;
+  border-bottom-color: #e5e5e8;
+  border-bottom-width: 1px;
   background-color: #ffffff;
   overflow: hidden;
 }
 .arraw-triangle {
   left: 120px;
-  top: -14px;
+  top: 4px;
   width: 22px;
   height: 22px;
   background-color: #ffffff;
@@ -308,10 +310,10 @@ export default {
 .order-img {
   height: 120px;
   width: 120px;
-  border-radius: 4px;
+  /* border-radius: 4px;
   border-color: #e5e5e8;
   border-width: 1px;
-  border-style: solid;
+  border-style: solid; */
   margin-right: 30px;
 }
 .order-content {

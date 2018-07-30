@@ -13,13 +13,10 @@
                 </div>
             </div>
             <div class="base-group">
-                <midea-cell title="" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="pickDate">
+                <midea-cell placeHolder="请选择" :hasBottomBorder="true" :hasSubBottomBorder="false" :rightText="date" @mideaCellClick="pickDate">
                     <div slot="title" class="cell-title">
                         <text class="cell-label">购买产品时间</text>
                         <text class="cell-label-star">*</text>
-                    </div>
-                    <div slot="rightText">
-                        <text class="right-text">{{date?date:'请选择'}}</text>
                     </div>
                 </midea-cell>
             </div>

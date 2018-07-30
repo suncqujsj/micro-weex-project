@@ -429,7 +429,7 @@ export default {
 .slider {
   position: absolute;
   width: 750px;
-  height: 210px;
+  height: 220px;
   bottom: 0px;
   left: 0px;
 }

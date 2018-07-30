@@ -19,7 +19,7 @@
                 </div>
             </scroller>
             <scroller class="period-content-wrapper" scroll-direction="vertical" show-scrollbar=false @scroll="scrollTime" @scrollend="scrollTimeEnd">
-                <div class="period-content-time-wrapper" v-for="(item, index) in timesArray" :key="index" :ref="'time'+index">
+                <div class="period-content-item-wrapper" v-for="(item, index) in timesArray" :key="index" :ref="'time'+index">
                     <text v-bind:class="['period-content-item',
                     index==0?'first-content-item':'',
                     index==(timesArray.length-1)?'last-content-item':'',
@@ -250,28 +250,20 @@ export default {
   background-color: #ffffff;
 }
 .period-content-wrapper {
-  /* width: 375px; */
-  flex: 1;
-  justify-content: center;
+  width: 375px;
   align-content: center;
   align-items: center;
 }
 .period-content-item-wrapper {
-  flex: 1;
-  /* padding-left: 54px; */
-}
-.period-content-time-wrapper {
-  flex: 1;
-  /* padding-right: 54px; */
+  width: 300px;
 }
 .period-content-item {
-  /* width: 300px; */
-  flex: 1;
+  width: 300px;
   height: 72px;
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #000000;
-  text-align: right;
+  text-align: center;
   padding: 8px;
 }
 .period-content-time {
@@ -296,10 +288,13 @@ export default {
   opacity: 0.3;
 }
 .selected-item {
+  font-family: PingFangSC-Medium;
+  font-weight: 600;
   opacity: 1;
   color: #000000;
 }
 .unselected-item {
+  font-family: PingFangSC-Regular;
   opacity: 0.6;
   color: #000000;
 }

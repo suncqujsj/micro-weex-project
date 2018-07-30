@@ -114,13 +114,15 @@ export default {
   height: 136px;
 }
 .header-title {
-  font-family: PingFangSC-Regular;
+  font-family: PingFangSC-Medium;
+  font-weight: 600;
 }
 .header-left-image-wrapper {
   width: 88px;
   height: 96px;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
   padding-left: 10px;
 }
 .header-left-image {
@@ -132,7 +134,8 @@ export default {
   height: 96px;
   display: flex;
   justify-content: center;
-  padding-left: 12px;
+  align-items: flex-end;
+  padding-right: 10px;
 }
 .header-right-image {
   height: 44px;

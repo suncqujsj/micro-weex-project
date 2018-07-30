@@ -42,9 +42,14 @@
             </div>
         </div>
         <toast-dialog :show="showToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}" contentPadding="0px">
-            <div class="auto-toast" v-for="item in autoExecuteDevices">
-                <div class="row-sb toast-line">
-                    <text class="toast-hd">{{item.applianceName}}</text>
+            <div class="auto-toast" v-for="(item,i) in autoExecuteDevices">
+                <div :class="['row-sb','toast-line', i>0?'toast-border':'']">
+                    <div>
+                        <text class="toast-hd">{{item.applianceName}}</text>
+                        <div class="row-s">
+                            <text class="toast-desc" v-for="desc in item.describe">{{desc.actionValue}}</text>
+                        </div>
+                    </div>
                     <image class="toast-icon" :src="icon.exe[item.status]"></image>
                 </div>
             </div>
@@ -84,15 +89,22 @@
     .scene-desc{ margin-left: 24px; font-size: 24px; }
     .auto-toast{
         width: 550px;
-        padding: 25px;
     }
     .toast-line{
+        padding: 25px;
+    }
+    .toast-border{
+        border-top-color: #f2f2f2;
+        border-top-width: 1px;
+        border-top-style: solid;
     }
     .toast-hd{
         font-size: 32px;
         width: 400px;
         text-overflow: ellipsis;
+        margin-bottom: 10px;
     }
+    .toast-desc{ color: #8A8A8F; margin-right: 4px; font-size: 24px; }
     .toast-icon{ width: 50px; height: 50px; }
 </style>
 
@@ -133,7 +145,7 @@
                     exe: {
                         1: 'assets/img/success.png',
                         2: 'assets/img/loading.png',
-                        3: 'assets/img/fail.png'
+                        3: 'assets/img/scene_ic_listundo@2x.png'
                     }
                 },
                 sceneImg: {
@@ -210,9 +222,9 @@
         methods: { 
             initData(){
                 nativeService.getUserInfo().then((res)=>{
+                    this.sceneList = this.sceneListTmpl
+                    this.autoList = this.autoListTmpl
                     if (res.uid == '' || res.uid == undefined){
-                        this.sceneList = this.sceneListTmpl
-                        this.autoList = this.autoListTmpl
                     }else{
                         nativeService.getCurrentHomeInfo().then( (res)=>{
                             this.homegroupId = res.homeId
@@ -220,21 +232,23 @@
                             if (res.deviceList) {
                                 this.userDevices = encodeURIComponent(JSON.stringify(res.deviceList))
                             }
-                            // this.uid = 'ac70d2636c0c4dd5b86bc97bbc8166c6'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
-                            // this.homegroupId = '150366'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
-                            // this.userDevices = encodeURIComponent(JSON.stringify([// 这里用的是模拟数据,等他调好bug后再改回真实数据
-                            //     {
-                            //         deviceId: '2222222',
-                            //         deviceName: '设备二',
-                            //         deviceType: '0xFD',
-                            //         isOnline: 1
-                            //     },{
-                            //         deviceId: '111111',
-                            //         deviceName: '设备一',
-                            //         deviceType: '0xAC',
-                            //         isOnline: 1
-                            //     }
-                            // ]))
+                            /*
+                                this.uid = 'ac70d2636c0c4dd5b86bc97bbc8166c6'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
+                                this.homegroupId = '150366'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
+                                this.userDevices = encodeURIComponent(JSON.stringify([// 这里用的是模拟数据,等他调好bug后再改回真实数据
+                                    {
+                                        deviceId: '2222222',
+                                        deviceName: '设备二',
+                                        deviceType: '0xFD',
+                                        isOnline: 1
+                                    },{
+                                        deviceId: '111111',
+                                        deviceName: '设备一',
+                                        deviceType: '0xAC',
+                                        isOnline: 1
+                                    }
+                                ]))
+                            */
 
                             this.getSceneList()
                             this.getAutoList()
@@ -281,6 +295,7 @@
                 })
             },
             executeAuto(sceneId){
+                this.checkAutoExeTimes = 0
                 this.checkLogin().then( (uid) => {
                     let reqUrl = url.auto.execute
                     let reqParams = {
@@ -322,14 +337,20 @@
                                 this.showToastDialog = true
                                 this.autoExecuteDevices = res.data.list
                                 
-                                if (res.data.status == 2 || res.data.status == 3) {
+                                if (res.data.status == 2) {
                                     setTimeout(()=>{
                                         this.checkExecuteAuto(sceneId, resultId)
                                     },1000)
-                                } else{
+                                } else if(res.data.status == 3){
+                                    this.showToastDialog = false
+                                    nativeService.toast('自动化执行失败，请再试一次')
+                                } else {
                                     setTimeout(()=>{
                                         this.showToastDialog = false
-                                    },2000)
+                                        setTimeout(()=>{
+                                            nativeService.toast('自动化执行成功！')
+                                        }, 200)
+                                    },1000)
                                 }
                             }else{
                                 if (codeDesc.auto.hasOwnProperty(rtnData.code)) {
@@ -339,8 +360,8 @@
                                 }
                             }
                         }).catch((err)=>{
-                        nativeService.toast(this.getErrorMessage(err))
-                    })
+                            nativeService.toast(this.getErrorMessage(err))
+                        })
                     }else{
                         this.showToastDialog = false
                         nativeService.toast('自动化执行失败，请再试一次')

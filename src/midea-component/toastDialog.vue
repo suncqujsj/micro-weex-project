@@ -50,7 +50,7 @@
             },
             contentRadius: {
                 type: String,
-                default: '5px'
+                default: '8px'
             },
             contentPadding: {
                 type: String,

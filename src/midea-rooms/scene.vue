@@ -21,7 +21,8 @@
                                 <text v-if="indicator.temperature != ''" class="font16 white mgb-20">℃</text>
                                 <text v-else class="font36 white">?</text>
                             </div>
-                            <text class="info-text font12 white">{{temperatureStatus}}</text>
+                            <text v-if="indicator.temperature != ''" class="info-text font12 white">{{temperatureStatus}}</text>
+                            <text v-else class="info-text font12 white"></text>
                         </div>  
                         <div class="scene-status">
                             <text class="info-text font14 white">湿度</text>
@@ -121,11 +122,31 @@
                     <text class="down-text">{{washerStatus[washerRunningStatus]}}</text>
                 </div>
             </div>
-            <toast-dialog :show="showToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}">
-                <div class="row-sb mgb-10" v-for="item in sceneDevices">
-                    <div class="row-sb toast-line">
-                        <text class="pop-hd">{{item.applianceName}}</text>
+            <toast-dialog :show="showToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}" contentPadding="0px">
+                <div class="toast-box" v-for="(item,i) in sceneDevices">
+                    <div :class="['row-sb','toast-line', i>0?'toast-border':'']">
+                        <div>
+                            <text class="pop-hd">{{item}}</text>
+                            <div class="row-s">
+                                <text class="toast-desc" v-for="desc in item.describe">{{desc.actionValue}}</text>
+                            </div>
+                        </div>
                         <image class="toast-icon" :src="icon.model[item.status]"></image>
+
+                    </div>
+                </div>
+            </toast-dialog>
+            <toast-dialog :show="showModelToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}" contentPadding="0px">
+                <div class="toast-box" v-for="(item,i) in modelDeviceList">
+                    <div :class="['row-sb','toast-line', i>0?'toast-border':'']">
+                        <div>
+                            <text class="pop-hd">{{item.applianceName}}</text>
+                            <div class="row-s">
+                                <text class="toast-desc" v-for="desc in item.describe">{{desc.actionValue}}</text>
+                            </div>
+                        </div>
+                        <image class="toast-icon" :src="icon.model[item.status]"></image>
+
                     </div>
                 </div>
             </toast-dialog>
@@ -251,6 +272,7 @@
         margin-top: 15px;
         text-align: center;
         font-size: 24px;
+        height: 24px;
     }
     .barchart {
         width: 700px;
@@ -294,13 +316,25 @@
         font-size: 28px;
         color:#8A8A8F;
     }
+    .toast-box{
+        width: 550px;
+    }
     .toast-line{
-        padding: 10px;
+        padding: 25px;
     }
-    .toast-icon{
-        width: 50px;
-        height: 50px;
+    .toast-border{
+        border-top-color: #f2f2f2;
+        border-top-width: 1px;
+        border-top-style: solid;
     }
+    .toast-hd{
+        font-size: 32px;
+        width: 400px;
+        text-overflow: ellipsis;
+        margin-bottom: 10px;
+    }
+    .toast-desc{ color: #8A8A8F; margin-right: 4px; font-size: 24px; }
+    .toast-icon{ width: 50px; height: 50px; }
     .no-washdata{
         color: #fff;
         text-align: center;
@@ -461,13 +495,13 @@
                     model: {
                         1: 'assets/img/success.png',
                         2: 'assets/img/loading.png',
-                        3: 'assets/img/fail.png'
+                        3: 'assets/img/scene_ic_listundo@2x.png'
                     },
                     washer: {
-                        on: 'assets/img/power_on.png',
-                        off: 'assets/img/power_off.png',
-                        start: 'assets/img/start_on.png',
-                        pause: 'assets/img/stop_on.png',
+                        on: 'assets/img/power_off.png',
+                        off: 'assets/img/power_on.png',
+                        pause: 'assets/img/start_on.png',
+                        start: 'assets/img/stop_on.png',
                         powerDisabled: 'assets/img/power_off.png',
                         statusDisabled: 'assets/img/start_off.png'
                     },
@@ -482,21 +516,12 @@
                         4: 'linear-gradient(to top, #4E69F7,#5D75F6)'
                     },
                 },
-                voteImg:{
-                    star: 'assets/img/rate.png',
-                    unstar: 'assets/img/unrate.png'
-                },
+                indicator: {},
+                sceneLevel: 1,
                 unit: {
                     temperature: '℃',
                     percent: '%'
                 },
-                activeModeDevices: [],
-                applianceList: {},
-                showToastDialog: false,
-                userSupportDevices: [],
-                showMall: false,
-                weatherDesc: '',
-                sceneDevices: [],
                 washerWaterData: {
                     x: {
                         "value": [],
@@ -512,13 +537,14 @@
                     ],
                     borderRadius: "3",
                     description: "",
+                    background: "transparent",
                     legend: {
                         "position": "TOP_CENTER",
                         "orientation": "HORIZONTAL",
                         "show": false
                     },
                     unit: {
-                        "x": "",
+                        "x": "日期",
                         "y": "",
                         // "x": "日期",
                         // "y": "单位:吨"
@@ -537,6 +563,7 @@
                             "backgroundColor": "#111"
                         }
                     ],
+                    background: "transparent",
                     borderRadius: "3",
                     description: "",
                     legend: {
@@ -545,9 +572,8 @@
                         "show": false
                     },
                     unit: {
-                        "x": "",
+                        "x": "日期",
                         "y": "",
-                        // "x": "日期",
                         // "y": "单位:度"
                     }
                 },
@@ -555,16 +581,24 @@
                 hasWasherWaterData: false,
                 washerPower: 'powerDisabled',//洗衣机电源状态（开机关机）
                 washerRunningStatus: 'statusDisabled',//洗衣机运行状态
-                washerStatus: {
-                    on: '开机',
-                    off: '关机',
+                washerStatus: {//机器要成为的状态
+                    on: '关机',
+                    off: '开机',
                     powerDisabled: '',
-                    start: '启动',
-                    pause: '暂停',
+                    start: '暂停',
+                    pause: '启动',
                     statusDisabled: ''
                 },
-                indicator: {},
-                sceneLevel: 1,
+                activeModeDevices: [],
+                applianceList: {},
+                showToastDialog: false,
+                showModelToastDialog: false,
+                userSupportDevices: [],
+                showMall: false,
+                weatherDesc: '',
+                sceneDevices: [],
+                checkQuickOptimizeTimes: 0,
+                checkModelExeTimes: 0,
             }
         },
         methods: {
@@ -612,12 +646,14 @@
                         nativeService.toast('无法获取相关数据，点击右上角设置设备')
                     }
                     if (this.roomType == 4){
+                        this.hasWasherWaterData = false
+                        this.hasWasherPowerData = false
                         this.getWeatherInfo()
-                         if ( this.scene.applianceList.length > 0) {
+                        if ( this.scene.applianceList.length > 0) {
                             this.washerCode = this.scene.applianceList[0].applianceCode || ''
                             this.getWashData()
                             this.luaQueryStatus()
-                         }
+                        }
                     }
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
@@ -666,9 +702,10 @@
                     }
                     this.webRequest(reqUrl, reqParams).then((res)=>{
                         if (res.code == 0) {
+                            this.checkQuickOptimizeTimes = 0
                             this.checkQuickOptimize(res.data.resultId)
                         }else if (res.code == 1711){
-                            nativeService.alert(res.msg)
+                            nativeService.toast(res.msg)
                         }else{
                             if (codeDesc.scene.hasOwnProperty(res.code)) {
                                 nativeService.toast(codeDesc.scene[res.code])
@@ -686,40 +723,48 @@
             checkQuickOptimize(resultId){
                 // status 1-成功，2-执行中，3-失败
                 this.checkLogin().then( (uid) => {
-                    let reqUrl = url.scene.optimizeStatus
-                    let reqParams = {
-                        uid: uid,
-                        homegroupId: this.homegroupId,
-                        sceneId: this.sceneId,
-                        resultId: resultId
-                    }
-                    this.webRequest(reqUrl, reqParams, false).then((res)=>{
-                        if (res.code == 0) {
-                            this.showToastDialog = true
-                            this.sceneDevices = Object.assign({}, res.data.list[0].actionList)
-                            
-                            for (var x in this.sceneDevices) {
-                                if (this.sceneDevices[x].status == 2 || this.sceneDevices[x].status == 3) {
-                                    setTimeout(()=>{
-                                        this.checkQuickOptimize(resultId)
-                                    },1000)
-                                } else{
-                                    setTimeout(()=>{
+                    if (this.checkQuickOptimizeTimes < 30) {
+                        this.checkQuickOptimizeTimes += 1
+                        let reqUrl = url.scene.optimizeStatus
+                        let reqParams = {
+                            uid: uid,
+                            homegroupId: this.homegroupId,
+                            sceneId: this.sceneId,
+                            resultId: resultId
+                        }
+                        this.webRequest(reqUrl, reqParams, false).then((res)=>{
+                            if (res.code == 0) {
+                                this.showToastDialog = true
+                                this.sceneDevices = res.data.list
+                                    if (res.data.status == 2) {
+                                        setTimeout(()=>{
+                                            this.checkQuickOptimize(resultId)
+                                        },1000)
+                                    } else if (res.data.status == 3){
                                         this.showToastDialog = false
-                                    },2000)
-                                    break
+                                        nativeService.toast('一键优化执行失败，请再试一次')
+                                    } else {
+                                        setTimeout(()=>{
+                                            this.showToastDialog = false
+                                            setTimeout(()=>{
+                                                nativeService.toast('执行成功!')
+                                            },200)
+                                        },1000)
+                                    }
+                            }else{
+                                if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                    nativeService.toast(codeDesc.scene[res.code])
+                                }else{
+                                    nativeService.toast(res.msg)
                                 }
                             }
-                        }else{
-                            if (codeDesc.scene.hasOwnProperty(res.code)) {
-                                nativeService.toast(codeDesc.scene[res.code])
-                            }else{
-                                nativeService.toast(res.msg)
-                            }
-                        }
-                    }).catch((err)=>{
-                        nativeService.toast(this.getErrorMessage(err))
-                    })
+                        }).catch((err)=>{
+                            nativeService.toast(this.getErrorMessage(err))
+                        })
+                    }else{
+                        this.showToastDialog = false
+                        nativeService.toast('一键优化执行失败，请再试一次')
+                    }
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
                 })
@@ -736,7 +781,9 @@
                         }
                         this.webRequest(reqUrl, reqParams).then((res)=>{
                             if (res.code == 0) {
-                                nativeService.toast('执行成功！')
+                                this.checkModelExeTimes = 0
+                                this.checkModelExe(res.data.resultId, modelId)
+                                // nativeService.toast('执行成功！')
                             }else{
                                 if (codeDesc.scene.hasOwnProperty(res.code)) {
                                     nativeService.toast(codeDesc.scene[res.code])
@@ -754,6 +801,57 @@
                     nativeService.toast('当前场景未绑定设备，无法执行此场景模式')
                 }
                 
+            },
+            checkModelExe(resultId, modelId){
+                this.checkLogin().then( (uid) => {
+                    if (this.checkModelExeTimes < 30) {
+                        this.checkModelExeTimes += 1
+                        let reqUrl = url.scene.modelStatus
+                        let reqParams = {
+                            uid: uid,
+                            homegroupId: this.homegroupId,
+                            sceneId: this.sceneId,
+                            modelId: modelId,
+                            resultId: resultId
+                        }
+                        this.webRequest(reqUrl, reqParams, false).then((res)=>{
+                            if (res.code == 0) {
+                                this.showModelToastDialog = true
+                                this.modelDeviceList = res.data.list
+
+                                if (res.data.status == 2) {
+                                    setTimeout(()=>{
+                                        this.checkModelExe(resultId, modelId)
+                                    },1000)
+                                } else if (res.data.status == 3){
+                                    this.showModelToastDialog = false
+                                    nativeService.toast('执行失败，请再试一次')
+                                } else {
+                                    setTimeout(()=>{
+                                        this.showModelToastDialog = false
+                                        setTimeout(()=>{
+                                            nativeService.toast('场景模式执行成功!')
+                                        }, 200)
+                                    },1000)
+                                }
+                                
+                            }else{
+                                if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                    nativeService.toast(codeDesc.scene[res.code])
+                                }else{
+                                    nativeService.toast(res.msg)
+                                }
+                            }
+                        }).catch((err)=>{
+                            nativeService.toast(this.getErrorMessage(err))
+                        })
+                    }else{
+                        this.showModelToastDialog = false
+                        nativeService.toast('执行失败，请再试一次')
+                    }
+                }).catch((err)=>{
+                    nativeService.toast(this.getErrorMessage(err))
+                })
             },
             getWeatherInfo(){
                 nativeService.getGPSInfo({
@@ -865,6 +963,7 @@
                     applianceId: String(self.washerCode)
                 }
             	nativeService.sendLuaRequest(params, true).then(function(luaData) {
+                    nativeService.alert(luaData)
                     self.setWasherStatus(luaData)
             	},function(error) {
                     nativeService.alert('查询洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
@@ -872,14 +971,17 @@
             },
             setWasherStatus(luaData){
                 this.washerPower = luaData.result.power
-                if (luaData.result.running_status != 'start') {
-                    this.washerRunningStatus = 'start' //runnig_status不等于start就可以发start命令
-                }else if (luaData.running_status == 'start'){
-                    this.washerRunningStatus = 'pause'
+                if (this.washerPower == 'on') {
+                    if (luaData.result.running_status != 'start') {
+                        this.washerRunningStatus = 'start' //runnig_status不等于start就可以发start命令
+                    }else if (luaData.running_status == 'start'){
+                        this.washerRunningStatus = 'pause'
+                    }
                 }
             },
             powerOnOff(){//控制阳台场景洗衣机的开启关闭
                 if (this.washerPower == 'powerDisabled') {
+                    nativeService.toast('无法控制设备')
                     return
                 }else{
                     let self = this;
@@ -902,6 +1004,7 @@
             },
             controlStartPause(){//控制阳台场景洗衣机的启动暂停
                 if (this.washerRunningStatus == 'statusDisabled') {
+                    nativeService.toast('无法控制设备')
                     return
                 }else{
                     let self = this;

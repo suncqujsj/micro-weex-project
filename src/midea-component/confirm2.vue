@@ -61,12 +61,12 @@
     }
 
     .left-button {
-        font-size: 36px;
+        font-size: 32px;
         color: #666;
     }
 
     .right-button {
-        font-size: 36px;
+        font-size: 32px;
         color: #000;
     }
 </style>

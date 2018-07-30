@@ -58,8 +58,8 @@
                 type: Object,
                 default: function(){
                     return {
-                        width: '60px',
-                        height: '60px',
+                        width: '82px',
+                        height: '82px',
                         marginRight: '25px'
                     }
                 }

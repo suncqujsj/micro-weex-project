@@ -1,36 +1,25 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
-            <div slot="customerContent" class="header-right">
-                <text class="header-right-text" @click="goToServiceCharge">收费标准</text>
-            </div>
+        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back" :showRightText="true" rightText="收费标准" @rightTextClick="goToServiceCharge">
         </midea-header>
         <scroller class="content-wrapper">
             <div class="base-group">
-                <div class="service-cell" @click="selectProduct">
-                    <div class="service-cell-block">
+                <midea-cell placeHolder="请选择" :rightText="selectedProductDesc" @mideaCellClick="selectProduct">
+                    <div slot="title" class="cell-title">
                         <text class="cell-label">维修产品</text>
                         <text class="cell-label-star">*</text>
-                        <text class="right-text address-text" v-bind:class="[selectedProductDesc=='请选择'?'empty-text':'']">{{selectedProductDesc}}</text>
-                        <image class="arrow-icon" src="./img/arrow_right.png" resize='contain'></image>
                     </div>
-                </div>
-                <midea-cell v-if="isIncludeU99" :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectProductUse">
+                </midea-cell>
+                <midea-cell v-if="isIncludeU99" placeHolder="请选择" :rightText="productUseDesc" @mideaCellClick="selectProductUse">
                     <div slot="title" class="cell-title">
                         <text class="cell-label">使用场所</text>
                         <text class="cell-label-star">*</text>
                     </div>
-                    <div slot="rightText">
-                        <text class="right-text" v-bind:class="[productUseDesc=='请选择'?'empty-text':'']">{{productUseDesc}}</text>
-                    </div>
                 </midea-cell>
-                <midea-cell :height="excludedFault?'80':'100'" :hasBottomBorder="false" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectFaultType">
+                <midea-cell :height="excludedFault?'80':'100'" placeHolder="请选择" :rightText="faultDesc" @mideaCellClick="selectFaultType">
                     <div slot="title" class="cell-title">
                         <text class="cell-label">故障类型</text>
                         <text class="cell-label-star">*</text>
-                    </div>
-                    <div slot="rightText">
-                        <text class="right-text" v-bind:class="[faultDesc=='请选择'?'empty-text':'']">{{faultDesc}}</text>
                     </div>
                 </midea-cell>
                 <div class="arraw-cell" v-if="excludedFault" @click="showExcludedFault">
@@ -44,24 +33,18 @@
                         <image class="arrow-icon" src="./img/arrow_right.png" resize='contain'></image>
                     </div>
                 </div>
-                <midea-cell :hasBottomBorder="true" :hasTopBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectServiePeriod">
+                <midea-cell placeHolder="请选择" :rightText="serviePeriodDesc" @mideaCellClick="selectServiePeriod">
                     <div slot="title" class="cell-title">
                         <text class="cell-label">期望服务时间</text>
                         <text class="cell-label-star">*</text>
                     </div>
-                    <div slot="rightText">
-                        <text class="right-text" v-bind:class="[serviePeriodDesc=='请选择'?'empty-text':'']">{{serviePeriodDesc}}</text>
-                    </div>
                 </midea-cell>
-
-                <div class="service-cell" @click="selectAddress">
-                    <div class="service-cell-block">
+                <midea-cell placeHolder="请选择" :rightText="userAddressDesc" @mideaCellClick="selectAddress" :hasSubBottomBorder="false">
+                    <div slot="title" class="cell-title">
                         <text class="cell-label">服务地址</text>
                         <text class="cell-label-star">*</text>
-                        <text class="right-text address-text" v-bind:class="[userAddressDesc=='请选择'?'empty-text':'']">{{userAddressDesc}}</text>
-                        <image class="arrow-icon" src="./img/arrow_right.png" resize='contain'></image>
                     </div>
-                </div>
+                </midea-cell>
             </div>
 
             <div class="base-group">
@@ -85,7 +68,7 @@
                         <image :src="item.imgMeta +','+item.contentStr" class="photo-item-img"></image>
                         <image src="./assets/img/service_ic_delone@3x.png" class="photo-delete-img" resize='contain' @click="removePhoto(index)"></image>
                     </div>
-                    <div v-if="photoData.length<3" class="photo-item-detail">
+                    <div v-if="photoData.length<3" class="photo-item-detail photo-item-detail-default">
                         <image src="./assets/img/service_ic_carema@3x.png" class="photo-item-add" resize='contain' @click="takePhoto"></image>
                     </div>
                 </div>
@@ -144,7 +127,7 @@ import PeriodPicker from './components/periodPicker.vue'
 import ScanInput from '@/customer-service/components/scanInput.vue'
 import FaultDialog from './components/faultDialog.vue'
 
-const PLEASE_SELECT = "请选择"
+const PLEASE_SELECT = ""
 export default {
     components: {
         MideaCell,
@@ -473,7 +456,7 @@ export default {
             }
             for (let index = 0; index < 31; index++) {
                 let theDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + index)
-                let theDateDesc = theDate.getMonth() + '月' + theDate.getDate() + '日'
+                let theDateDesc = (theDate.getMonth() + 1) + '月' + theDate.getDate() + '日'
                 this.serviePeriodDate.push({
                     'index': index,
                     'value': util.dateFormat(theDate, "yyyy-MM-dd"),
@@ -804,29 +787,14 @@ export default {
   background-color: #f2f2f2;
   position: relative;
 }
-.header-right {
-  position: absolute;
-  right: 0px;
-  width: 160px;
-  height: 88px;
-  display: flex;
-  justify-content: center;
-}
-.header-right-text {
-  font-family: PingFangSC-Regular;
-  font-size: 28px;
-  color: #666666;
-  padding-left: 20px;
-  padding-right: 20px;
-  text-align: right;
-}
 .base-group {
   margin-top: 24px;
 }
 .cell-title {
-  flex: 1;
+  flex: 300px;
   flex-direction: row;
   align-items: center;
+  margin-right: 8px;
 }
 .cell-label {
   font-family: PingFangSC-Regular;
@@ -834,7 +802,7 @@ export default {
   color: #000000;
 }
 .cell-label-star {
-  font-family: PingFangSC-Regular;
+  font-family: "SF Pro Text", PingFangSC-Regular;
   font-size: 32px;
   color: #ff3b30;
   padding-left: 5px;
@@ -939,9 +907,9 @@ export default {
   color: #666666;
   background-color: #f6f6f6;
   text-align: center;
-  padding-top: 10px;
+  padding-top: 12px;
   padding-right: 32px;
-  padding-bottom: 10px;
+  padding-bottom: 12px;
   padding-left: 32px;
   margin-right: 24px;
   border-radius: 4px;
@@ -952,7 +920,7 @@ export default {
 }
 .info-group {
   position: relative;
-  padding-bottom: 24px;
+  padding-bottom: 48px;
 }
 .info-textarea-wrapper {
   position: relative;
@@ -968,7 +936,7 @@ export default {
   font-size: 28px;
   color: #000000;
   padding-top: 10px;
-  padding-left: 22px;
+  padding-left: 16px;
   padding-right: 50px;
   background-color: #fafafa;
   height: 150px;
@@ -994,7 +962,7 @@ export default {
 .action-bar {
   width: 750px;
   text-align: center;
-  padding-top: 30px;
+  padding-top: 8px;
   padding-bottom: 50px;
 }
 .photo-group {
@@ -1023,10 +991,13 @@ export default {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 128px;
-  height: 128px;
-  background-color: #f2f2f2;
+  width: 140px;
+  height: 140px;
+  background-color: #ffffff;
   margin-right: 24px;
+}
+.photo-item-detail-default {
+  background-color: #f2f2f2;
 }
 .photo-item-img {
   width: 128px;

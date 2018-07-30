@@ -3,11 +3,9 @@
         <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back"></midea-header>
         <scroller class="scroller">
             <order-block class="order-block" :order="order" :showStatus="false">
-                <div slot="action-bar">
-                    <div class="service-status-bar">
-                        <text v-bind:class="['service-status-action',serviceStatus==0?'service-status-action-selected':'']" @click="switchServiceStatus(0)">服务未完成</text>
-                        <text v-bind:class="['service-status-action',serviceStatus==1?'service-status-action-selected':'']" @click="switchServiceStatus(1)">服务已完成</text>
-                    </div>
+                <div slot="action-bar" class="service-status-bar">
+                    <text v-bind:class="['service-status-action',serviceStatus==0?'service-status-action-selected':'']" @click="switchServiceStatus(0)">服务未完成</text>
+                    <text v-bind:class="['service-status-action',serviceStatus==1?'service-status-action-selected':'']" @click="switchServiceStatus(1)">服务已完成</text>
                 </div>
             </order-block>
 
@@ -44,8 +42,8 @@
                     </div>
                 </template>
 
-                <div v-if="isDataReady" class="action-bar">
-                    <midea-button text="提交" :btnStyle="{width: '638px'}" @mideaButtonClicked="submit"></midea-button>
+                <div v-if="serviceStatus==0 || serviceStatus==1" class="action-bar">
+                    <midea-button text="提交" :disabled="!isDataReady" :btnStyle="{width: '638px'}" @mideaButtonClicked="submit"></midea-button>
                 </div>
             </div>
         </scroller>
@@ -451,12 +449,11 @@ export default {
   border-bottom-width: 1px;
 }
 .service-status-bar {
-  /* width: 750px; */
+  height: 96px;
   justify-content: space-around;
   flex-direction: row;
   align-items: center;
   background-color: #ffffff;
-  padding-top: 32px;
   padding-left: 130px;
   padding-right: 130px;
 }
@@ -474,6 +471,7 @@ export default {
 .service-status-action-selected {
   color: #ffffff;
   background-color: #0078ff;
+  border-width: 0px;
 }
 .assess-block {
   background-color: #ffffff;

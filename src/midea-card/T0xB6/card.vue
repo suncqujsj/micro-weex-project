@@ -59,6 +59,8 @@
 	const modal = weex.requireModule('modal');
 	const dom = weex.requireModule('dom');
 	var stream = weex.requireModule('stream');
+	const globalEvent = weex.requireModule('globalEvent');
+	const bridgeModule = weex.requireModule('bridgeModule');
     export default {
         components: {
             mideaSwitch,
@@ -74,6 +76,8 @@
             	deviceSn: "",
             	onlineStatus:"",
             	
+            	pushKey: "receiveMessage",
+            	pushKeyOnline: "receiveMessageFromApp",
                 onoff: "",
                 minutes: "",
                 gear: "",
@@ -108,6 +112,9 @@
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);
             	},function(error) {
+            		if(error.errorCode == '331307' || error.errorCode == '1307') {
+	        			self.onlineStatus = "0"
+	        		}
             		console.log("error");
             	});
             },
@@ -146,11 +153,9 @@
         			"name":name,
         			"params":{
         				"power": poweronoff,
+        				"gear":  this.gear || '1'
         			}
         		};
-            	if(flag == 1) {
-            		params.data.gear = this.gear || 1;
-            	}
             	nativeService.sendLuaRequest(params,true).then(function(data) {
 //            		self.updateUI(data);
 					self.queryStatus();

@@ -1,9 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
-            <div slot="customerContent" class="header-right">
-                <text class="header-right-text" @click="switchMode">{{isListMode?'地图模式':'列表模式'}}</text>
-            </div>
+        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back" :showRightText="true" :rightText="isListMode?'地图模式':'列表模式'" @rightTextClick="switchMode">
         </midea-header>
         <div v-if="!serviceOrderNo" class="info-bar">
             <text class="info-address" @click="changeArea">{{areaObject.county?(areaObject.cityName+ ' '+areaObject.countyName):'请选择位置'}}</text>
@@ -14,34 +11,36 @@
             </div>
         </div>
 
-        <div class="empty-page" v-if="isSearchByGPS && locateFailed">
-            <image class="empty-page-icon" src="./assets/img/service_ic_dingwei@3x.png" resize='contain'>
-            </image>
-            <text class="empty-page-text">无法获取地址，请手动定位</text>
-            <text class="empty-page-refresh" @click="initPage">刷新</text>
-            <!-- <text class="empty-page-relocate">重新定位</text> -->
-        </div>
-        <div class="empty-page" v-if="isLoaded && sortedBranchList.length == 0">
+        <template v-if="sortedBranchList && sortedBranchList.length >0">
+            <scroller v-if="isListMode" class="scroller">
+                <div v-for="(branch, index) in sortedBranchList" :key="index">
+                    <branch-block class="branch-block" :data="branch" :index="index" @navigate="navigate(branch)">
+                    </branch-block>
+                </div>
+                <div class="gap-bottom"></div>
+            </scroller>
+            <div v-if="!isListMode" class="map-scroller">
+                <midea-map-view class="map" :data="mapData"></midea-map-view>
+                <slider class="slider" :index="currentAddressIndex" @change="changeBranch" auto-play="false">
+                    <div v-for="(branch, index) in sortedBranchList" :key="index">
+                        <branch-block class="branch-slider-block" ellipsis=true :data="branch" :index="index" @navigate="navigate(branch)">
+                        </branch-block>
+                    </div>
+                </slider>
+            </div>
+        </template>
+        <div class="empty-page" v-else-if="isLoaded && sortedBranchList.length == 0">
             <image class="empty-page-icon" src="./assets/img/default_ic_nobranch@3x.png" resize='contain'>
             </image>
             <text class="empty-page-text">抱歉，亲查询的网点不存在{{'\n'}}您可以拨打24小时服务热线咨询</text>
             <text class="empty-page-text phone" @click="makeCall(4008899315)">400-8899-315</text>
         </div>
-        <scroller v-if="isListMode && sortedBranchList.length >0" class="scroller">
-            <div v-for="(branch, index) in sortedBranchList" :key="index">
-                <branch-block class="branch-block" :data="branch" :index="index" @navigate="navigate(branch)">
-                </branch-block>
-            </div>
-            <div class="gap-bottom"></div>
-        </scroller>
-        <div v-if="!isListMode && sortedBranchList.length >0" class="map-scroller">
-            <midea-map-view class="map" :data="mapData"></midea-map-view>
-            <slider class="slider" :index="currentAddressIndex" @change="changeBranch" auto-play="false">
-                <div v-for="(branch, index) in sortedBranchList" :key="index">
-                    <branch-block class="branch-slider-block" ellipsis=true :data="branch" :index="index" @navigate="navigate(branch)">
-                    </branch-block>
-                </div>
-            </slider>
+        <div class="empty-page" v-else-if="isSearchByGPS && locateFailed">
+            <image class="empty-page-icon" src="./assets/img/service_ic_dingwei@3x.png" resize='contain'>
+            </image>
+            <text class="empty-page-text">无法获取地址，请手动定位</text>
+            <text class="empty-page-refresh" @click="initPage">刷新</text>
+            <!-- <text class="empty-page-relocate">重新定位</text> -->
         </div>
     </div>
 </template>
@@ -381,22 +380,6 @@ export default {
   background-color: #f2f2f2;
   position: relative;
   flex-direction: column;
-}
-.header-right {
-  position: absolute;
-  right: 0px;
-  width: 160px;
-  height: 88px;
-  display: flex;
-  justify-content: center;
-}
-.header-right-text {
-  font-family: PingFangSC-Regular;
-  font-size: 28px;
-  color: #666666;
-  padding-left: 20px;
-  padding-right: 20px;
-  text-align: right;
 }
 .info-bar {
   flex-direction: row;

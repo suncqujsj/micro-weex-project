@@ -319,7 +319,7 @@ export default {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding-left: 48px;
+  padding-left: 32px;
   margin-top: 22px;
 }
 .order-detail-content {
@@ -358,7 +358,9 @@ export default {
   flex-direction: column;
   justify-content: center;
   background-color: #ffffff;
-  padding: 32px;
+  padding-top: 32px;
+  padding-left: 32px;
+  padding-right: 32px;
   border-top-color: #e5e5e8;
   border-top-width: 1px;
   border-top-style: solid;
@@ -367,6 +369,7 @@ export default {
 .order-detail-step-row {
   flex-direction: row;
   align-items: center;
+  overflow: hidden;
 }
 .order-step-label {
   width: 150px;
@@ -378,7 +381,7 @@ export default {
 .order-detail-step-flow {
   position: relative;
   width: 60px;
-  height: 114px;
+  height: 150px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -388,17 +391,18 @@ export default {
   top: 0px;
   left: 28px;
   width: 1px;
-  height: 114px;
+  height: 200px;
   border-right-color: #efeff4;
   border-right-width: 3px;
   border-right-style: dotted;
 }
 .first-step-line {
-  top: 57px;
-  height: 57px;
+  top: 75px;
+  height: 100px;
 }
 .last-step-line {
-  height: 57px;
+  bottom: 75px;
+  height: 75px;
 }
 .order-detail-step-dot {
   margin-left: 9px;
@@ -416,6 +420,8 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #666666;
+  padding-top: 16px;
+  padding-bottom: 16px;
 }
 .current-step {
   color: #000000;
@@ -435,11 +441,11 @@ export default {
   padding-bottom: 32px;
 }
 .order-body-label {
-  width: 160px;
+  /* width: 160px; */
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #666666;
-  text-align: right;
+  text-align: left;
   margin-right: 15px;
 }
 .order-body-desc {

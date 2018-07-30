@@ -99,18 +99,15 @@ export default {
 			this.temperatureList.push({ value: index * 10, key: index * 10 }, )
 		}
 
-		nativeService.getUserInfo().then((data) => {
-			this.uid = data.uid
-			nativeService.getItem("CARD_STORAGE_SITUATION", (resp) => {
-				if (resp.result == 'success') {
-					this.situactionData = JSON.parse(resp.data) || {}
-					this.deviceId = this.situactionData.deviceId
+		nativeService.getItem("CARD_STORAGE_SITUATION", (resp) => {
+			if (resp.result == 'success') {
+				this.situactionData = JSON.parse(resp.data) || {}
+				this.deviceId = this.situactionData.deviceId
 
-					//设置默认值
-					this.conditionTempIndex = ((this.situactionData.props.conditions[0].value || 0) / 10) - 1
-				}
-			})
-		}).catch((error) => { })
+				//设置默认值
+				this.conditionTempIndex = ((this.situactionData.props.conditions[0].value || 0) / 10) - 1
+			}
+		})
 	}
 }
 </script>

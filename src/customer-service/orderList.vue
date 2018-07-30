@@ -380,8 +380,9 @@ export default {
 .action-bar {
   flex-direction: row;
   justify-content: flex-end;
-  padding-top: 10px;
+  align-items: center;
   margin-right: 32px;
+  height: 80px;
 }
 .action {
   font-family: PingFangSC-Regular;
@@ -389,13 +390,13 @@ export default {
   color: #000000;
   border-radius: 4px;
   padding-top: 10px;
-  padding-right: 24px;
   padding-bottom: 10px;
-  padding-left: 24px;
   margin-left: 32px;
   border-color: #e5e5e8;
   border-width: 1px;
   border-style: solid;
+  width: 144px;
+  text-align: center;
 }
 .primary-action {
   color: #0078ff;

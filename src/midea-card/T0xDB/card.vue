@@ -15,14 +15,14 @@
 		        	</div>
 		        	<div class="card-right">
 		        		<div class="card-control">
-		        			<div class="card-control-div">
-			        			<image class="card-control-img" style="margin-right:35px" :src="startPause" @click="controlStartPause"></image>
-			        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
-		        			</div>
 		        		</div>
 		        		<div class="card-icon" >
 		        			<image class="card-icon-img" @click="showControlPanelPage" src="./assets/img/smart_pic_equip032@2x.png"></image>
 		        		</div>
+		        		<div class="card-control-div">
+		        			<image class="card-control-img" style="margin-right:35px" :src="startPause" @click="controlStartPause"></image>
+		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
+	        			</div>
 		        	</div>
 		        </div>
 		        <div class="card-power-off" v-else>
@@ -31,7 +31,7 @@
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image class="icon-offline" src="./assets/img/smart_pic_equip032@2x.png"></image>
+		        		<image class="icon-offline" @click="showControlPanelPage" src="./assets/img/smart_pic_equip032@2x.png"></image>
 		        	</div>
 		        </div>
 	        </div>
@@ -88,6 +88,7 @@
                 expert_step: "",
                 program: "",
                 deviceLock: "",
+                errorCode: "",
                 danwei: "分",
                 subInfo: "大约需要",
                 powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
@@ -176,6 +177,9 @@
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);
             	},function(error) {
+            		if(error.errorCode == '331307' || error.errorCode == '1307') {
+            			self.onlineStatus = "0"
+            		}
             		console.log("error");
             	});
             },
@@ -191,6 +195,7 @@
 					this.expert_step = this.return_expert_step[params.expert_step];
 					this.program = this.return_program[params.program];
 					this.deviceLock = params.lock;
+					this.errorCode = parseInt(params.error_code);
 					if(this.running_status == "start") {
 						this.remain_time = this.remain_time;
 						this.danwei = "分";
@@ -244,8 +249,17 @@
             },
             controlStartPause() {
             	let self = this;
-            	if(this.running_status == "start") {
+            	if(self.errorCode != "0") {
+            		nativeService.toast('设备故障');
+		            return;
+            	}
+            	if(this.running_status == "start" || this.running_status == "delay") {
             		//pause logic
+					if(this.deviceLock == "on") {
+		            	nativeService.toast('请关闭童锁')
+		                return;
+		            }     
+		            
             		let params = {
             			"operation":"luaControl",
             			"name":"pause",
@@ -336,7 +350,7 @@
         computed: {
 	        startPause() {
 	        	let img = "./assets/img/smart_ic_power@2x.png";
-	            if(this.running_status == "start") {
+	            if(this.running_status == "start" || this.running_status == "delay") {
 	                img = "./assets/img/smart_ic_pause@2x.png";
 	            } else {
 	                img = "./assets/img/smart_ic_play@2x.png";
@@ -425,12 +439,13 @@
 		margin-right:38px;
 		flex-direction: row;
 		justify-content: flex-end;
-		z-index: 2;
 		height:100px;
 	}
 	.card-control-div {
-		margin-top:-60px;
 		flex-direction: row;
+		position: absolute;
+		top: 38px;
+		right: 36px;
 	}
 	.card-status-detail {
 		flex-direction: row;

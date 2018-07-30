@@ -87,6 +87,9 @@
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);
             	},function(error) {
+            		if(error.errorCode == '331307' || error.errorCode == '1307') {
+            			self.onlineStatus = "0"
+            		}
             		console.log("error");
             	});
             },

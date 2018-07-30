@@ -5,7 +5,7 @@
 		    	 <div class="card" v-if="onoff == 'on'">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
-	        				<text class="main-status" :class="[danwei==''? 'main-status-simple' :'']">{{display_value2}}</text>
+	        				<text class="main-status" :class="[danwei==''? 'main-status-simple' :'', intelligentFlag=='1'? 'main-status-small' :'']">{{display_value2}}</text>
 	        				<text class="danwei">{{danwei}}</text>
 	        			</div>
 	        			<text class="main-status-second">{{main_detail}}</text>
@@ -15,14 +15,14 @@
 		        	</div>
 		        	<div class="card-right">
 		        		<div class="card-control">
-		        			<div class="card-control-div">
-			        			<image class="card-control-img" style="margin-right:35px"  :src="startPause" @click="controlStartPause"></image>
-			        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
-		        			</div>
 		        		</div>
 		        		<div class="card-icon">
 		        			<image class="card-icon-img" @click="showControlPanelPage" src="./assets/img/smart_pic_equip010@2x.png"></image>
 		        		</div>
+		        		<div class="card-control-div">
+		        			<image class="card-control-img" style="margin-right:35px"  :src="startPause" @click="controlStartPause"></image>
+		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
+	        			</div>
 		        	</div>
 		        </div>
 		        <div class="card-power-off" v-else>
@@ -154,6 +154,8 @@
 	            main_detail: "",
                 onoff: "",
                 deviceLock:"",
+                errorCode: "",
+                intelligentFlag: 0,
                 powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
                 powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
                 list: [
@@ -174,6 +176,9 @@
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		self.updateUI(data);
             	},function(error) {
+            		if(error.errorCode == '331307' || error.errorCode == '1307') {
+            			self.onlineStatus = "0"
+            		}
             		console.log("error");
             	});
             },
@@ -186,6 +191,7 @@
 					this.remain_time = this.caculateTime(params.remain_time);
 					this.program = params.program;
 					this.deviceLock = params.lock;
+					this.errorCode = parseInt(params.error_code);
 					
 					this.wash_level = params.wash_level;
 					this.rinse_level = params.rinse_level;
@@ -195,6 +201,7 @@
 					this.temperature = params.temperature;
 					this.dehydration_time = params.dehydration_time;
 					this.wash_time = params.wash_time;
+					this.intelligentFlag = 0;
 				
 					if(this.onoff == "on" && this.running_status == "work") {
 						if(params.intelligent_wash && params.intelligent_wash == "on") {
@@ -203,6 +210,7 @@
 								this.display_value2 = "正在为您智能选择洗衣程序";
 								this.main_detail = "";
 								this.danwei = "";
+								this.intelligentFlag = 1;
 							} else {
 								this.display_value1 = this.return_program[params.program];
 								this.display_value2 = params.remain_time;//this.remain_time;
@@ -227,6 +235,7 @@
 								this.display_value2 = "将为您智能选择洗衣程序";
 								this.danwei = "";
 								this.main_detail = "";
+								this.intelligentFlag = 1;
 							} else {
 								this.display_value1 = this.return_program[params.program] || "--";
 								this.display_value2 = this.return_running_status[this.running_status];
@@ -280,8 +289,22 @@
             },
             controlStartPause() {
             	let self = this;
-            	if(this.running_status == "work") {
+            	if(self.errorCode != "0") {
+            		nativeService.toast('设备故障');
+		            return;
+            	}
+            	if(this.running_status == "work" || this.running_status == "order") {
             		//pause logic
+            		if(this.running_status == "order") {
+		            	nativeService.toast('预约执行中不能暂停');
+		                return;
+		            }else if(this.running_status == "work") {
+		            	if(this.deviceLock == "on") {
+		            		nativeService.toast('请关闭童锁');
+		            		return;	
+		            	} 	
+		            }
+            		
             		let params = {
             			"operation":"luaControl",
             			"name":"pause",
@@ -389,7 +412,7 @@
 		        },
 		        startPause() {
 		        	let img = "./assets/img/smart_ic_play@2x.png";
-		            if(this.running_status == "work") {
+		            if(this.running_status == "work" || this.running_status == "order") {
 		                img = "./assets/img/smart_ic_pause@2x.png";
 		            } else {
 		                img = "./assets/img/smart_ic_play@2x.png";
@@ -471,12 +494,12 @@
 		margin-right:38px;
 		flex-direction: row;
 		justify-content: flex-end;
-		z-index: 2;
-		height:100px;
 	}
 	.card-control-div {
-		margin-top:-60px;
 		flex-direction: row;
+		position: absolute;
+		top: 38px;
+		right: 36px;
 	}
 	.card-status-detail {
 		flex-direction: row;
@@ -512,6 +535,9 @@
 	.main-status {
 		font-size: 128px;
 		color: #FFFFFF;
+	}
+	.main-status-small {
+		font-size: 30px;
 	}
 	.main-status-simple {
 		font-size: 75px;

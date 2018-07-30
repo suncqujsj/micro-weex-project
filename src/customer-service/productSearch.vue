@@ -5,7 +5,7 @@
         <div class="search-bar" :style="{'height':isIos?'136px':'96px','padding-top':isIos?'40px':'0px'}">
             <div class="search-bar-content" v-bind:class="[isIos?'':'search-bar-top']">
                 <image class="search-bar-img" :src="'./assets/img/service_ic_sreach@3x.png'" resize="contain"></image>
-                <input class="search-bar-input" placeholder="请输入产品品类，如空调、洗衣机" v-model="keyWord" maxlength="20" @return="keyBoardsearch" return-key-type="search"></input>
+                <input class="search-bar-input" placeholder="请输入产品品类，如空调、洗衣机" v-model="keyWord" maxlength="20" @return="keyBoardsearch" :autofocus=true return-key-type="search"></input>
                 <image v-if="keyWord.length>0" class="search-bar-close" :src="'./assets/img/me_ic_return@3x.png'" resize="contain" @click="keyWord=''"></image>
             </div>
             <text v-if="isIos" class="search-action" @click="back">取消</text>
@@ -178,8 +178,6 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding-top: 16px;
-  padding-bottom: 16px;
   border-bottom-color: #e2e2e2;
   border-bottom-width: 1px;
   background-color: #ffffff;
@@ -201,8 +199,8 @@ export default {
 .search-bar-img {
   height: 40px;
   width: 40px;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 8px;
+  margin-right: 8px;
 }
 .search-bar-input {
   flex: 1;

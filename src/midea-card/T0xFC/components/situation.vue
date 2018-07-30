@@ -20,7 +20,6 @@ export default {
     mixins: [situationBase],
     data() {
         return {
-            uid: "",
             deviceId: "",
             situationList: []
         }
@@ -142,7 +141,7 @@ export default {
                 }
             }
             result.checked = result.enable == '1' ? true : false
-            
+
             result.title = "PM2.5高于" + result.props.conditions[0].value + "时，自动打开净化器"
             result.detail = ""
 
@@ -177,13 +176,10 @@ export default {
         }
     },
     created() {
-        nativeService.getUserInfo().then((data) => {
-            this.uid = data.uid
-            nativeService.getDeviceInfo().then((data) => {
-                this.deviceId = data.result.deviceId
-                this.getSituationList()
-            }, (error) => { })
-        }).catch((error) => { })
+        nativeService.getDeviceInfo().then((data) => {
+            this.deviceId = data.result.deviceId
+            this.getSituationList()
+        }, (error) => { })
     }
 }
 </script>

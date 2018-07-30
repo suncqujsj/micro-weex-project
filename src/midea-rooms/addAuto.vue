@@ -1,14 +1,18 @@
 <template>
    <div class="wrap" :style="wrapStyle">
         <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
-        <div class="next" @click="goNext()">
-            <text class="next-text">下一步</text>
-        </div>
         <div class="content">
-            <text class="hd">选择条件</text>
+            <!-- <text class="hd">选择条件</text> -->
             <midea-list v-for="(item,idx) in autos" :idx="idx" :hasWrapBorder="false" leftMargin="25px" :style="{backgroundColor: '#fff'}">
-                <div class="list-item">
-                    <check-item :title="item.title" :icon="item.icon" :desc="item.desc" :titleStyle="style.title" :status="activeTypeIndex == idx" @itemClick="selectType(idx)" mode="radio"></check-item>
+                <div class="list-item row-sb" @click="goNext(item)">
+                    <div class="row-s">
+                        <image class="icon-type" :src="item.icon"></image>
+                        <div>
+                            <text class="name">{{item.title}}</text>
+                            <text class="desc">{{item.desc}}</text>
+                        </div>
+                    </div>
+                    <image class="next" :src="icon.more"></image>
                 </div>
             </midea-list>
         </div>
@@ -16,27 +20,43 @@
 </template>
 
 <style>
+    .row-s{
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+    }
+    .row-sb{
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
     .wrap{
         background-color: #f2f2f2;
     }
-    .next{
-        position: absolute;
-        right: 10px;
-        top: 30px;
+    .list-item{
+        padding-top: 26px;
+        padding-bottom: 26px;
     }
-    .next-text{
-        font-size: 32px;
-        color: #666;
+    .next{
+        width: 8px;
+        height: 16px;
         margin-right: 25px;
     }
-    .hd{
-        padding: 25px;
-        font-size: 28px;
-        color: #777;
+    .content{
+        margin-top: 25px;
     }
-    .list-item{
-        padding-top: 18px;
-        padding-bottom: 18px;
+    .icon-type{
+        width: 82px;
+        height: 82px;
+        margin-right: 24px;
+    }
+    .name{
+        font-size: 32px;
+        padding-bottom: 8px;
+    }
+    .desc{
+        font-size: 24px;
+        color: #666;
     }
 </style>
 
@@ -69,6 +89,9 @@
         mixins: [base],
         data(){
             return {
+                icon: {
+                    more: 'assets/img/more.png'
+                },
                 header: {
                     title: '新建快捷操作',
                     bgColor: '#fff',
@@ -85,28 +108,28 @@
                     {
                         title: '在某个时间',
                         desc: '例如每天晚上5:00打开电热水器',
-                        icon: 'assets/img/clock.png',
+                        icon: 'assets/img/time.png',
                         sceneType: 4
-                    },
-                    {
-                        title: '到达某地',
-                        desc: '例如到家时自动打开空调',
-                        icon: 'assets/img/arrive.png',
-                        sceneType: 3,
-                        direction: 1
-                    },
-                    {
-                        title: '离开某地',
-                        desc: '例如离家时自动打开空调',
-                        icon: 'assets/img/arrive.png',
-                        sceneType: 3,
-                        direction: 2
                     },
                     {
                         title: '天气变化时',
                         desc: '例如气温降到15度时打开电暖器',
                         icon: 'assets/img/slweather.png',
                         sceneType: 6
+                    },
+                    {
+                        title: '到达某地',
+                        desc: '例如到家时自动打开空调',
+                        icon: 'assets/img/location.png',
+                        sceneType: 3,
+                        direction: 1
+                    },
+                    {
+                        title: '离开某地',
+                        desc: '例如离家时自动打开空调',
+                        icon: 'assets/img/location.png',
+                        sceneType: 3,
+                        direction: 2
                     }
                     // {
                     //     title: '室内温度/湿度/PM2.5变化时',
@@ -133,22 +156,19 @@
             goBack(){
                 nativeService.goBack()
             },
-            selectType(index){
-                this.activeTypeIndex = index
-            },
-            goNext(){
+            goNext(item){
                 this.checkLogin().then( (uid) => {
                     let params = {
                         from: 'addAuto',
                         uid: uid,
                         homegroupId: this.homegroupId,
-                        sceneType: this.autos[this.activeTypeIndex].sceneType,
+                        sceneType: item.sceneType,
                         userDevices: nativeService.getParameters('userDevices')
                     }
-                    if (this.autos[this.activeTypeIndex].sceneType == 2){
+                    if (item.sceneType == 2){
                         this.goTo('autoBindDevices', {}, params)
-                    }else if ( this.autos[this.activeTypeIndex].sceneType == 3){
-                        params.direction = this.autos[this.activeTypeIndex].direction
+                    }else if ( item.sceneType == 3){
+                        params.direction = item.direction
                         this.goTo('autoTypeSet', {}, params)
                     }else{
                         this.goTo('autoTypeSet', {}, params)

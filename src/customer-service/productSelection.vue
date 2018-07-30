@@ -344,8 +344,8 @@ export default {
 .search-bar-img {
   height: 40px;
   width: 40px;
-  margin-left: 16px;
-  margin-right: 10px;
+  margin-left: 8px;
+  margin-right: 8px;
 }
 .search-bar-desc {
   font-family: PingFangSC-Regular;
@@ -368,15 +368,17 @@ export default {
 }
 .product-brand {
   width: 200px;
-  height: 96px;
+  /* height: 96px; */
   align-items: center;
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #000000;
   text-align: center;
-  padding-top: 34px;
+  margin-top: 16px;
+  padding-top: 16px;
   padding-right: 16px;
-  padding-bottom: 34px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
   padding-left: 16px;
 }
 .product-brand-selected {

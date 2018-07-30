@@ -81,7 +81,7 @@ export default {
 .branch-block-header {
 }
 .branch-block-body {
-  margin-top: 10px;
+  margin-top: 24px;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -103,7 +103,6 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 24px;
   color: #8a8a8f;
-  margin-top: 16px;
   text-overflow: ellipsis;
 }
 .address-bar {
@@ -135,8 +134,8 @@ export default {
   margin-left: 24px;
 }
 .branch-tel-img {
-  height: 48px;
-  width: 48px;
+  height: 58px;
+  width: 58px;
 }
 .branch-tel-desc {
   font-family: PingFangSC-Regular;
@@ -152,8 +151,8 @@ export default {
   margin-left: 24px;
 }
 .branch-map-img {
-  height: 48px;
-  width: 48px;
+  height: 58px;
+  width: 58px;
 }
 .branch-map-desc {
   font-family: PingFangSC-Regular;

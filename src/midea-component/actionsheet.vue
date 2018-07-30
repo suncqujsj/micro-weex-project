@@ -123,7 +123,7 @@ export default {
   background-color: #fff;
 }
 .midea-actionsheet-bottom {
-  margin-top: 15px;
+  margin-top: 16px;
 }
 .midea-actionsheet-title {
   padding: 30px;
@@ -143,7 +143,7 @@ export default {
 }
 .midea-actionsheet-list {
   border-top-width: 1px;
-  border-top-color: #d7dde4;
+  border-top-color: #e5e5e8;
 }
 .midea-actionsheet-list:active {
   background-color: #f5f5f5;
@@ -157,7 +157,7 @@ export default {
 }
 .midea-actionsheet-btn {
   font-size: 32px;
-  color: #000000;
+  color: #666666;
   background-color: #ffffff;
   padding-top: 30px;
   padding-bottom: 30px;

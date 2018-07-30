@@ -12,55 +12,14 @@
                     <image v-if="showRightImg" class="header-right-image" :src="rightImg"></image>
                 </slot>
             </div>
+            <div v-if="showRightText" class="header-right" @click="rightTextClick">
+                <text class="header-right-text">{{rightText}}</text>
+            </div>
             <slot name="customerContent">
             </slot>
         </div>
     </div>
 </template>
-<style scoped>
-.box {
-  width: 750px;
-  height: 88px;
-  display: inline-flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
-}
-.header {
-  height: 88px;
-  background-color: #0e90ff;
-}
-.immersion {
-  padding-top: 40px;
-  height: 128px;
-}
-.header-title {
-  font-family: PingFangSC-Medium;
-}
-.header-left-image-wrapper {
-  width: 88px;
-  height: 88px;
-  display: flex;
-  justify-content: center;
-  padding-left: 20px;
-}
-.header-right-image-wrapper {
-  width: 88px;
-  height: 88px;
-  display: flex;
-  justify-content: center;
-  padding-left: 12px;
-}
-.header-left-image {
-  height: 48px;
-  width: 48px;
-}
-.header-right-image {
-  height: 44px;
-  width: 44px;
-}
-</style>
 <script>
 import nativeService from '@/common/services/nativeService'
 export default {
@@ -100,6 +59,14 @@ export default {
         showRightImg: {
             type: Boolean,
             default: false
+        },
+        showRightText: {
+            type: Boolean,
+            default: false
+        },
+        rightText: {
+            type: String,
+            default: ''
         }
     },
     data() {
@@ -119,9 +86,72 @@ export default {
             }
             this.$emit('rightImgClick')
         },
+        rightTextClick() {
+            if (!this.showRightText) {
+                return;
+            }
+            this.$emit('rightTextClick')
+        },
         headerClick() {
             this.$emit('headerClick')
         }
     },
 };
 </script>
+
+<style scoped>
+.box {
+  width: 750px;
+  height: 96px;
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.immersion {
+  padding-top: 40px;
+  height: 136px;
+}
+.header-title {
+  font-family: PingFangSC-Regular;
+}
+.header-left-image-wrapper {
+  width: 88px;
+  height: 96px;
+  display: flex;
+  justify-content: center;
+  padding-left: 10px;
+}
+.header-left-image {
+  height: 58px;
+  width: 58px;
+}
+.header-right-image-wrapper {
+  width: 88px;
+  height: 96px;
+  display: flex;
+  justify-content: center;
+  padding-left: 12px;
+}
+.header-right-image {
+  height: 44px;
+  width: 44px;
+}
+.header-right {
+  position: absolute;
+  right: 0px;
+  height: 96px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header-right-text {
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #666666;
+  padding-left: 20px;
+  padding-right: 32px;
+  text-align: right;
+}
+</style>

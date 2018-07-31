@@ -121,7 +121,7 @@
 
 .cell-content {
   font-family: PingFangSC-Regular;
-  font-size: 32px;
+  font-size: 30px;
   color: #000000;
   line-height: 40px;
 }

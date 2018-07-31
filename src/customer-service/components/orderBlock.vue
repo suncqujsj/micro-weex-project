@@ -136,10 +136,10 @@ export default {
 .order-block-img {
   height: 160px;
   width: 160px;
-  border-radius: 4px;
+  /* border-radius: 4px;
   border-color: #e5e5e8;
   border-width: 1px;
-  border-style: solid;
+  border-style: solid; */
   margin-left: 24px;
   margin-right: 24px;
 }

@@ -699,9 +699,9 @@ export default {
   color: #666666;
   background-color: #f6f6f6;
   text-align: center;
-  padding-top: 12px;
+  padding-top: 14px;
   padding-right: 32px;
-  padding-bottom: 12px;
+  padding-bottom: 14px;
   padding-left: 32px;
   margin-right: 24px;
   border-radius: 4px;

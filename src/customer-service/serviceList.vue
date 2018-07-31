@@ -3,19 +3,19 @@
         <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <list class="list-item">
-            <midea-item height="160" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('productSelection', {}, { from: 'serviceList', to:'serviceCharge'})">
+            <midea-item height="160" :hasBottomBorder="false" :hasSubBottomBorder="false" @mideaCellClick="goTo('productSelection', {}, { from: 'serviceList', to:'serviceCharge'})">
                 <image slot="itemImg" src="./assets/img/service_ic_cash@3x.png" class="service-item-img" resize='contain'>
                 </image>
                 <text slot="title" class="service-item-title">收费标准</text>
             </midea-item>
             <cell class="gap"></cell>
-            <midea-item height="160" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('serviceWarranty')">
+            <midea-item height="160" :hasBottomBorder="false" :hasSubBottomBorder="false" @mideaCellClick="goTo('serviceWarranty')">
                 <image slot="itemImg" src="./assets/img/service_ic_repair_1@3x.png" class="service-item-img" resize='contain'>
                 </image>
                 <text slot="title" class="service-item-title">包修政策</text>
             </midea-item>
             <cell class="gap"></cell>
-            <midea-item height="160" :hasArrow="true" :clickActivied="true" @mideaCellClick="goTo('servicePrice')">
+            <midea-item height="160" :hasBottomBorder="false" :hasSubBottomBorder="false" @mideaCellClick="goTo('servicePrice')">
                 <image slot="itemImg" src="./assets/img/service_ic_time@3x.png" class="service-item-img" resize='contain'>
                 </image>
                 <text slot="title" class="service-item-title">配件价格</text>
@@ -28,11 +28,11 @@
 import base from './base'
 import nativeService from './settings/nativeService';
 
-import mideaItem from '@/midea-component/item.vue'
+import { MideaItem } from '@/index'
 
 export default {
     components: {
-        mideaItem,
+        MideaItem
     },
     mixins: [base],
     data() {

@@ -37,7 +37,7 @@ import MideaZoom from '@/midea-component/zoom.vue'
 
 import MideaRichText from '@/midea-component/wxc-rich-text';
 
-export {
+export default {
   MideaAccordion,
   MideaActionsheet,
   MideaDialog,

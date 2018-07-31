@@ -1,41 +1,44 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" :showLeftImg="true">
+        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" :showLeftImg="true" @leftImgClick="back">
         </midea-header>
         <scroll>
             <cell class="group-gap-top"></cell>
-            <div class="cell-item">
-                <div class="cell-block">
-                    <text class="cell-label">智能配网</text>
-                    <image class="arrow-icon" src="./assets/img/service_ic_hide@3x.png" resize='contain'></image>
+            <div class="cell-item" 
+              v-for="(menu, index0) in menus" 
+              :key="menu.title">
+                <div class="cell-block" :data-menu-title="menu.title" @click="handleSwitch">
+                    <text class="cell-label">{{ menu.title }}</text>
+                    <image v-if="activeMenu === menu.title" class="arrow-icon" src="./assets/img/service_ic_show@3x.png" resize="contain"></image>
+                    <image v-else class="arrow-icon" src="./assets/img/service_ic_hide@3x.png" resize='contain'></image>
                 </div>
+
+                <template v-if="activeMenu === menu.title">
+                    <div class="cell-sub-item" 
+                      v-for="(subMenu, index1) in menu.subMenus"
+                      :key="subMenu.title"
+                      :data-subMenu-link="subMenu.link"
+                      @click="goToProblemDetail(subMenu)">
+                        <div class="cell-sub-block">
+                            <text class="cell-sub-label">{{ subMenu.title }}？</text>
+                            <image class="arrow-icon" src="./assets/img/public_ic_more@3x.png" resize='contain'></image>
+                        </div>
+                    </div>
+                </template>
             </div>
-            <div class="cell-item" @click="showSubItem=!showSubItem">
+            <!-- <div class="cell-item" @click="showSubItem=!showSubItem">
                 <div class="cell-block">
                     <text class="cell-label">家庭管理</text>
-                    <image class="arrow-icon" src="./assets/img/service_ic_hide@3x.png" resize='contain'></image>
+                    <image class="arrow-icon" v-if="!showSubItem" src="./assets/img/service_ic_hide@3x.png" resize='contain'></image>
+                    <image class="arrow-icon" v-else src="./assets/img/service_ic_show@3x.png" resize="contain"></image>
                 </div>
             </div>
-            <template v-if="showSubItem">
-                <div class="cell-sub-item">
-                    <div class="cell-block">
-                        <text class="cell-sub-label">如何添加家庭？</text>
-                        <image class="arrow-icon" src="./assets/img/public_ic_more@3x.png" resize='contain'></image>
-                    </div>
-                </div>
-                <div class="cell-sub-item">
-                    <div class="cell-block">
-                        <text class="cell-sub-label">如何邀请新用户？</text>
-                        <image class="arrow-icon" src="./assets/img/public_ic_more@3x.png" resize='contain'></image>
-                    </div>
-                </div>
-            </template>
             <div class="cell-item">
                 <div class="cell-block">
                     <text class="cell-label">用户管理</text>
                     <image class="arrow-icon" src="./assets/img/service_ic_hide@3x.png" resize='contain'></image>
                 </div>
-            </div>
+            </div> -->
         </scroll>
     </div>
 </template>
@@ -48,6 +51,8 @@ import util from '@/common/util/util'
 
 import { MideaItem } from '@/index'
 
+import menus from './menuData';
+
 export default {
     components: {
         MideaItem
@@ -55,8 +60,10 @@ export default {
     mixins: [base],
     data() {
         return {
-            title: '帮助中心',
-            showSubItem: false
+            title: '智能设备',
+            showSubItem: false,
+            activeMenu: '',
+            menus: menus
         }
     },
     computed: {
@@ -75,6 +82,30 @@ export default {
                     })
                 }
             })
+        },
+
+        // 展开和隐藏子菜单
+        handleSwitch(e) {
+            // console.log(e);
+            let curTitle = e.target.attr.dataMenuTitle;
+            this.activeMenu = (this.activeMenu === curTitle) ? '' : curTitle;
+        },
+
+        // 前往问题详情
+        goToProblemDetail(subMenu) {
+            // console.log(e);
+            // let link = e.target.attr.dataSubMenuLink;
+            // if (link.trim() === '') return;
+            // this.goTo(link);
+            // console.log(subMenu);
+            let link = subMenu.link;
+            if (link.trim() === '') return;
+            nativeService.setItem('deviceProblemDetail', subMenu, (res)=> {
+                // console.log(res);
+                if (res.result === 'success') {
+                    this.goTo(link);
+                }
+            });
         }
     },
     beforeCreate() {
@@ -94,7 +125,7 @@ export default {
   background-color: #f2f2f2;
 }
 .group-gap-top {
-  height: 40px40;
+  height: 24px;
 }
 .service-item-title {
   font-family: PingFangSC-Regular;
@@ -107,19 +138,30 @@ export default {
   border-bottom-color: #e5e5e8;
   border-bottom-width: 1px;
 }
-.cell-sub-item {
-  background-color: #f6f6f6;
-  border-bottom-color: #e5e5e8;
-  border-bottom-width: 1px;
-}
+
 .cell-block {
   flex-direction: row;
   align-items: center;
   padding-top: 24px;
-  padding-left: 24px;
+  padding-left: 32px;
   padding-right: 24px;
   padding-bottom: 24px;
 }
+
+.cell-sub-item {
+  background-color: #f6f6f6;
+  padding-left: 32px;
+}
+.cell-sub-block {
+  border-bottom-color: #e5e5e8;
+  border-bottom-width: 1px;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 24px;
+  padding-right: 24px;
+  padding-bottom: 24px;
+}
+
 .cell-label {
   flex: 1;
   font-family: PingFangSC-Regular;

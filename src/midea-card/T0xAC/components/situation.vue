@@ -33,6 +33,7 @@ export default {
     methods: {
         handlePageData(data) {
             //处理页面传递的信息
+            nativeService.toast(111)
             if (data.deviceId == this.deviceId) {
                 if (data.key == "situation") {
                     this.getSituationList()
@@ -122,15 +123,16 @@ export default {
                 "props": {
                     "conditions": [
                         {
-                            "attr": "temperature",
+                            "attr": "indoor_temperature",
                             "value": "28",
                             "operator": "1"
                         }
                     ],
                     "logic": "1",
                     "target": {
-                        "model": "cool",
-                        "temperature": "26"
+                        "mode": "cool",
+                        "temperature": "26",
+                        "power": "on"
                     }
                 },
                 title: '',
@@ -150,7 +152,7 @@ export default {
 
             let conditions1 = (result.props.conditions[0].operator == 1 ? "高于" : "低于") + result.props.conditions[0].value
             result.title = "室内温度" + conditions1 + "°度时，自动开启"
-            result.detail = "模式" + (result.props.target.model == 'cool' ? "制冷" : "制热") + "，温度" + result.props.target.temperature + "."
+            result.detail = "模式" + (result.props.target.mode == 'cool' ? "制冷" : "制热") + "，温度" + result.props.target.temperature + "."
 
             return result
         },
@@ -159,11 +161,12 @@ export default {
                 "moduleCode": 2,
                 "enable": "0",
                 "props": {
-                    model: "cool",
+                    mode: "cool",
                     temperature: "27",
                     wind_speed: "1",
                     wind_swing_lr: "on",
-                    wind_swing_ud: "on"
+                    wind_swing_ud: "on",
+                    "power": "on"
                 },
                 title: "",
                 detail: "",
@@ -196,7 +199,7 @@ export default {
                     break;
             }
             result.title = "我的最舒适"
-            result.detail = "模式" + (result.props.model == 'cool' ? "制冷" : "制热") + "，温度" + result.props.temperature + "°，风速" + windSpeedDesc + (result.props.wind_swing_ud == 'on' ? "，上下摆风" : "") + (result.props.wind_swing_lr == 'on' ? "，左右摆风" : "")
+            result.detail = "模式" + (result.props.mode == 'cool' ? "制冷" : "制热") + "，温度" + result.props.temperature + "°，风速" + windSpeedDesc + (result.props.wind_swing_ud == 'on' ? "，上下摆风" : "") + (result.props.wind_swing_lr == 'on' ? "，左右摆风" : "")
 
             return result
         },
@@ -275,10 +278,12 @@ export default {
   justify-content: space-between;
 }
 .smart-text {
-  font-family: PingFangSC-Regular;
+  font-family: PingFangSC-Medium;
+  font-weight: 600;
   font-size: 36px;
   color: #000000;
   letter-spacing: 0;
+  padding-bottom: 20px;
 }
 .smart-action {
   font-family: PingFangSC-Medium;

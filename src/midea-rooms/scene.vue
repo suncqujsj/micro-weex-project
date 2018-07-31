@@ -73,26 +73,16 @@
                     <text class="weather white">{{weatherDesc}}</text>
                     <slider v-if="hasWasherWaterData || hasWasherPowerData">
                         <div v-if="hasWasherWaterData">
-                            <div class="row-s chart-info">
+                            <div class="row-sb chart-info">
                                 <text class="font14 white">单位：升</text>
-                                <!-- <div class="row-e">
-                                    <image class="icon-use" :src="icon.water"></image>
-                                    <text class="font14 white">今日用水总量:</text>
-                                    <text class="use-value white">{{todayWaterUse}}</text>
-                                    <text class="font14 white">升</text>
-                                </div> -->
+                                <text class="font14 white">近30天用水量</text>
                             </div>
                             <midea-barchart-view class="barchart" :data="washerWaterData"></midea-barchart-view>
                         </div>
                         <div v-if="hasWasherPowerData">
-                            <div class="row-s chart-info">
+                            <div class="row-sb chart-info">
                                 <text class="font14 white">单位：度</text>
-                                <!-- <div class="row-e">
-                                    <image class="icon-use" :src="icon.power"></image>
-                                    <text class="font14 white">今日用电总量:</text>
-                                    <text class="use-value white">{{todayPowerUse}}</text>
-                                    <text class="font14 white">度</text>
-                                </div> -->
+                                <text class="font14 white">近30天用电量</text>
                             </div>
                             <midea-barchart-view class="barchart" :data="washerPowerData"></midea-barchart-view>
                         </div>
@@ -126,12 +116,12 @@
                 <div class="toast-box" v-for="(item,i) in sceneDevices">
                     <div :class="['row-sb','toast-line', i>0?'toast-border':'']">
                         <div>
-                            <text class="pop-hd">{{item}}</text>
+                            <text class="pop-hd">{{item.actionList[0].applianceName}}</text>
                             <div class="row-s">
-                                <text class="toast-desc" v-for="desc in item.describe">{{desc.actionValue}}</text>
+                                <text class="toast-desc" v-for="desc in item.actionList[0].describe">{{desc.actionValue}}</text>
                             </div>
                         </div>
-                        <image class="toast-icon" :src="icon.model[item.status]"></image>
+                        <image class="toast-icon" :src="icon.model[item.actionList[0].status]"></image>
 
                     </div>
                 </div>
@@ -140,13 +130,12 @@
                 <div class="toast-box" v-for="(item,i) in modelDeviceList">
                     <div :class="['row-sb','toast-line', i>0?'toast-border':'']">
                         <div>
-                            <text class="pop-hd">{{item.applianceName}}</text>
+                            <text class="toast-hd">{{item.applianceName}}</text>
                             <div class="row-s">
                                 <text class="toast-desc" v-for="desc in item.describe">{{desc.actionValue}}</text>
                             </div>
                         </div>
                         <image class="toast-icon" :src="icon.model[item.status]"></image>
-
                     </div>
                 </div>
             </toast-dialog>
@@ -445,7 +434,8 @@
             },
             sceneStyle(){
                 let tmp = {
-                    backgroundImage: this.style.linearBg[this.roomType],
+                    // backgroundImage: this.style.linearBg[this.roomType],
+                    backgroundColor: this.style.sceneBg[this.roomType],
                     height: this.pageHeight*0.7 + 'px',
                     position: 'relative',
                     overflow: 'hidden'
@@ -515,6 +505,12 @@
                         3: 'linear-gradient(to top, #FFB632,#FFCD00)',
                         4: 'linear-gradient(to top, #4E69F7,#5D75F6)'
                     },
+                    sceneBg: {
+                        1: '#4E69F7',
+                        2: '#4E69F7',
+                        3: '#FFB632',
+                        4: '#4E69F7',
+                    }
                 },
                 indicator: {},
                 sceneLevel: 1,
@@ -537,7 +533,7 @@
                     ],
                     borderRadius: "3",
                     description: "",
-                    background: "transparent",
+                    background: "#4E69F7",
                     legend: {
                         "position": "TOP_CENTER",
                         "orientation": "HORIZONTAL",
@@ -563,7 +559,7 @@
                             "backgroundColor": "#111"
                         }
                     ],
-                    background: "transparent",
+                    background: "#4E69F7",
                     borderRadius: "3",
                     description: "",
                     legend: {
@@ -597,6 +593,7 @@
                 showMall: false,
                 weatherDesc: '',
                 sceneDevices: [],
+                modelDeviceList: [],
                 checkQuickOptimizeTimes: 0,
                 checkModelExeTimes: 0,
             }
@@ -868,15 +865,15 @@
                             if (weather.grade) {
                                 tmpDesc += ' , 气温' + weather.grade + '℃'
                             }
-                            this.weatherDesc = tmpDesc || '无法获取天气，可能因为未开启定位服务'
+                            this.weatherDesc = tmpDesc || '无法获取天气城市的信息'
                         }).catch(()=>{
-                            this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
+                            this.weatherDesc = '无法获取天气城市的信息'
                         })
                     }).catch((err)=>{
-                        this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
+                        this.weatherDesc = '获取天气城市出错'
                     })
                 }).catch((err)=>{
-                    this.weatherDesc = '无法获取天气，请在系统设置中打开定位服务'
+                    this.weatherDesc = '无法获取天气城市，请检查是否开启定位服务'
                 })
             },
             getWashData(){
@@ -963,11 +960,10 @@
                     applianceId: String(self.washerCode)
                 }
             	nativeService.sendLuaRequest(params, true).then(function(luaData) {
-                    nativeService.alert(luaData)
                     self.setWasherStatus(luaData)
             	},function(error) {
                     nativeService.alert('查询洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
-            	});
+            	})
             },
             setWasherStatus(luaData){
                 this.washerPower = luaData.result.power

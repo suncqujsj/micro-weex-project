@@ -51,17 +51,17 @@
             itemStyle(){
                 let tmp = {}
                 if (this.hasWrapBorder){
-                    tmp.borderBottomWidth = '2px'
+                    tmp.borderBottomWidth = '1px'
                     tmp.borderBottomStyle = 'solid'
                     tmp.borderBottomColor = '#e5e5e5'
                 }else{
-                    tmp.borderTopWidth = '2px'
+                    tmp.borderTopWidth = '1px'
                     tmp.borderTopStyle = 'solid'
                     tmp.borderTopColor = '#e5e5e5'
                 }
                 if (this.idx == 0){
                     if ( this.hasWrapBorder){
-                        tmp.borderTopWidth = '2px'
+                        tmp.borderTopWidth = '1px'
                         tmp.borderTopStyle = 'solid'
                         tmp.borderTopColor = '#e5e5e5'
                     }else{

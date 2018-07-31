@@ -118,7 +118,7 @@ export const applianceActions = {
                 "type": "range",
                 "range": {
                     "max": 101,
-                    "min": 101
+                    "min": 0
                 },
                 "default": 101
             }
@@ -1687,7 +1687,8 @@ export const autoSupportActions = {
                     "type": "range",
                     "range": {
                         "max": 101,
-                        "min": 0                    },
+                        "min": 0                    
+                    },
                     "default": 101
                 }
             ]

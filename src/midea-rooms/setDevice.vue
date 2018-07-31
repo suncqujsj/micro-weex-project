@@ -27,24 +27,22 @@
                         </div>
                     </div>
                 </div>
-                <text class="save-btn" @click="save">确定</text>
+                <text v-if="actions.length > 0" class="save-btn" @click="save">确定</text>
                 
             </cell>
         </list>
         <div class="pop-floor" v-for="(item,idx) in actions">
-            <midea-popup v-if="item.type == 'list' || item.type=='range'" :show="show[item.property]" :height="600" @mideaPopupOverlayClicked="closePop(item.property)">
-                <div class="row-sb pop-hd">
-                    <text class="pop-text" @click="closePop(item.property)">取消</text>
-                    <text class="pop-text" @click="confirmPop(item.property)">确定</text>
-                </div>
-                <scroller v-if="item.type == 'list'">
-                    <text v-for="(value,key) in item.value" :class="['pop-item', item.currentStatus == key?'pop-item-active':'']" @click="setActiveKey(idx, key)">{{value}}</text>
-                </scroller>
-                <div v-if="item.type == 'range'">
+             <midea-confirm2 height="480" :show="show[item.property]" @leftBtnClick="closePop(item.property)" @rightBtnClick="confirmPop(item.property)" @mideaPopupOverlayClicked="closePop(item.property)">
+                 <div v-if="item.type == 'list'" class="pop-list">
+                    <scroller>
+                        <text v-for="(value,key) in item.value" :class="['pop-item', item.currentStatus == key?'pop-item-active':'']" @click="setActiveKey(idx, key)">{{value}}</text>
+                    </scroller>
+                 </div>
+                <div v-if="item.type == 'range'" class="pop-list">
                     <scroll-picker v-if="item.property == 'temperature'" :listArray="rangeArrays[item.property]" @onChange="setActiveTemperature"></scroll-picker>
                     <scroll-picker v-if="item.property == 'wind_speed'" :listArray="rangeArrays[item.property]" @onChange="setActiveWindSpeed"></scroll-picker>
                 </div>
-            </midea-popup>
+            </midea-confirm2>
         </div>
    </div>
 </template>
@@ -111,6 +109,12 @@
         margin-left: 20px;
     }
     .pop-text{ font-size: 30px; color: #007AFF; padding: 25px;}
+    .pop-list{
+        padding-top: 35px;
+        padding-bottom: 35px;
+        height: 360px;
+        background-color: #fff;
+    }
     .pop-item{ padding: 22px; font-size: 30px; color: #777;  text-align: center; width: 750px;}
     .pop-item-active { color: #333}
 </style>
@@ -126,11 +130,12 @@
 	import switchBar from '@/midea-rooms/components/switch.vue'
     import mideaList from '@/midea-rooms/components/list.vue'
     import scrollPicker from '@/midea-rooms/components/scrollPicker.vue'
+    import mideaConfirm2 from '@/midea-component/confirm2.vue'
 
     const channelSetDevice = new BroadcastChannel('autoBroadcast')
 
     export default {
-        components:{ MideaHeader, switchBar, MideaPopup, scrollPicker },
+        components:{ MideaHeader, switchBar, mideaConfirm2, MideaPopup, scrollPicker },
         mixins: [base],
         data(){
             return {
@@ -195,6 +200,7 @@
                 }else if (this.from == 'editAuto') {
                     this.deviceTask = Object.assign({}, this.deviceTask, JSON.parse(decodeURIComponent(nativeService.getParameters('deviceTask'))))
                 }
+                
                 nativeService.getItem('mideaRoom'+this.deviceId+this.pageStamp, (res)=>{
                     if (res.result == 'success' && res.data) {
                         this.editProperties = JSON.parse(res.data)
@@ -209,10 +215,10 @@
                         if ( this.from == 'addAuto' || this.from == 'addEdit' ) {
                             currentStatus = this.editProperties[tmpActions[i].property] || tmpActions[i].default
                         }else if( this.from == 'editAuto'){
-                            if (this.deviceTask[tmpActions[i].property] ) {
-                                currentStatus = this.editProperties[tmpActions[i].property] || this.deviceTask[tmpActions[i].property]
-                            }else{
+                            if (this.deviceTask[tmpActions[i].property] === '' || this.deviceTask[tmpActions[i].property] === undefined ) {
                                 currentStatus = this.editProperties[tmpActions[i].property]  || tmpActions[i].default
+                            }else{
+                                currentStatus = this.editProperties[tmpActions[i].property] || this.deviceTask[tmpActions[i].property]
                             }
                         }
 
@@ -266,7 +272,6 @@
                 this.show[property] = false
             },
             confirmPop(property){
-              
                 this.show[property] = false
                 for (var x in this.actions) {
                     if (this.actions[x].property == property && this.actions[x].type == 'range'){

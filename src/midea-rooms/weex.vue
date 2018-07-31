@@ -64,7 +64,7 @@
     .row-sa{ flex-direction: row; align-items: center; justify-content: space-around; }
     .row-e { flex-direction: row; align-items: center; justify-content: flex-end; }
     .hd { margin-top: 44px; margin-bottom: 24px; }
-    .hd-name{ font-weight: bold; font-size: 36px; color: #000; }
+    .hd-name{  font-size: 36px; color: #000; }
     .hd-btn{ font-size: 26px; color: #666; padding: 10px;}
     .scroller{ flex-direction: row; height: 276px;}
     .icon { width: 82px; height: 82px; margin-right: 20px; }

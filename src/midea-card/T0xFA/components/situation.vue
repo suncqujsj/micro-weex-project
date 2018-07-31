@@ -117,8 +117,9 @@ export default {
                     "unit": "2",
                     "value": "1",
                     "target": {
-                        "model": "sleep",
-                        "swing_angle": "90"
+                        "mode": "sleep",
+                        "swing_angle": "90",
+                        "power": "on"
                     }
                 },
                 title: '',
@@ -163,10 +164,12 @@ export default {
   justify-content: space-between;
 }
 .smart-text {
-  font-family: PingFangSC-Regular;
+  font-family: PingFangSC-Medium;
+  font-weight: 600;
   font-size: 36px;
   color: #000000;
   letter-spacing: 0;
+  padding-bottom: 20px;
 }
 .smart-action {
   font-family: PingFangSC-Medium;

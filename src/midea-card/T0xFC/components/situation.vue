@@ -124,7 +124,7 @@ export default {
                     "logic": "1",
                     "target": {
                         "power": "on",
-                        "model": "auto"
+                        "mode": "auto"
                     }
                 },
                 title: '',
@@ -197,10 +197,12 @@ export default {
   justify-content: space-between;
 }
 .smart-text {
-  font-family: PingFangSC-Regular;
+  font-family: PingFangSC-Medium;
+  font-weight: 600;
   font-size: 36px;
   color: #000000;
   letter-spacing: 0;
+  padding-bottom: 20px;
 }
 .smart-action {
   font-family: PingFangSC-Medium;

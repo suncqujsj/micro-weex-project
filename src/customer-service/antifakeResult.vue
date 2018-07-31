@@ -64,7 +64,7 @@
 <script>
 import base from './base'
 import nativeService from './settings/nativeService'
-import { MideaButton } from '@/index'
+import MideaButton from '@/midea-component/button2.vue'
 import EmptyDialog from '@/customer-service/components/emptyDialog.vue'
 
 const clipboard = weex.requireModule('clipboard')

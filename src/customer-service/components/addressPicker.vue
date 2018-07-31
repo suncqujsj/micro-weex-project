@@ -24,7 +24,7 @@ import nativeService from '../settings/nativeService';
 
 const dom = weex.requireModule('dom')
 
-import { MideaPopup } from '@/index'
+import MideaPopup from '@/midea-component/popup.vue'
 
 export default {
     components: {

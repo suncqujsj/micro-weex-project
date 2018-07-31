@@ -96,7 +96,11 @@ import util from '@/common/util/util'
 
 const globalEvent = weex.requireModule('globalEvent')
 
-import { MideaCell, MideaGridSelect, MideaButton, MideaActionsheet, MideaPopup } from '@/index'
+import MideaCell from '@/midea-component/cell2.vue'
+import MideaGridSelect from '@/component/optionList.vue'
+import MideaButton from '@/midea-component/button2.vue'
+import MideaActionsheet from '@/midea-component/actionsheet.vue'
+import MideaPopup from '@/midea-component/popup.vue'
 
 import PeriodPicker from './components/periodPicker.vue'
 import ScanInput from '@/customer-service/components/scanInput.vue'

@@ -48,7 +48,8 @@ import OrderBlock from '@/customer-service/components/orderBlock.vue'
 
 const dom = weex.requireModule('dom')
 
-import { MideaDialog, MideaActionsheet } from '@/index'
+import MideaDialog from '@/component/dialog.vue'
+import MideaActionsheet from '@/midea-component/actionsheet.vue'
 
 export default {
     components: {

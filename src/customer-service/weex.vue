@@ -76,9 +76,9 @@ import base from './base'
 import orderBase from './orderBase'
 import nativeService from './settings/nativeService'
 import debugUtil from '@/common/util/debugUtil'
-import util from '@/common/util/util'
 
-import { MideaActionsheet, MideaItem } from '@/index'
+import MideaActionsheet from '@/midea-component/actionsheet.vue'
+import MideaItem from '@/midea-component/item2.vue'
 
 export default {
     components: {

@@ -3,19 +3,16 @@
         <midea-header :title="title" :isImmersion="isipx?false:true" @leftImgClick="back">
         </midea-header>
         <scroller class="content-wrapper" v-if="situactionData">
-            <div class="base-group">
+            <div class="base-group header-group">
                 <text class="header-title">{{situationDesc.title}}</text>
                 <text class="header-desc">{{situationDesc.detail}}</text>
             </div>
             <div class="base-group">
-                <midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectSleepTemp">
-                    <div slot="title" class="cell-title">
-                        <text class="cell-label">睡眠时间</text>
-                    </div>
-                    <div slot="rightText">
-                        <text class="right-text">{{situactionData.props.time}}</text>
-                    </div>
-                </midea-cell>
+				<midea-cell placeHolder="请选择" :rightText="situactionData.props.time" @mideaCellClick="selectSleepTemp" :hasSubBottomBorder="false">
+					<div slot="title" class="cell-title">
+						<text class="cell-label">睡眠时间</text>
+					</div>
+				</midea-cell>
             </div>
 
             <div class="action-bar">
@@ -30,7 +27,11 @@ import nativeService from '@/common/services/nativeService.js'
 import situationBase from '@/midea-card/midea-components/situationBase'
 const picker = weex.requireModule('picker')
 
-import { MideaHeader, MideaCell, MideaButton } from '@/index'
+import MideaButton from '@/midea-component/button2.vue'
+import MideaCell from '@/midea-component/cell2.vue'
+import MideaHeader from '@/midea-component/header.vue'
+
+// import { MideaHeader, MideaCell, MideaButton } from '@/index'
 
 export default {
     components: {
@@ -107,8 +108,10 @@ export default {
 }
 .base-group {
   margin-top: 24px;
-  padding-left: 32px;
   background-color: #ffffff;
+}
+.header-group {
+  padding-left: 32px;
 }
 .header-title {
   font-family: PingFangSC-Regular;

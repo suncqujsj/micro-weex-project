@@ -537,7 +537,8 @@
 		color: #FFFFFF;
 	}
 	.main-status-small {
-		font-size: 30px;
+		font-size: 28px;
+		margin-left: 4px;
 	}
 	.main-status-simple {
 		font-size: 75px;

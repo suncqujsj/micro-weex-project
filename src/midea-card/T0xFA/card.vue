@@ -32,7 +32,7 @@
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image class="icon-offline" src="./assets/img/smart_img_equip028@2x.png"></image>
+		        		<image @click="showControlPanelPage" class="icon-offline" src="./assets/img/smart_img_equip028@2x.png"></image>
 		        	</div>
 		        </div>
 	        </div>

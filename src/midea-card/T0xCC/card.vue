@@ -38,7 +38,7 @@
 			        		<text class="text-offline">电源</text>
 			        	</div>
 			        	<div>
-			        		<image class="icon-offline" :src="deviceIcon"></image>
+			        		<image @click="showControlPanelPage" class="icon-offline" :src="deviceIcon"></image>
 			        	</div>
 			        </div>
 			    </div>

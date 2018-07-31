@@ -438,7 +438,7 @@ export default {
 .order-detail-body-row {
   flex-direction: row;
   align-items: flex-start;
-  padding-bottom: 32px;
+  padding-bottom: 28px;
 }
 .order-body-label {
   /* width: 160px; */

@@ -16,7 +16,7 @@
     </slot>
     <div class="cell-title">
       <slot name="title">
-        <text class="cell-content">{{title}}</text>
+        <text class="cell-content" :style="importTextStyle">{{title}}</text>
         <text class="cell-desc-text"
               v-if="desc">{{desc}}</text>
        </slot>
@@ -26,7 +26,7 @@
     <slot name="text"></slot>
     <slot name="rightText">
         <div v-if="rightText" :style="{paddingRight:hasArrow?'24px':'0px'}">
-           <text class="right-text">{{rightText}}</text>
+           <text class="right-text" :style="rightTextStyle">{{rightText}}</text>
         </div>
     </slot>
     <image :src="arrowIcon" :style="{top:((height-24)/2)+'px'}"
@@ -174,7 +174,13 @@
       itemImg: {
         type: String,
         default: ''
-      }
+      },
+        importTextStyle: { // 提供title中 text组件的样式接口
+            type: Object,
+        },
+        rightTextStyle: {  // 提供right-text中 text组件的样式接口
+            type: Object,
+        }
     },
     computed:{
       outputCellStyle () {

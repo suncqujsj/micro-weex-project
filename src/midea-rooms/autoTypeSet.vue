@@ -21,9 +21,10 @@
             <div v-if="sceneType==4">
                 <text class="hd">设置为</text>
                 <div class="row-sb time-floor"  @click="showPop('time')">
-                    <text class="text">时间</text>
+                    <text class="font16">时间</text>
                     <div class="row-sb">
-                        <text class="font-grey text">{{startTime}}</text>
+                        <text v-if="from == 'addAuto' && startTime==''" class="font-light-grey text">点击设置时间</text>
+                        <text v-else class="font-light-grey text">{{startTime}}</text>
                         <image class="icon-next" :src="icon.next"></image>
                     </div>
                 </div>
@@ -32,11 +33,9 @@
                 <text class="hd">天气</text>
                 <div>
                     <midea-list style="background-color:#fff" v-for="(item,i) in weather.type" :idx="i" :hasWrapBorder="false" leftMargin="25px">
-                        <check-item :title="item" @itemClick="selectWeather(i)" :status="weather.activeTypeIndex==i" mode="radio"></check-item>
+                        <check-item :title="item" :titleStyle="{fontSize:'30px'}" @itemClick="selectWeather(i)" :status="weather.activeTypeIndex==i" mode="radio"></check-item>
                     </midea-list>
                 </div>
-            </div>
-            <div v-if="sceneType==6">
                 <div class="box">
                     <!-- <midea-cell title="气温" :hasArrow="true" @mideaCellClick="setWeatherSwitch" :cellStyle="{paddingLeft: '30px'}" :rightText="switchs[weather.activeSwitch]"></midea-cell> -->
                     <midea-cell title="气温" :hasArrow="true" @mideaCellClick="showPop('weather')" :cellStyle="{paddingLeft: '30px'}" :rightText="weatherTemperatureDesc"></midea-cell>
@@ -83,9 +82,6 @@
                     <div class="line2"></div>
                 </div>
             </midea-confirm2>
-            <midea-dialog  :show="weather.showDialog" @close="closeDialog('weather')" @mideaDialogCancelBtnClicked="dialogCancel('weather')" @mideaDialogConfirmBtnClicked="weatherDialogConfirm" >
-                <text class="text" slot="content">需要切换模式为{{switchs[switchTo[weather.activeSwitch]] }}某个温度吗？</text>
-            </midea-dialog>
         </div>
    </div>
 </template>
@@ -94,6 +90,10 @@
     .row-sa{ flex-direction: row; align-items: center; justify-content: space-around; }
     .row-sb{ flex-direction: row; align-items: center; justify-content: space-between; }
     .row-e{ flex-direction: row; align-items: center; justify-content: flex-end; }
+    .font14{ font-size: 28px; }
+    .font15{ font-size: 30px; }
+    .font16{ font-size: 32px; }
+
     .wrap{
         background-color: #f2f2f2;
     }
@@ -126,6 +126,7 @@
     .head-text{ font-size: 32px; }
     .addauto-hd{position: relative;}
     .font-grey{ color: #666; }
+    .font-light-grey{ color: #8A8A8F; }
     .hd{
         padding-top: 34px;
         padding-left: 25px;
@@ -335,7 +336,6 @@
                 weather: {
                     type: ['多云','晴','沙尘暴','雾','雪', '雨'],
                     activeTypeIndex: 0,
-                    activeSwitch: 'min',
                     showDialog: false,
                     logicals: {
                         min: '低于',
@@ -354,9 +354,11 @@
                     min: 'max',
                     max: 'min'
                 },
-                activeHour: '00',
-                activeMinute: '00',
+                startTime: '',
+                activeHour: '',
+                activeMinute: '',
                 activeWeatherTemperature: '',
+                activeWeatherLogical: '',
                 activeWeatherStatus: '',
                 gpsInfo: {},
                 showMapSearchResult: false,
@@ -410,10 +412,20 @@
             },
             weatherTemperatureDesc(){
                 let tmp = ''
-                if (this.from == 'addAuto' && this.activeWeatherTemperature == '') {
-                    tmp = '点击设置温度'                    
+                if (this.from == 'addAuto' ) {
+                    if ( this.activeWeatherTemperature == '' || this.activeWeatherLogical == '' ) {
+                        tmp = '点击设置温度'
+                    }else{
+                        tmp = this.weather.logicals[this.activeWeatherLogical] + this.activeWeatherTemperature + '℃'
+                    }         
                 }else{
-                    tmp = this.weather.logicals[this.weather.activeSwitch] + this.activeWeatherTemperature + '℃'                    
+                    if (this.activeWeatherTemperature != '' && this.activeWeatherLogical != ''){
+                        tmp = this.weather.logicals[this.activeWeatherLogical] + this.activeWeatherTemperature + '℃'
+                    }else if (this.autoWeatherTemperature != '' && this.autoWeatherLogical != '') {
+                        tmp =  this.weather.logicals[this.autoWeatherLogical] + this.autoWeatherTemperature + '℃'
+                    }else{
+                        tmp = '点击设置温度'
+                    }
                 }
                 return tmp
             }
@@ -455,8 +467,8 @@
                     if (this.sceneType == 6) {
                         let tmpWeatherStatus = decodeURIComponent(nativeService.getParameters('weatherStatus'))
                         let tmpWeatherLogical = decodeURIComponent(nativeService.getParameters('logical'))
-                        this.activeWeatherTemperature = nativeService.getParameters('weatherTemperature')
-                        this.weather.activeSwitch = tmpWeatherLogical == '<' ? 'min':'max'
+                        this.autoWeatherTemperature = nativeService.getParameters('weatherTemperature')
+                        this.autoWeatherLogical = tmpWeatherLogical == '<' ? 'min':'max'
                         for (var w in this.weather.type) {
                             if (this.weather.type[w] == tmpWeatherStatus) {
                                 this.weather.activeTypeIndex = w
@@ -535,8 +547,10 @@
             },
             cancelPop(autoTypeName){
                 if (autoTypeName == 'time') {
-                    this.activeHour == '00'
-                    this.activeMinute = '00'
+                    if (this.startTime == '') {
+                        this.activeHour == '00'
+                        this.activeMinute = '00'
+                    }
                     if (this.from == 'editAuto') {
                         delete this.editParams.hour
                     }
@@ -544,14 +558,40 @@
                 this.closePop(autoTypeName)
             },
             confirmPop(autoTypeName) {
-                this.startTime = this.activeHour + ':' + this.activeMinute
+                if (autoTypeName == 'time') {
+                    if (this.activeHour == '') {
+                        this.activeHour = '00'
+                    }
+                    if (this.activeMinute == '') {
+                        this.activeMinute = '00'
+                    }
+                    this.startTime = this.activeHour + ':' + this.activeMinute
+                        
+                    if (this.from == 'editAuto') {
+                        this.editParams.hour = this.activeHour
+                        this.editParams.minute = this.activeMinute
+                    }
+                }
+                if (autoTypeName == 'weather') {
+                    if (this.activeWeatherTemperature == '') {
+                        this.activeWeatherTemperature = this.weatherTemperature[0].value
+                    }
+                    if (this.activeWeatherLogical == '') {
+                        this.activeWeatherLogical = this.weatherLogicalList[0].name
+                    }
+                    // nativeService.alert(this.weatherLogicalList[0].name)
+                }
                 this.closePop(autoTypeName)
             },
             // 时间 start
             setActiveHour(hour){
                 this.activeHour = hour.value
+                if ( this.activeMinute == '' ) {
+                    this.activeMinute == '00'
+                }
                 if (this.from == 'editAuto') {
                     this.editParams.hour = this.activeHour
+                
                 }
             },
             setActiveMinute(minute){
@@ -645,9 +685,9 @@
                 }
             },
             setActiveLogical(e){
-                this.weather.activeSwitch = e.name
+                this.activeWeatherLogical = e.name
                 if (this.from == 'editAuto') {
-                    this.editParams.logical =  this.weather.activeSwitch=='min'?'<':'>'
+                    this.editParams.logical =  this.activeWeatherLogical=='min'?'<':'>'
                 }
             },
             setActiveWeatherTemperature(wTemp){
@@ -681,7 +721,7 @@
                     params.direction = this.direction
                 }
                 if (this.sceneType == 4) {
-                    if ( !this.activeHour ) {
+                    if ( !this.activeMinute ) {
                         nativeService.alert('还没有设置启动时间哦')
                         return
                     }
@@ -695,7 +735,7 @@
                     }
                     params.weatherTemperature = this.activeWeatherTemperature
                     params.weatherStatus = encodeURIComponent(this.weather.type[this.weather.activeTypeIndex])
-                    let logical = this.weather.activeSwitch=='低于'?'<':'>'
+                    let logical = this.activeWeatherLogical =='min'?'<':'>'
                     params.logical = logical
                 }
                 
@@ -704,9 +744,9 @@
             },
             saveChange(){
                 let that = this
-                if ( Object.keys(this.editParams).length === 0 ){
-                    nativeService.toast('没有改动哦')
-                }
+                // if ( Object.keys(this.editParams).length === 0 ){
+                //     nativeService.toast('没有改动哦')
+                // }
                 
                 channelAutoTypeSet.postMessage({
                     page: 'setCondition',

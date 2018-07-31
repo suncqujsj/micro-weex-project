@@ -32,7 +32,7 @@
         border-radius: 2px;
     }
     .left-bar{
-        background-color: #5D75F6;
+        background-color: #267AFF;
     }
     .right-bar{
         background-color: #E5E5E8;

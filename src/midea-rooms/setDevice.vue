@@ -266,10 +266,11 @@
                 this.show[property] = false
             },
             confirmPop(property){
+              
                 this.show[property] = false
                 for (var x in this.actions) {
                     if (this.actions[x].property == property && this.actions[x].type == 'range'){
-                        this.actions[x].currentStatus = this.active[property]
+                        this.actions[x].currentStatus = this.active[property] || this.rangeArrays[property][0].value
                     }
                 }
                 this.editProperties[this.actions[x].property] = this.actions[x].currentStatus

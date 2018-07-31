@@ -161,7 +161,7 @@ export default {
   justify-content: space-between;
 }
 .smart-text {
-  font-family: PingFangSC-Regular;
+  font-family: PingFangSC-Medium;
   font-size: 36px;
   color: #000000;
   letter-spacing: 0;

@@ -74,7 +74,7 @@
         </div>
         <div v-if="sceneType==6" class="modal">
             <!-- 天气弹窗 -->
-            <midea-confirm2 height="600" :show="popStatus.weather" @leftBtnClick="cancelPop('weather')" @rightBtnClick="confirmPop('weather')" @mideaPopupOverlayClicked="closePop('weather')">
+            <midea-confirm2 height="580" :show="popStatus.weather" @leftBtnClick="cancelPop('weather')" @rightBtnClick="confirmPop('weather')" @mideaPopupOverlayClicked="closePop('weather')">
                 <div class="time-picker row-sb">
                     <scroll-picker :wrapWidth="375" :listArray="weatherLogicalList" @onChange="setActiveLogical"></scroll-picker>
                     <scroll-picker :wrapWidth="375" :listArray="weatherTemperature"  @onChange="setActiveWeatherTemperature"></scroll-picker>
@@ -721,7 +721,7 @@
                     params.direction = this.direction
                 }
                 if (this.sceneType == 4) {
-                    if ( !this.activeMinute ) {
+                    if ( !this.activeMinute || !this.activeHour ) {
                         nativeService.alert('还没有设置启动时间哦')
                         return
                     }

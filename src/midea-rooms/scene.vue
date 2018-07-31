@@ -107,22 +107,22 @@
                     <image class="down-icon" :src="icon.washer[washerPower]"></image>
                     <text class="down-text">{{washerStatus[washerPower]}}</text>
                 </div>
-                <div @click="controlStartPause">
+                <div v-if="washerPower=='on'" @click="controlStartPause">
                     <image class="down-icon" :src="icon.washer[washerRunningStatus]"></image>
                     <text class="down-text">{{washerStatus[washerRunningStatus]}}</text>
                 </div>
+                <text class="washer-desc">{{washerPowerDesc[washerPower]}}</text>
             </div>
             <toast-dialog :show="showToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}" contentPadding="0px">
-                <div class="toast-box" v-for="(item,i) in sceneDevices">
+                <div class="toast-box" v-for="(item,i) in formatSceneDevices">
                     <div :class="['row-sb','toast-line', i>0?'toast-border':'']">
                         <div>
-                            <text class="pop-hd">{{item.actionList[0].applianceName}}</text>
+                            <text class="toast-hd">{{item.applianceName}}</text>
                             <div class="row-s">
-                                <text class="toast-desc" v-for="desc in item.actionList[0].describe">{{desc.actionValue}}</text>
+                                <text class="toast-desc" v-for="desc in JSON.parse(item.describe)">{{desc.actionValue}}</text>
                             </div>
                         </div>
-                        <image class="toast-icon" :src="icon.model[item.actionList[0].status]"></image>
-
+                        <image class="toast-icon" :src="icon.model[item.status]"></image>
                     </div>
                 </div>
             </toast-dialog>
@@ -251,6 +251,7 @@
         align-items: center;
         padding-left:30px;
         padding-right:30px;
+        position: relative;
     }
     .down-icon{
         width: 112px;
@@ -280,6 +281,16 @@
         font-size: 52px;
         margin-left: 12px;
         margin-right: 10px;
+    }
+    .washer-desc{
+        color: #c7c7cc;
+        margin-bottom: 16px;
+        position: absolute;
+        top: 50px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 24px;
     }
     .wash-list{
         /* margin-top: 100px; */
@@ -451,6 +462,13 @@
                 return {
                     paddingTop: (this.pageHeight*0.3- 170)/2+ 'px',
                 }
+            },
+            formatSceneDevices(){
+                let tmp = []
+                for (var i in this.sceneDevices) {
+                    tmp = tmp.concat(this.sceneDevices[i].actionList)
+                }
+                return tmp
             }
         },
         mixins: [base],
@@ -519,46 +537,31 @@
                     percent: '%'
                 },
                 washerWaterData: {
-                    x: {
-                        "value": [],
-                        "label": []
-                    },
-                    y: [
-                        {
+                    x: { "value": [], "label": [] },
+                    y: [{
                             "value": [],
                             "title": "用水量",
-                            "color": "#eeeeee",
-                            "backgroundColor": "#111"
-                        }
-                    ],
+                            "color": "#ffffff",
+                            "background": "#ffffff"
+                        }],
                     borderRadius: "3",
                     description: "",
-                    background: "#4E69F7",
+                    // background: "#4E69F7",
                     legend: {
                         "position": "TOP_CENTER",
                         "orientation": "HORIZONTAL",
                         "show": false
                     },
-                    unit: {
-                        "x": "日期",
-                        "y": "",
-                        // "x": "日期",
-                        // "y": "单位:吨"
-                    }
+                    unit: { "x": "日期", "y": "", }
                 },
                 washerPowerData: {
-                    x: {
+                    x: { "value": [], "label": [] },
+                    y: [{
                         "value": [],
-                        "label": []
-                    },
-                    y: [
-                        {
-                            "value": [],
-                            "title": "用电量",
-                            "color": "#eeeeee",
-                            "backgroundColor": "#111"
-                        }
-                    ],
+                        "title": "用电量",
+                        "color": "#ffffff",
+                        "background": "#ffffff"
+                    }],
                     background: "#4E69F7",
                     borderRadius: "3",
                     description: "",
@@ -575,6 +578,10 @@
                 },
                 hasWasherPowerData: false,
                 hasWasherWaterData: false,
+                washerPowerDesc: {
+                    on: '已开机',
+                    off: '已关机'
+                },
                 washerPower: 'powerDisabled',//洗衣机电源状态（开机关机）
                 washerRunningStatus: 'statusDisabled',//洗衣机运行状态
                 washerStatus: {//机器要成为的状态
@@ -733,21 +740,24 @@
                             if (res.code == 0) {
                                 this.showToastDialog = true
                                 this.sceneDevices = res.data.list
-                                    if (res.data.status == 2) {
-                                        setTimeout(()=>{
-                                            this.checkQuickOptimize(resultId)
-                                        },1000)
-                                    } else if (res.data.status == 3){
+
+                                if (res.data.status == 2) {
+                                    setTimeout(()=>{
+                                        this.checkQuickOptimize(resultId)
+                                    },1000)
+                                } else if (res.data.status == 3){
+                                    this.showToastDialog = false
+                                    nativeService.toast('一键优化执行失败，请再试一次')
+                                } else {
+                                    setTimeout(()=>{
                                         this.showToastDialog = false
-                                        nativeService.toast('一键优化执行失败，请再试一次')
-                                    } else {
+                                        this.initData()
                                         setTimeout(()=>{
-                                            this.showToastDialog = false
-                                            setTimeout(()=>{
-                                                nativeService.toast('执行成功!')
-                                            },200)
-                                        },1000)
-                                    }
+                                            nativeService.toast('执行成功!')
+
+                                        },200)
+                                    },1000)
+                                }
                             }else{
                                 if (codeDesc.scene.hasOwnProperty(res.code)) {
                                     nativeService.toast(codeDesc.scene[res.code])
@@ -826,6 +836,7 @@
                                 } else {
                                     setTimeout(()=>{
                                         this.showModelToastDialog = false
+                                        this.initData()
                                         setTimeout(()=>{
                                             nativeService.toast('场景模式执行成功!')
                                         }, 200)
@@ -976,46 +987,36 @@
                 }
             },
             powerOnOff(){//控制阳台场景洗衣机的开启关闭
-                if (this.washerPower == 'powerDisabled') {
-                    nativeService.toast('无法控制设备')
-                    return
-                }else{
-                    let self = this;
-                    let poweronoff = this.washerPower=='off' ? "on" : "off"
-                    let params = {
-                        operation: "luaControl",
-                        applianceId:  String(self.washerCode),
-                        params: { "power": poweronoff },
-                    }
-                    nativeService.sendLuaRequest(params,true).then(function(luaData) {
-                        nativeService.showLoading()
-                        setTimeout(()=>{
-                            self.luaQueryStatus()
-                            nativeService.hideLoading()
-                        },2000)
-                    },function(error) {
-                        nativeService.alert('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
-                    });
+                let self = this;
+                let poweronoff = this.washerPower=='off' ? "on" : "off"
+                let params = {
+                    operation: "luaControl",
+                    applianceId:  String(self.washerCode),
+                    params: { "power": poweronoff },
                 }
+                nativeService.sendLuaRequest(params,true).then(function(luaData) {
+                    self.luaQueryStatus()
+                },function(error) {
+                    nativeService.alert('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
+                });
             },
             controlStartPause(){//控制阳台场景洗衣机的启动暂停
+            
+                nativeService.showLoading()
                 if (this.washerRunningStatus == 'statusDisabled') {
                     nativeService.toast('无法控制设备')
                     return
                 }else{
                     let self = this;
+                    
                     if( self.washerRunningStatus == "work") {
                         let params = {
                             operation:"luaControl",
                             applianceId: String(self.washerCode),
                             params:{ "control_status": "pause" }
                         }
-                        nativeService.sendLuaRequest(params,true).then(function(luaData) {
-                            nativeService.showLoading()
-                            setTimeout(()=>{
-                                self.luaQueryStatus()
-                                nativeService.hideLoading()
-                            },2000)
+                        nativeService.sendLuaRequest(params, true).then(function(luaData) {
+                            self.luaQueryStatus()
                         },function(error) {
                             nativeService.alert('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
                         })

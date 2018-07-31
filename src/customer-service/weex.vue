@@ -281,8 +281,8 @@ export default {
   align-items: center;
 }
 .navigation-img {
-  height: 120px;
-  width: 120px;
+  height: 128px;
+  width: 128px;
 }
 .navigation-desc {
   padding-top: 24px;

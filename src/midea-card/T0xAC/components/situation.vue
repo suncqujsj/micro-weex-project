@@ -33,7 +33,6 @@ export default {
     methods: {
         handlePageData(data) {
             //处理页面传递的信息
-            nativeService.toast(111)
             if (data.deviceId == this.deviceId) {
                 if (data.key == "situation") {
                     this.getSituationList()

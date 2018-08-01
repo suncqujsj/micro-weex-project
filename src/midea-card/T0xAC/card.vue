@@ -330,9 +330,7 @@ export default {
         nativeService.getDeviceInfo().then(function (data) {
             self.updateDeviceInfo(data.result);
             self.handleNotification();
-            if (data.result.isOnline || data.result.isOnline == "1") {
-                self.queryStatus();
-            }
+            self.queryStatus();
         }, function (error) {
             nativeService.toast("连接设备超时");
         })
@@ -354,7 +352,6 @@ export default {
   height: 392px;
   margin-left: 32px;
   margin-right: 32px;
-  margin-top: 32px;
   background-color: #5d75f6;
   flex-direction: row;
   border-radius: 6px;
@@ -364,7 +361,6 @@ export default {
   height: 392px;
   margin-left: 32px;
   margin-right: 32px;
-  margin-top: 32px;
   background-color: #d8d8de;
   flex-direction: row;
   border-radius: 6px;
@@ -380,8 +376,7 @@ export default {
 }
 .text-offline-center {
   position: absolute;
-  right: 295px;
-  top: 170px;
+  top: 176px;
   align-items: center;
 }
 .control-div-offline {

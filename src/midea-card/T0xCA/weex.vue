@@ -286,7 +286,6 @@
 		height:392px;
 		margin-left:32px;
 		margin-right:32px;
-		margin-top:32px;
 		background-color:#E9F1FF;
 		border-radius: 2px;
 		flex-direction: row;

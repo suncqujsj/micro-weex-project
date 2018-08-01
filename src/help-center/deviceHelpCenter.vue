@@ -18,9 +18,9 @@
                       v-for="(subMenu, index1) in menu.subMenus"
                       :key="subMenu.title"
                       :data-subMenu-link="subMenu.link"
-                      @click="goToProblemDetail">
+                      @click="goToProblemDetail(subMenu)">
                         <div class="cell-sub-block">
-                            <text class="cell-sub-label">{{ subMenu.title }}</text>
+                            <text class="cell-sub-label">{{ subMenu.title }}？</text>
                             <image class="arrow-icon" src="./assets/img/public_ic_more@3x.png" resize='contain'></image>
                         </div>
                     </div>
@@ -51,6 +51,8 @@ import util from '@/common/util/util'
 
 import { MideaItem } from '@/index'
 
+import menus from './menuData';
+
 export default {
     components: {
         MideaItem
@@ -61,29 +63,7 @@ export default {
             title: '智能设备',
             showSubItem: false,
             activeMenu: '',
-            menus: [
-                {
-                    title: '智能配网',
-                    subMenus: []
-                },
-                {
-                    title: '家庭管理',
-                    subMenus: [
-                        {
-                            title: '如何添加家庭？',
-                            link: 'deviceProblems/addFamily'
-                        },
-                        {
-                            title: '如何邀请新用户？',
-                            link: ''
-                        }
-                    ]
-                },
-                {
-                    title: '用户管理',
-                    subMenus: []
-                }
-            ]
+            menus: menus
         }
     },
     computed: {
@@ -112,11 +92,20 @@ export default {
         },
 
         // 前往问题详情
-        goToProblemDetail(e) {
+        goToProblemDetail(subMenu) {
             // console.log(e);
-            let link = e.target.attr.dataSubMenuLink;
+            // let link = e.target.attr.dataSubMenuLink;
+            // if (link.trim() === '') return;
+            // this.goTo(link);
+            // console.log(subMenu);
+            let link = subMenu.link;
             if (link.trim() === '') return;
-            this.goTo(link);
+            nativeService.setItem('deviceProblemDetail', subMenu, (res)=> {
+                // console.log(res);
+                if (res.result === 'success') {
+                    this.goTo(link);
+                }
+            });
         }
     },
     beforeCreate() {

@@ -292,7 +292,6 @@ export default {
   height: 392px;
   margin-left: 32px;
   margin-right: 32px;
-  margin-top: 32px;
   background-color: #e9f1ff;
   border-radius: 2px;
   flex-direction: row;

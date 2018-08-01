@@ -9,13 +9,14 @@
             </div>
             <midea-cell v-for="myData in prepareData"
                         :title="myData.deviceName"
-                        desc=""
                         height="160"
+                        :clickActivied="true"
+                        :hasBottomBorder="true"
                         :importTextStyle="cellTitleStyle"
                         :rightTextStyle="cellRightStyle"
                         :rightText="myData.status"
+                        iconSrc="./img/arrow_right.png"
                         :hasArrow="true"
-                        :clickActivied="true"
                         :itemImg="myData.icon"
                         @mideaCellClick="itemClicked">
             </midea-cell>
@@ -29,9 +30,9 @@
     import mideaSwitch from '@/midea-component/switch.vue'
     import mideaSmart from '@/midea-card/midea-components/smart.vue'
     import mideaItem from '@/midea-component/item.vue'
-//    import mideaDownload from '@/midea-card/midea-components/download.vue'
+    import mideaDownload from '@/midea-card/midea-components/download.vue'
     import mideaCell from '@/component/cell.vue'
-//    import Mock from './settings/mock'
+    //    import Mock from './settings/mock'
 
     const modal = weex.requireModule('modal');
     const dom = weex.requireModule('dom');
@@ -43,7 +44,7 @@
             mideaSwitch,
             mideaSmart,
             mideaItem,
-//            mideaDownload
+            mideaDownload
         },
         data() {
             return {
@@ -74,43 +75,10 @@
             }
         },
         methods: {
-            queryStatus() {
-//                this.lock = true;
-                if (this.first) {
-                    this.queryLoading = true;
-                    this.first = false;
-                }
-                let me = this;
-                let params = {
-                    "operation": "luaQuery",
-                    "name": "deviceinfo",
-                    "params": {}
-                };
-                nativeService.sendLuaRequest(params, true).then(function (data) {
-                    me.updateUI(data);
-                }, function (error) {
-                    modal.toast({'message': error, 'duration': 2});
-                });
-            },
-            updateUI(data) {
-                if (data.errorCode == 0) {
-                    this.onlineStatus = "1";
-                    let params = data.params || data.result;
-                    this.onoff = params.power;
-                    this.wind_speed = this.return_wind_speed[params.wind_speed];
-                    this.humidity = params.humidity;
-                    this.cur_humidity = params.cur_humidity;
-                    this.danwei = "%";
-                } else {
-                    modal.toast({'message': "连接设备超时", 'duration': 2});
-                }
-            },
             queryTXLists() { //
                 let me = this;
-                bridgeModule.getTXList().then((myList)=>{
-                    var TXList = myList;
-                    modal.toast({"message":"gotit","duration":5});
-                     console.dir(TXList);
+                nativeService.getTxList(true).then((myList) =>{
+                    let TXList = myList.data;
                     for (let i = 0; i < TXList.length; i++) {
                         let currentList = TXList[i];
                         let currentDeviceId = currentList.applianceCode;
@@ -144,23 +112,23 @@
                         tempData.deviceType = deviceType;
                         tempData.deviceSubType = deviceSubType;
                         tempData.onlineStatus = deviceOnlineStatus;
-                        console.log(tempData);
                         me.prepareData.push(tempData);
-                        // console.log(me.prepareData);
-                    }
-                }).catch(e => {
-                    // 打印一下错误
-                    console.log(e)
-                });
+                    }}
+                )
             },
-            updateTXList(deviceId) {
+            updateTXList() {
                 let me = this;
                 for (let j = 0; j < me.prepareData.length; j++) {
                     let currentData = me.prepareData[j];
                     let returnDeviceId = currentData.deviceId;
                     let deviceType = currentData.deviceType;
-                    if (returnDeviceId == deviceId) {
-                        nativeService.call('luaQueryTX', "deviceInfo", {deviceId: returnDeviceId}, function (data) {
+                    let deviceStatus = currentData.status
+                    if (returnDeviceId == deviceId && deviceStatus=="online") {
+                        let params={
+                            operation:"luaQuery",
+                            deviceId: returnDeviceId
+                        }
+                        nativeService.sendLuaRequest( params,true,).then( function (data) {
                             // console.log("data:" + data);
                             if (data.errorCode == 0) {
                                 let params = data.params;
@@ -213,105 +181,19 @@
                                         currentData.status += params.life_5;
                                     }
                                 }
-                                //me.prepareData.push(tempData);
-                                // console.log(me.prepareData);
+                                me.prepareData.push(tempData);
                             } else {
-                                modal.toast({'message': '连接设备超时', 'duration': 2});
-                                //currentData.temperature = "";
-                                //currentData.status = "未连接";
+                                mm.toast({'message': '连接设备超时', 'duration': 2});
                             }
                         })
                     }
                 }
             },
-            jumpControlPanelPage(deviceType, deviceSubType) {
+            jumpControlPanelPage() {
                 bridgeModule.showControlPanelPage("", "index.html");
             },
-            getApplianceIDTX() {
-                // console.log("getApplianceIDTX");
-                let me = this;
-                bridgeModule.getApplianceIDTX("deviceIds", function (data) {
-                    // console.log(data);
-                    modal.toast({'message': data});
-                    me.deviceIDTX1 = data[0];
-                })
-            },
-            getApplianceSubtypeTX() {
-                var me = this;
-                // console.log("getApplianceSubtypeTX");
-                bridgeModule.getApplianceSubtypeTX(this.deviceIDTX1, "deviceSubType", function (data) {
-                    modal.toast({'message': data});
-                });
-            },
-            getApplianceType() {
-                var me = this;
-                // console.log("getApplianceType");
-                bridgeModule.getApplianceType(this.deviceIDTX1, "deviceType", function (data) {
-                    modal.toast({'message': data});
-                });
-            },
-            getDeviceSNTX() {
-                var me = this;
-                // console.log("getDeviceSNTX");
-                bridgeModule.getDeviceSNTX(this.deviceIDTX1, "deviceSN", function (data) {
-                    modal.toast({'message': data});
-                });
-            },
-//            getTXList() {
-//                var me = this;
-//                // console.log("getTXList");
-//               nativeService.getTXList().then((data) => {
-//                   modal.toast({"message":data})
-//               })
-////                function (data) {
-////                    modal.toast({'message': data});
-////                    // console.dir(data);
-////                });
-//            },
-            getDeviceOnlineStatus() {
-                var me = this;
-                // console.log("getDeviceOnlineStatus");
-                bridgeModule.getDeviceOnlineStatus(this.deviceIDTX1, "getDeviceOnlineStatus", function (data) {
-                    modal.toast({'message': data});
-                    // console.dir(data);
-                })
-            },
-            luaQueryTX() {
-                var me = this;
-                // console.log("luaQueryTX");
-                nativeService.call('luaQueryTX', "deviceInfo", {deviceId: this.deviceIDTX1}, function (data) {
-                    // console.log(data);
-                    modal.toast({'message': data});
-                });
-            },
-            luaControlTX() {
-                let params = {
-                    "deviceId": this.deviceIDTX1,
-                    "mode": "custom",
-                    "temperature": 45
-                }
-                let me = this;
-                // console.log("luaControlTX");
-                bridgeModule.luaControlTX('luaControlTX', "deviceInfo", params, function (data) {
-                    modal.toast(data);
-                });
-            },
-            recieveMessage() {
-                // console.log("recieveMessage");
-                // console.log(this.messageBack);
-                modal.toast({'message': data});
-            },
-            startCmdProcess() {
-                // console.log("startCmdProcess");
-            },
-            onMideachange(event) {
-                //modal.toast({ 'message': event.value, 'duration': 2 });
-            },
-            onMideachange2(event) {
-                //modal.toast({ 'message': event.value, 'duration': 2 });
-            },
             itemClicked(event) {
-                //modal.toast({ 'message': event.value, 'duration': 2 });
+                this.jumpControlPanelPage();
             },
             handleNotification() {
                 let me = this;
@@ -342,6 +224,8 @@
         computed: {},
         mounted() {
             this.queryTXLists();
+            this.updateTXList();
+            this.handleNotification()
         }
     }
 </script>

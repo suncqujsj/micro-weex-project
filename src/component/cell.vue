@@ -29,7 +29,7 @@
            <text class="right-text" :style="rightTextStyle">{{rightText}}</text>
         </div>
     </slot>
-    <image :src="arrowIcon" :style="{top:((height-24)/2)+'px'}"
+    <image :src="iconSrc!==''? iconSrc : arrowIcon" :style="{top:((height-24)/2)+'px'}"
            class="cell-arrow-icon"
            v-if="hasArrow"></image>
   </div>
@@ -180,6 +180,10 @@
         },
         rightTextStyle: {  // 提供right-text中 text组件的样式接口
             type: Object,
+        },
+        iconSrc:{
+          type:String,
+            default: ''
         }
     },
     computed:{

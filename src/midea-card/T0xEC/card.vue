@@ -289,7 +289,6 @@
 		height:392px;
 		margin-left:32px;
 		margin-right:32px;
-		margin-top:32px;
 		background-color:#FFBD00;
 		border-radius: 2px;
 		flex-direction: row;
@@ -342,7 +341,6 @@
 		height:392px;
 		margin-left:32px;
 		margin-right:32px;
-		margin-top:32px;
 		background-color: #D8D8DE;
 		flex-direction: row;
 		border-radius: 6px;
@@ -358,8 +356,7 @@
 	}
 	.text-offline-center {
 		position: absolute;
-		right:300px;
-		top:190px;
+		top:176px;
 		align-items: center;
 	}
 	.control-div-offline {

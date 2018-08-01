@@ -352,7 +352,6 @@ export default {
   height: 392px;
   margin-left: 32px;
   margin-right: 32px;
-  margin-top: 32px;
   background-color: #5d75f6;
   flex-direction: row;
   border-radius: 6px;
@@ -362,7 +361,6 @@ export default {
   height: 392px;
   margin-left: 32px;
   margin-right: 32px;
-  margin-top: 32px;
   background-color: #d8d8de;
   flex-direction: row;
   border-radius: 6px;
@@ -378,8 +376,7 @@ export default {
 }
 .text-offline-center {
   position: absolute;
-  right: 295px;
-  top: 170px;
+  top: 176px;
   align-items: center;
 }
 .control-div-offline {

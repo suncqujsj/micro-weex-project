@@ -608,7 +608,37 @@ export default {
             bridgeModule.updateTitle(JSON.stringify(params));
         }
     },
+    // 获取套系列表
+    getTxList(isShowLoading = true) {
+        return new Promise((resolve, reject) => {
+            if (isShowLoading) {
+                this.showLoading()
+            }
+            bridgeModule.getTXList({}, (resData) => {
+                if (typeof resData == 'string') {
+                    this.alert(resData);
+                    resData = JSON.parse(resData);
+                }
+                if (isShowLoading) {
+                    this.hideLoading()
+                }
+                if (resData.errorCode && resData.errorCode !== 0) {
+                    //失败
+                    reject(resData);
+                } else {
+                    //成功
+                    resolve(resData)
+                }
+            }, (error) => {
+                if (typeof error == 'string') {
+                    error = JSON.parse(error)
+                    mm.modal({"message":error},3)
+                }
+                reject(error);
+            });
+        })
 
+    },
     showSharePanel(params, callback, callbackFail) {
         return new Promise((resolve, reject) => {
             bridgeModule.showSharePanel(params,
@@ -620,6 +650,7 @@ export default {
                 });
         })
     },
+
     /*
      * created by zhouhg 20180621 start
      */

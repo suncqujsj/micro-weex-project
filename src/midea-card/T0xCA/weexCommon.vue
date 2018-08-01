@@ -155,7 +155,6 @@
 		height:392px;
 		margin-left:32px;
 		margin-right:32px;
-		margin-top:32px;
 		background-color: #5D75F6;
 		flex-direction: column;
 		border-radius: 6px;

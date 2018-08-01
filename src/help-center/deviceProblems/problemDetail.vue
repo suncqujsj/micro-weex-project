@@ -1,24 +1,94 @@
 <template>
   <div class="wrapper">
-      <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" :showLeftImg="true" @leftImgClick="back">
+      <midea-header :title="title" bgColor="#ffffff" :isImmersion="false" :showLeftImg="true" @leftImgClick="back">
       </midea-header>
       <scroll>
           <cell class="group-gap-top"></cell>
-          <div class="detail-content">
-              <div>
-                  <text class="detail-title">添加家庭</text>
-              </div>
-              <div class="detail-step">
-                  <text class="detail-title">设置 - 家庭管理 - 添加家庭</text>
+          <div class="detail-content" v-if="problemDetail">
+              <div v-if="typeof problemDetail.detailTitle !== 'undefined'">
+                  <text class="detail-title">{{problemDetail.detailTitle}}</text>
               </div>
 
-              <div>
+              <div v-if="typeof problemDetail.descTypes !== 'undefined'">
+                  <div class="detail-step" 
+                    v-for="(descType, index0) in problemDetail.descTypes"
+                    :key="descType.descName">
+                    <text class="detail-title">{{descType.descName}}</text>
+
+                    <div v-for="(step1, index1) in descType.steps" :key="index1">
+                      <text class="tip-info">{{(index1 + 1) + '. ' + step1}}</text>
+                    </div>
+                  </div>
+              </div>
+
+              <div v-if="typeof problemDetail.placeholder !== 'undefined'">
+                <text class="placeholder-info">{{problemDetail.placeholder}}</text>
+              </div>
+
+              <div v-if="typeof problemDetail.failTypes !== 'undefined'">
+                <div 
+                  class="detail-step" 
+                  v-for="(failType, index2) in problemDetail.failTypes" 
+                  :key="failType.failName">
+                  <text class="detail-title">{{failType.failName}}</text>
+                  <text class="tip-info">{{failType.failDesc}}</text>
+                  <text class="tip-title">{{failType.solution}}</text>
+                  <text class="tip-info" v-if="typeof failType.tryAgain !== 'undefined'">{{failType.tryAgain}}</text>
+                  <div v-for="(step2, index3) in failType.steps" :key="index3">
+                    <text class="tip-info">{{(index3 + 1) + '. ' + step2}}</text>
+                  </div>
+                  <text class="tip-info" v-if="typeof failType.otherOpe !== 'undefined'">{{failType.otherOpe}}</text>
+                  <text class="tip-info" v-if="typeof failType.otherOpeDesc !== 'undefined'">{{failType.otherOpeDesc}}</text>
+                </div>
+              </div>
+
+              <div v-if="typeof problemDetail.descSteps !== 'undefined'">
+                <div v-for="(step3, index4) in problemDetail.descSteps" :key="index4">
+                  <text class="tip-info">{{(index4 + 1) + '. ' + step3}}</text>
+                </div>
+              </div>
+
+              <div v-if="typeof problemDetail.aboveInfo !== 'undefined'">
+                <text class="tip-info">{{problemDetail.aboveInfo}}</text>
+              </div>
+
+              <div v-if="typeof problemDetail.descInfos !== 'undefined'">
+                <div v-for="(info, index5) in problemDetail.descInfos" :key="index5">
+                  <text class="tip-info">{{info}}</text>
+                </div>
+              </div>
+
+              <div class="detail-step" v-if="typeof problemDetail.detailStep !== 'undefined'">
+                <text class="detail-title">{{problemDetail.detailStep}}</text>
+              </div>
+
+              <div v-if="typeof problemDetail.tipTitle !== 'undefined'">
+                <text class="tip-title">{{problemDetail.tipTitle}}</text>
+              </div>
+
+              <div v-if="typeof problemDetail.tipInfo !== 'undefined'">
+                <text class="tip-info">{{problemDetail.tipInfo}}</text>
+              </div>
+
+              <div class="detail-step" v-if="typeof problemDetail.delTipTitle !== 'undefined'">
+                <text class="detail-title">{{problemDetail.delTipTitle}}</text>
+              </div>
+
+              <div v-if="typeof problemDetail.delTipInfo !== 'undefined'">
+                <text class="tip-info">{{problemDetail.delTipInfo}}</text>
+              </div>
+
+              <div class="detail-step" v-if="typeof problemDetail.outTipTitle !== 'undefined'">
+                <text class="detail-title">{{problemDetail.outTipTitle}}</text>
+              </div>
+
+              <div v-if="typeof problemDetail.outTipInfo !== 'undefined'">
+                <text class="tip-info">{{problemDetail.outTipInfo}}</text>
+              </div>
+
+              <!-- <div>
                   <text class="tip-title">提示条款</text>
-              </div>
-
-              <div>
-                  <text class="tip-info">美的提醒您：在使用美的平台各项服务前，请您务必仔细阅读并透彻理解本声明。如对本声明内容有任何疑问，您可向美的平台客服咨询。阅读本声明的过程中，如果您不同意本声明或其中任何内容，您应立即停止使用美的平台服务。如果您使用美的平台服务的，即意味着您认可本声明全部内容。</text>
-              </div>
+              </div> -->
           </div>
       </scroll>
   </div>
@@ -34,8 +104,26 @@
     mixins: [base],
     data() {
       return {
-        title: '如何添加家庭'
+        title: '',
+        problemDetail: null
       }
+    },
+
+    methods: {
+      // 获取本地存储的问题详情数据
+      getDetail() {
+        nativeService.getItem('deviceProblemDetail', (res) => {
+          if (res.data) {
+            this.problemDetail = JSON.parse(res.data);
+            this.title = this.problemDetail.title || '使用帮助';
+            console.log(this.problemDetail);
+          }
+        });
+      }
+    },
+
+    created() {
+      this.getDetail();
     }
   }
 </script>
@@ -66,10 +154,10 @@
 
   .detail-step {
     padding-top: 24px;
-    padding-bottom: 46px;
   }
 
   .tip-title {
+    padding-top: 40px;
     font-family: PingFangSC-Medium;
     line-height: 36px;
     font-size: 24px;
@@ -83,6 +171,13 @@
       line-height: 36px;
       font-size: 24px;
       color: #666;
+  }
+  .placeholder-info {
+    padding-top: 8px;
+    font-family: PingFangSC-Regular;
+    line-height: 36px;
+    font-size: 24px;
+    color: #666;
   }
 
 </style>

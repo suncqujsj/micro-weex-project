@@ -81,7 +81,7 @@ export const DEVICE_INFO = {
 	  	},
 			"0x1B" :{
 	  		img: "smart_img_equip1b@2x.png",
-	  		controlPanel: "",
+	  		controlPanel: "index.html",
 	  		deviceStyle:"cold"
 	  	},
 			"0xED" :{

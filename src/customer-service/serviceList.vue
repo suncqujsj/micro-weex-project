@@ -28,7 +28,7 @@
 import base from './base'
 import nativeService from './settings/nativeService';
 
-import { MideaItem } from '@/index'
+import MideaItem from '@/midea-component/item2.vue'
 
 export default {
     components: {

@@ -76,9 +76,9 @@ import base from './base'
 import orderBase from './orderBase'
 import nativeService from './settings/nativeService'
 import debugUtil from '@/common/util/debugUtil'
-import util from '@/common/util/util'
 
-import { MideaActionsheet, MideaItem } from '@/index'
+import MideaActionsheet from '@/midea-component/actionsheet.vue'
+import MideaItem from '@/midea-component/item2.vue'
 
 export default {
     components: {
@@ -234,7 +234,7 @@ export default {
   width: 56px;
 }
 .wrapper-gap {
-  height: 250px;
+  height: 100px;
 }
 .service-desc-wrapper {
   flex-direction: column;
@@ -281,8 +281,8 @@ export default {
   align-items: center;
 }
 .navigation-img {
-  height: 120px;
-  width: 120px;
+  height: 128px;
+  width: 128px;
 }
 .navigation-desc {
   padding-top: 24px;

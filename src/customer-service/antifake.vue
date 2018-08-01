@@ -14,12 +14,11 @@
             </div>
 
             <div class="item-group">
-                <input class="item-input" type="number" placeholder="请输入4位验证码" :autofocus=false v-model="validCode" :return-key-type="isDataReady?'search':'text'" maxlength="4" @return="submit" />
+                <input class="item-input" type="number" placeholder="请输入4位验证码" v-model="validCode" maxlength="4" @return="submit" />
             </div>
 
             <div class="item-group" v-if="failedCount>=3">
-                <input class="item-input" type="text" placeholder="请输入图形验证码" :autofocus=false v-model="picCode" :return-key-type="isDataReady?'search':'text'" maxlength="4" @return="submit" />
-                <!-- <image class="validate-img" :src="picCodeSrc + picCodeSrcRadom" resize='contain' @click="refreshPicCode()"></image> -->
+                <input class="item-input" type="text" placeholder="请输入图形验证码" v-model="picCode" maxlength="4" @return="submit" />
                 <image class="validate-img" :src="picCodeSrc" resize='contain' @click="antiValidateCode()"></image>
             </div>
             <div class="item-group">

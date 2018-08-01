@@ -52,8 +52,8 @@
 }
 
 .cell-indent {
-  padding-bottom: 18px;
-  padding-top: 18px;
+  padding-bottom: 28px;
+  padding-top: 28px;
 }
 
 .has-desc {
@@ -115,8 +115,8 @@
   flex: 1;
 }
 .cell-arrow-icon {
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
 }
 
 .cell-content {

@@ -75,7 +75,7 @@
                     <text class="text-offline-center">已离线</text>
                 </div>
             </div>
-            <situation></situation>
+            <situation @statusChanged="queryStatus"></situation>
             <!--downloading by zhouhg-->
             <midea-download></midea-download>
         </div>
@@ -330,9 +330,7 @@ export default {
         nativeService.getDeviceInfo().then(function (data) {
             self.updateDeviceInfo(data.result);
             self.handleNotification();
-            if (data.result.isOnline || data.result.isOnline == "1") {
-                self.queryStatus();
-            }
+            self.queryStatus();
         }, function (error) {
             nativeService.toast("连接设备超时");
         })

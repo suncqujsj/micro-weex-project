@@ -8,11 +8,11 @@
                 <text class="header-desc">{{situationDesc.detail}}</text>
             </div>
             <div class="base-group">
-				<midea-cell placeHolder="请选择" :rightText="situactionData.props.time" @mideaCellClick="selectSleepTemp" :hasSubBottomBorder="false">
-					<div slot="title" class="cell-title">
-						<text class="cell-label">睡眠时间</text>
-					</div>
-				</midea-cell>
+                <midea-cell placeHolder="请选择" :rightText="situationDesc.timeDesc" @mideaCellClick="selectSleepTemp" :hasSubBottomBorder="false">
+                    <div slot="title" class="cell-title">
+                        <text class="cell-label">睡眠时间</text>
+                    </div>
+                </midea-cell>
             </div>
 
             <div class="action-bar">
@@ -53,15 +53,22 @@ export default {
         situationDesc() {
             let result = {
                 title: "睡觉时自动启用睡眠模式",
-                detail: "自然风，摇头"
+                detail: "自然风，摇头",
+                timeDesc: ''
+            }
+            if (this.situactionData) {
+                let time = this.situactionData.props.time
+                result.timeDesc = time.substr(0, 2) + ":" + time.substr(2, 2)
             }
             return result
         },
     },
     methods: {
         selectSleepTemp() {
+            let time = this.situactionData.props.time
+            let timeDesc = time.substr(0, 2) + ":" + time.substr(2, 2)
             picker.pickTime({
-                'value': this.situactionData.props.value,
+                'value': timeDesc,
                 'title': '选择时间', //取消和确定中间那标题
                 'cancelTxt': '取消', //取消按钮文字
                 'confirmTxt': '确定', //确定按钮文字,
@@ -71,7 +78,7 @@ export default {
                 'titleBgColor': '#E7EDEF' //标题栏颜色
             }, event => {
                 if (event.result === 'success') {
-                    this.situactionData.props.time = event.data;
+                    this.situactionData.props.time = event.data.replace(":", "");
                 }
             })
         },

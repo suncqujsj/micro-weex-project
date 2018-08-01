@@ -90,6 +90,7 @@ export default {
                 //直接执行
                 return this.executeSituationService(situation).then((resp) => {
                     if (resp.code == 0) {
+                        this.$emit('statusChanged')
                         nativeService.toast("执行成功")
                     } else {
                         throw resp
@@ -182,8 +183,8 @@ export default {
             }
             result.checked = result.enable == '1' ? true : false
 
-            let windSpeedDesc
-            switch (result.wind_speed) {
+            let windSpeedDesc = ""
+            switch (result.props.wind_speed) {
                 case "1":
                     windSpeedDesc = "最小"
                     break;
@@ -192,9 +193,6 @@ export default {
                     break;
                 case "100":
                     windSpeedDesc = "最大"
-                    break;
-                default:
-                    windSpeedDesc = "中"
                     break;
             }
             result.title = "我的最舒适"

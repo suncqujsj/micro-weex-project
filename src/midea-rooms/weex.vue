@@ -21,7 +21,7 @@
         </div>
         <div>
             <div class="hd"><text class="hd-name">场景</text></div> 
-            <div class="scene-list" v-if="sceneList">
+            <div class="scene-list" v-if="sceneList" :style="sceneListStyle">
                 <div class="scene" v-for="scene in sceneList" @click="goScene(scene)">
                     <image class="scene-bg" :src="sceneImg[scene.roomType]"></image>
                     <div class="scene-info">
@@ -81,7 +81,7 @@
     }
     .auto-name{ width: 180px; font-size: 30px; color: #666666; margin-bottom: 8px; text-overflow: clip; }
     /* .auto-desc{ width: 120px; font-size: 24px; color: #C7C7CC; lines:1; } */
-    .scene-list{  padding-left:30px; padding-right:30px; height: 900px;}
+    .scene-list{  padding-left:30px; padding-right:30px;}
     .scene { width: 690px; height: 206px; padding-bottom: 16px; position: relative; }
     .scene-bg{ width: 690px; height: 185px; position: absolute; }
     .next { width: 8px; height: 16px; position:absolute; top:84px; right: 25px;}
@@ -123,6 +123,15 @@
                     if ( qList[2*i+1] ){
                         tmp[i].push(qList[2*i+1])
                     }
+                }
+                return tmp
+            },
+            sceneListStyle(){
+                let tmp = {}
+                if (this.platform == 'android'){
+                    tmp.height = '840px'
+                }else{
+                    tmp.height = '1080px'
                 }
                 return tmp
             }

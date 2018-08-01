@@ -17,18 +17,18 @@
                         <div class="scene-status">
                             <text class="info-text font14 white">温度</text>
                             <div  class="row-c status-value">
-                                <text v-if="indicator.temperature != ''" class="font36 white">{{indicator.temperature}}</text>
-                                <text v-if="indicator.temperature != ''" class="font16 white mgb-20">℃</text>
+                                <text v-if="indicator.temperature && indicator.temperature !== ''" class="font36 white">{{indicator.temperature}}</text>
+                                <text v-if="indicator.temperature && indicator.temperature !== ''" class="font16 white mgb-20">℃</text>
                                 <text v-else class="font36 white">?</text>
                             </div>
-                            <text v-if="indicator.temperature != ''" class="info-text font12 white">{{temperatureStatus}}</text>
+                            <text v-if="indicator.temperature && indicator.temperature != ''" class="info-text font12 white">{{temperatureStatus}}</text>
                             <text v-else class="info-text font12 white"></text>
                         </div>  
                         <div class="scene-status">
                             <text class="info-text font14 white">湿度</text>
                             <div class="row-c status-value">
-                                <text v-if="indicator.humidity != ''" class="font36 white">{{indicator.humidity}}</text>
-                                <text v-if="indicator.humidity != ''" class="font16 white mgb-20">%</text>
+                                <text v-if="indicator.humidity && indicator.humidity !== ''" class="font36 white">{{indicator.humidity}}</text>
+                                <text v-if="indicator.humidity && indicator.humidity !== ''" class="font16 white mgb-20">%</text>
                                 <text v-else class="font36 white">?</text>
                             </div>
                             <text class="info-text font12 white">{{humidityStatus}}</text>
@@ -36,7 +36,7 @@
                         <div class="scene-status">
                             <text class="info-text font14 white">空气质量</text>
                             <div class="row-c status-value">
-                                <text v-if="indicator.pm25 != ''" class="font36 white">{{indicator.pm25}}</text>
+                                <text v-if="indicator.pm25 && indicator.pm25 !== ''" class="font36 white">{{indicator.pm25}}</text>
                                 <text v-else class="font36 white">?</text>
                             </div>
                             <text class="info-text font12 white">{{pm25Status}}</text>
@@ -46,8 +46,8 @@
                         <div class="scene-status">
                             <text class="info-text font14 white">温度</text>
                             <div class="row-c status-value">
-                                <text v-if="indicator.water_temperature !== ''" class="font36 white">{{indicator.water_temperature}}</text>
-                                <text v-if="indicator.water_temperature !== ''" class="font16 white mgb-20">℃</text>
+                                <text v-if="indicator.water_temperature && indicator.water_temperature !== ''" class="font36 white">{{indicator.water_temperature}}</text>
+                                <text v-if="indicator.water_temperature && indicator.water_temperature !== ''" class="font16 white mgb-20">℃</text>
                                 <text v-else class="font36 white">?</text>
                             </div>
                         </div>  
@@ -62,8 +62,8 @@
                         <div class="scene-status">
                             <text class="info-text font14 white">还需加热</text>
                             <div class="row-c status-value">
-                                <text v-if="indicator.remain_time != ''" class="font36 white">{{indicator.remain_time}}</text>
-                                <text v-if="indicator.remain_time != ''" class="font16 white mgb-20">分</text>
+                                <text v-if="indicator.remain_time && indicator.remain_time !== ''" class="font36 white">{{indicator.remain_time}}</text>
+                                <text v-if="indicator.remain_time && indicator.remain_time !== ''" class="font16 white mgb-20">分</text>
                                 <text v-else class="font36 white">?</text>
                             </div>
                         </div>
@@ -103,7 +103,7 @@
                 </div>
             </div>
             <div v-if="roomType == 4" class="down-block row-sa" :style="downBlockStyle">
-                <div @click="powerOnOff">
+                <div v-if="washerPower" @click="powerOnOff">
                     <image class="down-icon" :src="icon.washer[washerPower]"></image>
                     <text class="down-text">{{washerStatus[washerPower]}}</text>
                 </div>
@@ -111,7 +111,8 @@
                     <image class="down-icon" :src="icon.washer[washerRunningStatus]"></image>
                     <text class="down-text">{{washerStatus[washerRunningStatus]}}</text>
                 </div>
-                <text class="washer-desc">{{washerPowerDesc[washerPower]}}</text>
+                <text v-if="washerPower" class="washer-desc">{{washerPowerDesc[washerPower]}}</text>
+                <text v-else class="washer-desc">洗衣机状态未知</text>
             </div>
             <toast-dialog :show="showToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}" contentPadding="0px">
                 <div class="toast-box" v-for="(item,i) in formatSceneDevices">
@@ -624,27 +625,6 @@
                 this.goTo('buyShampoo')
             },
             initData(){
-                if (this.roomType == 1){
-                    this.scene.modeList = [
-                        { modelName: '回家', modelId: '1001' },
-                        { modelName: '舒适', modelId: '1002' },
-                        { modelName: '节能', modelId: '1003' },
-                        { modelName: '全关', modelId: '1004' },
-                    ]
-                }else if (this.roomType == 2) {
-                    this.scene.modeList = [
-                        { modelName: '回家', modelId: '1005' },
-                        { modelName: '舒适', modelId: '1006' },
-                        { modelName: '节能', modelId: '1007' },
-                        { modelName: '全关', modelId: '1008' },
-                    ]
-                }else if (this.roomType == 3) {
-                    this.scene.modeList = [
-                        { modelName: '舒适', modelId: '1009' },
-                        { modelName: '省电', modelId: '1010' },
-                        { modelName: '停用', modelId: '1011' },
-                    ]
-                }
                 this.getSceneDetail().then(()=>{
                     if (this.scene.applianceList.length <= 0 ) {
                         nativeService.toast('无法获取相关数据，点击右上角设置设备')
@@ -1040,9 +1020,31 @@
             }
         },
         created(){
+            this.roomType = nativeService.getParameters('roomType')
+            if (this.roomType == 1){
+                this.scene.modeList = [
+                    { modelName: '回家', modelId: '1001' },
+                    { modelName: '舒适', modelId: '1002' },
+                    { modelName: '节能', modelId: '1003' },
+                    { modelName: '全关', modelId: '1004' },
+                ]
+            }else if (this.roomType == 2) {
+                this.scene.modeList = [
+                    { modelName: '回家', modelId: '1005' },
+                    { modelName: '舒适', modelId: '1006' },
+                    { modelName: '节能', modelId: '1007' },
+                    { modelName: '全关', modelId: '1008' },
+                ]
+            }else if (this.roomType == 3) {
+                this.scene.modeList = [
+                    { modelName: '舒适', modelId: '1009' },
+                    { modelName: '省电', modelId: '1010' },
+                    { modelName: '停用', modelId: '1011' },
+                ]
+            }
+
             this.homegroupId = nativeService.getParameters('homegroupId')
             this.sceneId = nativeService.getParameters('sceneId')
-            this.roomType = nativeService.getParameters('roomType')
         }
     }
 </script>

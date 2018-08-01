@@ -197,11 +197,11 @@ export default {
             return new Promise((resolve, reject)=>{
                 nativeService.getUserInfo().then((res) => {
                     if (res.uid == '' || res.uid == undefined) {
-                        nativeService.alert('您还没有登录，点击确定前往登录', function () {
-                            nativeService.jumpNativePage({
-                                pageName: 'login'
-                            })
+                        // nativeService.alert('您还没有登录，点击确定前往登录', function () {
+                        nativeService.jumpNativePage({
+                            pageName: 'login'
                         })
+                        // })
                     } else {
                         resolve(res.uid)
                     }

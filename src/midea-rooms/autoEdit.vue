@@ -47,6 +47,7 @@
                                 <div class="row-s device-desc">
                                     <div v-for="actions in bindDeviceActions[item.deviceId]">
                                         <text v-if="actions.currentStatusName" class="device-desc-text">{{actions.currentStatusName}}</text>
+                                        <text v-if="actions.type=='range'" class="device-desc-text">{{actions.propertyName}}{{actions.currentStatus}}</text>
                                     </div>
                                 </div>
                             </div>

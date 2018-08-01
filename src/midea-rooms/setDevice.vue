@@ -213,7 +213,11 @@
                     for (var i in tmpActions) {
                         let currentStatus
                         if ( this.from == 'addAuto' || this.from == 'addEdit' ) {
-                            currentStatus = this.editProperties[tmpActions[i].property] || tmpActions[i].default
+                            if (this.editProperties[tmpActions[i].property] === '' || this.editProperties[tmpActions[i].property] == undefined) {
+                                currentStatus = tmpActions[i].default
+                            }else{
+                                currentStatus = this.editProperties[tmpActions[i].property]
+                            }
                         }else if( this.from == 'editAuto'){
                             if (this.deviceTask[tmpActions[i].property] === '' || this.deviceTask[tmpActions[i].property] === undefined ) {
                                 currentStatus = this.editProperties[tmpActions[i].property]  || tmpActions[i].default

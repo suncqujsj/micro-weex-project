@@ -22,7 +22,7 @@ export const all = [
             "errorCode": 0,
 		    "params": {
 		        "power": "on",
-		        "work_status": "1",
+		        "work_status": "2",
 		        "error_code": "0",
 		        "temperature": "30",
 		        "time_reserve_setting_hr":"12",
@@ -34,7 +34,8 @@ export const all = [
 		        "time_work_hr": "1",
 		        "time_work_min": "20",
 		        "time_pressurize_hr": "1",
-		        "time_pressurize_min": "1"
+		        "time_pressurize_min": "1",
+		        "cmd_code":"20014"
 		    }
         }
     },

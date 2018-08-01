@@ -1,8 +1,8 @@
 <template>
   <div class="wrapper">
-      <midea-header :title="title" bgColor="#ffffff" :isImmersion="false" :showLeftImg="true" @leftImgClick="back">
+      <midea-header ref="header" :title="title" bgColor="#ffffff" :isImmersion="false" :showLeftImg="true" @leftImgClick="back">
       </midea-header>
-      <scroll>
+      <scroller class="scroller" :style="{height: scrollHeight + 'px'}">
           <cell class="group-gap-top"></cell>
           <div class="detail-content" v-if="problemDetail">
               <div v-if="typeof problemDetail.detailTitle !== 'undefined'">
@@ -90,7 +90,7 @@
                   <text class="tip-title">提示条款</text>
               </div> -->
           </div>
-      </scroll>
+      </scroller>
   </div>
 </template>
 
@@ -99,13 +99,15 @@
   import nativeService from '../settings/nativeService'
   import debugUtil from '@/common/util/debugUtil'
   import util from '@/common/util/util'
+  const dom = weex.requireModule('dom');
 
   export default {
     mixins: [base],
     data() {
       return {
         title: '',
-        problemDetail: null
+        problemDetail: null,
+        scrollHeight: 1238
       }
     },
 
@@ -116,14 +118,29 @@
           if (res.data) {
             this.problemDetail = JSON.parse(res.data);
             this.title = this.problemDetail.title || '使用帮助';
-            console.log(this.problemDetail);
+            // console.log(this.problemDetail);
           }
+        });
+      },
+
+      // 获取滚动区高度
+      getScrollHeight() {
+        let height = weex.config.env.deviceHeight/weex.config.env.deviceWidth * 750;
+        dom.getComponentRect(this.$refs['header'].$el, (res)=> {
+          // console.log(res);
+          let headHeight = res.size ? res.size.height : 96;
+          this.scrollHeight = height - headHeight;
+          // console.log(this.scrollHeight);
         });
       }
     },
 
     created() {
       this.getDetail();
+    },
+
+    mounted() {
+      this.getScrollHeight();
     }
   }
 </script>
@@ -132,6 +149,10 @@
   .wrapper {
     flex: 1;
     background-color: #f2f2f2;
+  }
+  
+  .scroller {
+    height: 1270px;
   }
 
   .group-gap-top {
@@ -142,6 +163,7 @@
     padding-top: 48px;
     padding-left: 32px;
     padding-right: 32px;
+    padding-bottom: 48px;
     background-color: #fff;
   }
 

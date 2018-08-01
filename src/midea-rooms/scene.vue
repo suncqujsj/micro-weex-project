@@ -509,8 +509,8 @@
                     washer: {
                         on: 'assets/img/power_off.png',
                         off: 'assets/img/power_on.png',
-                        pause: 'assets/img/start_on.png',
-                        start: 'assets/img/stop_on.png',
+                        unwork: 'assets/img/start_on.png',
+                        work: 'assets/img/stop_on.png',
                         powerDisabled: 'assets/img/power_off.png',
                         statusDisabled: 'assets/img/start_off.png'
                     },
@@ -589,8 +589,8 @@
                     on: '关机',
                     off: '开机',
                     powerDisabled: '',
-                    start: '暂停',
-                    pause: '启动',
+                    work: '暂停',
+                    unwork: '启动',
                     statusDisabled: ''
                 },
                 activeModeDevices: [],
@@ -944,25 +944,29 @@
                 })
             },
             luaQueryStatus () {//洗衣机数据的lua查询
-            	let self = this;
-            	let params = {
-                    params:{}, 
-                    operation: 'luaQuery',
-                    applianceId: String(self.washerCode)
-                }
-            	nativeService.sendLuaRequest(params, true).then(function(luaData) {
-                    self.setWasherStatus(luaData)
-            	},function(error) {
-                    nativeService.alert('查询洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
-            	})
+                return new Promise((resolve, reject)=>{
+                    let self = this;
+                    let params = {
+                        params:{}, 
+                        operation: 'luaQuery',
+                        applianceId: String(self.washerCode)
+                    }
+                    nativeService.sendLuaRequest(params, true).then(function(luaData) {
+                        self.setWasherStatus(luaData)
+                        resolve(luaData)
+                    },function(error) {
+                        nativeService.alert('查询洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
+                    })
+                })
             },
             setWasherStatus(luaData){
+
                 this.washerPower = luaData.result.power
                 if (this.washerPower == 'on') {
-                    if (luaData.result.running_status != 'start') {
-                        this.washerRunningStatus = 'start' //runnig_status不等于start就可以发start命令
-                    }else if (luaData.running_status == 'start'){
-                        this.washerRunningStatus = 'pause'
+                    if (luaData.result.running_status == 'start'){
+                        this.washerRunningStatus = 'work'
+                    } else {
+                        this.washerRunningStatus = 'unwork' //runnig_status不等于start就可以发start命令
                     }
                 }
             },
@@ -974,48 +978,51 @@
                     applianceId:  String(self.washerCode),
                     params: { "power": poweronoff },
                 }
-                nativeService.sendLuaRequest(params,true).then(function(luaData) {
-                    self.luaQueryStatus()
+                nativeService.sendLuaRequest(params,true).then(function() {
+                    self.luaQueryStatus().then((luaData)=>{
+                        if (luaData.result.power == 'on') {
+                            nativeService.toast('已开启电源')
+                        }
+                        if (luaData.result.power == 'off') {
+                            nativeService.toast('已关闭电源')
+                        }
+                    })
                 },function(error) {
                     nativeService.alert('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
                 });
             },
             controlStartPause(){//控制阳台场景洗衣机的启动暂停
-            
-                nativeService.showLoading()
-                if (this.washerRunningStatus == 'statusDisabled') {
-                    nativeService.toast('无法控制设备')
-                    return
-                }else{
-                    let self = this;
-                    
-                    if( self.washerRunningStatus == "work") {
-                        let params = {
-                            operation:"luaControl",
-                            applianceId: String(self.washerCode),
-                            params:{ "control_status": "pause" }
-                        }
-                        nativeService.sendLuaRequest(params, true).then(function(luaData) {
-                            self.luaQueryStatus()
-                        },function(error) {
-                            nativeService.alert('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
-                        })
-                    } else {
-                        let params = {
-                            operation: "luaControl",
-                            applianceId: String(self.washerCode),
-                            params: { control_status: "start" }
-                        }
-                        nativeService.sendLuaRequest(params,true).then(function(luaData) {
-                            nativeService.showLoading()
-                            setTimeout(()=>{
-                                self.luaQueryStatus()
-                                nativeService.hideLoading()
-                            },2000)
-                        },function(error) {
-                            nativeService.alert('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
-                        });
+                let self = this;
+                
+                if( self.washerRunningStatus == "start") {
+                    let params = {
+                        operation:"luaControl",
+                        applianceId: String(self.washerCode),
+                        params:{ "control_status": "pause" }
                     }
+                    nativeService.sendLuaRequest(params, true).then(function() {
+                        self.luaQueryStatus().then((luaData)=>{
+                            nativeService.alert(luaData.result.running_status +'洗衣机暂停成功')
+                        })
+                        
+                    },function(error) {
+                        nativeService.alert('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
+                    })
+                } else {
+                    let params = {
+                        operation: "luaControl",
+                        applianceId: String(self.washerCode),
+                        params: { control_status: "start" }
+                    }
+                    nativeService.sendLuaRequest(params,true).then(function(luaData) {
+                        nativeService.showLoading()
+                        setTimeout(()=>{
+                            self.luaQueryStatus()
+                            nativeService.hideLoading()
+                        },2000)
+                    },function(error) {
+                        nativeService.alert('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
+                    });
                 }
             }
         },

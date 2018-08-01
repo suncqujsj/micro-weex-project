@@ -1,8 +1,8 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" :showLeftImg="true" @leftImgClick="back">
+        <midea-header ref="header" :title="title" bgColor="#ffffff" :isImmersion="false" :showLeftImg="true" @leftImgClick="back">
         </midea-header>
-        <scroll>
+        <scroller class="scroller" :style="{height: scrollHeight + 'px'}">
             <cell class="group-gap-top"></cell>
             <div class="cell-item" 
               v-for="(menu, index0) in menus" 
@@ -13,7 +13,7 @@
                     <image v-else class="arrow-icon" src="./assets/img/service_ic_hide@3x.png" resize='contain'></image>
                 </div>
 
-                <template v-if="activeMenu === menu.title">
+                <scroller style="max-height: 664px;" v-if="activeMenu === menu.title">
                     <div class="cell-sub-item" 
                       v-for="(subMenu, index1) in menu.subMenus"
                       :key="subMenu.title"
@@ -24,22 +24,9 @@
                             <image class="arrow-icon" src="./assets/img/public_ic_more@3x.png" resize='contain'></image>
                         </div>
                     </div>
-                </template>
+                </scroller>
             </div>
-            <!-- <div class="cell-item" @click="showSubItem=!showSubItem">
-                <div class="cell-block">
-                    <text class="cell-label">家庭管理</text>
-                    <image class="arrow-icon" v-if="!showSubItem" src="./assets/img/service_ic_hide@3x.png" resize='contain'></image>
-                    <image class="arrow-icon" v-else src="./assets/img/service_ic_show@3x.png" resize="contain"></image>
-                </div>
-            </div>
-            <div class="cell-item">
-                <div class="cell-block">
-                    <text class="cell-label">用户管理</text>
-                    <image class="arrow-icon" src="./assets/img/service_ic_hide@3x.png" resize='contain'></image>
-                </div>
-            </div> -->
-        </scroll>
+        </scroller>
     </div>
 </template>
 
@@ -53,6 +40,8 @@ import { MideaItem } from '@/index'
 
 import menus from './menuData';
 
+const dom = weex.requireModule('dom');
+
 export default {
     components: {
         MideaItem
@@ -63,7 +52,8 @@ export default {
             title: '智能设备',
             showSubItem: false,
             activeMenu: '',
-            menus: menus
+            menus: menus,
+            scrollHeight: 1238
         }
     },
     computed: {
@@ -106,6 +96,17 @@ export default {
                     this.goTo(link);
                 }
             });
+        },
+
+        // 获取滚动区高度
+        getScrollHeight() {
+            let height = weex.config.env.deviceHeight/weex.config.env.deviceWidth * 750;
+            dom.getComponentRect(this.$refs['header'].$el, (res)=> {
+                // console.log(res);
+                let headHeight = res.size ? res.size.height : 96;
+                this.scrollHeight = height - headHeight;
+                // console.log(this.scrollHeight);
+            });
         }
     },
     beforeCreate() {
@@ -113,6 +114,9 @@ export default {
     },
     created() {
         debugUtil.cleanDebugLog()
+    },
+    mounted() {
+        this.getScrollHeight();
     }
 }
 </script>
@@ -123,6 +127,9 @@ export default {
 .wrapper {
   flex: 1;
   background-color: #f2f2f2;
+}
+.scroller {
+    height: 1270px;
 }
 .group-gap-top {
   height: 24px;
@@ -146,11 +153,13 @@ export default {
   padding-left: 32px;
   padding-right: 24px;
   padding-bottom: 24px;
+  height: 95px;
 }
 
 .cell-sub-item {
   background-color: #f6f6f6;
   padding-left: 32px;
+  height: 96px;
 }
 .cell-sub-block {
   border-bottom-color: #e5e5e8;

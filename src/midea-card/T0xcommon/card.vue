@@ -105,7 +105,7 @@
             },
             showControlPanelPage() {
             	let params = {
-            		controlPanelName:"controlPanel.html"
+            		controlPanelName:this.device_info.controlPanel || "controlPanel.html"
             	};
             	bridgeModule.showControlPanelPage(params);
             },

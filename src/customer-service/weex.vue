@@ -234,7 +234,7 @@ export default {
   width: 56px;
 }
 .wrapper-gap {
-  height: 250px;
+  height: 100px;
 }
 .service-desc-wrapper {
   flex-direction: column;

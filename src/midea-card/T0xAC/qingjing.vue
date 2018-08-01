@@ -78,7 +78,7 @@ export default {
 			isShowCondition: false,
 			conditionOptions: [
 				{ value: '1', desc: '高于' },
-				{ value: '0', desc: '低于' }
+				{ value: '2', desc: '低于' }
 			],
 
 			isShowConditionTemp: false,

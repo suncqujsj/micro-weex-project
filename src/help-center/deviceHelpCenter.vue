@@ -159,7 +159,7 @@ export default {
 .cell-sub-item {
   background-color: #f6f6f6;
   padding-left: 32px;
-  height: 96px;
+  /* height: 96px; */
 }
 .cell-sub-block {
   border-bottom-color: #e5e5e8;

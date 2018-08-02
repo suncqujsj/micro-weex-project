@@ -87,6 +87,7 @@ export default {
             this.submitSituationService(this.situactionData).then((resp) => {
                 if (resp.code == 0) {
                     nativeService.toast("保存成功")
+					this.appPageDataChannel.postMessage({ key: "situation", deviceId: this.deviceId, data: {} })
                     this.back()
                 } else {
                     throw resp

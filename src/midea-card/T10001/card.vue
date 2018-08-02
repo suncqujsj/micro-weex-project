@@ -296,9 +296,14 @@
 
     .text-offline-center {
         position: absolute;
-        right: 300px;
-        top: 200px;
-        align-items: center;
+        top: 176px;
+        left:289px;
+		align-items: center;
+		font-family: PingFangSC-Regular;
+		font-size: 36px;
+		color: #000000;
+		letter-spacing: 0;
+		text-align: center;
     }
 
     .control-div-offline {

@@ -1,27 +1,27 @@
 <template>
-	<div class="wrapper">
-		<midea-header :title="title" :isImmersion="isipx?false:true" @leftImgClick="back">
-		</midea-header>
-		<scroller class="content-wrapper" v-if="situactionData">
-			<div class="base-group header-group">
-				<text class="header-title">{{situationDesc.title}}</text>
-				<text class="header-desc">{{situationDesc.detail}}</text>
-			</div>
-			<div class="base-group">
-				<midea-cell placeHolder="请选择" :rightText="situactionData.props.value" @mideaCellClick="selectConditionTemp" :hasSubBottomBorder="false">
-					<div slot="title" class="cell-title">
-						<text class="cell-label">提醒间隔</text>
-					</div>
-				</midea-cell>
-			</div>
+    <div class="wrapper">
+        <midea-header :title="title" :isImmersion="isipx?false:true" @leftImgClick="back">
+        </midea-header>
+        <scroller class="content-wrapper" v-if="situactionData">
+            <div class="base-group header-group">
+                <text class="header-title">{{situationDesc.title}}</text>
+                <text class="header-desc">{{situationDesc.detail}}</text>
+            </div>
+            <div class="base-group">
+                <midea-cell placeHolder="请选择" :rightText="situactionData.props.value" @mideaCellClick="selectConditionTemp" :hasSubBottomBorder="false">
+                    <div slot="title" class="cell-title">
+                        <text class="cell-label">提醒间隔</text>
+                    </div>
+                </midea-cell>
+            </div>
 
-			<div class="action-bar">
-				<midea-button text="保存" @mideaButtonClicked="submit"></midea-button>
-			</div>
-		</scroller>
+            <div class="action-bar">
+                <midea-button text="保存" @mideaButtonClicked="submit"></midea-button>
+            </div>
+        </scroller>
 
-		<midea-select :show="isShowConditionTemp" title="选择间隔" :items="temperatureList" :index="conditionTempIndex" @close="isShowConditionTemp=false" @itemClick="conditionTempItemClick"></midea-select>
-	</div>
+        <midea-select :show="isShowConditionTemp" title="选择间隔" :items="temperatureList" :index="conditionTempIndex" @close="isShowConditionTemp=false" @itemClick="conditionTempItemClick"></midea-select>
+    </div>
 </template>
 
 <script>
@@ -36,77 +36,78 @@ import MideaSelect from '@/midea-component/mSelect.vue'
 // import { MideaHeader, MideaCell, MideaButton, MideaSelect } from '@/index'
 
 export default {
-	components: {
-		MideaHeader,
-		MideaCell,
-		MideaButton,
-		MideaSelect
-	},
-	mixins: [situationBase],
-	data() {
-		return {
-			title: '情境设置',
-			situactionData: null,
+    components: {
+        MideaHeader,
+        MideaCell,
+        MideaButton,
+        MideaSelect
+    },
+    mixins: [situationBase],
+    data() {
+        return {
+            title: '情境设置',
+            situactionData: null,
 
-			isShowConditionTemp: false,
-			conditionTempIndex: null,
-			temperatureList: []
-		}
-	},
-	computed: {
-		isipx: function () {
-			return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6');
-		},
-		situationDesc() {
-			let result = {
-				title: '',
-				detail: ''
-			}
+            isShowConditionTemp: false,
+            conditionTempIndex: null,
+            temperatureList: []
+        }
+    },
+    computed: {
+        isipx: function () {
+            return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6');
+        },
+        situationDesc() {
+            let result = {
+                title: '',
+                detail: ''
+            }
 
-			if (this.situactionData) {
-				result = {
-					title: "每" + this.situactionData.props.value + "周提醒清晰冰箱内侧",
-					detail: "开启后， 每" + this.situactionData.props.value + "周提醒一次待清洁信息；关闭后，不再显示"
-				}
-			}
+            if (this.situactionData) {
+                result = {
+                    title: "每" + this.situactionData.props.value + "周提醒清晰冰箱内侧",
+                    detail: "开启后， 每" + this.situactionData.props.value + "周提醒一次待清洁信息；关闭后，不再显示"
+                }
+            }
 
-			return result
-		},
-	},
-	methods: {
+            return result
+        },
+    },
+    methods: {
 
-		selectConditionTemp() {
-			this.isShowConditionTemp = true
-		},
-		conditionTempItemClick(event) {
-			this.conditionTempIndex = event.index
-			this.situactionData.props.conditions[0].value = event.key
-		},
+        selectConditionTemp() {
+            this.isShowConditionTemp = true
+        },
+        conditionTempItemClick(event) {
+            this.conditionTempIndex = event.index
+            this.situactionData.props.conditions[0].value = event.key
+        },
 
-		submit() {
-			this.submitSituationService(this.situactionData).then((resp) => {
-				if (resp.code == 0) {
-					nativeService.toast("保存成功")
-					this.back()
-				} else {
-					throw resp
-				}
-			}).catch((error) => {
-				nativeService.toast(this.getErrorMessage(error))
-			})
-		}
-	},
-	created() {
-		for (let index = 17; index <= 30; index++) {
-			this.temperatureList.push({ value: index, key: index }, )
-		}
-		nativeService.getItem("CARD_STORAGE_SITUATION", (resp) => {
-			if (resp.result == 'success') {
-				this.situactionData = JSON.parse(resp.data) || {}
-				this.deviceId = this.situactionData.deviceId
-			}
-		})
-	}
+        submit() {
+            this.submitSituationService(this.situactionData).then((resp) => {
+                if (resp.code == 0) {
+                    nativeService.toast("保存成功")
+                    this.appPageDataChannel.postMessage({ key: "situation", deviceId: this.deviceId, data: {} })
+                    this.back()
+                } else {
+                    throw resp
+                }
+            }).catch((error) => {
+                nativeService.toast(this.getErrorMessage(error))
+            })
+        }
+    },
+    created() {
+        for (let index = 17; index <= 30; index++) {
+            this.temperatureList.push({ value: index, key: index }, )
+        }
+        nativeService.getItem("CARD_STORAGE_SITUATION", (resp) => {
+            if (resp.result == 'success') {
+                this.situactionData = JSON.parse(resp.data) || {}
+                this.deviceId = this.situactionData.deviceId
+            }
+        })
+    }
 }
 </script>
 

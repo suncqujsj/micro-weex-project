@@ -63,7 +63,7 @@
         <image v-if="sceneType==3" class="map-icon" :src="icon.map" @click="goCurrentLocation"></image>
         <div v-if="sceneType==4" class="modal">
             <!-- 时间弹窗 -->
-            <midea-confirm2 height="600" :show="popStatus.time" @leftBtnClick="cancelPop('time')" @rightBtnClick="confirmPop('time')" @mideaPopupOverlayClicked="closePop('time')">
+            <midea-confirm2 :height="popHeight" :show="popStatus.time" @leftBtnClick="cancelPop('time')" @rightBtnClick="confirmPop('time')" @mideaPopupOverlayClicked="closePop('time')">
                 <div class="time-picker row-sb">
                     <scroll-picker :wrapWidth="375" :listArray="hours" @onChange="setActiveHour"></scroll-picker>
                     <scroll-picker :wrapWidth="375" :listArray="minutes" @onChange="setActiveMinute"></scroll-picker>
@@ -74,7 +74,7 @@
         </div>
         <div v-if="sceneType==6" class="modal">
             <!-- 天气弹窗 -->
-            <midea-confirm2 height="580" :show="popStatus.weather" @leftBtnClick="cancelPop('weather')" @rightBtnClick="confirmPop('weather')" @mideaPopupOverlayClicked="closePop('weather')">
+            <midea-confirm2 :height="popHeight" :show="popStatus.weather" @leftBtnClick="cancelPop('weather')" @rightBtnClick="confirmPop('weather')" @mideaPopupOverlayClicked="closePop('weather')">
                 <div class="time-picker row-sb">
                     <scroll-picker :wrapWidth="375" :listArray="weatherLogicalList" @onChange="setActiveLogical"></scroll-picker>
                     <scroll-picker :wrapWidth="375" :listArray="weatherTemperature"  @onChange="setActiveWeatherTemperature"></scroll-picker>
@@ -285,19 +285,18 @@
 </style>
 
 <script>
-    const animation = weex.requireModule('animation')
+    const { platform } = weex.config.env;
 
     import base from './base'
     import nativeService from '@/common/services/nativeService.js'
     import MideaHeader from '@/midea-component/header.vue'
     import MideaCell from '@/midea-component/cell.vue'
     import mideaDialog from '@/midea-component/dialog.vue'
-    import mideaConfirm2 from '@/midea-component/confirm2.vue'
+    import mideaConfirm2 from '@/midea-rooms/components/confirm2.vue'
     import mideaList from '@/midea-rooms/components/list.vue'
     import checkItem from '@/midea-rooms/components/checkItem.vue'
     import scrollPicker from '@/midea-rooms/components/scrollPicker.vue'
     import WxcSearchbar from '@/midea-rooms/components/WxcSearchbar.vue'
-    
     const channelAutoTypeSet = new BroadcastChannel('autoBroadcast')
     
     export default {
@@ -426,6 +425,13 @@
                     }else{
                         tmp = '点击设置温度'
                     }
+                }
+                return tmp
+            },
+            popHeight(){
+                let tmp = 570
+                if (platform.toLowerCase() == 'android') {
+                    tmp = 615
                 }
                 return tmp
             }

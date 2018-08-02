@@ -130,7 +130,7 @@
 	import switchBar from '@/midea-rooms/components/switch.vue'
     import mideaList from '@/midea-rooms/components/list.vue'
     import scrollPicker from '@/midea-rooms/components/scrollPicker.vue'
-    import mideaConfirm2 from '@/midea-component/confirm2.vue'
+    import mideaConfirm2 from '@/midea-rooms/components/confirm2.vue'
 
     const channelSetDevice = new BroadcastChannel('autoBroadcast')
 

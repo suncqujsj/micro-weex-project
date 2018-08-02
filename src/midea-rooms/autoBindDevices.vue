@@ -47,7 +47,7 @@
                 </div>                
             </cell>
         </list>
-        <midea-promt title="快捷操作名称" ref="promt" placeholder="" :inputValue="inputAutoName" :show="showPrompt" @okClicked="promptConfirm" @onPromtClose="promptClose" @onPromtInput="promptInput"></midea-promt>
+        <midea-promt title="快捷操作名称" ref="promt" placeholder="最多输入15字" :inputValue="inputAutoName" :show="showPrompt" @okClicked="promptConfirm" @onPromtClose="promptClose" @onPromtInput="promptInput"></midea-promt>
    </div>
 </template>
 
@@ -158,7 +158,7 @@
     import MideaHeader from '@/midea-component/header.vue'
     import MideaCell from '@/midea-component/cell.vue'
     import mideaList from '@/midea-rooms/components/list.vue'
-    import mideaPromt from '@/component/promt.vue'
+    import mideaPromt from '@/midea-rooms/components/promt.vue'
 
     import { url, applianceImgPath, autoSupportActions, codeDesc } from './config/config.js'
     const channelBindDevice = new BroadcastChannel('autoBroadcast')
@@ -423,7 +423,7 @@
             },
             promptConfirm(){
                 if (this.inputAutoName == ''){
-                    nativeService.alert('没有输入快捷操作名称哦')
+                    nativeService.toast('没有输入快捷操作名称哦')
                     return
                 }
                 

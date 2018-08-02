@@ -68,7 +68,8 @@ import base from './base'
 import orderBase from './orderBase'
 import nativeService from '@/common/services/nativeService'
 import util from '@/common/util/util'
-import { MideaDialog, MideaActionsheet } from '@/index'
+import MideaDialog from '@/component/dialog.vue'
+import MideaActionsheet from '@/midea-component/actionsheet.vue'
 
 const clipboard = weex.requireModule('clipboard')
 

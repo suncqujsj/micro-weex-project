@@ -42,7 +42,7 @@
 <script>
 import nativeService from '../settings/nativeService';
 
-import { MideaPopup } from '@/index'
+import MideaPopup from '@/midea-component/popup.vue'
 
 const dom = weex.requireModule('dom')
 
@@ -295,7 +295,6 @@ export default {
 }
 .unselected-item {
   font-family: PingFangSC-Regular;
-  opacity: 0.6;
   color: #000000;
 }
 .period-content-select-area {

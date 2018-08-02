@@ -36,7 +36,7 @@ import base from './base'
 import nativeService from './settings/nativeService'
 import util from '@/common/util/util'
 
-import { MideaCell } from '@/index'
+import MideaCell from '@/midea-component/cell2.vue'
 import ScanInput from '@/customer-service/components/scanInput.vue'
 
 const picker = weex.requireModule('picker')

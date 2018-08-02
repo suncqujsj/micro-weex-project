@@ -27,24 +27,22 @@
                         </div>
                     </div>
                 </div>
-                <text class="save-btn" @click="save">确定</text>
+                <text v-if="actions.length > 0" class="save-btn" @click="save">确定</text>
                 
             </cell>
         </list>
         <div class="pop-floor" v-for="(item,idx) in actions">
-            <midea-popup v-if="item.type == 'list' || item.type=='range'" :show="show[item.property]" :height="600" @mideaPopupOverlayClicked="closePop(item.property)">
-                <div class="row-sb pop-hd">
-                    <text class="pop-text" @click="closePop(item.property)">取消</text>
-                    <text class="pop-text" @click="confirmPop(item.property)">确定</text>
-                </div>
-                <scroller v-if="item.type == 'list'">
-                    <text v-for="(value,key) in item.value" :class="['pop-item', item.currentStatus == key?'pop-item-active':'']" @click="setActiveKey(idx, key)">{{value}}</text>
-                </scroller>
+             <midea-confirm2 :height="490" :show="show[item.property]" @leftBtnClick="closePop(item.property)" @rightBtnClick="confirmPop(item.property)" @mideaPopupOverlayClicked="closePop(item.property)">
+                 <div v-if="item.type == 'list'" class="pop-list">
+                    <scroller>
+                        <text v-for="(value,key) in item.value" :class="['pop-item', active[item.property].value == key?'pop-item-active':'']" @click="setActiveKey(item.property, idx, key)"> {{value}}</text>
+                    </scroller>
+                 </div>
                 <div v-if="item.type == 'range'">
-                    <scroll-picker v-if="item.property == 'temperature'" :listArray="rangeArrays[item.property]" @onChange="setActiveTemperature"></scroll-picker>
-                    <scroll-picker v-if="item.property == 'wind_speed'" :listArray="rangeArrays[item.property]" @onChange="setActiveWindSpeed"></scroll-picker>
+                    <scroll-picker :height="375" v-if="item.property == 'temperature'" :listArray="rangeArrays[item.property]" @onChange="setActiveTemperature"></scroll-picker>
+                    <scroll-picker :height="375" v-if="item.property == 'wind_speed'" :listArray="rangeArrays[item.property]" @onChange="setActiveWindSpeed"></scroll-picker>
                 </div>
-            </midea-popup>
+            </midea-confirm2>
         </div>
    </div>
 </template>
@@ -111,6 +109,12 @@
         margin-left: 20px;
     }
     .pop-text{ font-size: 30px; color: #007AFF; padding: 25px;}
+    .pop-list{
+        padding-top: 35px;
+        padding-bottom: 35px;
+        height: 350px;
+        background-color: #fff;
+    }
     .pop-item{ padding: 22px; font-size: 30px; color: #777;  text-align: center; width: 750px;}
     .pop-item-active { color: #333}
 </style>
@@ -126,11 +130,12 @@
 	import switchBar from '@/midea-rooms/components/switch.vue'
     import mideaList from '@/midea-rooms/components/list.vue'
     import scrollPicker from '@/midea-rooms/components/scrollPicker.vue'
+    import mideaConfirm2 from '@/midea-rooms/components/confirm2.vue'
 
     const channelSetDevice = new BroadcastChannel('autoBroadcast')
 
     export default {
-        components:{ MideaHeader, switchBar, MideaPopup, scrollPicker },
+        components:{ MideaHeader, switchBar, mideaConfirm2, MideaPopup, scrollPicker },
         mixins: [base],
         data(){
             return {
@@ -195,6 +200,7 @@
                 }else if (this.from == 'editAuto') {
                     this.deviceTask = Object.assign({}, this.deviceTask, JSON.parse(decodeURIComponent(nativeService.getParameters('deviceTask'))))
                 }
+                
                 nativeService.getItem('mideaRoom'+this.deviceId+this.pageStamp, (res)=>{
                     if (res.result == 'success' && res.data) {
                         this.editProperties = JSON.parse(res.data)
@@ -207,18 +213,36 @@
                     for (var i in tmpActions) {
                         let currentStatus
                         if ( this.from == 'addAuto' || this.from == 'addEdit' ) {
-                            currentStatus = this.editProperties[tmpActions[i].property] || tmpActions[i].default
-                        }else if( this.from == 'editAuto'){
-                            if (this.deviceTask[tmpActions[i].property] ) {
-                                currentStatus = this.editProperties[tmpActions[i].property] || this.deviceTask[tmpActions[i].property]
+                            if (this.editProperties[tmpActions[i].property] === '' || this.editProperties[tmpActions[i].property] == undefined) {
+                                currentStatus = tmpActions[i].default
                             }else{
+                                currentStatus = this.editProperties[tmpActions[i].property]
+                            }
+                        }else if( this.from == 'editAuto'){
+                            if (this.deviceTask[tmpActions[i].property] === '' || this.deviceTask[tmpActions[i].property] === undefined ) {
                                 currentStatus = this.editProperties[tmpActions[i].property]  || tmpActions[i].default
+                            }else{
+                                currentStatus = this.editProperties[tmpActions[i].property] || this.deviceTask[tmpActions[i].property]
                             }
                         }
 
                         if (tmpActions[i].type == 'range') {
                             tmpActions[i] = Object.assign({}, tmpActions[i], {currentStatus: currentStatus})
                         }else{
+                            if (tmpActions[i].type == 'list') {
+                                this.active[tmpActions[i].property] = {
+                                    index: i,
+                                    value: currentStatus
+                                }
+                                if (tmpActions[i].type == 'list') {//初始化弹窗的内容
+                                    let activeProperty = {}
+                                    activeProperty[tmpActions[i].property] = {
+                                        index: i,
+                                        value: currentStatus
+                                    }
+                                    this.active = Object.assign({}, this.active, activeProperty)
+                                }
+                            }
                             tmpActions[i] = Object.assign({}, tmpActions[i], {currentStatus: currentStatus, currentStatusName: tmpActions[i]['value'][currentStatus]})
                         }
                         
@@ -235,7 +259,6 @@
                     this.actions = tmpActions
                     this.show = Object.assign({}, this.show, tmpShow)
                     this.activeKey = Object.assign({}, this.activeKey, tmpActiveKey)
-                    // nativeService.alert(this.actions)
                 })
                 
             },
@@ -266,14 +289,17 @@
                 this.show[property] = false
             },
             confirmPop(property){
-              
                 this.show[property] = false
                 for (var x in this.actions) {
                     if (this.actions[x].property == property && this.actions[x].type == 'range'){
                         this.actions[x].currentStatus = this.active[property] || this.rangeArrays[property][0].value
                     }
+                    if (this.actions[x].property == property && this.actions[x].type == 'list') {
+                        this.actions[x].currentStatus = this.active[property].value
+                        this.actions[x].currentStatusName =this.actions[x].value[ this.actions[x].currentStatus]
+                    }
+                    this.editProperties[this.actions[x].property] = this.actions[x].currentStatus
                 }
-                this.editProperties[this.actions[x].property] = this.actions[x].currentStatus
             },
             setActiveTemperature(e){
                 this.active.temperature = e.value
@@ -281,11 +307,11 @@
             setActiveWindSpeed(e){
                 this.active.wind_speed = e.value
             },
-            setActiveKey(propertyIdx, key){
-                this.actions[propertyIdx].currentStatus = key
-                this.actions[propertyIdx].currentStatusName = this.actions[propertyIdx]['value'][key]
-
-                this.editProperties[this.actions[propertyIdx].property] = this.actions[propertyIdx].currentStatus
+            setActiveKey(property, propertyIdx, key){
+                this.active[property] = {
+                    index: propertyIdx,
+                    value: key
+                }
             },
             cancelDevice(){
                 this.isCheck = 'uncheck'

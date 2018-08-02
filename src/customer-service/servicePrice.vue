@@ -44,7 +44,7 @@ import base from './base'
 import nativeService from './settings/nativeService'
 import util from '@/common/util/util'
 
-import { MideaButton } from '@/index'
+import MideaButton from '@/midea-component/button2.vue'
 import ScanInput from '@/customer-service/components/scanInput.vue'
 
 export default {

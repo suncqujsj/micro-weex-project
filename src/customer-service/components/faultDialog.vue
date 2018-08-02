@@ -176,7 +176,7 @@
 </style>
 
 <script>
-import { MideaMask } from '@/index'
+import MideaMask from '@/midea-component/mask.vue'
 const dom = weex.requireModule('dom');
 module.exports = {
     components: { MideaMask },

@@ -75,7 +75,7 @@
                     <text class="text-offline-center">已离线</text>
                 </div>
             </div>
-            <situation></situation>
+            <situation @statusChanged="queryStatus"></situation>
             <!--downloading by zhouhg-->
             <midea-download></midea-download>
         </div>
@@ -330,9 +330,7 @@ export default {
         nativeService.getDeviceInfo().then(function (data) {
             self.updateDeviceInfo(data.result);
             self.handleNotification();
-            if (data.result.isOnline || data.result.isOnline == "1") {
-                self.queryStatus();
-            }
+            self.queryStatus();
         }, function (error) {
             nativeService.toast("连接设备超时");
         })
@@ -354,7 +352,6 @@ export default {
   height: 392px;
   margin-left: 32px;
   margin-right: 32px;
-  margin-top: 32px;
   background-color: #5d75f6;
   flex-direction: row;
   border-radius: 6px;
@@ -364,7 +361,6 @@ export default {
   height: 392px;
   margin-left: 32px;
   margin-right: 32px;
-  margin-top: 32px;
   background-color: #d8d8de;
   flex-direction: row;
   border-radius: 6px;
@@ -379,10 +375,15 @@ export default {
   text-align: center;
 }
 .text-offline-center {
-  position: absolute;
-  right: 295px;
-  top: 170px;
-  align-items: center;
+	position: absolute;
+	top: 176px;
+	left:289px;
+	align-items: center;
+	font-family: PingFangSC-Regular;
+	font-size: 36px;
+	color: #000000;
+	letter-spacing: 0;
+	text-align: center;
 }
 .control-div-offline {
   position: absolute;

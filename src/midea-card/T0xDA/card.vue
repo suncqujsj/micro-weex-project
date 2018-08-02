@@ -425,9 +425,7 @@
             nativeService.getDeviceInfo().then(function(data) {
             	self.updateDeviceInfo(data.result);
             	self.handleNotification();
-            	if(data.result.isOnline == "1") {
-            		self.queryStatus();
-            	}
+        		self.queryStatus();
             },function(error) {
             	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
             })
@@ -449,7 +447,6 @@
 		height:392px;
 		margin-left:32px;
 		margin-right:32px;
-		margin-top:32px;
 		background-color: #5D75F6;
 		flex-direction: row;
 		border-radius: 6px;
@@ -462,7 +459,6 @@
 		height:392px;
 		margin-left:32px;
 		margin-right:32px;
-		margin-top:32px;
 		background-color: #D8D8DE;
 		flex-direction: row;
 		border-radius: 6px;
@@ -478,9 +474,14 @@
 	}
 	.text-offline-center {
 		position: absolute;
-		right:325px;
-		top:170px;
+		top:176px;
+		left:289px;
 		align-items: center;
+		font-family: PingFangSC-Regular;
+		font-size: 36px;
+		color: #000000;
+		letter-spacing: 0;
+		text-align: center;
 	}
 	.control-div-offline {
 		position: absolute;
@@ -537,8 +538,9 @@
 		color: #FFFFFF;
 	}
 	.main-status-small {
-		font-size: 28px;
+		font-size: 26px;
 		margin-left: 4px;
+		z-index: 2;
 	}
 	.main-status-simple {
 		font-size: 75px;

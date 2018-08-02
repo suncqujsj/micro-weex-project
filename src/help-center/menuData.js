@@ -36,6 +36,7 @@ const menus = [
             {
                 title: '设备添加失败如何处理',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '设备添加失败',
                 placeholder: '请根据失败提示进行重试',
                 failTypes: [
                     {
@@ -98,6 +99,7 @@ const menus = [
             {
                 title: '添加设备无法选择家庭网络',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '添加设备无法选择家庭网络',
                 placeholder: '安卓用户如果在添加设备无法选择家庭网络，请检查:',
                 descSteps: [
                     '手机WLAN已打开',
@@ -108,6 +110,7 @@ const menus = [
             {
                 title: '设备二维码在哪里',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '设备二维码在哪里',
                 descInfos: [
                     '美的智能设备在机身上都会贴有一张二维码，用于绑定并激活设备',
                     '不同设备粘贴二维码的位置会有所不同，主要粘贴在机身正面（如智能空调挂机、智能冰箱、智能洗衣机等）或机身背面（如智能空调柜机、智能插座等），使用前请仔细观察设备机身，并妥善保存二维码'
@@ -116,6 +119,7 @@ const menus = [
             {
                 title: '如何修改设备名称',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '修改设备名称',
                 descInfos: [
                     '添加设备连接成功后，可以修改设备名称，或者在个人中心—>我的设备—>设备详情中进行修改',
                     '注: 修改名称仅限于家庭创建者，家庭成员无法修改'
@@ -124,6 +128,7 @@ const menus = [
             {
                 title: '如何删除设备',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '删除设备',
                 descInfos: [
                     '登录美居App，在个人中心—>我的设备列表中按住左划删除',
                     '注: 删除仅限于家庭创建者，家庭成员无法删除'
@@ -132,6 +137,7 @@ const menus = [
             {
                 title: '设备为何显示离线',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '设备为何显示离线',
                 placeholder: '若设备变为离线状态，请检查:',
                 descSteps: [
                     '设备是否连接电源',
@@ -143,6 +149,7 @@ const menus = [
             {
                 title: '如何重置设备（进入配置模式）',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '重置设备（进入配置模式）',
                 descInfos: [
                     '重置设备（进入配置模式），就是让智能设备的WiFi模块恢复出厂初始设置，重置后可在美居App重新添加设备',
                     '不同类型、不同型号的设备的重置方式会有所不同，具体方式以实际设备配网指引为准'
@@ -151,6 +158,7 @@ const menus = [
             {
                 title: '如何下载/升级设备插件',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '下载/升级设备插件',
                 descInfos: [
                     '登录美居App，在首页或智能页面设备卡片位置，根据提示进行下载或更新操作。如用户选择忽略，则下个版本更新时再提示'
                 ]
@@ -158,6 +166,7 @@ const menus = [
             {
                 title: '网络信号弱导致设备控制失败怎么处理',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '网络信号弱导致设备控制失败怎么处理',
                 descInfos: [
                     '请确认设备所在区域的WiFi信号强度，以及当前操作手机的网络情况，可适当调整路由器位置',
                     '若问题仍然存在，请完全退出美居App（删除后台进程），再重新打开美居App并登录',
@@ -167,6 +176,7 @@ const menus = [
             {
                 title: '为什么添加设备时失败，重试多次也无法添加',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '为什么添加设备时失败，重试多次也无法添加',
                 descInfos: [
                     '当添加设备失败后，按照页面提示“重试”，请确保手机连接了家庭路由器网络，而且设备已进入了配网模式'
                 ]
@@ -174,6 +184,7 @@ const menus = [
             {
                 title: '为什么主界面的设备不见了',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '为什么主界面的设备不见了',
                 descInfos: [
                     '设备按照家庭进行展示，如没有看到之前的设备，可在首页切换家庭，或在个人中心—>我的设备列表中查找'
                 ]
@@ -181,6 +192,7 @@ const menus = [
             {
                 title: '更改无线路由器名称或密码后，为什么手机软件不能控制设备',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '更改无线路由器名称或密码后，为什么手机软件不能控制设备',
                 descInfos: [
                     '更改家庭无线路由器名称或密码后，需要重新配置设备到用户家庭无线网络'
                 ]
@@ -188,6 +200,7 @@ const menus = [
             {
                 title: '为什么扫描二维码黑屏',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '为什么扫描二维码黑屏',
                 descInfos: [
                     '扫描二维码时黑屏是因为禁止了美居的相机权限，建议您找到安全软件或者系统设置，打开美居的相机权限即可'
                 ]
@@ -195,6 +208,7 @@ const menus = [
             {
                 title: '为什么无法找到midea_xx_xxxx设备WiFi',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '为什么无法找到midea_xx_xxxx设备WiFi',
                 descInfos: [
                     '美的智能设备需要进入配置模式才会发射设备WiFi，进入配置模式的方法请参考设备配网指引。设备WiFi名称为midea_xx_xxxx，默认密码为12345678'
                 ]
@@ -202,6 +216,7 @@ const menus = [
             {
                 title: '添加设备百分比进度条停止',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '添加设备百分比进度条停止',
                 descInfos: [
                     '添加设备时出现进度条停止情况请不要着急取消或退出，美居会给出失败原因和提示。如果根据提示无法解决问题，请联系客服进行咨询'
                 ]
@@ -209,6 +224,7 @@ const menus = [
             {
                 title: '为什么美居搜索不到我家里面的WiFi网络',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '为什么美居搜索不到我家里面的WiFi网络',
                 descInfos: [
                     '美居无法获取WiFi列表是由于禁止了美居的定位权限，建议您找到安全软件或设置，打开美居的定位权限即可'
                 ]
@@ -216,6 +232,7 @@ const menus = [
             {
                 title: '为什么我的设备WiFi指示灯一直在闪',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '为什么我的设备WiFi指示灯一直在闪',
                 descInfos: [
                     'WiFi指示灯闪烁表明设备没有能够正常连接网络。建议您重置设备后再配网'
                 ]
@@ -223,6 +240,7 @@ const menus = [
             {
                 title: '扫描二维码一直提示错误，怎么回事',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '扫描二维码一直提示错误，怎么回事',
                 descInfos: [
                     '提示错误表明您扫描了错误的设备二维码，正确的二维码应该是单独贴在设备上，而不是常见的节能标示的二维码'
                 ]
@@ -230,6 +248,7 @@ const menus = [
             {
                 title: '怎么才能知道我的设备是否支持WiFi功能',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '怎么才能知道我的设备是否支持WiFi功能',
                 descInfos: [
                     '可查看产品说明书，或通过咨询购买渠道进行确认'
                 ]
@@ -237,6 +256,7 @@ const menus = [
             {
                 title: '为什么我的设备进入AP配置模式还是找不到设备WiFi',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '为什么我的设备进入AP配置模式还是找不到设备WiFi',
                 descInfos: [
                     '建议进行重试，如果多次尝试进入配置模式成功但无法搜索到设备WiFi，或为WiFi问题，请联系美的售后人员进行更换'
                 ]
@@ -244,6 +264,7 @@ const menus = [
             {
                 title: '连接的时候出现错误怎么办',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '连接的时候出现错误怎么办',
                 descInfos: [
                     '连接出现错误提示，请排除问题后重试，如果仍然不能解决可咨询客服需求帮助'
                 ]
@@ -251,6 +272,7 @@ const menus = [
             {
                 title: '连接智能设备需要注意哪些常见问题',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '连接智能设备需要注意哪些常见问题',
                 placeholder: '美居使用注意事项:',
                 descSteps: [
                     '建议手机系统版本为安卓4.0或者iOS8.0以上',
@@ -263,6 +285,7 @@ const menus = [
             {
                 title: '为什么扫描设备二维码没有任何反应',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '为什么扫描设备二维码没有任何反应',
                 descInfos: [
                     '扫描二维码时没有反应可以尝试变化角度，或者扫描距离稍微远一点，另外检查二维码是否破损。如果二维码破损，建议联系客服寻求帮助'
                 ]
@@ -319,6 +342,7 @@ const menus = [
             {
                 title: '如何删除/退出家庭',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '删除/退出家庭',
                 descInfos: [
                     '登录美居App，在个人中心—>设置—>家庭管理'
                 ],
@@ -337,16 +361,17 @@ const menus = [
             }
         ]
     },
-    {
-        title: '用户管理',
-        subMenus: []
-    },
+    // {
+    //     title: '用户管理',
+    //     subMenus: []
+    // },
     {
         title: '其他部分',
         subMenus: [
             {
                 title: '无法接收设备提醒/成员邀请',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '无法接收设备提醒/成员邀请',
                 placeholder: '请检查美居App是否已获得推送通知权限',
                 descInfos: [
                     '苹果用户具体入口：手机设置—> 通知—>美居—>允许通知',
@@ -356,6 +381,7 @@ const menus = [
             {
                 title: '美居App闪退',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '美居App闪退',
                 descInfos: [
                     '若美居App闪退，请完全退出美居App（删除后台进程），再重新打开美居App',
                     '若问题仍然存在，请完全卸载美居App后重新安装，并升级到最新版本',
@@ -365,6 +391,7 @@ const menus = [
             {
                 title: '美居App无法登陆',
                 link: 'deviceProblems/problemDetail',
+                detailTitle: '美居App无法登陆',
                 descInfos: [
                     '请确认网络情况后重试。若问题长时间仍然存在，请完全卸载美居App后重新安装，并升级到最新版本'
                 ]

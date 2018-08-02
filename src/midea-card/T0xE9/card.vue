@@ -235,7 +235,6 @@
 		height:392px;
 		margin-left:32px;
 		margin-right:32px;
-		margin-top:32px;
 		background-color: #5D75F6;
 		flex-direction: row;
 		border-radius: 6px;
@@ -248,7 +247,6 @@
 		height:392px;
 		margin-left:32px;
 		margin-right:32px;
-		margin-top:32px;
 		background-color: #D8D8DE;
 		flex-direction: row;
 		border-radius: 6px;
@@ -264,9 +262,14 @@
 	}
 	.text-offline-center {
 		position: absolute;
-		right:300px;
-		top:180px;
+		top:176px;
+		left:289px;
 		align-items: center;
+		font-family: PingFangSC-Regular;
+		font-size: 36px;
+		color: #000000;
+		letter-spacing: 0;
+		text-align: center;
 	}
 	.control-div-offline {
 		position: absolute;

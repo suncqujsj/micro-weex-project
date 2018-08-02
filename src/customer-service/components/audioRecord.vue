@@ -18,7 +18,7 @@
 <script>
 const globalEvent = weex.requireModule('globalEvent')
 import nativeService from '@/common/services/nativeService'
-import { MideaPopup } from '@/index'
+import MideaPopup from '@/midea-component/popup.vue'
 module.exports = {
     components: { MideaPopup },
     props: {

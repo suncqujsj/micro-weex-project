@@ -89,7 +89,7 @@ export default {
 			windSpeedOptions: [
 				{ value: '1', desc: '最小' },
 				{ value: '50', desc: '中' },
-				{ value: '100', desc: '最强' }
+				{ value: '100', desc: '最大' }
 			],
 		}
 	},

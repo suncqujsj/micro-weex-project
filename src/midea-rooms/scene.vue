@@ -1053,6 +1053,11 @@
                     { modelName: '节能', modelId: '1003' },
                     { modelName: '全关', modelId: '1004' },
                 ]
+                
+                nativeService.burialPoint({//埋点客厅
+                    pageName: 'sceneMainPage',
+                    subAction: 'scene_livingroom_operate'
+                })
             }else if (this.roomType == 2) {
                 this.scene.modeList = [
                     { modelName: '回家', modelId: '1005' },
@@ -1066,6 +1071,15 @@
                     { modelName: '省电', modelId: '1010' },
                     { modelName: '停用', modelId: '1011' },
                 ]
+            }else if (this.roomType == 4) {
+                nativeService.burialPoint({//埋点洗衣机用水
+                    pageName: 'sceneMainPage',
+                    subAction: 'scene_balcony_water_operate'
+                })
+                nativeService.burialPoint({//埋点洗衣机用电
+                    pageName: 'sceneMainPage',
+                    subAction: 'scene_balcony_electric_operate'
+                })
             }
 
             this.homegroupId = nativeService.getParameters('homegroupId')

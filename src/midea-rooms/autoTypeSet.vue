@@ -359,6 +359,7 @@
                 activeWeatherTemperature: '',
                 activeWeatherLogical: '',
                 activeWeatherStatus: '',
+                autoWeatherTemperature: '',
                 gpsInfo: {},
                 showMapSearchResult: false,
                 mapSearchResult: [],
@@ -554,11 +555,16 @@
             cancelPop(autoTypeName){
                 if (autoTypeName == 'time') {
                     if (this.startTime == '') {
-                        this.activeHour == '00'
-                        this.activeMinute = '00'
+                        this.activeHour == ''
+                        this.activeMinute = ''
                     }
                     if (this.from == 'editAuto') {
                         delete this.editParams.hour
+                    }
+                }
+                if (autoTypeName == 'weather') {
+                    if (this.autoWeatherTemperature == '') {
+                        this.activeWeatherTemperature = ''
                     }
                 }
                 this.closePop(autoTypeName)

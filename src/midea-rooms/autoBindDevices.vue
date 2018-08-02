@@ -499,6 +499,10 @@
                         nativeService.toast(this.getErrorMessage(err))
                     })
                 })
+                nativeService.burialPoint({
+                    pageName: 'sceneMainPage',
+                    subAction: 'scene_select_and_create'
+                })
             }
         },
         created() {

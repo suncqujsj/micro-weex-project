@@ -104,7 +104,7 @@
                             tempData.icon = "./assets/img/smart_img_equip031@2x.png";
                             tempData.temperature = "";
                         } else if (deviceType == "0xED" && deviceSubType == "265") {
-                            tempData.icon = "./assets/img/smart_img_equip031@2x.png";
+                            tempData.icon = "./assets/img/smart_img_equipunder031@2x.png";
                             tempData.temperature = "";
                         }
                         tempData.deviceId = currentDeviceId;
@@ -113,25 +113,24 @@
                         tempData.deviceSubType = deviceSubType;
                         tempData.onlineStatus = deviceOnlineStatus;
                         me.prepareData.push(tempData);
-                    }}
-                )
+                    }}).then(this.updateTXList)
             },
             updateTXList() {
                 let me = this;
                 for (let j = 0; j < me.prepareData.length; j++) {
                     let currentData = me.prepareData[j];
                     let returnDeviceId = currentData.deviceId;
+                    let deviceSubType = currentData.deviceSubType;
                     let deviceType = currentData.deviceType;
-                    let deviceStatus = currentData.status
-                    if (returnDeviceId == deviceId && deviceStatus=="online") {
-                        let params={
-                            operation:"luaQuery",
+                    let deviceStatus = currentData.status;
+                    let deviceOnlineStatus = currentData.onlineStatus;
+                    if (returnDeviceId && deviceOnlineStatus=="online") {
+                        let param={
                             deviceId: returnDeviceId
                         }
-                        nativeService.sendLuaRequest( params,true,).then( function (data) {
-                            // console.log("data:" + data);
+                        nativeService.sendLuaRequest( param,true,).then( function (data) {
                             if (data.errorCode == 0) {
-                                let params = data.params;
+                                let params = data.result;
                                 if (deviceType == "0xE2") {
                                     if (params.cur_temperature) {
                                         currentData.temperature = params.cur_temperature + "℃";
@@ -164,6 +163,7 @@
                                     currentData.temperature = "";
                                     currentData.status = params.power == "on" ? "已开机" : "已关机";
                                 } else if (deviceType == "0xED" && deviceSubType == "265") {
+                                    nativeService.alert(params);
                                     currentData.temperature = "";
                                     if (params.life_1) {
                                         currentData.status = params.life_1;
@@ -183,7 +183,7 @@
                                 }
                                 me.prepareData.push(tempData);
                             } else {
-                                mm.toast({'message': '连接设备超时', 'duration': 2});
+                                modal.toast({'message': '连接设备超时', 'duration': 2});
                             }
                         })
                     }
@@ -195,22 +195,78 @@
             itemClicked(event) {
                 this.jumpControlPanelPage();
             },
+            updateItem(data){ //设备状态上报
+                for (let j = 0; j < me.prepareData.length; j++) {
+                    let currentData = me.prepareData[j];
+                    let returnDeviceId = currentData.deviceId;
+                    let deviceSubType = currentData.deviceSubType;
+                    let deviceType = currentData.deviceType;
+                    let deviceStatus = currentData.status;
+                    let deviceOnlineStatus = currentData.onlineStatus;
+                    if (returnDeviceId == data.deviceId && deviceOnlineStatus == "online") {
+                        let params = data;
+                        if (deviceType == "0xE2") {
+                            if (params.cur_temperature) {
+                                currentData.temperature = params.cur_temperature + "℃";
+                            } else {
+                                currentData.temperature = "";
+                            }
+                            if (params.power == "off") {
+                                currentData.status = "已关机";
+                            } else {
+                                if (params.hot_power == "on") {
+                                    currentData.status = "加热中";
+                                } else if (params.warm_power == "on") {
+                                    currentData.status = "保温中";
+                                } else if (params.fast_hot_power == "on") {
+                                    currentData.status = "即热";
+                                }
+                            }
+                        } else if (deviceType == "0xE3") {
+                            if (params.power == "on") {
+                                if (params.temperature) {
+                                    currentData.status = params.temperature + "℃";
+                                } else {
+                                    currentData.status = "";
+                                }
+                            } else {
+                                currentData.status = "已关机";
+                            }
+                            currentData.temperature = "";
+                        } else if (deviceType == "0xED" && deviceSubType == "266") {
+                            currentData.temperature = "";
+                            currentData.status = params.power == "on" ? "已开机" : "已关机";
+                        } else if (deviceType == "0xED" && deviceSubType == "265") {
+                            nativeService.alert(params);
+                            currentData.temperature = "";
+                            if (params.life_1) {
+                                currentData.status = params.life_1;
+                            }
+                            if (params.life_2) {
+                                currentData.status += params.life_2;
+                            }
+                            if (params.life_3) {
+                                currentData.status += params.life_3;
+                            }
+                            if (params.life_4) {
+                                currentData.status += params.life_4;
+                            }
+                            if (params.life_5) {
+                                currentData.status += params.life_5;
+                            }
+                        }
+                        me.prepareData[j] = currentData;
+                    }
+                }
+            },
             handleNotification() {
                 let me = this;
                 globalEvent.addEventListener(this.pushKey, (data) => {
-                    me.updateUI(data);
+                    me.updateItem(data);
                 });
                 globalEvent.addEventListener(this.pushKeyOnline, (data) => {
-                    if (data && data.messageType == "deviceOnlineStatus") {
-                        if (data.messageBody && data.messageBody.onlineStatus == "online") {
-                            me.onlineStatus = "1";
-                        } else if (data.messageBody && data.messageBody.onlineStatus == "offline") {
-                            me.onlineStatus = "0";
-                        } else {
-                            me.onlineStatus = "0";
-                        }
-                    } else if (data && data.messageType == "queryStatusFromApp") {
-                        me.queryStatus();
+                    if (data && data.messageType == "queryStatusFromApp") {
+                        me.updateTXList() ;
                     }
                 });
             },
@@ -224,7 +280,6 @@
         computed: {},
         mounted() {
             this.queryTXLists();
-            this.updateTXList();
             this.handleNotification()
         }
     }

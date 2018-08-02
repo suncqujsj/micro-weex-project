@@ -955,12 +955,12 @@
                         self.setWasherStatus(luaData)
                         resolve(luaData)
                     },function(error) {
-                        nativeService.alert('查询洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
+                        // nativeService.toast('查询洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
+                        nativeService.toast('查询洗衣机状态失败')
                     })
                 })
             },
             setWasherStatus(luaData){
-
                 this.washerPower = luaData.result.power
                 if (this.washerPower == 'on') {
                     if (luaData.result.running_status == 'start'){
@@ -973,6 +973,7 @@
             powerOnOff(){//控制阳台场景洗衣机的开启关闭
                 let self = this;
                 let poweronoff = this.washerPower=='off' ? "on" : "off"
+                let aimText = this.washerPower=='off' ? "开机" : "关机"
                 let params = {
                     operation: "luaControl",
                     applianceId:  String(self.washerCode),
@@ -988,25 +989,35 @@
                         }
                     })
                 },function(error) {
-                    nativeService.alert('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
+                    // nativeService.toast('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
+                    nativeService.toast(aimText + '失败')
                 });
             },
             controlStartPause(){//控制阳台场景洗衣机的启动暂停
                 let self = this;
                 
-                if( self.washerRunningStatus == "start") {
+                if( self.washerRunningStatus == "work") {
                     let params = {
                         operation:"luaControl",
                         applianceId: String(self.washerCode),
                         params:{ "control_status": "pause" }
                     }
                     nativeService.sendLuaRequest(params, true).then(function() {
-                        self.luaQueryStatus().then((luaData)=>{
-                            nativeService.alert(luaData.result.running_status +'洗衣机暂停成功')
-                        })
+                        nativeService.showLoading()
+                        setTimeout(()=>{
+                            self.luaQueryStatus().then((luaData)=>{
+                                nativeService.hideLoading()
+                                if (luaData.result.running_status == 'pause') {
+                                    nativeService.toast('洗衣机暂停成功')
+                                }else{
+                                    nativeService.toast('洗衣机暂停失败')
+                                }
+                            })
+                        },1000)
                         
                     },function(error) {
-                        nativeService.alert('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
+                        nativeService.toast('洗衣机暂停失败')
+                        // nativeService.toast('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
                     })
                 } else {
                     let params = {
@@ -1017,11 +1028,18 @@
                     nativeService.sendLuaRequest(params,true).then(function(luaData) {
                         nativeService.showLoading()
                         setTimeout(()=>{
-                            self.luaQueryStatus()
-                            nativeService.hideLoading()
-                        },2000)
+                            self.luaQueryStatus().then((luaData)=>{
+                                nativeService.hideLoading()
+                                if (luaData.result.running_status == 'start') {
+                                    nativeService.toast('洗衣机启动成功')
+                                }else{
+                                    nativeService.toast('洗衣机启动失败')
+                                }
+                            })
+                        },1000)
                     },function(error) {
-                        nativeService.alert('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
+                        // nativeService.toast('洗衣机启动失败 \n[错误码：' + error.errorCode +']')
+                        nativeService.toast('洗衣机启动失败')
                     });
                 }
             }
@@ -1035,6 +1053,11 @@
                     { modelName: '节能', modelId: '1003' },
                     { modelName: '全关', modelId: '1004' },
                 ]
+                
+                nativeService.burialPoint({//埋点客厅
+                    pageName: 'sceneMainPage',
+                    subAction: 'scene_livingroom_operate'
+                })
             }else if (this.roomType == 2) {
                 this.scene.modeList = [
                     { modelName: '回家', modelId: '1005' },
@@ -1048,6 +1071,15 @@
                     { modelName: '省电', modelId: '1010' },
                     { modelName: '停用', modelId: '1011' },
                 ]
+            }else if (this.roomType == 4) {
+                nativeService.burialPoint({//埋点洗衣机用水
+                    pageName: 'sceneMainPage',
+                    subAction: 'scene_balcony_water_operate'
+                })
+                nativeService.burialPoint({//埋点洗衣机用电
+                    pageName: 'sceneMainPage',
+                    subAction: 'scene_balcony_electric_operate'
+                })
             }
 
             this.homegroupId = nativeService.getParameters('homegroupId')

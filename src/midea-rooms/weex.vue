@@ -326,6 +326,11 @@
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
                 })
+                
+                nativeService.burialPoint({//埋点洗衣机用水
+                    pageName: 'sceneMainPage',
+                    subAction: 'scene_shortcut_operate'
+                })
             },
             checkExecuteAuto(sceneId, resultId){
                 this.checkLogin().then( (uid) => {

@@ -50,29 +50,43 @@
         </list>
         <!-- 客厅/卧室场景指标弹窗 -->
         <div v-if="roomType == 1 || roomType == 2">
-            <midea-confirm2 :height="480" :show="show.temperatureMin" @leftBtnClick="cancelProp('temperatureMin')" @rightBtnClick="confirmProp('temperatureMin')" @mideaPopupOverlayClicked="closePropPop('temperatureMin')">
+            <midea-confirm2 :height="488" :show="show.temperatureMin" @leftBtnClick="cancelProp('temperatureMin')" @rightBtnClick="confirmProp('temperatureMin')" @mideaPopupOverlayClicked="closePropPop('temperatureMin')">
                 <scroll-picker :listArray="temperatureMinList" @onChange="setTemperatureMin"></scroll-picker>
+                <div class="line1" ></div>
+                <div class="line2"></div>
             </midea-confirm2>
-            <midea-confirm2 :height="480" :show="show.temperatureMax" @leftBtnClick="cancelProp('temperatureMin')" @rightBtnClick="confirmProp('temperatureMax')" @mideaPopupOverlayClicked="closePropPop('temperatureMax')">
+            <midea-confirm2 :height="488" :show="show.temperatureMax" @leftBtnClick="cancelProp('temperatureMin')" @rightBtnClick="confirmProp('temperatureMax')" @mideaPopupOverlayClicked="closePropPop('temperatureMax')">
                 <scroll-picker :listArray="temperatureMaxList" @onChange="setTemperatureMax"></scroll-picker>
+                <div class="line1" ></div>
+                <div class="line2"></div>
             </midea-confirm2>
-            <midea-confirm2 :height="480" :show="show.humidityMin" @leftBtnClick="cancelProp('humidityMin')" @rightBtnClick="confirmProp('humidityMin')" @mideaPopupOverlayClicked="closePropPop('humidityMin')">
+            <midea-confirm2 :height="488" :show="show.humidityMin" @leftBtnClick="cancelProp('humidityMin')" @rightBtnClick="confirmProp('humidityMin')" @mideaPopupOverlayClicked="closePropPop('humidityMin')">
                 <scroll-picker :listArray="humidityMinList" @onChange="setHumidityMin"></scroll-picker>
+                <div class="line1" ></div>
+                <div class="line2"></div>
             </midea-confirm2>
-            <midea-confirm2 :height="480" :show="show.humidityMax" @leftBtnClick="cancelProp('humidityMax')" @rightBtnClick="confirmProp('humidityMax')" @mideaPopupOverlayClicked="closePropPop('humidityMax')">
+            <midea-confirm2 :height="488" :show="show.humidityMax" @leftBtnClick="cancelProp('humidityMax')" @rightBtnClick="confirmProp('humidityMax')" @mideaPopupOverlayClicked="closePropPop('humidityMax')">
                 <scroll-picker :listArray="humidityMaxList" @onChange="setHumidityMax"></scroll-picker>
+                <div class="line1" ></div>
+                <div class="line2"></div>
             </midea-confirm2>
         </div>
         <!-- 卫浴场景指标弹窗 -->
         <div v-if="roomType == 3">
-            <midea-confirm2 :height="400" :show="show.comfortable" @leftBtnClick="cancelProp('comfortable')" @rightBtnClick="confirmProp('comfortable')" @mideaPopupOverlayClicked="closePropPop('comfortable')">
+            <midea-confirm2 :height="488" :show="show.comfortable" @leftBtnClick="cancelProp('comfortable')" @rightBtnClick="confirmProp('comfortable')" @mideaPopupOverlayClicked="closePropPop('comfortable')">
                 <scroll-picker :listArray="comfortableList" @onChange="setComfortableValue"></scroll-picker>
+                <div class="line1" ></div>
+                <div class="line2"></div>
             </midea-confirm2>
-            <midea-confirm2 :height="400" :show="show.save" @leftBtnClick="cancelProp('save')" @rightBtnClick="confirmProp('save')" @mideaPopupOverlayClicked="closePropPop('save')">
+            <midea-confirm2 :height="488" :show="show.save" @leftBtnClick="cancelProp('save')" @rightBtnClick="confirmProp('save')" @mideaPopupOverlayClicked="closePropPop('save')">
                 <scroll-picker :listArray="saveList" @onChange="setSaveValue"></scroll-picker>
+                <div class="line1" ></div>
+                <div class="line2"></div>
             </midea-confirm2>
-            <midea-confirm2 :height="400" :show="show.use" @leftBtnClick="cancelProp('use')" @rightBtnClick="confirmProp('use')" @mideaPopupOverlayClicked="closePropPop('use')">
+            <midea-confirm2 :height="488" :show="show.use" @leftBtnClick="cancelProp('use')" @rightBtnClick="confirmProp('use')" @mideaPopupOverlayClicked="closePropPop('use')">
                 <scroll-picker :listArray="useList" @onChange="setUseValue"></scroll-picker>
+                <div class="line1" ></div>
+                <div class="line2"></div>
             </midea-confirm2>
         </div>
     </div>
@@ -103,6 +117,20 @@
     .sub-hd{background-color: #f2f2f2; padding: 25px; color:#777;  font-size: 28px;}
     .device-line{padding-top: 32px; padding-bottom: 32px; padding-right: 25px; }
     .check{ width: 32px; height: 32px;}
+    .line1, .line2{
+        background-color: #e2e2e2;
+        width: 750px;
+        height: 1px;
+        position: absolute;
+        left: 0;
+        right: 0;
+    }
+    .line1{
+        top: 125px;
+    }
+    .line2{
+        top: 210px;
+    }
 </style>
 
 <script>
@@ -115,7 +143,7 @@
     import mideaList from '@/midea-rooms/components/list.vue'
     import scrollPicker from '@/midea-rooms/components/scrollPicker.vue'
     import mideaRange from '@/midea-rooms/components/range.vue'
-    import mideaConfirm2 from '@/midea-component/confirm2.vue'
+    import mideaConfirm2 from '@/midea-rooms/components/confirm2.vue'
 
     import { url, codeDesc } from './config/config.js'
 

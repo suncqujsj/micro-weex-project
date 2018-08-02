@@ -32,15 +32,15 @@
             </cell>
         </list>
         <div class="pop-floor" v-for="(item,idx) in actions">
-             <midea-confirm2 height="480" :show="show[item.property]" @leftBtnClick="closePop(item.property)" @rightBtnClick="confirmPop(item.property)" @mideaPopupOverlayClicked="closePop(item.property)">
+             <midea-confirm2 :height="490" :show="show[item.property]" @leftBtnClick="closePop(item.property)" @rightBtnClick="confirmPop(item.property)" @mideaPopupOverlayClicked="closePop(item.property)">
                  <div v-if="item.type == 'list'" class="pop-list">
                     <scroller>
-                        <text v-for="(value,key) in item.value" :class="['pop-item', item.currentStatus == key?'pop-item-active':'']" @click="setActiveKey(idx, key)">{{value}}</text>
+                        <text v-for="(value,key) in item.value" :class="['pop-item', active[item.property].value == key?'pop-item-active':'']" @click="setActiveKey(item.property, idx, key)"> {{value}}</text>
                     </scroller>
                  </div>
-                <div v-if="item.type == 'range'" class="pop-list">
-                    <scroll-picker v-if="item.property == 'temperature'" :listArray="rangeArrays[item.property]" @onChange="setActiveTemperature"></scroll-picker>
-                    <scroll-picker v-if="item.property == 'wind_speed'" :listArray="rangeArrays[item.property]" @onChange="setActiveWindSpeed"></scroll-picker>
+                <div v-if="item.type == 'range'">
+                    <scroll-picker :height="375" v-if="item.property == 'temperature'" :listArray="rangeArrays[item.property]" @onChange="setActiveTemperature"></scroll-picker>
+                    <scroll-picker :height="375" v-if="item.property == 'wind_speed'" :listArray="rangeArrays[item.property]" @onChange="setActiveWindSpeed"></scroll-picker>
                 </div>
             </midea-confirm2>
         </div>
@@ -112,7 +112,7 @@
     .pop-list{
         padding-top: 35px;
         padding-bottom: 35px;
-        height: 360px;
+        height: 350px;
         background-color: #fff;
     }
     .pop-item{ padding: 22px; font-size: 30px; color: #777;  text-align: center; width: 750px;}
@@ -130,7 +130,7 @@
 	import switchBar from '@/midea-rooms/components/switch.vue'
     import mideaList from '@/midea-rooms/components/list.vue'
     import scrollPicker from '@/midea-rooms/components/scrollPicker.vue'
-    import mideaConfirm2 from '@/midea-component/confirm2.vue'
+    import mideaConfirm2 from '@/midea-rooms/components/confirm2.vue'
 
     const channelSetDevice = new BroadcastChannel('autoBroadcast')
 
@@ -229,6 +229,20 @@
                         if (tmpActions[i].type == 'range') {
                             tmpActions[i] = Object.assign({}, tmpActions[i], {currentStatus: currentStatus})
                         }else{
+                            if (tmpActions[i].type == 'list') {
+                                this.active[tmpActions[i].property] = {
+                                    index: i,
+                                    value: currentStatus
+                                }
+                                if (tmpActions[i].type == 'list') {//初始化弹窗的内容
+                                    let activeProperty = {}
+                                    activeProperty[tmpActions[i].property] = {
+                                        index: i,
+                                        value: currentStatus
+                                    }
+                                    this.active = Object.assign({}, this.active, activeProperty)
+                                }
+                            }
                             tmpActions[i] = Object.assign({}, tmpActions[i], {currentStatus: currentStatus, currentStatusName: tmpActions[i]['value'][currentStatus]})
                         }
                         
@@ -245,7 +259,6 @@
                     this.actions = tmpActions
                     this.show = Object.assign({}, this.show, tmpShow)
                     this.activeKey = Object.assign({}, this.activeKey, tmpActiveKey)
-                    // nativeService.alert(this.actions)
                 })
                 
             },
@@ -281,8 +294,12 @@
                     if (this.actions[x].property == property && this.actions[x].type == 'range'){
                         this.actions[x].currentStatus = this.active[property] || this.rangeArrays[property][0].value
                     }
+                    if (this.actions[x].property == property && this.actions[x].type == 'list') {
+                        this.actions[x].currentStatus = this.active[property].value
+                        this.actions[x].currentStatusName =this.actions[x].value[ this.actions[x].currentStatus]
+                    }
+                    this.editProperties[this.actions[x].property] = this.actions[x].currentStatus
                 }
-                this.editProperties[this.actions[x].property] = this.actions[x].currentStatus
             },
             setActiveTemperature(e){
                 this.active.temperature = e.value
@@ -290,11 +307,11 @@
             setActiveWindSpeed(e){
                 this.active.wind_speed = e.value
             },
-            setActiveKey(propertyIdx, key){
-                this.actions[propertyIdx].currentStatus = key
-                this.actions[propertyIdx].currentStatusName = this.actions[propertyIdx]['value'][key]
-
-                this.editProperties[this.actions[propertyIdx].property] = this.actions[propertyIdx].currentStatus
+            setActiveKey(property, propertyIdx, key){
+                this.active[property] = {
+                    index: propertyIdx,
+                    value: key
+                }
             },
             cancelDevice(){
                 this.isCheck = 'uncheck'

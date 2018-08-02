@@ -47,6 +47,7 @@
                                 <div class="row-s device-desc">
                                     <div v-for="actions in bindDeviceActions[item.deviceId]">
                                         <text v-if="actions.currentStatusName" class="device-desc-text">{{actions.currentStatusName}}</text>
+                                        <text v-if="actions.type=='range'" class="device-desc-text">{{actions.propertyName}}{{actions.currentStatus}}</text>
                                     </div>
                                 </div>
                             </div>
@@ -623,9 +624,13 @@
                     for (var key in this.bindDeviceActions) { //key: applianceCode
                         let tmpCommand = {}
                         for (var i in this.bindDeviceActions[key]) {
-                            tmpCommand[this.bindDeviceActions[key][i].property] = this.bindDeviceActions[key][i].currentStatus || this.bindDeviceActions[key][i].default
-                            
+                            if (this.bindDeviceActions[key][i].currentStatus === '' || this.bindDeviceActions[key][i].currentStatus === undefined) {
+                                tmpCommand[this.bindDeviceActions[key][i].property] = this.bindDeviceActions[key][i].default
+                            }else{
+                                tmpCommand[this.bindDeviceActions[key][i].property] = this.bindDeviceActions[key][i].currentStatus 
+                            }
                         }
+                        
                         tmpTask.push({
                             applianceCode: key,
                             command: tmpCommand
@@ -700,7 +705,6 @@
                     if (e.data.isCheck == 'uncheck') {
                         delete that.autoBindDevices[e.data.applianceCode]
                     }
-                    
                     let tmpUserSetActions = {}
                     tmpUserSetActions[e.data.applianceCode] = e.data.actions
                     that.userSetActions = Object.assign({}, that.userSetActions, tmpUserSetActions)

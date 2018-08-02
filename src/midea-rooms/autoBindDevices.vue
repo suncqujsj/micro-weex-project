@@ -19,7 +19,18 @@
                             <div @click="goSetDevice(item)">
                                 <image class="device-img" :src="applianceImgPath[item.deviceType]"></image>
                                 <text class="device-name">{{item.deviceName}}</text>
-                                <!-- <text class="device-desc">{{device.desc}}</text> -->
+                                <div class="row-s device-desc">
+                                    <div v-for="actions in allDeviceActions[item.deviceId]">
+                                        <div v-if="actions.type =='range'">
+                                            <text v-if="actions.currentStatus === '' || actions.currentStatus == undefined" class="device-desc-text">{{actions.propertyName}}{{actions.default}}</text>
+                                            <text v-else class="device-desc-text">{{actions.propertyName}}{{actions.currentStatus}}</text>
+                                        </div>
+                                        <div v-else>
+                                            <text v-if="actions.currentStatus" class="device-desc-text">{{actions.value[actions.currentStatus]}}</text>
+                                            <text v-else class="device-desc-text">{{actions.value[actions.default]}}</text>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, idx)"></image>
                         </div>
@@ -128,6 +139,16 @@
         text-align: center;
         font-size: 32px;
     }
+    .device-desc{
+         align-items: flex-start;
+         height: 26px;
+    }
+    .device-desc-text{
+        color:#c7c7c7;
+        font-size: 26px;
+        margin-right: 6px;
+        text-align: left;
+    }
 </style>
 
 <script>
@@ -165,6 +186,26 @@
                     6: '天气'
                 }
                 return  tmp[this.sceneType]
+            },
+            task(){
+                let tmpTask = []
+                for (var key in this.checkedDevices) {//key: applianceCode
+                    let tmpCommand = {}
+                    if ( this.checkedDevices[key] ) {
+                        for (var x in this.allDeviceActions[key]) {
+                            if (this.allDeviceActions[key][x].currentStatus === '' || this.allDeviceActions[key][x].currentStatus == undefined){
+                                tmpCommand[this.allDeviceActions[key][x].property] = this.allDeviceActions[key][x].default
+                            }else{
+                                tmpCommand[this.allDeviceActions[key][x].property] = this.allDeviceActions[key][x].currentStatus 
+                            }
+                        }
+                    }
+                    tmpTask.push({
+                        applianceCode: key,
+                        command: tmpCommand
+                    })
+                }
+                return tmpTask
             }
         },
         data(){
@@ -200,7 +241,10 @@
                 unbindDevices: {},
                 autoSupportActions: {},
                 unbindDevicesActions: {},
-                sceneSupportDevices: []
+                sceneSupportDevices: [],
+                newAutoEditActions: {},
+                allDeviceActions: {},
+                pageStamp: '',//进入设备设置时的时间戳
             }
         },
         methods: {
@@ -212,6 +256,7 @@
                 this.sceneType = nativeService.getParameters('sceneType')
                 this.from = nativeService.getParameters('from')
                 this.autoSupportActions = Object.assign({}, this.autoSupportActions, autoSupportActions[this.sceneType])
+                this.pageStamp = +new Date()
 
                 if (nativeService.getParameters('userDevices')) {
                     let tmpUserDevices = JSON.parse(decodeURIComponent(nativeService.getParameters('userDevices'))) || []
@@ -288,7 +333,6 @@
                                     nativeService.alert('获取不到当前设置天气城市，请检查是否开启定位权限')
                                 })
                             }).catch((error) => {
-                                nativeService.alert(error)
                                 nativeService.alert('获取不到当前设置天气城市，请检查是否开启定位权限')
                             })
                         }
@@ -340,7 +384,8 @@
                         sceneType: this.sceneType,
                         deviceType: device.deviceType,
                         deviceName: encodeURIComponent(device.deviceName),
-                        deviceId: device.deviceId
+                        deviceId: device.deviceId,
+                        pageStamp: this.pageStamp
                     }
                     this.goTo('setDevice', {}, params)
                 }
@@ -348,9 +393,10 @@
             generateAllDeviceActions(){
                 let tmpAllDeviceActions = {}
                 for (var x in this.sceneSupportDevices) {
-                    tmpAllDeviceActions[this.sceneSupportDevices[x].deviceId] = this.autoSupportActions[this.sceneSupportDevices[x].deviceType].actions
+                    tmpAllDeviceActions[this.sceneSupportDevices[x].deviceId] = Object.assign({}, this.autoSupportActions[this.sceneSupportDevices[x].deviceType].actions, this.newAutoEditActions[this.sceneSupportDevices[x].deviceId])
                 }
-                this.allDeviceActions = Object.assign({}, this.allDeviceActions, tmpAllDeviceActions)
+                
+                this.allDeviceActions = Object.assign({}, tmpAllDeviceActions)
             },
             getDone(){
                 if ( Object.keys(this.checkedDevices).length == 0) {
@@ -404,21 +450,8 @@
                     if (nativeService.getParameters('templateCode')) {
                         reqParams.templateCode = nativeService.getParameters('templateCode')
                     }
-                    let tmpTask = []
-                    for (var key in this.checkedDevices) {//key: applianceCode
-                        let tmpCommand = {}
-                        if ( this.checkedDevices[key] ) {
-                            for (var x in this.allDeviceActions[key]) { 
-                                tmpCommand[this.allDeviceActions[key][x].property] = this.allDeviceActions[key][x].currentStatus || this.allDeviceActions[key][x].default
-                            }
-                        }
-                        tmpTask.push({
-                            applianceCode: key,
-                            command: tmpCommand
-                        })
-                    }
-                    
-                    reqParams.task = JSON.stringify(tmpTask)
+              
+                    reqParams.task = JSON.stringify(this.task)
                     reqParams.weekly = this.weekly
 
                     if (this.sceneType == 3) {
@@ -446,6 +479,7 @@
                         })
                         reqParams.weather = tmp
                     }
+           
                     this.webRequest(reqUrl, reqParams).then((rtnData)=>{
                         if (rtnData.code == 0) {
                             if (this.sceneType == 3) {
@@ -474,6 +508,8 @@
                 channelBindDevice.onmessage = function(e) {
                     if (e.data.page == 'setDevice') {
                         that.allDeviceActions[e.data.applianceCode] = e.data.actions
+                        that.newAutoEditActions[e.data.applianceCode] = e.data.actions
+                        that.generateAllDeviceActions()
                     }
                 }
             }

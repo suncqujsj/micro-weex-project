@@ -6,8 +6,12 @@
                 <div class="block"  style="background-color:#fff">
                     <text class="sub-hd">关联设备</text>
                     <midea-list v-for="(item,idx) in userSupportDevices" :idx="idx" :hasWrapBorder="false" leftMargin="25px">
-                        <check-item v-if="roomType != 4" :title="item.applianceName" :status="item.isRelation == 1" @itemClick="switchBindSceneDevice(item)"></check-item>
-                        <check-item v-if="roomType == 4" mode="radio" :title="item.applianceName" :status="item.isRelation == 1" @itemClick="switchBindSceneDevice(item)"></check-item>
+                        <div class="row-sb device-line" @click="switchBindSceneDevice(item)">
+                            <text class="font16">{{item.applianceName}}</text>
+                            <image v-if="item.isRelation == 1" class="check" :src="icon.checkOn"></image>
+                        </div>
+                        <!-- <check-item v-if="roomType != 4" :title="item.applianceName" :status="item.isRelation == 1" @itemClick="switchBindSceneDevice(item)"></check-item>
+                        <check-item v-if="roomType == 4" mode="radio" :title="item.applianceName" :status="item.isRelation == 1" @itemClick="switchBindSceneDevice(item)"></check-item> -->
                     </midea-list>
                 </div>
                 <div class="block" v-if="roomType == 1 || roomType == 2">
@@ -46,58 +50,30 @@
         </list>
         <!-- 客厅/卧室场景指标弹窗 -->
         <div v-if="roomType == 1 || roomType == 2">
-            <midea-popup :show="show.temperatureMin" :height="400" @mideaPopupOverlayClicked="cancelProp('temperatureMin')">
-                <div class="row-sb pop-hd">
-                    <text class="pop-text" @click="cancelProp('temperatureMin')">取消</text>
-                    <text class="pop-text" @click="confirmProp('temperatureMin')">确定</text>
-                </div>
+            <midea-confirm2 :height="480" :show="show.temperatureMin" @leftBtnClick="cancelProp('temperatureMin')" @rightBtnClick="confirmProp('temperatureMin')" @mideaPopupOverlayClicked="closePropPop('temperatureMin')">
                 <scroll-picker :listArray="temperatureMinList" @onChange="setTemperatureMin"></scroll-picker>
-            </midea-popup>
-            <midea-popup :show="show.temperatureMax" :height="400" @mideaPopupOverlayClicked="cancelProp('temperatureMax')">
-                <div class="row-sb pop-hd">
-                    <text class="pop-text" @click="cancelProp('temperatureMax')">取消</text>
-                    <text class="pop-text" @click="confirmProp('temperatureMax')">确定</text>
-                </div>
+            </midea-confirm2>
+            <midea-confirm2 :height="480" :show="show.temperatureMax" @leftBtnClick="cancelProp('temperatureMin')" @rightBtnClick="confirmProp('temperatureMax')" @mideaPopupOverlayClicked="closePropPop('temperatureMax')">
                 <scroll-picker :listArray="temperatureMaxList" @onChange="setTemperatureMax"></scroll-picker>
-            </midea-popup>
-            <midea-popup :show="show.humidityMin" :height="400" @mideaPopupOverlayClicked="cancelProp('humidityMin')">
-                 <div class="row-sb pop-hd">
-                    <text class="pop-text" @click="cancelProp('humidityMin')">取消</text>
-                    <text class="pop-text" @click="confirmProp('humidityMin')">确定</text>
-                </div>
+            </midea-confirm2>
+            <midea-confirm2 :height="480" :show="show.humidityMin" @leftBtnClick="cancelProp('humidityMin')" @rightBtnClick="confirmProp('humidityMin')" @mideaPopupOverlayClicked="closePropPop('humidityMin')">
                 <scroll-picker :listArray="humidityMinList" @onChange="setHumidityMin"></scroll-picker>
-            </midea-popup>
-            <midea-popup :show="show.humidityMax" :height="400" @mideaPopupOverlayClicked="cancelProp('humidityMax')">
-                 <div class="row-sb pop-hd">
-                    <text class="pop-text" @click="cancelProp('humidityMax')">取消</text>
-                    <text class="pop-text" @click="confirmProp('humidityMax')">确定</text>
-                </div>
+            </midea-confirm2>
+            <midea-confirm2 :height="480" :show="show.humidityMax" @leftBtnClick="cancelProp('humidityMax')" @rightBtnClick="confirmProp('humidityMax')" @mideaPopupOverlayClicked="closePropPop('humidityMax')">
                 <scroll-picker :listArray="humidityMaxList" @onChange="setHumidityMax"></scroll-picker>
-            </midea-popup>
+            </midea-confirm2>
         </div>
         <!-- 卫浴场景指标弹窗 -->
         <div v-if="roomType == 3">
-            <midea-popup :show="show.comfortable" :height="400" @mideaPopupOverlayClicked="closePropPop('comfortable')">
-                <div class="row-sb pop-hd">
-                    <text class="pop-text" @click="cancelProp('comfortable')">取消</text>
-                    <text class="pop-text" @click="confirmProp('comfortable')">确定</text>
-                </div>
+            <midea-confirm2 :height="400" :show="show.comfortable" @leftBtnClick="cancelProp('comfortable')" @rightBtnClick="confirmProp('comfortable')" @mideaPopupOverlayClicked="closePropPop('comfortable')">
                 <scroll-picker :listArray="comfortableList" @onChange="setComfortableValue"></scroll-picker>
-            </midea-popup>
-            <midea-popup :show="show.save" :height="400" @mideaPopupOverlayClicked="closePropPop('save')">
-                <div class="row-sb pop-hd">
-                    <text class="pop-text" @click="cancelProp('save')">取消</text>
-                    <text class="pop-text" @click="confirmProp('save')">确定</text>
-                </div>
+            </midea-confirm2>
+            <midea-confirm2 :height="400" :show="show.save" @leftBtnClick="cancelProp('save')" @rightBtnClick="confirmProp('save')" @mideaPopupOverlayClicked="closePropPop('save')">
                 <scroll-picker :listArray="saveList" @onChange="setSaveValue"></scroll-picker>
-            </midea-popup>
-            <midea-popup :show="show.use" :height="400" @mideaPopupOverlayClicked="closePropPop('use')">
-                <div class="row-sb pop-hd">
-                    <text class="pop-text" @click="cancelProp('use')">取消</text>
-                    <text class="pop-text" @click="confirmProp('use')">确定</text>
-                </div>
+            </midea-confirm2>
+            <midea-confirm2 :height="400" :show="show.use" @leftBtnClick="cancelProp('use')" @rightBtnClick="confirmProp('use')" @mideaPopupOverlayClicked="closePropPop('use')">
                 <scroll-picker :listArray="useList" @onChange="setUseValue"></scroll-picker>
-            </midea-popup>
+            </midea-confirm2>
         </div>
     </div>
 </template>
@@ -108,6 +84,9 @@
     .row-sb{ flex-direction: row; align-items: center; justify-content: space-between; }
     .row-sa{ flex-direction: row; align-items: center; justify-content: space-around; }
     .row-e { flex-direction: row; align-items: center; justify-content: flex-end; }
+    .font14{ font-size: 28px; }
+    .font15{ font-size: 30px; }
+    .font16{ font-size: 32px; }
     .scroller{ background-color: #F2F2F2; height: 1500px;}
     .block{ margin-bottom: 25px; }
     .range-block{ background-color: #fff; }
@@ -122,6 +101,8 @@
     .next-icon{width: 12px; height: 24px; margin-left: 20px;}
     .set-item{ padding-top: 25px; padding-bottom: 25px; padding-right: 25px;}
     .sub-hd{background-color: #f2f2f2; padding: 25px; color:#777;  font-size: 28px;}
+    .device-line{padding-top: 32px; padding-bottom: 32px; padding-right: 25px; }
+    .check{ width: 32px; height: 32px;}
 </style>
 
 <script>
@@ -134,11 +115,12 @@
     import mideaList from '@/midea-rooms/components/list.vue'
     import scrollPicker from '@/midea-rooms/components/scrollPicker.vue'
     import mideaRange from '@/midea-rooms/components/range.vue'
+    import mideaConfirm2 from '@/midea-component/confirm2.vue'
 
     import { url, codeDesc } from './config/config.js'
 
     export default {
-        components:{ mideaCell, MideaHeader, MideaPopup, checkItem, mideaList, scrollPicker, mideaRange },
+        components:{ mideaCell, MideaHeader, MideaPopup, mideaConfirm2, checkItem, mideaList, scrollPicker, mideaRange },
         mixins: [base],
         computed:{
             wrapStyle(){
@@ -182,6 +164,17 @@
             },
             useList(){
                 return this.generateListArray(1, 20)
+            },
+            userSupportDevicesGroup(){
+                let tmp = {}
+                for (var i in this.userSupportDevices) {
+                    if (tmp.hasOwnProperty(this.userSupportDevices[i].applianceType)) {tmp[this.userSupportDevices[i].applianceType].push(this.userSupportDevices[i])
+                    }else{
+                        tmp[this.userSupportDevices[i].applianceType] = []
+                        tmp[this.userSupportDevices[i].applianceType].push(this.userSupportDevices[i])
+                    }
+                }
+                return tmp
             }
         },
         data(){
@@ -193,7 +186,8 @@
                     leftImg: 'assets/img/public_ic_back@3x.png'
                 },
                 icon: {
-                    next: 'assets/img/more.png'
+                    next: 'assets/img/more.png',
+                    checkOn:  'assets/img/done.png',
                 },
                 userSupportDevices: [],
                 settingDetail: [],
@@ -305,7 +299,6 @@
                 return tmp
             },
             switchBindSceneDevice(appliance){//解绑、绑定设备到房间
-            nativeService.alert(appliance)
                 this.checkLogin().then( (uid) => {
                     let reqUrl = url.scene.applianceAdd
                     let reqParams = {
@@ -314,14 +307,15 @@
                         sceneId: this.sceneId,
                         applianceCode: appliance.applianceCode
                     }
+                    if (this.userSupportDevicesGroup[appliance.applianceType].length == 1 && appliance.isRelation == 1 ) {
+                        this.initData()
+                        nativeService.toast('设备已关联场景')
+                        return
+                    }
                     this.webRequest(reqUrl, reqParams).then((res)=>{
                         if (res.code == 0) {
-                            if (appliance.isRelation == 1) {
-                                nativeService.toast('解绑成功！')
-                            }else if (appliance.isRelation == 2) {
-                                nativeService.toast('绑定成功！')
-                            }
-                            nativeService.reload()
+                            nativeService.toast('绑定成功！')
+                            this.initData()
                         }else{
                             if (codeDesc.scene.hasOwnProperty(res.code)) {
                                 nativeService.toast(codeDesc.scene[res.code])

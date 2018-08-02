@@ -1003,5 +1003,12 @@ export default {
     updateAutoList() {
         bridgeModule.updateAutoList()
     },
+    /*发送埋点数据*/
+    burialPoint(params) {
+        let param = Object.assign(params, {
+            operation: 'burialPoint'
+        })
+        return this.commandInterfaceWrapper(param)
+    }
     //**********APP业务接口***************END
 }

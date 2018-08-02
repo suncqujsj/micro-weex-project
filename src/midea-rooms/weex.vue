@@ -12,6 +12,7 @@
                         <div class="row-s">
                             <image class="icon" :src="item.image"></image>
                             <text class="auto-name">{{item.name}}</text>
+                            <text class="auto-desc"></text>
                         </div>
                         <image v-if="item.sceneType==2" class="auto-btn" :src="icon.autoBtn[item.enable]"  @click="executeAuto(item.sceneId)">
                     </div>
@@ -20,7 +21,7 @@
         </div>
         <div>
             <div class="hd"><text class="hd-name">场景</text></div> 
-            <div class="scene-list" v-if="sceneList">
+            <div class="scene-list" v-if="sceneList" :style="sceneListStyle">
                 <div class="scene" v-for="scene in sceneList" @click="goScene(scene)">
                     <image class="scene-bg" :src="sceneImg[scene.roomType]"></image>
                     <div class="scene-info">
@@ -58,21 +59,21 @@
 </template>
 
 <style>
-    .wrapper { padding-left:30px; padding-right:30px; flex-direction: column;}
+    .wrapper { flex-direction: column; background-color: #f2f2f2;}
     .row-s { flex-direction: row; align-items: center; justify-content: flex-start; }
     .row-sb{ flex-direction: row; align-items: center; justify-content: space-between; }
     .row-sa{ flex-direction: row; align-items: center; justify-content: space-around; }
     .row-e { flex-direction: row; align-items: center; justify-content: flex-end; }
-    .hd { margin-top: 44px; margin-bottom: 24px; }
-    .hd-name{ font-weight: bold; font-size: 36px; color: #000; }
+    .hd { margin-top: 44px; padding-left:30px; padding-right:30px; margin-bottom: 24px; }
+    .hd-name{  font-size: 36px; color: #000; }
     .hd-btn{ font-size: 26px; color: #666; padding: 10px;}
-    .scroller{ flex-direction: row; height: 276px;}
+    .scroller{ padding-left:30px; padding-right:30px; flex-direction: row; height: 276px;}
     .icon { width: 82px; height: 82px; margin-right: 20px; }
     .auto-btn{ width: 50px; height: 50px; }
     .auto{
         width: 406px;
         height: 122px;
-        background-color: #f9f9f9;
+        background-color: #fff;
         margin-bottom: 16px;
         margin-right: 16px;
         padding: 20px;
@@ -80,19 +81,16 @@
     }
     .auto-name{ width: 180px; font-size: 30px; color: #666666; margin-bottom: 8px; text-overflow: clip; }
     /* .auto-desc{ width: 120px; font-size: 24px; color: #C7C7CC; lines:1; } */
-    .scene-list{ height: 1200px;}
+    .scene-list{  padding-left:30px; padding-right:30px;}
     .scene { width: 690px; height: 206px; padding-bottom: 16px; position: relative; }
     .scene-bg{ width: 690px; height: 185px; position: absolute; }
     .next { width: 8px; height: 16px; position:absolute; top:84px; right: 25px;}
     .scene-name, .scene-desc{ color: #fff; }
     .scene-name{ font-size: 32px; margin-top: 50px; margin-left: 32px; margin-bottom: 30px;}
     .scene-desc{ margin-left: 24px; font-size: 24px; }
-    .auto-toast{
-        width: 550px;
-    }
-    .toast-line{
-        padding: 25px;
-    }
+
+    .auto-toast{ width: 550px; }
+    .toast-line{ padding: 25px; }
     .toast-border{
         border-top-color: #f2f2f2;
         border-top-width: 1px;
@@ -125,6 +123,15 @@
                     if ( qList[2*i+1] ){
                         tmp[i].push(qList[2*i+1])
                     }
+                }
+                return tmp
+            },
+            sceneListStyle(){
+                let tmp = {}
+                if (this.platform == 'android'){
+                    tmp.height = '840px'
+                }else{
+                    tmp.height = '1080px'
                 }
                 return tmp
             }

@@ -8,14 +8,14 @@
         				<text class="main-status">{{currentWorkStatus}}</text>
         				<text class="danwei"></text>
 	        		</div>
-        			<text class="main-status-second" style="text-align: center;"></text>
+        			<text class="main-status-second" style="text-align: center;">{{danwei}}</text>
 	        		<div class="card-status-detail">
-	        			<text class="main-status-third"></text>
+	        			<text class="main-status-third">{{secondWorkStatus}}</text>
 	        		</div>
 	        	</div>
 	        	<div class="card-right">
-	        		<div class="card-control" @click="powerOnoff">
-	        			<image class="card-control-img" :src="controlStartPauseImg"></image>
+	        		<div class="card-control">
+	        			<image v-if="false" class="card-control-img" :src="controlStartPauseImg"></image>
 	        		</div>
 	        		<div class="card-icon">
 	        			<image class="card-icon-img" @click="showControlPanelPage" resize="contain" src="./assets/img/smart_img_equip041@2x.png"></image>
@@ -34,7 +34,7 @@
 	        </div>
         </div>
       	<situation></situation>
-	    <scroller class="scroller-item" scroll-direction="horizontal">
+	    <scroller class="scroller-item" scroll-direction="horizontal" v-if="false">
 		    <list class="scroller-list-item">
 	        	<!--带向右箭头的链接 -->
 		        <midea-item v-for="(item,i) in list" :key="item" :hasTopBorder="false" :hasBottomBorder="false" :title="item.name"   :hasArrow="true" :clickActivied="true" @onItemPress="showDel(item)" @mideaCellClick="cellClick(item)" :cantEdit="true" @onDelete="delItem(item)">
@@ -43,7 +43,7 @@
 		        </midea-item>
 	        </list>
 	    </scroller>
-        <div style="flex-direction: row;flex-wrap: wrap;">
+        <div style="flex-direction: row;flex-wrap: wrap;" v-if="false">
         	<cookbook v-for="(item3,index) in cookbook" :data="item3" @cookbookclick="mideaClick"></cookbook>
         </div>
         <midea-download></midea-download>
@@ -86,7 +86,9 @@
             	workStatus: "",
 	            temperature: "",//localStorage.getItem("ECtemperature") || "--",
 	            workstatusNum: "",
-	            currentWorkStatus:"",
+	            currentWorkStatus:"--",
+	            danwei: "",
+	            secondWorkStatus: "--",
 	            powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
 	            work_status: {
 					0: "待机",
@@ -103,7 +105,41 @@
 					11: "排气完成（中途开盖）",
 					12: "已开盖（中途开盖）"
 				},
-            	
+				return_cmd_code : {
+					20001: "煮饭",
+					20002: "煮粥",
+					20003: "煲汤",
+					20004: "肉/鸡",
+					20005: "牛/羊肉",
+					20006: "豆/蹄筋",
+					20007: "喷香米饭",
+					20008: "原味煲汤",
+					20009: "浓香炖肉",
+					20010: "快速煮饭",
+					20011: "稀饭",
+					20012: "杂粮粥",
+					20013: "蛋糕",
+					20014: "收汁入味",
+					20015: "蒸汽清洁",
+					20016: "再加热",
+					20017: "保温",
+					20018: "无水焗",
+					20019: "排气",
+					20020: "浓香煲汤",
+					20021: "隔水蒸饭",
+					20022: "营养炖汤",
+					20023: "滋补药膳",
+					20024: "营养蒸",
+					20025: "清香煮粥",
+					20026: "快速粥",
+					20027: "快速饭",
+					20028: "杂粮饭",
+					20029: "开盖煮",
+					20030: "高速骨肉香",
+					20031: "蹄筋",
+					20032: "豆类",
+					20034: "快速肉"
+				},
                 list: [
                 { 
                 	"name": "电饭煲食谱",
@@ -149,6 +185,7 @@
             			"params":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
+            		nativeService.alert(data);
             		self.updateUI(data);
             	},function(error) {
             		if(error.errorCode == '331307' || error.errorCode == '1307') {
@@ -164,6 +201,8 @@
 	                this.workStatus = this.work_status[params.work_status] || "";
 	                this.workstatusNum = params.work_status;
 	                this.temperature = params.temperature || "--";
+	                this.danwei = "";
+	                this.secondWorkStatus = this.return_cmd_code[params.cmd_code] || "--";
 	                if(this.workstatusNum == "0") {
 	                	this.currentWorkStatus = "空闲中";
 	                } else if(this.workstatusNum == "1" || this.workstatusNum == "8") {
@@ -177,7 +216,11 @@
 	                } else if(this.workstatusNum == "6") {
 	                	this.currentWorkStatus = "保压中";
 	                } else if(this.workstatusNum == "2") {
-	                	this.currentWorkStatus = "预约中";
+//	                	this.currentWorkStatus = "预约中";
+						this.currentWorkStatus = (params.time_reserve_hr<10?"0"+params.time_reserve_hr:params.time_reserve_hr) +":"+ (params.time_reserve_min<10?"0"+params.time_reserve_min:params.time_reserve_min);
+	                	this.danwei = "后开始运行";
+	                } else {
+	                	this.currentWorkStatus = "--";
 	                }
 	            }else {
 	                modal.toast({ 'message': "连接设备超时", 'duration': 2 });
@@ -357,7 +400,13 @@
 	.text-offline-center {
 		position: absolute;
 		top:176px;
+		left:289px;
 		align-items: center;
+		font-family: PingFangSC-Regular;
+		font-size: 36px;
+		color: #000000;
+		letter-spacing: 0;
+		text-align: center;
 	}
 	.control-div-offline {
 		position: absolute;
@@ -370,7 +419,7 @@
 		margin-left:50px
 	}
 	.main-status {
-		font-size: 128px;
+		font-size: 80px;
 		margin-top:60px;
 		font-family: SFProText-Light;
 		color: #FFFFFF;

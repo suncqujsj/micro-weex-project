@@ -57,7 +57,7 @@ import orderBase from './orderBase'
 import nativeService from './settings/nativeService'
 import util from '@/common/util/util'
 import OrderBlock from '@/customer-service/components/orderBlock.vue'
-import { MideaButton } from '@/index'
+import MideaButton from '@/midea-component/button2.vue'
 
 const clipboard = weex.requireModule('clipboard')
 

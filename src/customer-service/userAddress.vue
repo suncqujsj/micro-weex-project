@@ -42,7 +42,8 @@
 import base from './base'
 import nativeService from './settings/nativeService';
 
-import { MideaButton, MideaSwitch2 } from '@/index'
+import MideaButton from '@/midea-component/button2.vue'
+import MideaSwitch2 from '@/midea-component/switch2.vue'
 
 import AddressPicker from './components/addressPicker.vue'
 

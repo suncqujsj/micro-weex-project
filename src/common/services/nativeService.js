@@ -618,7 +618,43 @@ export default {
             bridgeModule.updateTitle(JSON.stringify(params));
         }
     },
-
+    // 获取套系列表
+    getTxList(isShowLoading = true) {
+        if (this.isDummy != true) {
+            return new Promise((resolve, reject) => {
+                if (isShowLoading) {
+                    this.showLoading()
+                }
+                bridgeModule.getTXList({}, (resData) => {
+                    if (typeof resData == 'string') {
+                        this.alert(resData);
+                        resData = JSON.parse(resData);
+                    }
+                    if (isShowLoading) {
+                        this.hideLoading()
+                    }
+                    if (resData.errorCode && resData.errorCode !== 0) {
+                        //失败
+                        reject(resData);
+                    } else {
+                        //成功
+                        resolve(resData)
+                    }
+                }, (error) => {
+                    if (typeof error == 'string') {
+                        error = JSON.parse(error)
+                        mm.modal({"message": error}, 3)
+                    }
+                    reject(error);
+                });
+            })
+        }else{
+            return new Promise((resolve, reject) => {
+                let data = Mock.getMock('queryTXList');
+                resolve(data)
+            })
+        }
+    },
     showSharePanel(params, callback, callbackFail) {
         return new Promise((resolve, reject) => {
             bridgeModule.showSharePanel(params,
@@ -630,6 +666,7 @@ export default {
                 });
         })
     },
+
     /*
      * created by zhouhg 20180621 start
      */
@@ -982,5 +1019,12 @@ export default {
     updateAutoList() {
         bridgeModule.updateAutoList()
     },
+    /*发送埋点数据*/
+    burialPoint(params) {
+        let param = Object.assign(params, {
+            operation: 'burialPoint'
+        })
+        return this.commandInterfaceWrapper(param)
+    }
     //**********APP业务接口***************END
 }

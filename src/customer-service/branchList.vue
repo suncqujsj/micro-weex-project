@@ -50,7 +50,8 @@ import base from './base'
 import nativeService from './settings/nativeService'
 import BranchBlock from '@/customer-service/components/branchBlock.vue'
 
-import { MideaDialog, MideaRichText } from '@/index'
+import MideaDialog from '@/component/dialog.vue'
+import MideaRichText from '@/midea-component/wxc-rich-text';
 
 export default {
     components: {

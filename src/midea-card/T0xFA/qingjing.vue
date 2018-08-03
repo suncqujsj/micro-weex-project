@@ -3,17 +3,14 @@
         <midea-header :title="title" :isImmersion="isipx?false:true" @leftImgClick="back">
         </midea-header>
         <scroller class="content-wrapper" v-if="situactionData">
-            <div class="base-group">
+            <div class="base-group header-group">
                 <text class="header-title">{{situationDesc.title}}</text>
                 <text class="header-desc">{{situationDesc.detail}}</text>
             </div>
             <div class="base-group">
-                <midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectSleepTemp">
+                <midea-cell placeHolder="请选择" :rightText="situationDesc.timeDesc" @mideaCellClick="selectSleepTemp" :hasSubBottomBorder="false">
                     <div slot="title" class="cell-title">
                         <text class="cell-label">睡眠时间</text>
-                    </div>
-                    <div slot="rightText">
-                        <text class="right-text">{{situactionData.props.time}}</text>
                     </div>
                 </midea-cell>
             </div>
@@ -30,7 +27,11 @@ import nativeService from '@/common/services/nativeService.js'
 import situationBase from '@/midea-card/midea-components/situationBase'
 const picker = weex.requireModule('picker')
 
-import { MideaHeader, MideaCell, MideaButton } from '@/index'
+import MideaButton from '@/midea-component/button2.vue'
+import MideaCell from '@/midea-component/cell2.vue'
+import MideaHeader from '@/midea-component/header.vue'
+
+// import { MideaHeader, MideaCell, MideaButton } from '@/index'
 
 export default {
     components: {
@@ -52,15 +53,22 @@ export default {
         situationDesc() {
             let result = {
                 title: "睡觉时自动启用睡眠模式",
-                detail: "自然风，摇头"
+                detail: "自然风，摇头",
+                timeDesc: ''
+            }
+            if (this.situactionData) {
+                let time = this.situactionData.props.time
+                result.timeDesc = time.substr(0, 2) + ":" + time.substr(2, 2)
             }
             return result
         },
     },
     methods: {
         selectSleepTemp() {
+            let time = this.situactionData.props.time
+            let timeDesc = time.substr(0, 2) + ":" + time.substr(2, 2)
             picker.pickTime({
-                'value': this.situactionData.props.value,
+                'value': timeDesc,
                 'title': '选择时间', //取消和确定中间那标题
                 'cancelTxt': '取消', //取消按钮文字
                 'confirmTxt': '确定', //确定按钮文字,
@@ -70,7 +78,7 @@ export default {
                 'titleBgColor': '#E7EDEF' //标题栏颜色
             }, event => {
                 if (event.result === 'success') {
-                    this.situactionData.props.time = event.data;
+                    this.situactionData.props.time = event.data.replace(":", "");
                 }
             })
         },
@@ -79,6 +87,7 @@ export default {
             this.submitSituationService(this.situactionData).then((resp) => {
                 if (resp.code == 0) {
                     nativeService.toast("保存成功")
+					this.appPageDataChannel.postMessage({ key: "situation", deviceId: this.deviceId, data: {} })
                     this.back()
                 } else {
                     throw resp
@@ -107,8 +116,10 @@ export default {
 }
 .base-group {
   margin-top: 24px;
-  padding-left: 32px;
   background-color: #ffffff;
+}
+.header-group {
+  padding-left: 32px;
 }
 .header-title {
   font-family: PingFangSC-Regular;

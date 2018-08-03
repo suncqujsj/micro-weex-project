@@ -35,7 +35,7 @@
 import base from './base'
 import nativeService from './settings/nativeService';
 
-import { MideaButton } from '@/index'
+import MideaButton from '@/midea-component/button2.vue'
 
 export default {
     components: {

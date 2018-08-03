@@ -115,6 +115,44 @@ export const all = [
 			},
             "errorCode": "0"
         }
+    },
+    {path:'queryTXList',
+        data:[{
+        'applianceType': '0xED',
+        'typeName': '简爱系列',
+        'name': '净水机0001',
+        'modelNumber': '266',
+        'sn': '6bdbd1517f0e37cf184a2ca01f43b93a1b390f388875f6b7269e855693233436044786454de37bb10ebecdf2a28ff2ff',
+        'applianceCode': '1099511822595',
+        'onlineStatus': 'online'
+    },
+        {
+            'applianceType': '0xED',
+            'typeName': '简爱系列',
+            'name': '净水机0001',
+            'modelNumber': '265',
+            'sn': '6bdbd1517f0e37cf184a2ca01f43b93a1b390f388875f6b7269e855693233436044786454de37bb10ebecdf2a28ff2ff',
+            'applianceCode': '1099511555555',
+            'onlineStatus': 'offline'
+        },
+        {
+            'applianceType': '0xE2',
+            'typeName': '电热水器',
+            'name': '',
+            'modelNumber': '60',
+            'sn': '',
+            'applianceCode': '',
+            'onlineStatus': 'unmatch'
+        },
+        {
+            'applianceType': '0xE3',
+            'typeName': '燃气热水器',
+            'name': '',
+            'modelNumber': '49',
+            'sn': '',
+            'applianceCode': '',
+            'onlineStatus': 'unmatch'
+        }]
     }
 ]
 

@@ -38,12 +38,13 @@
 import base from './base'
 import nativeService from './settings/nativeService'
 
-import { MideaDialog, MideaGridSelect, MideaRichText } from '@/index'
+import MideaDialog from '@/component/dialog.vue'
+import MideaRichText from '@/midea-component/wxc-rich-text';
 
 export default {
     components: {
         MideaDialog,
-        MideaGridSelect,
+
         MideaRichText
     },
     mixins: [base],

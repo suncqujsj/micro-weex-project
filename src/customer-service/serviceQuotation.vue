@@ -60,7 +60,7 @@ import orderBase from './orderBase'
 import nativeService from '@/common/services/nativeService'
 import util from '@/common/util/util'
 
-import { MideaButton } from '@/index'
+import MideaButton from '@/midea-component/button2.vue'
 
 export default {
     components: {

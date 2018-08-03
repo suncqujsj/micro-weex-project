@@ -8,7 +8,7 @@
         </div>
         <div class="content">
             <div class="name-floor row-sb">
-                <input class="input" type="text" placeholder="点击输入快捷操作名称" :value="autoName" @input="editAutoName" @change="editAutoName" />
+                <input class="input" type="text" :maxlength="15" :lines="1" placeholder="点击输入快捷操作名称" :value="autoName" @input="editAutoName" @change="editAutoName" />
                 <div class="clear" @click="clearInput">
                     <image v-if="autoName.length > 0" class="clear-icon" :src="icon.clear"></image>
                 </div>

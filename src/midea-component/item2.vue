@@ -52,8 +52,8 @@
 }
 
 .cell-indent {
-  padding-bottom: 18px;
-  padding-top: 18px;
+  padding-bottom: 28px;
+  padding-top: 28px;
 }
 
 .has-desc {
@@ -76,7 +76,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding-right: 10px;
+  padding-right: 18px;
 }
 .midea-sub-cell-inner {
   flex: 1;
@@ -115,8 +115,8 @@
   flex: 1;
 }
 .cell-arrow-icon {
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
 }
 
 .cell-content {

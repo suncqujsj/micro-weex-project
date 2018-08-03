@@ -102,7 +102,7 @@ export default {
 <style scoped>
 .box {
   width: 750px;
-  height: 96px;
+  height: 88px;
   display: inline-flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -111,7 +111,7 @@ export default {
 }
 .immersion {
   padding-top: 40px;
-  height: 136px;
+  height: 128px;
 }
 .header-title {
   font-family: PingFangSC-Medium;
@@ -119,7 +119,7 @@ export default {
 }
 .header-left-image-wrapper {
   width: 88px;
-  height: 96px;
+  height: 88px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -131,7 +131,7 @@ export default {
 }
 .header-right-image-wrapper {
   width: 88px;
-  height: 96px;
+  height: 88px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -144,7 +144,7 @@ export default {
 .header-right {
   position: absolute;
   right: 0px;
-  height: 96px;
+  height: 88px;
   display: flex;
   justify-content: center;
   align-items: center;

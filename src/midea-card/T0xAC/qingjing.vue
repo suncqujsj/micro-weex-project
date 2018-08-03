@@ -3,44 +3,32 @@
 		<midea-header :title="title" :isImmersion="isipx?false:true" @leftImgClick="back">
 		</midea-header>
 		<scroller class="content-wrapper" v-if="situactionData">
-			<div class="base-group">
+			<div class="base-group header-group">
 				<text class="header-title">{{situationDesc.title}}</text>
 				<text class="header-desc">{{situationDesc.detail}}</text>
 			</div>
 			<div class="base-group">
-				<midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectCondition">
+				<midea-cell placeHolder="请选择" :rightText="situationDesc.conditionsDesc" @mideaCellClick="selectCondition">
 					<div slot="title" class="cell-title">
 						<text class="cell-label">如果室温</text>
 					</div>
-					<div slot="rightText">
-						<text class="right-text">{{situationDesc.conditionsDesc}}</text>
-					</div>
 				</midea-cell>
-				<midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectConditionTemp">
+				<midea-cell placeHolder="请选择" :rightText="situactionData.props.conditions[0].value" @mideaCellClick="selectConditionTemp" :hasSubBottomBorder="false">
 					<div slot="title" class="cell-title">
 						<text class="cell-label">温度</text>
-					</div>
-					<div slot="rightText">
-						<text class="right-text">{{situactionData.props.conditions[0].value}}</text>
 					</div>
 				</midea-cell>
 			</div>
 
 			<div class="base-group">
-				<midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectModel">
+				<midea-cell placeHolder="请选择" :rightText="situationDesc.modeDesc" @mideaCellClick="selectModel">
 					<div slot="title" class="cell-title">
 						<text class="cell-label">就开启</text>
 					</div>
-					<div slot="rightText">
-						<text class="right-text">{{situationDesc.modelDesc}}</text>
-					</div>
 				</midea-cell>
-				<midea-cell :hasBottomBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="selectModelTemp">
+				<midea-cell placeHolder="请选择" :rightText="situactionData.props.target.temperature" @mideaCellClick="selectModelTemp" :hasSubBottomBorder="false">
 					<div slot="title" class="cell-title">
 						<text class="cell-label">温度</text>
-					</div>
-					<div slot="rightText">
-						<text class="right-text">{{situactionData.props.target.temperature}}</text>
 					</div>
 				</midea-cell>
 			</div>
@@ -54,10 +42,10 @@
 
 		<midea-select :show="isShowConditionTemp" title="选择温度" :items="temperatureList" :index="conditionTempIndex" @close="isShowConditionTemp=false" @itemClick="conditionTempItemClick"></midea-select>
 
-		<midea-actionsheet :items="modelItems" :show="isShowModel" @close="closeModelActionsheet" @itemClick="modeltItemClick" @btnClick="modelBtnClick" ref="modelActionsheet">
+		<midea-actionsheet :items="modeItems" :show="isShowModel" @close="closeModelActionsheet" @itemClick="modeItemClick" @btnClick="modeBtnClick" ref="modeActionsheet">
 		</midea-actionsheet>
 
-		<midea-select :show="isShowModelTemp" title="选择温度" :items="temperatureList" :index="modelTempIndex" @close="isShowModelTemp=false" @itemClick="modelTempItemClick"></midea-select>
+		<midea-select :show="isShowModelTemp" title="选择温度" :items="temperatureList" :index="modeTempIndex" @close="isShowModelTemp=false" @itemClick="modeTempItemClick"></midea-select>
 	</div>
 </template>
 
@@ -65,7 +53,13 @@
 import nativeService from '@/common/services/nativeService.js'
 import situationBase from '@/midea-card/midea-components/situationBase'
 
-import { MideaHeader, MideaCell, MideaButton, MideaActionsheet, MideaSelect } from '@/index'
+import MideaActionsheet from '@/midea-component/actionsheet.vue'
+import MideaButton from '@/midea-component/button2.vue'
+import MideaCell from '@/midea-component/cell2.vue'
+import MideaHeader from '@/midea-component/header.vue'
+import MideaSelect from '@/midea-component/mSelect.vue'
+
+// import { MideaHeader, MideaCell, MideaButton, MideaActionsheet, MideaSelect } from '@/index'
 
 export default {
 	components: {
@@ -84,7 +78,7 @@ export default {
 			isShowCondition: false,
 			conditionOptions: [
 				{ value: '1', desc: '高于' },
-				{ value: '0', desc: '低于' }
+				{ value: '2', desc: '低于' }
 			],
 
 			isShowConditionTemp: false,
@@ -92,13 +86,13 @@ export default {
 			temperatureList: [],
 
 			isShowModel: false,
-			modelOptions: [
+			modeOptions: [
 				{ value: 'cool', desc: '制冷' },
 				{ value: 'heat', desc: '制热' }
 			],
 
 			isShowModelTemp: false,
-			modelTempIndex: null,
+			modeTempIndex: null,
 		}
 	},
 	computed: {
@@ -110,8 +104,8 @@ export default {
 				return item.desc
 			})
 		},
-		modelItems() {
-			return this.modelOptions.map((item) => {
+		modeItems() {
+			return this.modeOptions.map((item) => {
 				return item.desc
 			})
 		},
@@ -123,13 +117,13 @@ export default {
 
 			if (this.situactionData) {
 				let conditionsDesc = (this.situactionData.props.conditions[0].operator == 1 ? "高于" : "低于")
-				let modelDesc = (this.situactionData.props.target.model == 'cool' ? "制冷" : "制热")
+				let modeDesc = (this.situactionData.props.target.mode == 'cool' ? "制冷" : "制热")
 
 				result = {
 					conditionsDesc: conditionsDesc,
-					modelDesc: modelDesc,
+					modeDesc: modeDesc,
 					title: "室内温度" + conditionsDesc + this.situactionData.props.conditions[0].value + "°度时，自动开启",
-					detail: "模式" + modelDesc + "，温度" + this.situactionData.props.target.temperature + "."
+					detail: "模式" + modeDesc + "，温度" + this.situactionData.props.target.temperature + "."
 				}
 			}
 
@@ -165,25 +159,25 @@ export default {
 		selectModel() {
 			this.isShowModel = true
 			this.$nextTick(e => {
-				this.$refs.modelActionsheet.open();
+				this.$refs.modeActionsheet.open();
 			});
 		},
 		closeModelActionsheet() {
 			this.isShowModel = false
 		},
-		modeltItemClick(event) {
+		modeItemClick(event) {
 			this.isShowModel = false
-			this.situactionData.props.target.model = this.modelOptions[event.index].value
+			this.situactionData.props.target.mode = this.modeOptions[event.index].value
 		},
-		modelBtnClick() {
+		modeBtnClick() {
 			this.isShowModel = false
 		},
 
 		selectModelTemp() {
 			this.isShowModelTemp = true
 		},
-		modelTempItemClick(event) {
-			this.modelTempIndex = event.index
+		modeTempItemClick(event) {
+			this.modeTempIndex = event.index
 			this.situactionData.props.target.temperature = event.key
 		},
 
@@ -211,7 +205,7 @@ export default {
 				this.deviceId = this.situactionData.deviceId
 				//设置默认值
 				this.conditionTempIndex = this.situactionData.props.conditions[0].value - 17
-				this.modelTempIndex = this.situactionData.props.target.temperature - 17
+				this.modeTempIndex = this.situactionData.props.target.temperature - 17
 			}
 		})
 	}
@@ -226,8 +220,10 @@ export default {
 }
 .base-group {
   margin-top: 24px;
-  padding-left: 32px;
   background-color: #ffffff;
+}
+.header-group {
+  padding-left: 32px;
 }
 .header-title {
   font-family: PingFangSC-Regular;

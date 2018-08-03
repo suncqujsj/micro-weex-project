@@ -9,13 +9,14 @@
             </div>
             <midea-cell v-for="myData in prepareData"
                         :title="myData.deviceName"
-                        desc=""
                         height="160"
+                        :clickActivied="true"
+                        :hasBottomBorder="true"
                         :importTextStyle="cellTitleStyle"
                         :rightTextStyle="cellRightStyle"
                         :rightText="myData.status"
+                        iconSrc="./img/arrow_right.png"
                         :hasArrow="true"
-                        :clickActivied="true"
                         :itemImg="myData.icon"
                         @mideaCellClick="itemClicked">
             </midea-cell>
@@ -29,9 +30,9 @@
     import mideaSwitch from '@/midea-component/switch.vue'
     import mideaSmart from '@/midea-card/midea-components/smart.vue'
     import mideaItem from '@/midea-component/item.vue'
-//    import mideaDownload from '@/midea-card/midea-components/download.vue'
+    import mideaDownload from '@/midea-card/midea-components/download.vue'
     import mideaCell from '@/component/cell.vue'
-//    import Mock from './settings/mock'
+    //    import Mock from './settings/mock'
 
     const modal = weex.requireModule('modal');
     const dom = weex.requireModule('dom');
@@ -43,7 +44,7 @@
             mideaSwitch,
             mideaSmart,
             mideaItem,
-//            mideaDownload
+            mideaDownload
         },
         data() {
             return {
@@ -74,43 +75,10 @@
             }
         },
         methods: {
-            queryStatus() {
-//                this.lock = true;
-                if (this.first) {
-                    this.queryLoading = true;
-                    this.first = false;
-                }
-                let me = this;
-                let params = {
-                    "operation": "luaQuery",
-                    "name": "deviceinfo",
-                    "params": {}
-                };
-                nativeService.sendLuaRequest(params, true).then(function (data) {
-                    me.updateUI(data);
-                }, function (error) {
-                    modal.toast({'message': error, 'duration': 2});
-                });
-            },
-            updateUI(data) {
-                if (data.errorCode == 0) {
-                    this.onlineStatus = "1";
-                    let params = data.params || data.result;
-                    this.onoff = params.power;
-                    this.wind_speed = this.return_wind_speed[params.wind_speed];
-                    this.humidity = params.humidity;
-                    this.cur_humidity = params.cur_humidity;
-                    this.danwei = "%";
-                } else {
-                    modal.toast({'message': "连接设备超时", 'duration': 2});
-                }
-            },
             queryTXLists() { //
                 let me = this;
-                bridgeModule.getTXList().then((myList)=>{
-                    var TXList = myList;
-                    modal.toast({"message":"gotit","duration":5});
-                     console.dir(TXList);
+                nativeService.getTxList(true).then((myList) =>{
+                    let TXList = myList.data;
                     for (let i = 0; i < TXList.length; i++) {
                         let currentList = TXList[i];
                         let currentDeviceId = currentList.applianceCode;
@@ -136,7 +104,7 @@
                             tempData.icon = "./assets/img/smart_img_equip031@2x.png";
                             tempData.temperature = "";
                         } else if (deviceType == "0xED" && deviceSubType == "265") {
-                            tempData.icon = "./assets/img/smart_img_equip031@2x.png";
+                            tempData.icon = "./assets/img/smart_img_equipunder031@2x.png";
                             tempData.temperature = "";
                         }
                         tempData.deviceId = currentDeviceId;
@@ -144,26 +112,25 @@
                         tempData.deviceType = deviceType;
                         tempData.deviceSubType = deviceSubType;
                         tempData.onlineStatus = deviceOnlineStatus;
-                        console.log(tempData);
                         me.prepareData.push(tempData);
-                        // console.log(me.prepareData);
-                    }
-                }).catch(e => {
-                    // 打印一下错误
-                    console.log(e)
-                });
+                    }}).then(this.updateTXList)
             },
-            updateTXList(deviceId) {
+            updateTXList() {
                 let me = this;
                 for (let j = 0; j < me.prepareData.length; j++) {
                     let currentData = me.prepareData[j];
                     let returnDeviceId = currentData.deviceId;
+                    let deviceSubType = currentData.deviceSubType;
                     let deviceType = currentData.deviceType;
-                    if (returnDeviceId == deviceId) {
-                        nativeService.call('luaQueryTX', "deviceInfo", {deviceId: returnDeviceId}, function (data) {
-                            // console.log("data:" + data);
+                    let deviceStatus = currentData.status;
+                    let deviceOnlineStatus = currentData.onlineStatus;
+                    if (returnDeviceId && deviceOnlineStatus=="online") {
+                        let param={
+                            deviceId: returnDeviceId
+                        }
+                        nativeService.sendLuaRequest( param,true,).then( function (data) {
                             if (data.errorCode == 0) {
-                                let params = data.params;
+                                let params = data.result;
                                 if (deviceType == "0xE2") {
                                     if (params.cur_temperature) {
                                         currentData.temperature = params.cur_temperature + "℃";
@@ -196,6 +163,7 @@
                                     currentData.temperature = "";
                                     currentData.status = params.power == "on" ? "已开机" : "已关机";
                                 } else if (deviceType == "0xED" && deviceSubType == "265") {
+                                    nativeService.alert(params);
                                     currentData.temperature = "";
                                     if (params.life_1) {
                                         currentData.status = params.life_1;
@@ -213,122 +181,92 @@
                                         currentData.status += params.life_5;
                                     }
                                 }
-                                //me.prepareData.push(tempData);
-                                // console.log(me.prepareData);
+                                me.prepareData.push(tempData);
                             } else {
                                 modal.toast({'message': '连接设备超时', 'duration': 2});
-                                //currentData.temperature = "";
-                                //currentData.status = "未连接";
                             }
                         })
                     }
                 }
             },
-            jumpControlPanelPage(deviceType, deviceSubType) {
+            jumpControlPanelPage() {
                 bridgeModule.showControlPanelPage("", "index.html");
             },
-            getApplianceIDTX() {
-                // console.log("getApplianceIDTX");
-                let me = this;
-                bridgeModule.getApplianceIDTX("deviceIds", function (data) {
-                    // console.log(data);
-                    modal.toast({'message': data});
-                    me.deviceIDTX1 = data[0];
-                })
-            },
-            getApplianceSubtypeTX() {
-                var me = this;
-                // console.log("getApplianceSubtypeTX");
-                bridgeModule.getApplianceSubtypeTX(this.deviceIDTX1, "deviceSubType", function (data) {
-                    modal.toast({'message': data});
-                });
-            },
-            getApplianceType() {
-                var me = this;
-                // console.log("getApplianceType");
-                bridgeModule.getApplianceType(this.deviceIDTX1, "deviceType", function (data) {
-                    modal.toast({'message': data});
-                });
-            },
-            getDeviceSNTX() {
-                var me = this;
-                // console.log("getDeviceSNTX");
-                bridgeModule.getDeviceSNTX(this.deviceIDTX1, "deviceSN", function (data) {
-                    modal.toast({'message': data});
-                });
-            },
-//            getTXList() {
-//                var me = this;
-//                // console.log("getTXList");
-//               nativeService.getTXList().then((data) => {
-//                   modal.toast({"message":data})
-//               })
-////                function (data) {
-////                    modal.toast({'message': data});
-////                    // console.dir(data);
-////                });
-//            },
-            getDeviceOnlineStatus() {
-                var me = this;
-                // console.log("getDeviceOnlineStatus");
-                bridgeModule.getDeviceOnlineStatus(this.deviceIDTX1, "getDeviceOnlineStatus", function (data) {
-                    modal.toast({'message': data});
-                    // console.dir(data);
-                })
-            },
-            luaQueryTX() {
-                var me = this;
-                // console.log("luaQueryTX");
-                nativeService.call('luaQueryTX', "deviceInfo", {deviceId: this.deviceIDTX1}, function (data) {
-                    // console.log(data);
-                    modal.toast({'message': data});
-                });
-            },
-            luaControlTX() {
-                let params = {
-                    "deviceId": this.deviceIDTX1,
-                    "mode": "custom",
-                    "temperature": 45
-                }
-                let me = this;
-                // console.log("luaControlTX");
-                bridgeModule.luaControlTX('luaControlTX', "deviceInfo", params, function (data) {
-                    modal.toast(data);
-                });
-            },
-            recieveMessage() {
-                // console.log("recieveMessage");
-                // console.log(this.messageBack);
-                modal.toast({'message': data});
-            },
-            startCmdProcess() {
-                // console.log("startCmdProcess");
-            },
-            onMideachange(event) {
-                //modal.toast({ 'message': event.value, 'duration': 2 });
-            },
-            onMideachange2(event) {
-                //modal.toast({ 'message': event.value, 'duration': 2 });
-            },
             itemClicked(event) {
-                //modal.toast({ 'message': event.value, 'duration': 2 });
+                this.jumpControlPanelPage();
+            },
+            updateItem(data){ //设备状态上报
+                for (let j = 0; j < me.prepareData.length; j++) {
+                    let currentData = me.prepareData[j];
+                    let returnDeviceId = currentData.deviceId;
+                    let deviceSubType = currentData.deviceSubType;
+                    let deviceType = currentData.deviceType;
+                    let deviceStatus = currentData.status;
+                    let deviceOnlineStatus = currentData.onlineStatus;
+                    if (returnDeviceId == data.deviceId && deviceOnlineStatus == "online") {
+                        let params = data;
+                        if (deviceType == "0xE2") {
+                            if (params.cur_temperature) {
+                                currentData.temperature = params.cur_temperature + "℃";
+                            } else {
+                                currentData.temperature = "";
+                            }
+                            if (params.power == "off") {
+                                currentData.status = "已关机";
+                            } else {
+                                if (params.hot_power == "on") {
+                                    currentData.status = "加热中";
+                                } else if (params.warm_power == "on") {
+                                    currentData.status = "保温中";
+                                } else if (params.fast_hot_power == "on") {
+                                    currentData.status = "即热";
+                                }
+                            }
+                        } else if (deviceType == "0xE3") {
+                            if (params.power == "on") {
+                                if (params.temperature) {
+                                    currentData.status = params.temperature + "℃";
+                                } else {
+                                    currentData.status = "";
+                                }
+                            } else {
+                                currentData.status = "已关机";
+                            }
+                            currentData.temperature = "";
+                        } else if (deviceType == "0xED" && deviceSubType == "266") {
+                            currentData.temperature = "";
+                            currentData.status = params.power == "on" ? "已开机" : "已关机";
+                        } else if (deviceType == "0xED" && deviceSubType == "265") {
+                            nativeService.alert(params);
+                            currentData.temperature = "";
+                            if (params.life_1) {
+                                currentData.status = params.life_1;
+                            }
+                            if (params.life_2) {
+                                currentData.status += params.life_2;
+                            }
+                            if (params.life_3) {
+                                currentData.status += params.life_3;
+                            }
+                            if (params.life_4) {
+                                currentData.status += params.life_4;
+                            }
+                            if (params.life_5) {
+                                currentData.status += params.life_5;
+                            }
+                        }
+                        me.prepareData[j] = currentData;
+                    }
+                }
             },
             handleNotification() {
                 let me = this;
                 globalEvent.addEventListener(this.pushKey, (data) => {
-                    me.updateUI(data);
+                    me.updateItem(data);
                 });
                 globalEvent.addEventListener(this.pushKeyOnline, (data) => {
-                    if (data && data.messageType == "deviceOnlineStatus") {
-                        if (data.messageBody && data.messageBody.onlineStatus == "online") {
-                            me.onlineStatus = "1";
-                        } else if (data.messageBody && data.messageBody.onlineStatus == "offline") {
-                            me.onlineStatus = "0";
-                        } else {
-                            me.onlineStatus = "0";
-                        }
-                    } else if (data && data.messageType == "queryStatusFromApp") {
-                        me.queryStatus();
+                    if (data && data.messageType == "queryStatusFromApp") {
+                        me.updateTXList() ;
                     }
                 });
             },
@@ -342,6 +280,7 @@
         computed: {},
         mounted() {
             this.queryTXLists();
+            this.handleNotification()
         }
     }
 </script>
@@ -412,9 +351,14 @@
 
     .text-offline-center {
         position: absolute;
-        right: 300px;
-        top: 200px;
-        align-items: center;
+        top: 176px;
+        left:289px;
+		align-items: center;
+		font-family: PingFangSC-Regular;
+		font-size: 36px;
+		color: #000000;
+		letter-spacing: 0;
+		text-align: center;
     }
 
     .control-div-offline {

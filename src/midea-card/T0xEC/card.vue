@@ -185,7 +185,6 @@
             			"params":{}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
-            		nativeService.alert(data);
             		self.updateUI(data);
             	},function(error) {
             		if(error.errorCode == '331307' || error.errorCode == '1307') {
@@ -416,7 +415,6 @@
 	}
 	.main-status-div {
 		flex-direction: row;
-		margin-left:50px
 	}
 	.main-status {
 		font-size: 80px;
@@ -435,7 +433,6 @@
 	}
 	.main-status-second {
 		font-size: 28px;
-		margin-left:10px;
 		margin-top:-30px;
 		color: #FFFFFF;
 		letter-spacing: 0;
@@ -443,7 +440,6 @@
 	}
 	.main-status-third {
 		font-size: 28px;
-		margin-left:10px;
 		margin-top:8px;
 		font-family: PingFangSC-Regular;
 		color: #FFFFFF;

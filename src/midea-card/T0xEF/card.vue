@@ -5,7 +5,7 @@
 		    	 <div class="card card-hot">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
-	        				<text class="main-status" :class="[work_status != 2?'main-status-simple':'']">{{display_value2}}</text>
+	        				<text class="main-status" :class="[work_status != 1?'main-status-simple':'']">{{display_value2}}</text>
 	        				<text class="danwei"></text>
 	        			</div>
 	        			<text class="main-status-second">{{danwei}}</text>
@@ -373,7 +373,7 @@
 		color: #FFFFFF;
 	}
 	.main-status-simple {
-		font-size: 75px;
+		font-size: 84px;
 		margin-top: 74px;
 	}
 	.danwei {

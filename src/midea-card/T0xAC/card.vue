@@ -295,7 +295,7 @@ export default {
             if (this.mode == 'cool') {
                 img = "./assets/img/smart_ic_smart@2x.png";
             } else if (this.mode == 'heat') {
-                img = "./assets/img/smart_ic_warmmode@2x";
+                img = "./assets/img/smart_ic_warmmode@2x.png";
             } else if (this.mode == 'auto') {
                 img = "./assets/img/auto@2x.png";
             } else if (this.mode == 'dry') {

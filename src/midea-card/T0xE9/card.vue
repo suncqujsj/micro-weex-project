@@ -5,7 +5,7 @@
 		    	 <div class="card card-hot">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
-	        				<text class="main-status">{{display_value1}}</text>
+	        				<text class="main-status" :class="[work_status !='1' && work_status != '3'?'main-status-simple':''] ">{{display_value1}}</text>
 	        				<text class="danwei">{{danwei}}</text>
 	        			</div>
 	        			<text class="main-status-second">{{main_second}}</text>
@@ -155,7 +155,7 @@
 					} else {
 						this.display_value1 = "空闲中";
 						this.main_second = "";
-						this.display_value2 = this.return_work_status[this.work_status];
+						this.display_value2 = this.return_work_status[this.work_status] || "--";
 						this.danwei = "";
 					}
 	            }else {
@@ -330,6 +330,10 @@
 	.main-status {
 		font-size: 128px;
 		color: #FFFFFF;
+	}
+	.main-status-simple {
+		font-size: 84px;
+		margin-top: 30px;
 	}
 	.danwei {
 		font-family: PingFangSC-Light;

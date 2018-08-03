@@ -71,7 +71,7 @@
             goTo: function(page){
                 console.log(1)
                 var path = page + '.js'
-                nativeService.goTo(path)
+                nativeService.goTo(path, false, true);
             },
             leftImgClick: function(){
             },

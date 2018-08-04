@@ -22,7 +22,7 @@ export const all = [
             "errorCode": 0,
 		    "params": {
 		       "power": "on",
-		        "mode": "normal",
+		        "mode": "baby",
 		        "gear":"4"
 		    }
         }

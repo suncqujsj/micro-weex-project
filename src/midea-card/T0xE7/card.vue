@@ -14,12 +14,15 @@
 		        		</div>
 		        	</div>
 		        	<div class="card-right">
-		        		<div class="card-control" @click="poweronoff(0)">
-		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png"></image>
+		        		<div class="card-control" >
+		        			
 		        		</div>
-		        		<div class="card-icon" @click="showControlPanelPage">
-		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip019@2x.png"></image>
+		        		<div class="card-icon">
+		        			<image class="card-icon-img" @click="showControlPanelPage" resize="contain" src="./assets/img/smart_img_equip019@2x.png"></image>
 		        		</div>
+		        		<div class="card-control-div">
+		        			<image class="card-control-img" @click="poweronoff(0)" src="./assets/img/smart_ic_off@2x.png"></image>
+	        			</div>
 		        	</div>
 		        </div>
 		        <div class="card-power-off" v-else>
@@ -379,6 +382,14 @@
 		margin-right:44px;
 		flex-direction: row;
 		justify-content: flex-end;
+		height:100px;
+	}
+	.card-control-div {
+		flex-direction: row;
+		position: absolute;
+		top: 38px;
+		right: 36px;
+		height:100px;
 	}
 	.card-control-temp-div {
 		flex-direction: row;

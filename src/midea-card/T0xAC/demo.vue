@@ -70,9 +70,6 @@
 			<!--显示两行不带switch,hasBottomBorder=false -->
 			<midea-smart :showSwitchIcon="false" @change="onMideachange2" :hasBottomBorder="false" :checked="mideaChecked2" :data="data3"></midea-smart>
 
-			<div style="flex-direction: row;flex-wrap: wrap;margin-top:20px">
-				<cookbook v-for="(item3,index) in cookbook" :data="item3" @cookbookclick="mideaClick"></cookbook>
-			</div>
 			<div style="flex-direction: row;flex-wrap: nowrap;margin-top:20px;margin-left: 32px;">
 				<scroller scroll-direction="horizontal" show-scrollbar="false" style="flex:1;height:300px">
 					<food v-for="(it,index) in foodData" :data="it" @foodclick="mideaClick"></food>
@@ -108,7 +105,6 @@ import nativeService from '@/common/services/nativeService.js'
 import MideaHeader from '@/midea-component/header.vue'
 import mideaSwitch from '@/midea-component/switch.vue'
 import mideaSmart from '@/midea-card/midea-components/smart.vue'
-import cookbook from '@/midea-card/T0xAC/components/cookbook.vue'
 import food from '@/midea-card/T0xAC/components/food.vue'
 import switchBar from '@/midea-card/T0xAC/components/switch.vue'
 import extend from '@/midea-card/T0xAC/components/extend.vue'
@@ -122,7 +118,6 @@ export default {
 		mideaSwitch,
 		mideaSmart,
 		mideaItem,
-		cookbook,
 		food,
 		switchBar,
 		extend,
@@ -170,35 +165,6 @@ export default {
 			list2: [
 				{ "name": "云食普" },
 			],
-			cookbook: [{
-				title: "蓬松煎饼1",
-				title_preimg: "./assets/img/smart_ic_a@2x.png",
-				detail_first: "炖锅炖锅炖1 ",
-				detail_second: "20分 | 简单 | 240千卡1",
-				img_url: "./assets/img/test_pic_banner04@2x.png",
-				targeturl: "a"
-			}, {
-				title: "蓬松煎饼2",
-				title_tailimg: "./assets/img/smart_ic_like@2x.png",
-				detail_first: "炖锅炖锅炖2 ",
-				detail_second: "20分 | 简单 | 240千卡2",
-				img_url: "./assets/img/test_pic_banner04@2x.png",
-				targeturl: "b"
-			}, {
-				title: "蓬松煎饼3",
-				detail_first: "炖锅炖锅炖3",
-				detail_second: "20分 | 简单 | 240千卡3",
-				img_url: "./assets/img/test_pic_banner04@2x.png",
-				targeturl: "c"
-			}, {
-				title: "蓬松煎饼4",
-				title_preimg: "./assets/img/smart_ic_a@2x.png",
-				title_tailimg: "./assets/img/smart_ic_like@2x.png",
-				detail_first: "炖锅炖锅炖4",
-				detail_second: "20分 | 简单 | 240千卡4",
-				img_url: "./assets/img/test_pic_banner04@2x.png",
-				targeturl: "d"
-			}],
 			foodData: [{
 				name: "橘子",
 				img: "./assets/img/test_pic_orange@2x.png",

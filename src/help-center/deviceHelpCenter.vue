@@ -1,9 +1,9 @@
 <template>
     <div class="wrapper">
-        <midea-header ref="header" :title="title" bgColor="#ffffff" :isImmersion="false" :showLeftImg="true" @leftImgClick="back">
+        <midea-header ref="header" :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" :showLeftImg="true" @leftImgClick="back">
         </midea-header>
         <scroller class="scroller" :style="{height: scrollHeight + 'px'}">
-            <cell class="group-gap-top"></cell>
+            <div class="group-gap-top"></div>
             <div class="cell-item" 
               v-for="(menu, index0) in menus" 
               :key="menu.title">
@@ -13,7 +13,7 @@
                     <image v-else class="arrow-icon" src="./assets/img/service_ic_hide@3x.png" resize='contain'></image>
                 </div>
 
-                <scroller style="max-height: 664px;" v-if="activeMenu === menu.title">
+                <div v-if="activeMenu === menu.title">
                     <div class="cell-sub-item" 
                       v-for="(subMenu, index1) in menu.subMenus"
                       :key="subMenu.title"
@@ -24,7 +24,7 @@
                             <image class="arrow-icon" src="./assets/img/public_ic_more@3x.png" resize='contain'></image>
                         </div>
                     </div>
-                </scroller>
+                </div>
             </div>
         </scroller>
     </div>
@@ -159,7 +159,7 @@ export default {
 .cell-sub-item {
   background-color: #f6f6f6;
   padding-left: 32px;
-  height: 96px;
+  /* height: 96px; */
 }
 .cell-sub-block {
   border-bottom-color: #e5e5e8;

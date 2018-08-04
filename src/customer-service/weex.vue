@@ -32,7 +32,7 @@
                         <div class="arraw-triangle"></div>
                     </div>
                 </cell>
-                <midea-item height="150" :hasSubBottomBorder="false" @mideaCellClick="goToOrderDetail">
+                <midea-item height="150" :hasSubBottomBorder="false" :clickActivied="false" @mideaCellClick="goToOrderDetail">
                     <image slot="itemImg" class="order-img" :src="formattedOrder.imageUrl" resize='contain'>
                     </image>
                     <div slot="title" class="order-content">

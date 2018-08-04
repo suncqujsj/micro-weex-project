@@ -22,12 +22,15 @@
 				        	</div>
 				        	<div class="card-right">
 				        		<div class="card-control" >
-				        			<image class="card-control-img" :src="powerIcon" @click="poweronoff(0)"></image>
+				        			
 				        		</div>
-				        		<div class="card-icon" @click="showControlPanelPage">
-				        			<image class="card-icon-img" :src="deviceIcon"></image>
+				        		<div class="card-icon">
+				        			<image class="card-icon-img"  @click="showControlPanelPage" :src="deviceIcon"></image>
 				        		</div>
 				        		<div></div>
+				        		<div class="card-control-div">
+				        			<image class="card-control-img" :src="powerIcon" @click="poweronoff(0)"></image>
+			        			</div>
 				        	</div>
 				        	<div class="card-right-margin"></div>
 				        </div>
@@ -249,7 +252,7 @@
 	        		if(this.mode == 'cool') {
 	        			img = "./assets/img/smart_ic_smart@2x.png";
 	        		} else if(this.mode == 'heat') {
-	        			img = "./assets/img/smart_ic_warmmode@2x";
+	        			img = "./assets/img/smart_ic_warmmode@2x.png";
 	        		} else if(this.mode == 'auto') {
 	        			img = "./assets/img/auto@2x.png";
 	        		} else if(this.mode == 'dry') {
@@ -355,8 +358,16 @@
 	}
 	.card-control {
 		align-items: flex-end;
-		margin-top:44px;
-		margin-right:44px
+		margin-top:38px;
+		margin-right:38px;
+		height:26px;
+	}
+	.card-control-div {
+		flex-direction: row;
+		position: absolute;
+		top: 38px;
+		right: 36px;
+		height:100px;
 	}
 	.card-control-temp-div {
 		flex-direction: row;

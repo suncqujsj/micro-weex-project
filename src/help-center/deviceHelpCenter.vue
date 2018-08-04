@@ -5,6 +5,7 @@
         <scroller class="scroller" :style="{height: scrollHeight + 'px'}">
             <div class="group-gap-top"></div>
             <div class="cell-item" 
+              :style="{borderBottomColor: index0 === (menus.length -1)?'#f2f2f2':'#e5e5e8'}"
               v-for="(menu, index0) in menus" 
               :key="menu.title">
                 <div class="cell-block" :data-menu-title="menu.title" @click="handleSwitch">
@@ -13,18 +14,18 @@
                     <image v-else class="arrow-icon" src="./assets/img/service_ic_hide@3x.png" resize='contain'></image>
                 </div>
 
-                <div v-if="activeMenu === menu.title">
-                    <div class="cell-sub-item" 
-                      v-for="(subMenu, index1) in menu.subMenus"
-                      :key="subMenu.title"
-                      :data-subMenu-link="subMenu.link"
-                      @click="goToProblemDetail(subMenu)">
+                <scroller class="sub-scroller" v-if="activeMenu === menu.title">
+                    <div class="cell-sub-item"
+                        v-for="(subMenu, index1) in menu.subMenus"
+                        :key="subMenu.title"
+                        :data-subMenu-link="subMenu.link"
+                        @click="goToProblemDetail(subMenu)">
                         <div class="cell-sub-block">
                             <text class="cell-sub-label">{{ subMenu.title }}？</text>
                             <image class="arrow-icon" src="./assets/img/public_ic_more@3x.png" resize='contain'></image>
                         </div>
                     </div>
-                </div>
+                </scroller>
             </div>
         </scroller>
     </div>
@@ -154,6 +155,11 @@ export default {
   padding-right: 24px;
   padding-bottom: 24px;
   height: 95px;
+}
+
+.sub-scroller {
+    background-color: #f2f2f2;
+    height: 624px;
 }
 
 .cell-sub-item {

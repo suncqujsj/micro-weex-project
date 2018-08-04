@@ -259,8 +259,7 @@
 	}
 	.content {
 		position: absolute;
-        top: 28px;
-		left: 28px;
+		left: 32px;
 		width:694px;
 		height:392px;
      	background-color: #000;
@@ -279,6 +278,7 @@
 		border-color: #CCCCCC;
 	}
 	.giveup_text{
+    	font-size: 32px;
 		color: #FFFFFF;
 		line-height: 76px;
 		text-align: center;

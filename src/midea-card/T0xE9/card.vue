@@ -32,6 +32,7 @@
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
+			<cookbook-list></cookbook-list>
 	        <midea-download></midea-download>
 	    </div>
     </scroller>
@@ -41,6 +42,7 @@
     import nativeService from '@/common/services/nativeService.js'
 	import mideaSwitch from '@/midea-component/switch.vue'
 	import mideaItem from '@/midea-component/item.vue'
+	import cookbookList from '@/midea-card/midea-components/cookbookList.vue'
 	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
@@ -52,6 +54,7 @@
         components: {
             mideaSwitch,
             mideaItem,
+            cookbookList,
             mideaDownload
         },
         data() {

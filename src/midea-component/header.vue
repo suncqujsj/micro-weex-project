@@ -116,9 +116,11 @@ export default {
 .header-title {
   flex: 1;
   font-family: PingFangSC-Medium;
-  font-weight: 600px;
+  font-weight: 600;
+  width: 600px;
   lines: 1;
   text-overflow: ellipsis;
+  text-align: center;
 }
 .header-left-image-wrapper {
   width: 88px;

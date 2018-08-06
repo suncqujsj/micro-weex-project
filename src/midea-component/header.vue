@@ -114,8 +114,11 @@ export default {
   height: 128px;
 }
 .header-title {
+  flex: 1;
   font-family: PingFangSC-Medium;
-  font-weight: 600;
+  font-weight: 600px;
+  lines: 1;
+  text-overflow: ellipsis;
 }
 .header-left-image-wrapper {
   width: 88px;

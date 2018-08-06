@@ -15,10 +15,13 @@
 					</div>
 					<div class="card-right">
 						<div class="card-control">
-							<image class="card-control-img" :src="controlStartPauseImg" @click="controlStartPause"></image>
+						
 						</div>
 						<div class="card-icon" @click="showControlPanelPage">
 							<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip043@2x.png"></image>
+</div>
+	        		<div class="card-control-div">
+	        			<image class="card-control-img" :src="controlStartPauseImg" @click="controlStartPause"></image>
 						</div>
 					</div>
 				</div>
@@ -139,6 +142,19 @@ export default {
 				boil_egg: "煮鸡蛋",
 				keep_warm: "保温",
 				diy: "DIY",
+					rice_wine :"米酒",
+					fruit_vegetable_paste:"果蔬泥",
+					vegetable_porridge:"蔬菜粥",
+					pork_porridge:"肉末粥",
+					fragrant_rice:"香软饭",
+					assorte_rice:"什锦饭",
+					steame_fish:"蒸鱼肉",
+					baby_rice:"宝宝饭",
+					essence_rice:"精华饭",
+					fragrant_dense_congee:"香浓粥",
+					one_two_cook:"一锅两煮",
+					original_steame:"原味蒸",
+					hot_fast_rice:"热水快速饭",
 				10000: "香甜煮",
 				10001: "快速煮",
 				10002: "标准煮",
@@ -472,10 +488,18 @@ export default {
 }
 .card-control {
   align-items: flex-end;
-  margin-top: 44px;
-  margin-right: 44px;
-  flex-direction: row;
-  justify-content: flex-end;
+		margin-top:38px;
+		margin-right:38px;
+		flex-direction: row;
+		justify-content: flex-end;
+		height:100px;
+	}
+	.card-control-div {
+		flex-direction: row;
+		position: absolute;
+		top: 38px;
+		right: 36px;
+		height:100px;
 }
 .card-status-detail {
   flex-direction: row;

@@ -15,12 +15,15 @@
 		        	</div>
 		        	<div class="card-right">
 		        		<div class="card-control">
-		        			<image class="card-control-img" :src="charge" @click="clickCharge" style="margin-right: 35px" ></image>
-		        			<image class="card-control-img" :src="startPause" @click="clickStartPause"></image>
+		        			
 		        		</div>
 		        		<div class="card-icon" @click="showControlPanelPage">
 		        			<image class="card-icon-img" src="./assets/img/smart_img_equip011@2x.png"></image>
 		        		</div>
+		        		<div class="card-control-div">
+		        			<image class="card-control-img" :src="charge" @click="clickCharge" style="margin-right: 35px" ></image>
+		        			<image class="card-control-img" :src="startPause" @click="clickStartPause"></image>
+	        			</div>
 		        	</div>
 		        </div>
 	        </div>
@@ -86,7 +89,11 @@
 					edge: "沿边模式",
 					emphases: "重点模式",
 					screw: "螺旋模式",
-					auto: "自动模式"
+					auto: "自动模式",
+					bed: "床底清扫",
+					wide_screw: "宽阔地方螺旋",
+					area: "区域清扫",
+					deep: "深度清扫"
                 },
                 display_value1: "",
                 display_value2: "",
@@ -120,10 +127,10 @@
                		this.work_mode = params.work_mode;
                		if(this.work_status == "work") {
                			this.display_value1 = "工作中";
-               			this.display_value2 = this.return_work_mode[this.work_mode];
+               			this.display_value2 = this.return_work_mode[this.work_mode] || "--";
                		} else {
-               			this.display_value1 = this.return_work_status[this.work_status];
-               			this.display_value2 = this.return_work_mode[this.work_mode];
+               			this.display_value1 = this.return_work_status[this.work_status] || "--";
+               			this.display_value2 = this.return_work_mode[this.work_mode] || "--";
                		}
 	            }else {
 	            	nativeService.toast("连接设备超时");
@@ -165,7 +172,8 @@
         			"name":name,
         			"params":{
         				"work_status": startPause,
-        				"move_direction": "none"
+        				"move_direction": "none",
+        				"work_mode": this.work_mode == "none"? "arc":this.work_mode
         			}
         		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
@@ -304,6 +312,14 @@
 		margin-right:44px;
 		flex-direction: row;
 		justify-content: flex-end;
+		height:100px;
+	}
+	.card-control-div {
+		flex-direction: row;
+		position: absolute;
+		top: 38px;
+		right: 36px;
+		height:100px;
 	}
 	.card-status-detail {
 		flex-direction: row;

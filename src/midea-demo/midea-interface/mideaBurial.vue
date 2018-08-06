@@ -11,6 +11,7 @@
 <script>
     import mideaHeader from '@/midea-component/header.vue'
     import mideaButton from '@/midea-component/button.vue'
+    import nativeService from '@/common/services/nativeService'
         
     module.exports = {
         components: { mideaHeader, mideaButton },

@@ -17,18 +17,18 @@
                         <div class="scene-status">
                             <text class="info-text font14 white">温度</text>
                             <div  class="row-c status-value">
-                                <text v-if="indicator.temperature && indicator.temperature !== ''" class="font36 white">{{indicator.temperature}}</text>
-                                <text v-if="indicator.temperature && indicator.temperature !== ''" class="font16 white mgb-20">℃</text>
+                                <text v-if="indicator.temperature != undefined && indicator.temperature !== ''" class="font36 white">{{indicator.temperature}}</text>
+                                <text v-if="indicator.temperature != undefined && indicator.temperature !== ''" class="font16 white mgb-20">℃</text>
                                 <text v-else class="font36 white">?</text>
                             </div>
-                            <text v-if="indicator.temperature && indicator.temperature != ''" class="info-text font12 white">{{temperatureStatus}}</text>
+                            <text v-if="indicator.temperature != undefined && indicator.temperature != ''" class="info-text font12 white">{{temperatureStatus}}</text>
                             <text v-else class="info-text font12 white"></text>
                         </div>  
                         <div class="scene-status">
                             <text class="info-text font14 white">湿度</text>
                             <div class="row-c status-value">
-                                <text v-if="indicator.humidity && indicator.humidity !== ''" class="font36 white">{{indicator.humidity}}</text>
-                                <text v-if="indicator.humidity && indicator.humidity !== ''" class="font16 white mgb-20">%</text>
+                                <text v-if="indicator.humidity != undefined && indicator.humidity !== ''" class="font36 white">{{indicator.humidity}}</text>
+                                <text v-if="indicator.humidity != undefined && indicator.humidity !== ''" class="font16 white mgb-20">%</text>
                                 <text v-else class="font36 white">?</text>
                             </div>
                             <text class="info-text font12 white">{{humidityStatus}}</text>
@@ -36,7 +36,7 @@
                         <div class="scene-status">
                             <text class="info-text font14 white">空气质量</text>
                             <div class="row-c status-value">
-                                <text v-if="indicator.pm25 && indicator.pm25 !== ''" class="font36 white">{{indicator.pm25}}</text>
+                                <text v-if="indicator.pm25 != undefined && indicator.pm25 !== ''" class="font36 white">{{indicator.pm25}}</text>
                                 <text v-else class="font36 white">?</text>
                             </div>
                             <text class="info-text font12 white">{{pm25Status}}</text>
@@ -46,8 +46,8 @@
                         <div class="scene-status">
                             <text class="info-text font14 white">温度</text>
                             <div class="row-c status-value">
-                                <text v-if="indicator.water_temperature && indicator.water_temperature !== ''" class="font36 white">{{indicator.water_temperature}}</text>
-                                <text v-if="indicator.water_temperature && indicator.water_temperature !== ''" class="font16 white mgb-20">℃</text>
+                                <text v-if="indicator.water_temperature != undefined && indicator.water_temperature !== ''" class="font36 white">{{indicator.water_temperature}}</text>
+                                <text v-if="indicator.water_temperature != undefined && indicator.water_temperature !== ''" class="font16 white mgb-20">℃</text>
                                 <text v-else class="font36 white">?</text>
                             </div>
                         </div>  
@@ -62,32 +62,37 @@
                         <div class="scene-status">
                             <text class="info-text font14 white">还需加热</text>
                             <div class="row-c status-value">
-                                <text v-if="indicator.remain_time && indicator.remain_time !== ''" class="font36 white">{{indicator.remain_time}}</text>
-                                <text v-if="indicator.remain_time && indicator.remain_time !== ''" class="font16 white mgb-20">分</text>
+                                <text v-if="indicator.remain_time != undefined && indicator.remain_time !== ''" class="font36 white">{{indicator.remain_time}}</text>
+                                <text v-if="indicator.remain_time != undefined && indicator.remain_time !== ''" class="font16 white mgb-20">分</text>
                                 <text v-else class="font36 white">?</text>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div v-if="roomType=='4'" class="up-block balcony-block">
-                    <text class="weather white">{{weatherDesc}}</text>
-                    <slider v-if="hasWasherWaterData || hasWasherPowerData">
-                        <div v-if="hasWasherWaterData">
-                            <div class="row-sb chart-info">
-                                <text class="font14 white">单位：升</text>
-                                <text class="font14 white">近30天用水量</text>
+                    <div v-if="network">
+                        <text class="weather white">{{weatherDesc}}</text>
+                        <slider v-if="hasWasherWaterData || hasWasherPowerData">
+                            <div v-if="hasWasherWaterData">
+                                <div class="row-sb chart-info">
+                                    <text class="font14 white">单位：升</text>
+                                    <text class="font14 white">近30天用水量</text>
+                                </div>
+                                <midea-barchart-view class="barchart" :data="washerWaterData"></midea-barchart-view>
                             </div>
-                            <midea-barchart-view class="barchart" :data="washerWaterData"></midea-barchart-view>
-                        </div>
-                        <div v-if="hasWasherPowerData">
-                            <div class="row-sb chart-info">
-                                <text class="font14 white">单位：度</text>
-                                <text class="font14 white">近30天用电量</text>
+                            <div v-if="hasWasherPowerData">
+                                <div class="row-sb chart-info">
+                                    <text class="font14 white">单位：度</text>
+                                    <text class="font14 white">近30天用电量</text>
+                                </div>
+                                <midea-barchart-view class="barchart" :data="washerPowerData"></midea-barchart-view>
                             </div>
-                            <midea-barchart-view class="barchart" :data="washerPowerData"></midea-barchart-view>
+                        </slider>
+                        <div v-if="!hasWasher">
+                            <text class="no-washdata">暂无数据</text>
                         </div>
-                    </slider>
-                    <div v-if="!hasWasherPowerData && !hasWasherWaterData">
+                    </div>
+                    <div v-if="!network">
                         <text class="no-washdata">暂无数据</text>
                     </div>
                 </div>
@@ -509,8 +514,10 @@
                     washer: {
                         on: 'assets/img/power_off.png',
                         off: 'assets/img/power_on.png',
-                        unwork: 'assets/img/start_on.png',
-                        work: 'assets/img/stop_on.png',
+                        start: 'assets/img/stop_on.png',
+                        pause: 'assets/img/start_on.png',
+                        standby: 'assets/img/start_on.png',
+                        idle: 'assets/img/start_on.png',
                         powerDisabled: 'assets/img/power_off.png',
                         statusDisabled: 'assets/img/start_off.png'
                     },
@@ -588,9 +595,11 @@
                 washerStatus: {//机器要成为的状态
                     on: '关机',
                     off: '开机',
-                    powerDisabled: '',
-                    work: '暂停',
-                    unwork: '启动',
+                    powerDisabled: '电源',
+                    start: '暂停',
+                    pause: '启动',
+                    standby: '启动',
+                    idle: '启动',
                     statusDisabled: ''
                 },
                 activeModeDevices: [],
@@ -604,6 +613,9 @@
                 modelDeviceList: [],
                 checkQuickOptimizeTimes: 0,
                 checkModelExeTimes: 0,
+                hasWasher: true,
+                network: true,
+                queryStatusCount: 0
             }
         },
         methods: {
@@ -625,22 +637,31 @@
                 this.goTo('buyShampoo')
             },
             initData(){
-                this.getSceneDetail().then(()=>{
-                    if (this.scene.applianceList.length <= 0 ) {
-                        nativeService.toast('无法获取相关数据，点击右上角设置设备')
+                nativeService.getNetworkStatus().then((result)=>{
+                    if (result.status == 1){
+                        this.getSceneDetail().then(()=>{
+                            if (this.scene.applianceList.length <= 0 ) {
+                                nativeService.toast('无法获取相关数据，点击右上角设置设备')
+                            }
+                            if (this.roomType == 4){
+                                this.hasWasherWaterData = false
+                                this.hasWasherPowerData = false
+                                this.getWeatherInfo()
+                                if ( this.scene.applianceList.length > 0) {
+                                    this.hasWasher = true
+                                    this.washerCode = this.scene.applianceList[0].applianceCode || ''
+                                    this.getWashData()
+                                    this.luaQueryStatus()
+                                }else{
+                                    this.hasWasher = false
+                                }
+                            }
+                        }).catch((err)=>{
+                            nativeService.toast(this.getErrorMessage(err))
+                        })
+                    }else if(result.status == 0){
+                        this.network = false
                     }
-                    if (this.roomType == 4){
-                        this.hasWasherWaterData = false
-                        this.hasWasherPowerData = false
-                        this.getWeatherInfo()
-                        if ( this.scene.applianceList.length > 0) {
-                            this.washerCode = this.scene.applianceList[0].applianceCode || ''
-                            this.getWashData()
-                            this.luaQueryStatus()
-                        }
-                    }
-                }).catch((err)=>{
-                    nativeService.toast(this.getErrorMessage(err))
                 })
             },
             getSceneDetail(){
@@ -955,71 +976,87 @@
                         self.setWasherStatus(luaData)
                         resolve(luaData)
                     },function(error) {
+                        
+                        let luaMsg = {
+                            '411003': '设备离线',
+                            '331308': '设备离线'
+                        }
+                        // nativeService.toast(error)
+                        
                         // nativeService.toast('查询洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
-                        nativeService.toast('查询洗衣机状态失败')
+                        if (Object.keys(luaMsg).indexOf(error.errorCode) > -1) {
+                            nativeService.toast(luaMsg[error.errorCode])
+                        }else{
+                            nativeService.toast('查询洗衣机状态失败' + error.errorCode)
+                        }
                     })
                 })
             },
             setWasherStatus(luaData){
                 this.washerPower = luaData.result.power
                 if (this.washerPower == 'on') {
-                    if (luaData.result.running_status == 'start'){
-                        this.washerRunningStatus = 'work'
-                    } else {
-                        this.washerRunningStatus = 'unwork' //runnig_status不等于start就可以发start命令
-                    }
+                    this.washerRunningStatus = luaData.result.running_status
                 }
             },
             powerOnOff(){//控制阳台场景洗衣机的开启关闭
                 let self = this;
-                let poweronoff = this.washerPower=='off' ? "on" : "off"
-                let aimText = this.washerPower=='off' ? "开机" : "关机"
-                let params = {
-                    operation: "luaControl",
-                    applianceId:  String(self.washerCode),
-                    params: { "power": poweronoff },
+                if (this.hasWasher) {
+                    if (['on','off'].indexOf(this.washerPower) > -1) {
+                        let poweronoff = this.washerPower=='off' ? "on" : "off"
+                        let aimText = this.washerPower=='off' ? "开机" : "关机"
+                        let params = {
+                            operation: "luaControl",
+                            applianceId:  String(self.washerCode),
+                            params: { "power": poweronoff },
+                        }
+                        nativeService.sendLuaRequest(params,true).then(function() {
+                            self.luaQueryStatus().then((luaData)=>{
+                                if (luaData.result.power == 'on') {
+                                    nativeService.toast('已开启电源')
+                                }
+                                if (luaData.result.power == 'off') {
+                                    nativeService.toast('已关闭电源')
+                                }
+                            })
+                        },function(error) {
+                            nativeService.toast(aimText + '失败')
+                            // nativeService.toast('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
+                        })
+                    }else{
+                        nativeService.toast('切换电源失败，请稍后重试')
+                    }
+                }else{
+                    nativeService.toast('未绑定洗衣机，请绑定后重试')
                 }
-                nativeService.sendLuaRequest(params,true).then(function() {
-                    self.luaQueryStatus().then((luaData)=>{
-                        if (luaData.result.power == 'on') {
-                            nativeService.toast('已开启电源')
-                        }
-                        if (luaData.result.power == 'off') {
-                            nativeService.toast('已关闭电源')
-                        }
-                    })
-                },function(error) {
-                    // nativeService.toast('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
-                    nativeService.toast(aimText + '失败')
-                });
             },
             controlStartPause(){//控制阳台场景洗衣机的启动暂停
                 let self = this;
                 
-                if( self.washerRunningStatus == "work") {
+                if( self.washerRunningStatus == "start") {
                     let params = {
                         operation:"luaControl",
                         applianceId: String(self.washerCode),
                         params:{ "control_status": "pause" }
                     }
+                    this.queryStatusCount = 0
                     nativeService.sendLuaRequest(params, true).then(function() {
                         nativeService.showLoading()
-                        setTimeout(()=>{
-                            self.luaQueryStatus().then((luaData)=>{
-                                nativeService.hideLoading()
-                                if (luaData.result.running_status == 'pause') {
-                                    nativeService.toast('洗衣机暂停成功')
-                                }else{
-                                    nativeService.toast('洗衣机暂停失败')
-                                }
-                            })
-                        },1000)
-                        
+                        var countQuery = setInterval(()=>{
+                            self.queryStatusCount++
+                        }, 1000)
+                        if (self.queryStatusCount < 10) {
+                            setTimeout(()=>{
+                                self.callLuaQuery()
+                            },1000)
+                        }else{
+                            clearInterval(countQuery)
+                            nativeService.toast('洗衣机暂停失败')
+                        }
                     },function(error) {
                         nativeService.toast('洗衣机暂停失败')
                         // nativeService.toast('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
                     })
-                } else {
+                } else {//runnig_status不等于start就可以发start命令
                     let params = {
                         operation: "luaControl",
                         applianceId: String(self.washerCode),
@@ -1042,9 +1079,29 @@
                         nativeService.toast('洗衣机启动失败')
                     });
                 }
+            },
+            callLuaQuery(){
+                this.luaQueryStatus().then((luaData)=>{
+                    if (luaData.result.running_status != 'start') {
+                        nativeService.toast('洗衣机暂停成功')
+                    }else{
+                        setTimeout(()=>{
+                            this.callLuaQuery()
+                        },1000)
+                    }
+                })
             }
         },
         created(){
+            nativeService.burialPoint({//埋点客厅
+                pageName: 'sceneMainPage',
+                subAction: 'scene_livingroom_operate'
+            }).then(()=>{
+                nativeService.alert(11111112)
+            }).catch((err)=>{
+                nativeService.alert('error'+ JSON.stringify(err))
+            })
+
             this.roomType = nativeService.getParameters('roomType')
             if (this.roomType == 1){
                 this.scene.modeList = [

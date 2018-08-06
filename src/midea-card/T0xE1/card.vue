@@ -14,18 +14,21 @@
 		        		</div>
 		        	</div>
 		        	<div class="card-right">
-		        		<div class="card-control" v-if="work_status=='work'">
-		        			<image v-if="work_status=='work'" class="card-control-img" :src="startPause" @click="controlStartPause"></image>
-		        			<image v-if="work_status=='work'" class="card-control-img" src="./assets/img/smart_ic_cancelwork@2x.png" @click="cancelWork"></image>
-		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
-		        		</div>
-		        		<div class="card-control" v-else>
-		        			<image v-if="work_status!='work'" class="card-control-img" style="margin-left:50px" src="./assets/img/smart_ic_play@2x.png" @click="startWork"></image>
-		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
+		        		<div class="card-control" >
+		        			
 		        		</div>
 		        		<div class="card-icon" >
 		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip029@2x.png" @click="showControlPanelPage()"></image>
 		        		</div>
+		        		<div class="card-control-div" v-if="work_status=='work'">
+		        			<image v-if="work_status=='work'" class="card-control-img" :src="startPause" @click="controlStartPause"></image>
+		        			<image v-if="work_status=='work'" class="card-control-img" src="./assets/img/smart_ic_cancelwork@2x.png" @click="cancelWork"></image>
+		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
+	        			</div>
+	        			<div class="card-control-div" v-else>
+		        			<image v-if="work_status!='work'" class="card-control-img" style="margin-left:50px" src="./assets/img/smart_ic_play@2x.png" @click="startWork"></image>
+		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
+	        			</div>
 		        	</div>
 		        </div>
 		        <div class="card-power-off" v-else>
@@ -381,6 +384,16 @@
 		margin-top:44px;
 		flex-direction: row;
 		justify-content: space-around;
+		height:100px;
+	}
+	.card-control-div {
+		flex-direction: row;
+		position: absolute;
+		justify-content: space-around;
+		top: 38px;
+		/*right: 36px;*/
+		height:100px;
+		width: 343px;
 	}
 	.card-control-temp-div {
 		flex-direction: row;

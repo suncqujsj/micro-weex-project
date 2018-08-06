@@ -327,7 +327,7 @@
                     nativeService.toast(this.getErrorMessage(err))
                 })
                 
-                nativeService.burialPoint({//埋点洗衣机用水
+                nativeService.burialPoint({//埋点手动自动化执行
                     pageName: 'sceneMainPage',
                     subAction: 'scene_shortcut_operate'
                 })

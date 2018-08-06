@@ -753,7 +753,7 @@
                 
                 params.userDevices = nativeService.getParameters('userDevices')
                 this.goTo('autoBindDevices', {}, params )
-            },
+            }, 
             saveChange(){
                 let that = this
                 // if ( Object.keys(this.editParams).length === 0 ){

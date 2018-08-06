@@ -6,7 +6,7 @@ export const all = [
         data: {
             "errorCode": 0,
 		    "params": {
-		       "work_status": "5",
+		       "work_status": "1",
 		        "time_reserve_hr": "2",
 		        "time_reserve_min": "55",
 		        "time_work_hr":"3",

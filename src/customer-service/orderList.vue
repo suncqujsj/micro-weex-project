@@ -325,6 +325,11 @@ export default {
     },
     created() {
         this.getOrderList()
+
+        nativeService.burialPoint({
+            pageName: 'serviceProgressQueryPage',
+            subAction: 'page_view'
+        })
     }
 }
 </script>

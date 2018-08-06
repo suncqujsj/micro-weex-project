@@ -46,7 +46,10 @@ export default {
         }
     },
     created() {
-
+        nativeService.burialPoint({
+            pageName: 'serviceChargePolicyPage',
+            subAction: 'page_view'
+        })
     }
 }
 </script>

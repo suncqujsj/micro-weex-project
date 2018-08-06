@@ -617,6 +617,11 @@ export default {
                 this.stopRecordAudio()
             }
         })
+
+        nativeService.burialPoint({
+            pageName: 'serviceInstallationPage',
+            subAction: 'page_view'
+        })
     }
 }
 </script>

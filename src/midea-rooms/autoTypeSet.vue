@@ -67,8 +67,6 @@
                 <div class="time-picker row-sb">
                     <scroll-picker :wrapWidth="375" :listArray="hours" @onChange="setActiveHour"></scroll-picker>
                     <scroll-picker :wrapWidth="375" :listArray="minutes" @onChange="setActiveMinute"></scroll-picker>
-                    <div class="line1" ></div>
-                    <div class="line2"></div>
                 </div>
             </midea-confirm2>
         </div>

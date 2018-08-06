@@ -515,6 +515,7 @@
                         on: 'assets/img/power_off.png',
                         off: 'assets/img/power_on.png',
                         start: 'assets/img/stop_on.png',
+                        work: 'assets/img/stop_on.png',
                         pause: 'assets/img/start_on.png',
                         standby: 'assets/img/start_on.png',
                         idle: 'assets/img/start_on.png',
@@ -597,6 +598,7 @@
                     off: '开机',
                     powerDisabled: '电源',
                     start: '暂停',
+                    work: '暂停',
                     pause: '启动',
                     standby: '启动',
                     idle: '启动',
@@ -1032,7 +1034,7 @@
             controlStartPause(){//控制阳台场景洗衣机的启动暂停
                 let self = this;
                 
-                if( self.washerRunningStatus == "start") {
+                if( self.washerRunningStatus == "start" || self.washerRunningStatus == "work") {
                     let params = {
                         operation:"luaControl",
                         applianceId: String(self.washerCode),
@@ -1056,7 +1058,7 @@
                         nativeService.toast('洗衣机暂停失败')
                         // nativeService.toast('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
                     })
-                } else {//runnig_status不等于start就可以发start命令
+                } else {//runnig_status不等于start和work就可以发start命令
                     let params = {
                         operation: "luaControl",
                         applianceId: String(self.washerCode),
@@ -1067,7 +1069,7 @@
                         setTimeout(()=>{
                             self.luaQueryStatus().then((luaData)=>{
                                 nativeService.hideLoading()
-                                if (luaData.result.running_status == 'start') {
+                                if (luaData.result.running_status == 'start' || luaData.result.running_status == 'work') {
                                     nativeService.toast('洗衣机启动成功')
                                 }else{
                                     nativeService.toast('洗衣机启动失败')
@@ -1082,7 +1084,7 @@
             },
             callLuaQuery(){
                 this.luaQueryStatus().then((luaData)=>{
-                    if (luaData.result.running_status != 'start') {
+                    if (luaData.result.running_status != 'start' || luaData.result.running_status != 'work') {
                         nativeService.toast('洗衣机暂停成功')
                     }else{
                         setTimeout(()=>{
@@ -1093,15 +1095,6 @@
             }
         },
         created(){
-            nativeService.burialPoint({//埋点客厅
-                pageName: 'sceneMainPage',
-                subAction: 'scene_livingroom_operate'
-            }).then(()=>{
-                nativeService.alert(11111112)
-            }).catch((err)=>{
-                nativeService.alert('error'+ JSON.stringify(err))
-            })
-
             this.roomType = nativeService.getParameters('roomType')
             if (this.roomType == 1){
                 this.scene.modeList = [

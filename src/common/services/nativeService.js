@@ -610,25 +610,39 @@ export default {
     },
     // 获取套系列表
     getTxList(isShowLoading = true) {
-        if (this.isDummy != true) {
+        // if (this.isDummy != true) {
             return new Promise((resolve, reject) => {
                 if (isShowLoading) {
                     this.showLoading()
                 }
                 bridgeModule.getTXList({}, (resData) => {
                     if (typeof resData == 'string') {
-                        this.alert(resData);
-                        resData = JSON.parse(resData);
+                        // this.alert(resData)
+                        var resDataObj = JSON.parse(resData);
+                        if (isShowLoading) {
+                            this.hideLoading()
+                        }
+                        if (resDataObj.errorCode && resDataObj.errorCode !== 0) {
+                            //失败
+                            reject(resDataObj);
+                        } else {
+                            //成功
+                            resolve(resDataObj)
+                        }
                     }
-                    if (isShowLoading) {
-                        this.hideLoading()
-                    }
-                    if (resData.errorCode && resData.errorCode !== 0) {
-                        //失败
-                        reject(resData);
-                    } else {
-                        //成功
-                        resolve(resData)
+                    else{
+                        //Android 可能直接传个对象
+                        var resDataObj = resData;
+                        if (isShowLoading) {
+                            this.hideLoading()
+                        }
+                        if (resDataObj.errorCode && resDataObj.errorCode !== 0) {
+                            //失败
+                            reject(resDataObj);
+                        } else {
+                            //成功
+                            resolve(resDataObj)
+                        }
                     }
                 }, (error) => {
                     if (typeof error == 'string') {
@@ -638,12 +652,12 @@ export default {
                     reject(error);
                 });
             })
-        }else{
-            return new Promise((resolve, reject) => {
-                let data = Mock.getMock('queryTXList');
-                resolve(data)
-            })
-        }
+        // }else{
+        //     return new Promise((resolve, reject) => {
+        //         let data = Mock.getMock('queryTXList');
+        //         resolve(data)
+        //     })
+        // }
     },
     showSharePanel(params, callback, callbackFail) {
         return new Promise((resolve, reject) => {

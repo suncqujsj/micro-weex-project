@@ -119,6 +119,7 @@ export default {
                     "target": {
                         "mode": "sleep",
                         "swing_angle": "90",
+                        "swing": "on",
                         "power": "on"
                     }
                 },

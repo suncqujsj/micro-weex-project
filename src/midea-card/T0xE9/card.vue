@@ -5,7 +5,7 @@
 		    	 <div class="card card-hot">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
-	        				<text class="main-status">{{display_value1}}</text>
+	        				<text class="main-status" :class="[work_status !='1' && work_status != '3'?'main-status-simple':''] ">{{display_value1}}</text>
 	        				<text class="danwei">{{danwei}}</text>
 	        			</div>
 	        			<text class="main-status-second">{{main_second}}</text>
@@ -32,6 +32,7 @@
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
+			<cookbook-list></cookbook-list>
 	        <midea-download></midea-download>
 	    </div>
     </scroller>
@@ -41,6 +42,7 @@
     import nativeService from '@/common/services/nativeService.js'
 	import mideaSwitch from '@/midea-component/switch.vue'
 	import mideaItem from '@/midea-component/item.vue'
+	import cookbookList from '@/midea-card/midea-components/cookbookList.vue'
 	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
@@ -52,6 +54,7 @@
         components: {
             mideaSwitch,
             mideaItem,
+            cookbookList,
             mideaDownload
         },
         data() {
@@ -155,7 +158,7 @@
 					} else {
 						this.display_value1 = "空闲中";
 						this.main_second = "";
-						this.display_value2 = this.return_work_status[this.work_status];
+						this.display_value2 = this.return_work_status[this.work_status] || "--";
 						this.danwei = "";
 					}
 	            }else {
@@ -330,6 +333,10 @@
 	.main-status {
 		font-size: 128px;
 		color: #FFFFFF;
+	}
+	.main-status-simple {
+		font-size: 84px;
+		margin-top: 30px;
 	}
 	.danwei {
 		font-family: PingFangSC-Light;

@@ -16,11 +16,14 @@
 		        	</div>
 		        	<div class="card-right">
 		        		<div class="card-control" @click="lockSwitch" >
-		        			<image class="card-control-img" :src="deviceLock"></image>
+		        			
 		        		</div>
-		        		<div class="card-icon" @click="showControlPanelPage">
-		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip042@2x.png"></image>
+		        		<div class="card-icon">
+		        			<image class="card-icon-img"  @click="showControlPanelPage" resize="contain" src="./assets/img/smart_img_equip042@2x.png"></image>
 		        		</div>
+		        		<div class="card-control-div">
+		        			<image class="card-control-img" @click="lockSwitch" :src="deviceLock"></image>
+	        			</div>
 		        	</div>
 		        </div>
 			    <div v-else class="card-power-off" >
@@ -36,18 +39,7 @@
 	        </div>
         </div>
       	<situation></situation>
-	    <scroller class="scroller-item" scroll-direction="horizontal">
-		    <list class="scroller-list-item">
-	        	<!--带向右箭头的链接 -->
-		        <midea-item v-for="(item,i) in list" :key="item" :hasTopBorder="false" :hasBottomBorder="false" :title="item.name"   :hasArrow="true" :clickActivied="true" @onItemPress="showDel(item)" @mideaCellClick="cellClick(item)" :cantEdit="true" @onDelete="delItem(item)">
-		        	 <text slot="title" class="cell-content">{{item.name}}</text>
-		        	 <text slot="rightText" class="right-text">{{item.rightText}}</text>
-		        </midea-item>
-	        </list>
-	    </scroller>
-        <div style="flex-direction: row;flex-wrap: wrap;">
-        	<cookbook v-for="(item3,index) in cookbook" :data="item3" @cookbookclick="mideaClick"></cookbook>
-        </div>
+		<cookbook-list></cookbook-list>
         <midea-download></midea-download>
     </div>
     </scroller>
@@ -58,7 +50,7 @@
 	import mideaSwitch from '@/midea-component/switch.vue'
 	import mideaItem from '@/midea-component/item.vue'
 	import situation from '@/midea-card/midea-components/situation.vue'
-	import cookbook from '@/midea-card/T0xAC/components/cookbook.vue'
+	import cookbookList from '@/midea-card/midea-components/cookbookList.vue'
 	import mideaDownload from '@/midea-card/midea-components/download.vue';
 	import Mock from './settings/mock'
 	const modal = weex.requireModule('modal');
@@ -71,7 +63,7 @@
             mideaSwitch,
             mideaItem,
 			situation,
-            cookbook,
+			cookbookList,
             mideaDownload
         },
         data() {
@@ -119,36 +111,7 @@
                 { 
                 	"name": "电饭煲食谱",
                 	"rightText":"更多"
-                }],
-                cookbook:[{
-	    			title:"蓬松煎饼1",
-	    			title_preimg:"./assets/img/smart_ic_a@2x.png",
-	    			detail_first:"炖锅炖锅炖1 ",
-	    			detail_second:"20分 | 简单 | 240千卡1",
-	    			img_url:"./assets/img/test_pic_banner04@2x.png",
-	    			targeturl:"a"
-	    		},{
-	    			title:"蓬松煎饼2",
-	    			title_tailimg:"./assets/img/smart_ic_like@2x.png",
-	    			detail_first:"炖锅炖锅炖2 ",
-	    			detail_second:"20分 | 简单 | 240千卡2",
-	    			img_url:"./assets/img/test_pic_banner04@2x.png",
-	    			targeturl:"b"
-	    		},{
-	    			title:"蓬松煎饼3",
-	    			detail_first:"炖锅炖锅炖3",
-	    			detail_second:"20分 | 简单 | 240千卡3",
-	    			img_url:"./assets/img/test_pic_banner04@2x.png",
-	    			targeturl:"c"
-	    		},{
-	    			title:"蓬松煎饼4",
-	    			title_preimg:"./assets/img/smart_ic_a@2x.png",
-	    			title_tailimg:"./assets/img/smart_ic_like@2x.png",
-	    			detail_first:"炖锅炖锅炖4",
-	    			detail_second:"20分 | 简单 | 240千卡4",
-	    			img_url:"./assets/img/test_pic_banner04@2x.png",
-	    			targeturl:"d"
-	    		}],
+                }]
             }
         },
         methods: {
@@ -368,10 +331,18 @@
 	}
 	.card-control {
 		align-items: flex-end;
-		margin-top:44px;
-		margin-right:44px;
+		margin-top:38px;
+		margin-right:38px;
 		flex-direction: row;
 		justify-content: flex-end;
+		height:100px;
+	}
+	.card-control-div {
+		flex-direction: row;
+		position: absolute;
+		top: 38px;
+		right: 36px;
+		height:100px;
 	}
 	.card-status-detail {
 		flex-direction: row;

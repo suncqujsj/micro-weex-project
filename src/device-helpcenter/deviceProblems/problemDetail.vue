@@ -1,9 +1,9 @@
 <template>
   <div class="wrapper">
-      <midea-header ref="header" :title="title" bgColor="#ffffff" :isImmersion="false" :showLeftImg="true" @leftImgClick="back">
+      <midea-header ref="header" :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" :showLeftImg="true" @leftImgClick="back">
       </midea-header>
       <scroller class="scroller" :style="{height: scrollHeight + 'px'}">
-          <cell class="group-gap-top"></cell>
+          <div class="group-gap-top"></div>
           <div class="detail-content" v-if="problemDetail">
               <div v-if="typeof problemDetail.detailTitle !== 'undefined'">
                   <text class="detail-title">{{problemDetail.detailTitle}}</text>
@@ -163,7 +163,7 @@
     padding-top: 48px;
     padding-left: 32px;
     padding-right: 32px;
-    padding-bottom: 48px;
+    padding-bottom: 96px;
     background-color: #fff;
   }
 

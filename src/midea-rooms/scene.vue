@@ -1093,6 +1093,15 @@
             }
         },
         created(){
+            nativeService.burialPoint({//埋点客厅
+                pageName: 'sceneMainPage',
+                subAction: 'scene_livingroom_operate'
+            }).then(()=>{
+                nativeService.alert(11111112)
+            }).catch((err)=>{
+                nativeService.alert('error'+ JSON.stringify(err))
+            })
+
             this.roomType = nativeService.getParameters('roomType')
             if (this.roomType == 1){
                 this.scene.modeList = [

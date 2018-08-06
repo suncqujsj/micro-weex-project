@@ -69,7 +69,7 @@
                 mode: "",
                 loading: false,
                 loading2: false,
-                deviceIDTX1: "17592187019849",
+//                deviceIDTX1: "17592187019849",
                 messageBack: "",
                 prepareData:[],
             }
@@ -101,7 +101,7 @@
                                 tempData.icon ="./assets/img/smart_img_equip036@2x.png";
                                 tempData.temperature = "";
                             } else if (deviceType == "0xED" && deviceSubType == "259") {
-                                tempData.icon = "./assets/img/smart_img_equip031@2x.png";
+                                tempData.icon = "./assets/img/smart_img_equitea@2x.png";
                                 tempData.temperature = "";
                             } else if (deviceType == "0xED" && deviceSubType == "261") {
                                 tempData.icon = "./assets/img/smart_img_equipunder031@2x.png";
@@ -252,7 +252,10 @@
                 }
 			},
             jumpControlPanelPage() {
-                bridgeModule.showControlPanelPage("", "index.html");
+                let params = {
+                    controlPanelName:"index.html"
+                };
+                bridgeModule.showControlPanelPage(params);
             },
             itemClicked(event) {
                 this.jumpControlPanelPage();

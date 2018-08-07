@@ -14,7 +14,7 @@
                         :hasBottomBorder="true"
                         :importTextStyle="cellTitleStyle"
                         :rightTextStyle="cellRightStyle"
-                        :rightText="myData.status"
+                        :rightText="myData.status+myData.temperature"
                         iconSrc="./img/arrow_right.png"
                         :hasArrow="true"
                         :itemImg="myData.icon"
@@ -127,9 +127,10 @@
                     let deviceOnlineStatus = currentData.onlineStatus;
                     if (returnDeviceId && deviceOnlineStatus=="online") {
                         let param={
-                            deviceId: returnDeviceId
+                            applianceId: returnDeviceId
                         }
-                        nativeService.sendLuaRequest( param,true,).then( function (data) {
+//                        nativeService.alert(param)
+                        nativeService.sendLuaRequest(param,true).then( function (data) {
                             if (data.errorCode == 0) {
                                 let params = data.result;
                                 if (deviceType == "0xE2") {

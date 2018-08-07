@@ -546,6 +546,7 @@ export default {
             if (!params.params) {
                 params.params = {}
             }
+
             if (this.isDummy != true) {
                 if (isShowLoading) {
                     this.showLoading()
@@ -568,6 +569,7 @@ export default {
                             reject(resData);
                         }
                     }, (error) => {
+                    // this.alert(error)
                         debugUtil.debugLog(debugLogSeperator, `Lua request(${msgid}): `, params)
                         debugUtil.debugLog(`=======> Lua error(${msgid}): `, error, debugLogSeperator)
                         if (isShowLoading) {

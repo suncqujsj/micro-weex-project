@@ -14,7 +14,7 @@
                         :hasBottomBorder="true"
                         :importTextStyle="cellTitleStyle"
                         :rightTextStyle="cellRightStyle"
-                        :rightText="myData.status+myData.temperature"
+                        :rightText="myData.temperature&& myData.temperature!=='' ? myData.status+myData.temperature : myData.status"
                         iconSrc="./img/arrow_right.png"
                         :hasArrow="true"
                         :itemImg="myData.icon"
@@ -131,6 +131,7 @@
                         }
 //                        nativeService.alert(param)
                         nativeService.sendLuaRequest(param,true).then( function (data) {
+//                            nativeService.alert(data)
                             if (data.errorCode == 0) {
                                 let params = data.result;
                                 if (deviceType == "0xE2") {
@@ -148,6 +149,8 @@
                                             currentData.status = "保温中";
                                         } else if (params.fast_hot_power == "on") {
                                             currentData.status = "即热";
+                                        }else{
+                                            currentData.status = "待机";
                                         }
                                     }
                                 } else if (deviceType == "0xE3") {
@@ -183,7 +186,7 @@
                                         currentData.status += params.life_5;
                                     }
                                 }
-                                me.prepareData.push(tempData);
+                                me.prepareData[i]=currentData;
                             } else {
                                 modal.toast({'message': '连接设备超时', 'duration': 2});
                             }

@@ -24,7 +24,7 @@ export default {
     props: {
         title: {
             type: String,
-            default: "配套食谱"
+            default: "推荐食谱"
         },
         count: {
             type: Number,

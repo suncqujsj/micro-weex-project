@@ -782,6 +782,11 @@ export default {
                 this.stopRecordAudio()
             }
         })
+
+        nativeService.burialPoint({
+            pageName: 'serviceRepairPage',
+            subAction: 'page_view'
+        })
     }
 }
 </script>

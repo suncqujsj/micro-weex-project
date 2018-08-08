@@ -14,7 +14,7 @@
                         :hasBottomBorder="true"
                         :importTextStyle="cellTitleStyle"
                         :rightTextStyle="cellRightStyle"
-                        :rightText="myData.status"
+                        :rightText="myData.temperature&& myData.temperature!=='' ? myData.status+myData.temperature : myData.status"
                         iconSrc="./img/arrow_right.png"
                         :hasArrow="true"
                         :itemImg="myData.icon"
@@ -69,7 +69,7 @@
                 mode: "",
                 loading: false,
                 loading2: false,
-                deviceIDTX1: "17592187019849",
+//                deviceIDTX1: "17592187019849",
                 messageBack: "",
                 prepareData: []
             }
@@ -78,6 +78,7 @@
             queryTXLists() { //
                 let me = this;
                 nativeService.getTxList(true).then((myList) =>{
+//                    nativeService.alert(myList)
                     let TXList = myList.data;
                     for (let i = 0; i < TXList.length; i++) {
                         let currentList = TXList[i];
@@ -126,9 +127,11 @@
                     let deviceOnlineStatus = currentData.onlineStatus;
                     if (returnDeviceId && deviceOnlineStatus=="online") {
                         let param={
-                            deviceId: returnDeviceId
+                            applianceId: returnDeviceId
                         }
-                        nativeService.sendLuaRequest( param,true,).then( function (data) {
+//                        nativeService.alert(param)
+                        nativeService.sendLuaRequest(param,true).then( function (data) {
+//                            nativeService.alert(data)
                             if (data.errorCode == 0) {
                                 let params = data.result;
                                 if (deviceType == "0xE2") {
@@ -146,6 +149,8 @@
                                             currentData.status = "保温中";
                                         } else if (params.fast_hot_power == "on") {
                                             currentData.status = "即热";
+                                        }else{
+                                            currentData.status = "待机";
                                         }
                                     }
                                 } else if (deviceType == "0xE3") {
@@ -163,7 +168,7 @@
                                     currentData.temperature = "";
                                     currentData.status = params.power == "on" ? "已开机" : "已关机";
                                 } else if (deviceType == "0xED" && deviceSubType == "265") {
-                                    nativeService.alert(params);
+//                                    nativeService.alert(params);
                                     currentData.temperature = "";
                                     if (params.life_1) {
                                         currentData.status = params.life_1;
@@ -181,7 +186,7 @@
                                         currentData.status += params.life_5;
                                     }
                                 }
-                                me.prepareData.push(tempData);
+                                me.prepareData[i]=currentData;
                             } else {
                                 modal.toast({'message': '连接设备超时', 'duration': 2});
                             }
@@ -190,7 +195,10 @@
                 }
             },
             jumpControlPanelPage() {
-                bridgeModule.showControlPanelPage("", "index.html");
+                let params = {
+                    controlPanelName:"index.html"
+                };
+                bridgeModule.showControlPanelPage(params);
             },
             itemClicked(event) {
                 this.jumpControlPanelPage();
@@ -237,7 +245,7 @@
                             currentData.temperature = "";
                             currentData.status = params.power == "on" ? "已开机" : "已关机";
                         } else if (deviceType == "0xED" && deviceSubType == "265") {
-                            nativeService.alert(params);
+//                            nativeService.alert(params);
                             currentData.temperature = "";
                             if (params.life_1) {
                                 currentData.status = params.life_1;
@@ -298,7 +306,7 @@
 
     .card {
         width: 686px;
-        height: 392px;
+        height: 430px;
         margin-left: 32px;
         margin-right: 32px;
         margin-top: 32px;
@@ -351,14 +359,9 @@
 
     .text-offline-center {
         position: absolute;
-        top: 176px;
-        left:289px;
-		align-items: center;
-		font-family: PingFangSC-Regular;
-		font-size: 36px;
-		color: #000000;
-		letter-spacing: 0;
-		text-align: center;
+        right: 300px;
+        top: 200px;
+        align-items: center;
     }
 
     .control-div-offline {

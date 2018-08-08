@@ -33,7 +33,7 @@
             <image class="empty-page-icon" src="./assets/img/default_ic_nobranch@3x.png" resize='contain'>
             </image>
             <text class="empty-page-text">抱歉，亲查询的网点不存在{{'\n'}}您可以拨打24小时服务热线咨询</text>
-            <text class="empty-page-text phone" @click="makeCall(4008899315)">400-8899-315</text>
+            <text class="empty-page-text phone" @click="makeCall('4008899315')">400-8899-315</text>
         </div>
         <div class="empty-page" v-else-if="isSearchByGPS && locateFailed">
             <image class="empty-page-icon" src="./assets/img/service_ic_dingwei@3x.png" resize='contain'>
@@ -372,6 +372,10 @@ export default {
     created() {
         this.serviceOrderNo = nativeService.getParameters('id') || null
         this.initPage()
+        nativeService.burialPoint({
+            pageName: 'serviceOnlineShopInquiriesPage',
+            subAction: 'page_view'
+        })
     }
 }
 </script>

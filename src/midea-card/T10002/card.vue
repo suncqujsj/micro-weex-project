@@ -14,7 +14,7 @@
 						:hasBottomBorder="true"
 						:importTextStyle="cellTitleStyle"
 						:rightTextStyle="cellRightStyle"
-						:rightText="myData.status"
+						:rightText="myData.temperature&& myData.temperature!=='' ? myData.status+myData.temperature : myData.status"
 						iconSrc="./img/arrow_right.png"
 						:hasArrow="true"
 						:itemImg="myData.icon"
@@ -69,7 +69,7 @@
                 mode: "",
                 loading: false,
                 loading2: false,
-                deviceIDTX1: "17592187019849",
+//                deviceIDTX1: "17592187019849",
                 messageBack: "",
                 prepareData:[],
             }
@@ -79,6 +79,7 @@
                 let me = this;
                     nativeService.getTxList().then((myList) =>{
                         let TXList = myList.data;
+//                        nativeService.alert(myList);
                         for (let i = 0; i < TXList.length; i++) {
                             let currentList = TXList[i];
                             let currentDeviceId = currentList.applianceCode;
@@ -101,7 +102,7 @@
                                 tempData.icon ="./assets/img/smart_img_equip036@2x.png";
                                 tempData.temperature = "";
                             } else if (deviceType == "0xED" && deviceSubType == "259") {
-                                tempData.icon = "./assets/img/smart_img_equip031@2x.png";
+                                tempData.icon = "./assets/img/smart_img_equitea@2x.png";
                                 tempData.temperature = "";
                             } else if (deviceType == "0xED" && deviceSubType == "261") {
                                 tempData.icon = "./assets/img/smart_img_equipunder031@2x.png";
@@ -126,9 +127,10 @@
                     let deviceOnlineStatus = currentData.onlineStatus;
                     if (returnDeviceId && deviceOnlineStatus=="online") {
                         let param={
-                            deviceId: returnDeviceId
-						}
+                            applianceId: returnDeviceId
+                        }
                         nativeService.sendLuaRequest(param,true).then( function (data) {
+//                            nativeService.alert(data)
                             if (data.errorCode == 0) {
                                 let params = data.result;
                                 if (deviceType == "0xE2") {
@@ -146,7 +148,9 @@
                                             currentData.status = "保温中";
                                         } else if (params.fast_hot_power == "on") {
                                             currentData.status = "即热";
-                                        }
+                                        }else{
+                                            currentData.status = "待机";
+										}
                                     }
                                 } else if (deviceType == "0xE3") {
                                     if (params.power == "on") {
@@ -180,7 +184,7 @@
                                         currentData.status += params.life_5;
                                     }
                                 }
-                                me.prepareData.push(currentData);
+                                me.prepareData[i]=currentData;
                             } else {
                                 modal.toast({'message': '连接设备超时', 'duration': 2});
                             }
@@ -252,7 +256,10 @@
                 }
 			},
             jumpControlPanelPage() {
-                bridgeModule.showControlPanelPage("", "index.html");
+                let params = {
+                    controlPanelName:"index.html"
+                };
+                bridgeModule.showControlPanelPage(params);
             },
             itemClicked(event) {
                 this.jumpControlPanelPage();

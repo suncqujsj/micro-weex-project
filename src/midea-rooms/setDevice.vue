@@ -32,7 +32,7 @@
             </cell>
         </list>
         <div class="pop-floor" v-for="(item,idx) in actions">
-             <midea-confirm2 :height="490" :show="show[item.property]" @leftBtnClick="closePop(item.property)" @rightBtnClick="confirmPop(item.property)" @mideaPopupOverlayClicked="closePop(item.property)">
+             <midea-confirm2 :height="popHeight" :show="show[item.property]" @leftBtnClick="closePop(item.property)" @rightBtnClick="confirmPop(item.property)" @mideaPopupOverlayClicked="closePop(item.property)">
                  <div v-if="item.type == 'list'" class="pop-list">
                     <scroller>
                         <text v-for="(value,key) in item.value" :class="['pop-item', active[item.property].value == key?'pop-item-active':'']" @click="setActiveKey(item.property, idx, key)"> {{value}}</text>
@@ -120,6 +120,7 @@
 </style>
 
 <script>
+    const { platform } = weex.config.env;
     import { url, applianceActions, autoSupportActions } from './config/config.js'
 
     import base from './base'
@@ -180,6 +181,13 @@
                         tmp = true
                     }
                     break
+                }
+                return tmp
+            },
+            popHeight(){
+                let tmp = 490
+                if (platform.toLowerCase() == 'android') {
+                    tmp = 535
                 }
                 return tmp
             }

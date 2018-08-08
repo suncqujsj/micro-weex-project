@@ -3,7 +3,7 @@
 	    <div class="box">
 	        <div  v-if="onlineStatus == '1'">
 		    	 <div class="card" v-if="onoff == 'on'">
-		        	<div class="card-left" @click="showControlPanelPage">
+		        	<div class="card-left">
 	        			<div class="main-status-div">
 	        				<text class="main-status">{{pm25}}</text>
 	        				<text class="danwei"></text>
@@ -14,14 +14,16 @@
 		        		</div>
 		        	</div>
 		        	<div class="card-right">
-		        		<div class="card-control" @click="poweronoff(0)">
-		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png"></image>
+		        		<div class="card-control" >
+		        			
 		        		</div>
-		        		<div class="card-icon" @click="showControlPanelPage">
-		        			<image class="card-icon-img" src="./assets/img/smart_img_equip033@2x.png"></image>
+		        		<div class="card-icon" >
+		        			<image class="card-icon-img" @click="showControlPanelPage" src="./assets/img/smart_img_equip033@2x.png"></image>
 		        		</div>
 		        		<div></div>
-		        		
+		        		 <div class="card-control-div">
+		        			<image class="card-control-img" @click="poweronoff(0)" src="./assets/img/smart_ic_off@2x.png"></image>
+	        			</div>
 		        	</div>
 		        </div>
 		        <div class="card-power-off" v-else>
@@ -263,8 +265,16 @@
 	}
 	.card-control {
 		align-items: flex-end;
-		margin-top:44px;
-		margin-right:44px
+		margin-top:38px;
+		margin-right:38px;
+		height:60px;
+	}
+	.card-control-div {
+		flex-direction: row;
+		position: absolute;
+		top: 38px;
+		right: 36px;
+		height:100px;
 	}
 	.card-status-detail {
 		flex-direction: row;

@@ -81,7 +81,7 @@ export default {
         },
         desc: {
             type: String,
-            default: "具体上门时间以服务商与您沟通约定为准"
+            default: "具体服务时间以服务商与您沟通约定为准"
         },
         cancelButtonText: {
             type: String,

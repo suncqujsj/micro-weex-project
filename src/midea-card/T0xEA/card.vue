@@ -474,7 +474,7 @@ export default {
   margin-left: 32px;
   margin-right: 32px;
   background-color: #ffbd00;
-  border-radius: 2px;
+  border-radius: 6px;
   flex-direction: row;
 }
 .scroller-item {

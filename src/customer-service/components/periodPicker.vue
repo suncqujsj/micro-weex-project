@@ -160,26 +160,24 @@ export default {
             if (this.times) {
                 if (this.dateIndex == 0) {
                     let now = new Date()
-                    if (now.getHours() >= 18) {
+                    if (now.getHours() > 12) {
                         this.times[0].disable = true
                         this.times[1].disable = true
                         this.times[2].disable = true
                         this.times[3].disable = true
                         this.times[4].disable = true
-                    } else if (now.getHours() >= 16) {
+                    } else if (now.getHours() >= 10) {
                         this.times[0].disable = true
                         this.times[1].disable = true
                         this.times[2].disable = true
                         this.times[3].disable = true
-                    } else if (now.getHours() >= 14) {
+                    } else if (now.getHours() >= 8) {
                         this.times[0].disable = true
                         this.times[1].disable = true
                         this.times[2].disable = true
-                    } else if (now.getHours() >= 12) {
+                    } else {
                         this.times[0].disable = true
                         this.times[1].disable = true
-                    } else if (now.getHours() >= 10) {
-                        this.times[0].disable = true
                     }
                 } else {
                     this.times[0].disable = false

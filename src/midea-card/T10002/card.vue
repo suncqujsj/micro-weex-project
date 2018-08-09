@@ -79,7 +79,7 @@
                 let me = this;
                     nativeService.getTxList().then((myList) =>{
                         let TXList = myList.data;
-//                        nativeService.alert(myList);
+                        nativeService.alert(myList);
                         for (let i = 0; i < TXList.length; i++) {
                             let currentList = TXList[i];
                             let currentDeviceId = currentList.applianceCode;
@@ -104,7 +104,7 @@
                             } else if (deviceType == "0xED" && deviceSubType == "259") {
                                 tempData.icon = "./assets/img/smart_img_equitea@2x.png";
                                 tempData.temperature = "";
-                            } else if (deviceType == "0xED" && deviceSubType == "261") {
+                            } else if (deviceType == "0xED" && deviceSubType == "263") {
                                 tempData.icon = "./assets/img/smart_img_equipunder031@2x.png";
                                 tempData.temperature = "";
                             }
@@ -130,7 +130,7 @@
                             applianceId: returnDeviceId
                         }
                         nativeService.sendLuaRequest(param,true).then( function (data) {
-//                            nativeService.alert(data)
+                            nativeService.alert(data)
                             if (data.errorCode == 0) {
                                 let params = data.result;
                                 if (deviceType == "0xE2") {
@@ -166,7 +166,7 @@
                                 } else if (deviceType == "0xED" && deviceSubType == "259") {
                                     currentData.temperature = "";
                                     currentData.status = params.power == "on" ? "已开机" : "已关机";
-                                } else if (deviceType == "0xED" && deviceSubType == "261") {
+                                } else if (deviceType == "0xED" && deviceSubType == "263") {
                                     currentData.temperature = "";
                                     if (params.life_1) {
                                         currentData.status = params.life_1;

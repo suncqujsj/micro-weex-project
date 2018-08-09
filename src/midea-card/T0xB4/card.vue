@@ -21,7 +21,7 @@
 		        		<div class="card-icon">
 		        			<image class="card-icon-img"  @click="showControlPanelPage" resize="contain" src="./assets/img/smart_img_equip042@2x.png"></image>
 		        		</div>
-		        		<div class="card-control-div">
+		        		<div class="card-control-div" v-if="false">
 		        			<image class="card-control-img" @click="lockSwitch" :src="deviceLock"></image>
 	        			</div>
 		        	</div>
@@ -104,7 +104,8 @@
 					preheating: "预热中",
 					preheat_finish: "预热结束",
 					work_finish: "完成工作",
-					recipes_finish: "菜谱段结束"
+					recipes_finish: "菜谱段结束",
+					invalid: "--"
                 },
                 powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
                 list: [
@@ -139,7 +140,7 @@
             		this.onlineStatus = "1";
 	                let params = data.params || data.result;
 	                this.work_status = params.work_status;
-	                this.work_mode = this.return_work_mode[params.work_mode];
+	                this.work_mode = this.return_work_mode[params.work_mode] || "--";
 	                this.work_hour = params.work_hour;
 	                this.work_minute = params.work_minute;
 	                this.lock = params.lock;
@@ -148,7 +149,7 @@
 	                	this.display_value2 = "剩余时间";
 	                	this.danwei = "分";
 	                } else {
-	                	this.display_value1 = this.return_work_status[this.work_status];
+	                	this.display_value1 = this.return_work_status[this.work_status] || "--";
 	                	this.display_value2 = "";
 	                	this.danwei = "";
 	                }
@@ -277,7 +278,7 @@
 		margin-left:32px;
 		margin-right:32px;
 		background-color:#FFBD00;
-		border-radius: 2px;
+		border-radius: 6px;
 		flex-direction: row;
 	}
 	.card-power-off {

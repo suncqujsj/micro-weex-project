@@ -292,7 +292,7 @@
 		margin-left:32px;
 		margin-right:32px;
 		background-color:#FFBD00;
-		border-radius: 2px;
+		border-radius: 6px;
 		flex-direction: row;
 	}
 	.scroller-item {

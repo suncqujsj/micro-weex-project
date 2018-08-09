@@ -3,7 +3,7 @@
 	    <div class="box">
 	        <div v-if="onlineStatus == '1'">
 		    	 <div class="card" :class="[device_info.deviceStyle =='warm'?'card-hot':'']">
-		        	<div class="card-left">
+		        	<div class="card-left" @click="showControlPanelPage">
 	        			<div class="main-status-div">
 	        				<text class="main-status">设备在线</text>
 	        			</div>

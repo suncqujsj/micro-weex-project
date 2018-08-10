@@ -94,6 +94,9 @@ export default {
                     if (order.unitCode) {
                         others.isAbleToCheckBranch = true
                     }
+                    if (this.checkPassTime(order)) {
+                        others.isAbleToUrgeOrder = true
+                    }
                     break;
                 case 2:
                     //已接单-上门
@@ -112,6 +115,9 @@ export default {
                     others.statusIcon = "./assets/img/service_ic_order_ongoing@3x.png"
                     if (order.interfaceSource == "SMART" && archivesNumber <= 0) {
                         others.isAbleToCancel = true
+                    }
+                    if (this.checkPassTime(order)) {
+                        others.isAbleToUrgeOrder = true
                     }
                     break;
                 case 3:
@@ -138,6 +144,9 @@ export default {
                     others.statusIcon = "./assets/img/service_ic_order_new@3x.png"
                     if (order.interfaceSource == "SMART" && archivesNumber <= 0) {
                         others.isAbleToCancel = true
+                    }
+                    if (this.checkPassTime(order)) {
+                        others.isAbleToUrgeOrder = true
                     }
                     others.isAbleToCallService = true
                     break;

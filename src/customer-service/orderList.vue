@@ -1,9 +1,9 @@
 <template>
     <div>
-        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back"></midea-header>
+        <midea-header :title="title" :isImmersion="isImmersion" @headerClick="headerClick" titleText="#000000" @leftImgClick="back"></midea-header>
         <scroller class="scroller" ref="orderListScroller" loadmoreoffset=300 @loadmore="loadmore">
             <refresh v-if="isLoaded" class="refresh" @refresh="onrefresh" :display="refreshing ? 'show' : 'hide'">
-                <text class="indicator-text">刷新列表 ...</text>
+                <!-- <text class="indicator-text">刷新列表 ...</text> -->
                 <loading-indicator class="indicator"></loading-indicator>
             </refresh>
             <div class="empty-page" v-if="isLoaded && formattedOrderList.length == 0">
@@ -19,13 +19,13 @@
                             <text class="action" v-if="formattedOrder.isAbleToCancel" @click="showDialog(index)">取消工单</text>
                             <text class="action" v-if="formattedOrder.isAbleToUrgeOrder" @click="urgeOrder(index)">催办</text>
                             <text class="action" v-if="formattedOrder.isAbleToRenew" @click="renewOrder(index)">重新报单</text>
-                            <text class="action primary-action" v-if="formattedOrder.allowCallbackWX == 'Y'" @click="goToCallback(index)">评价有礼</text>
+                            <text class="action primary-action" v-if="formattedOrder.allowCallbackWX == 'Y'" @click="goToCallback(index)">评价</text>
                             <text class="action" v-if="formattedOrder.isAbleToCallService" @click="callService(index)">联系网点</text>
                         </div>
                     </order-block>
                 </div>
                 <loading class="loading" :display="showLoading" v-if="hasNext">
-                    <text class="indicator-text">加载中...</text>
+                    <!-- <text class="indicator-text">加载中...</text> -->
                     <loading-indicator class="indicator"></loading-indicator>
                 </loading>
                 <text v-if="isLoaded && !hasNext && formattedOrderList.length>3" class="indicator-text">———— 到底了 ————</text>
@@ -276,7 +276,7 @@ export default {
                     interfaceSource: order.interfaceSource,
                     orgCode: order.orgCode,
                     serviceOrderNo: order.serviceOrderNo,
-                    operator: data.nickName
+                    operator: data.mobile
                 }
                 nativeService.cancelserviceorder(param).then(() => {
                     order.serviceOrderStatus = '22'
@@ -325,6 +325,11 @@ export default {
     },
     created() {
         this.getOrderList()
+
+        nativeService.burialPoint({
+            pageName: 'serviceProgressQueryPage',
+            subAction: 'page_view'
+        })
     }
 }
 </script>

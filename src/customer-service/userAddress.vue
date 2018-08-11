@@ -1,27 +1,27 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back" :showRightText="!isNew" rightText="删除" @rightTextClick="deleteAddress">
+        <midea-header :title="title" :isImmersion="isImmersion" @headerClick="headerClick" titleText="#000000" @leftImgClick="back" :showRightText="!isNew" rightText="删除" @rightTextClick="deleteAddress">
         </midea-header>
         <scroller>
             <div class="group-gap-top"></div>
             <div class="scroller-inner">
                 <div class="item-group">
                     <text class="text-label">姓名</text>
-                    <input class="text-input" type="text" placeholder="请输入姓名" v-model="userAddress.receiverName" maxlength="20" />
+                    <input ref="receiverName" class="text-input" type="text" placeholder="请输入姓名" v-model="userAddress.receiverName" maxlength="20" />
                     <image class="text-img" src="./assets/img/me_ic_addresslist@3x.png" resize='contain' @click="getAddressBookPerson"></image>
                 </div>
                 <div class="item-group">
                     <text class="text-label">手机号码</text>
-                    <input class="text-input" type="tel" placeholder="请输入手机号码" v-model="userAddress.receiverMobile" maxlength="11" />
+                    <input ref="receiverMobile" class="text-input" type="tel" placeholder="请输入手机号码" v-model="userAddress.receiverMobile" maxlength="11" />
                 </div>
                 <div class="item-group">
                     <text class="text-label">所在区域</text>
-                    <text class="text-desc" v-bind:class="[areaDesc=='请选择所在区域'?'empty-text':'']" @click="isShowAddressPicker=true">{{areaDesc}}</text>
+                    <text class="text-desc" v-bind:class="[areaDesc=='请选择所在区域'?'empty-text':'']" @click="showAddressPicker()">{{areaDesc}}</text>
                     <image class="text-img" src="./assets/img/me_ic_area@3x.png" resize='contain' @click="getPosition"></image>
                 </div>
                 <div class="item-group">
                     <text class="text-label">详细地址</text>
-                    <input class="text-input" type="text" placeholder="请输入详细地址" v-model="userAddress.addr" maxlength="200" />
+                    <input ref="addr" class="text-input" type="text" placeholder="请输入详细地址" v-model="userAddress.addr" maxlength="200" />
                 </div>
                 <div class="item-group">
                     <text class="text-label">默认地址</text>
@@ -82,7 +82,8 @@ export default {
                 street: '',
                 streetName: ''
             },
-            isShowAddressPicker: false
+            isShowAddressPicker: false,
+            isSelected: 'N'
         }
     },
     computed: {
@@ -109,7 +110,13 @@ export default {
         }
     },
     methods: {
+        triggerBlur() {
+            this.$refs.receiverName.blur()
+            this.$refs.receiverMobile.blur()
+            this.$refs.addr.blur()
+        },
         getPosition() {
+            this.triggerBlur()
             nativeService.showLoadingWithMsg("正在获取位置信息...")
             let gpsParam = {
                 desiredAccuracy: "10",  //定位的精确度，单位：米
@@ -196,6 +203,10 @@ export default {
                 }
             })
         },
+        showAddressPicker() {
+            this.triggerBlur()
+            this.isShowAddressPicker = true
+        },
         servieAddressCancel(event) {
             this.isShowAddressPicker = false
             this.gpsAddress = null
@@ -209,7 +220,11 @@ export default {
         },
         deleteAddress() {
             nativeService.userAddrDelete({ userAddrId: this.userAddress.userAddrId }).then(() => {
-                this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddress" })
+                this.appPageDataChannel.postMessage({ page: "userAddressList", key: "userAddress" })
+                if (this.isSelected == 'Y') {
+                    //更新安装/维修界面
+                    this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddressList", data: null })
+                }
                 this.back()
             }).catch((error) => {
                 nativeService.toast(nativeService.getErrorMessage(error))
@@ -217,11 +232,19 @@ export default {
         },
         submit() {
             if (!this.isDataReady) return
-
+            if (this.userAddress.receiverMobile.length != 11) {
+                nativeService.toast("请输入正确的手机号码")
+                return
+            }
+            this.triggerBlur()
             if (this.userAddress.userAddrId) {
                 //地址修改
                 nativeService.userAddrUpdate(this.userAddress).then((resp) => {
-                    this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddress" })
+                    this.appPageDataChannel.postMessage({ page: "userAddressList", key: "userAddress" })
+                    if (this.isSelected == 'Y') {
+                        //更新安装/维修界面
+                        this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddressList", data: this.userAddress })
+                    }
                     this.back()
                 }).catch((error) => {
                     nativeService.toast(nativeService.getErrorMessage(error))
@@ -229,7 +252,7 @@ export default {
             } else {
                 //地址新增
                 nativeService.userAddrAdd(this.userAddress).then(() => {
-                    this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddress" })
+                    this.appPageDataChannel.postMessage({ page: "userAddressList", key: "userAddress" })
                     this.back()
                 }).catch((error) => {
                     nativeService.toast(nativeService.getErrorMessage(error))
@@ -239,7 +262,7 @@ export default {
     },
     created() {
         this.userAddress.userAddrId = nativeService.getParameters('id') || null
-
+        this.isSelected = nativeService.getParameters('isSelected') || 'N'
         if (this.userAddress.userAddrId) {
             //地址修改
             this.isNew = false

@@ -259,7 +259,7 @@ export default {
   margin-left: 32px;
   margin-right: 32px;
   background-color: #e9f1ff;
-  border-radius: 2px;
+  border-radius: 6px;
   flex-direction: row;
 }
 .smart {

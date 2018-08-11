@@ -107,7 +107,7 @@
 					ssp: "简自洁",
 					sport_clothes: "运动服",
 					single_dehytration: "单脱水",
-					rinsing_dehydration: "漂洗加脱水",
+					rinsing_dehydration: "漂洗+脱水",
 					big: "大件",
 					baby_clothes: "婴儿服",
 					down_jacket: "羽绒服",

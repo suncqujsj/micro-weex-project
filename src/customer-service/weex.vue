@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper" @viewappear="refreshPage">
         <!-- 不可删除此空div行，否则list会自动调整移动至状态栏下 -->
-        <div style="height: 40px; background-color: #ffffff;"></div>
+        <div v-if="!isipx" style="height: 40px; background-color: #ffffff;"></div>
         <list class="list">
             <cell>
                 <div class="service-header">
@@ -106,7 +106,8 @@ export default {
             showBar: false,
             actionsheetItems: ['美的', '小天鹅'],
             actionsheetItemsValue: ['4008999315', '4008228228'],
-            order: null
+            order: null,
+            productList: null
         }
     },
     computed: {
@@ -114,6 +115,25 @@ export default {
             let result
             if (this.order) {
                 result = this.formatOrder(this.order)
+            }
+            if (this.productList && result) {
+                let brandCode = this.order.serviceUserDemandVOs[0].brandCode
+                let prodCode = this.order.serviceUserDemandVOs[0].prodCode
+                for (let brandIndex = 0; brandIndex < this.productList.length; brandIndex++) {
+                    const brandItem = this.productList[brandIndex]
+                    if (brandCode == brandItem.brandCode && brandItem.productTypeDTOList) {
+                        for (let categaryIndex = 0; categaryIndex < brandItem.productTypeDTOList.length; categaryIndex++) {
+                            let categaryItem = brandItem.productTypeDTOList[categaryIndex]
+                            if (categaryItem.children) {
+                                for (let productIndex = 0; productIndex < categaryItem.children.length; productIndex++) {
+                                    if (prodCode == categaryItem.children[productIndex].prodCode) {
+                                        result.imageUrl = categaryItem.children[productIndex].prodImg
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             return result
         }
@@ -187,7 +207,7 @@ export default {
             //清楚本地缓存数据
             for (const key in this.SERVICE_STORAGE_KEYS) {
                 if (this.SERVICE_STORAGE_KEYS.hasOwnProperty(key)) {
-                    if (['historyKeys'].indexOf(key) < 0) {
+                    if (['historyKeys', 'productType'].indexOf(key) < 0) {
                         nativeService.removeItem(this.SERVICE_STORAGE_KEYS[key])
                     }
                 }
@@ -197,6 +217,14 @@ export default {
     created() {
         debugUtil.cleanDebugLog()
         this.resetStorage()
+        //所有产品品类列表
+        let param = {
+            version: "1.0",
+            codeType: ""
+        }
+        nativeService.getProdType(param).then((data) => {
+            this.productList = data
+        }).catch((error) => { })
     }
 }
 </script>

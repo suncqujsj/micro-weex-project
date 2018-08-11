@@ -69,7 +69,7 @@ export default {
             others.contactTimeDesc = util.dateFormat(new Date(order.contactTime), "yyyy-MM-dd")
 
             //产品图片
-            others.imageUrl = 'http://fcmms.midea.com/ccrm-uat/productImg/1000美的家用空调.jpg'//'./assets/img/product/default.png'
+            others.imageUrl = ''
             let prodName, archivesNumber = 0
             if (order.serviceUserDemandVOs && order.serviceUserDemandVOs.length > 0) {
                 //订单描述
@@ -94,6 +94,9 @@ export default {
                     if (order.unitCode) {
                         others.isAbleToCheckBranch = true
                     }
+                    if (this.checkPassTime(order)) {
+                        others.isAbleToUrgeOrder = true
+                    }
                     break;
                 case 2:
                     //已接单-上门
@@ -112,6 +115,9 @@ export default {
                     others.statusIcon = "./assets/img/service_ic_order_ongoing@3x.png"
                     if (order.interfaceSource == "SMART" && archivesNumber <= 0) {
                         others.isAbleToCancel = true
+                    }
+                    if (this.checkPassTime(order)) {
+                        others.isAbleToUrgeOrder = true
                     }
                     break;
                 case 3:
@@ -138,6 +144,9 @@ export default {
                     others.statusIcon = "./assets/img/service_ic_order_new@3x.png"
                     if (order.interfaceSource == "SMART" && archivesNumber <= 0) {
                         others.isAbleToCancel = true
+                    }
+                    if (this.checkPassTime(order)) {
+                        others.isAbleToUrgeOrder = true
                     }
                     others.isAbleToCallService = true
                     break;

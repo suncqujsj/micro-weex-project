@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" @viewappear="viewappear" @viewdisappear="viewdisappear">
-        <midea-header :title="'Debug信息'+buildTime" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="'Debug信息'+buildTime" :isImmersion="isImmersion" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <div class="header-action">
             <text class="action" @click="clean">清空</text>
@@ -8,7 +8,7 @@
             <text class="action" @click="copyLog('')">拷贝日志</text>
             <text class="action" @click="getConfig">信息({{plugin_version}})</text>
             <text class="action" @click="showAppData">全局数据</text>
-            <text class="action" @click="testfunc">是否iphoneX:{{isipx}}</text>
+            <text class="action" @click="testfunc">是否沉浸式:{{isImmersion}}</text>
         </div>
         <scroller class="info-box">
             <template v-for="item in convertedContent">
@@ -121,7 +121,8 @@ export default {
             })
         },
         testfunc() {
-            nativeService.setNavBarHidden()
+            this.appPageDataChannel.postMessage({ page: 'orderList', key: "createcallback", data: {} })
+            this.back({ viewTag: "orderList" })
         }
     },
     created() {

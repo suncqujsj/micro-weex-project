@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back" :showRightText="true" rightText="收费标准" @rightTextClick="goToServiceCharge">
+        <midea-header :title="title" :isImmersion="isImmersion" @headerClick="headerClick" titleText="#000000" @leftImgClick="back" :showRightText="true" rightText="收费标准" @rightTextClick="goToServiceCharge">
         </midea-header>
         <scroller class="content-wrapper">
             <div class="base-group">
@@ -230,7 +230,8 @@ export default {
             },
             isMicPanelShow: false,
             isRecording: false,
-            micResult: ""
+            micResult: "",
+            isInProgress: false
         }
     },
     computed: {
@@ -395,10 +396,11 @@ export default {
             }
         },
         getExcludedFaultList() {
+            this.excludedFault = null
             nativeService.getUserInfo().then((data) => {
                 let param = {
                     interfaceSource: "SMART",
-                    operator: data.nickName || "operator",
+                    operator: data.mobile || "operator",
                     operatorUnit: "operatorUnit",
                     orgCode: this.selectedFault.orgCode,
                     depth: "3",
@@ -464,7 +466,8 @@ export default {
                 this.serviePeriodDate.push({
                     'index': index,
                     'value': util.dateFormat(theDate, "yyyy-MM-dd"),
-                    'desc': theDateDesc + (index == 0 ? '(今天)' : '(周' + weekDesc[theDate.getDay()] + ')')
+                    'desc': theDateDesc + (index == 0 ? '(今天)' : '(周' + weekDesc[theDate.getDay()] + ')'),
+                    'disable': false
                 })
             }
         },
@@ -684,6 +687,9 @@ export default {
         submit() {
             if (!this.isDataReady) return
 
+            if (this.isInProgress) return
+
+            this.isInProgress = true
             nativeService.getUserInfo().then((data) => {
                 this.userInfo = data || {}
                 let param = {
@@ -738,6 +744,7 @@ export default {
                 param["serviceUserDemandVOs"] = serviceUserDemandVOs
 
                 nativeService.createserviceorder(param).then(() => {
+                    this.isInProgress = false
                     this.appPageDataChannel.postMessage({ page: "maintenance", key: "createOrder" })
                     if (this.isRenew) {
                         //重新报单
@@ -747,6 +754,7 @@ export default {
                         this.goTo('orderList', { "replace": true })
                     }
                 }).catch((error) => {
+                    this.isInProgress = false
                     nativeService.toast(nativeService.getErrorMessage(error))
                 })
             })
@@ -781,6 +789,11 @@ export default {
             if (data.messageType == "stopRecordAudio") {
                 this.stopRecordAudio()
             }
+        })
+
+        nativeService.burialPoint({
+            pageName: 'serviceRepairPage',
+            subAction: 'page_view'
         })
     }
 }

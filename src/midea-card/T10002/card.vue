@@ -14,7 +14,7 @@
 						:hasBottomBorder="true"
 						:importTextStyle="cellTitleStyle"
 						:rightTextStyle="cellRightStyle"
-						:rightText="myData.status"
+						:rightText="myData.temperature&& myData.temperature!=='' ? myData.status+myData.temperature : myData.status"
 						iconSrc="./img/arrow_right.png"
 						:hasArrow="true"
 						:itemImg="myData.icon"
@@ -79,6 +79,7 @@
                 let me = this;
                     nativeService.getTxList().then((myList) =>{
                         let TXList = myList.data;
+                        nativeService.alert(myList);
                         for (let i = 0; i < TXList.length; i++) {
                             let currentList = TXList[i];
                             let currentDeviceId = currentList.applianceCode;
@@ -103,7 +104,7 @@
                             } else if (deviceType == "0xED" && deviceSubType == "259") {
                                 tempData.icon = "./assets/img/smart_img_equitea@2x.png";
                                 tempData.temperature = "";
-                            } else if (deviceType == "0xED" && deviceSubType == "261") {
+                            } else if (deviceType == "0xED" && deviceSubType == "263") {
                                 tempData.icon = "./assets/img/smart_img_equipunder031@2x.png";
                                 tempData.temperature = "";
                             }
@@ -126,9 +127,10 @@
                     let deviceOnlineStatus = currentData.onlineStatus;
                     if (returnDeviceId && deviceOnlineStatus=="online") {
                         let param={
-                            deviceId: returnDeviceId
-						}
+                            applianceId: returnDeviceId
+                        }
                         nativeService.sendLuaRequest(param,true).then( function (data) {
+                            nativeService.alert(data)
                             if (data.errorCode == 0) {
                                 let params = data.result;
                                 if (deviceType == "0xE2") {
@@ -146,7 +148,9 @@
                                             currentData.status = "保温中";
                                         } else if (params.fast_hot_power == "on") {
                                             currentData.status = "即热";
-                                        }
+                                        }else{
+                                            currentData.status = "待机";
+										}
                                     }
                                 } else if (deviceType == "0xE3") {
                                     if (params.power == "on") {
@@ -162,7 +166,7 @@
                                 } else if (deviceType == "0xED" && deviceSubType == "259") {
                                     currentData.temperature = "";
                                     currentData.status = params.power == "on" ? "已开机" : "已关机";
-                                } else if (deviceType == "0xED" && deviceSubType == "261") {
+                                } else if (deviceType == "0xED" && deviceSubType == "263") {
                                     currentData.temperature = "";
                                     if (params.life_1) {
                                         currentData.status = params.life_1;
@@ -180,7 +184,7 @@
                                         currentData.status += params.life_5;
                                     }
                                 }
-                                me.prepareData.push(currentData);
+                                me.prepareData[i]=currentData;
                             } else {
                                 modal.toast({'message': '连接设备超时', 'duration': 2});
                             }

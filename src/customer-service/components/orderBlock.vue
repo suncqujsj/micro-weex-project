@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import nativeService from '../settings/nativeService'
 import orderBase from '../orderBase'
 
 export default {
@@ -44,6 +45,7 @@ export default {
     },
     data() {
         return {
+            productList: null
         }
     },
     computed: {
@@ -52,6 +54,25 @@ export default {
             if (this.order) {
                 result = this.formatOrder(this.order)
             }
+            if (this.productList && result) {
+                let brandCode = this.order.serviceUserDemandVOs[0].brandCode
+                let prodCode = this.order.serviceUserDemandVOs[0].prodCode
+                for (let brandIndex = 0; brandIndex < this.productList.length; brandIndex++) {
+                    const brandItem = this.productList[brandIndex]
+                    if (brandCode == brandItem.brandCode && brandItem.productTypeDTOList) {
+                        for (let categaryIndex = 0; categaryIndex < brandItem.productTypeDTOList.length; categaryIndex++) {
+                            let categaryItem = brandItem.productTypeDTOList[categaryIndex]
+                            if (categaryItem.children) {
+                                for (let productIndex = 0; productIndex < categaryItem.children.length; productIndex++) {
+                                    if (prodCode == categaryItem.children[productIndex].prodCode) {
+                                        result.imageUrl = categaryItem.children[productIndex].prodImg
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             return result
         },
@@ -59,7 +80,14 @@ export default {
     methods: {
     },
     created() {
-
+        //所有产品品类列表
+        let param = {
+            version: "1.0",
+            codeType: ""
+        }
+        nativeService.getProdType(param).then((data) => {
+            this.productList = data
+        }).catch((error) => { })
     }
 }
 </script>

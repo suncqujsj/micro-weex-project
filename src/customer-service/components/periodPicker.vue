@@ -81,7 +81,7 @@ export default {
         },
         desc: {
             type: String,
-            default: "具体上门时间以服务商与您沟通约定为准"
+            default: "具体服务时间以服务商与您沟通约定为准"
         },
         cancelButtonText: {
             type: String,
@@ -151,7 +151,7 @@ export default {
         refreshDate() {
             if (this.dates) {
                 let now = new Date()
-                if (now.getHours() >= 18) {
+                if (now.getHours() >= 10) {
                     this.dates[0].disable = true
                 }
             }
@@ -160,26 +160,24 @@ export default {
             if (this.times) {
                 if (this.dateIndex == 0) {
                     let now = new Date()
-                    if (now.getHours() >= 18) {
+                    if (now.getHours() >= 12) {
                         this.times[0].disable = true
                         this.times[1].disable = true
                         this.times[2].disable = true
                         this.times[3].disable = true
                         this.times[4].disable = true
-                    } else if (now.getHours() >= 16) {
+                    } else if (now.getHours() >= 10) {
                         this.times[0].disable = true
                         this.times[1].disable = true
                         this.times[2].disable = true
                         this.times[3].disable = true
-                    } else if (now.getHours() >= 14) {
+                    } else if (now.getHours() >= 8) {
                         this.times[0].disable = true
                         this.times[1].disable = true
                         this.times[2].disable = true
-                    } else if (now.getHours() >= 12) {
+                    } else {
                         this.times[0].disable = true
                         this.times[1].disable = true
-                    } else if (now.getHours() >= 10) {
-                        this.times[0].disable = true
                     }
                 } else {
                     this.times[0].disable = false

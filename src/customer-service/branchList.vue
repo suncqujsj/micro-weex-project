@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back" :showRightText="true" :rightText="isListMode?'地图模式':'列表模式'" @rightTextClick="switchMode">
+        <midea-header :title="title" :isImmersion="isImmersion" @headerClick="headerClick" titleText="#000000" @leftImgClick="back" :showRightText="true" :rightText="isListMode?'地图模式':'列表模式'" @rightTextClick="switchMode">
         </midea-header>
         <div v-if="!serviceOrderNo" class="info-bar">
             <text class="info-address" @click="changeArea">{{areaObject.county?(areaObject.cityName+ ' '+areaObject.countyName):'请选择位置'}}</text>
@@ -33,7 +33,7 @@
             <image class="empty-page-icon" src="./assets/img/default_ic_nobranch@3x.png" resize='contain'>
             </image>
             <text class="empty-page-text">抱歉，亲查询的网点不存在{{'\n'}}您可以拨打24小时服务热线咨询</text>
-            <text class="empty-page-text phone" @click="makeCall(4008899315)">400-8899-315</text>
+            <text class="empty-page-text phone" @click="makeCall('4008899315')">400-8899-315</text>
         </div>
         <div class="empty-page" v-else-if="isSearchByGPS && locateFailed">
             <image class="empty-page-icon" src="./assets/img/service_ic_dingwei@3x.png" resize='contain'>
@@ -148,17 +148,23 @@ export default {
                         longitude: nuitLongitude,
                         zoom: 18 //地图显示范围 4-21级 （最大是21级）,非必选
                     },
-                    markers: [
-                        {
-                            icon: {
-                                normal: "./assets/img/service_ic_pin@3x.png",//正常的图片地址
-                                click: "./assets/img/service_ic_pin@3x.png" //点击高亮的图片地址
-                            },
-                            list: [
-                                { latitude: unitLatitude, longitude: nuitLongitude, id: 1 }
-                            ]
-                        }
-                    ]
+                    markers: []
+                }
+                for (let index = 0; index < this.sortedBranchList.length; index++) {
+                    const element = this.sortedBranchList[index];
+                    result.markers.push({
+                        icon: {
+                            normal: "./assets/img/service_ic_pin@3x.png",//正常的图片地址
+                            click: "./assets/img/service_ic_pin@3x.png" //点击高亮的图片地址
+                        },
+                        list: [
+                            {
+                                latitude: this.sortedBranchList[index].unitLatitude,
+                                longitude: this.sortedBranchList[index].nuitLongitude,
+                                id: index + 1
+                            }
+                        ]
+                    })
                 }
             }
             return result
@@ -372,6 +378,10 @@ export default {
     created() {
         this.serviceOrderNo = nativeService.getParameters('id') || null
         this.initPage()
+        nativeService.burialPoint({
+            pageName: 'serviceOnlineShopInquiriesPage',
+            subAction: 'page_view'
+        })
     }
 }
 </script>

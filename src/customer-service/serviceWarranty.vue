@@ -1,11 +1,11 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" :isImmersion="isImmersion" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller>
             <div class="base-group">
                 <div class="item-group">
-                    <scan-input placeholder="请输入或扫机身条码" v-model="barCode" @blur="checkBarCode" @scanCode="scanCode"></scan-input>
+                    <scan-input ref="barCode" placeholder="请输入或扫机身条码" v-model="barCode" @blur="checkBarCode" @scanCode="scanCode"></scan-input>
                 </div>
                 <div class="item-group last-item-group">
                     <text v-if="!productModel" class="item-input-text placeholder" @click="goToSearch">请输入型号</text>
@@ -117,6 +117,7 @@ export default {
             this.goTo('serviceMachineSearch', {}, { from: 'serviceWarranty', keyword: this.productModel })
         },
         pickDate() {
+            this.$refs.barCode.inputBlur()
             if (!this.barCode && !this.productModel) {
                 nativeService.toast('请输入型号或扫机身条码')
                 return
@@ -178,7 +179,7 @@ export default {
   color: #000000;
 }
 .cell-label-star {
-  font-family: PingFangSC-Regular;
+  font-family: "SF Pro Text", PingFangSC-Regular;
   font-size: 32px;
   color: #ff3b30;
   padding-left: 5px;
@@ -207,7 +208,7 @@ export default {
   border-radius: 4px;
   border-color: #e5e5e8;
   border-width: 1px;
-  height: 72px;
+  /* height: 72px; */
   padding-top: 16px;
   padding-left: 22px;
   padding-right: 50px;

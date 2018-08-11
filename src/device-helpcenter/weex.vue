@@ -130,6 +130,7 @@ export default {
 }
 .scroller {
     height: 1270px;
+    padding-bottom: 100px;
 }
 .group-gap-top {
   height: 24px;

@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back" :showRightImg="true" rightImg="./assets/img/home_ic_add@3x.png" @rightImgClick="addAddress">
+        <midea-header :title="title" :isImmersion="isImmersion" @headerClick="headerClick" titleText="#000000" @leftImgClick="back" :showRightImg="true" rightImg="./assets/img/home_ic_add@3x.png" @rightImgClick="addAddress">
         </midea-header>
         <scroller loadmoreoffset=750 @loadmore="loadmore">
             <div class="empty-page" v-if="isLoaded && userAddressList.length == 0">
@@ -108,11 +108,11 @@ export default {
             }, 1500)
         },
         addAddress() {
-            this.goTo('userAddress', {}, { from: "userAddressList" })
+            this.goTo('userAddress', {}, { from: this.fromPage })
         },
         goToAddressDetail(item) {
             nativeService.setItem(this.SERVICE_STORAGE_KEYS.userAddress, item, () => {
-                this.goTo('userAddress', {}, { from: "userAddressList", id: item.userAddrId })
+                this.goTo('userAddress', {}, { from: this.fromPage, id: item.userAddrId, isSelected: (this.selectedId == item.userAddrId ? 'Y' : 'N') })
             })
         },
         submit(item) {

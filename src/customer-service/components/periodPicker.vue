@@ -151,7 +151,7 @@ export default {
         refreshDate() {
             if (this.dates) {
                 let now = new Date()
-                if (now.getHours() >= 18) {
+                if (now.getHours() >= 10) {
                     this.dates[0].disable = true
                 }
             }
@@ -160,7 +160,7 @@ export default {
             if (this.times) {
                 if (this.dateIndex == 0) {
                     let now = new Date()
-                    if (now.getHours() > 12) {
+                    if (now.getHours() >= 12) {
                         this.times[0].disable = true
                         this.times[1].disable = true
                         this.times[2].disable = true

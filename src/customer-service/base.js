@@ -58,6 +58,21 @@ export default {
         },
         isipx: function () {
             return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6');
+        },
+        isImmersion: function () {
+            let result = true
+            if (weex.config.env.platform == 'iOS') {
+                if (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6') {
+                    //iphoneX不使用沉浸式
+                    result = false
+                }
+            } else {
+                //安卓根据设置匹配
+                if (weex.config.env.isImmersion == "false") {
+                    result = false
+                }
+            }
+            return result
         }
     },
     methods: {

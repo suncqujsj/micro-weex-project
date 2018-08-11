@@ -137,7 +137,7 @@ export default {
                 }
             }
             result.title = "睡觉时自动启用睡眠模式"
-            result.detail = "自然风，摇头"
+            result.detail = "睡眠风，摇头"
             result.checked = result.enable == '1' ? true : false
 
             return result

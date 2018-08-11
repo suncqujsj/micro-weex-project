@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper" @viewappear="refreshPage">
         <!-- 不可删除此空div行，否则list会自动调整移动至状态栏下 -->
-        <div style="height: 40px; background-color: #ffffff;"></div>
+        <div v-if="!isipx" style="height: 40px; background-color: #ffffff;"></div>
         <list class="list">
             <cell>
                 <div class="service-header">

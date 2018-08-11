@@ -1,5 +1,6 @@
 <template>
     <div class="wrap" :style="wrapStyle">
+    <!-- <div v-if="isShow" class="wrap" :style="wrapStyle"> -->
         <div class="select-area"></div>
         <scroller class="scroller" :style="scrollerStyle" :show-scrollbar="false" @scroll="scroll" @scrollend="scrollEnd">
             <div v-for="(item, index) in listArray" :key="index" ref="item">
@@ -24,6 +25,10 @@ const dom = weex.requireModule('dom')
 
 export default {
     props: {
+        isShow: {
+            type: Boolean,
+            default: false
+        },
         listArray: {
             type: Array,
             default: function(){
@@ -32,7 +37,7 @@ export default {
         },
         itemIndex: {
             type: Number,
-            default: 0
+            default: 999
         },
         wrapHeight: {
             type: Number,
@@ -62,6 +67,15 @@ export default {
             itemHeight: 70
         }
     },
+    watch: {
+        isShow(value) {
+            if (value) {
+                this.$nextTick(() => {
+                    // dom.scrollToElement(this.$refs.item[this.itemIndex], {})
+                })
+            }
+        }
+    },
     methods: {
         scroll(event) {
             let offsetY = event.contentOffset.y || ''
@@ -74,7 +88,7 @@ export default {
             const el = this.$refs['item'][0]
             dom.scrollToElement(el, { offset: this.itemIndex * 70 })
             this.$emit('onChange', this.listArray[this.itemIndex])
-        },
+        }
     },
     mounted() {
     },
@@ -109,23 +123,23 @@ export default {
   margin-bottom: 140px;
 }
 .first-visible-item {
-  opacity: 0.3;
+  opacity: 0.1;
 }
 .second-visible-item {
-  opacity: 0.6;
+  opacity: 0.3;
 }
 .second-last-visible-item {
-  opacity: 0.6;
+  opacity: 0.3;
 }
 .first-last-visible-item {
-  opacity: 0.3;
+  opacity: 0.1;
 }
 .selected-item {
   opacity: 1;
   color: #000000;
 }
 .unselected-item {
-  opacity: 0.6;
+  opacity: 0.3;
   color: #000000;
 }
 .select-area {

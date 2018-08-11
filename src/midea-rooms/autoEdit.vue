@@ -1,8 +1,8 @@
 <template>
    <div class="wrap" :style="wrapStyle">
        <div class="header-floor">
-            <midea-header :title="autoDetail.name" :bgColor="header.bgColor" :titleText="header.color" @leftImgClick="goBack"></midea-header>
-            <div class="delete" @click="showDialog('delete')">
+            <midea-header :title="autoDetail.name" :isImmersion="isipx?false:true" :bgColor="header.bgColor" :titleText="header.color" @leftImgClick="goBack"></midea-header>
+            <div class="delete" @click="showDialog('delete')" :style="headBtnStyle">
                 <text class="delete-text">删除</text>
             </div>
        </div>
@@ -76,6 +76,14 @@
     .wrap{ background-color: #f2f2f2;}
     .header-floor{
         position: relative; 
+    }
+    .delete{
+        position: absolute;
+        right: 25px;
+    }
+    .delete-text{
+        font-size: 32px;
+        color: #666;
     }
     .hd{
         background-color: #fff;
@@ -193,15 +201,7 @@
         text-align: center;
         font-size: 32px;
     }
-    .delete{
-        position: absolute;
-        top: 30px;
-        right: 25px;
-    }
-    .delete-text{
-        font-size: 32px;
-        color: #666;
-    }
+   
     .type-img{
         width: 82px;
         height: 82px;
@@ -270,8 +270,8 @@
         data(){
             return {
                 icon: {
-                    check:  'assets/img/check_on.png',
-                    uncheck: 'assets/img/check_off.png',
+                    check:  'assets/img/scene_ic_checkbox_on@3x.png',
+                    uncheck: 'assets/img/scene_ic_checkbox_off@3x.png',
                     next: 'assets/img/more.png',
                     addDevice: 'assets/img/add.png'
                 },
@@ -279,17 +279,15 @@
                 header: {
                     title: '设置',
                     bgColor: '#fff',
-                    color: '#111',
-                    leftImg: 'assets/img/b.png',
-                    rightImg: 'assets/img/b.png'
+                    color: '#111'
                 },
                 autoDetail: {
                 },
                 autoTypeImg: {
-                    2: 'assets/img/smart_ic_hand@2x.png',
-                    3: 'assets/img/location.png',
-                    4: 'assets/img/time.png',
-                    6: 'assets/img/slweather.png',
+                    2: 'assets/img/smart_ic_hand@3x.png',
+                    3: 'assets/img/scene_ic_placeblue@3x.png',
+                    4: 'assets/img/samrt_ic_clock@3x.png',
+                    6: 'assets/img/scene_ic_weather@3x.png',
                 },
                 applianceActions: applianceActions,
                 autoEnable: null,
@@ -326,11 +324,6 @@
                 let tmp = {
                     height: this.pageHeight+'px'
                 }
-                if (this.isipx) {
-                    tmp.paddingTop = '64px'
-                }else if (this.platform != 'android'){
-                    tmp.paddingTop = '40px'
-                }
                 return tmp
             },
             deleteStyle(){
@@ -359,6 +352,15 @@
                 }
                 weekTmp = weekTmp.join('、')
                 return weekTmp
+            },
+            headBtnStyle(){
+                let tmp = {}
+                if (this.platform == 'ios' && !this.isipx) {
+                    tmp.top = '69px'
+                }else{
+                    tmp.top = '29px'
+                }
+                return tmp
             },
         },
         methods: {
@@ -509,12 +511,10 @@
                     sceneType: this.sceneType,
                     weekly: this.autoDetail.weekly
                 }
-                if (this.sceneType == 3) {
-                    params.direction = this.autoDetail.location.direction
-                }
                 params.editSceneId = this.autoDetail.sceneId
                 
                 if (this.sceneType == 3){
+                    params.direction = this.autoDetail.location.direction
                     params.locationLongitude = this.autoDetail.location.longitude
                     params.locationLatitude = this.autoDetail.location.latitude
                 }
@@ -543,9 +543,10 @@
                             if (this.sceneType == 3) {
                                 nativeService.updateAutoList()//通知原生位置类型自动化列表需要更新
                             }
-                            nativeService.alert('删除成功!', function(){
+                            nativeService.toast('删除成功!')
+                            setTimeout(()=>{
                                 nativeService.backToNative()
-                            })
+                            }, 300)
                         }else{
                             if (codeDesc.auto.hasOwnProperty(rtnData.code)){
                                 nativeService.toast(codeDesc.auto[rtnData.code])
@@ -637,6 +638,10 @@
                         })
                     }
                     reqParams.task = JSON.stringify(tmpTask) || JSON.stringify(this.autoDetail.task)
+                    if (reqParams.task == '[]' || reqParams == ''){
+                        nativeService.toast('请添加设备')
+                        return
+                    }
                     if (Object.keys(this.editParams).length === 0 && !reqParams.task) {
                         nativeService.alert('没有改动哦')
                         return

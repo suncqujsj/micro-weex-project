@@ -24,19 +24,29 @@
             <div class="scene-list" v-if="sceneList" :style="sceneListStyle">
                 <div class="scene" v-for="scene in sceneList" @click="goScene(scene)">
                     <image class="scene-bg" :src="sceneImg[scene.roomType]"></image>
-                    <div class="scene-info">
+                    <div v-if="isLogin && scene.applianceCount !== 0" class="scene-info">
                         <text class="scene-name">{{scene.name}}</text>
-                        <div v-if="scene.roomType == 1 || scene.roomType == 2" class="row-s">
-                            <text v-if="isLogin && scene.indicator.temperature" class="scene-desc">室温{{scene.indicator.temperature}}, </text>
-                            <text v-if="isLogin && scene.indicator.humidity" class="scene-desc">湿度{{scene.indicator.humidity}}, </text>
-                            <text v-if="isLogin && scene.indicator.pm25" class="scene-desc">空气质量{{scene.indicator.pm25}} </text>
+                        <div>
+                            <div v-if="[1, 2].indexOf(scene.roomType) > -1 && scene.indicator" class="row-s">
+                                <text v-if="scene.indicator.temperature" class="scene-desc">室温{{scene.indicator.temperature}}, </text>
+                                <text v-if="scene.indicator.humidity" class="scene-desc">湿度{{scene.indicator.humidity}}, </text>
+                                <text v-if="scene.indicator.pm25" class="scene-desc">空气质量{{scene.indicator.pm25}} </text>
+                                <text v-if="!scene.indicator.temperature && !scene.indicator.humidity && !scene.indicator.pm25" class="scene-desc">该场景暂无设备信息</text>
+                            </div>
+                            <div v-else-if="scene.roomType == 3 && scene.indicator" class="scene-desc">
+                                <text v-if="scene.indicator.level" class="scene-desc">{{feel[scene.indicator.level]}}</text>
+                                <text v-else class="scene-desc">该场景暂无设备信息</text>
+                            </div>
+                            <div v-else-if="scene.roomType == 4 && scene.indicator" class="scene-dexc">
+                                <text v-if="scene.indicator.work_stats" class="scene-desc">{{scene.indicator.work_stats}}</text>
+                                <text v-else class="scene-desc">该场景暂无设备信息</text>
+                            </div>
                         </div>
-                        <div v-if="scene.roomType == 3" class="scene-desc">
-                            <text v-if="isLogin && scene.indicator.level" class="scene-desc">{{feel[scene.indicator.level]}}</text>
-                        </div>
-                        <div v-if="scene.roomType == 4" class="scene-dexc">
-                            <text v-if="isLogin && scene.indicator.work_stats" class="scene-desc">{{scene.indicator.work_stats}}</text>
-                        </div>
+                        <image class="next" :src="icon.next"></image>
+                    </div>
+                    <div v-else>
+                        <text class="scene-name">{{scene.name}}</text>
+                        <text class="scene-desc">该场景暂无设备信息</text>
                         <image class="next" :src="icon.next"></image>
                     </div>
                 </div>
@@ -86,8 +96,8 @@
     .scene-bg{ width: 690px; height: 185px; position: absolute; }
     .next { width: 8px; height: 16px; position:absolute; top:84px; right: 25px;}
     .scene-name, .scene-desc{ color: #fff; }
-    .scene-name{ font-size: 32px; margin-top: 50px; margin-left: 32px; margin-bottom: 30px;}
-    .scene-desc{ margin-left: 24px; font-size: 24px; }
+    .scene-name{ font-weight:bold; font-size: 32px; margin-top: 50px; margin-left: 32px; margin-bottom: 30px;}
+    .scene-desc{ margin-left: 30px; font-size: 24px; }
 
     .auto-toast{ width: 550px; }
     .toast-line{ padding: 25px; }
@@ -130,11 +140,22 @@
                 let tmp = {}
                 if (this.platform == 'android'){
                     tmp.height = '840px'
+                }else if (this.platform == 'iphoneX'){
+                    tmp.height = '1180px'
                 }else{
                     tmp.height = '1080px'
                 }
                 return tmp
-            }
+            },
+            formatSceneList(){
+                let tmp = {}
+                if (this.sceneList.length > 0) {
+                    for (var i in this.sceneList) {
+                        tmp[this.sceneList[i].roomType] = this.sceneList[i]
+                    }
+                }
+                return tmp
+            }  
         },
         components: {ToastDialog},
         mixins: [base],
@@ -146,20 +167,20 @@
                 icon: {
                     next: 'assets/img/more_w.png',
                     autoBtn:{
-                        0: 'assets/img/auto_btn.png',
+                        0: 'assets/img/scene_ic_goahead@3x.png',
                         1: 'assets/img/autooo.png',
                     },
                     exe: {
-                        1: 'assets/img/success.png',
-                        2: 'assets/img/loading.png',
-                        3: 'assets/img/scene_ic_listundo@2x.png'
+                        1: 'assets/img/scene_ic_listdone@3x.png',
+                        2: 'assets/img/scene_ic_listloading@3x.png',
+                        3: 'assets/img/scene_ic_listundo@3x.png'
                     }
                 },
                 sceneImg: {
-                    1: 'assets/img/sence_pic_parlour@2x.png',
-                    2: 'assets/img/sence_pic_bedroom@2x.png',
-                    3: 'assets/img/sence_pic_bathroom@2x.png',
-                    4: 'assets/img/sence_pic_sun@2x.png',
+                    1: 'assets/img/sence_pic_parlour@3x.png',
+                    2: 'assets/img/sence_pic_bedroom@3x.png',
+                    3: 'assets/img/sence_pic_bathroom@3x.png',
+                    4: 'assets/img/sence_pic_sun@3x.png',
                 },
                 feel: {
                     1: '未知',
@@ -171,27 +192,27 @@
                 autoListTmpl: [
                     {
                         isAdd: true,
-                        image: 'assets/img/arrive.png',
+                        image: 'assets/img/scene_ic_placeblue@3x.png',
                         sceneType: 3,
                         direction: 1,
                         name: '回家'
                     },
                     {
                         isAdd: true,
-                        image: 'assets/img/arrive.png',
+                        image: 'assets/img/scene_ic_placeblue@3x.png',
                         sceneType: 3,
                         direction: 2,
                         name: '离家'
                     },
                     {
                         isAdd: true,
-                        image: 'assets/img/time.png',
+                        image: 'assets/img/samrt_ic_clock@3x.png',
                         sceneType: 4,
                         name: '晚安'
                     },
                     {
                         isAdd: true,
-                        image: 'assets/img/slweather.png',
+                        image: 'assets/img/scene_ic_weather@3x.png',
                         sceneType: 6,
                         name: '天气变化'
                     }
@@ -223,82 +244,81 @@
                     '3.2': '1007',
                     '4': '1006',
                     '6': '1008'
-                }
+                },
             }
         },
         methods: { 
             initData(){
-                nativeService.getUserInfo().then((res)=>{
-                    this.sceneList = this.sceneListTmpl
-                    this.autoList = this.autoListTmpl
-                    if (res.uid == '' || res.uid == undefined){
-                    }else{
-                        nativeService.getCurrentHomeInfo().then( (res)=>{
-                            this.homegroupId = res.homeId
-                            this.userDevices = ''
-                            if (res.deviceList) {
-                                this.userDevices = encodeURIComponent(JSON.stringify(res.deviceList))
-                            }
-                            /*
-                                this.uid = 'ac70d2636c0c4dd5b86bc97bbc8166c6'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
-                                this.homegroupId = '150366'// 这里用的是宗鸿给的uid和homeGroupId,等他调好bug后再改回真实数据
-                                this.userDevices = encodeURIComponent(JSON.stringify([// 这里用的是模拟数据,等他调好bug后再改回真实数据
-                                    {
-                                        deviceId: '2222222',
-                                        deviceName: '设备二',
-                                        deviceType: '0xFD',
-                                        isOnline: 1
-                                    },{
-                                        deviceId: '111111',
-                                        deviceName: '设备一',
-                                        deviceType: '0xAC',
-                                        isOnline: 1
+                nativeService.getNetworkStatus().then((result)=>{
+                    if (result.status == 1){
+                        nativeService.getUserInfo().then((res)=>{
+                            if (res.uid == '' || res.uid == undefined){
+                                this.setTmpl()
+                            }else{
+                                nativeService.getCurrentHomeInfo().then( (res)=>{
+                                    if (res.homeId === '' || res.homeId == undefined) {
+                                        this.setTmpl()
+                                    }else{this.homegroupId = res.homeId
+                                        this.userDevices = ''
+                                        if (res.deviceList) {
+                                            this.userDevices = encodeURIComponent(JSON.stringify(res.deviceList))
+                                        }
+                                     
+                                        this.getAutoList()
+                                        this.getSceneList()
                                     }
-                                ]))
-                            */
-
-                            this.getSceneList()
-                            this.getAutoList()
+                                }).catch((err)=>{
+                                    this.setTmpl()
+                                    nativeService.toast(this.getErrorMessage(err))
+                                })
+                            }
                         }).catch((err)=>{
+                            this.setTmpl()
                             nativeService.toast(this.getErrorMessage(err))
                         })
+                    } else if (result.status == 0){
+                        this.setTmpl()
                     }
-                }).catch((err)=>{
-                    nativeService.toast(this.getErrorMessage(err))
                 })
             },
             editAuto(auto){
                 this.checkLogin().then( (uid) => {
-                    if (auto.isAdd){
-                        let params = {
-                            from: 'addAuto',
-                            uid: uid,
-                            homegroupId: this.homegroupId,
-                            sceneType: auto.sceneType,
-                            userDevices: this.userDevices,
-                            templateCode: this.templateCode[auto.sceneType]
-                        }
-                        if (auto.sceneType == 3) {
-                            params.direction = auto.direction
-                        }
-                        if (auto.sceneType == 2) {
-                            this.goTo("autoBindDevices", {}, params)
+                    this.getUserRole().then((roleId)=>{
+                        if (auto.isAdd){
+                            if (roleId == '1001') {
+                                let params = {
+                                    from: 'addAuto',
+                                    uid: uid,
+                                    homegroupId: this.homegroupId,
+                                    sceneType: auto.sceneType,
+                                    userDevices: this.userDevices,
+                                    templateCode: this.templateCode[auto.sceneType]
+                                }
+                                if (auto.sceneType == 3) {
+                                    params.direction = auto.direction
+                                }
+                                if (auto.sceneType == 2) {
+                                    this.goTo("autoBindDevices", {}, params)
+                                }else{
+                                    this.goTo('autoTypeSet',{}, params)
+                                }
+                            }else{
+                                nativeService.toast('只有家庭创建者才有权限操作')
+                            }
                         }else{
-                            this.goTo('autoTypeSet',{}, params)
+                            let params = {
+                                uid: uid,
+                                homegroupId: this.homegroupId,
+                                sceneType: auto.sceneType,
+                                sceneId: auto.sceneId,
+                                enable: auto.enable,
+                                userDevices: this.userDevices
+                            }
+                            this.goTo("autoEdit", {}, params)
                         }
-                    }else{
-                        let params = {
-                            uid: uid,
-                            homegroupId: this.homegroupId,
-                            sceneType: auto.sceneType,
-                            sceneId: auto.sceneId,
-                            enable: auto.enable,
-                            userDevices: this.userDevices
-                        }
-                        this.goTo("autoEdit", {}, params)
-                    }
-                }).catch((err)=>{
-                    nativeService.toast(this.getErrorMessage(err))
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
+                    })
                 })
             },
             executeAuto(sceneId){
@@ -383,15 +403,21 @@
                 })
             },
             goAddAuto(){
-                this.checkLogin().then( (uid) => {
-                    let params = {
-                        uid: uid,
-                        homegroupId: this.homegroupId,
-                        userDevices: this.userDevices
+                this.getUserRole().then((roleId)=>{
+                    if (roleId == '1001') {
+                        this.checkLogin().then( (uid) => {
+                            let params = {
+                                uid: uid,
+                                homegroupId: this.homegroupId,
+                                userDevices: this.userDevices
+                            }
+                            this.goTo('addAuto', {}, params)
+                        }).catch((err)=>{
+                            nativeService.toast(this.getErrorMessage(err))
+                        })
+                    }else{
+                        nativeService.toast('只有家庭创建者才有权限操作')
                     }
-                    this.goTo('addAuto', {}, params)
-                }).catch((err)=>{
-                    nativeService.toast(this.getErrorMessage(err))
                 })
             },
             getAutoList(){
@@ -401,33 +427,33 @@
                         uid: uid,
                         homegroupId: this.homegroupId
                     }
-                    this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                    this.webRequest(reqUrl, reqParams, false).then((rtnData)=>{
                         if (rtnData.code == 0) {
                             this.autoList = rtnData.data.list
                             let basicTemplate = {
                                 '3.1':{
                                     isAdd: true,
-                                    image: 'assets/img/arrive.png',
+                                    image: 'assets/img/scene_ic_placeblue@3x.png',
                                     sceneType: 3,
                                     direction: 1,
                                     name: '回家'
                                 },
                                 '3.2': {
                                     isAdd: true,
-                                    image: 'assets/img/arrive.png',
+                                    image: 'assets/img/scene_ic_placeblue@3x.png',
                                     sceneType: 3,
                                     direction: 2,
                                     name: '离家'
                                 },
                                 '4': {
                                     isAdd: true,
-                                    image: 'assets/img/time.png',
+                                    image: 'assets/img/samrt_ic_clock@3x.png',
                                     sceneType: 4,
                                     name: '晚安'
                                 },
                                 '6': {
                                     isAdd: true,
-                                    image: 'assets/img/slweather.png',
+                                    image: 'assets/img/scene_ic_weather@3x.png',
                                     sceneType: 6,
                                     name: '天气变化'
                                 }
@@ -470,10 +496,11 @@
                         homegroupId: this.homegroupId
                     }
 
-                    this.webRequest(reqUrl, reqParams).then((rtnData)=>{
+                    this.webRequest(reqUrl, reqParams, false).then((rtnData)=>{
                         if (rtnData.code == 0) {
-                            this.sceneList = rtnData.data.list
+                            this.sceneList = this.sortSceneList(rtnData.data.list)
                         }else{
+                            this.sceneList = this.sceneListTmpl
                             if (codeDesc.scene.hasOwnProperty(rtnData.code)) {
                                 nativeService.toast(codeDesc.scene[rtnData.code])
                             }else{
@@ -487,6 +514,22 @@
                     nativeService.toast(this.getErrorMessage(err))
                 })
             },
+            sortSceneList(sList){
+                for(var i=0; i<sList.length-1; i++){
+                    for(var j=0; j<sList.length-1-i; j++){
+                        if(sList[j].roomType>sList[j+1].roomType){
+                            var temp=sList[j]
+                            sList[j]=sList[j+1]
+                            sList[j+1]=temp
+                        }
+                    }
+                }
+                return sList;
+            },
+            setTmpl(){
+                this.autoList = this.autoListTmpl
+                this.sceneList = this.sceneListTmpl
+            },
             goScene(scene){
                 this.checkLogin().then( (uid) => {
                     let params = {
@@ -499,6 +542,42 @@
                     this.goTo("scene", {}, params)
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
+                })
+            },
+            getUserRole(){
+                return new Promise((resolve,reject)=>{
+                    this.checkLogin().then( (uid) => {
+                        if (this.homegroupId === '' || this.homegroupId == undefined) {
+                        }else{
+                            let reqUrl = url.home.getMember
+                            let reqParams = {
+                                uid: uid,
+                                homegroupId: this.homegroupId
+                            }
+                            this.webRequest(reqUrl, reqParams, false).then((rtnData)=>{
+                                if (rtnData.code == 0) {
+                                    let roleId = ''
+                                    for (var i in rtnData.data.list) {
+                                        if (rtnData.data.list[i].uid == uid) {
+                                            roleId = rtnData.data.list[i].roleId
+                                            break
+                                        }
+                                    }
+                                    resolve(roleId)
+                                }else{
+                                    if (codeDesc.scene.hasOwnProperty(rtnData.code)) {
+                                        nativeService.toast(codeDesc.home[rtnData.code])
+                                    }else{
+                                        nativeService.toast(rtnData.msg)
+                                    }
+                                }
+                            }).catch((err)=>{
+                                nativeService.toast(this.getErrorMessage(err))
+                            })
+                        }
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
+                    })
                 })
             }
         },

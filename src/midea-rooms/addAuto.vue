@@ -1,6 +1,6 @@
 <template>
    <div class="wrap" :style="wrapStyle">
-        <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
+        <midea-header :title="header.title" :isImmersion="isipx?false:true" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
         <div class="content">
             <!-- <text class="hd">选择条件</text> -->
             <midea-list v-for="(item,idx) in autos" :idx="idx" :hasWrapBorder="false" leftMargin="25px" :style="{backgroundColor: '#fff'}">
@@ -78,11 +78,6 @@
                 let tmp = {
                     height: this.pageHeight+'px'
                 }
-                if (this.isipx) {
-                    tmp.marginTop = '64px'
-                }else{
-                    tmp.marginTop = '40px'
-                }
                 return tmp
             }
         },
@@ -102,32 +97,32 @@
                     {
                         title: '手动',
                         desc: '',
-                        icon: 'assets/img/smart_ic_hand@2x.png',
+                        icon: 'assets/img/smart_ic_hand@3x.png',
                         sceneType: 2
                     },
                     {
                         title: '在某个时间',
                         desc: '例如每天晚上5:00打开电热水器',
-                        icon: 'assets/img/time.png',
+                        icon: 'assets/img/samrt_ic_clock@3x.png',
                         sceneType: 4
                     },
                     {
                         title: '天气变化时',
                         desc: '例如气温降到15度时打开电暖器',
-                        icon: 'assets/img/slweather.png',
+                        icon: 'assets/img/scene_ic_weather@3x.png',
                         sceneType: 6
                     },
                     {
                         title: '到达某地',
                         desc: '例如到家时自动打开空调',
-                        icon: 'assets/img/location.png',
+                        icon: 'assets/img/scene_ic_placeblue@3x.png',
                         sceneType: 3,
                         direction: 1
                     },
                     {
                         title: '离开某地',
                         desc: '例如离家时自动打开空调',
-                        icon: 'assets/img/location.png',
+                        icon: 'assets/img/scene_ic_placeblue@3x.png',
                         sceneType: 3,
                         direction: 2
                     }

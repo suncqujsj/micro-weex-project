@@ -1,6 +1,6 @@
 <template>
     <div :style="wrapStyle">
-        <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
+        <midea-header :title="header.title" :isImmersion="isipx?false:true" :bgColor="header.bgColor" :titleText="header.color"  @leftImgClick="goBack"></midea-header>
         <list class="scroller" :style="scrollerStyle">
             <cell>
                 <div class="block"  style="background-color:#fff">
@@ -153,11 +153,7 @@
         computed:{
             wrapStyle(){
                 let tmp = {}
-                if (this.isipx) {
-                    tmp.marginTop = '64px'
-                }else{
-                    tmp.marginTop = '40px'
-                }
+              
                 return tmp
             },
             scrollerStyle(){
@@ -210,12 +206,11 @@
                 header: {
                     title: '设置',
                     bgColor: '#fff',
-                    color: '#111',
-                    leftImg: 'assets/img/public_ic_back@3x.png'
+                    color: '#111'
                 },
                 icon: {
                     next: 'assets/img/more.png',
-                    checkOn:  'assets/img/done.png',
+                    checkOn:  'assets/img/scene_ic_done@3x.png',
                 },
                 userSupportDevices: [],
                 settingDetail: [],
@@ -255,32 +250,36 @@
                 nativeService.goBack()
             },
             initData(){
-                this.getSupportDevices().then((res)=>{
-                    if (res.applianceList.length == 0) {
-                        nativeService.toast('您在该场景下没有可以绑定的设备哦')
-                        setTimeout(()=>{
-                            this.goBack()
-                        },500)
-                        return
-                    }
-                    this.userSupportDevices = res.applianceList
-                    
-                    this.scenePropFormat = this.jsonToArray(res.prop)
-                    this.sceneProp = res.prop
+                if (this.sceneId !== ''){
+                    this.getSupportDevices().then((res)=>{
+                        if (res.applianceList.length == 0) {
+                            nativeService.toast('您在该场景下没有可以绑定的设备哦')
+                            setTimeout(()=>{
+                                this.goBack()
+                            },500)
+                            return
+                        }
+                        this.userSupportDevices = res.applianceList
+                        
+                        this.scenePropFormat = this.jsonToArray(res.prop)
+                        this.sceneProp = res.prop
 
-                    if ( this.roomType == 1 || this.roomType == 2 ){//初始化客厅/卧室的温度、湿度（可以被用户设置）
-                        this.temperatureRange = {
-                            min: this.sceneProp.temperature.split(',')[0],
-                            max:this.sceneProp.temperature.split(',')[1]
+                        if ( this.roomType == 1 || this.roomType == 2 ){//初始化客厅/卧室的温度、湿度（可以被用户设置）
+                            this.temperatureRange = {
+                                min: this.sceneProp.temperature.split(',')[0],
+                                max:this.sceneProp.temperature.split(',')[1]
+                            }
+                            this.humidityRange = {
+                                min: this.sceneProp.humidity.split(',')[0],
+                                max: this.sceneProp.humidity.split(',')[1]
+                            }
                         }
-                        this.humidityRange = {
-                            min: this.sceneProp.humidity.split(',')[0],
-                            max: this.sceneProp.humidity.split(',')[1]
-                        }
-                    }
-                }).catch((err)=>{
-                    nativeService.toast(this.getErrorMessage(err))
-                })
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
+                    })
+                }else{
+                    nativeService.toast('该场景暂无设备信息')
+                }
             },
             getSupportDevices(){//获取此房间可绑定的设备以及该房间的指标数据（温度、湿度、水温、人数等）
                 return new Promise((resolve,reject)=>{
@@ -454,7 +453,7 @@
         },
         created(){
             this.homegroupId = nativeService.getParameters('homegroupId')
-            this.sceneId = nativeService.getParameters('sceneId')
+            this.sceneId = nativeService.getParameters('sceneId') || ''
             this.roomType = nativeService.getParameters('roomType')
             this.initData()
         }

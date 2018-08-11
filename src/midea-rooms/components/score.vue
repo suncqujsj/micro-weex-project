@@ -28,11 +28,11 @@ export default {
         },
         starPath: {
             type: String,
-            default: 'assets/img/rate.png'
+            default: 'assets/img/scene_ic_ratefull@3x.png'
         },
         unstarPath: {
             type: String,
-            default: 'assets/img/unrate.png'
+            default: 'assets/img/scene_ic_ratehalf@3x.png'
         },
     },
     computed: {

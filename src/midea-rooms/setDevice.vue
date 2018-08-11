@@ -1,8 +1,8 @@
 <template>
    <div class="wrap" :style="wrapStyle">
         <div class="header-floor">
-            <midea-header :title="deviceName" bgColor="#fff" titleText="#000" @leftImgClick="goBack"></midea-header>
-            <div v-if="from == 'editAuto'" class="delete" @click="cancelDevice">
+            <midea-header :title="deviceName" :isImmersion="isipx?false:true" bgColor="#fff" titleText="#000" @leftImgClick="goBack"></midea-header>
+            <div v-if="from == 'editAuto'" class="delete" @click="cancelDevice" :style="headBtnStyle">
                 <text class="delete-text">删除</text>
             </div>
        </div>
@@ -167,11 +167,6 @@
                 let tmp = {
                     height: this.pageHeight+'px'
                 }
-                if (this.isipx) {
-                    tmp.marginTop = '64px'
-                }else{
-                    tmp.marginTop = '40px'
-                }
                 return tmp
             },
             showOtherActions(){
@@ -190,7 +185,16 @@
                     tmp = 535
                 }
                 return tmp
-            }
+            },
+            headBtnStyle(){
+                let tmp = {}
+                if (this.platform == 'ios' && !this.isipx) {
+                    tmp.top = '69px'
+                }else{
+                    tmp.top = '29px'
+                }
+                return tmp
+            },
         },
         methods: {
             goBack(){

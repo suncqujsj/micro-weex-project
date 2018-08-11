@@ -2,8 +2,8 @@
     <div @viewappear="initData">
         <scroller class="wrap">
             <div :style="sceneStyle">
-                <midea-header :title="scene.name" bgColor="transparent" titleText="#fff" :leftImg="icon.back" @leftImgClick="goBack"></midea-header>
-                <div class="setting" @click="goSetting()">
+                <midea-header :title="scene.name" :isImmersion="isipx?false:true" bgColor="transparent" titleText="#fff" :leftImg="icon.back" @leftImgClick="goBack"></midea-header>
+                <div class="setting" @click="goSetting()" :style="headBtnStyle">
                     <text class="setting-text white">设置</text>
                 </div>
                 <div v-if="roomType=='1' || roomType=='2' || roomType=='3' " class="up-block" >
@@ -190,7 +190,6 @@
     .setting{
         position:absolute;
         right: 25px;
-        top: 69px;
     }
     .setting-text{
         font-size: 28px;
@@ -359,7 +358,7 @@
     import mideaList from '@/midea-rooms/components/list.vue'
     import myScore from '@/midea-rooms/components/score.vue'
 
-    import { url, codeDesc } from './config/config.js'
+    import { url, codeDesc, luaDesc } from './config/config.js'
 
     export default {
         components:{ MideaHeader, ToastDialog, mideaCell, mideaList, myScore },
@@ -457,10 +456,14 @@
                     position: 'relative',
                     overflow: 'hidden'
                 }
-                if (this.isipx) {
-                    tmp.paddingTop = '64px'
+                return tmp
+            },
+            headBtnStyle(){
+                let tmp = {}
+                if (this.platform == 'ios' && !this.isipx) {
+                    tmp.top = '69px'
                 }else{
-                    tmp.paddingTop = '40px'
+                    tmp.top = '29px'
                 }
                 return tmp
             },
@@ -490,37 +493,37 @@
                     fail: '',
                     hanging: '',
                     actions: {
-                        '1001': 'assets/img/home_on.png',
-                        '1002': 'assets/img/comfort_on.png',
-                        '1003': 'assets/img/eco_on.png',
-                        '1004': 'assets/img/shut_on.png',
-                        '1005': 'assets/img/home_on.png',
-                        '1006': 'assets/img/comfort_on.png',
-                        '1007': 'assets/img/eco_on.png',
-                        '1008': 'assets/img/shut_on.png',
-                        '1009': 'assets/img/comfort_on.png',
-                        '1010': 'assets/img/eco_on.png',
-                        '1011': 'assets/img/stop_on.png',
-                        '1012': 'assets/img/power_on.png',
-                        '1013': 'assets/img/power_off.png',
-                        '1014': 'assets/img/alarm_on.png',
-                        '1015': 'assets/img/start_on.png',
+                        '1001': 'assets/img/scene_ic_homing_on@3x.png',
+                        '1002': 'assets/img/scene_ic_comfort_on@3x.png',
+                        '1003': 'assets/img/scene_ic_eco_on@3x.png',
+                        '1004': 'assets/img/scene_ic_switch_on@3x.png',
+                        '1005': 'assets/img/scene_ic_homing_on@3x.png',
+                        '1006': 'assets/img/scene_ic_comfort_on@3x.png',
+                        '1007': 'assets/img/scene_ic_eco_on@3x.png',
+                        '1008': 'assets/img/scene_ic_switch_on@3x.png',
+                        '1009': 'assets/img/scene_ic_comfort_on@3x.png',
+                        '1010': 'assets/img/scene_ic_eco_on@3x.png',
+                        '1011': 'assets/img/scene_ic_stop_on@3x.png',
+                        '1012': 'assets/img/scene_ic_power_on@3x.png',
+                        '1013': 'assets/img/scene_ic_power_off@3x.png',
+                        '1014': 'assets/img/scene_ic_alarm_on@3x.png',
+                        '1015': 'assets/img/scene_ic_start_on@3x.png',
                     },
                     model: {
-                        1: 'assets/img/success.png',
-                        2: 'assets/img/loading.png',
-                        3: 'assets/img/scene_ic_listundo@2x.png'
+                        1: 'assets/img/scene_ic_listdone@3x.png',
+                        2: 'assets/img/scene_ic_listloading@3x.png',
+                        3: 'assets/img/scene_ic_listundo@3x.png'
                     },
                     washer: {
-                        on: 'assets/img/power_off.png',
-                        off: 'assets/img/power_on.png',
-                        start: 'assets/img/stop_on.png',
-                        work: 'assets/img/stop_on.png',
-                        pause: 'assets/img/start_on.png',
-                        standby: 'assets/img/start_on.png',
-                        idle: 'assets/img/start_on.png',
-                        powerDisabled: 'assets/img/power_off.png',
-                        statusDisabled: 'assets/img/start_off.png'
+                        on: 'assets/img/scene_ic_power_off@3x.png',
+                        off: 'assets/img/scene_ic_power_on@3x.png',
+                        start: 'assets/img/scene_ic_stop_on@3x.png',
+                        work: 'assets/img/scene_ic_stop_on@3x.png',
+                        pause: 'assets/img/scene_ic_start_on@3x.png',
+                        standby: 'assets/img/scene_ic_start_on@3x.png',
+                        idle: 'assets/img/scene_ic_start_on@3x.png',
+                        powerDisabled: 'assets/img/scene_ic_power_off@3x.png',
+                        statusDisabled: 'assets/img/scene_ic_start_off@3x.png'
                     },
                     water: 'assets/img/equitment_ic_waterdrop@2x.png',
                     power: 'assets/img/equitment_ic_lightning@2x.png',
@@ -546,9 +549,12 @@
                     percent: '%'
                 },
                 washerWaterData: {
-                    x: { "value": [], "label": [] },
+                    x: { 
+                        "value": ['','','','','','','','','','','','','','','','','','','','','','','','','','','','','',''],
+                        "label": ['','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',]
+                    },
                     y: [{
-                            "value": [],
+                            "value": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                             "title": "用水量",
                             "color": "#ffffff",
                             "background": "#ffffff"
@@ -564,9 +570,12 @@
                     unit: { "x": "日期", "y": "", }
                 },
                 washerPowerData: {
-                    x: { "value": [], "label": [] },
+                    x: {
+                        "value": ['','','','','','','','','','','','','','','','','','','','','','','','','','','','','',''],
+                        "label": ['','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',]
+                    },
                     y: [{
-                        "value": [],
+                        "value": [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],
                         "title": "用电量",
                         "color": "#ffffff",
                         "background": "#ffffff"
@@ -625,12 +634,16 @@
                 nativeService.goBack()
             },
             goSetting(){
-                let params = {
-                    homegroupId: this.homegroupId,
-                    roomType: this.roomType,
-                    sceneId: this.sceneId,
+                if (this.sceneId !== '') {
+                    let params = {
+                        homegroupId: this.homegroupId,
+                        roomType: this.roomType,
+                        sceneId: this.sceneId,
+                    }
+                    this.goTo('setting', {}, params)
+                }else{
+                    nativeService.toast('该场景暂无设备信息')
                 }
-                this.goTo('setting', {}, params)
             },
             closeToastDialog(){
                 this.showToastDialog = false
@@ -669,21 +682,55 @@
             getSceneDetail(){
                 return new Promise((resolve, reject)=>{
                     this.checkLogin().then( (uid) => {
-                        let reqUrl = url.scene.detail
+                        if (this.sceneId !== '') {
+                            let reqUrl = url.scene.detail
+                            let reqParams = {
+                                uid: uid,
+                                homegroupId: this.homegroupId,
+                                sceneId: this.sceneId
+                            }
+                            
+                            this.webRequest(reqUrl, reqParams).then( (res) => {
+                                if (res.code == '0') {
+                                    this.scene = res.data
+                                    this.indicator = res.data.indicator || {}
+                                    if ( this.indicator.level && this.indicator.level != '' ) {
+                                        this.sceneLevel = this.indicator.level
+                                    }
+                                    resolve()
+                                }else{
+                                    if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                        nativeService.toast(codeDesc.scene[res.code])
+                                    }else{
+                                        nativeService.toast(res.msg)
+                                    }
+                                }
+                            }).catch((err)=>{
+                                nativeService.toast(this.getErrorMessage(err))
+                            })
+                        }else{
+                            nativeService.toast('该场景暂无设备信息')
+                        }
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
+                    })
+                })
+            },
+            quickOptimize(){
+                this.checkLogin().then( (uid) => {
+                    if (this.sceneId !== '') {
+                        let reqUrl = url.scene.optimize
                         let reqParams = {
                             uid: uid,
                             homegroupId: this.homegroupId,
-                            sceneId: this.sceneId
+                            sceneId: this.sceneId,
                         }
-                        
-                        this.webRequest(reqUrl, reqParams).then( (res) => {
-                            if (res.code == '0') {
-                                this.scene = res.data
-                                this.indicator = res.data.indicator || {}
-                                if ( this.indicator.level && this.indicator.level != '' ) {
-                                     this.sceneLevel = this.indicator.level
-                                }
-                                resolve()
+                        this.webRequest(reqUrl, reqParams).then((res)=>{
+                            if (res.code == 0) {
+                                this.checkQuickOptimizeTimes = 0
+                                this.checkQuickOptimize(res.data.resultId)
+                            }else if (res.code == 1711){
+                                nativeService.toast(res.msg)
                             }else{
                                 if (codeDesc.scene.hasOwnProperty(res.code)) {
                                     nativeService.toast(codeDesc.scene[res.code])
@@ -694,38 +741,13 @@
                         }).catch((err)=>{
                             nativeService.toast(this.getErrorMessage(err))
                         })
-                    }).catch((err)=>{
-                        nativeService.toast(this.getErrorMessage(err))
-                    })
-                })
-            },
-            quickOptimize(){
-                this.checkLogin().then( (uid) => {
-                    let reqUrl = url.scene.optimize
-                    let reqParams = {
-                        uid: uid,
-                        homegroupId: this.homegroupId,
-                        sceneId: this.sceneId,
+                    }else{
+                        nativeService.toast('该场景暂无设备信息')
                     }
-                    this.webRequest(reqUrl, reqParams).then((res)=>{
-                        if (res.code == 0) {
-                            this.checkQuickOptimizeTimes = 0
-                            this.checkQuickOptimize(res.data.resultId)
-                        }else if (res.code == 1711){
-                            nativeService.toast(res.msg)
-                        }else{
-                            if (codeDesc.scene.hasOwnProperty(res.code)) {
-                                nativeService.toast(codeDesc.scene[res.code])
-                            }else{
-                                nativeService.toast(res.msg)
-                            }
-                        }
-                    }).catch((err)=>{
-                        nativeService.toast(this.getErrorMessage(err))
-                    })
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
                 })
+                
             },
             checkQuickOptimize(resultId){
                 // status 1-成功，2-执行中，3-失败
@@ -925,16 +947,16 @@
                                     tmpPowerYLabel[i] = 0
                                     if (result[i].powerConsumption){
                                         if ( result[i].powerConsumption != '') {
-                                            tmpPowerYValue[i] = Number(result[i].powerConsumption)
-                                            tmpPowerYLabel[i] = Number(result[i].powerConsumption)
+                                            tmpPowerYValue[i] = Number(result[i].powerConsumption)/1000
+                                            tmpPowerYLabel[i] = Number(result[i].powerConsumption)/1000
                                         }
                                     }
 
                                     tmpWaterYValue[i] = 0
                                     tmpWaterYLabel[i] = 0
                                     if (result[i].waterConsumption && result[i].waterConsumption != '') {
-                                        tmpWaterYValue[i] = Number(result[i].waterConsumption)
-                                        tmpWaterYLabel[i] = Number(result[i].waterConsumption)
+                                        tmpWaterYValue[i] = Number(result[i].waterConsumption)/10
+                                        tmpWaterYLabel[i] = Number(result[i].waterConsumption)/10
                                     }
                                 }
 
@@ -948,9 +970,10 @@
                                 this.washerWaterData['y'][0]['value'] = tmpWaterYValue
                                 this.washerWaterData['y'][0]['label'] = tmpWaterYLabel
                                 
+                                // nativeService.alert(JSON.stringify(this.washerPowerData.y) + '\n\n' + JSON.stringify( this.washerWaterData.y[0]))
+
                                 this.hasWasherPowerData = true
                                 this.hasWasherWaterData = true
-
                             }else{
                                 if (codeDesc.scene.hasOwnProperty(res.code)) {
                                     nativeService.toast(codeDesc.scene[res.code])
@@ -978,18 +1001,11 @@
                         self.setWasherStatus(luaData)
                         resolve(luaData)
                     },function(error) {
-                        
-                        let luaMsg = {
-                            '411003': '设备离线',
-                            '331308': '设备离线'
-                        }
-                        // nativeService.toast(error)
-                        
-                        // nativeService.toast('查询洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
-                        if (Object.keys(luaMsg).indexOf(error.errorCode) > -1) {
-                            nativeService.toast(luaMsg[error.errorCode])
+                        let luaCode = String(error.errorCode).slice(2,6)
+                        if (Object.keys(luaDesc).indexOf(luaCode) > -1) {
+                            nativeService.toast(luaDesc[luaCode])
                         }else{
-                            nativeService.toast('查询洗衣机状态失败' + error.errorCode)
+                            nativeService.toast('查询洗衣机状态失败,请稍后重试')
                         }
                     })
                 })
@@ -1021,7 +1037,7 @@
                                 }
                             })
                         },function(error) {
-                            nativeService.toast(aimText + '失败')
+                            nativeService.toast(aimText + '失败，请稍后重试')
                             // nativeService.toast('改变洗衣机状态时遇到了问题 \n[错误码：' + error.errorCode +']')
                         })
                     }else{
@@ -1133,7 +1149,7 @@
             }
 
             this.homegroupId = nativeService.getParameters('homegroupId')
-            this.sceneId = nativeService.getParameters('sceneId')
+            this.sceneId = nativeService.getParameters('sceneId') || ''
         }
     }
 </script>

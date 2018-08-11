@@ -102,12 +102,14 @@ export default {
             if (value) {
                 this.$nextTick(() => {
                     this.refreshDate()
-                    if (!this.dateIndex || this.dateIndex < 0) this.dateIndex = 0
+                    if (!this.dateIndex || this.dateIndex < 0) {
+                        this.dateIndex = 0
+                    }
                     const dateEl = this.$refs['date0'][0]
-                    dom.scrollToElement(dateEl, { offset: this.dateIndex * this.itemHeight })
+                    dom.scrollToElement(dateEl, { offset: this.dateIndex * this.itemHeight, animated: false })
                     this.refreshTime()
                     const timeEl = this.$refs['time0'][0]
-                    dom.scrollToElement(timeEl, { offset: this.timeIndex * this.itemHeight })
+                    dom.scrollToElement(timeEl, { offset: this.timeIndex * this.itemHeight, animated: false })
                 })
             }
         }
@@ -151,14 +153,16 @@ export default {
         refreshDate() {
             if (this.dates) {
                 let now = new Date()
-                if (now.getHours() >= 10) {
-                    this.dates[0].disable = true
+                if (now.getHours() >= 12) {
+                    this.dates[0].disable = true //隐藏今天
+                    this.dateIndex-- //index往前移动一个
                 }
             }
         },
         refreshTime() {
             if (this.times) {
-                if (this.dateIndex == 0) {
+                if (this.datesArray[this.dateIndex].index == 0) {
+                    //今天过滤时间段
                     let now = new Date()
                     if (now.getHours() >= 12) {
                         this.times[0].disable = true

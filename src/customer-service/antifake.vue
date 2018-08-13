@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" :isImmersion="isImmersion" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller>
             <image class="advertisement" src="./assets/img/service_img_gangwei@3x.png" resize='contain'></image>
@@ -17,7 +17,7 @@
                 <input class="item-input" type="number" placeholder="请输入4位验证码" v-model="validCode" maxlength="4" @return="submit" />
             </div>
 
-            <div class="item-group" v-if="failedCount>=3">
+            <div class="item-group" v-if="successCount>=3 || failedCount>=3">
                 <input class="item-input" type="text" placeholder="请输入图形验证码" v-model="picCode" maxlength="4" @return="submit" />
                 <image class="validate-img" :src="picCodeSrc" resize='contain' @click="antiValidateCode()"></image>
             </div>
@@ -55,6 +55,7 @@ export default {
             title: '滤芯防伪',
             code: '',
             validCode: '',
+            successCount: 0,
             failedCount: 0,
             picCode: '',
             picCodeSrc: '', //http://wap.cjm.so/Common/ValidateCode.ashx?Type=&Demand=&w=&h=&r=
@@ -67,7 +68,7 @@ export default {
     },
     computed: {
         isDataReady() {
-            return this.code && this.validCode && (this.failedCount < 3 || this.picCode)
+            return this.code && this.validCode && (this.successCount < 3 || this.picCode) && (this.failedCount < 3 || this.picCode)
         }
     },
     methods: {
@@ -93,20 +94,27 @@ export default {
             let param = {
                 Code: this.code + this.validCode
             }
-            if (this.failedCount > 2) {
+            if (this.successCount > 2 || this.failedCount > 2) {
                 param.Validate = this.picCode
             }
             nativeService.antiFakeQuery(param).then(
                 (resp) => {
                     this.result = resp
                     if (resp.success && resp.result.ResultID) {
-                        this.failedCount = 0
                         nativeService.setItem(this.SERVICE_STORAGE_KEYS.antifakeResult, Object.assign({
                             code: this.code
                         }, resp), (resp) => {
+                            this.successCount++
+                            if (this.successCount > 2) {
+                                this.antiValidateCode()
+                            }
+                            this.picCode = ""
                             this.goTo('antifakeResult')
                         })
                     } else {
+                        if (this.result.message == '码不存在') {
+                            this.result.message = "滤芯编号或者验证码不正确"
+                        }
                         this.failedCount++
                         if (this.failedCount > 2) {
                             this.antiValidateCode()

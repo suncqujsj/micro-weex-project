@@ -10,8 +10,6 @@
             <text class="order-block-channel">{{formattedOrder.interfaceSourceDesc}}接入</text>
             <text v-if="showStatus" v-bind:class="['order-block-status', formattedOrder.calcServiceOrderStatus=='3'?'order-block-status-gray':'']">{{formattedOrder.calcServiceOrderStatus==5?'':formattedOrder.statusDesc}}</text>
         </div>
-        <image v-if="showStatus && formattedOrder.calcServiceOrderStatus==5" class="order-block-status-icon" src="./assets/img/service_ic_finish@3x.png" resize='contain'>
-        </image>
         <div class="order-block-body">
             <image class="order-block-img" :src="formattedOrder.imageUrl" resize='contain'>
             </image>
@@ -21,6 +19,7 @@
             </div>
             <text v-if="formattedOrder.price" class="order-block-price">{{formattedOrder.price}}元</text>
         </div>
+        <image v-if="showStatus && formattedOrder.calcServiceOrderStatus==5" class="order-block-status-icon" src="./assets/img/service_ic_finish@3x.png" resize='contain'> </image>
         <slot name="action-bar">
         </slot>
     </div>

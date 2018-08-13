@@ -23,10 +23,6 @@
                 nativeService.burialPoint({//埋点客厅
                     pageName: 'testPageName',
                     subAction: 'meiju_test_operate'
-                }).then(()=>{
-                    nativeService.toast('埋点成功')
-                }).catch((err)=>{
-                    nativeService.alert('埋点失败， error:\n'+ JSON.stringify(err))
                 })
             }
         },

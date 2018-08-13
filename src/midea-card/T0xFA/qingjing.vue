@@ -53,7 +53,7 @@ export default {
         situationDesc() {
             let result = {
                 title: "睡觉时自动启用睡眠模式",
-                detail: "自然风，摇头",
+                detail: "睡眠风，摇头",
                 timeDesc: ''
             }
             if (this.situactionData) {

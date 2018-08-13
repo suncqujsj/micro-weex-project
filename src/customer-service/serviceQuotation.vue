@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" :isImmersion="isImmersion" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller class="scroller">
             <div class="charge-detail-header">

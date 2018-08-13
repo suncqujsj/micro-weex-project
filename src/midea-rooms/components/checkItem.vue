@@ -72,7 +72,7 @@
                             width: '40px',
                             height: '40px'
                         },
-                        path: 'assets/img/done.png',
+                        path: 'assets/img/scene_ic_done@3x.png',
                     }
                 }
             },

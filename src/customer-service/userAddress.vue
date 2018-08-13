@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back" :showRightText="!isNew" rightText="删除" @rightTextClick="deleteAddress">
+        <midea-header :title="title" :isImmersion="isImmersion" @headerClick="headerClick" titleText="#000000" @leftImgClick="back" :showRightText="!isNew" rightText="删除" @rightTextClick="deleteAddress">
         </midea-header>
         <scroller>
             <div class="group-gap-top"></div>
@@ -82,7 +82,8 @@ export default {
                 street: '',
                 streetName: ''
             },
-            isShowAddressPicker: false
+            isShowAddressPicker: false,
+            isSelected: 'N'
         }
     },
     computed: {
@@ -219,7 +220,11 @@ export default {
         },
         deleteAddress() {
             nativeService.userAddrDelete({ userAddrId: this.userAddress.userAddrId }).then(() => {
-                this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddress" })
+                this.appPageDataChannel.postMessage({ page: "userAddressList", key: "userAddress" })
+                if (this.isSelected == 'Y') {
+                    //更新安装/维修界面
+                    this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddressList", data: null })
+                }
                 this.back()
             }).catch((error) => {
                 nativeService.toast(nativeService.getErrorMessage(error))
@@ -227,12 +232,19 @@ export default {
         },
         submit() {
             if (!this.isDataReady) return
-
+            if (this.userAddress.receiverMobile.length != 11) {
+                nativeService.toast("请输入正确的手机号码")
+                return
+            }
             this.triggerBlur()
             if (this.userAddress.userAddrId) {
                 //地址修改
                 nativeService.userAddrUpdate(this.userAddress).then((resp) => {
-                    this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddress" })
+                    this.appPageDataChannel.postMessage({ page: "userAddressList", key: "userAddress" })
+                    if (this.isSelected == 'Y') {
+                        //更新安装/维修界面
+                        this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddressList", data: this.userAddress })
+                    }
                     this.back()
                 }).catch((error) => {
                     nativeService.toast(nativeService.getErrorMessage(error))
@@ -240,7 +252,7 @@ export default {
             } else {
                 //地址新增
                 nativeService.userAddrAdd(this.userAddress).then(() => {
-                    this.appPageDataChannel.postMessage({ page: this.fromPage, key: "userAddress" })
+                    this.appPageDataChannel.postMessage({ page: "userAddressList", key: "userAddress" })
                     this.back()
                 }).catch((error) => {
                     nativeService.toast(nativeService.getErrorMessage(error))
@@ -250,7 +262,7 @@ export default {
     },
     created() {
         this.userAddress.userAddrId = nativeService.getParameters('id') || null
-
+        this.isSelected = nativeService.getParameters('isSelected') || 'N'
         if (this.userAddress.userAddrId) {
             //地址修改
             this.isNew = false

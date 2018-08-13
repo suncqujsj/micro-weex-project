@@ -1,10 +1,11 @@
 <template>
     <div>
-        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" :isImmersion="isImmersion" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <div class="search-bar">
             <div class="search-bar-content">
-                <input class="search-bar-input" placeholder="请输入型号" :autofocus=true v-model="searchModelKeyWord" @return="true" @input="searchProduct" maxlength="30"></input>
+                <input class="search-bar-input" placeholder="请输入型号" :autofocus=true v-model="searchModelKeyWord" @return="true" @input="searchProduct" maxlength="100"></input>
+                <image v-if="searchModelKeyWord.length>0" class="search-bar-close" :src="'./assets/img/me_ic_return@3x.png'" resize="contain" @click="searchModelKeyWord=''"></image>
             </div>
         </div>
         <scroller class="product-content" loadmoreoffset=50 @loadmore="loadmore">
@@ -124,6 +125,12 @@ export default {
   font-size: 28px;
   color: #000000;
   height: 40px;
+}
+.search-bar-close {
+  height: 40px;
+  width: 40px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .scroller {

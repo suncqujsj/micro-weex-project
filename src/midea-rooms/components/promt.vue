@@ -9,14 +9,14 @@
          <text class="box-title-text">{{title}}</text>
        </div>
        <div class="box-input-wrapper">
-          <input maxlength="15"  @input="onInput" :value="inputName" class="box-input" type="text" :placeholder="placeholder" />
+          <input ref="input0" maxlength="15"  @input="onInput" :value="inputName" class="box-input" type="text" :placeholder="placeholder" />
        </div>
        <div class="box-btn-group">
-          <div  @click="onOkClicked" class="box-btn-wrapper">
-            <text  class="box-btn-text">确定</text>
-          </div>
           <div @click="onCancled" class="box-btn-wrapper">
             <text class="box-btn-text">取消</text>
+          </div>
+          <div  @click="onOkClicked" class="box-btn-wrapper">
+            <text  class="box-btn-text">确定</text>
           </div>
        </div>
      </div>
@@ -104,7 +104,8 @@ const modal = weex.requireModule('modal');
           this.$emit('onPromtInput',event.value);
       },
       onOkClicked(event) {
-          this.$emit('okClicked',event);
+          this.$refs.input0.blur()
+          this.$emit('okClicked',event)
       },
       onCancled(event) {
           this.$emit('onPromtClose',event);

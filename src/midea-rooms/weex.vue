@@ -75,7 +75,7 @@
     .row-sa{ flex-direction: row; align-items: center; justify-content: space-around; }
     .row-e { flex-direction: row; align-items: center; justify-content: flex-end; }
     .hd { margin-top: 44px; padding-left:30px; padding-right:30px; margin-bottom: 24px; }
-    .hd-name{  font-size: 36px; color: #000; }
+    .hd-name{ font-weight: bold; font-size: 36px; color: #000; }
     .hd-btn{ font-size: 26px; color: #666; padding: 10px;}
     .scroller{ padding-left:30px; padding-right:30px; flex-direction: row; height: 276px;}
     .icon { width: 82px; height: 82px; margin-right: 20px; }
@@ -312,7 +312,8 @@
                                 sceneType: auto.sceneType,
                                 sceneId: auto.sceneId,
                                 enable: auto.enable,
-                                userDevices: this.userDevices
+                                userDevices: this.userDevices,
+                                roleId: roleId
                             }
                             this.goTo("autoEdit", {}, params)
                         }
@@ -542,42 +543,6 @@
                     this.goTo("scene", {}, params)
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
-                })
-            },
-            getUserRole(){
-                return new Promise((resolve,reject)=>{
-                    this.checkLogin().then( (uid) => {
-                        if (this.homegroupId === '' || this.homegroupId == undefined) {
-                        }else{
-                            let reqUrl = url.home.getMember
-                            let reqParams = {
-                                uid: uid,
-                                homegroupId: this.homegroupId
-                            }
-                            this.webRequest(reqUrl, reqParams, false).then((rtnData)=>{
-                                if (rtnData.code == 0) {
-                                    let roleId = ''
-                                    for (var i in rtnData.data.list) {
-                                        if (rtnData.data.list[i].uid == uid) {
-                                            roleId = rtnData.data.list[i].roleId
-                                            break
-                                        }
-                                    }
-                                    resolve(roleId)
-                                }else{
-                                    if (codeDesc.scene.hasOwnProperty(rtnData.code)) {
-                                        nativeService.toast(codeDesc.home[rtnData.code])
-                                    }else{
-                                        nativeService.toast(rtnData.msg)
-                                    }
-                                }
-                            }).catch((err)=>{
-                                nativeService.toast(this.getErrorMessage(err))
-                            })
-                        }
-                    }).catch((err)=>{
-                        nativeService.toast(this.getErrorMessage(err))
-                    })
                 })
             }
         },

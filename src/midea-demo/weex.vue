@@ -130,7 +130,8 @@ module.exports = {
             { title: 'updateAutoList更新自动化列表', link: "updateAutoList" },
             { title: 'weexBundleToWeb跳转web页面', link: "weexBundleToWeb" },
             { title: 'weex环境变量', link: "weexEnv" },
-            { title: '美居埋点', link: "mideaBurial" }
+            { title: '美居埋点', link: "mideaBurial" },
+            { title: 'mapPointPick地图选点', link: "mapPointPick" }
         ]
     }),
     computed: {

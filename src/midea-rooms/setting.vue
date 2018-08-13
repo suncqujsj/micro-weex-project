@@ -3,7 +3,7 @@
         <midea-header :title="header.title" :isImmersion="isipx?false:true" :bgColor="header.bgColor" :titleText="header.color"  @leftImgClick="goBack"></midea-header>
         <list class="scroller" :style="scrollerStyle">
             <cell>
-                <div class="block"  style="background-color:#fff">
+                <div class="block"  style="margin-top:10px; background-color:#fff">
                     <text class="sub-hd">关联设备</text>
                     <midea-list v-for="(item,idx) in userSupportDevices" :idx="idx" :hasWrapBorder="false" leftMargin="25px">
                         <div class="row-sb device-line" @click="switchBindSceneDevice(item)">
@@ -14,7 +14,7 @@
                         <check-item v-if="roomType == 4" mode="radio" :title="item.applianceName" :status="item.isRelation == 1" @itemClick="switchBindSceneDevice(item)"></check-item> -->
                     </midea-list>
                 </div>
-                <div class="block" v-if="roomType == 1 || roomType == 2">
+                <!-- <div class="block" v-if="roomType == 1 || roomType == 2">
                     <div class="range-block">
                         <div class="row-sb range-hd">
                             <text class="text">适宜温度</text>
@@ -32,6 +32,52 @@
                         <div class="range-bd" @click="showPropPop('humidity')">
                             <midea-range :wrapWidth="700" unit="%" :min="10" :max="90" :rangeMin="humidityRange.min" :rangeMax="humidityRange.max" @minClicked="showPropPop('humidityMin')" @maxClicked="showPropPop('humidityMax')"></midea-range>
                         </div>
+                    </div>
+                </div> -->
+                <div class="block" v-if="roomType == 1 || roomType == 2">
+                    <div class="range-block">
+                        <text class="sub-hd">适宜温度</text>
+                        <midea-list style="background-color:#fff" :idx="1" leftMargin="25px">
+                            <div class="row-sb set-item" @click="showPropPop('temperatureMin')">
+                                <text class="text font16">最低</text>
+                                <div class="row-e">
+                                    <text class="value-text">{{temperatureRange.min}}℃</text>
+                                    <image class="next-icon" :src="icon.next"></image>
+                                </div>
+                            </div>
+                        </midea-list>
+                        <midea-list style="background-color:#fff" :idx="1" leftMargin="25px">
+                            <div class="row-sb set-item" @click="showPropPop('temperatureMax')">
+                                <text class="text font16">最高</text>
+                                <div class="row-e">
+                                    <text class="value-text">{{temperatureRange.max}}℃</text>
+                                    <image class="next-icon" :src="icon.next"></image>
+                                </div>
+                            </div>
+                        </midea-list>
+                    </div>
+                </div>
+                <div class="block" v-if="roomType == 1 || roomType == 2">
+                    <div class="range-block">
+                        <text class="sub-hd">适宜湿度</text>
+                        <midea-list style="background-color:#fff" :idx="1" leftMargin="25px">
+                            <div class="row-sb set-item" @click="showPropPop('humidityMin')">
+                                <text class="text font16">最低</text>
+                                <div class="row-e">
+                                    <text class="value-text">{{humidityRange.min}}%</text>
+                                    <image class="next-icon" :src="icon.next"></image>
+                                </div>
+                            </div>
+                        </midea-list>
+                        <midea-list style="background-color:#fff" :idx="1" leftMargin="25px">
+                            <div class="row-sb set-item" @click="showPropPop('humidityMax')">
+                                <text class="text font16">最高</text>
+                                <div class="row-e">
+                                    <text class="value-text">{{humidityRange.max}}%</text>
+                                    <image class="next-icon" :src="icon.next"></image>
+                                </div>
+                            </div>
+                        </midea-list>
                     </div>
                 </div>
                 <div class="block" v-if="roomType == 3">
@@ -102,18 +148,17 @@
     .font15{ font-size: 30px; }
     .font16{ font-size: 32px; }
     .scroller{ background-color: #F2F2F2; height: 1500px;}
-    .block{ margin-bottom: 25px; }
+    .block{ margin-bottom: 10px;}
     .range-block{ background-color: #fff; }
     .hd{ padding: 40px; font-size: 28px; color: #777;}
     .text{ font-size: 28px; }
     .pop-text{ font-size: 30px; color: #007AFF; padding: 25px; }
-    .range-block{ margin-bottom: 25px;}
-    .range-hd{ border-bottom-color: #e5e5e5; border-bottom-width: 2px; border-bottom-style: solid; margin-left: 25px; padding-top: 30px; padding-bottom: 30px; padding-right: 25px; }
+    .range-hd{ margin-left: 25px; padding-top: 30px; padding-bottom: 30px; padding-right: 25px; }
     .range-bd{ padding: 25px; }
     .range-value{ color: #666; }
     .value-text{ color: #666; font-size: 28px;}
     .next-icon{width: 12px; height: 24px; margin-left: 20px;}
-    .set-item{ padding-top: 25px; padding-bottom: 25px; padding-right: 25px;}
+    .set-item{ padding-top: 32px; padding-bottom: 32px; padding-right: 25px;}
     .sub-hd{background-color: #f2f2f2; padding: 25px; color:#777;  font-size: 28px;}
     .device-line{padding-top: 32px; padding-bottom: 32px; padding-right: 25px; }
     .check{ width: 32px; height: 32px;}

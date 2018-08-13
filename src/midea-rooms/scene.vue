@@ -894,9 +894,9 @@
                 }).then((gps)=>{
                     nativeService.getCityInfo({cityName: gps.city}).then( (city)=>{
                         nativeService.getWeatherInfo({cityNo: city.cityNo}).then((weather)=>{
-                            let tmpDesc = ''
+                            let tmpDesc = gps.district || gps.city
                             if (weather.weatherStatus) {
-                                tmpDesc += '今天' + weather.weatherStatus
+                                tmpDesc += '  今天' + weather.weatherStatus
                             }
                             if (weather.grade) {
                                 tmpDesc += ' , 气温' + weather.grade + '℃'

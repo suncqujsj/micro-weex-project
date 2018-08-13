@@ -363,9 +363,9 @@
                 showMapSearchResult: false,
                 mapSearchResult: [],
                 mapCenter: {
-                    latitude: 39.92,
-                    longitude: 116.46,
-                    zoom: 14 //地图显示范围 4-21级 （最大是21级）,非必选
+                    latitude: '',
+                    longitude: '',
+                    zoom: 18
                 },
                 mapMarkerList: [],
                 from: '', // 页面来源于编辑还是新增
@@ -373,7 +373,8 @@
                 popStatus: {
                     time: false,
                     weather: false
-                }
+                },
+                destination: {}
             }
         },
         computed: {
@@ -394,10 +395,21 @@
                             normal: "assets/img/me_ic_return@3x.png",//正常的图片地址
                             click: "assets/img/scene_ic_listundo@3x.png" //点击高亮的图片地址
                         },
-                        list: this.mapMarkerList
+                        // list: this.mapMarkerList
+                        list: [{ latitude: this.mapCenter.latitude, longitude: this.mapCenter.longitude, id: 1 }]
                     }]
                 }
                 return tmp
+            },
+            mapListStyle(){
+                let tmp = {}
+                if (this.platform == 'ios' && !this.isipx) {
+                    tmp.top = '210px'
+                }else{
+                    tmp.top = '172px'
+                }
+                return tmp
+
             },
             weatherTemperatureDesc(){
                 let tmp = ''
@@ -424,16 +436,6 @@
                     tmp = 615
                 }
                 return tmp
-            },
-            mapListStyle(){
-                let tmp = {}
-                if (platform.toLowerCase() == 'android') {
-                    tmp.top = '172px'
-                }else{
-                    tmp.top = '210px'
-                }
-                return tmp
-
             }
         },
         methods: {
@@ -457,8 +459,6 @@
                     this.week = tmpWeek
                                  
                     if (this.sceneType == 3) {
-                        nativeService.alert(this.mapData)
-                       
                         this.mapCenter.latitude = nativeService.getParameters('locationLatitude')
                         this.mapCenter.longitude = nativeService.getParameters('locationLongitude')
                         this.mapMarkerList = [{ latitude: this.mapCenter.latitude, longitude: this.mapCenter.longitude, id: 1 }]
@@ -477,6 +477,19 @@
                             }
                         }
                     }
+                }else{
+                    if (this.sceneType == 3) {
+                        nativeService.getGPSInfo({
+                            desiredAccuracy: "10",
+                            distanceFilter: "10",
+                            alwaysAuthorization: "0" 
+                        }).then( (res) => {
+                            this.gpsInfo = res
+                            this.mapCenter.latitude = this.gpsInfo.latitude || '39.92'
+                            this.mapCenter.longitude = this.gpsInfo.longitude || '116.46'
+                            this.mapMarkerList = [{ latitude: this.mapCenter.latitude, longitude: this.mapCenter.longitude, id: 1 }]
+                        })
+                    }
                 }
 
                 if (this.sceneType == 3) {
@@ -486,16 +499,6 @@
                     }else if (this.direction == 2) {
                         this.title = '离开某地'
                     }
-                    nativeService.getGPSInfo({
-                        desiredAccuracy: "10",
-                        distanceFilter: "10",
-                        alwaysAuthorization: "0" 
-                    }).then( (res) => {
-                        this.gpsInfo = res
-                        this.mapCenter.latitude = this.gpsInfo.latitude
-                        this.mapCenter.longitude = this.gpsInfo.longitude
-                        this.mapMarkerList = [{ latitude: this.mapCenter.latitude, longitude: this.mapCenter.longitude, id: 1 }]
-                      })
                 }
                 if (this.sceneType == 4){
                     this.title = '在某个时间'
@@ -589,7 +592,6 @@
                     if (this.activeWeatherLogical == '') {
                         this.activeWeatherLogical = this.weatherLogicalList[0].name
                     }
-                    // nativeService.alert(this.weatherLogicalList[0].name)
                 }
                 this.closePop(autoTypeName)
             },
@@ -650,20 +652,17 @@
                 this.mapSearchResult = []
             },
             selectMapSearchResult(destination){
-                let tmpDestination = []
-                Object.keys(destination).map(function(x){
-                    tmpDestination.push( x + '='+ encodeURIComponent(destination[x]))
-                })
-                tmpDestination = tmpDestination.join('&')
+                this.destination = destination
+                this.mapCenter.latitude = destination.latitude
+                this.mapCenter.longitude = destination.longitude
 
+                this.showMapSearchResult = false
+                this.mapSearchResult = []
+                
                 if (this.from == 'editAuto') {
                     this.editParams.locationAddress = destination.key
                     this.editParams.locationLatitude = destination.latitude
                     this.editParams.locationLongitude = destination.longitude
-                    channelAutoTypeSet.postMessage({page: 'setCondition', editParams: this.editParams})
-                    this.goBack()
-                }else{
-                    this.goNext(tmpDestination)
                 }
             },
             mapMarkerPick(item) {
@@ -671,14 +670,13 @@
             mapPointPick(item) {
                 this.mapCenter.latitude = item.latitude
                 this.mapCenter.longitude = item.longitude
-                this.mapMarkerList = [{ latitude: this.mapCenter.latitude, longitude: this.mapCenter.longitude, id: 1 }]
             },
             goCurrentLocation(){
                 this.showMapSearchResult = false
                 let tmp = {
                     latitude: this.gpsInfo.latitude,
                     longitude: this.gpsInfo.longitude,
-                    zoom: 14
+                    zoom: 18
                 }
                 this.mapCenter = tmp
                 this.markers = [{
@@ -730,7 +728,12 @@
                     params.templateCode = nativeService.getParameters('templateCode')
                 }
                 if (this.sceneType == 3) {
-                    params.destination = destination
+                    let tmpDestination = []
+                    Object.keys(destination).map(function(x){
+                        tmpDestination.push( x + '='+ encodeURIComponent(destination[x]))
+                    })
+                    tmpDestination = tmpDestination.join('&')
+                    params.destination = tmpDestination
                     params.direction = this.direction
                 }
                 if (this.sceneType == 4) {
@@ -760,7 +763,7 @@
                 // if ( Object.keys(this.editParams).length === 0 ){
                 //     nativeService.toast('没有改动哦')
                 // }
-                
+                               
                 channelAutoTypeSet.postMessage({
                     page: 'setCondition',
                     editParams: that.editParams

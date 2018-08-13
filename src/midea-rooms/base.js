@@ -19,6 +19,8 @@ const appDataChannel = new BroadcastChannel(plugin_name + 'appData')
 const pushDataChannel = new BroadcastChannel(plugin_name + 'pushData')
 const bridgeModule = weex.requireModule('bridgeModule');
 
+import { url, codeDesc } from './config/config.js'
+
 export default {
     components: {
         mideaHeader
@@ -203,6 +205,45 @@ export default {
                     } else {
                         resolve(res.uid)
                     }
+                })
+            })
+        },
+        getUserRole() {
+            return new Promise((resolve, reject) => {
+                this.checkLogin().then((uid) => {
+                    nativeService.getCurrentHomeInfo().then((res) => {
+                        if (res.homeId === '' || res.homeId == undefined) {
+
+                        } else {
+                            let reqUrl = url.home.getMember
+                            let reqParams = {
+                                uid: uid,
+                                homegroupId: res.homeId
+                            }
+                            this.webRequest(reqUrl, reqParams, false).then((rtnData) => {
+                                if (rtnData.code == 0) {
+                                    let roleId = ''
+                                    for (var i in rtnData.data.list) {
+                                        if (rtnData.data.list[i].uid == uid) {
+                                            roleId = rtnData.data.list[i].roleId
+                                            break
+                                        }
+                                    }
+                                    resolve(roleId)
+                                } else {
+                                    if (codeDesc.scene.hasOwnProperty(rtnData.code)) {
+                                        nativeService.toast(codeDesc.home[rtnData.code])
+                                    } else {
+                                        nativeService.toast(rtnData.msg)
+                                    }
+                                }
+                            }).catch((err) => {
+                                nativeService.toast(this.getErrorMessage(err))
+                            })
+                        }
+                    })
+                }).catch((err) => {
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             })
         },

@@ -28,10 +28,14 @@
 	        		<image class="card-control-img" :src="powerIcon_offline"  @click="reload"></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
-	        	<div>
+	        	<div v-if="deviceType == '0x20'">
+	        		<image class="icon-offline" @click="showControlPanelPage" :src="device_icon"></image>
+	        	</div>
+	        	<div v-else>
 	        		<image class="icon-offline" :src="device_icon"></image>
 	        	</div>
-	        	<text class="text-offline-center">已离线</text>
+	        	<text v-if="deviceType == '0x20'" @click="showControlPanelPage" class="text-offline-center">已离线</text>
+	        	<text v-else class="text-offline-center">已离线</text>
 	        </div>
 	        <midea-download></midea-download>
 	    </div>

@@ -14,14 +14,14 @@
 		        		</div>
 		        	</div>
 		        	<div class="card-right">
-		        		<div class="card-control" @click="poweronoff(0)">
+		        		<div class="card-control" >
 		        			
 		        		</div>
 		        		<div class="card-icon">
 		        			<image class="card-icon-img" @click="showControlPanelPage" resize="contain" src="./assets/img/smart_img_equip026@2x.png"></image>
 		        		</div>
 		        		<div class="card-control-div">
-		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png"></image>
+		        			<image class="card-control-img" @click="poweronoff(0)" src="./assets/img/smart_ic_off@2x.png"></image>
 	        			</div>
 		        	</div>
 		        </div>

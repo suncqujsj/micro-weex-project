@@ -664,12 +664,14 @@ export default {
                 let deviceInfo = resp.data
 
                 //维修产品
-                this.selectedProduct.push({
-                    brandCode: deviceInfo.brandCode,  //产品品牌
-                    brand: deviceInfo.productBrand,  //产品品牌名称
-                    prodCode: deviceInfo.productTypeId,  //产品品类
-                    prodName: deviceInfo.productType  //产品品类名称
-                })
+                if (deviceInfo.brandCode && deviceInfo.productTypeId) {
+                    this.selectedProduct.push({
+                        brandCode: deviceInfo.brandCode,  //产品品牌
+                        brand: deviceInfo.productBrand,  //产品品牌名称
+                        prodCode: deviceInfo.productTypeId,  //产品品类
+                        prodName: deviceInfo.productType  //产品品类名称
+                    })
+                }
 
                 //故障类型
                 this.selectedFault = {

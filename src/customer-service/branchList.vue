@@ -348,11 +348,13 @@ export default {
                 let param = {
                     from: { //当前用户地点
                         latitude: this.gpsInfo.latitude, //纬度
-                        longitude: this.gpsInfo.longitude //经度
+                        longitude: this.gpsInfo.longitude, //经度
+                        name: "当前位置", //起点的名称
                     },
                     to: { //目的地地点
                         latitude: item.unitLatitude, //纬度
-                        longitude: item.nuitLongitude //经度
+                        longitude: item.nuitLongitude, //经度
+                        name: item.unitName, //起点的名称
                     }
                 }
                 nativeService.launchMapApp(param).then((resp) => { }

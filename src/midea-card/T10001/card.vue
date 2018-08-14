@@ -2,7 +2,7 @@
     <scroller class="content" show-scrollbar="false">
         <div class="box">
             <div class="card">
-                <image class="main-page" src="./assets/img/smart_ic_set02@2x.png"></image>
+                <image class="main-page" src="./assets/img/smart_ic_set02@3x.png"></image>
             </div>
             <div class="title">
                 <text style="font-size: 36px;color: #ffffff;font-family: PingFangSC-Medium;">简爱</text>
@@ -79,7 +79,8 @@
                 let me = this;
                 nativeService.getTxList(true).then((myList) =>{
 //                    nativeService.alert(myList)
-                    let TXList = myList.data;
+                    let TXList = myList; //mock 的数据结构
+//                    let TXList = myList.data;
                     for (let i = 0; i < TXList.length; i++) {
                         let currentList = TXList[i];
                         let currentDeviceId = currentList.applianceCode;
@@ -96,16 +97,16 @@
                             tempData.status = "";
                         }
                         if (deviceType == "0xE2") {
-                            tempData.icon = "./assets/img/smart_img_equip021@2x.png";
+                            tempData.icon = "./assets/img/smart_E2@3x.png";
                             tempData.temperature = "";
                         } else if (deviceType == "0xE3") {
-                            tempData.icon ="./assets/img/smart_img_equip036@2x.png";
+                            tempData.icon ="./assets/img/smart_E3@3x.png";
                             tempData.temperature = "";
                         } else if (deviceType == "0xED" && deviceSubType == "266") {
-                            tempData.icon = "./assets/img/smart_img_equip031@2x.png";
+                            tempData.icon = "./assets/img/smart_ED@3x.png";
                             tempData.temperature = "";
                         } else if (deviceType == "0xED" && deviceSubType == "265") {
-                            tempData.icon = "./assets/img/smart_img_equipunder031@2x.png";
+                            tempData.icon = "./assets/img/smart_img_equip049@3x.png";
                             tempData.temperature = "";
                         }
                         tempData.deviceId = currentDeviceId;
@@ -245,7 +246,6 @@
                             currentData.temperature = "";
                             currentData.status = params.power == "on" ? "已开机" : "已关机";
                         } else if (deviceType == "0xED" && deviceSubType == "265") {
-//                            nativeService.alert(params);
                             currentData.temperature = "";
                             if (params.life_1) {
                                 currentData.status = params.life_1;
@@ -270,10 +270,12 @@
             handleNotification() {
                 let me = this;
                 globalEvent.addEventListener(this.pushKey, (data) => {
+                    nativeService.alert(data)
                     me.updateItem(data);
                 });
                 globalEvent.addEventListener(this.pushKeyOnline, (data) => {
                     if (data && data.messageType == "queryStatusFromApp") {
+                        nativeService.alert(data.deviceId)
                         me.updateTXList() ;
                     }
                 });
@@ -288,7 +290,7 @@
         computed: {},
         mounted() {
             this.queryTXLists();
-            this.handleNotification()
+//            this.handleNotification()
         }
     }
 </script>

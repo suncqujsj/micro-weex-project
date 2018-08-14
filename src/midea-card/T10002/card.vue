@@ -2,7 +2,7 @@
 	<scroller class="content" show-scrollbar="false">
 		<div class="box">
 			<div class="card">
-				<image class="main-page" src="./assets/img/smart_ic_set01@2x.png"></image>
+				<image class="main-page" src="./assets/img/smart_ic_set01@3x.png"></image>
 			</div>
 			<div class="title">
 				<text style="font-size: 36px;color: #ffffff;font-family: PingFangSC-Medium;">禅意</text>
@@ -79,7 +79,7 @@
                 let me = this;
                     nativeService.getTxList().then((myList) =>{
                         let TXList = myList.data;
-                        nativeService.alert(myList);
+//                        nativeService.alert(myList);
                         for (let i = 0; i < TXList.length; i++) {
                             let currentList = TXList[i];
                             let currentDeviceId = currentList.applianceCode;
@@ -96,16 +96,16 @@
                                 tempData.status = "";
                             }
                             if (deviceType == "0xE2") {
-                                tempData.icon = "./assets/img/smart_img_equip021@2x.png";
+                                tempData.icon = "./assets/img/smart_E2@3x.png";
                                 tempData.temperature = "";
                             } else if (deviceType == "0xE3") {
-                                tempData.icon ="./assets/img/smart_img_equip036@2x.png";
+                                tempData.icon ="./assets/img/smart_E3@3x.png";
                                 tempData.temperature = "";
                             } else if (deviceType == "0xED" && deviceSubType == "259") {
-                                tempData.icon = "./assets/img/smart_img_equitea@2x.png";
+                                tempData.icon = "./assets/img/smart_img_equip050@3x.png";
                                 tempData.temperature = "";
                             } else if (deviceType == "0xED" && deviceSubType == "263") {
-                                tempData.icon = "./assets/img/smart_img_equipunder031@2x.png";
+                                tempData.icon = "./assets/img/smart_img_equip049@3x.png";
                                 tempData.temperature = "";
                             }
                             tempData.deviceId = currentDeviceId;
@@ -130,7 +130,7 @@
                             applianceId: returnDeviceId
                         }
                         nativeService.sendLuaRequest(param,true).then( function (data) {
-                            nativeService.alert(data)
+//                            nativeService.alert(data)
                             if (data.errorCode == 0) {
                                 let params = data.result;
                                 if (deviceType == "0xE2") {
@@ -267,6 +267,7 @@
             handleNotification() {
                 let me = this;
                 globalEvent.addEventListener(this.pushKey, (data) => {
+//                    nativeService.alert(data)
                     me.updateItem(data);
                 });
                 globalEvent.addEventListener(this.pushKeyOnline, (data) => {

@@ -44,7 +44,7 @@ export default {
         },
         hasBottomBorder: {
             type: Boolean,
-            default: true
+            default: false
         },
         showSwitchIcon: {
             type: Boolean,
@@ -76,8 +76,13 @@ export default {
 
 <style>
 .smart-content {
-  padding-top: 20px;
+  margin-bottom: 24px;
+  padding-top: 28px;
   padding-bottom: 20px;
+  padding-left: 32px;
+  padding-right: 32px;
+  background-color: #fff;
+  border-radius: 8px;
 }
 .index-img {
   width: 40px;

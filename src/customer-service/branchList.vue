@@ -328,14 +328,14 @@ export default {
                 let result = data.list || []
                 this.branchList = result
                 //GCJ-02(火星)转BD-09（百度地图）
-                // this.branchList = result.map((item) => {
-                //     if (item.unitLatitude && item.nuitLongitude) {
-                //         let point = nativeService.mapabcEncryptToBdmap(item.unitLatitude, item.nuitLongitude)
-                //         item.unitLatitude = point.lat
-                //         item.nuitLongitude = point.lng
-                //     }
-                //     return item
-                // })
+                this.branchList = result.map((item) => {
+                    if (item.unitLatitude && item.nuitLongitude) {
+                        let point = nativeService.mapabcEncryptToBdmap(item.unitLatitude, item.nuitLongitude)
+                        item.unitLatitude = point.lat
+                        item.nuitLongitude = point.lng
+                    }
+                    return item
+                })
 
                 this.currentAddressIndex = 0
                 this.isLoaded = true
@@ -345,23 +345,37 @@ export default {
         },
         navigate(item) {
             if (this.gpsInfo) {
-                let param = {
-                    from: { //当前用户地点
-                        latitude: this.gpsInfo.latitude, //纬度
-                        longitude: this.gpsInfo.longitude, //经度
-                        name: "当前位置", //起点的名称
-                    },
-                    to: { //目的地地点
-                        latitude: item.unitLatitude, //纬度
-                        longitude: item.nuitLongitude, //经度
-                        name: item.unitName, //起点的名称
+                nativeService.baiduGeocoder({ //当前用户地点
+                    latitude: this.gpsInfo.latitude, //纬度
+                    longitude: this.gpsInfo.longitude //经度
+                }).then((addressData) => {
+                    let currentAddress = "当前位置"
+                    if (addressData.status == 0) {
+                        if (addressData.result.poiRegions.length > 0) {
+                            currentAddress = addressData.result.poiRegions[0].name
+                        }
+                        if (!currentAddress) {
+                            currentAddress = addressData.result.formatted_address
+                        }
                     }
-                }
-                nativeService.launchMapApp(param).then((resp) => { }
-                ).catch((error) => {
-                    if (error.errorCode == -1) {
-                        nativeService.toast("没有打开地图权限")
+                    let param = {
+                        from: { //当前用户地点
+                            latitude: this.gpsInfo.latitude, //纬度
+                            longitude: this.gpsInfo.longitude, //经度
+                            name: currentAddress + ",", //起点的名称
+                        },
+                        to: { //目的地地点
+                            latitude: item.unitLatitude, //纬度
+                            longitude: item.nuitLongitude, //经度
+                            name: item.unitName, //起点的名称
+                        }
                     }
+                    nativeService.launchMapApp(param).then((resp) => { }
+                    ).catch((error) => {
+                        if (error.errorCode == -1) {
+                            nativeService.toast("没有打开地图权限")
+                        }
+                    })
                 })
             } else {
                 nativeService.toast("没有当前定位信息")

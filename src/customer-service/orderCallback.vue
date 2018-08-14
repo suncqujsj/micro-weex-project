@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back"></midea-header>
+        <midea-header :title="title" :isImmersion="isImmersion" @headerClick="headerClick" titleText="#000000" @leftImgClick="back"></midea-header>
         <scroller class="scroller">
             <order-block class="order-block" :order="order" :showStatus="false">
                 <div slot="action-bar" class="service-status-bar">
@@ -279,6 +279,8 @@ export default {
             this.$set(this.uncompletedList, index, item)
         },
         submit() {
+            if (!this.isDataReady) return
+            
             let param = {
                 interfaceSource: this.order.interfaceSource,
                 orgCode: this.order.orgCode,

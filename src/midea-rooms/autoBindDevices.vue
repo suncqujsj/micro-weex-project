@@ -1,9 +1,6 @@
 <template>
    <div class="wrap" :style="wrapStyle">
-        <midea-header :title="header.title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
-        <div class="done" @click="getDone()">
-            <text class="done-text">完成</text>
-        </div>
+        <midea-header :title="header.title" :isImmersion="isipx?false:true" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
         <list>
             <cell class="content">
                 <div v-if="sceneType != 2 && from=='addAuto'" class="hd">
@@ -44,7 +41,8 @@
                             <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, idx)"></image>
                         </div>
                     </div>
-                </div>                
+                </div>
+                <text class="save-btn" @click="getDone()">完成</text>              
             </cell>
         </list>
         <midea-promt title="快捷操作名称" ref="promt" placeholder="最多输入15字" :inputValue="inputAutoName" :show="showPrompt" @okClicked="promptConfirm" @onPromtClose="promptClose" @onPromtInput="promptInput"></midea-promt>
@@ -149,6 +147,17 @@
         margin-right: 6px;
         text-align: left;
     }
+    .save-btn{
+        width: 690px;
+        margin-top: 48px;
+        padding: 25px;
+        background-color: #267AFF;
+        color: #fff;
+        border-radius: 8px;
+        margin-left: 30px;
+        text-align: center;
+        font-size: 32px;
+    }
 </style>
 
 <script>
@@ -171,12 +180,8 @@
                 let tmp = {
                     height: this.pageHeight+'px'
                 }
-                if (this.isipx) {
-                    tmp.marginTop = '64px'
-                }else{
-                    tmp.marginTop = '40px'
-                }
                 return tmp
+
             },
             sceneTypeName(){
                 let tmp = {
@@ -211,13 +216,13 @@
         data(){
             return {
                 icon: {
-                    check:  'assets/img/check_on.png',
-                    uncheck: 'assets/img/check_off.png',
+                    check:  'assets/img/scene_ic_checkbox_on@3x.png',
+                    uncheck: 'assets/img/scene_ic_checkbox_off@3x.png',
                     auto: {
-                        2: 'assets/img/smart_ic_hand@2x.png',
-                        3: 'assets/img/arrive.png',
-                        4: 'assets/img/time.png',
-                        6: 'assets/img/slweather.png',
+                        2: 'assets/img/smart_ic_hand@3x.png',
+                        3: 'assets/img/scene_ic_placeblue@3x.png',
+                        4: 'assets/img/samrt_ic_clock@3x.png',
+                        6: 'assets/img/scene_ic_weather@3x.png',
                     }
                 },
                 header: {
@@ -426,7 +431,6 @@
                     nativeService.toast('没有输入快捷操作名称哦')
                     return
                 }
-                
                 this.showPrompt = false
                 this.setNewAuto()
             },
@@ -485,9 +489,10 @@
                             if (this.sceneType == 3) {
                                 nativeService.updateAutoList()//通知原生位置类型自动化列表需要更新
                             }
-                            nativeService.alert('新增成功！', function(){
+                            nativeService.toast('新增成功！')
+                            setTimeout(()=>{
                                 nativeService.backToNative()
-                            })
+                            }, 300)
                         }else{
                             if (codeDesc.auto.hasOwnProperty(rtnData.code)){
                                 nativeService.toast(codeDesc.auto[rtnData.code])

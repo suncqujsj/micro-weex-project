@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" :isImmersion="isImmersion" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <div class="search-bar">
             <div class="search-bar-content">
@@ -10,7 +10,14 @@
             <text v-if="!isIos" class="search-action" @click="search">搜索</text>
         </div>
         <list>
-            <cell v-for="(itemA, indexA) in sortedFreePlocy" :key="indexA">
+            <cell v-if="isLoaded && sortedFreePlocy.length == 0">
+                <div class="empty-page">
+                    <image class="empty-page-icon" src="./assets/img/default_ic_noresult@3x.png" resize='contain'>
+                    </image>
+                    <text class="empty-page-text">抱歉 {{'\n'}}没有找到相关的收费标准</text>
+                </div>
+            </cell>
+            <cell v-else v-for="(itemA, indexA) in sortedFreePlocy" :key="indexA">
                 <div class="cell-item">
                     <div :class="['cell-sub-item','level-one',indexA==sortedFreePlocy.length-1?'last-item':'']" @click="levelAClicked(itemA, indexA)">
                         <text class="cell-item-title">{{itemA.classAProject}}</text>
@@ -58,6 +65,7 @@ export default {
                 classB: '',
                 classC: ''
             },
+            isLoaded: false,
             chargeStandardList: [],
             expandedAIndex: -1,
             expandedBIndex: -1
@@ -108,6 +116,7 @@ export default {
     methods: {
         search() {
             nativeService.getChargeStandardList(this.queryParam).then((data) => {
+                this.isLoaded = true
                 let result = data.data || []
                 this.chargeStandardList = result.sort(function (a, b) {
                     if (a.classA === b.classA) {
@@ -121,6 +130,7 @@ export default {
                     }
                 })
             }).catch((error) => {
+                this.isLoaded = true
                 nativeService.toast(nativeService.getErrorMessage(error))
             })
         },
@@ -273,5 +283,24 @@ export default {
   font-size: 28px;
   color: #666666;
   margin-bottom: 24px;
+}
+
+.empty-page {
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 160px;
+}
+.empty-page-icon {
+  width: 240px;
+  height: 240px;
+}
+.empty-page-text {
+  padding-top: 36px;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #888888;
+  text-align: center;
 }
 </style>

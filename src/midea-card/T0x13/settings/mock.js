@@ -6,7 +6,7 @@ export const all = [
         data: {
             "errorCode": 0,
 		    "params": {
-		       "power": "on",
+		       "power": "off",
 		       "scene_light": "film"
 		    }
         }

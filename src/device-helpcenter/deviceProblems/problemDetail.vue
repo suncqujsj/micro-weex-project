@@ -163,7 +163,7 @@
     padding-top: 48px;
     padding-left: 32px;
     padding-right: 32px;
-    padding-bottom: 96px;
+    padding-bottom: 100px;
     background-color: #fff;
   }
 

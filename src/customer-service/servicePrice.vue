@@ -1,11 +1,11 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
+        <midea-header :title="title" :isImmersion="isImmersion" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <scroller>
             <div class="base-group">
                 <div class="item-group">
-                    <scan-input placeholder="请输入或扫机身条码" v-model="barCode" @blur="checkBarCode" @scanCode="scanCode"></scan-input>
+                    <scan-input ref="barCode" placeholder="请输入或扫机身条码" v-model="barCode" @blur="checkBarCode" @scanCode="scanCode"></scan-input>
                 </div>
                 <div class="item-group">
                     <text v-if="!productModel" class="item-input-text placeholder" @click="goToSearch">请输入型号</text>
@@ -13,7 +13,7 @@
                 </div>
 
                 <div class="item-group scan-group group-bottom-border">
-                    <input class="item-input" placeholder="请输入配件名称" :autofocus=false v-model="materialName" maxlength="50" />
+                    <input ref="materialName" class="item-input" placeholder="请输入配件名称" :autofocus=false v-model="materialName" maxlength="50" />
                 </div>
 
                 <div class="action-bar">
@@ -93,6 +93,10 @@ export default {
                 }
             }
         },
+        triggerBlur() {
+            this.$refs.barCode.inputBlur()
+            this.$refs.materialName.blur()
+        },
         scanCode(result) {
             this.barCode = nativeService.convertScanResult(result).code
             this.checkBarCode()
@@ -122,7 +126,8 @@ export default {
         },
         search() {
             if (!this.isDataReady) return
-
+            
+            this.triggerBlur()
             let param = {
                 pageSize: 100,
                 pageNum: 1,
@@ -186,7 +191,7 @@ export default {
   border-radius: 4px;
   border-color: #e5e5e8;
   border-width: 1px;
-  height: 72px;
+  /* height: 72px; */
   padding-top: 16px;
   padding-left: 22px;
   padding-right: 50px;

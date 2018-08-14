@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header :title="title" :isImmersion="isipx?false:true" @headerClick="headerClick" titleText="#000000" @leftImgClick="back"></midea-header>
+        <midea-header :title="title" :isImmersion="isImmersion" @headerClick="headerClick" titleText="#000000" @leftImgClick="back"></midea-header>
         <scroller class="scroller" v-if="formattedOrder">
             <div class="order-detail-header">
                 <div class="order-detail-background"></div>
@@ -51,7 +51,7 @@
             <text class="action" v-if="formattedOrder.isAbleToCancel" @click="showDialog()">取消工单</text>
             <text class="action" v-if="formattedOrder.isAbleToUrgeOrder" @click="urgeOrder()">催办</text>
             <text class="action" v-if="formattedOrder.isAbleToRenew" @click="renewOrder()">重新报单</text>
-            <text class="action primary-action" v-if="formattedOrder.allowCallbackWX == 'Y'" @click="goToCallback()">评价有礼</text>
+            <text class="action primary-action" v-if="formattedOrder.allowCallbackWX == 'Y'" @click="goToCallback()">评价</text>
             <text class="action" v-if="formattedOrder.isAbleToCallService" @click="callService()">联系网点</text>
         </div>
 
@@ -215,7 +215,7 @@ export default {
                     interfaceSource: order.interfaceSource,
                     orgCode: order.orgCode,
                     serviceOrderNo: order.serviceOrderNo,
-                    operator: data.nickName
+                    operator: data.mobile
                 }
                 nativeService.cancelserviceorder(param).then(() => {
                     this.order.serviceOrderStatus = '22'
@@ -488,14 +488,14 @@ export default {
   font-size: 24px;
   color: #000000;
   border-radius: 4px;
-  padding-top: 14px;
-  padding-right: 24px;
-  padding-bottom: 14px;
-  padding-left: 24px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   margin-left: 32px;
   border-color: #e5e5e8;
   border-width: 1px;
   border-style: solid;
+  width: 144px;
+  text-align: center;
 }
 .primary-action {
   color: #0078ff;

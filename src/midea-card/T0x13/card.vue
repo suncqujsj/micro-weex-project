@@ -14,30 +14,30 @@
 		        		</div>
 		        	</div>
 		        	<div class="card-right">
-		        		<div class="card-control" @click="poweronoff(0)">
+		        		<div class="card-control">
 		        			
 		        		</div>
-		        		<div class="card-icon" @click="showControlPanelPage">
-		        			<image class="card-icon-img"  src="./assets/img/smart_img_equip013@2x.png"></image>
+		        		<div class="card-icon" >
+		        			<image class="card-icon-img" @click="showControlPanelPage"  src="./assets/img/smart_img_equip013@2x.png"></image>
 		        		</div>
 		        		<div class="card-control-div">
-		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png"></image>
+		        			<image class="card-control-img" @click="poweronoff(0)" :src="powerOnoffImg"></image>
 	        			</div>
 		        	</div>
 		        </div>
 		        <div class="card-power-off" v-else>
-		        	<div class="control-div-offline">
-		        		<image class="card-control-img" :src="powerIcon_poweroff"  @click="poweronoff(1)"></image>
-		        		<text class="text-offline">电源</text>
-		        	</div>
-		        	<div >
+		        	<div>
 		        		<image class="icon-offline" @click="showControlPanelPage" src="./assets/img/smart_img_equip013@2x.png"></image>
+		        	</div>
+		        	<div class="control-div-offline">
+		        		<image class="card-control-img" :src="powerOnoffImg"  @click="poweronoff(1)"></image>
+		        		<text class="text-offline">电源</text>
 		        	</div>
 		        </div>
 	        </div>
 	        <div class="card-power-off" v-else>
-	        	<div class="control-div-offline" @click="reload">
-	        		<image class="card-control-img" :src="powerIcon_offline"></image>
+	        	<div class="control-div-offline" >
+	        		<image class="card-control-img" @click="reload" :src="powerIcon_offline"></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
@@ -141,7 +141,7 @@
             			}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
-            		//self.updateUI(data);
+//            		self.updateUI(data);
             		self.queryStatus();
             	},function(error) {
             		console.log("error");
@@ -183,7 +183,10 @@
             },
         },
         computed: {
-        	
+        	powerOnoffImg() {
+	            let img = "./assets/img/smart_ic_off@2x.png";
+	            return img;
+	        },
         },
         mounted() {
 	       let self = this;
@@ -253,6 +256,7 @@
 		right:32px;
 		top:32px;
 		align-items: center;
+		flex-direction: column;
 	}
 	.card-control {
 		align-items: flex-end;

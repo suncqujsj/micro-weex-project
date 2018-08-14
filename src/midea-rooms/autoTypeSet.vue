@@ -1,13 +1,10 @@
 <template>
    <div class="wrap" :style="wrapStyle">
         <div class="addauto-hd">
-            <midea-header :title="title" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
-            <div v-if="from=='addAuto' && sceneType != 3" class="next" @click="goNext">
-                <text class="next-text"  @click="goNext">下一步</text>
-            </div>
+            <midea-header :title="title" :isImmersion="isipx?false:true" :bgColor="header.bgColor" :titleText="header.color"  @leftImgClick="goBack"></midea-header>
         </div>
         <scroller class="content-scroller">
-            <div style="background-color: #fff" v-if="sceneType == 3">
+            <div class="map-box" v-if="sceneType == 3">
                 <wxc-searchbar ref="wxc-searchbar" returnKeyType="search"
                     @wxcSearchbarCancelClicked="searchCancel"
                     @wxcSearchbarInputReturned="searchInputReturned"
@@ -17,6 +14,7 @@
                     @wxcSearchbarInputOnBlur="searchInputBlur">
                 </wxc-searchbar>
                 <midea-map-view class="map" :data="mapData" @marker-pick="mapMarkerPick" @point-pick="mapPointPick"></midea-map-view>
+                <image class="map-icon" :src="icon.map" @click="goCurrentLocation"></image>
             </div>
             <div v-if="sceneType==4">
                 <text class="hd">设置为</text>
@@ -48,8 +46,9 @@
                 </div>
             </div>
             <text v-if="from=='editAuto'" class="save-btn" @click="saveChange">确定</text>
+            <text v-if="from=='addAuto'" class="save-btn" @click="goNext">确定</text>
         </scroller>
-        <scroller v-if="sceneType== 3 && showMapSearchResult" class="map-result">
+        <scroller v-if="sceneType== 3 && showMapSearchResult" class="map-result" :style="mapListStyle">
             <div v-if="mapSearchResult.length > 0">
                 <div v-for="(item,i) in mapSearchResult" @click="selectMapSearchResult(item)">
                     <text :class="['map-result-item', i==0?'noborder':'']">{{item.key}}-{{item.city}} </text>
@@ -60,13 +59,14 @@
                 <text>什么都没有搜到呢，换个关键词试试吧</text>
             </div>
         </scroller>
-        <image v-if="sceneType==3" class="map-icon" :src="icon.map" @click="goCurrentLocation"></image>
         <div v-if="sceneType==4" class="modal">
             <!-- 时间弹窗 -->
             <midea-confirm2 :height="popHeight" :show="popStatus.time" @leftBtnClick="cancelPop('time')" @rightBtnClick="confirmPop('time')" @mideaPopupOverlayClicked="closePop('time')">
                 <div class="time-picker row-sb">
                     <scroll-picker :wrapWidth="375" :listArray="hours" @onChange="setActiveHour"></scroll-picker>
                     <scroll-picker :wrapWidth="375" :listArray="minutes" @onChange="setActiveMinute"></scroll-picker>
+                    <div class="line1" ></div>
+                    <div class="line2"></div>
                 </div>
             </midea-confirm2>
         </div>
@@ -91,7 +91,6 @@
     .font14{ font-size: 28px; }
     .font15{ font-size: 30px; }
     .font16{ font-size: 32px; }
-
     .wrap{
         background-color: #f2f2f2;
     }
@@ -218,13 +217,17 @@
     }
     .map{
         width: 750px;
-        height: 750px;
+        height: 760px;
+    }
+    .map-box{
+        background-color: #fff;
+        position: relative;
     }
     .map-icon{
-        position: fixed;
+        position: absolute;
         width: 82px;
         height: 82px;
-        top: 800px;
+        bottom: 20px;
         right: 25px;
     }
     .map-result{
@@ -232,7 +235,6 @@
         width: 750px;
         padding-bottom: 25px;
         position: absolute;
-        top: 172px;
         left: 0;
         right: 0;
         background-color: #fff;
@@ -306,16 +308,15 @@
         data(){
             return {
                 icon: {
-                    map: 'assets/img/location.png',
-                    mapNormal: "assets/img/service_ic_pin@3x.png",
-                    mapClick: "assets/img/service_ic_pin@3x.png",
+                    map: 'assets/img/scene_ic_placeblue@3x.png',
+                    mapNormal: "assets/img/scene_ic_placeblue@3x.png",
+                    mapClick: "assets/img/scene_ic_placeblue@3x.png",
                     next: 'assets/img/more.png'
                 },
                 title: '',
                 header: {
                     bgColor: '#fff',
-                    color: '#111',
-                    leftImg: 'assets/img/public_ic_back@3x.png'
+                    color: '#111'
                 },
                 sceneType: '',
                 direction: '',
@@ -362,11 +363,11 @@
                 showMapSearchResult: false,
                 mapSearchResult: [],
                 mapCenter: {
-                    latitude: 22.93,
-                    longitude: 113.2,
-                    zoom: 11 //地图显示范围 4-21级 （最大是21级）,非必选
+                    latitude: 39.92,
+                    longitude: 116.46,
+                    zoom: 14 //地图显示范围 4-21级 （最大是21级）,非必选
                 },
-                mapMarkers: [],
+                mapMarkerList: [],
                 from: '', // 页面来源于编辑还是新增
                 editParams: {},
                 popStatus: {
@@ -379,12 +380,7 @@
             wrapStyle(){
                 let tmp = {
                     height: this.pageHeight+'px'
-                }
-                if (this.isipx) {
-                    tmp.paddingTop = '64px'
-                }else if (this.platform != 'android'){
-                    tmp.paddingTop = '40px'
-                }
+                } 
                 return tmp
             },
             condition(){
@@ -392,19 +388,14 @@
             },
             mapData(){
                 let tmp = {
-                    center: {
-                        latitude: 22.93,
-                        longitude: 113.2,
-                        zoom: 10 //地图显示范围 4-21级 （最大是21级）,非必选
-                    },
-                    markers: []
-                }
-
-                if (this.mapCenter) {
-                    tmp. center = this.mapCenter
-                }
-                if (this.mapMarkers) {
-                    tmp.markers = this.mapMarkers
+                    center: this.mapCenter,
+                    markers: [{
+                        icon: {
+                            normal: "assets/img/me_ic_return@3x.png",//正常的图片地址
+                            click: "assets/img/scene_ic_listundo@3x.png" //点击高亮的图片地址
+                        },
+                        list: this.mapMarkerList
+                    }]
                 }
                 return tmp
             },
@@ -433,6 +424,16 @@
                     tmp = 615
                 }
                 return tmp
+            },
+            mapListStyle(){
+                let tmp = {}
+                if (platform.toLowerCase() == 'android') {
+                    tmp.top = '172px'
+                }else{
+                    tmp.top = '210px'
+                }
+                return tmp
+
             }
         },
         methods: {
@@ -456,15 +457,11 @@
                     this.week = tmpWeek
                                  
                     if (this.sceneType == 3) {
-                         nativeService.getGPSInfo({
-                            desiredAccuracy: "10",
-                            distanceFilter: "10",
-                            alwaysAuthorization: "0" 
-                        }).then( (res) => {
-                            this.gpsInfo = res
-                        })
-                        this.mapCenter.latitude = nativeService.getParameters('locationLatitude') ||  this.gpsInfo.latitude
-                        this.mapCenter.longitude = nativeService.getParameters('locationLongitude') || this.gpsInfo.longitude
+                        nativeService.alert(this.mapData)
+                       
+                        this.mapCenter.latitude = nativeService.getParameters('locationLatitude')
+                        this.mapCenter.longitude = nativeService.getParameters('locationLongitude')
+                        this.mapMarkerList = [{ latitude: this.mapCenter.latitude, longitude: this.mapCenter.longitude, id: 1 }]
                     }
                     if (this.sceneType == 4) {
                         this.startTime = nativeService.getParameters('startTime')
@@ -495,7 +492,10 @@
                         alwaysAuthorization: "0" 
                     }).then( (res) => {
                         this.gpsInfo = res
-                    })
+                        this.mapCenter.latitude = this.gpsInfo.latitude
+                        this.mapCenter.longitude = this.gpsInfo.longitude
+                        this.mapMarkerList = [{ latitude: this.mapCenter.latitude, longitude: this.mapCenter.longitude, id: 1 }]
+                      })
                 }
                 if (this.sceneType == 4){
                     this.title = '在某个时间'
@@ -612,10 +612,6 @@
             },
             // 时间 end
             // 地图部分 start
-            mapMarkerPick(item) {
-            },
-            mapPointPick(item) {
-            },
             searchLocation(searchKey){
                 let searchParam = {
                     keyword: searchKey,
@@ -670,12 +666,19 @@
                     this.goNext(tmpDestination)
                 }
             },
+            mapMarkerPick(item) {
+            },
+            mapPointPick(item) {
+                this.mapCenter.latitude = item.latitude
+                this.mapCenter.longitude = item.longitude
+                this.mapMarkerList = [{ latitude: this.mapCenter.latitude, longitude: this.mapCenter.longitude, id: 1 }]
+            },
             goCurrentLocation(){
                 this.showMapSearchResult = false
                 let tmp = {
                     latitude: this.gpsInfo.latitude,
                     longitude: this.gpsInfo.longitude,
-                    zoom: 10
+                    zoom: 14
                 }
                 this.mapCenter = tmp
                 this.markers = [{
@@ -766,8 +769,10 @@
             }
         },
         created(){
+        },
+        mounted() {
             this.initData()
-        }
+        },
     }
 </script>
 

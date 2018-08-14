@@ -35,7 +35,8 @@ export default {
         appDataChannel: appDataChannel,
         pushKey: 'receiveMessage',
         pushDataChannel: pushDataChannel,
-        appData: appDataTemplate
+        appData: appDataTemplate,
+        webRequestStatus: false//在网络请求没有回来时，阻止下一次请求，防止多次请求
     }),
     computed: {
         pageHeight() {
@@ -45,11 +46,7 @@ export default {
             return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6')
         },
         platform() {
-            if (weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6')) {
-                return 'iphoneX'
-            } else {
-                return weex.config.env.platform.toLowerCase()
-            }
+            return weex.config.env.platform.toLowerCase()
         },
     },
     methods: {
@@ -171,6 +168,7 @@ export default {
                     //         }
                     //     })
                 */
+                this.webRequestStatus = true
                 let requestOption = {
                     method: "POST",
                     isShowLoading: isShowLoading
@@ -224,6 +222,15 @@ export default {
             }
             debugUtil.debugLog(error)
             return msg
+        },
+        getScrollActiveIndex(listArray, activeValue){
+            let tmp = 0
+            for (var i in listArray) {
+                if (listArray[i].value === activeValue) {
+                    tmp = i
+                }
+            }
+            return tmp
         }
     },
     created() {

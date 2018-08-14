@@ -219,10 +219,11 @@
                     check:  'assets/img/scene_ic_checkbox_on@3x.png',
                     uncheck: 'assets/img/scene_ic_checkbox_off@3x.png',
                     auto: {
-                        2: 'assets/img/smart_ic_hand@3x.png',
-                        3: 'assets/img/scene_ic_placeblue@3x.png',
-                        4: 'assets/img/samrt_ic_clock@3x.png',
-                        6: 'assets/img/scene_ic_weather@3x.png',
+                        '2': 'assets/img/smart_ic_hand@3x.png',
+                        '31': 'assets/img/scene_ic_placeblue@3x.png',
+                        '32': 'assets/img/scene_ic_placegreen@3x.png',
+                        '4': 'assets/img/samrt_ic_clock@3x.png',
+                        '6': 'assets/img/scene_ic_weather@3x.png',
                     }
                 },
                 header: {
@@ -447,10 +448,19 @@
                         uid: uid,
                         homegroupId: this.homegroupId,
                         sceneType: this.sceneType,
-                        image: this.icon.auto[this.sceneType],
                         name: this.inputAutoName,
                         enable: 1
                     }
+                    if (this.sceneType == 3) {
+                        if (this.direction == 1){
+                            reqParams.image = this.icon.auto['31']
+                        }else{
+                            reqParams.image = this.icon.auto['32']
+                        }
+                    }else{
+                        reqParams.image = this.icon.auto[this.sceneType]
+                    }
+
                     if (nativeService.getParameters('templateCode')) {
                         reqParams.templateCode = nativeService.getParameters('templateCode')
                     }

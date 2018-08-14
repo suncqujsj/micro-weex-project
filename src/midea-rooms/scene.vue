@@ -3,94 +3,115 @@
         <scroller class="wrap">
             <div :style="sceneStyle">
                 <midea-header :title="scene.name" :isImmersion="isipx?false:true" bgColor="transparent" titleText="#fff" :leftImg="icon.back" @leftImgClick="goBack"></midea-header>
-                <div class="setting" @click="goSetting()" :style="headBtnStyle">
+                <div v-if="hasUseableDevice" class="setting" @click="goSetting()" :style="headBtnStyle">
                     <text class="setting-text white">设置</text>
                 </div>
                 <div v-if="roomType=='1' || roomType=='2' || roomType=='3' " class="up-block" >
-                    <div class="up-desc">
-                        <text v-if="roomType=='1'||roomType=='2'" class="desc white">{{temperatureStatus}} {{pm25Status}}</text>
-                        <text v-if="roomType=='3'" class="desc white">{{waterStatus}}</text>
-                        <my-score class="scene-score" :score="indicator.level" :starWidth="45"></my-score>
-                        <text class="improve white" @click="quickOptimize">一键优化</text>
-                    </div>
-                    <div class="up-status row-sa" v-if="roomType=='1' || roomType=='2'">
-                        <div class="scene-status">
-                            <text class="info-text font14 white">温度</text>
-                            <div  class="row-c status-value">
-                                <text v-if="indicator.temperature != undefined && indicator.temperature !== ''" class="font36 white">{{indicator.temperature}}</text>
-                                <text v-if="indicator.temperature != undefined && indicator.temperature !== ''" class="font16 white mgb-20">℃</text>
-                                <text v-else class="font36 white">?</text>
+                    <div v-if="hasUseableDevice">
+                        <div class="up-desc">
+                            <text v-if="roomType=='1'||roomType=='2'" class="desc white">{{temperatureStatus}} {{pm25Status}}</text>
+                            <text v-if="roomType=='3'" class="desc white">{{waterStatus}}</text>
+                            <my-score class="scene-score" :score="indicator.level" :starWidth="45"></my-score>
+                            <text class="improve white" @click="quickOptimize">一键优化</text>
+                        </div>
+                        <div class="up-status row-sa" v-if="roomType=='1' || roomType=='2'">
+                            <div class="scene-status">
+                                <text class="info-text font14 white">温度</text>
+                                <div  class="row-c status-value">
+                                    <text v-if="indicator.temperature != undefined && indicator.temperature !== ''" class="font36 white">{{indicator.temperature}}</text>
+                                    <text v-if="indicator.temperature != undefined && indicator.temperature !== ''" class="font16 white mgb-20">℃</text>
+                                    <text v-else class="font36 white">--</text>
+                                </div>
+                                <text v-if="indicator.temperature != undefined && indicator.temperature != ''" class="info-text font12 white">{{temperatureStatus}}</text>
+                                <text v-else class="info-text font12 white"></text>
+                            </div>  
+                            <div class="scene-status">
+                                <text class="info-text font14 white">湿度</text>
+                                <div class="row-c status-value">
+                                    <text v-if="indicator.humidity != undefined && indicator.humidity !== ''" class="font36 white">{{indicator.humidity}}</text>
+                                    <text v-if="indicator.humidity != undefined && indicator.humidity !== ''" class="font16 white mgb-20">%</text>
+                                    <text v-else class="font36 white">--</text>
+                                </div>
+                                <text class="info-text font12 white">{{humidityStatus}}</text>
+                            </div>  
+                            <div class="scene-status">
+                                <text class="info-text font14 white">空气质量</text>
+                                <div class="row-c status-value">
+                                    <text v-if="indicator.pm25 != undefined && indicator.pm25 !== ''" class="font36 white">{{indicator.pm25}}</text>
+                                    <text v-else class="font36 white">--</text>
+                                </div>
+                                <text class="info-text font12 white">{{pm25Status}}</text>
                             </div>
-                            <text v-if="indicator.temperature != undefined && indicator.temperature != ''" class="info-text font12 white">{{temperatureStatus}}</text>
-                            <text v-else class="info-text font12 white"></text>
-                        </div>  
-                        <div class="scene-status">
-                            <text class="info-text font14 white">湿度</text>
-                            <div class="row-c status-value">
-                                <text v-if="indicator.humidity != undefined && indicator.humidity !== ''" class="font36 white">{{indicator.humidity}}</text>
-                                <text v-if="indicator.humidity != undefined && indicator.humidity !== ''" class="font16 white mgb-20">%</text>
-                                <text v-else class="font36 white">?</text>
+                        </div>
+                        <div class="up-status row-sa bath-up-status" v-if="roomType=='3'">
+                            <div class="scene-status">
+                                <text class="info-text font14 white">温度</text>
+                                <div class="row-c status-value">
+                                    <text v-if="indicator.water_temperature != undefined && indicator.water_temperature !== ''" class="font36 white">{{indicator.water_temperature}}</text>
+                                    <text v-if="indicator.water_temperature != undefined && indicator.water_temperature !== ''" class="font16 white mgb-20">℃</text>
+                                    <text v-else class="font36 white">--</text>
+                                </div>
+                            </div>  
+                            <!-- <div class="scene-status">
+                                <text class="info-text font14 white">热水量</text>
+                                <div class="row-c status-value">
+                                    <text v-if="indicator.water_capacity" class="font36 white">{{indicator.water_capacity}}</text>
+                                    <text v-if="indicator.water_capacity" class="font16 white mgb-20">%</text>
+                                    <text v-else class="font36 white">?</text>
+                                </div>
+                            </div> -->
+                            <div class="scene-status">
+                                <text class="info-text font14 white">还需加热</text>
+                                <div class="row-c status-value">
+                                    <text v-if="indicator.remain_time != undefined && indicator.remain_time !== ''" class="font36 white">{{indicator.remain_time}}</text>
+                                    <text v-if="indicator.remain_time != undefined && indicator.remain_time !== ''" class="font16 white mgb-20">分</text>
+                                    <text v-else class="font36 white">--</text>
+                                </div>
                             </div>
-                            <text class="info-text font12 white">{{humidityStatus}}</text>
-                        </div>  
-                        <div class="scene-status">
-                            <text class="info-text font14 white">空气质量</text>
-                            <div class="row-c status-value">
-                                <text v-if="indicator.pm25 != undefined && indicator.pm25 !== ''" class="font36 white">{{indicator.pm25}}</text>
-                                <text v-else class="font36 white">?</text>
-                            </div>
-                            <text class="info-text font12 white">{{pm25Status}}</text>
                         </div>
                     </div>
-                    <div class="up-status row-sa bath-up-status" v-if="roomType=='3'">
-                        <div class="scene-status">
-                            <text class="info-text font14 white">温度</text>
-                            <div class="row-c status-value">
-                                <text v-if="indicator.water_temperature != undefined && indicator.water_temperature !== ''" class="font36 white">{{indicator.water_temperature}}</text>
-                                <text v-if="indicator.water_temperature != undefined && indicator.water_temperature !== ''" class="font16 white mgb-20">℃</text>
-                                <text v-else class="font36 white">?</text>
-                            </div>
-                        </div>  
-                        <!-- <div class="scene-status">
-                            <text class="info-text font14 white">热水量</text>
-                            <div class="row-c status-value">
-                                <text v-if="indicator.water_capacity" class="font36 white">{{indicator.water_capacity}}</text>
-                                <text v-if="indicator.water_capacity" class="font16 white mgb-20">%</text>
-                                <text v-else class="font36 white">?</text>
-                            </div>
-                        </div> -->
-                        <div class="scene-status">
-                            <text class="info-text font14 white">还需加热</text>
-                            <div class="row-c status-value">
-                                <text v-if="indicator.remain_time != undefined && indicator.remain_time !== ''" class="font36 white">{{indicator.remain_time}}</text>
-                                <text v-if="indicator.remain_time != undefined && indicator.remain_time !== ''" class="font16 white mgb-20">分</text>
-                                <text v-else class="font36 white">?</text>
-                            </div>
+                    <div v-if="hasUseableDevice === false">
+                        <div class="up-desc">
+                            <text class="desc white">{{scene.name}}中无相关设备</text>
+                            <text class="sub-desc" v-if="roomType==1 || roomType==2">(如： 空调/空气净化器/电风扇)</text>
+                            <text class="sub-desc" v-if="roomType==3">(如： 电热水器)</text>
+                            <text class="sub-desc" v-if="roomType==4">(如： 滚筒洗衣机/波轮洗衣机)</text>
+                            <text class="add-device-btn white" @click="jumpAddDevicePage">添加设备</text>
                         </div>
                     </div>
                 </div>
                 <div v-if="roomType=='4'" class="up-block balcony-block">
                     <div v-if="network">
                         <text class="weather white">{{weatherDesc}}</text>
-                        <slider v-if="hasWasherWaterData || hasWasherPowerData">
-                            <div v-if="hasWasherWaterData">
-                                <div class="row-sb chart-info">
-                                    <text class="font14 white">单位：升</text>
-                                    <text class="font14 white">近30天用水量</text>
+                        <div v-if="hasUseableDevice">
+                            <slider v-if="hasWasherWaterData || hasWasherPowerData">
+                                <div v-if="hasWasherWaterData">
+                                    <div class="row-sb chart-info">
+                                        <text class="font14 white">单位：升</text>
+                                        <text class="font14 white">近30天用水量</text>
+                                    </div>
+                                    <midea-barchart-view class="barchart" :data="washerWaterData"></midea-barchart-view>
                                 </div>
-                                <midea-barchart-view class="barchart" :data="washerWaterData"></midea-barchart-view>
-                            </div>
-                            <div v-if="hasWasherPowerData">
-                                <div class="row-sb chart-info">
-                                    <text class="font14 white">单位：度</text>
-                                    <text class="font14 white">近30天用电量</text>
+                                <div v-if="hasWasherPowerData">
+                                    <div class="row-sb chart-info">
+                                        <text class="font14 white">单位：度</text>
+                                        <text class="font14 white">近30天用电量</text>
+                                    </div>
+                                    <midea-barchart-view class="barchart" :data="washerPowerData"></midea-barchart-view>
                                 </div>
-                                <midea-barchart-view class="barchart" :data="washerPowerData"></midea-barchart-view>
+                            </slider>
+                            <div v-if="!hasWasher">
+                                <text class="no-washdata">暂无数据</text>
                             </div>
-                        </slider>
-                        <div v-if="!hasWasher">
-                            <text class="no-washdata">暂无数据</text>
                         </div>
+                        <div v-if="hasUseableDevice === false">
+                            <div class="up-desc">
+                                <text class="desc white">{{scene.name}}中无相关设备</text>
+                                <text class="sub-desc">(如： 滚筒洗衣机/波轮洗衣机)</text>
+                                <text class="add-device-btn white" @click="jumpAddDevicePage">添加设备</text>
+                            </div>
+                        </div>
+
                     </div>
                     <div v-if="!network">
                         <text class="no-washdata">暂无数据</text>
@@ -102,9 +123,15 @@
                 </div> -->
             </div>
             <div v-if="roomType != 4" class="down-block row-sa" :style="downBlockStyle">
-                <div v-for="model in scene.modeList" @click="executeModel(model.modelId)">
-                    <image class="down-icon" :src="icon.actions[model.modelId]"></image>
-                    <text class="down-text">{{model.modelName}}</text>
+                <div v-for="model in scene.modeList">
+                    <div v-if="hasUseableDevice" @click="executeModel(model.modelId)">
+                        <image class="down-icon" :src="icon.actions[model.modelId]"></image>
+                        <text class="down-text">{{model.modelName}}</text>
+                    </div>
+                    <div v-if="hasUseableDevice === false">
+                        <image class="down-icon" :src="icon.actionsDisabled[model.modelId]"></image>
+                        <text class="down-text down-text-disable">{{model.modelName}}</text>
+                    </div>
                 </div>
             </div>
             <div v-if="roomType == 4" class="down-block row-sa" :style="downBlockStyle">
@@ -208,6 +235,13 @@
     .desc, .weather{
         text-align: center;
     }
+    .sub-desc{
+        font-size: 24px;
+        color: #FFFFFF;
+        opacity: 0.6;
+        text-align: center;
+        margin-top: 30px;
+    }
     .scene-score{
         margin-top: 30px;
         margin-bottom: 70px;
@@ -217,18 +251,21 @@
         font-size: 30px;
         margin-bottom: 25px;
     }
-    .improve{
+    .improve, .add-device-btn{
         margin-left: 275px;
         margin-top:25px;
         width: 200px;
-        padding-top: 8px;
-        padding-bottom: 8px;
+        padding-top: 14px;
+        padding-bottom: 14px;
         border-width: 2px;
         border-color: #fff;
         border-style: solid;
         text-align: center;
-        border-radius: 28px;
+        border-radius: 32px;
         font-size: 28px;
+    }
+    .add-device-btn{
+        margin-top: 125px;
     }
     .up-status{
         margin-top: 145px;
@@ -268,6 +305,11 @@
         text-align: center;
         font-size: 24px;
         height: 24px;
+        color: #000;
+    }
+    .down-text-disabled{
+        /* color: #696969; */
+        color: #f00;
     }
     .barchart {
         width: 700px;
@@ -504,10 +546,19 @@
                         '1009': 'assets/img/scene_ic_comfort_on@3x.png',
                         '1010': 'assets/img/scene_ic_eco_on@3x.png',
                         '1011': 'assets/img/scene_ic_stop_on@3x.png',
-                        '1012': 'assets/img/scene_ic_power_on@3x.png',
-                        '1013': 'assets/img/scene_ic_power_off@3x.png',
-                        '1014': 'assets/img/scene_ic_alarm_on@3x.png',
-                        '1015': 'assets/img/scene_ic_start_on@3x.png',
+                    },
+                    actionsDisabled: {
+                        '1001': 'assets/img/scene_ic_homing_off_1@3x.png',
+                        '1002': 'assets/img/scene_ic_comfort_off_1@3x.png',
+                        '1003': 'assets/img/scene_ic_eco_off_1@3x.png',
+                        '1004': 'assets/img/scene_ic_switch_off_1@3x.png',
+                        '1005': 'assets/img/scene_ic_homing_off_1@3x.png',
+                        '1006': 'assets/img/scene_ic_comfort_off_1@3x.png',
+                        '1007': 'assets/img/scene_ic_eco_off_1@3x.png',
+                        '1008': 'assets/img/scene_ic_switch_off_1@3x.png',
+                        '1009': 'assets/img/scene_ic_comfort_off_1@3x.png',
+                        '1010': 'assets/img/scene_ic_eco_off_1@3x.png',
+                        '1011': 'assets/img/scene_ic_stop_off_1@3x.png',
                     },
                     model: {
                         1: 'assets/img/scene_ic_listdone@3x.png',
@@ -542,8 +593,9 @@
                         4: '#4E69F7',
                     }
                 },
-                indicator: {},
-                sceneLevel: 1,
+                indicator: {
+                    level: 1
+                },
                 unit: {
                     temperature: '℃',
                     percent: '%'
@@ -594,6 +646,7 @@
                         // "y": "单位:度"
                     }
                 },
+                hasUseableDevice: '',
                 hasWasherPowerData: false,
                 hasWasherWaterData: false,
                 washerPowerDesc: {
@@ -676,6 +729,7 @@
                         })
                     }else if(result.status == 0){
                         this.network = false
+                        this.hasUseableDevice = true
                     }
                 })
             },
@@ -693,9 +747,8 @@
                             this.webRequest(reqUrl, reqParams).then( (res) => {
                                 if (res.code == '0') {
                                     this.scene = res.data
-                                    this.indicator = res.data.indicator || {}
-                                    if ( this.indicator.level && this.indicator.level != '' ) {
-                                        this.sceneLevel = this.indicator.level
+                                    if (res.data.indicator) {
+                                        this.indicator = res.data.indicator
                                     }
                                     resolve()
                                 }else{
@@ -1108,10 +1161,44 @@
                         },1000)
                     }
                 })
+            },
+            getSupportDevices(){//获取此房间可绑定的设备以及该房间的指标数据（温度、湿度、水温、人数等）
+                return new Promise((resolve,reject)=>{
+                    this.checkLogin().then( (uid) => {
+                        let reqUrl = url.scene.supportList
+                        let reqParams = {
+                            uid: uid,
+                            homegroupId: this.homegroupId,
+                            sceneId: this.sceneId
+                        }
+                        this.webRequest(reqUrl, reqParams).then((res)=>{
+                            if (res.code == 0) {
+                                resolve(res.data)
+                            }else{
+                                if (codeDesc.scene.hasOwnProperty(res.code)) {
+                                    nativeService.toast(codeDesc.scene[res.code])
+                                }else{
+                                    nativeService.toast(res.msg)
+                                }
+                            }
+                        }).catch((err)=>{
+                            nativeService.toast(this.getErrorMessage(err))
+                        })
+                    }).catch((err)=>{
+                        nativeService.toast(this.getErrorMessage(err))
+                    })
+                })
+            },
+            jumpAddDevicePage(){
+                 nativeService.jumpNativePage({
+                    "pageName": "addDevice", //跳转到登录界面
+                    "data": {}
+                })
             }
         },
         created(){
             this.roomType = nativeService.getParameters('roomType')
+
             if (this.roomType == 1){
                 this.scene.modeList = [
                     { modelName: '回家', modelId: '1001' },
@@ -1150,6 +1237,16 @@
 
             this.homegroupId = nativeService.getParameters('homegroupId')
             this.sceneId = nativeService.getParameters('sceneId') || ''
+        
+            if (this.sceneId !== ''){
+                this.getSupportDevices().then((res)=>{
+                    if (res.applianceList.length == 0) {
+                        this.hasUseableDevice = false
+                    }else{
+                        this.hasUseableDevice = true
+                    }
+                })
+            }
         }
     }
 </script>

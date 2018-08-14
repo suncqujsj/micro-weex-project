@@ -122,7 +122,7 @@
                     {
                         title: '离开某地',
                         desc: '例如离家时自动打开空调',
-                        icon: 'assets/img/scene_ic_placeblue@3x.png',
+                        icon: 'assets/img/scene_ic_placegreen@3x.png',
                         sceneType: 3,
                         direction: 2
                     }

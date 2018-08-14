@@ -199,7 +199,7 @@
                     },
                     {
                         isAdd: true,
-                        image: 'assets/img/scene_ic_placeblue@3x.png',
+                        image: 'assets/img/scene_ic_placegreen@3x.png',
                         sceneType: 3,
                         direction: 2,
                         name: '离家'
@@ -441,7 +441,7 @@
                                 },
                                 '3.2': {
                                     isAdd: true,
-                                    image: 'assets/img/scene_ic_placeblue@3x.png',
+                                    image: 'assets/img/scene_ic_placegreen@3x.png',
                                     sceneType: 3,
                                     direction: 2,
                                     name: '离家'

@@ -113,7 +113,7 @@ export default {
                         })
                     } else {
                         if (this.result.message == '码不存在') {
-                            this.result.message = "滤芯编号或者验证码不正确"
+                            this.result.message = "滤芯编码错误或者校验码错误，请重新输入。"
                         }
                         this.failedCount++
                         if (this.failedCount > 2) {

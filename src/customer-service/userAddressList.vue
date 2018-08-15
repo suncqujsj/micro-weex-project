@@ -167,6 +167,7 @@ export default {
   padding-right: 28px;
   padding-bottom: 12px;
   text-align: left;
+  width: 450px;
 }
 .text-tag {
   background-color: #e8f1ff;

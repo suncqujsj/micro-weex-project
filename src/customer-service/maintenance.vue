@@ -697,7 +697,7 @@ export default {
                 let param = {
                     serviceOrderVO: {
                         interfaceSource: "SMART",
-                        webUserCode: this.userInfo.uid, //"oFtQywGHyqrWbDvjVdRTeR9Ig3m0"
+                        // webUserCode: this.userInfo.uid, //"oFtQywGHyqrWbDvjVdRTeR9Ig3m0"
                         webUserPhone: this.userInfo.mobile,
 
                         customerName: this.userInfo.nickName,   //报单人姓名

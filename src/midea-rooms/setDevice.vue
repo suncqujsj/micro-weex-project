@@ -64,7 +64,7 @@
     .floor{
         margin-left: 25px;
         padding-right: 25px;
-        border-top-width: 2px;
+        border-top-width: 1px;
         border-top-style: solid;
         border-top-color: #e5e5e5;
     }
@@ -90,7 +90,7 @@
     }
     .property-text{
         color: #666;
-        font-size: 30px;
+        font-size: 28px;
     }
     .save-btn{
         width: 690px;

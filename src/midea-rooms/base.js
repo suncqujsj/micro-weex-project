@@ -195,53 +195,56 @@ export default {
         },
         checkLogin(){
             return new Promise((resolve, reject)=>{
-                nativeService.getUserInfo().then((res) => {
-                    if (res.uid == '' || res.uid == undefined) {
+                nativeService.getUserInfo().then((user) => {
+                    if (user.uid == '' || user.uid == undefined) {
                         // nativeService.alert('您还没有登录，点击确定前往登录', function () {
                         nativeService.jumpNativePage({
                             pageName: 'login'
                         })
                         // })
                     } else {
-                        resolve(res.uid)
+                        nativeService.getCurrentHomeInfo().then((home) => {
+                            if (home.homeId === '' || home.homeId == undefined) {
+                                nativeService.toast('获取家庭失败，请稍后重试')
+                            }else{
+                                let result = {
+                                    uid: user.uid,
+                                    homegroupId: home.homeId
+                                }
+                                resolve(result)
+                            }
+                        }).catch((err)=>{
+                            nativeService.toast('获取家庭失败，请稍后重试')
+                        })
                     }
+                }).catch((err)=>{
                 })
             })
         },
-        getUserRole() {
+        getUserRole(uid, homegroupId) {
             return new Promise((resolve, reject) => {
-                this.checkLogin().then((uid) => {
-                    nativeService.getCurrentHomeInfo().then((res) => {
-                        if (res.homeId === '' || res.homeId == undefined) {
-
-                        } else {
-                            let reqUrl = url.home.getMember
-                            let reqParams = {
-                                uid: uid,
-                                homegroupId: res.homeId
+                let reqUrl = url.home.getMember
+                let reqParams = {
+                    uid: uid,
+                    homegroupId: homegroupId
+                }
+                this.webRequest(reqUrl, reqParams, false).then((rtnData) => {
+                    if (rtnData.code == 0) {
+                        let roleId = ''
+                        for (var i in rtnData.data.list) {
+                            if (rtnData.data.list[i].uid == uid) {
+                                roleId = rtnData.data.list[i].roleId
+                                break
                             }
-                            this.webRequest(reqUrl, reqParams, false).then((rtnData) => {
-                                if (rtnData.code == 0) {
-                                    let roleId = ''
-                                    for (var i in rtnData.data.list) {
-                                        if (rtnData.data.list[i].uid == uid) {
-                                            roleId = rtnData.data.list[i].roleId
-                                            break
-                                        }
-                                    }
-                                    resolve(roleId)
-                                } else {
-                                    if (codeDesc.scene.hasOwnProperty(rtnData.code)) {
-                                        nativeService.toast(codeDesc.home[rtnData.code])
-                                    } else {
-                                        nativeService.toast(rtnData.msg)
-                                    }
-                                }
-                            }).catch((err) => {
-                                nativeService.toast(this.getErrorMessage(err))
-                            })
                         }
-                    })
+                        resolve(roleId)
+                    } else {
+                        if (codeDesc.scene.hasOwnProperty(rtnData.code)) {
+                            nativeService.toast(codeDesc.home[rtnData.code])
+                        } else {
+                            nativeService.toast(rtnData.msg)
+                        }
+                    }
                 }).catch((err) => {
                     nativeService.toast(this.getErrorMessage(err))
                 })
@@ -304,6 +307,8 @@ export default {
         this.getAppData().then((data) => {
             this.appData = data || {}
         })
+
+        nativeService.alert(weex.config.env.isImmersion)
     }
 };
 

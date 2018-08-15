@@ -21,7 +21,7 @@
                             <text class="text">启用</text>
                             <div>
                                 <switch-bar v-if="roleId == '1001'" :isActive="autoEnable == 1" @onSwitch="openAuto"></switch-bar>
-                                <switch-bar v-else :disabled="true" :isActive="autoEnable == 1"></switch-bar>
+                                <text class="enable-text" v-else>{{autoEnable==1?'已开启':'已关闭'}}</text>
                             </div>
                         </div>
                     </div>
@@ -83,7 +83,7 @@
         right: 25px;
     }
     .delete-text{
-        font-size: 32px;
+        font-size: 28px;
         color: #666;
     }
     .hd{
@@ -122,7 +122,7 @@
     }
     .sub-hd{
         color: #666;
-        font-size: 30px;
+        font-size: 28px;
         margin-top: 33px;
         margin-left:30px;
         margin-bottom: 14px;
@@ -148,7 +148,14 @@
         padding-bottom: 5px;
         border-top-color: #e5e5e5;
         border-top-style: solid;
-        border-top-width: 2px;
+        border-top-width: 1px;
+    }
+    .enable-text{
+        padding-top: 30px;
+        padding-bottom: 30px;
+        padding-right: 10px;
+        font-size: 28px;
+        color: #666;
     }
     .device-box{
         padding-left: 32.25px;
@@ -358,9 +365,9 @@
             headBtnStyle(){
                 let tmp = {}
                 if (this.platform == 'ios' && !this.isipx) {
-                    tmp.top = '69px'
+                    tmp.top = '72px'
                 }else{
-                    tmp.top = '29px'
+                    tmp.top = '32px'
                 }
                 return tmp
             },
@@ -398,11 +405,11 @@
                 this.sceneSupoortDevices = tmpSceneSupoortDevices
             },
             getAutoDetail(){//请求自动化详情
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     let reqUrl = url.auto.detail
                     let reqParams = {
-                        uid: uid,
-                        homegroupId: this.homegroupId,
+                        uid: res.uid,
+                        homegroupId: res.homegroupId,
                         sceneId: this.sceneId
                     }
                     this.webRequest(reqUrl, reqParams).then((rtnData)=>{
@@ -522,8 +529,8 @@
                     
                     if (this.sceneType == 3){
                         params.direction = this.autoDetail.location.direction
-                        params.locationLongitude = this.autoDetail.location.longitude
-                        params.locationLatitude = this.autoDetail.location.latitude
+                        params.locationLatitude = this.editParams.locationLatitude ||this.autoDetail.location.latitude
+                        params.locationLongitude = this.editParams.locationLongitude || this.autoDetail.location.longitude
                     }
                     if (this.sceneType == 4){
                         params.startTime = this.autoDetail.startTime
@@ -538,11 +545,11 @@
             },
             deleteAuto(){
                 this.closeDialog('delete')
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     let reqUrl = url.auto.delete
                     let reqParams = {
-                        uid: uid,
-                        homegroupId: this.homegroupId,
+                        uid: res.uid,
+                        homegroupId: res.homegroupId,
                         sceneId: this.sceneId,
                         enable: '2'
                     }
@@ -601,12 +608,12 @@
                 this.generateBindDeviceActions()
             },
             goBindNewDevice(){
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     if (Object.keys(this.unbindDevices).length > 0) {
                         let params = {
                             from: 'editAuto',
-                            uid: uid,
-                            homegroupId: this.homegroupId,
+                            uid: res.uid,
+                            homegroupId: res.homegroupId,
                             sceneType: this.sceneType,
                             userDevices: nativeService.getParameters('userDevices'),
                             unbindDevices: encodeURIComponent(JSON.stringify(this.unbindDevices)),
@@ -621,11 +628,11 @@
                 })
             },
             sendAutoEdit(){
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     let reqUrl = url.auto.update
                     let reqParams = {
-                        uid: uid,
-                        homegroupId: this.homegroupId,
+                        uid: res.uid,
+                        homegroupId: res.homegroupId,
                         sceneType: this.sceneType,
                         sceneId: this.sceneId,
                         image: this.autoDetail.image,

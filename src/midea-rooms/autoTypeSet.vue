@@ -13,8 +13,8 @@
                     @wxcSearchbarInputOnFocus="searchInputFocus"
                     @wxcSearchbarInputOnBlur="searchInputBlur">
                 </wxc-searchbar>
-                <div class="map">
-                    <midea-map-view class="map" :data="mapData" @marker-pick="mapMarkerPick" @point-pick="mapPointPick"></midea-map-view>
+                <div style="width:750px;height:760px;">
+                    <midea-map-view class="map" :data="mapData" @point-pick="mapPointPick"></midea-map-view>
                 </div>
                 <image class="map-icon" :src="icon.map" @click="goCurrentLocation"></image>
             </div>
@@ -110,8 +110,8 @@
         color: #666;
     }
     .icon-next{
-        width: 12px;
-        height: 24px;
+        width: 8px;
+        height: 16px;
         margin-left: 12px;
     }
     .text{font-size: 28px;}
@@ -207,7 +207,7 @@
         color: #fff;
         font-size: 28px;
         text-align: center;
-        padding-top: 10px;
+        padding-top: 13px;
     }
     .week-active{
         background-color: #267AFF;
@@ -219,11 +219,16 @@
     }
     .map{
         width: 750px;
+        flex: 1;
+        flex-direction: column;
         height: 760px;
     }
     .map-box{
         background-color: #fff;
         position: relative;
+        flex: 1;
+        flex-direction: column;
+        height: 834px;
     }
     .map-icon{
         position: absolute;
@@ -375,7 +380,10 @@
                 popStatus: {
                     time: false,
                     weather: false
-                }
+                },
+                destination: {
+                },
+                addressName: ''
             }
         },
         computed: {
@@ -478,16 +486,7 @@
                     }
                 }else{
                     if (this.sceneType == 3) {
-                        nativeService.getGPSInfo({
-                            desiredAccuracy: "10",
-                            distanceFilter: "10",
-                            alwaysAuthorization: "0" 
-                        }).then( (res) => {
-                            this.gpsInfo = res
-                            this.mapCenter.latitude = this.gpsInfo.latitude || '39.92'
-                            this.mapCenter.longitude = this.gpsInfo.longitude || '116.46'
-                            this.mapMarkerList = [{ latitude: this.mapCenter.latitude, longitude: this.mapCenter.longitude, id: 1 }]
-                        })
+                        this.goCurrentLocation()
                     }
                 }
 
@@ -651,45 +650,48 @@
                 this.mapSearchResult = []
             },
             selectMapSearchResult(destination){
-                let tmpDestination = []
-                Object.keys(destination).map(function(x){
-                    tmpDestination.push( x + '='+ encodeURIComponent(destination[x]))
-                })
-                tmpDestination = tmpDestination.join('&')
+                this.showMapSearchResult = false
+                this.mapSearchResult = []
+                this.mapCenter.latitude = destination.latitude
+                this.mapCenter.longitude = destination.longitude
+                this.mapMarkerList = [{ latitude: this.mapCenter.latitude, longitude: this.mapCenter.longitude, id: 1 }]
 
-                if (this.from == 'editAuto') {
-                    this.editParams.locationAddress = destination.key
-                    this.editParams.locationLatitude = destination.latitude
-                    this.editParams.locationLongitude = destination.longitude
-                    channelAutoTypeSet.postMessage({page: 'setCondition', editParams: this.editParams})
-                    this.goBack()
-                }else{
-                    this.goNext(tmpDestination)
-                }
+                this.destination = destination
             },
-            mapMarkerPick(item) {
-            },
-            mapPointPick(item) {
+            mapPointPick(item) {//地图选点，更新中心点坐标和目标地点
                 this.mapCenter.latitude = item.latitude
                 this.mapCenter.longitude = item.longitude
                 this.mapMarkerList = [{ latitude: this.mapCenter.latitude, longitude: this.mapCenter.longitude, id: 1 }]
-                
+                this.getBaiduMapName(item.latitude, item.longitude).then((res)=>{
+                    let tmpDestination = {
+                        key: res,
+                        latitude: item.latitude,
+                        longitude: item.longitude
+                    }
+                    this.destination = tmpDestination
+                })
             },
             goCurrentLocation(){
                 this.showMapSearchResult = false
-                let tmp = {
-                    latitude: this.gpsInfo.latitude,
-                    longitude: this.gpsInfo.longitude,
-                    zoom: 18
-                }
-                this.mapCenter = tmp
-                this.markers = [{
-                    icon: {
-                        normal: this.icon.mapNormal,
-                        click: this.icon.mapClick
-                    },
-                    list: [{ latitude: this.gpsInfo.latitude, longitude: this.gpsInfo.longitude, id: 1 }]
-                }]
+        
+                nativeService.getGPSInfo({
+                    desiredAccuracy: "10",
+                    distanceFilter: "10",
+                    alwaysAuthorization: "0" 
+                }).then( (gpsInfo) => {
+                    this.mapCenter.latitude = gpsInfo.latitude
+                    this.mapCenter.longitude = gpsInfo.longitude
+                    this.mapMarkerList = [{ latitude: this.mapCenter.latitude, longitude: this.mapCenter.longitude, id: 1 }]
+                
+                    this.getBaiduMapName( gpsInfo.latitude, gpsInfo.longitude).then((res)=>{
+                        let tmpDestination = {
+                            key: res,
+                            latitude: gpsInfo.latitude,
+                            longitude: gpsInfo.longitude
+                        }
+                        this.destination = tmpDestination
+                    })
+                })
             },
             // 地图部分 end
             // 天气 start
@@ -712,8 +714,19 @@
                     this.editParams.weatherTemperature = this.activeWeatherTemperature
                 }
             },
+            getBaiduMapName(latitude, longitude){
+                return new Promise((resolve, reject)=>{
+                    nativeService.baiduGeocoder({latitude: latitude, longitude: longitude}).then((res)=>{
+                        if (res.status == 0) {
+                            // this.destination.key = res.sematic_description || res.formatted_address
+                            resolve(res.result.sematic_description)
+                        }
+                    }).catch((err)=>{
+                    })
+                })
+            },
             // 天气 end
-            goNext(destination){
+            goNext(){
                 let weeklyString = ''
                 for (let i=0; i<this.week.length; i++) {
                     weeklyString += this.week[i].repeat
@@ -732,7 +745,13 @@
                     params.templateCode = nativeService.getParameters('templateCode')
                 }
                 if (this.sceneType == 3) {
-                    params.destination = destination
+                    let destination = this.destination
+                    let tmpDestination = []
+                    Object.keys(destination).map(function(x){
+                        tmpDestination.push( x + '='+ encodeURIComponent(destination[x]))
+                    })
+                    tmpDestination = tmpDestination.join('&')
+                    params.destination = tmpDestination
                     params.direction = this.direction
                 }
                 if (this.sceneType == 4) {
@@ -753,7 +772,6 @@
                     let logical = this.activeWeatherLogical =='min'?'<':'>'
                     params.logical = logical
                 }
-                
                 params.userDevices = nativeService.getParameters('userDevices')
                 this.goTo('autoBindDevices', {}, params )
             }, 
@@ -762,7 +780,12 @@
                 // if ( Object.keys(this.editParams).length === 0 ){
                 //     nativeService.toast('没有改动哦')
                 // }
-                
+                  
+                if (this.sceneType == 3) {
+                    this.editParams.locationAddress = this.destination.key
+                    this.editParams.locationLatitude = this.destination.latitude
+                    this.editParams.locationLongitude = this.destination.longitude
+                }
                 channelAutoTypeSet.postMessage({
                     page: 'setCondition',
                     editParams: that.editParams

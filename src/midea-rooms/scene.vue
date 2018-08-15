@@ -2,14 +2,14 @@
     <div @viewappear="initData">
         <scroller class="wrap">
             <div :style="sceneStyle">
-                <midea-header :title="scene.name" :isImmersion="isipx?false:true" bgColor="transparent" titleText="#fff" :leftImg="icon.back" @leftImgClick="goBack"></midea-header>
-                <div v-if="hasUseableDevice" class="setting" @click="goSetting()" :style="headBtnStyle">
+                <midea-header :title="sceneName[roomType]" :isImmersion="isipx?false:true" bgColor="transparent" titleText="#fff" :leftImg="icon.back" @leftImgClick="goBack"></midea-header>
+                <div v-if="hasUseableDevice && network" class="setting" @click="goSetting()" :style="headBtnStyle">
                     <text class="setting-text white">设置</text>
                 </div>
                 <div v-if="roomType=='1' || roomType=='2' || roomType=='3' " class="up-block" >
                     <div v-if="hasUseableDevice">
                         <div class="up-desc">
-                            <text v-if="roomType=='1'||roomType=='2'" class="desc white">{{temperatureStatus}} {{pm25Status}}</text>
+                            <text v-if="roomType=='1'||roomType=='2'" class="bold desc white">{{temperatureStatus}} {{pm25Status}}</text>
                             <text v-if="roomType=='3'" class="desc white">{{waterStatus}}</text>
                             <my-score class="scene-score" :score="indicator.level" :starWidth="45"></my-score>
                             <text class="improve white" @click="quickOptimize">一键优化</text>
@@ -72,7 +72,7 @@
                     </div>
                     <div v-if="hasUseableDevice === false">
                         <div class="up-desc">
-                            <text class="desc white">{{scene.name}}中无相关设备</text>
+                            <text class="desc white">{{sceneName[roomType]}}中无相关设备</text>
                             <text class="sub-desc" v-if="roomType==1 || roomType==2">(如： 空调/空气净化器/电风扇)</text>
                             <text class="sub-desc" v-if="roomType==3">(如： 电热水器)</text>
                             <text class="sub-desc" v-if="roomType==4">(如： 滚筒洗衣机/波轮洗衣机)</text>
@@ -106,12 +106,11 @@
                         </div>
                         <div v-if="hasUseableDevice === false">
                             <div class="up-desc">
-                                <text class="desc white">{{scene.name}}中无相关设备</text>
+                                <text class="desc white">{{sceneName[roomType]}}中无相关设备</text>
                                 <text class="sub-desc">(如： 滚筒洗衣机/波轮洗衣机)</text>
                                 <text class="add-device-btn white" @click="jumpAddDevicePage">添加设备</text>
                             </div>
                         </div>
-
                     </div>
                     <div v-if="!network">
                         <text class="no-washdata">暂无数据</text>
@@ -124,19 +123,23 @@
             </div>
             <div v-if="roomType != 4" class="down-block row-sa" :style="downBlockStyle">
                 <div v-for="model in scene.modeList">
-                    <div v-if="hasUseableDevice" @click="executeModel(model.modelId)">
+                    <div v-if="hasUseableDevice && network" @click="executeModel(model.modelId)">
                         <image class="down-icon" :src="icon.actions[model.modelId]"></image>
                         <text class="down-text">{{model.modelName}}</text>
                     </div>
-                    <div v-if="hasUseableDevice === false">
+                    <div v-if="hasUseableDevice === false || !network">
                         <image class="down-icon" :src="icon.actionsDisabled[model.modelId]"></image>
                         <text class="down-text down-text-disable">{{model.modelName}}</text>
                     </div>
                 </div>
             </div>
             <div v-if="roomType == 4" class="down-block row-sa" :style="downBlockStyle">
-                <div v-if="washerPower" @click="powerOnOff">
-                    <image class="down-icon" :src="icon.washer[washerPower]"></image>
+                <div v-if="washerPower && hasUseableDevice" @click="powerOnOff">
+                    <image v-if="hasUseableDevice" class="down-icon" :src="icon.washer[washerPower]"></image>
+                    <text class="down-text">{{washerStatus[washerPower]}}</text>
+                </div>
+                <div v-if="washerPower && hasUseableDevice=== false">
+                    <image class="down-icon" :src="icon.washer['powerDisabled']"></image>
                     <text class="down-text">{{washerStatus[washerPower]}}</text>
                 </div>
                 <div v-if="washerPower=='on'" @click="controlStartPause">
@@ -207,6 +210,7 @@
         width: 50px;
         height: 50px;
     }
+    .bold{ font-weight: bold; }
     .font12{ font-size: 24px; }
     .font14{ font-size: 28px; }
     .font16{ font-size: 32px; }
@@ -245,7 +249,7 @@
     .scene-score{
         margin-top: 30px;
         margin-bottom: 70px;
-        margin-left: 260px;
+        margin-left: 228px;
     }
     .weather{
         font-size: 30px;
@@ -253,7 +257,7 @@
     }
     .improve, .add-device-btn{
         margin-left: 275px;
-        margin-top:25px;
+        margin-top:15px;
         width: 200px;
         padding-top: 14px;
         padding-bottom: 14px;
@@ -528,6 +532,12 @@
                 uid: '',
                 homegroupId: '',
                 scene: {},
+                sceneName: {
+                    1: '客厅',
+                    2: '卧室',
+                    3: '卫浴',
+                    4: '阳台'
+                },
                 icon:{
                     back: 'assets/img/b_white.png',
                     next: 'assets/img/more_w.png',
@@ -573,7 +583,7 @@
                         pause: 'assets/img/scene_ic_start_on@3x.png',
                         standby: 'assets/img/scene_ic_start_on@3x.png',
                         idle: 'assets/img/scene_ic_start_on@3x.png',
-                        powerDisabled: 'assets/img/scene_ic_power_off@3x.png',
+                        powerDisabled: 'assets/img/scene_ic_power_off_1@3x.png',
                         statusDisabled: 'assets/img/scene_ic_start_off@3x.png'
                     },
                     water: 'assets/img/equitment_ic_waterdrop@2x.png',
@@ -706,41 +716,52 @@
             },
             initData(){
                 nativeService.getNetworkStatus().then((result)=>{
-                    if (result.status == 1){
-                        this.getSceneDetail().then(()=>{
-                            if (this.scene.applianceList.length <= 0 ) {
-                                nativeService.toast('无法获取相关数据，点击右上角设置设备')
-                            }
-                            if (this.roomType == 4){
-                                this.hasWasherWaterData = false
-                                this.hasWasherPowerData = false
-                                this.getWeatherInfo()
-                                if ( this.scene.applianceList.length > 0) {
-                                    this.hasWasher = true
-                                    this.washerCode = this.scene.applianceList[0].applianceCode || ''
-                                    this.getWashData()
-                                    this.luaQueryStatus()
+                    if (result.status == 1 ){
+                        if (this.sceneId !== ''){
+                            this.getSupportDevices().then((res)=>{
+                                if (res.applianceList.length == 0) {
+                                    this.hasUseableDevice = false
                                 }else{
-                                    this.hasWasher = false
+                                    this.hasUseableDevice = true
+                                                
+                                    this.getSceneDetail().then(()=>{
+                                        if (this.scene.applianceList.length <= 0 ) {
+                                            nativeService.toast('无法获取相关数据，点击右上角设置设备')
+                                        }
+                                        if (this.roomType == 4){
+                                            this.hasWasherWaterData = false
+                                            this.hasWasherPowerData = false
+                                            if ( this.scene.applianceList.length > 0) {
+                                                this.hasWasher = true
+                                                this.washerCode = this.scene.applianceList[0].applianceCode || ''
+                                                this.getWashData()
+                                                this.luaQueryStatus()
+                                            }else{
+                                                this.hasWasher = false
+                                            }
+                                        }
+                                    }).catch((err)=>{
+                                        nativeService.toast(this.getErrorMessage(err))
+                                    })
                                 }
-                            }
-                        }).catch((err)=>{
-                            nativeService.toast(this.getErrorMessage(err))
-                        })
+                            })
+                        }else{
+                            this.hasUseableDevice = false
+                        }
                     }else if(result.status == 0){
+                        this.hasUseableDevice = true //为了兼容没有网络时的显示，将hasUseableDevice设为true
                         this.network = false
-                        this.hasUseableDevice = true
                     }
                 })
             },
             getSceneDetail(){
                 return new Promise((resolve, reject)=>{
-                    this.checkLogin().then( (uid) => {
+                    this.checkLogin().then( (res) => {
                         if (this.sceneId !== '') {
                             let reqUrl = url.scene.detail
                             let reqParams = {
-                                uid: uid,
-                                homegroupId: this.homegroupId,
+                                uid: res.uid,
+                                homegroupId: res.homegroupId,
                                 sceneId: this.sceneId
                             }
                             
@@ -770,12 +791,12 @@
                 })
             },
             quickOptimize(){
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     if (this.sceneId !== '') {
                         let reqUrl = url.scene.optimize
                         let reqParams = {
-                            uid: uid,
-                            homegroupId: this.homegroupId,
+                            uid: res.uid,
+                            homegroupId: res.homegroupId,
                             sceneId: this.sceneId,
                         }
                         this.webRequest(reqUrl, reqParams).then((res)=>{
@@ -804,13 +825,13 @@
             },
             checkQuickOptimize(resultId){
                 // status 1-成功，2-执行中，3-失败
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     if (this.checkQuickOptimizeTimes < 30) {
                         this.checkQuickOptimizeTimes += 1
                         let reqUrl = url.scene.optimizeStatus
                         let reqParams = {
-                            uid: uid,
-                            homegroupId: this.homegroupId,
+                            uid: res.uid,
+                            homegroupId: res.homegroupId,
                             sceneId: this.sceneId,
                             resultId: resultId
                         }
@@ -856,11 +877,11 @@
             },
             executeModel(modelId){
                 if (this.scene.applianceList && this.scene.applianceList.length > 0) {
-                    this.checkLogin().then( (uid) => {
+                    this.checkLogin().then( (res) => {
                         let reqUrl = url.scene.modelExecute
                         let reqParams = {
-                            uid: uid,
-                            homegroupId: this.homegroupId,
+                            uid: res.uid,
+                            homegroupId: res.homegroupId,
                             sceneId: this.sceneId,
                             modelId: modelId
                         }
@@ -888,13 +909,13 @@
                 
             },
             checkModelExe(resultId, modelId){
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     if (this.checkModelExeTimes < 30) {
                         this.checkModelExeTimes += 1
                         let reqUrl = url.scene.modelStatus
                         let reqParams = {
-                            uid: uid,
-                            homegroupId: this.homegroupId,
+                            uid: res.uid,
+                            homegroupId: res.homegroupId,
                             sceneId: this.sceneId,
                             modelId: modelId,
                             resultId: resultId
@@ -966,12 +987,12 @@
                 })
             },
             getWashData(){
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     if (this.washerCode) {
                         let reqUrl = url.scene.washerConsumption
                         let reqParams = {
-                            uid: uid,
-                            homegroupId: this.homegroupId,
+                            uid: res.uid,
+                            homegroupId: res.homegroupId,
                             applianceCode: this.washerCode
                         }
                         
@@ -1164,11 +1185,11 @@
             },
             getSupportDevices(){//获取此房间可绑定的设备以及该房间的指标数据（温度、湿度、水温、人数等）
                 return new Promise((resolve,reject)=>{
-                    this.checkLogin().then( (uid) => {
+                    this.checkLogin().then( (res) => {
                         let reqUrl = url.scene.supportList
                         let reqParams = {
-                            uid: uid,
-                            homegroupId: this.homegroupId,
+                            uid: res.uid,
+                            homegroupId: res.homegroupId,
                             sceneId: this.sceneId
                         }
                         this.webRequest(reqUrl, reqParams).then((res)=>{
@@ -1225,6 +1246,8 @@
                     { modelName: '停用', modelId: '1011' },
                 ]
             }else if (this.roomType == 4) {
+                this.getWeatherInfo()
+
                 nativeService.burialPoint({//埋点洗衣机用水
                     pageName: 'sceneMainPage',
                     subAction: 'scene_balcony_water_operate'
@@ -1237,16 +1260,6 @@
 
             this.homegroupId = nativeService.getParameters('homegroupId')
             this.sceneId = nativeService.getParameters('sceneId') || ''
-        
-            if (this.sceneId !== ''){
-                this.getSupportDevices().then((res)=>{
-                    if (res.applianceList.length == 0) {
-                        this.hasUseableDevice = false
-                    }else{
-                        this.hasUseableDevice = true
-                    }
-                })
-            }
         }
     }
 </script>

@@ -52,7 +52,7 @@
     }
     .name{
         font-size: 32px;
-        padding-bottom: 8px;
+        padding-bottom: 12px;
     }
     .desc{
         font-size: 24px;
@@ -152,11 +152,11 @@
                 nativeService.goBack()
             },
             goNext(item){
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     let params = {
                         from: 'addAuto',
-                        uid: uid,
-                        homegroupId: this.homegroupId,
+                        uid: res.uid,
+                        homegroupId: res.homegroupId,
                         sceneType: item.sceneType,
                         userDevices: nativeService.getParameters('userDevices')
                     }

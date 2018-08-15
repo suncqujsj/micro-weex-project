@@ -3,7 +3,7 @@
         <midea-header :title="header.title" :isImmersion="isipx?false:true" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
         <list>
             <cell class="content">
-                <div v-if="sceneType != 2 && from=='addAuto'" class="hd">
+                <div v-if="sceneType != 2 && from=='addAuto' && sceneSupportDevices.length > 0" class="hd">
                     <text v-if="sceneType == 3 && direction == 1" class="hd-text">在{{weekDesc}}到达 {{destination.key}} 时自动操控</text>
                     <text v-if="sceneType == 3 && direction == 2" class="hd-text">在{{weekDesc}}离开 {{destination.key}} 时自动操控</text>
                     <text v-if="sceneType == 4" class="hd-text">在{{weekDesc}}的{{startTime}}自动操控</text>
@@ -42,7 +42,7 @@
                         </div>
                     </div>
                 </div>
-                <text class="save-btn" @click="getDone()">完成</text>              
+                <text v-if="sceneSupportDevices.length > 0" class="save-btn" @click="getDone()">完成</text>              
             </cell>
         </list>
         <midea-promt title="快捷操作名称" ref="promt" placeholder="最多输入15字" :inputValue="inputAutoName" :show="showPrompt" @okClicked="promptConfirm" @onPromtClose="promptClose" @onPromtInput="promptInput"></midea-promt>
@@ -442,11 +442,11 @@
                 this.inputAutoName = val;
             },
             setNewAuto(){
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     let reqUrl = url.auto.add
                     let reqParams = {
-                        uid: uid,
-                        homegroupId: this.homegroupId,
+                        uid: res.uid,
+                        homegroupId: res.homegroupId,
                         sceneType: this.sceneType,
                         name: this.inputAutoName,
                         enable: 1

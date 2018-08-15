@@ -80,7 +80,7 @@
                         </midea-list>
                     </div>
                 </div>
-                <div class="block" v-if="roomType == 3">
+                <div class="block mgt15" v-if="roomType == 3">
                     <midea-list style="background-color:#fff" v-for="(prop,i) in scenePropFormat" :idx="i" :hasWrapBorder="false" leftMargin="25px">
                         <div class="row-sb set-item" @click="showPropPop(prop.key)">
                             <text class="text">{{sceneName[prop.key]}}</text>
@@ -175,6 +175,9 @@
     }
     .line2{
         top: 210px;
+    }
+    .mgt15{
+        margin-top: 15px;
     }
 </style>
 
@@ -328,11 +331,11 @@
             },
             getSupportDevices(){//获取此房间可绑定的设备以及该房间的指标数据（温度、湿度、水温、人数等）
                 return new Promise((resolve,reject)=>{
-                    this.checkLogin().then( (uid) => {
+                    this.checkLogin().then( (res) => {
                         let reqUrl = url.scene.supportList
                         let reqParams = {
-                            uid: uid,
-                            homegroupId: this.homegroupId,
+                            uid: res.uid,
+                            homegroupId: res.homegroupId,
                             sceneId: this.sceneId
                         }
                         this.webRequest(reqUrl, reqParams).then((res)=>{
@@ -371,11 +374,11 @@
                 return tmp
             },
             switchBindSceneDevice(appliance){//解绑、绑定设备到房间
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     let reqUrl = url.scene.applianceAdd
                     let reqParams = {
-                        uid: uid,
-                        homegroupId: this.homegroupId,
+                        uid: res.uid,
+                        homegroupId: res.homegroupId,
                         sceneId: this.sceneId,
                         applianceCode: appliance.applianceCode
                     }
@@ -434,11 +437,11 @@
                 this.closePropPop(propType)
             },
             confirmProp(propType){
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     let reqUrl = url.scene.modelSet
                     let reqParams = {
-                        uid: uid,
-                        homegroupId: this.homegroupId,
+                        uid: res.uid,
+                        homegroupId: res.homegroupId,
                         sceneId: this.sceneId
                     }
                     /*

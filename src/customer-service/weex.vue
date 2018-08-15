@@ -207,7 +207,7 @@ export default {
             //清楚本地缓存数据
             for (const key in this.SERVICE_STORAGE_KEYS) {
                 if (this.SERVICE_STORAGE_KEYS.hasOwnProperty(key)) {
-                    if (['historyKeys', 'productType'].indexOf(key) < 0) {
+                    if (['historyKeys'].indexOf(key) < 0) {
                         nativeService.removeItem(this.SERVICE_STORAGE_KEYS[key])
                     }
                 }

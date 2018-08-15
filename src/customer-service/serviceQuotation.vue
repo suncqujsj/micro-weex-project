@@ -121,7 +121,7 @@ export default {
                     serviceOrderNo: this.notificationData.cssInfoId,
                     archivesNo: this.notificationData.archivesNo,
                     orgCode: this.notificationData.orgCode,
-                    webConfirmNo: userInfo.uid, //外部确认号码???
+                    webConfirmNo: userInfo.mobile, 
                     confirmIphone: userInfo.mobile
                 }
                 nativeService.dochargecomfirm(param).then((resp) => {

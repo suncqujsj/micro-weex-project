@@ -8,7 +8,7 @@
 	        				<text class="main-status">{{humidity}}</text>
 	        				<text class="danwei">{{danwei}}</text>
 	        			</div>
-	        			<text class="main-status-second">当前湿度</text>
+	        			<text class="main-status-second">设定湿度</text>
 		        		<div class="card-status-detail">
 		        			<text class="main-status-third">{{display_value1}}</text>
 		        		</div>
@@ -276,7 +276,8 @@
 <style>
 	.content {
 		flex:1;
-		width:750px
+		width:750px;
+		background-color: #f2f2f2;
 	}
 	.box {
 		margin-bottom:650px

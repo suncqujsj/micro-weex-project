@@ -19,12 +19,54 @@
    ></midea-slider>
  -->
 
-    </div>
+        <midea-title-bar title="自定义背景" bgColor="#EEF4F7"></midea-title-bar>
+         <div class="silder-container">
+            <div class="line-container">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+            <midea-slider @slideEnd="slideEnd" :max="7" :min="1" :value="1" :step="1" :axisH="0" :pointH="26" :axisColor="axisColor"  pointColor="#EEF4F7" showTip="false"></midea-slider>
+        </div>
 
     </div>
 </template>
 <style scoped>
-
+.silder-container{
+  position: relative;
+  height: 52px;
+  margin-top: 50px;
+  padding-top: 25px;
+}
+.line-container {
+  position: absolute;
+  top: 24px;
+  left: 20px;
+  height: 6px;
+  width: 710px;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  border-color: #5d75f6;
+  border-width: 1px;
+}
+.line {
+  height: 6px;
+  margin: 30px 3px;
+  flex: 1;
+  background-color: #5d75f6;
+  border-radius: 2px;
+}
+.dot {
+  height: 6px;
+  width: 6px;
+  margin: 30px 0;
+  background-color: #fff;
+  flex: 0.1;
+}
 </style>
 <script>  
 import base from '../base'

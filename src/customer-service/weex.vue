@@ -1,9 +1,9 @@
 <template>
     <div class="wrapper" @viewappear="refreshPage">
         <!-- 不可删除此空div行，否则list会自动调整移动至状态栏下 -->
-        <div v-if="!isipx" style="height: 40px; background-color: #ffffff;"></div>
+        <!-- <div style="background-color: #ffffff;" :class="[isImmersion?(isipx? 'immersion-ipx': 'immersion'):'']"></div> -->
         <list class="list">
-            <cell>
+            <cell :class="[isImmersion?(isipx? 'immersion-ipx': 'immersion'):'']">
                 <div class="service-header">
                     <div style="flex: 1;"> </div>
                     <div class="service-header-image-wrapper" @click="showHotLine">
@@ -234,6 +234,15 @@ export default {
 <style>
 .wrapper {
   background-color: #f2f2f2;
+}
+
+.immersion {
+  padding-top: 40px;
+  background-color: #ffffff;
+}
+.immersion-ipx {
+  padding-top: 68px;
+  background-color: #ffffff;
 }
 .list {
   flex: 1;

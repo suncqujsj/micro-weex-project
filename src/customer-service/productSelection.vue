@@ -55,7 +55,7 @@
         </div>
         <div v-if="isMultiMode" class="action-bar">
             <div class="product-selected-items-wrapper">
-                <scroller v-if="selectedProductArray && selectedProductArray.length>0" class="product-selected-items" scroll-direction="horizontal">
+                <scroller v-if="selectedProductArray && selectedProductArray.length>0" class="product-selected-items" show-scrollbar="false" scroll-direction="horizontal">
                     <div class="selected-action-wrapper" v-for="(item,index) in selectedProductArray" :key="index" :ref="'selectedProduct'+index" @click="removeSelectedProduct(index)">
                         <text class="selected-action-desc">{{item.prodName}}</text>
                         <image class="selected-action-img" :src="'./assets/img/service_ic_delone@3x.png'" resize="contain"></image>
@@ -359,21 +359,22 @@ export default {
 }
 .product-content-left {
   width: 200px;
-  border-right-color: #e5e5e8;
-  border-right-width: 1px;
 }
 .product-content-left-scroller {
   align-content: center;
   align-items: center;
+  background-color: #f2f2f2;
 }
 .product-brand {
   width: 200px;
-  /* height: 96px; */
   align-items: center;
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #000000;
   text-align: center;
+  background-color: #f2f2f2;
+  border-left-color: #f2f2f2;
+  border-left-width: 4px;
   margin-top: 16px;
   padding-top: 16px;
   padding-right: 16px;
@@ -385,9 +386,8 @@ export default {
   font-family: PingFangSC-Medium;
   font-weight: 600;
   color: #000000;
-  background-color: #f2f2f2;
+  background-color: #ffffff;
   border-left-color: #000000;
-  border-left-width: 4px;
 }
 .product-content-right {
   flex: 1;

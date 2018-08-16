@@ -83,7 +83,7 @@ function walk() {
     }
 }
 function runWalk(dir) {
-    // console.log(dir);
+    console.log(dir);
     dir = dir || ".";
     let directory = path.join(__dirname, './src', dir)
     let distPath = path.join(__dirname, 'dist')
@@ -94,32 +94,44 @@ function runWalk(dir) {
             let stat = fs.statSync(fullpath)
             let extname = path.extname(fullpath)
             if (stat.isFile() && extname === FILE_TYPE) {
-                let name = path.join(dir, path.basename(file, extname))
+                let targetDir = dir
+                if (dir.indexOf("midea-card")==0){
+                    targetDir = dir + '/midea-card'
+                }
+                let name = path.join(targetDir, path.basename(file, extname))
                 let entryFile = path.resolve(entryPath, name + '.js')
-                // console.log((path.resolve(entryPath, name + '.js')) + "@@" + directory + name);
+                console.log((path.resolve(entryPath, name + '.js')) + "@@" + directory + "@@"  + name);
                 fs.outputFileSync(path.resolve(entryPath, name + '.js'), getEntryFileContent('@/' + dir.replace('\\', '/') + '/' + path.basename(file, extname)))
                 entry[name] = entryFile;
                 hasTargetFile = true
             } else if (stat.isDirectory()) {
                 if (file == "assets") {
-                    let targetImgFolder = path.join(distPath, dir, "assets")
+                    let targetDir = dir
+                    if (dir.indexOf("midea-card")==0){
+                        targetDir = dir + '/midea-card'
+                    }
+                    let targetImgFolder = path.join(distPath, targetDir, "assets")
                     subProjectAssets.push({ from: fullpath, to: targetImgFolder })
-                } else if (file !== "components") { 
+                } else if (file !== "components") {
                     let subdir = path.join(dir, file)
                     runWalk(subdir)
                 }
             }
         })
     if (hasTargetFile) {
+        let targetDir = dir
+        if (dir.indexOf("midea-card")==0){
+            targetDir = dir + '/midea-card'
+        }
         plugins.push(
             new CopyWebpackPlugin([
-                { from: commonImagePath, to: path.join(distPath, dir, "img") }
+                { from: commonImagePath, to: path.join(distPath, targetDir, "img") }
             ])
         )
         if (fs.existsSync(path.join(directory, 'weex.html'))) {
             plugins.push(
                 new CopyWebpackPlugin([
-                    { from: path.join(directory, 'weex.html'), to: path.join(distPath, dir) }
+                    { from: path.join(directory, 'weex.html'), to: path.join(distPath, targetDir) }
                 ])
             )
         }

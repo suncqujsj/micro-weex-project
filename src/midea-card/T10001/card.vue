@@ -299,7 +299,8 @@
 <style>
     .content {
         flex: 1;
-        width: 750px
+        width: 750px;
+        background-color: #f2f2f2;
     }
 
     .box {

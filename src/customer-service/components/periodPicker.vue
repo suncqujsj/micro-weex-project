@@ -31,10 +31,12 @@
                 </div>
             </scroller>
         </div>
-        <div class="action-bar">
-            <text class="action-btn action-btn-cancel" @click="buttonCancel">{{cancelButtonText}}</text>
-            <div class="action-split"></div>
+        <div class="action-bar-content">
+            <div class="action-bar">
+                <text class="action-btn action-btn-cancel" @click="buttonCancel">{{cancelButtonText}}</text>
+                <div class="action-split"></div>
             <text class="action-btn" @click="confirm">{{buttonText}}</text>
+        </div>
         </div>
     </midea-popup>
 </template>
@@ -312,26 +314,32 @@ export default {
   border-bottom-color: #e5e5e8;
   border-bottom-width: 1px;
 }
+.action-bar-content{
+ background-color: #f2f2f2;
+}
 .action-bar {
-  background-color: #f2f2f2;
+  background-color: #ffffff;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  height: 96px;
+  margin-top: 16px;
+}
+.action-btn-cancel{
+   color: #666;
 }
 .action-btn {
   flex: 1;
-  margin-top: 16px;
   font-family: PingFangSC-Regular;
   font-size: 32px;
   color: #000000;
   text-align: center;
   background-color: #ffffff;
   text-align: center;
-  padding-top: 22px;
-  padding-bottom: 22px;
 }
 .action-split {
   background-color: #e5e5e8;
   width: 2px;
+  height: 48px;
 }
 </style>

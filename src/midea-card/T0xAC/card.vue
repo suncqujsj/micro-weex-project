@@ -130,6 +130,7 @@ export default {
             indoorTemperature: "",//localStorage.getItem("ACindoorTemperature"),
             outdoorTemperature: "",//localStorage.getItem("ACoutdoorTemperature"),
             danwei: "",
+            running: false,
 
             powerIcon: "./assets/img/smart_ic_off@3x.png",
             powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
@@ -161,9 +162,14 @@ export default {
                 nativeService.toast("送风模式无法设置温度");
                 return
             }
+            if(this.running) {
+        		return;
+        	} else {
+        		this.running = true;
+        	}
             let promptStr = "0";//localStorage.getItem("ACTone"+this.deviceSN);
             let me = this;
-            this.temperature += value;
+            //this.temperature += value;
             let params = {
                 "operation": "luaControl",
                 "name": "temperatureControl",
@@ -172,7 +178,10 @@ export default {
                 }
             }
             nativeService.sendLuaRequest(params, true).then(function (data) {
+            	me.running = false;
                 me.updateUI(data);
+            },function(error) {
+            	me.running = false;
             })
         },
         queryStatus() {
@@ -346,6 +355,7 @@ export default {
   flex: 1;
   width: 750px;
   scroll-direction: vertical;
+  background-color: #f2f2f2;
 }
 .box {
   margin-bottom: 290px;

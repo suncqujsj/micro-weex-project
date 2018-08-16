@@ -3,21 +3,18 @@
         <midea-header :title="title" :isImmersion="isImmersion" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
         </midea-header>
         <list class="list-item">
-            <midea-item height="160" :hasBottomBorder="false" :hasSubBottomBorder="false" @mideaCellClick="goTo('productSelection', {}, { from: 'serviceList', to:'serviceCharge'})">
-                <image slot="itemImg" src="./assets/img/service_ic_cash@3x.png" class="service-item-img" resize='contain'>
-                </image>
+            <cell>
+                <image class="service_advertisement" src="./assets/img/service_img_cash@3x.png" resize='contain'></image>
+            </cell>
+            <midea-item height="96" :hasBottomBorder="false" :hasSubBottomBorder="false" @mideaCellClick="goTo('productSelection', {}, { from: 'serviceList', to:'serviceCharge'})">
                 <text slot="title" class="service-item-title">收费标准</text>
             </midea-item>
             <cell class="gap"></cell>
-            <midea-item height="160" :hasBottomBorder="false" :hasSubBottomBorder="false" @mideaCellClick="goTo('serviceWarranty')">
-                <image slot="itemImg" src="./assets/img/service_ic_repair_1@3x.png" class="service-item-img" resize='contain'>
-                </image>
+            <midea-item height="96" :hasBottomBorder="false" :hasSubBottomBorder="false" @mideaCellClick="goTo('serviceWarranty')">
                 <text slot="title" class="service-item-title">包修政策</text>
             </midea-item>
             <cell class="gap"></cell>
-            <midea-item height="160" :hasBottomBorder="false" :hasSubBottomBorder="false" @mideaCellClick="goTo('servicePrice')">
-                <image slot="itemImg" src="./assets/img/service_ic_time@3x.png" class="service-item-img" resize='contain'>
-                </image>
+            <midea-item height="96" :hasBottomBorder="false" :hasSubBottomBorder="false" @mideaCellClick="goTo('servicePrice')">
                 <text slot="title" class="service-item-title">配件价格</text>
             </midea-item>
         </list>
@@ -56,22 +53,27 @@ export default {
 
 <style>
 .wrapper {
-  background-color: #f2f2f2;
+  background-color: #ffffff;
   position: relative;
 }
 .list-item {
-  margin-top: 24px;
-  margin-right: 32px;
-  margin-left: 32px;
+
   border-radius: 6px;
 }
 .gap {
-  height: 24px;
+  height: 1px;
+  margin-left: 38px;
+  background-color: #E5E5E8;
 }
 .service-item-img {
   height: 60px;
   width: 60px;
   margin-right: 32px;
+}
+.service_advertisement {
+  width: 750px;
+  height: 420px;
+  background-color: #ffffff;
 }
 .service-item-title {
   font-family: PingFangSC-Regular;

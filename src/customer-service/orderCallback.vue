@@ -288,7 +288,7 @@ export default {
                 oiCallbackInfoVO: {
                     serviceOrderNo: this.order.serviceOrderNo,
                     remark: this.remark,
-                    webUserCode: this.userInfo.uid //"oFtQywGHyqrWbDvjVdRTeR9Ig3m0"
+                    // webUserCode: this.userInfo.uid //"oFtQywGHyqrWbDvjVdRTeR9Ig3m0"
                 }
             }
             if (this.serviceStatus == 0) {

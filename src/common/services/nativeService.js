@@ -11,7 +11,7 @@ import debugUtil from '../util/debugUtil'
 import util from '../util/util'
 
 var isDummy = false;
-import Mock from './mock'  //正式场上线时注释掉
+// import Mock from './mock'  //正式场上线时注释掉
 
 const debugLogSeperator = "**************************************\n"
 

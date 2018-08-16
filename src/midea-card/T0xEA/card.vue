@@ -464,6 +464,7 @@ export default {
 <style>
 .content {
   width: 750px;
+	background-color: #f2f2f2;
 }
 .box {
   margin-bottom: 150px;

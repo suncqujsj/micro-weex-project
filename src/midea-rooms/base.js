@@ -50,6 +50,9 @@ export default {
         platform() {
             return weex.config.env.platform.toLowerCase()
         },
+        isImmersion() {
+            return weex.config.env.isImmersion
+        },
     },
     methods: {
         viewappear() {
@@ -307,8 +310,6 @@ export default {
         this.getAppData().then((data) => {
             this.appData = data || {}
         })
-
-        nativeService.alert(weex.config.env.isImmersion)
     }
 };
 

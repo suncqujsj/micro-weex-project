@@ -32,7 +32,7 @@
             </cell>
         </list>
         <div class="pop-floor" v-for="(item,idx) in actions">
-             <midea-confirm2 :height="popHeight" :show="show[item.property]" @leftBtnClick="closePop(item.property)" @rightBtnClick="confirmPop(item.property)" @mideaPopupOverlayClicked="closePop(item.property)">
+             <midea-confirm2 :height="490" :show="show[item.property]" @leftBtnClick="closePop(item.property)" @rightBtnClick="confirmPop(item.property)" @mideaPopupOverlayClicked="closePop(item.property)">
                  <div v-if="item.type == 'list'" class="pop-list">
                     <scroller>
                         <text v-for="(value,key) in item.value" :class="['pop-item', active[item.property].value == key?'pop-item-active':'']" @click="setActiveKey(item.property, idx, key)"> {{value}}</text>
@@ -110,9 +110,9 @@
     }
     .pop-text{ font-size: 30px; color: #007AFF; padding: 25px;}
     .pop-list{
-        padding-top: 35px;
-        padding-bottom: 35px;
-        height: 350px;
+        padding-top: 20px;
+        height: 340px;
+        margin-bottom: 30px;
         background-color: #fff;
     }
     .pop-item{ padding: 22px; font-size: 30px; color: #777;  text-align: center; width: 750px;}
@@ -179,19 +179,12 @@
                 }
                 return tmp
             },
-            popHeight(){
-                let tmp = 490
-                if (platform.toLowerCase() == 'android') {
-                    tmp = 535
-                }
-                return tmp
-            },
             headBtnStyle(){
                 let tmp = {}
-                if (this.platform == 'ios' && !this.isipx) {
-                    tmp.top = '69px'
+                if (this.isImmersion) {
+                    tmp.top = '72px'
                 }else{
-                    tmp.top = '29px'
+                    tmp.top = '32px'
                 }
                 return tmp
             },

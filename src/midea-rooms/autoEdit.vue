@@ -364,7 +364,7 @@
             },
             headBtnStyle(){
                 let tmp = {}
-                if (this.platform == 'ios' && !this.isipx) {
+                if (this.isImmersion) {
                     tmp.top = '72px'
                 }else{
                     tmp.top = '32px'

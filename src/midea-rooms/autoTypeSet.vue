@@ -61,7 +61,7 @@
                 <text>什么都没有搜到呢，换个关键词试试吧</text>
             </div>
         </scroller>
-        <div v-if="sceneType==4" class="modal">
+        <div v-if="sceneType==4">
             <!-- 时间弹窗 -->
             <midea-confirm2 :height="popHeight" :show="popStatus.time" @leftBtnClick="cancelPop('time')" @rightBtnClick="confirmPop('time')" @mideaPopupOverlayClicked="closePop('time')">
                 <div class="time-picker row-sb">
@@ -72,7 +72,7 @@
                 </div>
             </midea-confirm2>
         </div>
-        <div v-if="sceneType==6" class="modal">
+        <div v-if="sceneType==6">
             <!-- 天气弹窗 -->
             <midea-confirm2 :height="popHeight" :show="popStatus.weather" @leftBtnClick="cancelPop('weather')" @rightBtnClick="confirmPop('weather')" @mideaPopupOverlayClicked="closePop('weather')">
                 <div class="time-picker row-sb">
@@ -438,8 +438,8 @@
                 return tmp
             },
             popHeight(){
-                let tmp = 570
-                if (platform.toLowerCase() == 'android') {
+                let tmp = 573
+                if (this.isImmersion === false) {
                     tmp = 615
                 }
                 return tmp

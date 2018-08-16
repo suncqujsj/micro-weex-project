@@ -1,6 +1,6 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
-	    <div class="box">
+	    <div class="box" @click="showControlPanelPage">
 	        <div v-if="onlineStatus == '1'">
 		    	 <div class="card" v-if="onoff == 'on'">
 		        	<div class="card-left">
@@ -21,13 +21,23 @@
 		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip029@2x.png" @click="showControlPanelPage()"></image>
 		        		</div>
 		        		<div class="card-control-div" v-if="work_status=='work'">
-		        			<image v-if="work_status=='work'" class="card-control-img" :src="startPause" @click="controlStartPause"></image>
-		        			<image v-if="work_status=='work'" class="card-control-img" src="./assets/img/smart_ic_cancelwork@2x.png" @click="cancelWork"></image>
-		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
+							<div class="left-btn">
+								<image v-if="work_status=='work'" class="card-control-img" :src="startPause" @click="controlStartPause"></image>
+							</div>
+							<div class="left-btn">
+								<image v-if="work_status=='work'" class="card-control-img" src="./assets/img/smart_ic_cancelwork@2x.png" @click="cancelWork"></image>
+							</div>
+							<div class="right-btn">
+								<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
+							</div>
 	        			</div>
 	        			<div class="card-control-div" v-else>
-		        			<image v-if="work_status!='work'" class="card-control-img" style="margin-left:50px" src="./assets/img/smart_ic_play@2x.png" @click="startWork"></image>
-		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
+							<div class="left-btn">
+		        			<image v-if="work_status!='work'" class="card-control-img" src="./assets/img/smart_ic_play@2x.png" @click="startWork"></image>
+							</div>
+							<div class="right-btn">
+								<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
+							</div>
 	        			</div>
 		        	</div>
 		        </div>
@@ -37,7 +47,7 @@
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image class="icon-offline" src="./assets/img/smart_img_equip029@2x.png" @click="showControlPanelPage"></image>
+		        		<image class="icon-offline" src="./assets/img/smart_img_equip029@2x.png" ></image>
 		        	</div>
 		        </div>
 	        </div>
@@ -376,8 +386,12 @@
 	}
 	.control-div-offline {
 		position: absolute;
-		right:32px;
-		top:32px;
+		right: 0px;
+		top:0px;
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
 		align-items: center;
 	}
 	.card-control {
@@ -391,10 +405,20 @@
 		flex-direction: row;
 		position: absolute;
 		justify-content: space-around;
-		top: 38px;
-		/*right: 36px;*/
-		height:100px;
-		width: 343px;
+		top: 0px;
+		right: 0px;
+	}
+	.left-btn{
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
+		margin-right: 2px;
+	}
+	.right-btn {
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left: 14px;
 	}
 	.card-control-temp-div {
 		flex-direction: row;

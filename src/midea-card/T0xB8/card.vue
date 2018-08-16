@@ -1,6 +1,6 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
-	    <div class="box">
+	    <div class="box" @click="showControlPanelPage">
 	       <div v-if="onlineStatus == '1'">
 		    	 <div class="card">
 		        	<div class="card-left">
@@ -17,20 +17,26 @@
 		        		<div class="card-control">
 		        			
 		        		</div>
-		        		<div class="card-icon" @click="showControlPanelPage">
+		        		<div class="card-icon" >
 		        			<image class="card-icon-img" src="./assets/img/smart_img_equip011@2x.png"></image>
 		        		</div>
 		        		<div class="card-control-div">
-		        			<image class="card-control-img" :src="charge" @click="clickCharge" style="margin-right: 35px" ></image>
-		        			<image class="card-control-img" :src="startPause" @click="clickStartPause"></image>
+							<div class="left-btn" @click="clickCharge">
+								<image class="card-control-img" :src="charge"  ></image>
+							</div>
+							<div class="right-btn" @click="clickStartPause">
+								<image class="card-control-img" :src="startPause" ></image>
+							</div>
 	        			</div>
 		        	</div>
 		        </div>
 	        </div>
 	         <div class="card-power-off" v-else>
 	        	<div class="control-div-offline" @click="reload">
+					<div class="right-btn">
 	        		<image class="card-control-img" :src="powerIcon_offline"></image>
 	        		<text class="text-offline">重连</text>
+					</div>
 	        	</div>
 	        	<div>
 	        		<image class="icon-offline" src="./assets/img/smart_img_equip011@2x.png"></image>
@@ -303,8 +309,8 @@
 	}
 	.control-div-offline {
 		position: absolute;
-		right:32px;
-		top:32px;
+		right:0px;
+		top:0px;
 		align-items: center;
 	}
 	.card-control {
@@ -318,9 +324,20 @@
 	.card-control-div {
 		flex-direction: row;
 		position: absolute;
-		top: 38px;
-		right: 36px;
-		height:100px;
+		top: 0px;
+		right: 0px;
+	}
+	.left-btn{
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
+		margin-right: 2px;
+	}
+	.right-btn {
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left: 14px;
 	}
 	.card-status-detail {
 		flex-direction: row;

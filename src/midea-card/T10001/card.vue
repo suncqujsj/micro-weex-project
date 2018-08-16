@@ -79,8 +79,8 @@
                 let me = this;
                 nativeService.getTxList(true).then((myList) =>{
 //                    nativeService.alert(myList)
-                    let TXList = myList; //mock 的数据结构
-//                    let TXList = myList.data;
+//                    let TXList = myList; //mock 的数据结构
+                    let TXList = myList.data;
                     for (let i = 0; i < TXList.length; i++) {
                         let currentList = TXList[i];
                         let currentDeviceId = currentList.applianceCode;
@@ -270,12 +270,12 @@
             handleNotification() {
                 let me = this;
                 globalEvent.addEventListener(this.pushKey, (data) => {
-                    nativeService.alert(data)
+//                    nativeService.alert(data)
                     me.updateItem(data);
                 });
                 globalEvent.addEventListener(this.pushKeyOnline, (data) => {
                     if (data && data.messageType == "queryStatusFromApp") {
-                        nativeService.alert(data.deviceId)
+//                        nativeService.alert(data.deviceId)
                         me.updateTXList() ;
                     }
                 });
@@ -290,7 +290,7 @@
         computed: {},
         mounted() {
             this.queryTXLists();
-//            this.handleNotification()
+            this.handleNotification()
         }
     }
 </script>

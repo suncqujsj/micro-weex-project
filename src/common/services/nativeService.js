@@ -11,7 +11,7 @@ import debugUtil from '../util/debugUtil'
 import util from '../util/util'
 
 var isDummy = false;
-// import Mock from './mock'  //正式场上线时注释掉
+import Mock from './mock'  //正式场上线时注释掉
 
 const debugLogSeperator = "**************************************\n"
 
@@ -582,7 +582,6 @@ export default {
                     });
             } else {
                 let resData
-
                 if (params['operation'] || params['name']) {
                     if (params['name']) {
                         resData = Mock.getMock(params['name'])
@@ -1010,7 +1009,6 @@ export default {
         return this.commandInterfaceWrapper(param)
     },
 
-    //downloadImageWithCookie已经弃用/无用
     downloadImageWithCookie(params) {
         let param = Object.assign(params, {
             operation: 'downloadImageWithCookie'
@@ -1030,17 +1028,6 @@ export default {
     burialPoint(params) {
         let param = Object.assign(params, {
             operation: 'burialPoint'
-        })
-        return this.commandInterfaceWrapper(param)
-    },
-    /* 百度开放接口，通过经纬度返回对应的位置信息
-    params:{
-        latitude: string,
-        longitude: string
-    } */
-    baiduGeocoder(params) {
-        let param = Object.assign(params, {
-            operation: 'baiduGeocoder'
         })
         return this.commandInterfaceWrapper(param)
     }

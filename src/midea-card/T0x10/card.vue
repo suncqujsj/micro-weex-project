@@ -1,6 +1,6 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
-	    <div class="box">
+	    <div class="box" @click="showControlPanelPage">
 	        <div v-if="onlineStatus == '1'">
 		    	 <div class="card" v-if="onoff == 'on'">
 		        	<div class="card-left">
@@ -17,26 +17,26 @@
 		        		<div class="card-control">
 		        		</div>
 		        		<div class="card-icon">
-		        			<image class="card-icon-img" @click="showControlPanelPage" resize="contain" src="./assets/img/smart_img_equip025@2x.png"></image>
+		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip025@2x.png"></image>
 		        		</div>
-		        		<div class="card-control-div" @click="poweronoff(0)">
-		        			<image class="card-control-img"  src="./assets/img/smart_ic_off@2x.png"></image>
+		        		<div class="card-control-div"  @click="poweronoff(0)">
+		        			<image class="card-control-img"  src="./assets/img/smart_ic_off@2x.png" ></image>
 	        			</div>
 		        	</div>
 		        </div>
 		        <div class="card-power-off" v-else>
-		        	<div class="control-div-offline">
-		        		<image class="card-control-img" :src="powerIcon_poweroff"  @click="poweronoff(1)"></image>
+		        	<div class="control-div-offline" >
+		        		<image class="card-control-img" :src="powerIcon_poweroff" @click="poweronoff(1)"></image>
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image class="icon-offline" @click="showControlPanelPage" src="./assets/img/smart_img_equip025@2x.png"></image>
+		        		<image class="icon-offline"  src="./assets/img/smart_img_equip025@2x.png"></image>
 		        	</div>
 		        </div>
 	        </div>
 	        <div class="card-power-off" v-else>
-	        	<div class="control-div-offline">
-	        		<image class="card-control-img" :src="powerIcon_offline"  @click="reload"></image>
+	        	<div class="control-div-offline" @click="reload">
+	        		<image class="card-control-img" :src="powerIcon_offline" ></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
@@ -243,8 +243,12 @@
 	}
 	.control-div-offline {
 		position: absolute;
-		right:32px;
-		top:32px;
+		right:0px;
+		top:0px;
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
 		align-items: center;
 	}
 	.card-control {
@@ -258,9 +262,12 @@
 	.card-control-div {
 		flex-direction: row;
 		position: absolute;
-		top: 38px;
-		right: 36px;
-		height:100px;
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
+		top: 0px;
+		right: 0px;
 	}
 	.card-control-temp-div {
 		flex-direction: row;

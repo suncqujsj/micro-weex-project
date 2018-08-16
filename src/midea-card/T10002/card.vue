@@ -79,7 +79,7 @@
                 let me = this;
                     nativeService.getTxList().then((myList) =>{
                         let TXList = myList.data;
-//                        nativeService.alert(myList);
+//                        nativeService.alert(myList.data);
                         for (let i = 0; i < TXList.length; i++) {
                             let currentList = TXList[i];
                             let currentDeviceId = currentList.applianceCode;

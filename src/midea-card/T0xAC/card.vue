@@ -1,7 +1,7 @@
 <template>
     <scroller class="content" show-scrollbar="false">
         <div class="box">
-            <div>
+            <div @click="showControlPanelPage">
                 <div v-if="onlineStatus == '1'">
                     <div v-if="onoff == 'on'">
                         <div class="card" :class="[mode =='heat'?'card-hot':''] " v-if="PD004 != 0">
@@ -16,8 +16,8 @@
                                     <text class="main-status-third">{{currentMode}}</text>
                                 </div>
                                 <div class="card-control-temp-div">
-                                    <image @click="temperatureControl(-1)" class="cart-control-temp-img" src="./assets/img/smart_ic_reduce_huge@2x.png"></image>
-                                    <image @click="temperatureControl(1)" class="cart-control-temp-img cart-control-temp-img-right" src="./assets/img/smart_ic_increase_huge@2x.png"></image>
+                                    <image @click="temperatureControl(-1)" class="cart-control-temp-img" src="./assets/img/smart_ic_reduce_huge@3x.png"></image>
+                                    <image @click="temperatureControl(1)" class="cart-control-temp-img cart-control-temp-img-right" src="./assets/img/smart_ic_increase_huge@3x.png"></image>
                                 </div>
                             </div>
                             <div class="card-right">
@@ -28,8 +28,8 @@
                                     <image class="card-icon-img" :src="deviceIcon"></image>
                                 </div>
                                 <div></div>
-                                <div class="card-control-div">
-				        			<image class="card-control-img" :src="powerIcon" @click="poweronoff(0)"></image>
+                                <div class="card-control-div" @click="poweronoff(0)">
+				        			<image class="card-control-img" :src="powerIcon" ></image>
 			        			</div>
                             </div>
                             <div class="card-right-margin"></div>
@@ -58,12 +58,12 @@
                         </div>
                     </div>
                     <div class="card-power-off" v-else>
-                        <div class="control-div-offline">
-                            <image class="card-control-img" :src="powerIcon_poweroff" @click="poweronoff(1)"></image>
+                        <div class="control-div-offline" @click="poweronoff(1)">
+                            <image class="card-control-img" :src="powerIcon_poweroff" ></image>
                             <text class="text-offline">电源</text>
                         </div>
                         <div>
-                            <image @click="showControlPanelPage" class="icon-offline" :src="deviceIcon"></image>
+                            <image class="icon-offline" :src="deviceIcon"></image>
                         </div>
                     </div>
                 </div>
@@ -390,8 +390,12 @@ export default {
 }
 .control-div-offline {
   position: absolute;
-  right: 32px;
-  top: 32px;
+  right: 0px;
+  top:0px;
+    padding-top: 24px;
+    padding-right: 24px;
+    padding-left:14px;
+    padding-bottom: 6px;
   align-items: center;
 }
 .icon-offline {
@@ -411,9 +415,13 @@ export default {
 .card-control-div {
 	flex-direction: row;
 	position: absolute;
-	top: 38px;
-	right: 36px;
-	height:100px;
+    right: 0px;
+    top:0px;
+    padding-top: 24px;
+    padding-right: 24px;
+    padding-left:14px;
+    padding-bottom: 6px;
+	/*height:100px;*/
 }
 .card-control-temp-div {
   flex-direction: row;
@@ -421,11 +429,11 @@ export default {
   margin-bottom: 25px;
 }
 .cart-control-temp-img {
-  width: 64px;
-  height: 64px;
+  width: 84px;
+  height: 84px;
 }
 .cart-control-temp-img-right {
-  margin-left: 100px;
+  margin-left: 60px;
 }
 .card-status-detail {
   flex-direction: row;

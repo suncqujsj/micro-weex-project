@@ -169,12 +169,13 @@ export default {
         	}
             let promptStr = "0";//localStorage.getItem("ACTone"+this.deviceSN);
             let me = this;
+            let setTemperature = this.temperature + value;
             //this.temperature += value;
             let params = {
                 "operation": "luaControl",
                 "name": "temperatureControl",
                 "params": {
-                    temperature: me.temperature,
+                    temperature: setTemperature,
                 }
             }
             nativeService.sendLuaRequest(params, true).then(function (data) {

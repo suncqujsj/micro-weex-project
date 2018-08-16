@@ -300,6 +300,7 @@
 		flex:1;
 		width:750px;
 		scroll-direction: vertical;
+		background-color: #f2f2f2;
 	}
 	.box {
 		margin-bottom:290px;

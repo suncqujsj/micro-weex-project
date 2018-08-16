@@ -85,7 +85,8 @@ let customizeNativeService = Object.assign(nativeService, {
     getCssRequestCommonParam() {
         return new Promise((resolve, reject) => {
             let param = {
-                plugin_version: appConfig.plugin_version || '0.0.1'
+                plugin_version: appConfig.plugin_version || '0.0.1',
+                tm: Math.round(new Date().getTime() / 1000) //时间戳
             }
             this.getUserInfo().then((data) => {
                 // param.webUserCode = data.uid //"oFtQywGHyqrWbDvjVdRTeR9Ig3m0"

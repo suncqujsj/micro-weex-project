@@ -95,7 +95,6 @@
         },
         methods: {
             queryStatus () {
-                console.log('queryS')
             	let self = this;
             	let params = {
             			"operation":"luaQuery",
@@ -112,7 +111,6 @@
             	});
             },
             updateUI(data) {
-                console.log(data)
             	if(data.errorCode == 0) {
             		this.onlineStatus = "1";
 	            	let params = data.params || data.result;
@@ -143,8 +141,8 @@
             			}
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
-            		self.updateUI(data);
-//            		self.queryStatus();
+//            		self.updateUI(data);
+            		self.queryStatus();
             	},function(error) {
             		console.log("error");
             	});
@@ -193,7 +191,7 @@
         mounted() {
 	       let self = this;
             nativeService.getDeviceInfo().then(function(data) {
-//            	self.updateDeviceInfo(data.result);
+            	self.updateDeviceInfo(data.result);
             	self.handleNotification();
         		self.queryStatus();
             },function(error) {

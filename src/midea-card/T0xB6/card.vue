@@ -166,8 +166,8 @@
         			}
         		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
-            		self.updateUI(data);
-//					self.queryStatus();
+//            		self.updateUI(data);
+					self.queryStatus();
             	},function(error) {
             		console.log("error");
             	});

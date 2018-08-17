@@ -77,7 +77,8 @@ export default {
 }
 .service-item-title {
   font-family: PingFangSC-Regular;
-  font-size: 36px;
+  font-size: 32px;
+  
   color: #000000;
 }
 </style>

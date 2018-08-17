@@ -1,6 +1,6 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
-	    <div class="box">
+	    <div class="box" @click="showControlPanelPage">
 	       <div v-if="onlineStatus == '1'">
 		    	 <div class="card" v-if="onoff == 'on'">
 		        	<div class="card-left">
@@ -17,11 +17,15 @@
 		        		<div class="card-control">
 		        		</div>
 		        		<div class="card-icon">
-		        			<image class="card-icon-img" @click="showControlPanelPage" src="./assets/img/smart_pic_equip010@2x.png"></image>
+		        			<image class="card-icon-img"  src="./assets/img/smart_pic_equip010@2x.png"></image>
 		        		</div>
-		        		<div class="card-control-div">
-		        			<image class="card-control-img" style="margin-right:35px"  :src="startPause" @click="controlStartPause"></image>
-		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
+		        		<div class="card-control-div" @click="controlStartPause">
+							<div class="left-btn">
+								<image class="card-control-img"  :src="startPause" ></image>
+							</div>
+							<div class="right-btn" @click="poweronoff(0)">
+								<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" ></image>
+							</div>
 	        			</div>
 		        	</div>
 		        </div>
@@ -36,9 +40,11 @@
 		        </div>
 	        </div>
 	         <div class="card-power-off" v-else>
-	        	<div class="control-div-offline">
-	        		<image class="card-control-img" :src="powerIcon_offline"  @click="reload"></image>
+	        	<div class="control-div-offline" @click="reload">
+					<div class="right-btn">
+	        		<image class="card-control-img" :src="powerIcon_offline"  ></image>
 	        		<text class="text-offline">重连</text>
+					</div>
 	        	</div>
 	        	<div>
 	        		<image class="icon-offline" src="./assets/img/smart_pic_equip010@2x.png"></image>
@@ -486,8 +492,8 @@
 	}
 	.control-div-offline {
 		position: absolute;
-		right:32px;
-		top:32px;
+		top: 0px;
+		right: 0px;
 		align-items: center;
 	}
 	.card-control {
@@ -500,8 +506,20 @@
 	.card-control-div {
 		flex-direction: row;
 		position: absolute;
-		top: 38px;
-		right: 36px;
+		top: 0px;
+		right: 0px;
+	}
+	.left-btn{
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
+		margin-right: 2px;
+	}
+	.right-btn {
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left: 14px;
 	}
 	.card-status-detail {
 		flex-direction: row;

@@ -1,10 +1,7 @@
 <template>
     <div class="wrap" :style="wrapStyle" @viewappear="initData">
         <div class="header-floor">
-            <midea-header title="设置名称" bgColor="#fff" titleText="#000" @leftImgClick="goBack"></midea-header>
-            <div class="delete" @click="confirmNameEdit">
-                <text class="delete-text">完成</text>
-            </div>
+            <midea-header title="设置名称" :isImmersion="isImmersion" bgColor="#fff" titleText="#000" @leftImgClick="goBack"  :showRightText="true" rightText="完成"  @rightTextClick="confirmNameEdit"></midea-header>
         </div>
         <div class="content">
             <div class="name-floor row-sb">

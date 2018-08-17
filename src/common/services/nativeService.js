@@ -963,6 +963,13 @@ export default {
             operation: 'getWeatherInfo'
         })
         return this.commandInterfaceWrapper(param)
+    }, 
+    /*  ^5.0.0  百度开放接口，通过经纬度返回对应的位置信息 */
+    baiduGeocoder(params) {
+        let param = Object.assign(params, {
+            operation: 'baiduGeocoder'
+        })
+        return this.commandInterfaceWrapper(param)
     },
     //获取登录态信息
     getLoginInfo() {

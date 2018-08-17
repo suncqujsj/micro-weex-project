@@ -19,6 +19,8 @@ const appDataChannel = new BroadcastChannel(plugin_name + 'appData')
 const pushDataChannel = new BroadcastChannel(plugin_name + 'pushData')
 const bridgeModule = weex.requireModule('bridgeModule');
 
+import { url, codeDesc } from './config/config.js'
+
 export default {
     components: {
         mideaHeader
@@ -47,6 +49,13 @@ export default {
         },
         platform() {
             return weex.config.env.platform.toLowerCase()
+        },
+        isImmersion() {
+            let result = true
+            if (weex.config.env.isImmersion == "false") {
+                result = false
+            }
+            return result
         },
     },
     methods: {
@@ -193,16 +202,58 @@ export default {
         },
         checkLogin(){
             return new Promise((resolve, reject)=>{
-                nativeService.getUserInfo().then((res) => {
-                    if (res.uid == '' || res.uid == undefined) {
-                        // nativeService.alert('您还没有登录，点击确定前往登录', function () {
+                nativeService.getLoginInfo().then((login)=>{
+                    if (login.isLogin === '0') {
                         nativeService.jumpNativePage({
                             pageName: 'login'
                         })
-                        // })
-                    } else {
-                        resolve(res.uid)
+                    }else{
+                        nativeService.getUserInfo().then((user) => {
+                            nativeService.getCurrentHomeInfo().then((home) => {
+                                if (home.homeId === '' || home.homeId == undefined) {
+                                    nativeService.toast('获取家庭失败，请稍后重试')
+                                } else {
+                                    let result = {
+                                        uid: user.uid,
+                                        homegroupId: home.homeId
+                                    }
+                                    resolve(result)
+                                }
+                            }).catch((err) => {
+                                nativeService.toast('获取家庭失败，请稍后重试')
+                            })
+                        })
                     }
+                })
+               
+            })
+        },
+        getUserRole(uid, homegroupId) {
+            return new Promise((resolve, reject) => {
+                let reqUrl = url.home.getMember
+                let reqParams = {
+                    uid: uid,
+                    homegroupId: homegroupId
+                }
+                this.webRequest(reqUrl, reqParams, false).then((rtnData) => {
+                    if (rtnData.code == 0) {
+                        let roleId = ''
+                        for (var i in rtnData.data.list) {
+                            if (rtnData.data.list[i].uid == uid) {
+                                roleId = rtnData.data.list[i].roleId
+                                break
+                            }
+                        }
+                        resolve(roleId)
+                    } else {
+                        if (codeDesc.scene.hasOwnProperty(rtnData.code)) {
+                            nativeService.toast(codeDesc.home[rtnData.code])
+                        } else {
+                            nativeService.toast(rtnData.msg)
+                        }
+                    }
+                }).catch((err) => {
+                    nativeService.toast(this.getErrorMessage(err))
                 })
             })
         },

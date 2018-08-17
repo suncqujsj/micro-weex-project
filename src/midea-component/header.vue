@@ -13,7 +13,7 @@
                 </slot>
             </div>
             <div v-if="showRightText" class="header-right" @click="rightTextClick">
-                <text class="header-right-text">{{rightText}}</text>
+                <text class="header-right-text" :style="{color: rightColor}">{{rightText}}</text>
             </div>
             <slot name="customerContent">
             </slot>
@@ -67,6 +67,10 @@ export default {
         rightText: {
             type: String,
             default: ''
+        },
+        rightColor: {
+            type: String,
+            default: '#666666'
         }
     },
     computed: {
@@ -166,7 +170,6 @@ export default {
 .header-right-text {
   font-family: PingFangSC-Regular;
   font-size: 28px;
-  color: #666666;
   padding-left: 20px;
   padding-right: 32px;
   text-align: right;

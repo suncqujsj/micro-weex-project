@@ -1,13 +1,14 @@
 <template>
     <midea-popup ref="popup" :show="show" @mideaPopupOverlayClicked="cancel" pos="bottom" :height="height">
         <div class="wrap">
-            <slot></slot>
-            <div class="confirm-buttons row-sb">
+            <div class="slot-floor">
+                <slot></slot>
+            </div>
+            <div :show="show" class="confirm-buttons row-sb">
                 <div class="confirm-button-left" @click="leftBtnClick"><text class="left-button">{{leftBtnText}}</text></div>
                 <div class="confirm-button-right" @click="rightBtnClick"><text class="right-button">{{rightBtnText}}</text></div>
             </div>
         </div>
-        
     </midea-popup>
 </template>
 
@@ -67,8 +68,13 @@ export default {
 
 <style>
     .wrap{ background-color: #f2f2f2; }
+    .slot-floor{
+        height: 500px;
+    }
     .row-sb{ flex-direction: row; align-items: center; justify-content: space-between; }
     .confirm-buttons{
+        position: absolute;
+        bottom: 0;
         background-color: #fff;
         margin-top: 30px;
         padding-top: 25px;

@@ -1,10 +1,7 @@
 <template>
    <div class="wrap" :style="wrapStyle">
        <div class="header-floor">
-            <midea-header :title="autoDetail.name" :isImmersion="isipx?false:true" :bgColor="header.bgColor" :titleText="header.color" @leftImgClick="goBack"></midea-header>
-            <div class="delete" @click="showDialog('delete')" :style="headBtnStyle">
-                <text class="delete-text">删除</text>
-            </div>
+            <midea-header :title="autoDetail.name" :isImmersion="isImmersion" :bgColor="header.bgColor" :titleText="header.color" @leftImgClick="goBack" :showRightText="roleId=='1001' ? true : false" rightText="删除" @rightTextClick="showDialog('delete')"></midea-header>
        </div>
         <list class="content-list">
             <cell class="content">
@@ -14,13 +11,14 @@
                             <text class="text">名称</text>
                             <div class="row-sb">
                                 <text class="auto-name-text">{{autoName}}</text>
-                               <image class="icon-next" :src="icon.next"></image>
+                               <image v-if="roleId == '1001'" class="icon-next" :src="icon.next"></image>
                             </div>
                         </div>
                         <div v-if="sceneType != 2" class="row-sb switch-floor">
                             <text class="text">启用</text>
                             <div>
-                                <switch-bar :isActive="autoEnable == 1" @onSwitch="openAuto"></switch-bar>
+                                <switch-bar v-if="roleId == '1001'" :isActive="autoEnable == 1" @onSwitch="openAuto"></switch-bar>
+                                <text class="enable-text" v-else>{{autoEnable==1?'已开启':'已关闭'}}</text>
                             </div>
                         </div>
                     </div>
@@ -33,7 +31,7 @@
                                 <text class="condition-desc" v-if="autoDetail.startTime && sceneType==4">在{{weekDesc}} {{autoDetail.startTime}}时</text>
                                 <text class="condition-desc" v-if="autoDetail.weather && sceneType==6"> 在{{weekDesc}} 天气为{{autoDetail.weather.weatherStatus}}, 气温{{temperatureLoginText[autoDetail.weather.logical]}} {{autoDetail.weather.temperature}}℃ 时</text>
                             </div>
-                            <image class="icon-next" :src="icon.next"></image>
+                            <image v-if="roleId == '1001'" class="icon-next" :src="icon.next"></image>
                         </div>
                     </div>
                 </div>
@@ -53,13 +51,13 @@
                             </div>
                             <!-- <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, key)"></image> -->
                         </div>
-                        <div class="device row-c" @click="goBindNewDevice">
+                        <div v-if="roleId == '1001'" class="device row-c" @click="goBindNewDevice">
                             <image class="icon-add" :src="icon.addDevice"></image>
                             <text class="add-device-text">添加设备</text>
                         </div>
                     </div>
-                    <text class="save-btn" @click="sendAutoEdit">保存</text>
                 </div>
+                <text v-if="roleId == '1001'" class="save-btn" @click="sendAutoEdit">保存</text>
             </cell>
         </list>
         <!-- 删除自动化弹窗提示 -->
@@ -82,7 +80,7 @@
         right: 25px;
     }
     .delete-text{
-        font-size: 32px;
+        font-size: 28px;
         color: #666;
     }
     .hd{
@@ -121,7 +119,7 @@
     }
     .sub-hd{
         color: #666;
-        font-size: 30px;
+        font-size: 28px;
         margin-top: 33px;
         margin-left:30px;
         margin-bottom: 14px;
@@ -147,7 +145,14 @@
         padding-bottom: 5px;
         border-top-color: #e5e5e5;
         border-top-style: solid;
-        border-top-width: 2px;
+        border-top-width: 1px;
+    }
+    .enable-text{
+        padding-top: 30px;
+        padding-bottom: 30px;
+        padding-right: 10px;
+        font-size: 28px;
+        color: #666;
     }
     .device-box{
         padding-left: 32.25px;
@@ -275,6 +280,7 @@
                     next: 'assets/img/more.png',
                     addDevice: 'assets/img/add.png'
                 },
+                roleId: nativeService.getParameters('roleId'),
                 applianceImgPath: applianceImgPath,
                 header: {
                     title: '设置',
@@ -353,15 +359,6 @@
                 weekTmp = weekTmp.join('、')
                 return weekTmp
             },
-            headBtnStyle(){
-                let tmp = {}
-                if (this.platform == 'ios' && !this.isipx) {
-                    tmp.top = '69px'
-                }else{
-                    tmp.top = '29px'
-                }
-                return tmp
-            },
         },
         methods: {
             goBack(){
@@ -396,11 +393,11 @@
                 this.sceneSupoortDevices = tmpSceneSupoortDevices
             },
             getAutoDetail(){//请求自动化详情
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     let reqUrl = url.auto.detail
                     let reqParams = {
-                        uid: uid,
-                        homegroupId: this.homegroupId,
+                        uid: res.uid,
+                        homegroupId: res.homegroupId,
                         sceneId: this.sceneId
                     }
                     this.webRequest(reqUrl, reqParams).then((rtnData)=>{
@@ -428,10 +425,12 @@
                 })
             },
             goSetAutoName(){
-                let params = {
-                    autoName: encodeURIComponent(this.autoName)
+                if (this.roleId == '1001') {
+                    let params = {
+                        autoName: encodeURIComponent(this.autoName)
+                    }
+                    this.goTo('setAutoName', {}, params)
                 }
-                this.goTo('setAutoName', {}, params)
             },
             initBindDevices(){
                 let tmpAutoBindDevices = {}//根据后台返回的task字段初始化已绑定设备列表
@@ -496,45 +495,49 @@
                 this.bindDeviceActions =  Object.assign({}, tmpBindDeviceActions)
             },
             openAuto(e){
-                if (this.autoDetail.enable == 1) {
-                    this.autoDetail.enable = 0
-                    this.autoEnable = 0
-                }else if (this.autoDetail.enable == 0) {
-                    this.autoDetail.enable = 1
-                    this.autoEnable = 1
+                if (this.roleId == '1001') {
+                    if (this.autoDetail.enable == 1) {
+                        this.autoDetail.enable = 0
+                        this.autoEnable = 0
+                    }else if (this.autoDetail.enable == 0) {
+                        this.autoDetail.enable = 1
+                        this.autoEnable = 1
+                    }
+                    this.editParams.enable = Number(e.value)
                 }
-                this.editParams.enable = Number(e.value)
             },
             goAutoTypeSet(){
-                let params = {
-                    from: 'editAuto',
-                    sceneType: this.sceneType,
-                    weekly: this.autoDetail.weekly
+                if (this.roleId == '1001') {
+                    let params = {
+                        from: 'editAuto',
+                        sceneType: this.sceneType,
+                        weekly: this.autoDetail.weekly
+                    }
+                    params.editSceneId = this.autoDetail.sceneId
+                    
+                    if (this.sceneType == 3){
+                        params.direction = this.autoDetail.location.direction
+                        params.locationLatitude = this.editParams.locationLatitude ||this.autoDetail.location.latitude
+                        params.locationLongitude = this.editParams.locationLongitude || this.autoDetail.location.longitude
+                    }
+                    if (this.sceneType == 4){
+                        params.startTime = this.autoDetail.startTime
+                    }
+                    if (this.sceneType == 6){
+                        params.weatherStatus = encodeURIComponent(this.autoDetail.weather.weatherStatus)
+                        params.logical = encodeURIComponent(this.autoDetail.weather.logical)
+                        params.weatherTemperature = this.autoDetail.weather.temperature
+                    }
+                    this.goTo('autoTypeSet', {}, params)
                 }
-                params.editSceneId = this.autoDetail.sceneId
-                
-                if (this.sceneType == 3){
-                    params.direction = this.autoDetail.location.direction
-                    params.locationLongitude = this.autoDetail.location.longitude
-                    params.locationLatitude = this.autoDetail.location.latitude
-                }
-                if (this.sceneType == 4){
-                    params.startTime = this.autoDetail.startTime
-                }
-                if (this.sceneType == 6){
-                    params.weatherStatus = encodeURIComponent(this.autoDetail.weather.weatherStatus)
-                    params.logical = encodeURIComponent(this.autoDetail.weather.logical)
-                    params.weatherTemperature = this.autoDetail.weather.temperature
-                }
-                this.goTo('autoTypeSet', {}, params)
             },
             deleteAuto(){
                 this.closeDialog('delete')
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     let reqUrl = url.auto.delete
                     let reqParams = {
-                        uid: uid,
-                        homegroupId: this.homegroupId,
+                        uid: res.uid,
+                        homegroupId: res.homegroupId,
                         sceneId: this.sceneId,
                         enable: '2'
                     }
@@ -562,24 +565,26 @@
                 })
             },
             setDevice(deviceId){
-                let tmpTask = {}
-                for (var i in this.autoDetail.task) {
-                    if (this.autoDetail.task[i].applianceCode == deviceId) {
-                        tmpTask = this.autoDetail.task[i].command
+                if (this.roleId == '1001'){
+                    let tmpTask = {}
+                    for (var i in this.autoDetail.task) {
+                        if (this.autoDetail.task[i].applianceCode == deviceId) {
+                            tmpTask = this.autoDetail.task[i].command
+                        }
                     }
+                    tmpTask = JSON.stringify(tmpTask)
+                    let params = {
+                        from: 'editAuto',
+                        sceneId: this.autoDetail.sceneId,
+                        sceneType: this.autoDetail.sceneType,
+                        deviceId: deviceId,
+                        deviceType: this.userDevices[deviceId].deviceType,
+                        deviceTask: tmpTask,
+                        deviceName: encodeURIComponent(this.autoBindDevices[deviceId].deviceName),
+                        pageStamp: this.pageStamp
+                    }
+                    this.goTo('setDevice', {}, params)
                 }
-                tmpTask = JSON.stringify(tmpTask)
-                let params = {
-                    from: 'editAuto',
-                    sceneId: this.autoDetail.sceneId,
-                    sceneType: this.autoDetail.sceneType,
-                    deviceId: deviceId,
-                    deviceType: this.userDevices[deviceId].deviceType,
-                    deviceTask: tmpTask,
-                    deviceName: encodeURIComponent(this.autoBindDevices[deviceId].deviceName),
-                    pageStamp: this.pageStamp
-                }
-                this.goTo('setDevice', {}, params)
             },
             checkOn(item, index){
                 let tmpStatus = {
@@ -591,12 +596,12 @@
                 this.generateBindDeviceActions()
             },
             goBindNewDevice(){
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     if (Object.keys(this.unbindDevices).length > 0) {
                         let params = {
                             from: 'editAuto',
-                            uid: uid,
-                            homegroupId: this.homegroupId,
+                            uid: res.uid,
+                            homegroupId: res.homegroupId,
                             sceneType: this.sceneType,
                             userDevices: nativeService.getParameters('userDevices'),
                             unbindDevices: encodeURIComponent(JSON.stringify(this.unbindDevices)),
@@ -611,11 +616,11 @@
                 })
             },
             sendAutoEdit(){
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     let reqUrl = url.auto.update
                     let reqParams = {
-                        uid: uid,
-                        homegroupId: this.homegroupId,
+                        uid: res.uid,
+                        homegroupId: res.homegroupId,
                         sceneType: this.sceneType,
                         sceneId: this.sceneId,
                         image: this.autoDetail.image,

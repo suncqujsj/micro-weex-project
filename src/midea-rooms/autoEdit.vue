@@ -1,10 +1,7 @@
 <template>
    <div class="wrap" :style="wrapStyle">
        <div class="header-floor">
-            <midea-header :title="autoDetail.name" :isImmersion="isipx?false:true" :bgColor="header.bgColor" :titleText="header.color" @leftImgClick="goBack"></midea-header>
-            <div v-if="roleId == '1001'" class="delete" @click="showDialog('delete')" :style="headBtnStyle">
-                <text class="delete-text">删除</text>
-            </div>
+            <midea-header :title="autoDetail.name" :isImmersion="isImmersion" :bgColor="header.bgColor" :titleText="header.color" @leftImgClick="goBack" :showRightText="roleId=='1001' ? true : false" rightText="删除" @rightTextClick="showDialog('delete')"></midea-header>
        </div>
         <list class="content-list">
             <cell class="content">
@@ -362,15 +359,6 @@
                 weekTmp = weekTmp.join('、')
                 return weekTmp
             },
-            headBtnStyle(){
-                let tmp = {}
-                if (this.isImmersion) {
-                    tmp.top = '72px'
-                }else{
-                    tmp.top = '32px'
-                }
-                return tmp
-            },
         },
         methods: {
             goBack(){
@@ -437,7 +425,7 @@
                 })
             },
             goSetAutoName(){
-                if (roleId == '1001') {
+                if (this.roleId == '1001') {
                     let params = {
                         autoName: encodeURIComponent(this.autoName)
                     }

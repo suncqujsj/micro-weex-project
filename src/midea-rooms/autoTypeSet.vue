@@ -1,7 +1,7 @@
 <template>
    <div class="wrap" :style="wrapStyle">
         <div class="addauto-hd">
-            <midea-header :title="title" :isImmersion="isipx?false:true" :bgColor="header.bgColor" :titleText="header.color"  @leftImgClick="goBack"></midea-header>
+            <midea-header :title="title" :isImmersion="isImmersion" :bgColor="header.bgColor" :titleText="header.color"  @leftImgClick="goBack"></midea-header>
         </div>
         <scroller class="content-scroller">
             <div class="map-box" v-if="sceneType == 3">

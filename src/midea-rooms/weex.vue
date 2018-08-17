@@ -14,7 +14,9 @@
                             <div>
                                 <text class="auto-name">{{item.name}}</text>
                                 <div class="auto-desc row-s">
-                                    <text v-for="device in item.task" class="auto-desc-text">{{formatUserDevices[device.applianceCode].deviceName}}</text>
+                                    <div v-for="device in item.task">
+                                        <text class="auto-desc-text">{{formatUserDevices[device.applianceCode]}}</text>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -95,7 +97,7 @@
     }
     .auto-name{ width: 180px; font-size: 28px; color: #000; font-weight: bold; margin-bottom: 8px; text-overflow: clip; }
     .auto-desc{ width: 120px; font-size: 24px; color: #C7C7CC; lines:1; }
-    .auto-desc-text{ font-size: 24px; color: #C7C7CC; }
+    .auto-desc-text{ font-size: 24px; color: #C7C7CC; margin-right: 6px;}
     .scene-list{  padding-left:30px; padding-right:30px;}
     .scene { width: 690px; height: 206px; padding-bottom: 16px; position: relative; }
     .scene-bg{ width: 690px; height: 185px; position: absolute; }
@@ -122,7 +124,7 @@
 </style>
 
 <script>
-    import { url, codeDesc } from './config/config.js'
+    import { url, codeDesc, autoSupportActions } from './config/config.js'
     import base from './base'
     import nativeService from '@/common/services/nativeService.js'
     import ToastDialog from '@/midea-component/toastDialog.vue'
@@ -166,7 +168,7 @@
             userDevices(newValue){
                 let tmp = {}
                 for(var i in this.userDevices) {
-                    tmp[this.userDevices[i].deviceId] = this.userDevices[i]
+                    tmp[this.userDevices[i].deviceId] = this.userDevices[i].deviceName
                 }
                 this.formatUserDevices = tmp
             }
@@ -257,7 +259,8 @@
                     '4': '1006',
                     '6': '1008'
                 },
-                formatUserDevices: {}
+                formatUserDevices: {},
+                autoSupportActions: autoSupportActions
             }
         },
         methods: { 

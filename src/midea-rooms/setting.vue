@@ -1,6 +1,6 @@
 <template>
     <div :style="wrapStyle">
-        <midea-header :title="header.title" :isImmersion="isipx?false:true" :bgColor="header.bgColor" :titleText="header.color"  @leftImgClick="goBack"></midea-header>
+        <midea-header :title="header.title" :isImmersion="isImmersion" :bgColor="header.bgColor" :titleText="header.color"  @leftImgClick="goBack"></midea-header>
         <list class="scroller" :style="scrollerStyle">
             <cell>
                 <div class="block"  style="margin-top:10px; background-color:#fff">

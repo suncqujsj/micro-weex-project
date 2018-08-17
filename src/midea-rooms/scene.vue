@@ -2,10 +2,7 @@
     <div @viewappear="initData">
         <scroller class="wrap">
             <div :style="sceneStyle">
-                <midea-header :title="sceneName[roomType]" :isImmersion="isipx?false:true" bgColor="transparent" titleText="#fff" :leftImg="icon.back" @leftImgClick="goBack"></midea-header>
-                <div v-if="hasUseableDevice && network" class="setting" @click="goSetting()" :style="headBtnStyle">
-                    <text class="setting-text white">设置</text>
-                </div>
+                <midea-header :title="sceneName[roomType]" :isImmersion="isImmersion" bgColor="transparent" titleText="#fff" :leftImg="icon.back" @leftImgClick="goBack" :showRightText="hasUseableDevice && network ? true : false" rightText="设置" rightColor="#fff" @rightTextClick="goSetting"></midea-header>
                 <div v-if="roomType=='1' || roomType=='2' || roomType=='3' " class="up-block" >
                     <div v-if="hasUseableDevice">
                         <div class="up-desc">
@@ -501,15 +498,6 @@
                     height: this.pageHeight*0.7 + 'px',
                     position: 'relative',
                     overflow: 'hidden'
-                }
-                return tmp
-            },
-            headBtnStyle(){
-                let tmp = {}
-                if (this.isImmersion) {
-                    tmp.top = '72px'
-                }else{
-                    tmp.top = '32px'
                 }
                 return tmp
             },

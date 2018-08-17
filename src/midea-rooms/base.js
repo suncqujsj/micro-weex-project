@@ -51,7 +51,11 @@ export default {
             return weex.config.env.platform.toLowerCase()
         },
         isImmersion() {
-            return weex.config.env.isImmersion
+            let result = true
+            if (weex.config.env.isImmersion == "false") {
+                result = false
+            }
+            return result
         },
     },
     methods: {
@@ -198,30 +202,30 @@ export default {
         },
         checkLogin(){
             return new Promise((resolve, reject)=>{
-                nativeService.getUserInfo().then((user) => {
-                    if (user.uid == '' || user.uid == undefined) {
-                        // nativeService.alert('您还没有登录，点击确定前往登录', function () {
+                nativeService.getLoginInfo().then((login)=>{
+                    if (login.isLogin === '0') {
                         nativeService.jumpNativePage({
                             pageName: 'login'
                         })
-                        // })
-                    } else {
-                        nativeService.getCurrentHomeInfo().then((home) => {
-                            if (home.homeId === '' || home.homeId == undefined) {
-                                nativeService.toast('获取家庭失败，请稍后重试')
-                            }else{
-                                let result = {
-                                    uid: user.uid,
-                                    homegroupId: home.homeId
+                    }else{
+                        nativeService.getUserInfo().then((user) => {
+                            nativeService.getCurrentHomeInfo().then((home) => {
+                                if (home.homeId === '' || home.homeId == undefined) {
+                                    nativeService.toast('获取家庭失败，请稍后重试')
+                                } else {
+                                    let result = {
+                                        uid: user.uid,
+                                        homegroupId: home.homeId
+                                    }
+                                    resolve(result)
                                 }
-                                resolve(result)
-                            }
-                        }).catch((err)=>{
-                            nativeService.toast('获取家庭失败，请稍后重试')
+                            }).catch((err) => {
+                                nativeService.toast('获取家庭失败，请稍后重试')
+                            })
                         })
                     }
-                }).catch((err)=>{
                 })
+               
             })
         },
         getUserRole(uid, homegroupId) {

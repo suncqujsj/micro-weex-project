@@ -1,6 +1,6 @@
 <template>
 	<scroller class="content">
-    <div class="box">
+    <div class="box" @click="showControlPanelPage">
         <div>
         	<div>
 		    	 <div class="card" v-if="onlineStatus == '1'">
@@ -19,10 +19,10 @@
 		        			
 		        		</div>
 		        		<div class="card-icon">
-		        			<image class="card-icon-img"  @click="showControlPanelPage" resize="contain" src="./assets/img/smart_img_equip042@2x.png"></image>
+		        			<image class="card-icon-img"   resize="contain" src="./assets/img/smart_img_equip042@2x.png"></image>
 		        		</div>
 		        		<div class="card-control-div" v-if="false">
-		        			<image class="card-control-img" @click="lockSwitch" :src="deviceLock"></image>
+		        			<image class="card-control-img"  :src="deviceLock"  @click="lockSwitch"></image>
 	        			</div>
 		        	</div>
 		        </div>
@@ -313,8 +313,12 @@
 	}
 	.control-div-offline {
 		position: absolute;
-		right:32px;
-		top:32px;
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
+		top: 0px;
+		right: 0px;
 		align-items: center;
 	}
 	.icon-offline {
@@ -342,9 +346,12 @@
 	.card-control-div {
 		flex-direction: row;
 		position: absolute;
-		top: 38px;
-		right: 36px;
-		height:100px;
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
+		top: 0px;
+		right: 0px;
 	}
 	.card-status-detail {
 		flex-direction: row;

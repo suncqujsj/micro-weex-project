@@ -1,6 +1,6 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
-	    <div class="box" >
+	    <div class="box" @click="showControlPanelPage">
 	        <div>
 		    	 <div v-if="onlineStatus == '1'">
 		    	 	<div v-if="onoff == 'on'">
@@ -25,11 +25,11 @@
 				        			
 				        		</div>
 				        		<div class="card-icon">
-				        			<image class="card-icon-img"  @click="showControlPanelPage" :src="deviceIcon"></image>
+				        			<image class="card-icon-img"   :src="deviceIcon"></image>
 				        		</div>
 				        		<div></div>
-				        		<div class="card-control-div">
-				        			<image class="card-control-img" :src="powerIcon" @click="poweronoff(0)"></image>
+				        		<div class="card-control-div" @click="poweronoff(0)">
+				        			<image class="card-control-img" :src="powerIcon" ></image>
 			        			</div>
 				        	</div>
 				        	<div class="card-right-margin"></div>
@@ -345,8 +345,12 @@
 	}
 	.control-div-offline {
 		position: absolute;
-		right:32px;
-		top:32px;
+		right: 0px;
+		top:0px;
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
 		align-items: center;
 	}
 	.icon-offline {
@@ -366,9 +370,12 @@
 	.card-control-div {
 		flex-direction: row;
 		position: absolute;
-		top: 38px;
-		right: 36px;
-		height:100px;
+		right: 0px;
+		top:0px;
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
 	}
 	.card-control-temp-div {
 		flex-direction: row;
@@ -376,10 +383,10 @@
 		margin-bottom: 25px;
 	}
 	.cart-control-temp-img {
-		width: 64px;
-		height: 64px
+		width: 84px;
+		height: 84px
 	}.cart-control-temp-img-right {
-		margin-left: 100px
+		margin-left: 60px
 	}
 	.card-status-detail {
 		flex-direction: row;

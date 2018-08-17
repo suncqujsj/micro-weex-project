@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" style="width:750px;">
-        <div :style="{backgroundColor:bgColor}" class="box" :class="[isImmersion && 'immersion']">
+        <div :style="{backgroundColor:bgColor}" class="box" :class="[isImmersion?(isipx? 'immersion-ipx': 'immersion'):'']">
             <div class="header-left-image-wrapper" @click="leftImgClick">
                 <image v-if="showLeftImg" class="header-left-image" :src="leftImg"></image>
             </div>
@@ -73,6 +73,11 @@ export default {
             default: '#666666'
         }
     },
+    computed: {
+        isipx: function () {
+            return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6');
+        }
+    },
     data() {
         return {
         }
@@ -116,6 +121,10 @@ export default {
 .immersion {
   padding-top: 40px;
   height: 128px;
+}
+.immersion-ipx {
+  padding-top: 68px;
+  height: 156px;
 }
 .header-title {
   flex: 1;

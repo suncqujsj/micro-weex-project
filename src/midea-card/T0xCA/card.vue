@@ -1,6 +1,6 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
-	    <div class="box">
+	    <div class="box" @click="showControlPanelPage">
 	        <div v-if="onlineStatus == '1'">
 		    	 <div class="card">
 		        	<div class="card-left">
@@ -27,7 +27,7 @@
 		        		<div class="card-control">
 		        		</div>
 		        		<div class="card-icon" style="margin-right:40px">
-		        			<image @click="showControlPanelPage" class="card-icon-img" src="./assets/img/smart_img_equip012@2x.png"></image>
+		        			<image  class="card-icon-img" src="./assets/img/smart_img_equip012@2x.png"></image>
 		        		</div>
 		        	</div>
 		        </div>

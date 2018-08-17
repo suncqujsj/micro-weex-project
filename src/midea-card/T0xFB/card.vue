@@ -1,6 +1,6 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
-	    <div class="box">
+	    <div class="box" @click="showControlPanelPage">
 	        <div v-if="onlineStatus == '1'">
 		    	 <div class="card card-hot" v-if="onoff == 'on'">
 		        	<div class="card-left">
@@ -13,8 +13,8 @@
 		        			<text class="main-status-third">{{display_value1}}</text>
 		        		</div>
 		        		<div class="card-control-temp-div">
-		        			<image @click="down" class="cart-control-temp-img" src="./assets/img/smart_ic_reduce_huge@2x.png"></image>
-		        			<image @click="up" class="cart-control-temp-img cart-control-temp-img-right" src="./assets/img/smart_ic_increase_huge@2x.png"></image>
+		        			<image @click="down" class="cart-control-temp-img" src="./assets/img/smart_ic_reduce_huge@3x.png"></image>
+		        			<image @click="up" class="cart-control-temp-img cart-control-temp-img-right" src="./assets/img/smart_ic_increase_huge@3x.png"></image>
 		        		</div>
 		        	</div>
 		        	<div class="card-right">
@@ -22,7 +22,7 @@
 		        			
 		        		</div>
 		        		<div class="card-icon" >
-		        			<image class="card-icon-img" @click="showControlPanelPage" resize="contain" src="./assets/img/smart_img_equip040@2x.png"></image>
+		        			<image class="card-icon-img"  resize="contain" src="./assets/img/smart_img_equip040@2x.png"></image>
 		        		</div>
 		        		<div class="card-control-div">
 		        			<image class="card-control-img" @click="poweronoff(0)" src="./assets/img/smart_ic_off@2x.png"></image>
@@ -327,8 +327,12 @@
 	}
 	.control-div-offline {
 		position: absolute;
-		right:32px;
-		top:32px;
+		right: 0px;
+		top:0px;
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
 		align-items: center;
 	}
 	.card-control {
@@ -342,9 +346,12 @@
 	.card-control-div {
 		flex-direction: row;
 		position: absolute;
-		top: 38px;
-		right: 36px;
-		height:100px;
+		right: 0px;
+		top:0px;
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
 	}
 	.card-control-temp-div {
 		flex-direction: row;
@@ -352,11 +359,11 @@
 		margin-bottom: 25px;
 	}
 	.cart-control-temp-img {
-		width: 64px;
-		height: 64px
+		width: 84px;
+		height: 84px
 	}
 	.cart-control-temp-img-right {
-		margin-left: 100px
+		margin-left: 60px
 	}
 	.card-status-detail {
 		flex-direction: row;

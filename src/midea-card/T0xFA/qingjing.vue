@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header :title="title" :isImmersion="isipx?false:true" @leftImgClick="back">
+        <midea-header :title="title" :isImmersion="isImmersion" @leftImgClick="back">
         </midea-header>
         <scroller class="content-wrapper" v-if="situactionData">
             <div class="base-group header-group">

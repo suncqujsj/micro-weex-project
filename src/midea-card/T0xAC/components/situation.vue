@@ -151,8 +151,8 @@ export default {
             result.checked = result.enable == '1' ? true : false
 
             let conditions1 = (result.props.conditions[0].operator == 1 ? "高于" : "低于") + result.props.conditions[0].value
-            result.title = "室内温度" + conditions1 + "°度时，自动开启"
-            result.detail = "模式" + (result.props.target.mode == 'cool' ? "制冷" : "制热") + "，温度" + result.props.target.temperature + "."
+            result.title = "室内温度" + conditions1 + "°时，自动开启"
+            result.detail = "模式" + (result.props.target.mode == 'cool' ? "制冷" : "制热") + "，温度" + result.props.target.temperature + "°."
 
             return result
         },

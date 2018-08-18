@@ -18,25 +18,25 @@
 		        			
 		        		</div>
 		        		<div class="card-icon" >
-		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip029@2x.png" @click="showControlPanelPage()"></image>
+		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip029@3x.png" @click="showControlPanelPage()"></image>
 		        		</div>
 		        		<div class="card-control-div" v-if="work_status=='work'">
 							<div class="left-btn">
 								<image v-if="work_status=='work'" class="card-control-img" :src="startPause" @click="controlStartPause"></image>
 							</div>
 							<div class="left-btn">
-								<image v-if="work_status=='work'" class="card-control-img" src="./assets/img/smart_ic_cancelwork@2x.png" @click="cancelWork"></image>
+								<image v-if="work_status=='work'" class="card-control-img" src="./assets/img/smart_ic_cancelwork@3x.png" @click="cancelWork"></image>
 							</div>
 							<div class="right-btn">
-								<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
+								<image class="card-control-img" src="./assets/img/smart_ic_off@3x.png" @click="poweronoff(0)"></image>
 							</div>
 	        			</div>
 	        			<div class="card-control-div" v-else>
 							<div class="left-btn">
-		        			<image v-if="work_status!='work'" class="card-control-img" src="./assets/img/smart_ic_play@2x.png" @click="startWork"></image>
+		        			<image v-if="work_status!='work'" class="card-control-img" src="./assets/img/smart_ic_play@3x.png" @click="startWork"></image>
 							</div>
 							<div class="right-btn">
-								<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
+								<image class="card-control-img" src="./assets/img/smart_ic_off@3x.png" @click="poweronoff(0)"></image>
 							</div>
 	        			</div>
 		        	</div>
@@ -47,7 +47,7 @@
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image class="icon-offline" src="./assets/img/smart_img_equip029@2x.png" ></image>
+		        		<image class="icon-offline" src="./assets/img/smart_img_equip029@3x.png" ></image>
 		        	</div>
 		        </div>
 	        </div>
@@ -57,7 +57,7 @@
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
-	        		<image class="icon-offline" src="./assets/img/smart_img_equip029@2x.png"></image>
+	        		<image class="icon-offline" src="./assets/img/smart_img_equip029@3x.png"></image>
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
@@ -132,8 +132,8 @@
 					4: "干燥",
 					5: "结束"
 	            },
-	            powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
-                powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
+	            powerIcon_poweroff: "./assets/img/smart_ic_power_blue@3x.png",
+                powerIcon_offline: "./assets/img/smart_ic_reline@3x.png",
             }
         },
         methods: {
@@ -313,9 +313,9 @@
         	startPause() {
 	        	let img = "";
 	            if(this.operator == "start") {
-	                img = "./assets/img/smart_ic_pause@2x.png";
+	                img = "./assets/img/smart_ic_pause@3x.png";
 	            } else {
-	                img = "./assets/img/smart_ic_play@2x.png";
+	                img = "./assets/img/smart_ic_play@3x.png";
 	            }
 	            return img;
 	        }

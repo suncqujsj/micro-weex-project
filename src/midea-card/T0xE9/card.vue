@@ -17,7 +17,7 @@
 		        		<div class="card-control" >
 		        		</div>
 		        		<div class="card-icon">
-		        			<image class="card-icon-img"  resize="contain" src="./assets/img/smart_img_equip039@2x.png"></image>
+		        			<image class="card-icon-img"  resize="contain" src="./assets/img/smart_img_equip039@3x.png"></image>
 		        		</div>
 		        	</div>
 		        </div>
@@ -28,7 +28,7 @@
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
-	        		<image class="icon-offline" src="./assets/img/smart_img_equip039@2x.png"></image>
+	        		<image class="icon-offline" src="./assets/img/smart_img_equip039@3x.png"></image>
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
@@ -102,8 +102,8 @@
 					3:"预约等待中",
 					4:"保温"
 				},
-	            powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
-                powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
+	            powerIcon_poweroff: "./assets/img/smart_ic_power_blue@3x.png",
+                powerIcon_offline: "./assets/img/smart_ic_reline@3x.png",
             }
         },
         methods: {

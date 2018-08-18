@@ -10,7 +10,7 @@
                 <div v-for="col in colList">
                     <div v-for="item in col" class="auto row-sb"  @click="editAuto(item)">
                         <div class="row-s">
-                            <image class="icon" :src="item.image"></image>
+                            <image class="icon" :src="icon.auto[item.sceneType]"></image>
                             <div>
                                 <text class="auto-name">{{item.name}}</text>
                                 <div class="auto-desc row-s">
@@ -96,7 +96,7 @@
         border-radius: 4px;
     }
     .auto-name{ width: 180px; font-size: 28px; color: #000; font-weight: bold; margin-bottom: 8px; text-overflow: clip; }
-    .auto-desc{ width: 120px; font-size: 24px; color: #C7C7CC; lines:1; }
+    .auto-desc{ width: 120px; font-size: 24px; color: #C7C7CC; lines:1; text-overflow: ellipsis; }
     .auto-desc-text{ font-size: 24px; color: #C7C7CC; margin-right: 6px;}
     .scene-list{  padding-left:30px; padding-right:30px;}
     .scene { width: 690px; height: 206px; padding-bottom: 16px; position: relative; }
@@ -187,6 +187,12 @@
                         1: 'assets/img/scene_ic_listdone@3x.png',
                         2: 'assets/img/scene_ic_listloading@3x.png',
                         3: 'assets/img/scene_ic_listundo@3x.png'
+                    },
+                    auto: {
+                        2: 'assets/img/smart_ic_hand@3x.png',
+                        3: 'assets/img/scene_ic_placeblue@3x.png',
+                        4: 'assets/img/samrt_ic_clock@3x.png',
+                        6: 'assets/img/scene_ic_weather@3x.png',
                     }
                 },
                 sceneImg: {

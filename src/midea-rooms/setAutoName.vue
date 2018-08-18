@@ -76,11 +76,6 @@
                     height: this.pageHeight+'px',
                     backgroundColor: '#f2f2f2'
                 }
-                if (this.isipx) {
-                    tmp.paddingTop = '64px'
-                }else if (this.platform != 'android'){
-                    tmp.paddingTop = '40px'
-                }
                 return tmp
             },
         },

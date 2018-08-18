@@ -124,19 +124,24 @@ export default {
 }
 .first-visible-item {
   opacity: 0.1;
+  /* font-size: 30px; */
 }
 .second-visible-item {
   opacity: 0.3;
+  /* font-size: 34px; */
 }
 .second-last-visible-item {
   opacity: 0.3;
+  /* font-size: 34px; */
 }
 .first-last-visible-item {
   opacity: 0.1;
+  /* font-size: 30px; */
 }
 .selected-item {
   opacity: 1;
   color: #000000;
+  /* font-size: 38px; */
 }
 .unselected-item {
   opacity: 0.3;

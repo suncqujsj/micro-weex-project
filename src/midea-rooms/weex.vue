@@ -279,7 +279,7 @@
                             }else{
                                 nativeService.getCurrentHomeInfo().then( (home)=>{
                                     if (home.isLocal === '1'){
-                                        nativeService.toast('本地设备暂不支持场景功能')
+                                        // nativeService.toast('本地设备暂不支持场景功能')
                                         this.setTmpl()
                                     }else{
                                         if (home.homeId === '' || home.homeId == undefined) {

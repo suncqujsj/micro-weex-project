@@ -24,7 +24,7 @@
 				        			
 				        		</div>
 				        		<div class="card-icon" >
-				        			<image class="card-icon-img"  src="./assets/img/smart_pic_equip021@3x.png"></image>
+				        			<image class="card-icon-img"  src="./assets/img/smart_pic_equip021@2x.png"></image>
 				        		</div>
 				        		 <div class="card-control-div">
 				        			<image class="card-control-img" src="./assets/img/smart_ic_off@3x.png" @click="poweronoff(0)"></image>

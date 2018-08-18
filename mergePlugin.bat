@@ -23,10 +23,12 @@ echo %d%
 
 
 echo "删除%pluginPath%\dist_zip"
-rmdir "%pluginPath%\dist_zip" /q /s 
+if exist "%pluginPath%\dist_zip" rmdir "%pluginPath%\dist_zip" /q /s 
+
 ::开始循环需要拷贝的目录
 for /d %%i in ("%pluginPath%\*") do (
     set folderName=%%~ni
+    if exist "%%i\midea-card" rmdir "%%i\midea-card" /q /s 
     if exist "%buildPath%\!folderName!" (
         echo "拷贝!folderName!至!folderName!"
         XCOPY "%buildPath%\!folderName!\*.*" %%i /s/y/q

@@ -24,10 +24,10 @@
 				        			
 				        		</div>
 				        		<div class="card-icon">
-				        			<image class="card-icon-img"   src="./assets/img/smart_img_equip036@2x.png"></image>
+				        			<image class="card-icon-img"   src="./assets/img/smart_img_equip036@3x.png"></image>
 				        		</div>
 				        		 <div class="card-control-div" @click="poweronoff(0)">
-				        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" ></image>
+				        			<image class="card-control-img" src="./assets/img/smart_ic_off@3x.png" ></image>
 			        			</div>
 				        	</div>
 				        </div>
@@ -42,7 +42,7 @@
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image @click="showControlPanelPage" class="icon-offline" src="./assets/img/smart_img_equip036@2x.png"></image>
+		        		<image @click="showControlPanelPage" class="icon-offline" src="./assets/img/smart_img_equip036@3x.png"></image>
 		        	</div>
 		        </div>
 		    </div>
@@ -52,7 +52,7 @@
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
-	        		<image class="icon-offline" src="./assets/img/smart_img_equip036@2x.png"></image>
+	        		<image class="icon-offline" src="./assets/img/smart_img_equip036@3x.png"></image>
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
@@ -113,8 +113,8 @@
 					adult:"成人浴工作模式",
 					old:"老人浴工作模式"
 	            },
-                powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
-                powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
+                powerIcon_offline: "./assets/img/smart_ic_reline@3x.png",
+                powerIcon_poweroff: "./assets/img/smart_ic_power_blue@3x.png",
             }
         },
         methods: {

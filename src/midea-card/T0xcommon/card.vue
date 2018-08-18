@@ -9,7 +9,7 @@
 	        			</div>
 		        		<div class="card-status-detail" @click="showControlPanelPage">
 		        			<text class="main-status-third">进入详情</text>
-		        			<image class="main-status-detail" src="./assets/img/smart_ic_arrow_forward@2x.png"></image>
+		        			<image class="main-status-detail" src="./assets/img/smart_ic_arrow_forward@3x.png"></image>
 		        		</div>
 		        		<div class="card-control-temp-div">
 		        		</div>
@@ -73,8 +73,8 @@
             	
             	pushKey: "receiveMessage",
             	pushKeyOnline: "receiveMessageFromApp",
-	            powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
-                powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
+	            powerIcon_poweroff: "./assets/img/smart_ic_power_blue@3x.png",
+                powerIcon_offline: "./assets/img/smart_ic_reline@3x.png",
             }
         },
         methods: {

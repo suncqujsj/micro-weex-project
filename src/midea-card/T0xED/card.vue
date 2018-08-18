@@ -19,7 +19,7 @@
 	        			</div>
 		        		<div class="card-status-detail card-status-detail-simple">
 		        			<text class="main-status-third-simple">进入详情</text>
-		        			<image class="main-status-detail" src="./assets/img/smart_ic_arrow_forward@2x.png"></image>
+		        			<image class="main-status-detail" src="./assets/img/smart_ic_arrow_forward@3x.png"></image>
 		        		</div>
 		        		<div class="card-control-temp-div">
 		        		</div>
@@ -28,7 +28,7 @@
 		        		<div class="card-control">
 		        		</div>
 		        		<div class="card-icon" >
-		        			<image class="card-icon-img" src="./assets/img/smart_img_equip031@2x.png"></image>
+		        			<image class="card-icon-img" src="./assets/img/smart_img_equip031@3x.png"></image>
 		        		</div>
 		        	</div>
 		        </div>
@@ -38,7 +38,7 @@
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image @click="showControlPanelPage" class="icon-offline" src="./assets/img/smart_img_equip031@2x.png"></image>
+		        		<image @click="showControlPanelPage" class="icon-offline" src="./assets/img/smart_img_equip031@3x.png"></image>
 		        	</div>
 		        </div>
 	        </div>
@@ -48,7 +48,7 @@
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
-	        		<image class="icon-offline" src="./assets/img/smart_img_equip031@2x.png"></image>
+	        		<image class="icon-offline" src="./assets/img/smart_img_equip031@3x.png"></image>
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
@@ -97,8 +97,8 @@
                 cool_status: "",
                 heat_temperature: "",
                 cool_temperature: "",
-                powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
-                powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
+                powerIcon_offline: "./assets/img/smart_ic_reline@3x.png",
+                powerIcon_poweroff: "./assets/img/smart_ic_power_blue@3x.png",
             }
         },
         methods: {
@@ -216,11 +216,11 @@
         },
         computed: {
 				powerOnoffImg () {
-		            let img = "./assets/img/smart_ic_power@2x.png";
+		            let img = "./assets/img/smart_ic_power@3x.png";
 		            if(this.power == "on") {
-		                img = "./assets/img/smart_ic_power@2x.png";
+		                img = "./assets/img/smart_ic_power@3x.png";
 		            } else {
-		                img = "./assets/img/smart_ic_power@2x.png";
+		                img = "./assets/img/smart_ic_power@3x.png";
 		            }
 		            return img;
 		        },

@@ -27,7 +27,7 @@
 		        		<div class="card-control">
 		        		</div>
 		        		<div class="card-icon" style="margin-right:40px">
-		        			<image  class="card-icon-img" src="./assets/img/smart_img_equip012@2x.png"></image>
+		        			<image  class="card-icon-img" src="./assets/img/smart_img_equip012@3x.png"></image>
 		        		</div>
 		        	</div>
 		        </div>
@@ -38,7 +38,7 @@
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
-	        		<image class="icon-offline" src="./assets/img/smart_img_equip012@2x.png"></image>
+	        		<image class="icon-offline" src="./assets/img/smart_img_equip012@3x.png"></image>
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
@@ -78,7 +78,7 @@
             	mode: "--",
                 storage_temperature:"--",
                 freezing_temperature:"--",
-                powerIcon_offline: "./assets/img/smart_ic_reline@2x.png"
+                powerIcon_offline: "./assets/img/smart_ic_reline@3x.png"
             }
         },
         methods: {

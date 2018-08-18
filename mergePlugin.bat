@@ -41,7 +41,7 @@ for /d %%i in ("%pluginPath%\*") do (
         )
     )
     if not exist "%pluginPath%\dist_zip" md "%pluginPath%\dist_zip"
-    "C:\Program Files\HaoZip\HaoZipC.exe" a -tzip "%pluginPath%\dist_zip\!folderName!_0815.zip" %%i -sn
+    "C:\Program Files\HaoZip\HaoZipC.exe" a -tzip "%pluginPath%\dist_zip\!folderName!_%d%.zip" %%i -sn
     echo "—πÀı÷¡%pluginPath%\dist_zip\!folderName!_%d%.zip""
 );
  

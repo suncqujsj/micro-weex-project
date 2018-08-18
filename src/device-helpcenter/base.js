@@ -58,6 +58,13 @@ export default {
         },
         isipx: function () {
             return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6');
+        },
+        isImmersion: function () {
+            let result = true
+            if (weex.config.env.isImmersion == "false") {
+                result = false
+            }
+            return result
         }
     },
     methods: {

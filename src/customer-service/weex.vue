@@ -1,8 +1,10 @@
 <template>
     <div class="wrapper" @viewappear="refreshPage">
         <!-- 不可删除此空div行，否则list会自动调整移动至状态栏下 -->
-        <div :class="[isImmersion?(isipx? 'immersion-ipx': 'immersion'):'']"></div>
         <list class="list">
+            <cell>
+                <div :class="[isImmersion?(isipx? 'immersion-ipx': 'immersion'):'']"></div>
+            </cell>
             <cell>
                 <div class="service-header">
                     <div style="flex: 1;"> </div>
@@ -237,11 +239,11 @@ export default {
 }
 
 .immersion {
-  padding-top: 40px;
+  height: 40px;
   background-color: #ffffff;
 }
 .immersion-ipx {
-  padding-top: 68px;
+  height: 68px;
   background-color: #ffffff;
 }
 .list {
@@ -252,11 +254,6 @@ export default {
   height: 88px;
   display: flex;
   flex-direction: row;
-}
-.immersion {
-  padding-top: 40px;
-  height: 128px;
-  /* background-color: blue; */
 }
 .service-header-image-wrapper {
   height: 88px;

@@ -18,7 +18,7 @@
 						
 						</div>
 						<div class="card-icon" >
-							<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip043@2x.png"></image>
+							<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip043@3x.png"></image>
 						</div>
 	        		<div class="card-control-div" @click="controlStartPause">
 	        			<image class="card-control-img" :src="controlStartPauseImg" ></image>
@@ -31,7 +31,7 @@
 						<text class="text-offline">重连</text>
 					</div>
 					<div>
-						<image class="icon-offline" src="./assets/img/smart_img_equip043@2x.png"></image>
+						<image class="icon-offline" src="./assets/img/smart_img_equip043@3x.png"></image>
 					</div>
 					<text class="text-offline-center">已离线</text>
 				</div>
@@ -76,7 +76,7 @@ export default {
 			pushKey: "receiveMessage",
 			pushKeyOnline: "receiveMessageFromApp",
 
-			powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
+			powerIcon_offline: "./assets/img/smart_ic_reline@3x.png",
 			mode: "keep_warm",	//当前设备模式
 			work_status: "cooking",	//当前设备状态
 			display_value: "",//localStorage.getItem("EAdisplay_value") || "",

@@ -1,6 +1,6 @@
 <template>
 	<div class="wrapper">
-		<midea-header :title="title" :isImmersion="isipx?false:true" @leftImgClick="back">
+		<midea-header :title="title" :isImmersion="isImmersion" @leftImgClick="back">
 		</midea-header>
 		<scroller class="content-wrapper" v-if="situactionData">
 			<div class="base-group header-group">
@@ -123,7 +123,7 @@ export default {
 					conditionsDesc: conditionsDesc,
 					modeDesc: modeDesc,
 					title: "室内温度" + conditionsDesc + this.situactionData.props.conditions[0].value + "°度时，自动开启",
-					detail: "模式" + modeDesc + "，温度" + this.situactionData.props.target.temperature + "."
+					detail: "模式" + modeDesc + "，温度" + this.situactionData.props.target.temperature + "°."
 				}
 			}
 

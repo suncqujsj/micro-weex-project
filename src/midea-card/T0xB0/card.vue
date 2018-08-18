@@ -17,7 +17,7 @@
 						<div class="card-control" @click="lockSwitch">
 						</div>
 						<div class="card-icon" >
-							<image class="card-icon-img"  resize="contain" src="./assets/img/smart_img_equip022@2x.png"></image>
+							<image class="card-icon-img"  resize="contain" src="./assets/img/smart_img_equip022@3x.png"></image>
 						</div>
 						<div class="card-control-div" @click="lockSwitch">
 		        			<image class="card-control-img"  :src="deviceLock"></image>
@@ -31,7 +31,7 @@
 					<text class="text-offline">重连</text>
 				</div>
 				<div>
-					<image class="icon-offline" src="./assets/img/smart_img_equip022@2x.png"></image>
+					<image class="icon-offline" src="./assets/img/smart_img_equip022@3x.png"></image>
 				</div>
 				<text class="text-offline-center">已离线</text>
 			</div>
@@ -80,7 +80,7 @@ export default {
 			lock: "",
 			display_value: "",
 			display_value2: "",
-			powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
+			powerIcon_offline: "./assets/img/smart_ic_reline@3x.png",
 			list: [
 				{
 					"name": "电饭煲食谱",
@@ -205,9 +205,9 @@ export default {
 		deviceLock() {
 			let img = "";
 			if (this.lock == "on") {
-				img = "./assets/img/smart_ic_lock_white@2x.png";
+				img = "./assets/img/smart_ic_lock_white@3x.png";
 			} else {
-				img = "./assets/img/smart_ic_unlock_white@2x.png";
+				img = "./assets/img/smart_ic_unlock_white@3x.png";
 			}
 			return img;
 		}

@@ -210,14 +210,18 @@ export default {
                     }else{
                         nativeService.getUserInfo().then((user) => {
                             nativeService.getCurrentHomeInfo().then((home) => {
-                                if (home.homeId === '' || home.homeId == undefined) {
-                                    nativeService.toast('获取家庭失败，请稍后重试')
-                                } else {
-                                    let result = {
-                                        uid: user.uid,
-                                        homegroupId: home.homeId
+                                if (home.isLocal === '1') {
+                                    nativeService.toast('本地设备暂不支持场景功能')
+                                }else{
+                                    if (home.homeId === '' || home.homeId == undefined) {
+                                        nativeService.toast('获取家庭失败，请稍后重试')
+                                    } else {
+                                        let result = {
+                                            uid: user.uid,
+                                            homegroupId: home.homeId
+                                        }
+                                        resolve(result)
                                     }
-                                    resolve(result)
                                 }
                             }).catch((err) => {
                                 nativeService.toast('获取家庭失败，请稍后重试')

@@ -278,16 +278,21 @@
                                 this.setTmpl()
                             }else{
                                 nativeService.getCurrentHomeInfo().then( (home)=>{
-                                    if (home.homeId === '' || home.homeId == undefined) {
+                                    if (home.isLocal === '1'){
+                                        nativeService.toast('本地设备暂不支持场景功能')
                                         this.setTmpl()
                                     }else{
-                                        this.userDevicesStr = ''
-                                        if (home.deviceList) {
-                                            this.userDevices = home.deviceList
-                                            this.userDevicesStr = encodeURIComponent(JSON.stringify(home.deviceList))
+                                        if (home.homeId === '' || home.homeId == undefined) {
+                                            this.setTmpl()
+                                        }else{
+                                            this.userDevicesStr = ''
+                                            if (home.deviceList) {
+                                                this.userDevices = home.deviceList
+                                                this.userDevicesStr = encodeURIComponent(JSON.stringify(home.deviceList))
+                                            }
+                                            this.getAutoList(user.uid, home.homeId)
+                                            this.getSceneList(user.uid, home.homeId)
                                         }
-                                        this.getAutoList(user.uid, home.homeId)
-                                        this.getSceneList(user.uid, home.homeId)
                                     }
                                 }).catch((err)=>{
                                     this.setTmpl()

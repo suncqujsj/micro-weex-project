@@ -16,8 +16,8 @@
 				        			<text class="main-status-third">{{currentMode}}</text>
 				        		</div>
 				        		<div class="card-control-temp-div">
-				        			<image @click="temperatureControl(-1)" class="cart-control-temp-img" src="./assets/img/smart_ic_reduce_huge@2x.png"></image>
-				        			<image @click="temperatureControl(1)" class="cart-control-temp-img cart-control-temp-img-right" src="./assets/img/smart_ic_increase_huge@2x.png"></image>
+				        			<image @click="temperatureControl(-1)" class="cart-control-temp-img" src="./assets/img/smart_ic_reduce_huge@3x.png"></image>
+				        			<image @click="temperatureControl(1)" class="cart-control-temp-img cart-control-temp-img-right" src="./assets/img/smart_ic_increase_huge@3x.png"></image>
 				        		</div>
 				        	</div>
 				        	<div class="card-right">
@@ -100,10 +100,10 @@
 	            danwei: "",
             
                 powerIcon: "./assets/img/smart_ic_off@3x.png",
-                powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
-                powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
-                deviceIcon: "./assets/img/smart_img_equip023@2x.png",
-                moreImg: "./assets/img/smart_ic_more@2x.png",
+                powerIcon_poweroff: "./assets/img/smart_ic_power_blue@3x.png",
+                powerIcon_offline: "./assets/img/smart_ic_reline@3x.png",
+                deviceIcon: "./assets/img/smart_img_equip023@3x.png",
+                moreImg: "./assets/img/smart_ic_more@3x.png",
             }
         },
         methods: {
@@ -244,23 +244,23 @@
         },
         computed: {
 			powerOnoffImg () {
-	            let img = "./assets/img/smart_ic_power@2x.png";
+	            let img = "./assets/img/smart_ic_power@3x.png";
 	            return img;
 	        },
         	statusImg() {
-	        		let img = "./assets/img/smart_ic_smart@2x.png";
+	        		let img = "./assets/img/smart_ic_smart@3x.png";
 	        		if(this.mode == 'cool') {
-	        			img = "./assets/img/smart_ic_smart@2x.png";
+	        			img = "./assets/img/smart_ic_smart@3x.png";
 	        		} else if(this.mode == 'heat') {
-	        			img = "./assets/img/smart_ic_warmmode@2x.png";
+	        			img = "./assets/img/smart_ic_warmmode@3x.png";
 	        		} else if(this.mode == 'auto') {
-	        			img = "./assets/img/auto@2x.png";
+	        			img = "./assets/img/auto@3x.png";
 	        		} else if(this.mode == 'dry') {
-	        			img = "./assets/img/wet@2x.png";
+	        			img = "./assets/img/wet@3x.png";
 	        		} else if(this.mode == 'fan') {
-	        			img = "./assets/img/wind@2x.png";
+	        			img = "./assets/img/wind@3x.png";
 	        		} else {
-	        			img = "./assets/img/smart_ic_smart@2x.png";
+	        			img = "./assets/img/smart_ic_smart@3x.png";
 	        		}
 	        		return img;
         	},

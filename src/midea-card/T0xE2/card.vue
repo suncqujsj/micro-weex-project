@@ -24,10 +24,10 @@
 				        			
 				        		</div>
 				        		<div class="card-icon" >
-				        			<image class="card-icon-img"  src="./assets/img/smart_pic_equip021@2x.png"></image>
+				        			<image class="card-icon-img"  src="./assets/img/smart_pic_equip021@3x.png"></image>
 				        		</div>
 				        		 <div class="card-control-div">
-				        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
+				        			<image class="card-control-img" src="./assets/img/smart_ic_off@3x.png" @click="poweronoff(0)"></image>
 			        			</div>
 				        	</div>
 				        </div>
@@ -42,7 +42,7 @@
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image @click="showControlPanelPage" class="icon-offline" src="./assets/img/smart_img_equip021@2x.png"></image>
+		        		<image @click="showControlPanelPage" class="icon-offline" src="./assets/img/smart_img_equip021@3x.png"></image>
 		        	</div>
 		        </div>
 		    </div>
@@ -52,7 +52,7 @@
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
-	        		<image class="icon-offline" src="./assets/img/smart_img_equip021@2x.png"></image>
+	        		<image class="icon-offline" src="./assets/img/smart_img_equip021@3x.png"></image>
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
@@ -125,8 +125,8 @@
 					memory:"智能记忆",
 					none:""
 	            },
-                powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
-                powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
+                powerIcon_offline: "./assets/img/smart_ic_reline@3x.png",
+                powerIcon_poweroff: "./assets/img/smart_ic_power_blue@3x.png",
                 list: [
                 { 
                 	"name": "电饭煲食谱",
@@ -295,29 +295,29 @@
         },
         computed: {
 				powerOnoffImg () {
-		            let img = "./assets/img/smart_ic_power@2x.png";
+		            let img = "./assets/img/smart_ic_power@3x.png";
 		            if(this.power == "on") {
-		                img = "./assets/img/smart_ic_power@2x.png";
+		                img = "./assets/img/smart_ic_power@3x.png";
 		            } else {
-		                img = "./assets/img/smart_ic_power@2x.png";
+		                img = "./assets/img/smart_ic_power@3x.png";
 		            }
 		            return img;
 		        },
 		        startPause() {
-		        	let img = "./assets/img/smart_ic_power@2x.png";
+		        	let img = "./assets/img/smart_ic_power@3x.png";
 		            if(this.power == "on") {
-		                img = "./assets/img/smart_ic_power@2x.png";
+		                img = "./assets/img/smart_ic_power@3x.png";
 		            } else {
-		                img = "./assets/img/smart_ic_power@2x.png";
+		                img = "./assets/img/smart_ic_power@3x.png";
 		            }
 		            return img;
 		        },
 	        	statusImg() {
-		        		let img = "./assets/img/smart_ic_smart@2x.png";
+		        		let img = "./assets/img/smart_ic_smart@3x.png";
 		        		if(this.currentStatus == "auto") {
-		        			img = "./assets/img/smart_ic_smart@2x.png"
+		        			img = "./assets/img/smart_ic_smart@3x.png"
 		        		} else if(this.currentStatus == "cold") {
-		        			img = "./assets/img/smart_ic_smart@2x.png"
+		        			img = "./assets/img/smart_ic_smart@3x.png"
 		        		}
 		        		return img;
 	        	}

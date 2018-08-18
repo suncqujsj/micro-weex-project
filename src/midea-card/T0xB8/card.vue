@@ -18,7 +18,7 @@
 		        			
 		        		</div>
 		        		<div class="card-icon" >
-		        			<image class="card-icon-img" src="./assets/img/smart_img_equip011@2x.png"></image>
+		        			<image class="card-icon-img" src="./assets/img/smart_img_equip011@3x.png"></image>
 		        		</div>
 		        		<div class="card-control-div">
 							<div class="left-btn" @click="clickCharge">
@@ -39,7 +39,7 @@
 					</div>
 	        	</div>
 	        	<div>
-	        		<image class="icon-offline" src="./assets/img/smart_img_equip011@2x.png"></image>
+	        		<image class="icon-offline" src="./assets/img/smart_img_equip011@3x.png"></image>
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
@@ -104,8 +104,8 @@
                 display_value1: "",
                 display_value2: "",
                 
-                powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
-                powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
+                powerIcon_offline: "./assets/img/smart_ic_reline@3x.png",
+                powerIcon_poweroff: "./assets/img/smart_ic_power_blue@3x.png",
             }
         },
         methods: {
@@ -227,14 +227,14 @@
 				startPause () {
 		            let img = "";
 		            if(this.work_status == "work") {
-		                img = "./assets/img/smart_ic_pause@2x.png";
+		                img = "./assets/img/smart_ic_pause@3x.png";
 		            } else {
-		                img = "./assets/img/smart_ic_play@2x.png";
+		                img = "./assets/img/smart_ic_play@3x.png";
 		            }
 		            return img;
 		        },
 		        charge() {
-		        	let img = "./assets/img/smart_ic_charge@2x.png";
+		        	let img = "./assets/img/smart_ic_charge@3x.png";
 //		            if(this.work_status == "work") {
 //		                img = "./assets/img/smart_ic_charge@2x.png";
 //		            } else {

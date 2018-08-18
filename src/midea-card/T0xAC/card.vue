@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="card-status-detail card-status-detail-simple">
                                     <text class="main-status-third-simple">进入详情</text>
-                                    <image class="main-status-detail" src="./assets/img/smart_ic_arrow_forward@2x.png"></image>
+                                    <image class="main-status-detail" src="./assets/img/smart_ic_arrow_forward@3x.png"></image>
                                 </div>
                                 <div class="card-control-temp-div">
                                 </div>
@@ -133,10 +133,10 @@ export default {
             running: false,
 
             powerIcon: "./assets/img/smart_ic_off@3x.png",
-            powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
-            powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
-            deviceIcon: "./assets/img/smart_img_equip001@2x.png",
-            moreImg: "./assets/img/smart_ic_more@2x.png"
+            powerIcon_poweroff: "./assets/img/smart_ic_power_blue@3x.png",
+            powerIcon_offline: "./assets/img/smart_ic_reline@3x.png",
+            deviceIcon: "./assets/img/smart_img_equip001@3x.png",
+            moreImg: "./assets/img/smart_ic_more@3x.png"
         }
     },
     methods: {
@@ -300,23 +300,23 @@ export default {
     },
     computed: {
         powerOnoffImg() {
-            let img = "./assets/img/smart_ic_power@2x.png";
+            let img = "./assets/img/smart_ic_power@3x.png";
             return img;
         },
         statusImg() {
-            let img = "./assets/img/smart_ic_smart@2x.png";
+            let img = "./assets/img/smart_ic_smart@3x.png";
             if (this.mode == 'cool') {
-                img = "./assets/img/smart_ic_smart@2x.png";
+                img = "./assets/img/smart_ic_smart@3x.png";
             } else if (this.mode == 'heat') {
-                img = "./assets/img/smart_ic_warmmode@2x.png";
+                img = "./assets/img/smart_ic_warmmode@3x.png";
             } else if (this.mode == 'auto') {
-                img = "./assets/img/auto@2x.png";
+                img = "./assets/img/auto@3x.png";
             } else if (this.mode == 'dry') {
-                img = "./assets/img/wet@2x.png";
+                img = "./assets/img/wet@3x.png";
             } else if (this.mode == 'fan') {
-                img = "./assets/img/wind@2x.png";
+                img = "./assets/img/wind@3x.png";
             } else {
-                img = "./assets/img/smart_ic_smart@2x.png";
+                img = "./assets/img/smart_ic_smart@3x.png";
             }
             return img;
         },

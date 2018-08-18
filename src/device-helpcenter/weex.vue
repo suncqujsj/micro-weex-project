@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header ref="header" :title="title" bgColor="#ffffff" :isImmersion="isipx?false:true" :showLeftImg="true" @leftImgClick="back">
+        <midea-header ref="header" :title="title" bgColor="#ffffff" :isImmersion="isImmersion" :showLeftImg="true" @leftImgClick="back">
         </midea-header>
         <scroller class="scroller" :style="{height: scrollHeight + 'px'}">
             <div class="group-gap-top"></div>

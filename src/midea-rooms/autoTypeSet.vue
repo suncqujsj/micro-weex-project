@@ -411,7 +411,7 @@
             },
             mapListStyle(){
                 let tmp = {}
-                if (this.platform == 'ios' && !this.isipx) {
+                if (this.isImmersion) {
                     tmp.top = '210px'
                 }else{
                     tmp.top = '172px'

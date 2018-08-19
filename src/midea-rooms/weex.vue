@@ -10,8 +10,8 @@
                 <div v-for="col in colList">
                     <div v-for="item in col" class="auto row-sb"  @click="editAuto(item)">
                         <div class="row-s">
-                            <image class="icon" :src="icon.auto[item.sceneType]"></image>
-                            <div>
+                            <image class="icon" :src="item.sceneType == 3? icon.auto[item.sceneType+'.'+item.location.direction] :  icon.auto[item.sceneType]"></image>
+                            <div class="auto-info">
                                 <text class="auto-name">{{item.name}}</text>
                                 <div class="auto-desc row-s">
                                     <div v-for="device in item.task">
@@ -84,7 +84,7 @@
     .hd-name{ font-weight: bold; font-size: 36px; color: #000; }
     .hd-btn{ font-size: 26px; color: #666; padding: 10px;}
     .scroller{ padding-left:30px; padding-right:30px; flex-direction: row; height: 276px;}
-    .icon { width: 82px; height: 82px; margin-right: 20px; }
+    .icon { width: 82px; height: 82px;  }
     .auto-btn{ width: 50px; height: 50px; }
     .auto{
         width: 366px;
@@ -95,6 +95,7 @@
         padding: 20px;
         border-radius: 4px;
     }
+    .auto-info {margin-left: 20px;}
     .auto-name{ width: 180px; font-size: 28px; color: #000; font-weight: bold; margin-bottom: 8px; text-overflow: clip; }
     .auto-desc{ width: 120px; font-size: 24px; color: #C7C7CC; lines:1; text-overflow: ellipsis; }
     .auto-desc-text{ font-size: 24px; color: #C7C7CC; margin-right: 6px;}
@@ -189,10 +190,11 @@
                         3: 'assets/img/scene_ic_listundo@3x.png'
                     },
                     auto: {
-                        2: 'assets/img/smart_ic_hand@3x.png',
-                        3: 'assets/img/scene_ic_placeblue@3x.png',
-                        4: 'assets/img/samrt_ic_clock@3x.png',
-                        6: 'assets/img/scene_ic_weather@3x.png',
+                        '2': 'assets/img/smart_ic_hand@3x.png',
+                        '3.1': 'assets/img/scene_ic_placeblue@3x.png',
+                        '3.2': 'assets/img/scene_ic_placegreen@3x.png',
+                        '4': 'assets/img/samrt_ic_clock@3x.png',
+                        '6': 'assets/img/scene_ic_weather@3x.png',
                     }
                 },
                 sceneImg: {
@@ -278,16 +280,21 @@
                                 this.setTmpl()
                             }else{
                                 nativeService.getCurrentHomeInfo().then( (home)=>{
-                                    if (home.homeId === '' || home.homeId == undefined) {
+                                    if (home.isLocal === '1'){
+                                        // nativeService.toast('本地设备暂不支持场景功能')
                                         this.setTmpl()
                                     }else{
-                                        this.userDevicesStr = ''
-                                        if (home.deviceList) {
-                                            this.userDevices = home.deviceList
-                                            this.userDevicesStr = encodeURIComponent(JSON.stringify(home.deviceList))
+                                        if (home.homeId === '' || home.homeId == undefined) {
+                                            this.setTmpl()
+                                        }else{
+                                            this.userDevicesStr = ''
+                                            if (home.deviceList) {
+                                                this.userDevices = home.deviceList
+                                                this.userDevicesStr = encodeURIComponent(JSON.stringify(home.deviceList))
+                                            }
+                                            this.getAutoList(user.uid, home.homeId)
+                                            this.getSceneList(user.uid, home.homeId)
                                         }
-                                        this.getAutoList(user.uid, home.homeId)
-                                        this.getSceneList(user.uid, home.homeId)
                                     }
                                 }).catch((err)=>{
                                     this.setTmpl()

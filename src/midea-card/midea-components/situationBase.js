@@ -17,7 +17,14 @@ export default {
         uid: '',
         deviceId: '',
         situationList: [],
-        isSituationLoaded: false
+        isSituationLoaded: false,
+        errorMessages: {
+            '1900': '该设备不支持情境功能',
+            '1901': '系统出错，请稍后再试',
+            '1902': '该设备已存在相同的情境',
+            '1903': '不存在该情境',
+            '1904': '该情境不可用'
+        }
     }),
     computed: {
         pageHeight() {
@@ -224,7 +231,7 @@ export default {
                 let unNormalErrorCode = ['']
                 if (unNormalErrorCode.indexOf(errorCode) < 0) {
                     //若是正常的错误码，则显示错误信息
-                    msg = error.msg || "请求失败，请稍后重试。"
+                    msg = this.errorMessages[errorCode] || "请求失败，请稍后重试。"
                 }
                 if (errorCode) {
                     msg += "(" + errorCode + ")"

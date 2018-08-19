@@ -23,7 +23,7 @@
 
             <div class="base-group" v-for="(item, index) in materialList" :key="index">
                 <div class="item-group result-header">
-                    <text class="result-title">{{item.mobileDescribeMaterial}}</text>
+                    <text class="result-title">{{item.mobileDescribeMaterial||item.materialName}}</text>
                     <text class="result-price">指导价{{item.priceCustomer}}元</text>
                 </div>
             </div>
@@ -126,7 +126,7 @@ export default {
         },
         search() {
             if (!this.isDataReady) return
-            
+
             this.triggerBlur()
             let param = {
                 pageSize: 100,

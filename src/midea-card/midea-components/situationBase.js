@@ -15,7 +15,9 @@ export default {
             situation: 'CARD_STORAGE_SITUATION'
         },
         uid: '',
-        deviceId: ''
+        deviceId: '',
+        situationList: [],
+        isSituationLoaded: false
     }),
     computed: {
         pageHeight() {
@@ -52,9 +54,6 @@ export default {
         },
         exit() {
             nativeService.backToNative()
-        },
-        handlePageData(data) {
-            //处理页面传递的信息
         },
         getSituationListService() {
             return new Promise((resolve, reject) => {
@@ -232,6 +231,70 @@ export default {
                 }
             }
             return msg
+        },
+
+        handlePageData(data) {
+            //处理页面传递的信息
+            if (data.deviceId == this.deviceId) {
+                if (data.key == "situation") {
+                    this.getSituationList()
+                }
+            }
+        },
+        goToSituation(path, situation) {
+            if (this.isSituationLoaded) {
+                nativeService.setItem("CARD_STORAGE_SITUATION", Object.assign(situation, { deviceId: this.deviceId }), () => {
+                    nativeService.goTo(path)
+                })
+            } else {
+                this.getSituationList()
+            }
+        },
+        getSituationList() {
+            this.getSituationListService().then((resp) => {
+                if (resp.code == 10 && resp.data) {
+                    this.situationList = resp.data.list || []
+                    this.isSituationLoaded = true
+                } else {
+                    throw resp
+                }
+            }).catch((error) => {
+                nativeService.toast(this.getErrorMessage(error))
+            })
+        },
+        switchEnable(event, situation) {
+            if (this.isSituationLoaded) {
+                let enable = event.value ? "1" : "0"
+                if (situation.isCreated) {
+                    //更新
+                    let index = this.situationList.findIndex((item) => (item.moduleCode == situation.moduleCode))
+                    this.updateSituationEnableService(situation.moduleCode, enable).then((resp) => {
+                        if (resp.code == 0) {
+                            situation.enable = enable
+                            this.$set(this.situationList, index, situation)
+                        } else {
+                            throw resp
+                        }
+                    }).catch((error) => {
+                        this.$set(this.situationList, index, situation)
+                        nativeService.toast(this.getErrorMessage(error))
+                    })
+                } else {
+                    //新增
+                    this.addSituationService(situation.moduleCode, enable, situation).then((resp) => {
+                        if (resp.code == 0) {
+                            situation.enable = enable
+                            this.situationList.push(situation)
+                        } else {
+                            throw resp
+                        }
+                    }).catch((error) => {
+                        nativeService.toast(this.getErrorMessage(error))
+                    })
+                }
+            } else {
+                this.getSituationList()
+            }
         }
     },
     created() {

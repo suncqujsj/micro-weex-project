@@ -26,7 +26,8 @@
                         <text class="sub-hd">当如下条件满足时</text>
                         <div @click="goAutoTypeSet" class="row-sb floor">
                             <div class="row-s">
-                                <image class="type-img" :src="autoTypeImg[sceneType]"></image>
+                                <image class="type-img" :src="sceneType == 3 ? autoTypeImg[sceneType+'.'+autoDetail.location.direction] :  autoTypeImg[sceneType]"></image>
+
                                 <text class="condition-desc" v-if="autoDetail.location && sceneType==3">在{{weekDesc}} {{directionText[autoDetail.location.direction]}} {{autoDetail.location.address}}时</text>
                                 <text class="condition-desc" v-if="autoDetail.startTime && sceneType==4">在{{weekDesc}} {{autoDetail.startTime}}时</text>
                                 <text class="condition-desc" v-if="autoDetail.weather && sceneType==6"> 在{{weekDesc}} 天气为{{autoDetail.weather.weatherStatus}}, 气温{{temperatureLoginText[autoDetail.weather.logical]}} {{autoDetail.weather.temperature}}℃ 时</text>
@@ -290,10 +291,11 @@
                 autoDetail: {
                 },
                 autoTypeImg: {
-                    2: 'assets/img/smart_ic_hand@3x.png',
-                    3: 'assets/img/scene_ic_placeblue@3x.png',
-                    4: 'assets/img/samrt_ic_clock@3x.png',
-                    6: 'assets/img/scene_ic_weather@3x.png',
+                    '2': 'assets/img/smart_ic_hand@3x.png',
+                    '3.1': 'assets/img/scene_ic_placeblue@3x.png',
+                    '3.2': 'assets/img/scene_ic_placegreen@3x.png',
+                    '4': 'assets/img/samrt_ic_clock@3x.png',
+                    '6': 'assets/img/scene_ic_weather@3x.png',
                 },
                 applianceActions: applianceActions,
                 autoEnable: null,

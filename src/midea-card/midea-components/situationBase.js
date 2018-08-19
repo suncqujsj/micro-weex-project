@@ -252,7 +252,7 @@ export default {
         },
         getSituationList() {
             this.getSituationListService().then((resp) => {
-                if (resp.code == 10 && resp.data) {
+                if (resp.code == 0 && resp.data) {
                     this.situationList = resp.data.list || []
                     this.isSituationLoaded = true
                 } else {

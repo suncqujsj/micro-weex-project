@@ -1,10 +1,11 @@
 <template>
     <div class="wrapper" @viewappear="refreshPage">
         <!-- 不可删除此空div行，否则list会自动调整移动至状态栏下 -->
+        <div style="background-color: #ffffff;"></div>
         <list class="list">
-            <cell>
+            <header>
                 <div :class="[isImmersion?(isipx? 'immersion-ipx': 'immersion'):'']"></div>
-            </cell>
+            </header>
             <cell>
                 <div class="service-header">
                     <div style="flex: 1;"> </div>

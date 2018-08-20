@@ -14,7 +14,6 @@ export default {
         CARD_STORAGE_KEYS: {
             situation: 'CARD_STORAGE_SITUATION'
         },
-        uid: '',
         deviceId: '',
         situationList: [],
         isSituationLoaded: false,
@@ -43,6 +42,9 @@ export default {
     },
     methods: {
         viewappear() {
+            if (!this.isSituationLoaded) {
+                this.getSituationList()
+            }
         },
         viewdisappear() {
         },
@@ -63,164 +65,144 @@ export default {
             nativeService.backToNative()
         },
         getSituationListService() {
+            //获取情境列表
             return new Promise((resolve, reject) => {
-                nativeService.getUserInfo().then((data) => {
-                    this.uid = data.uid
-                    let param = {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json;charset=utf-8"
-                        },
-                        data: {
-                            reqId: nativeService.generateUUID(),
-                            uid: this.uid,
-                            applianceCode: this.deviceId || "",
-                            stamp: Math.round(new Date().getTime() / 1000) //时间戳
-                        }
+                let param = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8"
+                    },
+                    data: {
+                        reqId: nativeService.generateUUID(),
+                        applianceCode: this.deviceId || "",
+                        stamp: Math.round(new Date().getTime() / 1000) //时间戳
                     }
-                    nativeService.sendCentralCloundRequest("/v1/situation/list", param).then((resp) => {
-                        resolve(resp)
-                    }).catch((error) => {
-                        reject(error)
-                    })
+                }
+                nativeService.sendCentralCloundRequest("/v1/situation/list", param).then((resp) => {
+                    resolve(resp)
+                }).catch((error) => {
+                    reject(error)
                 })
             })
         },
         addSituationService(moduleCode, enable, situation) {
+            //新增情境
             return new Promise((resolve, reject) => {
-                nativeService.getUserInfo().then((data) => {
-                    this.uid = data.uid
-                    let param = {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json;charset=utf-8"
-                        },
-                        data: {
-                            reqId: nativeService.generateUUID(),
-                            uid: this.uid,
-                            applianceCode: this.deviceId || "",
-                            stamp: Math.round(new Date().getTime() / 1000), //时间戳
-                            moduleCode: moduleCode,
-                            enable: enable,
-                            props: situation.props
-                        }
+                let param = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8"
+                    },
+                    data: {
+                        reqId: nativeService.generateUUID(),
+                        applianceCode: this.deviceId || "",
+                        stamp: Math.round(new Date().getTime() / 1000), //时间戳
+                        moduleCode: moduleCode,
+                        enable: enable,
+                        props: situation.props
                     }
-                    nativeService.sendCentralCloundRequest("/v1/situation/add", param).then((resp) => {
-                        resolve(resp)
-                    }).catch((error) => {
-                        reject(error)
-                    })
+                }
+                nativeService.sendCentralCloundRequest("/v1/situation/add", param).then((resp) => {
+                    resolve(resp)
+                }).catch((error) => {
+                    reject(error)
                 })
             })
         },
         updateSituationEnableService(moduleCode, enable) {
+            //更新情境开关
             return new Promise((resolve, reject) => {
-                nativeService.getUserInfo().then((data) => {
-                    this.uid = data.uid
-                    let param = {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json;charset=utf-8"
-                        },
-                        data: {
-                            reqId: nativeService.generateUUID(),
-                            uid: this.uid,
-                            applianceCode: this.deviceId || "",
-                            stamp: Math.round(new Date().getTime() / 1000), //时间戳
-                            moduleCode: moduleCode,
-                            enable: enable
-                        }
+                let param = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8"
+                    },
+                    data: {
+                        reqId: nativeService.generateUUID(),
+                        applianceCode: this.deviceId || "",
+                        stamp: Math.round(new Date().getTime() / 1000), //时间戳
+                        moduleCode: moduleCode,
+                        enable: enable
                     }
-                    nativeService.sendCentralCloundRequest("/v1/situation/update", param).then((resp) => {
-                        resolve(resp)
-                    }).catch((error) => {
-                        reject(error)
-                    })
+                }
+                nativeService.sendCentralCloundRequest("/v1/situation/update", param).then((resp) => {
+                    resolve(resp)
+                }).catch((error) => {
+                    reject(error)
                 })
             })
         },
         updateSituationService(situation, enable = null) {
+            //更新情境设置
             return new Promise((resolve, reject) => {
-                nativeService.getUserInfo().then((data) => {
-                    this.uid = data.uid
-                    let param = {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json;charset=utf-8"
-                        },
-                        data: {
-                            reqId: nativeService.generateUUID(),
-                            uid: this.uid,
-                            applianceCode: this.deviceId || "",
-                            stamp: Math.round(new Date().getTime() / 1000), //时间戳
-                            moduleCode: situation.moduleCode,
-                            props: situation.props
-                        }
+                let param = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8"
+                    },
+                    data: {
+                        reqId: nativeService.generateUUID(),
+                        applianceCode: this.deviceId || "",
+                        stamp: Math.round(new Date().getTime() / 1000), //时间戳
+                        moduleCode: situation.moduleCode,
+                        props: situation.props
                     }
-                    if (enable != null) {
-                        param.data.enable = enable
-                    }
-                    nativeService.sendCentralCloundRequest("/v1/situation/update", param).then((resp) => {
-                        resolve(resp)
-                    }).catch((error) => {
-                        reject(error)
-                    })
+                }
+                if (enable != null) {
+                    param.data.enable = enable
+                }
+                nativeService.sendCentralCloundRequest("/v1/situation/update", param).then((resp) => {
+                    resolve(resp)
+                }).catch((error) => {
+                    reject(error)
                 })
             })
         },
         submitSituationService(situation) {
             return new Promise((resolve, reject) => {
-                nativeService.getUserInfo().then((data) => {
-                    this.uid = data.uid
-                    let param = {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json;charset=utf-8"
-                        },
-                        data: {
-                            reqId: nativeService.generateUUID(),
-                            uid: this.uid,
-                            applianceCode: this.deviceId || "",
-                            stamp: Math.round(new Date().getTime() / 1000), //时间戳
-                            moduleCode: situation.moduleCode,
-                            enable: situation.enable,
-                            props: situation.props
-                        }
+                let param = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8"
+                    },
+                    data: {
+                        reqId: nativeService.generateUUID(),
+                        applianceCode: this.deviceId || "",
+                        stamp: Math.round(new Date().getTime() / 1000), //时间戳
+                        moduleCode: situation.moduleCode,
+                        enable: situation.enable,
+                        props: situation.props
                     }
-                    let url = "/v1/situation/add"
-                    if (situation.isCreated) {
-                        url = "/v1/situation/update"
-                    }
-                    nativeService.sendCentralCloundRequest(url, param).then((resp) => {
-                        resolve(resp)
-                    }).catch((error) => {
-                        reject(error)
-                    })
+                }
+                let url = "/v1/situation/add"
+                if (situation.isCreated) {
+                    url = "/v1/situation/update"
+                }
+                nativeService.sendCentralCloundRequest(url, param).then((resp) => {
+                    resolve(resp)
+                }).catch((error) => {
+                    reject(error)
                 })
             })
         },
         executeSituationService(situation) {
             return new Promise((resolve, reject) => {
-                nativeService.getUserInfo().then((data) => {
-                    this.uid = data.uid
-                    let param = {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json;charset=utf-8"
-                        },
-                        data: {
-                            reqId: nativeService.generateUUID(),
-                            uid: this.uid,
-                            applianceCode: this.deviceId || "",
-                            stamp: Math.round(new Date().getTime() / 1000), //时间戳
-                            moduleCode: situation.moduleCode
-                        }
+                let param = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8"
+                    },
+                    data: {
+                        reqId: nativeService.generateUUID(),
+                        applianceCode: this.deviceId || "",
+                        stamp: Math.round(new Date().getTime() / 1000), //时间戳
+                        moduleCode: situation.moduleCode
                     }
-                    nativeService.sendCentralCloundRequest("/v1/situation/execute", param).then((resp) => {
-                        resolve(resp)
-                    }).catch((error) => {
-                        reject(error)
-                    })
+                }
+                nativeService.sendCentralCloundRequest("/v1/situation/execute", param).then((resp) => {
+                    resolve(resp)
+                }).catch((error) => {
+                    reject(error)
                 })
             })
         },

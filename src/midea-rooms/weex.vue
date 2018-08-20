@@ -215,14 +215,18 @@
                         isAdd: true,
                         image: 'assets/img/scene_ic_placeblue@3x.png',
                         sceneType: 3,
-                        direction: 1,
+                        location: {
+                            direction: 1,
+                        },
                         name: '回家'
                     },
                     {
                         isAdd: true,
                         image: 'assets/img/scene_ic_placegreen@3x.png',
                         sceneType: 3,
-                        direction: 2,
+                        location: {
+                            direction: 2,
+                        },
                         name: '离家'
                     },
                     {
@@ -272,32 +276,31 @@
             }
         },
         methods: { 
-            initData(){
+            initData(){// 初始化场景首页
                 nativeService.getNetworkStatus().then((result)=>{
                     if (result.status == 1){
                         nativeService.getUserInfo().then((user)=>{
                             if (user.uid == '' || user.uid == undefined){
-                                this.setTmpl()
+                                this.setTmpl() //填充静态模板
                             }else{
                                 nativeService.getCurrentHomeInfo().then( (home)=>{
-                                    if (home.isLocal === '1'){
-                                        // nativeService.toast('本地设备暂不支持场景功能')
-                                        this.setTmpl()
+                                    if (home.isLocal === '1'){//场景不支持本地家庭
+                                        this.setTmpl() //填充静态模板
                                     }else{
                                         if (home.homeId === '' || home.homeId == undefined) {
-                                            this.setTmpl()
+                                            this.setTmpl() //填充静态模板
                                         }else{
                                             this.userDevicesStr = ''
                                             if (home.deviceList) {
                                                 this.userDevices = home.deviceList
                                                 this.userDevicesStr = encodeURIComponent(JSON.stringify(home.deviceList))
                                             }
-                                            this.getAutoList(user.uid, home.homeId)
-                                            this.getSceneList(user.uid, home.homeId)
+                                            this.getAutoList(user.uid, home.homeId) //获取自动化列表数据
+                                            this.getSceneList(user.uid, home.homeId)//获取场景列表数据
                                         }
                                     }
                                 }).catch((err)=>{
-                                    this.setTmpl()
+                                    this.setTmpl()//填充静态模板
                                     nativeService.toast(this.getErrorMessage(err))
                                 })
                             }
@@ -312,8 +315,8 @@
             },
             editAuto(auto){
                 this.checkLogin().then( (res) => {
-                    this.getUserRole(res.uid, res.homegroupId).then((roleId)=>{
-                        if (auto.isAdd){
+                    this.getUserRole(res.uid, res.homegroupId).then((roleId)=>{//用户为家庭创建者时可以添加自动化
+                        if (auto.isAdd){//新增自动化
                             if (roleId == '1001') {
                                 let params = {
                                     from: 'addAuto',
@@ -324,7 +327,7 @@
                                     templateCode: this.templateCode[auto.sceneType]
                                 }
                                 if (auto.sceneType == 3) {
-                                    params.direction = auto.direction
+                                    params.direction = auto.location.direction
                                 }
                                 if (auto.sceneType == 2) {
                                     this.goTo("autoBindDevices", {}, params)
@@ -334,7 +337,7 @@
                             }else{
                                 nativeService.toast('只有家庭创建者才有权限操作')
                             }
-                        }else{
+                        }else{//进入自动化详情
                             let params = {
                                 uid: res.uid,
                                 homegroupId: res.homegroupId,
@@ -351,7 +354,7 @@
                     })
                 })
             },
-            executeAuto(sceneId){
+            executeAuto(sceneId){//执行手动自动化
                 this.checkAutoExeTimes = 0
                 this.checkLogin().then( (res) => {
                     let reqUrl = url.auto.execute
@@ -382,7 +385,7 @@
                     subAction: 'scene_shortcut_operate'
                 })
             },
-            checkExecuteAuto(sceneId, resultId){
+            checkExecuteAuto(sceneId, resultId){//检查手动自动化执行结果
                 this.checkLogin().then( (res) => {
                     if (this.checkAutoExeTimes < 20) {//最多查20次
                         this.checkAutoExeTimes += 1
@@ -432,7 +435,7 @@
                     nativeService.toast(this.getErrorMessage(err))
                 })
             },
-            goAddAuto(){
+            goAddAuto(){ //去添加自动化类型选择页面
                 this.checkLogin().then( (res) => {
                     this.getUserRole(res.uid, res.homegroupId).then((roleId)=>{
                         if (roleId == '1001') {
@@ -450,7 +453,7 @@
                     })
                 })
             },
-            getAutoList(uid, homegroupId){
+            getAutoList(uid, homegroupId){ //获取自动化列表
                 let reqUrl = url.auto.list
                 let reqParams = {
                     uid: uid,
@@ -464,14 +467,18 @@
                                 isAdd: true,
                                 image: 'assets/img/scene_ic_placeblue@3x.png',
                                 sceneType: 3,
-                                direction: 1,
+                                location: {
+                                    direction: 1
+                                },
                                 name: '回家'
                             },
                             '3.2': {
                                 isAdd: true,
                                 image: 'assets/img/scene_ic_placegreen@3x.png',
                                 sceneType: 3,
-                                direction: 2,
+                                location: {
+                                    direction: 2
+                                },
                                 name: '离家'
                             },
                             '4': {
@@ -502,7 +509,6 @@
                             tmpTemp.push(basicTemplate[templateName[x]])
                         }
                         this.autoList = this.autoList.concat(tmpTemp)
-                        
                     }else{
                         if (codeDesc.auto.hasOwnProperty(rtnData.code)) {
                             nativeService.toast(codeDesc.auto[rtnData.code])
@@ -514,7 +520,7 @@
                     nativeService.toast(this.getErrorMessage(err))
                 })
             },
-            getSceneList(uid, homegroupId){
+            getSceneList(uid, homegroupId){ //获取场景列表
                 let reqUrl = url.scene.list
                 let reqParams = {
                     uid: uid,
@@ -523,7 +529,7 @@
 
                 this.webRequest(reqUrl, reqParams, false).then((rtnData)=>{
                     if (rtnData.code == 0) {
-                        this.sceneList = this.sortSceneList(rtnData.data.list)
+                        this.sceneList = this.sortSceneList(rtnData.data.list) //排列场景数据
                     }else{
                         this.sceneList = this.sceneListTmpl
                         if (codeDesc.scene.hasOwnProperty(rtnData.code)) {
@@ -571,6 +577,5 @@
         }
     }
 </script>
-
 
 

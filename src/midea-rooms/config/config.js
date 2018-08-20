@@ -464,7 +464,8 @@ export const autoSupportActions = {
             ]
         },
         "0xE1": { "name": "洗碗机",
-            "actions": [{
+            "actions": [
+                {
                     "property": "work_status",
                     "propertyName": "工作状态",
                     "type": "list",

@@ -168,11 +168,15 @@
             },
             showOtherActions(){
                 let tmp = false
-                for (var i in this.actions) {
-                    if (this.actions[i].property == 'power' && this.actions[i].currentStatus == 'on') {
-                        tmp = true
+                if (this.deviceType == '0xE1' || this.deviceType == '0xB8') {
+                    return true
+                }else{
+                    for (var i in this.actions) {
+                        if (this.actions[i].property == 'power' && this.actions[i].currentStatus == 'on') {
+                            tmp = true
+                        }
+                        break
                     }
-                    break
                 }
                 return tmp
             }

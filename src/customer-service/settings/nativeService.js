@@ -89,7 +89,6 @@ let customizeNativeService = Object.assign(nativeService, {
                 tm: Math.round(new Date().getTime() / 1000) //时间戳
             }
             this.getUserInfo().then((data) => {
-                // param.webUserCode = data.uid //"oFtQywGHyqrWbDvjVdRTeR9Ig3m0"
                 param.webUserPhone = data.mobile
                 resolve(param)
             }).catch((error) => {
@@ -221,12 +220,7 @@ let customizeNativeService = Object.assign(nativeService, {
                 sourceSys: "APP",
                 tm: Math.round(new Date().getTime() / 1000) //时间戳
             }
-            this.getUserInfo().then((data) => {
-                // param.uid = data.uid //"2a58bb9810b3462b80e6d42c142441f8"
-                resolve(param)
-            }).catch((error) => {
-                reject(error)
-            })
+            resolve(param)
         })
     },
     sendControlHttpRequestWrapper(url, params, options) {

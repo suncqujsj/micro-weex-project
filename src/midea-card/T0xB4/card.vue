@@ -86,7 +86,7 @@
                 display_value2: "",
                 danwei: "分",
                 return_work_mode: {
-                	none: "不设置",
+                	none: "未设置",
 					double_tube: "上下管发热",
 					above_tube: "单上管发热",
 					revolve_bake: "旋转烧烤",

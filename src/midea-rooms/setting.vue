@@ -171,10 +171,10 @@
         right: 0;
     }
     .line1{
-        top: 125px;
+        top: 130px;
     }
     .line2{
-        top: 210px;
+        top: 215px;
     }
     .mgt15{
         margin-top: 15px;

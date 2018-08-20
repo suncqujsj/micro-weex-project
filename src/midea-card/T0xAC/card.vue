@@ -1,7 +1,7 @@
 <template>
     <scroller class="content" show-scrollbar="false">
         <div class="box">
-            <div>
+            <div @click="showControlPanelPage">
                 <div v-if="onlineStatus == '1'">
                     <div v-if="onoff == 'on'">
                         <div class="card" :class="[mode =='heat'?'card-hot':''] " v-if="PD004 != 0">
@@ -16,8 +16,8 @@
                                     <text class="main-status-third">{{currentMode}}</text>
                                 </div>
                                 <div class="card-control-temp-div">
-                                    <image @click="temperatureControl(-1)" class="cart-control-temp-img" src="./assets/img/smart_ic_reduce_huge@2x.png"></image>
-                                    <image @click="temperatureControl(1)" class="cart-control-temp-img cart-control-temp-img-right" src="./assets/img/smart_ic_increase_huge@2x.png"></image>
+                                    <image @click="temperatureControl(-1)" class="cart-control-temp-img" src="./assets/img/smart_ic_reduce_huge@3x.png"></image>
+                                    <image @click="temperatureControl(1)" class="cart-control-temp-img cart-control-temp-img-right" src="./assets/img/smart_ic_increase_huge@3x.png"></image>
                                 </div>
                             </div>
                             <div class="card-right">
@@ -28,8 +28,8 @@
                                     <image class="card-icon-img" :src="deviceIcon"></image>
                                 </div>
                                 <div></div>
-                                <div class="card-control-div">
-				        			<image class="card-control-img" :src="powerIcon" @click="poweronoff(0)"></image>
+                                <div class="card-control-div" @click="poweronoff(0)">
+				        			<image class="card-control-img" :src="powerIcon" ></image>
 			        			</div>
                             </div>
                             <div class="card-right-margin"></div>
@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="card-status-detail card-status-detail-simple">
                                     <text class="main-status-third-simple">进入详情</text>
-                                    <image class="main-status-detail" src="./assets/img/smart_ic_arrow_forward@2x.png"></image>
+                                    <image class="main-status-detail" src="./assets/img/smart_ic_arrow_forward@3x.png"></image>
                                 </div>
                                 <div class="card-control-temp-div">
                                 </div>
@@ -58,12 +58,12 @@
                         </div>
                     </div>
                     <div class="card-power-off" v-else>
-                        <div class="control-div-offline">
-                            <image class="card-control-img" :src="powerIcon_poweroff" @click="poweronoff(1)"></image>
+                        <div class="control-div-offline" @click="poweronoff(1)">
+                            <image class="card-control-img" :src="powerIcon_poweroff" ></image>
                             <text class="text-offline">电源</text>
                         </div>
                         <div>
-                            <image @click="showControlPanelPage" class="icon-offline" :src="deviceIcon"></image>
+                            <image class="icon-offline" :src="deviceIcon"></image>
                         </div>
                     </div>
                 </div>
@@ -133,10 +133,10 @@ export default {
             running: false,
 
             powerIcon: "./assets/img/smart_ic_off@3x.png",
-            powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
-            powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
-            deviceIcon: "./assets/img/smart_img_equip001@2x.png",
-            moreImg: "./assets/img/smart_ic_more@2x.png"
+            powerIcon_poweroff: "./assets/img/smart_ic_power_blue@3x.png",
+            powerIcon_offline: "./assets/img/smart_ic_reline@3x.png",
+            deviceIcon: "./assets/img/smart_img_equip001@3x.png",
+            moreImg: "./assets/img/smart_ic_more@3x.png"
         }
     },
     methods: {
@@ -169,12 +169,13 @@ export default {
         	}
             let promptStr = "0";//localStorage.getItem("ACTone"+this.deviceSN);
             let me = this;
+            let setTemperature = this.temperature + value;
             //this.temperature += value;
             let params = {
                 "operation": "luaControl",
                 "name": "temperatureControl",
                 "params": {
-                    temperature: me.temperature,
+                    temperature: setTemperature,
                 }
             }
             nativeService.sendLuaRequest(params, true).then(function (data) {
@@ -299,23 +300,23 @@ export default {
     },
     computed: {
         powerOnoffImg() {
-            let img = "./assets/img/smart_ic_power@2x.png";
+            let img = "./assets/img/smart_ic_power@3x.png";
             return img;
         },
         statusImg() {
-            let img = "./assets/img/smart_ic_smart@2x.png";
+            let img = "./assets/img/smart_ic_smart@3x.png";
             if (this.mode == 'cool') {
-                img = "./assets/img/smart_ic_smart@2x.png";
+                img = "./assets/img/smart_ic_smart@3x.png";
             } else if (this.mode == 'heat') {
-                img = "./assets/img/smart_ic_warmmode@2x.png";
+                img = "./assets/img/smart_ic_warmmode@3x.png";
             } else if (this.mode == 'auto') {
-                img = "./assets/img/auto@2x.png";
+                img = "./assets/img/auto@3x.png";
             } else if (this.mode == 'dry') {
-                img = "./assets/img/wet@2x.png";
+                img = "./assets/img/wet@3x.png";
             } else if (this.mode == 'fan') {
-                img = "./assets/img/wind@2x.png";
+                img = "./assets/img/wind@3x.png";
             } else {
-                img = "./assets/img/smart_ic_smart@2x.png";
+                img = "./assets/img/smart_ic_smart@3x.png";
             }
             return img;
         },
@@ -400,8 +401,12 @@ export default {
 }
 .control-div-offline {
   position: absolute;
-  right: 32px;
-  top: 32px;
+  right: 0px;
+  top:0px;
+    padding-top: 24px;
+    padding-right: 24px;
+    padding-left:14px;
+    padding-bottom: 6px;
   align-items: center;
 }
 .icon-offline {
@@ -421,9 +426,13 @@ export default {
 .card-control-div {
 	flex-direction: row;
 	position: absolute;
-	top: 38px;
-	right: 36px;
-	height:100px;
+    right: 0px;
+    top:0px;
+    padding-top: 24px;
+    padding-right: 24px;
+    padding-left:14px;
+    padding-bottom: 6px;
+	/*height:100px;*/
 }
 .card-control-temp-div {
   flex-direction: row;
@@ -431,11 +440,11 @@ export default {
   margin-bottom: 25px;
 }
 .cart-control-temp-img {
-  width: 64px;
-  height: 64px;
+  width: 84px;
+  height: 84px;
 }
 .cart-control-temp-img-right {
-  margin-left: 100px;
+  margin-left: 60px;
 }
 .card-status-detail {
   flex-direction: row;

@@ -1,10 +1,7 @@
 <template>
    <div class="wrap" :style="wrapStyle">
         <div class="header-floor">
-            <midea-header :title="deviceName" :isImmersion="isipx?false:true" bgColor="#fff" titleText="#000" @leftImgClick="goBack"></midea-header>
-            <div v-if="from == 'editAuto'" class="delete" @click="cancelDevice" :style="headBtnStyle">
-                <text class="delete-text">删除</text>
-            </div>
+            <midea-header :title="deviceName" :isImmersion="isImmersion" bgColor="#fff" titleText="#000" @leftImgClick="goBack" :showRightText="from == 'editAuto' ? true : false" rightText="删除" @rightTextClick="cancelDevice"></midea-header>
        </div>
         <list>
             <cell class="content">
@@ -32,7 +29,7 @@
             </cell>
         </list>
         <div class="pop-floor" v-for="(item,idx) in actions">
-             <midea-confirm2 :height="popHeight" :show="show[item.property]" @leftBtnClick="closePop(item.property)" @rightBtnClick="confirmPop(item.property)" @mideaPopupOverlayClicked="closePop(item.property)">
+             <midea-confirm2 :height="490" :show="show[item.property]" @leftBtnClick="closePop(item.property)" @rightBtnClick="confirmPop(item.property)" @mideaPopupOverlayClicked="closePop(item.property)">
                  <div v-if="item.type == 'list'" class="pop-list">
                     <scroller>
                         <text v-for="(value,key) in item.value" :class="['pop-item', active[item.property].value == key?'pop-item-active':'']" @click="setActiveKey(item.property, idx, key)"> {{value}}</text>
@@ -64,7 +61,7 @@
     .floor{
         margin-left: 25px;
         padding-right: 25px;
-        border-top-width: 2px;
+        border-top-width: 1px;
         border-top-style: solid;
         border-top-color: #e5e5e5;
     }
@@ -90,7 +87,7 @@
     }
     .property-text{
         color: #666;
-        font-size: 30px;
+        font-size: 28px;
     }
     .save-btn{
         width: 690px;
@@ -110,9 +107,9 @@
     }
     .pop-text{ font-size: 30px; color: #007AFF; padding: 25px;}
     .pop-list{
-        padding-top: 35px;
-        padding-bottom: 35px;
-        height: 350px;
+        padding-top: 20px;
+        height: 340px;
+        margin-bottom: 30px;
         background-color: #fff;
     }
     .pop-item{ padding: 22px; font-size: 30px; color: #777;  text-align: center; width: 750px;}
@@ -178,23 +175,7 @@
                     break
                 }
                 return tmp
-            },
-            popHeight(){
-                let tmp = 490
-                if (platform.toLowerCase() == 'android') {
-                    tmp = 535
-                }
-                return tmp
-            },
-            headBtnStyle(){
-                let tmp = {}
-                if (this.platform == 'ios' && !this.isipx) {
-                    tmp.top = '69px'
-                }else{
-                    tmp.top = '29px'
-                }
-                return tmp
-            },
+            }
         },
         methods: {
             goBack(){

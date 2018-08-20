@@ -55,6 +55,10 @@
                 type: Boolean,
                 default: true
             },
+            disabled: {
+                type: Boolean,
+                default: false
+            }
         },
         computed(){
         },
@@ -68,10 +72,13 @@
         },
         methods: {
             onSwitch(){
-                this.isActive = !this.isActive;
-                this.executeAnimation()
+                if (this.disabled) {
+                }else{
+                    this.isActive = !this.isActive;
+                    this.executeAnimation()
 
-                this.$emit('onSwitch', {value: this.isActive})
+                    this.$emit('onSwitch', {value: this.isActive})
+                }
             },
             executeAnimation(){
                 let that = this

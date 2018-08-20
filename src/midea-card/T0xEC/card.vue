@@ -1,6 +1,6 @@
 <template>
 	<scroller class="content">
-    <div class="box">
+    <div class="box" @click="showControlPanelPage">
         <div>
 	    	 <div class="card" v-if="onlineStatus == '1'">
 	        	<div class="card-left">
@@ -18,7 +18,7 @@
 	        			<image v-if="false" class="card-control-img" :src="controlStartPauseImg"></image>
 	        		</div>
 	        		<div class="card-icon">
-	        			<image class="card-icon-img" @click="showControlPanelPage" resize="contain" src="./assets/img/smart_img_equip041@2x.png"></image>
+	        			<image class="card-icon-img"  resize="contain" src="./assets/img/smart_img_equip041@3x.png"></image>
 	        		</div>
 	        	</div>
 	        </div>
@@ -28,7 +28,7 @@
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
-	        		<image class="icon-offline" src="./assets/img/smart_img_equip041@2x.png"></image>
+	        		<image class="icon-offline" src="./assets/img/smart_img_equip041@3x.png"></image>
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
@@ -78,7 +78,7 @@
 	            currentWorkStatus:"--",
 	            danwei: "",
 	            secondWorkStatus: "--",
-	            powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
+	            powerIcon_offline: "./assets/img/smart_ic_reline@3x.png",
 	            work_status: {
 					0: "待机",
 					1: "非预约烹饪中",
@@ -256,11 +256,11 @@
         },
         computed: {
         	controlStartPauseImg () {
-	            let img = "./assets/img/smart_ic_play@2x.png";
+	            let img = "./assets/img/smart_ic_play@3x.png";
 	            if(this.work_status == "cooking" || this.work_status == "keep_warm") {
-	                img = "./assets/img/smart_ic_pause@2x.png";
+	                img = "./assets/img/smart_ic_pause@3x.png";
 	            } else {
-	                img = "./assets/img/smart_ic_play@2x.png";
+	                img = "./assets/img/smart_ic_play@3x.png";
 	            }
 	            return img;
 	        },
@@ -370,8 +370,12 @@
 	}
 	.control-div-offline {
 		position: absolute;
-		right:32px;
-		top:32px;
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
+		top: 0px;
+		right: 0px;
 		align-items: center;
 	}
 	.main-status-div {

@@ -27,91 +27,42 @@ export default {
     data() {
         return {
             deviceId: "",
-            situationList: []
+            situationList: [],
+            isSituationLoaded: false
         }
     },
     methods: {
-        handlePageData(data) {
-            //处理页面传递的信息
-            if (data.deviceId == this.deviceId) {
-                if (data.key == "situation") {
-                    this.getSituationList()
-                }
-            }
-        },
-        goToSituation(path, situation) {
-            nativeService.setItem("CARD_STORAGE_SITUATION", Object.assign(situation, { deviceId: this.deviceId }), () => {
-                nativeService.goTo(path)
-            })
-        },
-        getSituationList() {
-            this.getSituationListService().then((resp) => {
-                if (resp.code == 0 && resp.data) {
-                    this.situationList = resp.data.list || []
-                } else {
-                    throw resp
-                }
-            }).catch((error) => {
-                nativeService.toast(this.getErrorMessage(error))
-            })
-        },
-        switchEnable(event, situation) {
-            let enable = event.value ? "1" : "0"
-            if (situation.isCreated) {
-                //更新
-                let index = this.situationList.findIndex((item) => (item.moduleCode == situation.moduleCode))
-                this.updateSituationEnableService(situation.moduleCode, enable).then((resp) => {
-                    if (resp.code == 0) {
-                        situation.enable = enable
-                        this.$set(this.situationList, index, situation)
-                    } else {
-                        throw resp
-                    }
-                }).catch((error) => {
-                    this.$set(this.situationList, index, situation)
-                    nativeService.toast(this.getErrorMessage(error))
-                })
-            } else {
-                //新增
-                this.addSituationService(situation.moduleCode, enable, situation).then((resp) => {
-                    if (resp.code == 0) {
-                        situation.enable = enable
-                        this.situationList.push(situation)
-                    } else {
-                        throw resp
-                    }
-                }).catch((error) => {
-                    nativeService.toast(this.getErrorMessage(error))
-                })
-            }
-        },
         executeSituation(situation) {
-            if (situation.isCreated) {
-                //直接执行
-                return this.executeSituationService(situation).then((resp) => {
-                    if (resp.code == 0) {
-                        this.$emit('statusChanged')
-                        nativeService.toast("执行成功")
-                    } else {
-                        throw resp
-                    }
-                }).catch((error) => {
-                    nativeService.toast(this.getErrorMessage(error))
-                })
-            } else {
-                //先新增，再执行
-                this.addSituationService(situation.moduleCode, "1", situation).then((resp) => {
-                    if (resp.code == 0) {
-                        this.situationList.push(situation)
+            if (this.isSituationLoaded) {
+                if (situation.isCreated) {
+                    //直接执行
+                    return this.executeSituationService(situation).then((resp) => {
+                        if (resp.code == 0) {
+                            this.$emit('statusChanged')
+                            nativeService.toast("执行成功")
+                        } else {
+                            throw resp
+                        }
+                    }).catch((error) => {
+                        nativeService.toast(this.getErrorMessage(error))
+                    })
+                } else {
+                    //先新增，再执行
+                    this.addSituationService(situation.moduleCode, "1", situation).then((resp) => {
+                        if (resp.code == 0) {
+                            this.situationList.push(situation)
 
-                        situation.isCreated = true
-                        this.executeSituation(situation)
-                    } else {
-                        throw resp
-                    }
-                }).catch((error) => {
-                    nativeService.toast(this.getErrorMessage(error))
-                })
+                            situation.isCreated = true
+                            this.executeSituation(situation)
+                        } else {
+                            throw resp
+                        }
+                    }).catch((error) => {
+                        nativeService.toast(this.getErrorMessage(error))
+                    })
+                }
+            } else {
+                this.getSituationList()
             }
         }
     },
@@ -151,8 +102,8 @@ export default {
             result.checked = result.enable == '1' ? true : false
 
             let conditions1 = (result.props.conditions[0].operator == 1 ? "高于" : "低于") + result.props.conditions[0].value
-            result.title = "室内温度" + conditions1 + "°度时，自动开启"
-            result.detail = "模式" + (result.props.target.mode == 'cool' ? "制冷" : "制热") + "，温度" + result.props.target.temperature + "."
+            result.title = "室内温度" + conditions1 + "°时，自动开启"
+            result.detail = "模式" + (result.props.target.mode == 'cool' ? "制冷" : "制热") + "，温度" + result.props.target.temperature + "°."
 
             return result
         },

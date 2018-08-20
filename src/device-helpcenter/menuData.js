@@ -1,8 +1,10 @@
 const menus = [
     {
+        id: 10,
         title: '智能配网',
         subMenus: [
             {
+                id: 1001,
                 title: '如何添加设备',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '添加设备',
@@ -10,7 +12,7 @@ const menus = [
                     {
                         descName: '安卓用户添加设备',
                         steps: [
-                            '确认手机已经打开并连接家庭无线网络（WiFi）', 
+                            '确认手机已经打开并连接家庭无线网络（WiFi）',
                             '登录美居App，在“首页”点击 “+”，进入“添加设备”界面',
                             '扫描设备机身二维码，或选择家电型号进入配网流程',
                             '操作设备进入配置模式，此时能接收到设备发出的热点WiFi：midea_xx_xxxx',
@@ -34,6 +36,7 @@ const menus = [
                 ]
             },
             {
+                id: 1002,
                 title: '设备添加失败如何处理',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '设备添加失败',
@@ -97,6 +100,7 @@ const menus = [
                 ]
             },
             {
+                id: 1003,
                 title: '添加设备无法选择家庭网络',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '添加设备无法选择家庭网络',
@@ -108,6 +112,7 @@ const menus = [
                 ]
             },
             {
+                id: 1004,
                 title: '设备二维码在哪里',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '设备二维码在哪里',
@@ -117,6 +122,7 @@ const menus = [
                 ]
             },
             {
+                id: 1005,
                 title: '如何修改设备名称',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '修改设备名称',
@@ -126,6 +132,7 @@ const menus = [
                 ]
             },
             {
+                id: 1006,
                 title: '如何删除设备',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '删除设备',
@@ -135,6 +142,7 @@ const menus = [
                 ]
             },
             {
+                id: 1007,
                 title: '设备为何显示离线',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '设备为何显示离线',
@@ -147,6 +155,7 @@ const menus = [
                 aboveInfo: '以上仍未能恢复，您还可尝试重置设备，具体重置方式请参照设备说明书'
             },
             {
+                id: 1008,
                 title: '如何重置设备（进入配置模式）',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '重置设备（进入配置模式）',
@@ -156,6 +165,7 @@ const menus = [
                 ]
             },
             {
+                id: 1009,
                 title: '如何下载/升级设备插件',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '下载/升级设备插件',
@@ -164,6 +174,7 @@ const menus = [
                 ]
             },
             {
+                id: 1010,
                 title: '网络信号弱导致设备控制失败怎么处理',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '网络信号弱导致设备控制失败怎么处理',
@@ -174,6 +185,7 @@ const menus = [
                 ]
             },
             {
+                id: 1011,
                 title: '为什么添加设备时失败，重试多次也无法添加',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '为什么添加设备时失败，重试多次也无法添加',
@@ -182,6 +194,7 @@ const menus = [
                 ]
             },
             {
+                id: 1012,
                 title: '为什么主界面的设备不见了',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '为什么主界面的设备不见了',
@@ -190,6 +203,7 @@ const menus = [
                 ]
             },
             {
+                id: 1013,
                 title: '更改无线路由器名称或密码后，为什么手机软件不能控制设备',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '更改无线路由器名称或密码后，为什么手机软件不能控制设备',
@@ -198,6 +212,7 @@ const menus = [
                 ]
             },
             {
+                id: 1014,
                 title: '为什么扫描二维码黑屏',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '为什么扫描二维码黑屏',
@@ -206,6 +221,7 @@ const menus = [
                 ]
             },
             {
+                id: 1015,
                 title: '为什么无法找到midea_xx_xxxx设备WiFi',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '为什么无法找到midea_xx_xxxx设备WiFi',
@@ -214,6 +230,7 @@ const menus = [
                 ]
             },
             {
+                id: 1016,
                 title: '添加设备百分比进度条停止',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '添加设备百分比进度条停止',
@@ -222,6 +239,7 @@ const menus = [
                 ]
             },
             {
+                id: 1017,
                 title: '为什么美居搜索不到我家里面的WiFi网络',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '为什么美居搜索不到我家里面的WiFi网络',
@@ -230,6 +248,7 @@ const menus = [
                 ]
             },
             {
+                id: 1018,
                 title: '为什么我的设备WiFi指示灯一直在闪',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '为什么我的设备WiFi指示灯一直在闪',
@@ -238,6 +257,7 @@ const menus = [
                 ]
             },
             {
+                id: 1019,
                 title: '扫描二维码一直提示错误，怎么回事',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '扫描二维码一直提示错误，怎么回事',
@@ -246,6 +266,7 @@ const menus = [
                 ]
             },
             {
+                id: 1020,
                 title: '怎么才能知道我的设备是否支持WiFi功能',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '怎么才能知道我的设备是否支持WiFi功能',
@@ -254,6 +275,7 @@ const menus = [
                 ]
             },
             {
+                id: 1021,
                 title: '为什么我的设备进入AP配置模式还是找不到设备WiFi',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '为什么我的设备进入AP配置模式还是找不到设备WiFi',
@@ -262,6 +284,7 @@ const menus = [
                 ]
             },
             {
+                id: 1022,
                 title: '连接的时候出现错误怎么办',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '连接的时候出现错误怎么办',
@@ -270,6 +293,7 @@ const menus = [
                 ]
             },
             {
+                id: 1023,
                 title: '连接智能设备需要注意哪些常见问题',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '连接智能设备需要注意哪些常见问题',
@@ -283,6 +307,7 @@ const menus = [
                 ]
             },
             {
+                id: 1024,
                 title: '为什么扫描设备二维码没有任何反应',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '为什么扫描设备二维码没有任何反应',
@@ -293,9 +318,11 @@ const menus = [
         ]
     },
     {
+        id: 20,
         title: '家庭管理',
         subMenus: [
             {
+                id: 2001,
                 title: '如何添加家庭',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '添加家庭',
@@ -304,6 +331,7 @@ const menus = [
                 tipInfo: '美的提醒您：在使用美的平台各项服务前，请您务必仔细阅读并透彻理解本声明。如对本声明内容有任何疑问，您可向美的平台客服咨询。阅读本声明的过程中，如果您不同意本声明或其中任何内容，您应立即停止使用美的平台服务。如果您使用美的平台服务的，即意味着您认可本声明全部内容。'
             },
             {
+                id: 2002,
                 title: '如何创建新的家庭',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '创建新的家庭',
@@ -312,6 +340,7 @@ const menus = [
                 ]
             },
             {
+                id: 2003,
                 title: '如何编辑家庭信息',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '编辑家庭信息',
@@ -321,6 +350,7 @@ const menus = [
                 ]
             },
             {
+                id: 2004,
                 title: '如何删除家庭成员',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '删除家庭成员',
@@ -330,6 +360,7 @@ const menus = [
                 ]
             },
             {
+                id: 2005,
                 title: '如何邀请家庭成员',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '邀请家庭成员',
@@ -340,6 +371,7 @@ const menus = [
                 ]
             },
             {
+                id: 2006,
                 title: '如何删除/退出家庭',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '删除/退出家庭',
@@ -352,6 +384,7 @@ const menus = [
                 outTipInfo: '家庭成员退出家庭后，该成员将不能控制该家庭中的设备'
             },
             {
+                id: 2007,
                 title: '如何切换家庭',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '切换家庭',
@@ -366,9 +399,11 @@ const menus = [
     //     subMenus: []
     // },
     {
+        id: 30,
         title: '其他部分',
         subMenus: [
             {
+                id: 3001,
                 title: '无法接收设备提醒/成员邀请',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '无法接收设备提醒/成员邀请',
@@ -379,6 +414,7 @@ const menus = [
                 ]
             },
             {
+                id: 3002,
                 title: '美居App闪退',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '美居App闪退',
@@ -389,6 +425,7 @@ const menus = [
                 ]
             },
             {
+                id: 3003,
                 title: '美居App无法登陆',
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '美居App无法登陆',

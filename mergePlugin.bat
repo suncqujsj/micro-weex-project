@@ -23,10 +23,12 @@ echo %d%
 
 
 echo "删除%pluginPath%\dist_zip"
-rmdir "%pluginPath%\dist_zip" /q /s 
+if exist "%pluginPath%\dist_zip" rmdir "%pluginPath%\dist_zip" /q /s 
+
 ::开始循环需要拷贝的目录
 for /d %%i in ("%pluginPath%\*") do (
     set folderName=%%~ni
+    if exist "%%i\midea-card" rmdir "%%i\midea-card" /q /s 
     if exist "%buildPath%\!folderName!" (
         echo "拷贝!folderName!至!folderName!"
         XCOPY "%buildPath%\!folderName!\*.*" %%i /s/y/q
@@ -41,7 +43,7 @@ for /d %%i in ("%pluginPath%\*") do (
         )
     )
     if not exist "%pluginPath%\dist_zip" md "%pluginPath%\dist_zip"
-    "C:\Program Files\HaoZip\HaoZipC.exe" a -tzip "%pluginPath%\dist_zip\!folderName!_0815.zip" %%i -sn
+    "C:\Program Files\HaoZip\HaoZipC.exe" a -tzip "%pluginPath%\dist_zip\!folderName!_%d%.zip" %%i -sn
     echo "压缩至%pluginPath%\dist_zip\!folderName!_%d%.zip""
 );
  

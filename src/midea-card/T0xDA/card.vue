@@ -1,6 +1,6 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
-	    <div class="box">
+	    <div class="box" @click="showControlPanelPage">
 	       <div v-if="onlineStatus == '1'">
 		    	 <div class="card" v-if="onoff == 'on'">
 		        	<div class="card-left">
@@ -17,11 +17,15 @@
 		        		<div class="card-control">
 		        		</div>
 		        		<div class="card-icon">
-		        			<image class="card-icon-img" @click="showControlPanelPage" src="./assets/img/smart_pic_equip010@2x.png"></image>
+		        			<image class="card-icon-img"  src="./assets/img/smart_pic_equip010@3x.png"></image>
 		        		</div>
-		        		<div class="card-control-div">
-		        			<image class="card-control-img" style="margin-right:35px"  :src="startPause" @click="controlStartPause"></image>
-		        			<image class="card-control-img" src="./assets/img/smart_ic_off@2x.png" @click="poweronoff(0)"></image>
+		        		<div class="card-control-div" @click="controlStartPause">
+							<div class="left-btn">
+								<image class="card-control-img"  :src="startPause" ></image>
+							</div>
+							<div class="right-btn" @click="poweronoff(0)">
+								<image class="card-control-img" src="./assets/img/smart_ic_off@3x.png" ></image>
+							</div>
 	        			</div>
 		        	</div>
 		        </div>
@@ -31,17 +35,19 @@
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image @click="showControlPanelPage" class="icon-offline" src="./assets/img/smart_pic_equip010@2x.png"></image>
+		        		<image @click="showControlPanelPage" class="icon-offline" src="./assets/img/smart_pic_equip010@3x.png"></image>
 		        	</div>
 		        </div>
 	        </div>
 	         <div class="card-power-off" v-else>
-	        	<div class="control-div-offline">
-	        		<image class="card-control-img" :src="powerIcon_offline"  @click="reload"></image>
+	        	<div class="control-div-offline" @click="reload">
+					<div class="right-btn">
+	        		<image class="card-control-img" :src="powerIcon_offline"  ></image>
 	        		<text class="text-offline">重连</text>
+					</div>
 	        	</div>
 	        	<div>
-	        		<image class="icon-offline" src="./assets/img/smart_pic_equip010@2x.png"></image>
+	        		<image class="icon-offline" src="./assets/img/smart_pic_equip010@3x.png"></image>
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
@@ -156,8 +162,8 @@
                 deviceLock:"",
                 errorCode: "",
                 intelligentFlag: 0,
-                powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
-                powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
+                powerIcon_offline: "./assets/img/smart_ic_reline@3x.png",
+                powerIcon_poweroff: "./assets/img/smart_ic_power_blue@3x.png",
                 list: [
                 { 
                 	"name": "电饭煲食谱",
@@ -279,7 +285,7 @@
             		};
             	nativeService.sendLuaRequest(params,true).then(function(data) {
             		if(flag != 1) {
-            			self.queryStatus();
+                        self.queryStatus();
             		} else {
             			self.updateUI(data);	
             		}
@@ -335,7 +341,7 @@
             			}
             		};
             		nativeService.sendLuaRequest(params,true).then(function(data) {
-	            		//self.updateUI(data);
+//	            		self.updateUI(data);
 	            		self.queryStatus();
 	            	},function(error) {
 	            		console.log("error");
@@ -402,20 +408,20 @@
         },
         computed: {
 				powerOnoffImg () {
-		            let img = "./assets/img/smart_ic_power@2x.png";
+		            let img = "./assets/img/smart_ic_power@3x.png";
 		            if(this.power == "on") {
-		                img = "./assets/img/smart_ic_power@2x.png";
+		                img = "./assets/img/smart_ic_power@3x.png";
 		            } else {
-		                img = "./assets/img/smart_ic_power@2x.png";
+		                img = "./assets/img/smart_ic_power@3x.png";
 		            }
 		            return img;
 		        },
 		        startPause() {
-		        	let img = "./assets/img/smart_ic_play@2x.png";
+		        	let img = "./assets/img/smart_ic_play@3x.png";
 		            if(this.running_status == "work" || this.running_status == "order") {
-		                img = "./assets/img/smart_ic_pause@2x.png";
+		                img = "./assets/img/smart_ic_pause@3x.png";
 		            } else {
-		                img = "./assets/img/smart_ic_play@2x.png";
+		                img = "./assets/img/smart_ic_play@3x.png";
 		            }
 		            return img;
 		        }
@@ -486,8 +492,12 @@
 	}
 	.control-div-offline {
 		position: absolute;
-		right:32px;
-		top:32px;
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
+		top: 0px;
+		right: 0px;
 		align-items: center;
 	}
 	.card-control {
@@ -500,8 +510,20 @@
 	.card-control-div {
 		flex-direction: row;
 		position: absolute;
-		top: 38px;
-		right: 36px;
+		top: 0px;
+		right: 0px;
+	}
+	.left-btn{
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
+		margin-right: 2px;
+	}
+	.right-btn {
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left: 14px;
 	}
 	.card-status-detail {
 		flex-direction: row;

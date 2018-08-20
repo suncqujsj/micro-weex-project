@@ -1,6 +1,6 @@
 <template>
 	<scroller class="content">
-		<div class="box">
+		<div class="box" @click="showControlPanelPage">
 			<div>
 				<div class="card" v-if="onlineStatus == '1'">
 					<div class="card-left">
@@ -17,11 +17,11 @@
 						<div class="card-control">
 						
 						</div>
-						<div class="card-icon" @click="showControlPanelPage">
-							<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip043@2x.png"></image>
-</div>
-	        		<div class="card-control-div">
-	        			<image class="card-control-img" :src="controlStartPauseImg" @click="controlStartPause"></image>
+						<div class="card-icon" >
+							<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip043@3x.png"></image>
+						</div>
+	        		<div class="card-control-div" @click="controlStartPause">
+	        			<image class="card-control-img" :src="controlStartPauseImg" ></image>
 						</div>
 					</div>
 				</div>
@@ -31,7 +31,7 @@
 						<text class="text-offline">重连</text>
 					</div>
 					<div>
-						<image class="icon-offline" src="./assets/img/smart_img_equip043@2x.png"></image>
+						<image class="icon-offline" src="./assets/img/smart_img_equip043@3x.png"></image>
 					</div>
 					<text class="text-offline-center">已离线</text>
 				</div>
@@ -76,7 +76,7 @@ export default {
 			pushKey: "receiveMessage",
 			pushKeyOnline: "receiveMessageFromApp",
 
-			powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
+			powerIcon_offline: "./assets/img/smart_ic_reline@3x.png",
 			mode: "keep_warm",	//当前设备模式
 			work_status: "cooking",	//当前设备状态
 			display_value: "",//localStorage.getItem("EAdisplay_value") || "",
@@ -498,9 +498,12 @@ export default {
 	.card-control-div {
 		flex-direction: row;
 		position: absolute;
-		top: 38px;
-		right: 36px;
-		height:100px;
+		right: 0px;
+		top:0px;
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
 }
 .card-status-detail {
   flex-direction: row;
@@ -560,8 +563,12 @@ export default {
 }
 .control-div-offline {
   position: absolute;
-  right: 32px;
-  top: 32px;
+	right: 0px;
+	top:0px;
+	padding-top: 24px;
+	padding-right: 24px;
+	padding-left:14px;
+	padding-bottom: 6px;
   align-items: center;
 }
 .main-status-div {

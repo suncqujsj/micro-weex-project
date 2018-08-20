@@ -1,9 +1,9 @@
 <template>
    <div class="wrap" :style="wrapStyle">
-        <midea-header :title="header.title" :isImmersion="isipx?false:true" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
+        <midea-header :title="header.title" :isImmersion="isImmersion" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
         <list>
             <cell class="content">
-                <div v-if="sceneType != 2 && from=='addAuto'" class="hd">
+                <div v-if="sceneType != 2 && from=='addAuto' && sceneSupportDevices.length > 0" class="hd">
                     <text v-if="sceneType == 3 && direction == 1" class="hd-text">在{{weekDesc}}到达 {{destination.key}} 时自动操控</text>
                     <text v-if="sceneType == 3 && direction == 2" class="hd-text">在{{weekDesc}}离开 {{destination.key}} 时自动操控</text>
                     <text v-if="sceneType == 4" class="hd-text">在{{weekDesc}}的{{startTime}}自动操控</text>
@@ -42,7 +42,7 @@
                         </div>
                     </div>
                 </div>
-                <text class="save-btn" @click="getDone()">完成</text>              
+                <text v-if="sceneSupportDevices.length > 0" class="save-btn" @click="getDone()">完成</text>              
             </cell>
         </list>
         <midea-promt title="快捷操作名称" ref="promt" placeholder="最多输入15字" :inputValue="inputAutoName" :show="showPrompt" @okClicked="promptConfirm" @onPromtClose="promptClose" @onPromtInput="promptInput"></midea-promt>
@@ -219,10 +219,11 @@
                     check:  'assets/img/scene_ic_checkbox_on@3x.png',
                     uncheck: 'assets/img/scene_ic_checkbox_off@3x.png',
                     auto: {
-                        2: 'assets/img/smart_ic_hand@3x.png',
-                        3: 'assets/img/scene_ic_placeblue@3x.png',
-                        4: 'assets/img/samrt_ic_clock@3x.png',
-                        6: 'assets/img/scene_ic_weather@3x.png',
+                        '2': 'assets/img/smart_ic_hand@3x.png',
+                        '31': 'assets/img/scene_ic_placeblue@3x.png',
+                        '32': 'assets/img/scene_ic_placegreen@3x.png',
+                        '4': 'assets/img/samrt_ic_clock@3x.png',
+                        '6': 'assets/img/scene_ic_weather@3x.png',
                     }
                 },
                 header: {
@@ -441,16 +442,25 @@
                 this.inputAutoName = val;
             },
             setNewAuto(){
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     let reqUrl = url.auto.add
                     let reqParams = {
-                        uid: uid,
-                        homegroupId: this.homegroupId,
+                        uid: res.uid,
+                        homegroupId: res.homegroupId,
                         sceneType: this.sceneType,
-                        image: this.icon.auto[this.sceneType],
                         name: this.inputAutoName,
                         enable: 1
                     }
+                    if (this.sceneType == 3) {
+                        if (this.direction == 1){
+                            reqParams.image = this.icon.auto['31']
+                        }else{
+                            reqParams.image = this.icon.auto['32']
+                        }
+                    }else{
+                        reqParams.image = this.icon.auto[this.sceneType]
+                    }
+
                     if (nativeService.getParameters('templateCode')) {
                         reqParams.templateCode = nativeService.getParameters('templateCode')
                     }

@@ -1,7 +1,7 @@
 <template>
     <div class="row-sb" :style="wrapStyle">
-        <div v-for="item in indexList">
-            <image v-if="item <= score" :src="starPath" class="star" :style="starStyle"></image>
+        <div v-for="(item,i) in indexList">
+            <image v-if="item <= score" :src="starPath" :class="['star', i>0? 'mgl16': '']" :style="starStyle"></image>
             <image v-else :src="unstarPath" class="star" :style="starStyle"></image>
         </div>
     </div>
@@ -13,6 +13,9 @@
     .star{
         width: 50px;
         height: 50px;
+    }
+    .mgl16{
+        margin-left: 16px;
     }
 </style>
 <script>
@@ -38,7 +41,7 @@ export default {
     computed: {
         wrapStyle(){
             return {
-                width: (this.starWidth * 5) + 'px',
+                width: (this.starWidth * 5 +64) + 'px',
                 height: this.starWidth + 'px',
             }
         },

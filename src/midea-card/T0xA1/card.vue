@@ -1,6 +1,6 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
-	    <div class="box">
+	    <div class="box" @click="showControlPanelPage">
 	        <div v-if="onlineStatus == '1'">
 		    	 <div class="card" v-if="onoff == 'on'">
 		        	<div class="card-left">
@@ -18,10 +18,10 @@
 		        			
 		        		</div>
 		        		<div class="card-icon">
-		        			<image class="card-icon-img" @click="showControlPanelPage" resize="contain" src="./assets/img/smart_img_equip026@2x.png"></image>
+		        			<image class="card-icon-img"  resize="contain" src="./assets/img/smart_img_equip026@3x.png"></image>
 		        		</div>
-		        		<div class="card-control-div">
-		        			<image class="card-control-img" @click="poweronoff(0)" src="./assets/img/smart_ic_off@2x.png"></image>
+		        		<div class="card-control-div" @click="poweronoff(0)">
+		        			<image class="card-control-img"  src="./assets/img/smart_ic_off@3x.png"></image>
 	        			</div>
 		        	</div>
 		        </div>
@@ -31,17 +31,17 @@
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image class="icon-offline" @click="showControlPanelPage" src="./assets/img/smart_img_equip026@2x.png"></image>
+		        		<image class="icon-offline" @click="showControlPanelPage" src="./assets/img/smart_img_equip026@3x.png"></image>
 		        	</div>
 		        </div>
 	        </div>
 	        <div class="card-power-off" v-else>
-	        	<div class="control-div-offline">
-	        		<image class="card-control-img" :src="powerIcon_offline"  @click="reload"></image>
+	        	<div class="control-div-offline" @click="reload">
+	        		<image class="card-control-img" :src="powerIcon_offline"  ></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
-	        		<image class="icon-offline" src="./assets/img/smart_img_equip026@2x.png"></image>
+	        		<image class="icon-offline" src="./assets/img/smart_img_equip026@3x.png"></image>
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
@@ -92,8 +92,8 @@
 					dry_shoes:"干鞋模式",
 					invalid:"无效"
 	            },
-	            powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
-                powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
+	            powerIcon_poweroff: "./assets/img/smart_ic_power_blue@3x.png",
+                powerIcon_offline: "./assets/img/smart_ic_reline@3x.png",
             }
         },
         methods: {
@@ -325,8 +325,12 @@
 	}
 	.control-div-offline {
 		position: absolute;
-		right:32px;
-		top:32px;
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
+		top: 0px;
+		right: 0px;
 		align-items: center;
 	}
 	.card-control {
@@ -340,9 +344,12 @@
 	.card-control-div {
 		flex-direction: row;
 		position: absolute;
-		top: 38px;
-		right: 36px;
-		height:100px;
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
+		top: 0px;
+		right: 0px;
 	}
 	.card-control-temp-div {
 		flex-direction: row;

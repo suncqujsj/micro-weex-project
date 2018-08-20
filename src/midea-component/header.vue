@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" style="width:750px;">
-        <div :style="{backgroundColor:bgColor}" class="box" :class="[isImmersion && 'immersion']">
+        <div :style="{backgroundColor:bgColor}" class="box" :class="[isImmersion?(isipx? 'immersion-ipx': 'immersion'):'']">
             <div class="header-left-image-wrapper" @click="leftImgClick">
                 <image v-if="showLeftImg" class="header-left-image" :src="leftImg"></image>
             </div>
@@ -13,7 +13,7 @@
                 </slot>
             </div>
             <div v-if="showRightText" class="header-right" @click="rightTextClick">
-                <text class="header-right-text">{{rightText}}</text>
+                <text class="header-right-text" :style="{color: rightColor}">{{rightText}}</text>
             </div>
             <slot name="customerContent">
             </slot>
@@ -67,6 +67,15 @@ export default {
         rightText: {
             type: String,
             default: ''
+        },
+        rightColor: {
+            type: String,
+            default: '#666666'
+        }
+    },
+    computed: {
+        isipx: function () {
+            return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6');
         }
     },
     data() {
@@ -113,6 +122,10 @@ export default {
   padding-top: 40px;
   height: 128px;
 }
+.immersion-ipx {
+  padding-top: 68px;
+  height: 156px;
+}
 .header-title {
   flex: 1;
   font-family: PingFangSC-Medium;
@@ -157,7 +170,6 @@ export default {
 .header-right-text {
   font-family: PingFangSC-Regular;
   font-size: 28px;
-  color: #666666;
   padding-left: 20px;
   padding-right: 32px;
   text-align: right;

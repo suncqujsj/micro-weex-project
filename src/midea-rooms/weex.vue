@@ -10,11 +10,17 @@
                 <div v-for="col in colList">
                     <div v-for="item in col" class="auto row-sb"  @click="editAuto(item)">
                         <div class="row-s">
-                            <image class="icon" :src="item.image"></image>
-                            <text class="auto-name">{{item.name}}</text>
-                            <text class="auto-desc"></text>
+                            <image class="icon" :src="item.sceneType == 3? icon.auto[item.sceneType+'.'+item.location.direction] :  icon.auto[item.sceneType]"></image>
+                            <div class="auto-info">
+                                <text class="auto-name">{{item.name}}</text>
+                                <div class="auto-desc row-s">
+                                    <div v-for="device in item.task">
+                                        <text class="auto-desc-text">{{formatUserDevices[device.applianceCode]}}</text>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <image v-if="item.sceneType==2" class="auto-btn" :src="icon.autoBtn[item.enable]"  @click="executeAuto(item.sceneId)">
+                        <image v-if="item.sceneType==2" class="auto-btn" :src="icon.autoBtn"  @click="executeAuto(item.sceneId)">
                     </div>
                 </div>
             </scroller>
@@ -75,13 +81,13 @@
     .row-sa{ flex-direction: row; align-items: center; justify-content: space-around; }
     .row-e { flex-direction: row; align-items: center; justify-content: flex-end; }
     .hd { margin-top: 44px; padding-left:30px; padding-right:30px; margin-bottom: 24px; }
-    .hd-name{  font-size: 36px; color: #000; }
+    .hd-name{ font-weight: bold; font-size: 36px; color: #000; }
     .hd-btn{ font-size: 26px; color: #666; padding: 10px;}
     .scroller{ padding-left:30px; padding-right:30px; flex-direction: row; height: 276px;}
-    .icon { width: 82px; height: 82px; margin-right: 20px; }
+    .icon { width: 82px; height: 82px;  }
     .auto-btn{ width: 50px; height: 50px; }
     .auto{
-        width: 406px;
+        width: 366px;
         height: 122px;
         background-color: #fff;
         margin-bottom: 16px;
@@ -89,8 +95,10 @@
         padding: 20px;
         border-radius: 4px;
     }
-    .auto-name{ width: 180px; font-size: 30px; color: #666666; margin-bottom: 8px; text-overflow: clip; }
-    /* .auto-desc{ width: 120px; font-size: 24px; color: #C7C7CC; lines:1; } */
+    .auto-info {margin-left: 20px;}
+    .auto-name{ width: 180px; font-size: 28px; color: #000; font-weight: bold; margin-bottom: 8px; text-overflow: clip; }
+    .auto-desc{ width: 120px; font-size: 24px; color: #C7C7CC; lines:1; text-overflow: ellipsis; }
+    .auto-desc-text{ font-size: 24px; color: #C7C7CC; margin-right: 6px;}
     .scene-list{  padding-left:30px; padding-right:30px;}
     .scene { width: 690px; height: 206px; padding-bottom: 16px; position: relative; }
     .scene-bg{ width: 690px; height: 185px; position: absolute; }
@@ -117,7 +125,7 @@
 </style>
 
 <script>
-    import { url, codeDesc } from './config/config.js'
+    import { url, codeDesc, autoSupportActions } from './config/config.js'
     import base from './base'
     import nativeService from '@/common/services/nativeService.js'
     import ToastDialog from '@/midea-component/toastDialog.vue'
@@ -155,7 +163,16 @@
                     }
                 }
                 return tmp
-            }  
+            },
+        },
+        watch: {
+            userDevices(newValue){
+                let tmp = {}
+                for(var i in this.userDevices) {
+                    tmp[this.userDevices[i].deviceId] = this.userDevices[i].deviceName
+                }
+                this.formatUserDevices = tmp
+            }
         },
         components: {ToastDialog},
         mixins: [base],
@@ -166,14 +183,18 @@
                 homegroupId: '',
                 icon: {
                     next: 'assets/img/more_w.png',
-                    autoBtn:{
-                        0: 'assets/img/scene_ic_goahead@3x.png',
-                        1: 'assets/img/autooo.png',
-                    },
+                    autoBtn: 'assets/img/sence_ic_action_on@3x.png',
                     exe: {
                         1: 'assets/img/scene_ic_listdone@3x.png',
                         2: 'assets/img/scene_ic_listloading@3x.png',
                         3: 'assets/img/scene_ic_listundo@3x.png'
+                    },
+                    auto: {
+                        '2': 'assets/img/smart_ic_hand@3x.png',
+                        '3.1': 'assets/img/scene_ic_placeblue@3x.png',
+                        '3.2': 'assets/img/scene_ic_placegreen@3x.png',
+                        '4': 'assets/img/samrt_ic_clock@3x.png',
+                        '6': 'assets/img/scene_ic_weather@3x.png',
                     }
                 },
                 sceneImg: {
@@ -199,7 +220,7 @@
                     },
                     {
                         isAdd: true,
-                        image: 'assets/img/scene_ic_placeblue@3x.png',
+                        image: 'assets/img/scene_ic_placegreen@3x.png',
                         sceneType: 3,
                         direction: 2,
                         name: '离家'
@@ -233,7 +254,8 @@
                         "roomType": 4
                     }
                 ],
-                userDevices: '',
+                userDevices: [],
+                userDevicesStr: '',
                 user: null,
                 autoTemplate: {},
                 showToastDialog: false,
@@ -245,27 +267,34 @@
                     '4': '1006',
                     '6': '1008'
                 },
+                formatUserDevices: {},
+                autoSupportActions: autoSupportActions
             }
         },
         methods: { 
             initData(){
                 nativeService.getNetworkStatus().then((result)=>{
                     if (result.status == 1){
-                        nativeService.getUserInfo().then((res)=>{
-                            if (res.uid == '' || res.uid == undefined){
+                        nativeService.getUserInfo().then((user)=>{
+                            if (user.uid == '' || user.uid == undefined){
                                 this.setTmpl()
                             }else{
-                                nativeService.getCurrentHomeInfo().then( (res)=>{
-                                    if (res.homeId === '' || res.homeId == undefined) {
+                                nativeService.getCurrentHomeInfo().then( (home)=>{
+                                    if (home.isLocal === '1'){
+                                        // nativeService.toast('本地设备暂不支持场景功能')
                                         this.setTmpl()
-                                    }else{this.homegroupId = res.homeId
-                                        this.userDevices = ''
-                                        if (res.deviceList) {
-                                            this.userDevices = encodeURIComponent(JSON.stringify(res.deviceList))
+                                    }else{
+                                        if (home.homeId === '' || home.homeId == undefined) {
+                                            this.setTmpl()
+                                        }else{
+                                            this.userDevicesStr = ''
+                                            if (home.deviceList) {
+                                                this.userDevices = home.deviceList
+                                                this.userDevicesStr = encodeURIComponent(JSON.stringify(home.deviceList))
+                                            }
+                                            this.getAutoList(user.uid, home.homeId)
+                                            this.getSceneList(user.uid, home.homeId)
                                         }
-                                     
-                                        this.getAutoList()
-                                        this.getSceneList()
                                     }
                                 }).catch((err)=>{
                                     this.setTmpl()
@@ -282,16 +311,16 @@
                 })
             },
             editAuto(auto){
-                this.checkLogin().then( (uid) => {
-                    this.getUserRole().then((roleId)=>{
+                this.checkLogin().then( (res) => {
+                    this.getUserRole(res.uid, res.homegroupId).then((roleId)=>{
                         if (auto.isAdd){
                             if (roleId == '1001') {
                                 let params = {
                                     from: 'addAuto',
-                                    uid: uid,
-                                    homegroupId: this.homegroupId,
+                                    uid: res.uid,
+                                    homegroupId: res.homegroupId,
                                     sceneType: auto.sceneType,
-                                    userDevices: this.userDevices,
+                                    userDevices: this.userDevicesStr,
                                     templateCode: this.templateCode[auto.sceneType]
                                 }
                                 if (auto.sceneType == 3) {
@@ -307,12 +336,13 @@
                             }
                         }else{
                             let params = {
-                                uid: uid,
-                                homegroupId: this.homegroupId,
+                                uid: res.uid,
+                                homegroupId: res.homegroupId,
                                 sceneType: auto.sceneType,
                                 sceneId: auto.sceneId,
                                 enable: auto.enable,
-                                userDevices: this.userDevices
+                                userDevices: this.userDevicesStr,
+                                roleId: roleId
                             }
                             this.goTo("autoEdit", {}, params)
                         }
@@ -323,11 +353,11 @@
             },
             executeAuto(sceneId){
                 this.checkAutoExeTimes = 0
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     let reqUrl = url.auto.execute
                     let reqParams = {
-                        uid: uid,
-                        homegroupId: this.homegroupId,
+                        uid: res.uid,
+                        homegroupId: res.homegroupId,
                         sceneId: sceneId
                     }
                     this.webRequest(reqUrl, reqParams).then((rtnData)=>{
@@ -353,13 +383,13 @@
                 })
             },
             checkExecuteAuto(sceneId, resultId){
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     if (this.checkAutoExeTimes < 20) {//最多查20次
                         this.checkAutoExeTimes += 1
                         let reqUrl = url.auto.executeStatus
                         let reqParams = {
-                            uid: uid,
-                            homegroupId: this.homegroupId,
+                            uid: res.uid,
+                            homegroupId: res.homegroupId,
                             sceneId: sceneId,
                             resultId: resultId
                         }
@@ -403,113 +433,105 @@
                 })
             },
             goAddAuto(){
-                this.getUserRole().then((roleId)=>{
-                    if (roleId == '1001') {
-                        this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
+                    this.getUserRole(res.uid, res.homegroupId).then((roleId)=>{
+                        if (roleId == '1001') {
                             let params = {
-                                uid: uid,
-                                homegroupId: this.homegroupId,
-                                userDevices: this.userDevices
+                                uid: res.uid,
+                                homegroupId: res.homegroupId,
+                                userDevices: this.userDevicesStr
                             }
                             this.goTo('addAuto', {}, params)
-                        }).catch((err)=>{
-                            nativeService.toast(this.getErrorMessage(err))
-                        })
-                    }else{
-                        nativeService.toast('只有家庭创建者才有权限操作')
-                    }
-                })
-            },
-            getAutoList(){
-                this.checkLogin().then( (uid) => {
-                    let reqUrl = url.auto.list
-                    let reqParams = {
-                        uid: uid,
-                        homegroupId: this.homegroupId
-                    }
-                    this.webRequest(reqUrl, reqParams, false).then((rtnData)=>{
-                        if (rtnData.code == 0) {
-                            this.autoList = rtnData.data.list
-                            let basicTemplate = {
-                                '3.1':{
-                                    isAdd: true,
-                                    image: 'assets/img/scene_ic_placeblue@3x.png',
-                                    sceneType: 3,
-                                    direction: 1,
-                                    name: '回家'
-                                },
-                                '3.2': {
-                                    isAdd: true,
-                                    image: 'assets/img/scene_ic_placeblue@3x.png',
-                                    sceneType: 3,
-                                    direction: 2,
-                                    name: '离家'
-                                },
-                                '4': {
-                                    isAdd: true,
-                                    image: 'assets/img/samrt_ic_clock@3x.png',
-                                    sceneType: 4,
-                                    name: '晚安'
-                                },
-                                '6': {
-                                    isAdd: true,
-                                    image: 'assets/img/scene_ic_weather@3x.png',
-                                    sceneType: 6,
-                                    name: '天气变化'
-                                }
-                            }
-                            let templateName = ['3.1', '3.2', '4', '6'], tmpTemp =  []
-                            
-                            for (var i in this.autoList) {
-                                let sType = String(this.autoList[i].sceneType)
-                                if (sType == '3') {
-                                    sType = sType + '.' +this.autoList[i].location.direction
-                                }
-                                if (templateName.indexOf(sType) > -1 && ['1005', '1006', '1007', '1008'].indexOf(this.autoList[i].templateCode) == -1) {
-                                    templateName.splice(templateName.indexOf(sType), 1)
-                                }
-                            }
-                            for (var x in templateName) {
-                                tmpTemp.push(basicTemplate[templateName[x]])
-                            }
-                            this.autoList = this.autoList.concat(tmpTemp)
-                            
                         }else{
-                            if (codeDesc.auto.hasOwnProperty(rtnData.code)) {
-                                nativeService.toast(codeDesc.auto[rtnData.code])
-                            }else{
-                                nativeService.toast(rtnData.msg)
-                            }
+                            nativeService.toast('只有家庭创建者才有权限操作')
                         }
                     }).catch((err)=>{
                         nativeService.toast(this.getErrorMessage(err))
                     })
+                })
+            },
+            getAutoList(uid, homegroupId){
+                let reqUrl = url.auto.list
+                let reqParams = {
+                    uid: uid,
+                    homegroupId: homegroupId
+                }
+                this.webRequest(reqUrl, reqParams, false).then((rtnData)=>{
+                    if (rtnData.code == 0) {
+                        this.autoList = rtnData.data.list
+                        let basicTemplate = {
+                            '3.1':{
+                                isAdd: true,
+                                image: 'assets/img/scene_ic_placeblue@3x.png',
+                                sceneType: 3,
+                                direction: 1,
+                                name: '回家'
+                            },
+                            '3.2': {
+                                isAdd: true,
+                                image: 'assets/img/scene_ic_placegreen@3x.png',
+                                sceneType: 3,
+                                direction: 2,
+                                name: '离家'
+                            },
+                            '4': {
+                                isAdd: true,
+                                image: 'assets/img/samrt_ic_clock@3x.png',
+                                sceneType: 4,
+                                name: '晚安'
+                            },
+                            '6': {
+                                isAdd: true,
+                                image: 'assets/img/scene_ic_weather@3x.png',
+                                sceneType: 6,
+                                name: '天气变化'
+                            }
+                        }
+                        let templateName = ['3.1', '3.2', '4', '6'], tmpTemp =  []
+                        
+                        for (var i in this.autoList) {
+                            let sType = String(this.autoList[i].sceneType)
+                            if (sType == '3') {
+                                sType = sType + '.' +this.autoList[i].location.direction
+                            }
+                            if (templateName.indexOf(sType) > -1 && ['1005', '1006', '1007', '1008'].indexOf(this.autoList[i].templateCode) == -1) {
+                                templateName.splice(templateName.indexOf(sType), 1)
+                            }
+                        }
+                        for (var x in templateName) {
+                            tmpTemp.push(basicTemplate[templateName[x]])
+                        }
+                        this.autoList = this.autoList.concat(tmpTemp)
+                        
+                    }else{
+                        if (codeDesc.auto.hasOwnProperty(rtnData.code)) {
+                            nativeService.toast(codeDesc.auto[rtnData.code])
+                        }else{
+                            nativeService.toast(rtnData.msg)
+                        }
+                    }
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
                 })
             },
-            getSceneList(){
-                this.checkLogin().then( (uid) => {
-                    let reqUrl = url.scene.list
-                    let reqParams = {
-                        uid: uid,
-                        homegroupId: this.homegroupId
-                    }
+            getSceneList(uid, homegroupId){
+                let reqUrl = url.scene.list
+                let reqParams = {
+                    uid: uid,
+                    homegroupId: homegroupId
+                }
 
-                    this.webRequest(reqUrl, reqParams, false).then((rtnData)=>{
-                        if (rtnData.code == 0) {
-                            this.sceneList = this.sortSceneList(rtnData.data.list)
+                this.webRequest(reqUrl, reqParams, false).then((rtnData)=>{
+                    if (rtnData.code == 0) {
+                        this.sceneList = this.sortSceneList(rtnData.data.list)
+                    }else{
+                        this.sceneList = this.sceneListTmpl
+                        if (codeDesc.scene.hasOwnProperty(rtnData.code)) {
+                            nativeService.toast(codeDesc.scene[rtnData.code])
                         }else{
-                            this.sceneList = this.sceneListTmpl
-                            if (codeDesc.scene.hasOwnProperty(rtnData.code)) {
-                                nativeService.toast(codeDesc.scene[rtnData.code])
-                            }else{
-                                nativeService.toast(rtnData.msg)
-                            }
+                            nativeService.toast(rtnData.msg)
                         }
-                    }).catch((err)=>{
-                        nativeService.toast(this.getErrorMessage(err))
-                    })
+                    }
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
                 })
@@ -531,53 +553,17 @@
                 this.sceneList = this.sceneListTmpl
             },
             goScene(scene){
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     let params = {
-                        uid: uid,
-                        homegroupId: this.homegroupId,
+                        uid: res.uid,
+                        homegroupId: res.homegroupId,
                         roomType:scene.roomType,
                         sceneId: scene.sceneId,
-                        userDevices: this.userDevices
+                        userDevices: this.userDevicesStr
                     }
                     this.goTo("scene", {}, params)
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
-                })
-            },
-            getUserRole(){
-                return new Promise((resolve,reject)=>{
-                    this.checkLogin().then( (uid) => {
-                        if (this.homegroupId === '' || this.homegroupId == undefined) {
-                        }else{
-                            let reqUrl = url.home.getMember
-                            let reqParams = {
-                                uid: uid,
-                                homegroupId: this.homegroupId
-                            }
-                            this.webRequest(reqUrl, reqParams, false).then((rtnData)=>{
-                                if (rtnData.code == 0) {
-                                    let roleId = ''
-                                    for (var i in rtnData.data.list) {
-                                        if (rtnData.data.list[i].uid == uid) {
-                                            roleId = rtnData.data.list[i].roleId
-                                            break
-                                        }
-                                    }
-                                    resolve(roleId)
-                                }else{
-                                    if (codeDesc.scene.hasOwnProperty(rtnData.code)) {
-                                        nativeService.toast(codeDesc.home[rtnData.code])
-                                    }else{
-                                        nativeService.toast(rtnData.msg)
-                                    }
-                                }
-                            }).catch((err)=>{
-                                nativeService.toast(this.getErrorMessage(err))
-                            })
-                        }
-                    }).catch((err)=>{
-                        nativeService.toast(this.getErrorMessage(err))
-                    })
                 })
             }
         },

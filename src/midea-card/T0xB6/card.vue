@@ -1,6 +1,6 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
-	    <div class="box">
+	    <div class="box" @click="showControlPanelPage">
 	        <div v-if="onlineStatus == '1'">
 		    	 <div class="card card-hot" v-if="onoff == 'on'">
 		        	<div class="card-left">
@@ -19,32 +19,38 @@
 		        		<div class="card-control" >
 		        			
 		        		</div>
-		        		<div class="card-icon" @click="showControlPanelPage">
-		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip030@2x.png"></image>
+		        		<div class="card-icon" >
+		        			<image class="card-icon-img" resize="contain" src="./assets/img/smart_img_equip030@3x.png"></image>
 		        		</div>
 		        		<div class="card-control-div">
-		        			<image class="card-control-img" @click="lightSwitch" style="margin-right: 35px" :src="lightImg"></image>
-		        			<image class="card-control-img" @click="poweronoff(0)" src="./assets/img/smart_ic_off@2x.png"></image>
+							<div class="left-btn" @click="lightSwitch">
+								<image class="card-control-img"   :src="lightImg"></image>
+							</div>
+							<div class="right-btn"  @click="poweronoff(0)">
+		        			<image class="card-control-img" src="./assets/img/smart_ic_off@3x.png"></image>
+							</div>
 	        			</div>
 		        	</div>
 		        </div>
 		        <div class="card-power-off" v-else>
-		        	<div class="control-div-offline">
-		        		<image class="card-control-img" :src="powerIcon_poweroff"  @click="poweronoff(1)"></image>
+		        	<div class="control-div-offline" >
+						<div class="right-btn">
+						<image class="card-control-img" :src="powerIcon_poweroff" @click="poweronoff(1)"></image>
 		        		<text class="text-offline">电源</text>
+						</div>
 		        	</div>
 		        	<div>
-		        		<image class="icon-offline" src="./assets/img/smart_img_equip030@2x.png" @click="showControlPanelPage"></image>
+		        		<image class="icon-offline" src="./assets/img/smart_img_equip030@3x.png" ></image>
 		        	</div>
 		        </div>
 	        </div>
 	        <div class="card-power-off" v-else>
-	        	<div class="control-div-offline">
-	        		<image class="card-control-img" :src="powerIcon_offline"  @click="reload"></image>
+	        	<div class="control-div-offline" @click="reload">
+	        		<image class="card-control-img" :src="powerIcon_offline"  ></image>
 	        		<text class="text-offline">重连</text>
 	        	</div>
 	        	<div>
-	        		<image class="icon-offline" src="./assets/img/smart_img_equip030@2x.png"></image>
+	        		<image class="icon-offline" src="./assets/img/smart_img_equip030@3x.png"></image>
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
@@ -88,8 +94,8 @@
                 danwei: "",
                 display_value: "",
                 
-	            powerIcon_poweroff: "./assets/img/smart_ic_power_blue@2x.png",
-                powerIcon_offline: "./assets/img/smart_ic_reline@2x.png",
+	            powerIcon_poweroff: "./assets/img/smart_ic_power_blue@3x.png",
+                powerIcon_offline: "./assets/img/smart_ic_reline@3x.png",
                 data:{
                  	title:"室内温度高于28°度时候，自动开启空调。",
                  	detail:"模式制冷，温度23."
@@ -225,9 +231,9 @@
         	lightImg() {
 	        	let img = "";
 	            if(this.light == "on") {
-	                img = "./assets/img/smart_ic_lightoff@2x.png";
+	                img = "./assets/img/smart_ic_lightoff@3x.png";
 	            } else {
-	                img = "./assets/img/smart_ic_lighton@2x.png";
+	                img = "./assets/img/smart_ic_lighton@3x.png";
 	            }
 	            return img;
 	        }
@@ -298,8 +304,8 @@
 	}
 	.control-div-offline {
 		position: absolute;
-		right:32px;
-		top:32px;
+		right:0px;
+		top:0px;
 		align-items: center;
 	}
 	.card-control {
@@ -312,9 +318,21 @@
 	.card-control-div {
 		flex-direction: row;
 		position: absolute;
-		top: 38px;
-		right: 36px;
-		height:100px;
+		top: 0px;
+		right: 0px;
+	}
+	.left-btn{
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
+		margin-right: 2px;
+	}
+	.right-btn{
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
 	}
 	.card-control-temp-div {
 		flex-direction: row;

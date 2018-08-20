@@ -1,6 +1,6 @@
 <template>
    <div class="wrap" :style="wrapStyle">
-        <midea-header :title="header.title" :isImmersion="isipx?false:true" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
+        <midea-header :title="header.title" :isImmersion="isImmersion" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
         <div class="content">
             <!-- <text class="hd">选择条件</text> -->
             <midea-list v-for="(item,idx) in autos" :idx="idx" :hasWrapBorder="false" leftMargin="25px" :style="{backgroundColor: '#fff'}">
@@ -52,7 +52,7 @@
     }
     .name{
         font-size: 32px;
-        padding-bottom: 8px;
+        padding-bottom: 12px;
     }
     .desc{
         font-size: 24px;
@@ -122,7 +122,7 @@
                     {
                         title: '离开某地',
                         desc: '例如离家时自动打开空调',
-                        icon: 'assets/img/scene_ic_placeblue@3x.png',
+                        icon: 'assets/img/scene_ic_placegreen@3x.png',
                         sceneType: 3,
                         direction: 2
                     }
@@ -152,11 +152,11 @@
                 nativeService.goBack()
             },
             goNext(item){
-                this.checkLogin().then( (uid) => {
+                this.checkLogin().then( (res) => {
                     let params = {
                         from: 'addAuto',
-                        uid: uid,
-                        homegroupId: this.homegroupId,
+                        uid: res.uid,
+                        homegroupId: res.homegroupId,
                         sceneType: item.sceneType,
                         userDevices: nativeService.getParameters('userDevices')
                     }

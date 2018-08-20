@@ -15,7 +15,16 @@ export default {
             situation: 'CARD_STORAGE_SITUATION'
         },
         uid: '',
-        deviceId: ''
+        deviceId: '',
+        situationList: [],
+        isSituationLoaded: false,
+        errorMessages: {
+            '1900': '该设备不支持情境功能',
+            '1901': '系统出错，请稍后再试',
+            '1902': '该设备已存在相同的情境',
+            '1903': '不存在该情境',
+            '1904': '该情境不可用'
+        }
     }),
     computed: {
         pageHeight() {
@@ -23,6 +32,13 @@ export default {
         },
         isipx: function () {
             return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6');
+        },
+        isImmersion: function () {
+            let result = true
+            if (weex.config.env.isImmersion == "false") {
+                result = false
+            }
+            return result
         }
     },
     methods: {
@@ -45,9 +61,6 @@ export default {
         },
         exit() {
             nativeService.backToNative()
-        },
-        handlePageData(data) {
-            //处理页面传递的信息
         },
         getSituationListService() {
             return new Promise((resolve, reject) => {
@@ -218,13 +231,77 @@ export default {
                 let unNormalErrorCode = ['']
                 if (unNormalErrorCode.indexOf(errorCode) < 0) {
                     //若是正常的错误码，则显示错误信息
-                    msg = error.msg || "请求失败，请稍后重试。"
+                    msg = this.errorMessages[errorCode] || "请求失败，请稍后重试。"
                 }
                 if (errorCode) {
                     msg += "(" + errorCode + ")"
                 }
             }
             return msg
+        },
+
+        handlePageData(data) {
+            //处理页面传递的信息
+            if (data.deviceId == this.deviceId) {
+                if (data.key == "situation") {
+                    this.getSituationList()
+                }
+            }
+        },
+        goToSituation(path, situation) {
+            if (this.isSituationLoaded) {
+                nativeService.setItem("CARD_STORAGE_SITUATION", Object.assign(situation, { deviceId: this.deviceId }), () => {
+                    nativeService.goTo(path)
+                })
+            } else {
+                this.getSituationList()
+            }
+        },
+        getSituationList() {
+            this.getSituationListService().then((resp) => {
+                if (resp.code == 0 && resp.data) {
+                    this.situationList = resp.data.list || []
+                    this.isSituationLoaded = true
+                } else {
+                    throw resp
+                }
+            }).catch((error) => {
+                nativeService.toast(this.getErrorMessage(error))
+            })
+        },
+        switchEnable(event, situation) {
+            if (this.isSituationLoaded) {
+                let enable = event.value ? "1" : "0"
+                if (situation.isCreated) {
+                    //更新
+                    let index = this.situationList.findIndex((item) => (item.moduleCode == situation.moduleCode))
+                    this.updateSituationEnableService(situation.moduleCode, enable).then((resp) => {
+                        if (resp.code == 0) {
+                            situation.enable = enable
+                            this.$set(this.situationList, index, situation)
+                        } else {
+                            throw resp
+                        }
+                    }).catch((error) => {
+                        this.$set(this.situationList, index, situation)
+                        nativeService.toast(this.getErrorMessage(error))
+                    })
+                } else {
+                    //新增
+                    this.addSituationService(situation.moduleCode, enable, situation).then((resp) => {
+                        if (resp.code == 0) {
+                            situation.enable = enable
+                            this.situationList.push(situation)
+                        } else {
+                            throw resp
+                        }
+                    }).catch((error) => {
+                        nativeService.toast(this.getErrorMessage(error))
+                    })
+                }
+            } else {
+                this.getSituationList()
+            }
         }
     },
     created() {

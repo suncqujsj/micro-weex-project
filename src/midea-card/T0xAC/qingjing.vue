@@ -122,7 +122,7 @@ export default {
 				result = {
 					conditionsDesc: conditionsDesc,
 					modeDesc: modeDesc,
-					title: "室内温度" + conditionsDesc + this.situactionData.props.conditions[0].value + "°度时，自动开启",
+					title: "室内温度" + conditionsDesc + this.situactionData.props.conditions[0].value + "°时，自动开启",
 					detail: "模式" + modeDesc + "，温度" + this.situactionData.props.target.temperature + "°."
 				}
 			}

@@ -14,13 +14,14 @@
                             <div class="auto-info">
                                 <text class="auto-name">{{item.name}}</text>
                                 <div class="auto-desc row-s">
-                                    <div v-for="device in item.task">
-                                        <text class="auto-desc-text">{{formatUserDevices[device.applianceCode]}}</text>
+                                    <div v-for="(device, i) in item.task">
+                                        <text v-if="i==0" class="auto-desc-text">{{formatUserDevices[device.applianceCode]}}</text>
                                     </div>
+                                    <text v-if="item.task && item.task.length > 1" class="auto-desc-text">...</text>
                                 </div>
                             </div>
+                            <image v-if="item.sceneType==2" class="auto-btn" :src="icon.autoBtn"  @click="executeAuto(item.sceneId)">
                         </div>
-                        <image v-if="item.sceneType==2" class="auto-btn" :src="icon.autoBtn"  @click="executeAuto(item.sceneId)">
                     </div>
                 </div>
             </scroller>
@@ -95,9 +96,9 @@
         padding: 20px;
         border-radius: 4px;
     }
-    .auto-info {margin-left: 20px;}
+    .auto-info {margin-left: 20px; width: 180px; }
     .auto-name{ width: 180px; font-size: 28px; color: #000; font-weight: bold; margin-bottom: 8px; text-overflow: clip; }
-    .auto-desc{ width: 120px; font-size: 24px; color: #C7C7CC; lines:1; text-overflow: ellipsis; }
+    .auto-desc{ width: 180px; }
     .auto-desc-text{ font-size: 24px; color: #C7C7CC; margin-right: 6px;}
     .scene-list{  padding-left:30px; padding-right:30px;}
     .scene { width: 690px; height: 206px; padding-bottom: 16px; position: relative; }
@@ -148,10 +149,12 @@
                 let tmp = {}
                 if (this.platform == 'android'){
                     tmp.height = '840px'
-                }else if (this.platform == 'iphoneX'){
-                    tmp.height = '1180px'
-                }else{
-                    tmp.height = '1080px'
+                }else if (this.platform == 'ios'){
+                    if (this.isipx) {
+                        tmp.height = '1180px'
+                    }else{
+                        tmp.height = '1080px'
+                    }
                 }
                 return tmp
             },
@@ -179,7 +182,6 @@
         data(){
             return {
                 isLogin: false,
-                uid: '',
                 homegroupId: '',
                 icon: {
                     next: 'assets/img/more_w.png',
@@ -280,30 +282,26 @@
                 nativeService.getNetworkStatus().then((result)=>{
                     if (result.status == 1){
                         nativeService.getUserInfo().then((user)=>{
-                            if (user.uid == '' || user.uid == undefined){
-                                this.setTmpl() //填充静态模板
-                            }else{
-                                nativeService.getCurrentHomeInfo().then( (home)=>{
-                                    if (home.isLocal === '1'){//场景不支持本地家庭
+                            nativeService.getCurrentHomeInfo().then( (home)=>{
+                                if (home.isLocal === '1'){//场景不支持本地家庭
+                                    this.setTmpl() //填充静态模板
+                                }else{
+                                    if (home.homeId === '' || home.homeId == undefined) {
                                         this.setTmpl() //填充静态模板
                                     }else{
-                                        if (home.homeId === '' || home.homeId == undefined) {
-                                            this.setTmpl() //填充静态模板
-                                        }else{
-                                            this.userDevicesStr = ''
-                                            if (home.deviceList) {
-                                                this.userDevices = home.deviceList
-                                                this.userDevicesStr = encodeURIComponent(JSON.stringify(home.deviceList))
-                                            }
-                                            this.getAutoList(user.uid, home.homeId) //获取自动化列表数据
-                                            this.getSceneList(user.uid, home.homeId)//获取场景列表数据
+                                        this.userDevicesStr = ''
+                                        if (home.deviceList) {
+                                            this.userDevices = home.deviceList
+                                            this.userDevicesStr = encodeURIComponent(JSON.stringify(home.deviceList))
                                         }
+                                        this.getAutoList( home.homeId) //获取自动化列表数据
+                                        this.getSceneList( home.homeId)//获取场景列表数据
                                     }
-                                }).catch((err)=>{
-                                    this.setTmpl()//填充静态模板
-                                    nativeService.toast(this.getErrorMessage(err))
-                                })
-                            }
+                                }
+                            }).catch((err)=>{
+                                this.setTmpl()//填充静态模板
+                                nativeService.toast(this.getErrorMessage(err))
+                            })
                         }).catch((err)=>{
                             this.setTmpl()
                             nativeService.toast(this.getErrorMessage(err))
@@ -315,43 +313,37 @@
             },
             editAuto(auto){
                 this.checkLogin().then( (res) => {
-                    this.getUserRole(res.uid, res.homegroupId).then((roleId)=>{//用户为家庭创建者时可以添加自动化
-                        if (auto.isAdd){//新增自动化
-                            if (roleId == '1001') {
-                                let params = {
-                                    from: 'addAuto',
-                                    uid: res.uid,
-                                    homegroupId: res.homegroupId,
-                                    sceneType: auto.sceneType,
-                                    userDevices: this.userDevicesStr,
-                                    templateCode: this.templateCode[auto.sceneType]
-                                }
-                                if (auto.sceneType == 3) {
-                                    params.direction = auto.location.direction
-                                }
-                                if (auto.sceneType == 2) {
-                                    this.goTo("autoBindDevices", {}, params)
-                                }else{
-                                    this.goTo('autoTypeSet',{}, params)
-                                }
-                            }else{
-                                nativeService.toast('只有家庭创建者才有权限操作')
-                            }
-                        }else{//进入自动化详情
+                    if (auto.isAdd){//新增自动化
+                        if (res.isOwner == '1') {
                             let params = {
-                                uid: res.uid,
+                                from: 'addAuto',
                                 homegroupId: res.homegroupId,
                                 sceneType: auto.sceneType,
-                                sceneId: auto.sceneId,
-                                enable: auto.enable,
                                 userDevices: this.userDevicesStr,
-                                roleId: roleId
+                                templateCode: this.templateCode[auto.sceneType]
                             }
-                            this.goTo("autoEdit", {}, params)
+                            if (auto.sceneType == 3) {
+                                params.direction = auto.location.direction
+                            }
+                            if (auto.sceneType == 2) {
+                                this.goTo("autoBindDevices", {}, params)
+                            }else{
+                                this.goTo('autoTypeSet',{}, params)
+                            }
+                        }else{
+                            nativeService.toast('只有家庭创建者才有权限操作')
                         }
-                    }).catch((err)=>{
-                        nativeService.toast(this.getErrorMessage(err))
-                    })
+                    }else{//进入自动化详情
+                        let params = {
+                            homegroupId: res.homegroupId,
+                            isOwner: res.isOwner,
+                            sceneType: auto.sceneType,
+                            sceneId: auto.sceneId,
+                            enable: auto.enable,
+                            userDevices: this.userDevicesStr
+                        }
+                        this.goTo("autoEdit", {}, params)
+                    }
                 })
             },
             executeAuto(sceneId){//执行手动自动化
@@ -359,7 +351,6 @@
                 this.checkLogin().then( (res) => {
                     let reqUrl = url.auto.execute
                     let reqParams = {
-                        uid: res.uid,
                         homegroupId: res.homegroupId,
                         sceneId: sceneId
                     }
@@ -382,6 +373,7 @@
                 
                 nativeService.burialPoint({//埋点手动自动化执行
                     pageName: 'sceneMainPage',
+                    actionType: 'scene',
                     subAction: 'scene_shortcut_operate'
                 })
             },
@@ -391,7 +383,6 @@
                         this.checkAutoExeTimes += 1
                         let reqUrl = url.auto.executeStatus
                         let reqParams = {
-                            uid: res.uid,
                             homegroupId: res.homegroupId,
                             sceneId: sceneId,
                             resultId: resultId
@@ -437,26 +428,20 @@
             },
             goAddAuto(){ //去添加自动化类型选择页面
                 this.checkLogin().then( (res) => {
-                    this.getUserRole(res.uid, res.homegroupId).then((roleId)=>{
-                        if (roleId == '1001') {
-                            let params = {
-                                uid: res.uid,
-                                homegroupId: res.homegroupId,
-                                userDevices: this.userDevicesStr
-                            }
-                            this.goTo('addAuto', {}, params)
-                        }else{
-                            nativeService.toast('只有家庭创建者才有权限操作')
+                    if (res.isOwner == '1') {
+                        let params = {
+                            homegroupId: res.homegroupId,
+                            userDevices: this.userDevicesStr
                         }
-                    }).catch((err)=>{
-                        nativeService.toast(this.getErrorMessage(err))
-                    })
+                        this.goTo('addAuto', {}, params)
+                    }else{
+                        nativeService.toast('只有家庭创建者才有权限操作')
+                    }
                 })
             },
-            getAutoList(uid, homegroupId){ //获取自动化列表
+            getAutoList(homegroupId){ //获取自动化列表
                 let reqUrl = url.auto.list
                 let reqParams = {
-                    uid: uid,
                     homegroupId: homegroupId
                 }
                 this.webRequest(reqUrl, reqParams, false).then((rtnData)=>{
@@ -520,10 +505,9 @@
                     nativeService.toast(this.getErrorMessage(err))
                 })
             },
-            getSceneList(uid, homegroupId){ //获取场景列表
+            getSceneList(homegroupId){ //获取场景列表
                 let reqUrl = url.scene.list
                 let reqParams = {
-                    uid: uid,
                     homegroupId: homegroupId
                 }
 
@@ -561,7 +545,6 @@
             goScene(scene){
                 this.checkLogin().then( (res) => {
                     let params = {
-                        uid: res.uid,
                         homegroupId: res.homegroupId,
                         roomType:scene.roomType,
                         sceneId: scene.sceneId,

@@ -334,7 +334,7 @@
                     this.checkLogin().then( (res) => {
                         let reqUrl = url.scene.supportList
                         let reqParams = {
-                            uid: res.uid,
+                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             sceneId: this.sceneId
                         }
@@ -377,7 +377,7 @@
                 this.checkLogin().then( (res) => {
                     let reqUrl = url.scene.applianceAdd
                     let reqParams = {
-                        uid: res.uid,
+                        // uid: res.uid,
                         homegroupId: res.homegroupId,
                         sceneId: this.sceneId,
                         applianceCode: appliance.applianceCode
@@ -440,7 +440,7 @@
                 this.checkLogin().then( (res) => {
                     let reqUrl = url.scene.modelSet
                     let reqParams = {
-                        uid: res.uid,
+                        // uid: res.uid,
                         homegroupId: res.homegroupId,
                         sceneId: this.sceneId
                     }

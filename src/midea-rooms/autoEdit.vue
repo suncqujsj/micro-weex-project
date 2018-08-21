@@ -1,7 +1,7 @@
 <template>
    <div class="wrap" :style="wrapStyle">
        <div class="header-floor">
-            <midea-header :title="autoDetail.name" :isImmersion="isImmersion" :bgColor="header.bgColor" :titleText="header.color" @leftImgClick="goBack" :showRightText="roleId=='1001' ? true : false" rightText="删除" @rightTextClick="showDialog('delete')"></midea-header>
+            <midea-header :title="autoDetail.name" :isImmersion="isImmersion" :bgColor="header.bgColor" :titleText="header.color" @leftImgClick="goBack" :showRightText="isOwner=='1' ? true : false" rightText="删除" @rightTextClick="showDialog('delete')"></midea-header>
        </div>
         <list class="content-list">
             <cell class="content">
@@ -11,13 +11,13 @@
                             <text class="text">名称</text>
                             <div class="row-sb">
                                 <text class="auto-name-text">{{autoName}}</text>
-                               <image v-if="roleId == '1001'" class="icon-next" :src="icon.next"></image>
+                               <image v-if="isOwner == '1'" class="icon-next" :src="icon.next"></image>
                             </div>
                         </div>
                         <div v-if="sceneType != 2" class="row-sb switch-floor">
                             <text class="text">启用</text>
                             <div>
-                                <switch-bar v-if="roleId == '1001'" :isActive="autoEnable == 1" @onSwitch="openAuto"></switch-bar>
+                                <switch-bar v-if="isOwner == '1'" :isActive="autoEnable == 1" @onSwitch="openAuto"></switch-bar>
                                 <text class="enable-text" v-else>{{autoEnable==1?'已开启':'已关闭'}}</text>
                             </div>
                         </div>
@@ -32,7 +32,7 @@
                                 <text class="condition-desc" v-if="autoDetail.startTime && sceneType==4">在{{weekDesc}} {{autoDetail.startTime}}时</text>
                                 <text class="condition-desc" v-if="autoDetail.weather && sceneType==6"> 在{{weekDesc}} 天气为{{autoDetail.weather.weatherStatus}}, 气温{{temperatureLoginText[autoDetail.weather.logical]}} {{autoDetail.weather.temperature}}℃ 时</text>
                             </div>
-                            <image v-if="roleId == '1001'" class="icon-next" :src="icon.next"></image>
+                            <image v-if="isOwner == '1'" class="icon-next" :src="icon.next"></image>
                         </div>
                     </div>
                 </div>
@@ -52,13 +52,13 @@
                             </div>
                             <!-- <image class="check-icon" :src="icon[item.isCheck]" @click="checkOn(item, key)"></image> -->
                         </div>
-                        <div v-if="roleId == '1001'" class="device row-c" @click="goBindNewDevice">
+                        <div v-if="isOwner == '1'" class="device row-c" @click="goBindNewDevice">
                             <image class="icon-add" :src="icon.addDevice"></image>
                             <text class="add-device-text">添加设备</text>
                         </div>
                     </div>
                 </div>
-                <text v-if="roleId == '1001'" class="save-btn" @click="sendAutoEdit">保存</text>
+                <text v-if="isOwner == '1'" class="save-btn" @click="sendAutoEdit">保存</text>
             </cell>
         </list>
         <!-- 删除自动化弹窗提示 -->
@@ -281,7 +281,7 @@
                     next: 'assets/img/more.png',
                     addDevice: 'assets/img/add.png'
                 },
-                roleId: nativeService.getParameters('roleId'),
+                isOwner: nativeService.getParameters('isOwner'),
                 applianceImgPath: applianceImgPath,
                 header: {
                     title: '设置',
@@ -398,7 +398,6 @@
                 this.checkLogin().then( (res) => {
                     let reqUrl = url.auto.detail
                     let reqParams = {
-                        uid: res.uid,
                         homegroupId: res.homegroupId,
                         sceneId: this.sceneId
                     }
@@ -427,7 +426,7 @@
                 })
             },
             goSetAutoName(){
-                if (this.roleId == '1001') {
+                if (this.isOwner == '1') {
                     let params = {
                         autoName: encodeURIComponent(this.autoName)
                     }
@@ -497,7 +496,7 @@
                 this.bindDeviceActions =  Object.assign({}, tmpBindDeviceActions)
             },
             openAuto(e){
-                if (this.roleId == '1001') {
+                if (this.isOwner == '1') {
                     if (this.autoDetail.enable == 1) {
                         this.autoDetail.enable = 0
                         this.autoEnable = 0
@@ -509,7 +508,7 @@
                 }
             },
             goAutoTypeSet(){
-                if (this.roleId == '1001') {
+                if (this.isOwner == '1') {
                     let params = {
                         from: 'editAuto',
                         sceneType: this.sceneType,
@@ -538,7 +537,6 @@
                 this.checkLogin().then( (res) => {
                     let reqUrl = url.auto.delete
                     let reqParams = {
-                        uid: res.uid,
                         homegroupId: res.homegroupId,
                         sceneId: this.sceneId,
                         enable: '2'
@@ -567,7 +565,7 @@
                 })
             },
             setDevice(deviceId){
-                if (this.roleId == '1001'){
+                if (this.isOwner == '1'){
                     let tmpTask = {}
                     for (var i in this.autoDetail.task) {
                         if (this.autoDetail.task[i].applianceCode == deviceId) {
@@ -602,7 +600,6 @@
                     if (Object.keys(this.unbindDevices).length > 0) {
                         let params = {
                             from: 'editAuto',
-                            uid: res.uid,
                             homegroupId: res.homegroupId,
                             sceneType: this.sceneType,
                             userDevices: nativeService.getParameters('userDevices'),
@@ -621,7 +618,6 @@
                 this.checkLogin().then( (res) => {
                     let reqUrl = url.auto.update
                     let reqParams = {
-                        uid: res.uid,
                         homegroupId: res.homegroupId,
                         sceneType: this.sceneType,
                         sceneId: this.sceneId,

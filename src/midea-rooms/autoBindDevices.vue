@@ -445,7 +445,6 @@
                 this.checkLogin().then( (res) => {
                     let reqUrl = url.auto.add
                     let reqParams = {
-                        uid: res.uid,
                         homegroupId: res.homegroupId,
                         sceneType: this.sceneType,
                         name: this.inputAutoName,
@@ -516,6 +515,7 @@
                 })
                 nativeService.burialPoint({
                     pageName: 'sceneMainPage',
+                    actionType: 'scene',
                     subAction: 'scene_select_and_create'
                 })
             }

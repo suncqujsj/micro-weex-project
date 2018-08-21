@@ -273,10 +273,10 @@
         right: 0;
     }
     .line1{
-        top: 165px;
+        top: 170px;
     }
     .line2{
-        top: 245px;
+        top: 250px;
     }
     .save-btn{
         width: 690px;

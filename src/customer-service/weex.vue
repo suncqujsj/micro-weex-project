@@ -142,10 +142,12 @@ export default {
     },
     methods: {
         refreshPage() {
-            nativeService.getUserInfo().then((data) => {
-                if (data.uid) {
+            nativeService.getLoginInfo().then((data) => {
+                if (data.isLogin == 1) {
+                    //已经登录
                     this.getOrderList()
                 } else {
+                    //未登录
                     this.order = null
                 }
             })
@@ -165,8 +167,8 @@ export default {
             })
         },
         itemClicked(item) {
-            nativeService.getUserInfo().then((data) => {
-                if (data.uid) {
+            nativeService.getLoginInfo().then((data) => {
+                if (data.isLogin == 1) {
                     //已经登录
                     this.goTo(item.page)
                 } else {

@@ -200,6 +200,10 @@
                     controlPanelName:"index.html"
                 };
                 bridgeModule.showControlPanelPage(params);
+                nativeService.burialPoint({
+	                pageName: 'applianceDetailPage',
+	                subAction: 'page_view'
+	            });
             },
             itemClicked(event) {
                 this.jumpControlPanelPage();
@@ -285,6 +289,10 @@
                     controlPanelName: "index.html"
                 };
                 bridgeModule.showControlPanelPage(params);
+                nativeService.burialPoint({
+	                pageName: 'applianceDetailPage',
+	                subAction: 'page_view'
+	            });
             },
         },
         computed: {},

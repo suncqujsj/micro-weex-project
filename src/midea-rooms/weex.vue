@@ -96,9 +96,9 @@
         padding: 20px;
         border-radius: 4px;
     }
-    .auto-info {margin-left: 20px; width: 180px; }
-    .auto-name{ width: 180px; font-size: 28px; color: #000; font-weight: bold; margin-bottom: 8px; text-overflow: clip; }
-    .auto-desc{ width: 180px; }
+    .auto-info {margin-left: 20px; width: 175px; }
+    .auto-name{ width: 175px; font-size: 28px; color: #000; font-weight: bold; margin-bottom: 8px; text-overflow: clip; }
+    .auto-desc{ width: 175px; }
     .auto-desc-text{ font-size: 24px; color: #C7C7CC; margin-right: 6px;}
     .scene-list{  padding-left:30px; padding-right:30px;}
     .scene { width: 690px; height: 206px; padding-bottom: 16px; position: relative; }

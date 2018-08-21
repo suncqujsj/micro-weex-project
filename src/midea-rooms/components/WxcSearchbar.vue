@@ -85,11 +85,8 @@
     width: 710px;
     height: 64px;
     line-height: 64px;
-    background-color: #E5E5E5;
+    background-color: #f2f2f2;
     border-radius: 6px;
-  }
-  .search-bar-input-yellow {
-    background-color: #fff6d6;
   }
   .search-bar-icon {
     position: absolute;

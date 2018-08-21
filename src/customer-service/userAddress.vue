@@ -56,7 +56,7 @@ export default {
     mixins: [base],
     data() {
         return {
-            title: '修改地址',
+            title: '我的地址',
             isNew: true,
             userAddress: {
                 receiverName: '',
@@ -271,6 +271,9 @@ export default {
                     this.userAddress = JSON.parse(resp.data)
                 }
             })
+            this.title='修改地址'
+        }else{
+            this.title='我的地址'
         }
     }
 }

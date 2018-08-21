@@ -394,10 +394,6 @@ export default {
     created() {
         this.serviceOrderNo = nativeService.getParameters('id') || null
         this.initPage()
-        nativeService.burialPoint({
-            pageName: 'serviceOnlineShopInquiriesPage',
-            subAction: 'page_view'
-        })
     }
 }
 </script>

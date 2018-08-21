@@ -45,7 +45,7 @@
                 </midea-item>
             </template>
             <cell class="group-gap-top"></cell>
-            <midea-item title="网点查询" @mideaCellClick="goTo('productSelection', {}, { from: 'rootView', to:'branchList' })">
+            <midea-item title="网点查询" @mideaCellClick="goToBranchList">
                 <image slot="itemImg" src="./assets/img/service_ic_location@3x.png" class="service-item-img" resize='contain'>
                 </image>
             </midea-item>
@@ -207,6 +207,13 @@ export default {
             nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, this.order, () => {
                 this.goTo("orderDetail", {}, { from: 'orderList', id: this.order.serviceOrderNo })
             })
+        },
+        goToBranchList() {
+            nativeService.burialPoint({
+                pageName: 'serviceOnlineShopInquiriesPage',
+                subAction: 'page_view'
+            })
+            this.goTo('productSelection', {}, { from: 'rootView', to: 'branchList' })
         },
         resetStorage() {
             //清楚本地缓存数据

@@ -176,7 +176,7 @@ export default {
 }
 .order-block-label {
   font-family: PingFangSC-Regular;
-  font-size: 32px;
+  font-size: 28px;
   color: #000000;
 }
 .order-block-desc {

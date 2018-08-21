@@ -517,7 +517,6 @@
         mixins: [base],
         data(){
             return {
-                uid: '',
                 homegroupId: '',
                 scene: {},
                 sceneName: {
@@ -748,7 +747,7 @@
                         if (this.sceneId !== '') {
                             let reqUrl = url.scene.detail
                             let reqParams = {
-                                uid: res.uid,
+                                // uid: res.uid,
                                 homegroupId: res.homegroupId,
                                 sceneId: this.sceneId
                             }
@@ -783,7 +782,7 @@
                     if (this.sceneId !== '') {
                         let reqUrl = url.scene.optimize
                         let reqParams = {
-                            uid: res.uid,
+                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             sceneId: this.sceneId,
                         }
@@ -818,7 +817,7 @@
                         this.checkQuickOptimizeTimes += 1
                         let reqUrl = url.scene.optimizeStatus
                         let reqParams = {
-                            uid: res.uid,
+                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             sceneId: this.sceneId,
                             resultId: resultId
@@ -868,7 +867,7 @@
                     this.checkLogin().then( (res) => {
                         let reqUrl = url.scene.modelExecute
                         let reqParams = {
-                            uid: res.uid,
+                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             sceneId: this.sceneId,
                             modelId: modelId
@@ -902,7 +901,7 @@
                         this.checkModelExeTimes += 1
                         let reqUrl = url.scene.modelStatus
                         let reqParams = {
-                            uid: res.uid,
+                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             sceneId: this.sceneId,
                             modelId: modelId,
@@ -979,7 +978,7 @@
                     if (this.washerCode) {
                         let reqUrl = url.scene.washerConsumption
                         let reqParams = {
-                            uid: res.uid,
+                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             applianceCode: this.washerCode
                         }
@@ -1176,7 +1175,7 @@
                     this.checkLogin().then( (res) => {
                         let reqUrl = url.scene.supportList
                         let reqParams = {
-                            uid: res.uid,
+                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             sceneId: this.sceneId
                         }

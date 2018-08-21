@@ -177,24 +177,52 @@ export default {
                     //         }
                     //     })
                 */
-                this.webRequestStatus = true
-                let requestOption = {
-                    method: "POST",
-                    isShowLoading: isShowLoading
+                // let sendUid = false
+                let sendUid = true
+                if (sendUid) {
+                    nativeService.getUserInfo().then((user)=>{
+                        reqParams = Object.assign({
+                            uid: user.uid
+                        }, reqParams)
+                        this.webRequestStatus = true
+                        let requestOption = {
+                            method: "POST",
+                            isShowLoading: isShowLoading
+                        }
+                        let requestParam = {
+                            method: requestOption.method,
+                            headers: {
+                                "Content-Type": "application/json;charset=utf-8"
+                            },
+                            data: this.generateReqBody(reqParams)
+                        }
+                        nativeService.isDummy = false
+                        nativeService.sendCentralCloundRequest(reqUrl, requestParam, requestOption).then((resp) => {
+                            resolve(resp)
+                        }).catch((error) => {
+                            reject(error)
+                        })
+                    })
+                }else{
+                    this.webRequestStatus = true
+                    let requestOption = {
+                        method: "POST",
+                        isShowLoading: isShowLoading
+                    }
+                    let requestParam = {
+                        method: requestOption.method,
+                        headers: {
+                            "Content-Type": "application/json;charset=utf-8"
+                        },
+                        data: this.generateReqBody(reqParams)
+                    }
+                    nativeService.isDummy = false
+                    nativeService.sendCentralCloundRequest(reqUrl, requestParam, requestOption).then((resp) => {
+                        resolve(resp)
+                    }).catch((error) => {
+                        reject(error)
+                    })
                 }
-                let requestParam = {
-                    method: requestOption.method,
-                    headers: {
-                        "Content-Type": "application/json;charset=utf-8"
-                    },
-                    data: this.generateReqBody(reqParams)
-                }
-                nativeService.isDummy = false
-                nativeService.sendCentralCloundRequest(reqUrl, requestParam, requestOption).then((resp) => {
-                    resolve(resp)
-                }).catch((error) => {
-                    reject(error)
-                })
             })
         },
         reload() {
@@ -217,8 +245,8 @@ export default {
                                         nativeService.toast('获取家庭失败，请稍后重试')
                                     } else {
                                         let result = {
-                                            uid: user.uid,
-                                            homegroupId: home.homeId
+                                            homegroupId: home.homeId,
+                                            isOwner: home.isOwner
                                         }
                                         resolve(result)
                                     }
@@ -230,35 +258,6 @@ export default {
                     }
                 })
                
-            })
-        },
-        getUserRole(uid, homegroupId) {
-            return new Promise((resolve, reject) => {
-                let reqUrl = url.home.getMember
-                let reqParams = {
-                    uid: uid,
-                    homegroupId: homegroupId
-                }
-                this.webRequest(reqUrl, reqParams, false).then((rtnData) => {
-                    if (rtnData.code == 0) {
-                        let roleId = ''
-                        for (var i in rtnData.data.list) {
-                            if (rtnData.data.list[i].uid == uid) {
-                                roleId = rtnData.data.list[i].roleId
-                                break
-                            }
-                        }
-                        resolve(roleId)
-                    } else {
-                        if (codeDesc.scene.hasOwnProperty(rtnData.code)) {
-                            nativeService.toast(codeDesc.home[rtnData.code])
-                        } else {
-                            nativeService.toast(rtnData.msg)
-                        }
-                    }
-                }).catch((err) => {
-                    nativeService.toast(this.getErrorMessage(err))
-                })
             })
         },
         getErrorMessage(error) {

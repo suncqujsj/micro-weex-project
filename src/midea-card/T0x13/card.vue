@@ -172,6 +172,10 @@
             		controlPanelName:"controlPanel.html"
             	};
             	bridgeModule.showControlPanelPage(params);
+            	nativeService.burialPoint({
+                    pageName: 'applianceDetailPage',
+                    subAction: 'page_view'
+                })
             },
             reload() {
             	let params = {};

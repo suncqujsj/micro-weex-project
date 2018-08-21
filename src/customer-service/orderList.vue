@@ -397,7 +397,7 @@ export default {
   border-radius: 4px;
   padding-top: 10px;
   padding-bottom: 10px;
-  margin-left: 32px;
+  margin-left: 16px;
   border-color: #e5e5e8;
   border-width: 1px;
   border-style: solid;

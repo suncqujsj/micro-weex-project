@@ -56,7 +56,7 @@ export default {
     mixins: [base],
     data() {
         return {
-            title: '我的地址',
+            title: '修改地址',
             isNew: true,
             userAddress: {
                 receiverName: '',

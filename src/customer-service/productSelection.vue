@@ -375,11 +375,11 @@ export default {
   background-color: #f2f2f2;
   border-left-color: #f2f2f2;
   border-left-width: 4px;
-  margin-top: 16px;
-  padding-top: 16px;
+  margin-top: 12px;
+  padding-top: 20px;
   padding-right: 16px;
-  margin-bottom: 16px;
-  padding-bottom: 16px;
+  margin-bottom: 12px;
+  padding-bottom: 20px;
   padding-left: 16px;
 }
 .product-brand-selected {

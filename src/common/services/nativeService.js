@@ -211,7 +211,7 @@ export default {
         if (typeof message == 'object') {
             message = JSON.stringify(message)
         }
-        mm.toast({ message: message, duration: duration || 1 });
+        bridgeModule.toast({ message: message, duration: duration || 1 });
     },
     alert(message, callback, okTitle) {
         var callbackFunc = callback || function (value) { }

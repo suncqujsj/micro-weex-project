@@ -62,8 +62,8 @@
             </cell>
         </list>
         <!-- 删除自动化弹窗提示 -->
-        <midea-dialog  :show="show.delete" @close="closeDialog('delete')" @mideaDialogCancelBtnClicked="closeDialog('delete')" @mideaDialogConfirmBtnClicked="deleteAuto" >
-            <text class="·" slot="content">确定要删除此快捷操作？</text>
+        <midea-dialog  :show="show.delete" secondBtnColor="#267AFF" mainBtnColor="#267AFF" @close="closeDialog('delete')" @mideaDialogCancelBtnClicked="closeDialog('delete')" @mideaDialogConfirmBtnClicked="deleteAuto" title="删除快捷操作">
+            <text class="delete-text" slot="content">确定要删除此快捷操作？</text>
         </midea-dialog>
    </div>
 </template>
@@ -76,14 +76,7 @@
     .header-floor{
         position: relative; 
     }
-    .delete{
-        position: absolute;
-        right: 25px;
-    }
-    .delete-text{
-        font-size: 28px;
-        color: #666;
-    }
+   
     .hd{
         background-color: #fff;
         width: 750px;
@@ -241,7 +234,9 @@
         font-size: 30px;
     }
     .delete-text{
-        font-size: 30px;
+        font-size: 28px;
+        color: #111;
+        text-align: center;
     }
     .icon-add{
         width: 32px;
@@ -264,7 +259,7 @@
     import nativeService from '@/common/services/nativeService.js'
     import MideaHeader from '@/midea-component/header.vue'
     import MideaCell from '@/midea-component/cell.vue'
-    import mideaDialog from '@/midea-component/dialog.vue'
+    import mideaDialog from '@/midea-rooms/components/dialog.vue'
     import mideaList from '@/midea-rooms/components/list.vue'
 	import switchBar from '@/midea-rooms/components/switch.vue'
 
@@ -702,6 +697,7 @@
                 })
                 nativeService.burialPoint({
                     pageName: 'sceneMainPage',
+                    actionType: 'scene',
                     subAction: 'scene_select_and_edit'
                 })
             }

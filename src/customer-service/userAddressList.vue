@@ -163,12 +163,12 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 32px;
   color: #000000;
-  padding-top: 14px;
+  padding-top: 7px;
   padding-right: 28px;
   padding-bottom: 12px;
   text-align: left;
-  width: 450px;
-  line-height: 34px;
+  max-width: 450px;
+  /* width: 450px; */
 }
 .text-tag {
   background-color: #e8f1ff;
@@ -176,11 +176,11 @@ export default {
   font-family: PingFangSC-Regular;
   font-size: 24px;
   color: #267aff;
-  padding-top: 0px;
+  padding-top: 3px;
   padding-left: 28px;
   padding-right: 28px;
-  padding-bottom: 0px;
-  line-height: 36px;
+  padding-bottom: 3px;
+  top: -3px;
   text-align: center;
 }
 .text-desc {
@@ -190,8 +190,7 @@ export default {
   color: #8a8a8f;
   text-align: left;
   padding-top: 12px;
-  padding-bottom: 12px;
-  line-height: 28px;
+  padding-bottom: 8px;
 }
 .edit-block {
   align-self: stretch;

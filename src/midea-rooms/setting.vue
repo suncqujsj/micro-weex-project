@@ -101,7 +101,7 @@
                 <div class="line1" ></div>
                 <div class="line2"></div>
             </midea-confirm2>
-            <midea-confirm2 :height="488" :show="show.temperatureMax" @leftBtnClick="cancelProp('temperatureMin')" @rightBtnClick="confirmProp('temperatureMax')" @mideaPopupOverlayClicked="closePropPop('temperatureMax')">
+            <midea-confirm2 :height="488" :show="show.temperatureMax" @leftBtnClick="cancelProp('temperatureMax')" @rightBtnClick="confirmProp('temperatureMax')" @mideaPopupOverlayClicked="closePropPop('temperatureMax')">
                 <scroll-picker :listArray="temperatureMaxList" @onChange="setTemperatureMax"></scroll-picker>
                 <div class="line1" ></div>
                 <div class="line2"></div>
@@ -334,7 +334,6 @@
                     this.checkLogin().then( (res) => {
                         let reqUrl = url.scene.supportList
                         let reqParams = {
-                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             sceneId: this.sceneId
                         }
@@ -377,7 +376,6 @@
                 this.checkLogin().then( (res) => {
                     let reqUrl = url.scene.applianceAdd
                     let reqParams = {
-                        // uid: res.uid,
                         homegroupId: res.homegroupId,
                         sceneId: this.sceneId,
                         applianceCode: appliance.applianceCode
@@ -440,7 +438,6 @@
                 this.checkLogin().then( (res) => {
                     let reqUrl = url.scene.modelSet
                     let reqParams = {
-                        // uid: res.uid,
                         homegroupId: res.homegroupId,
                         sceneId: this.sceneId
                     }

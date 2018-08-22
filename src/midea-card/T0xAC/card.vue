@@ -76,6 +76,7 @@
                     </div>
                     <text class="text-offline-center">已离线</text>
                 </div>
+            </div>
             <situation @statusChanged="queryStatus"></situation>
             <!--downloading by zhouhg-->
             <midea-download></midea-download>

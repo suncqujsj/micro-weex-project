@@ -77,11 +77,11 @@ export default {
 			pushKeyOnline: "receiveMessageFromApp",
 			onoff: "",
 			work_status: "",
-			mode: "",
+			mode: "--",
 			minutes: "",
 			second: "",
 			lock: "",
-			display_value: "",
+			display_value: "--",
 			display_value2: "",
 			powerIcon_offline: "./assets/img/smart_ic_reline@3x.png",
 			list: [

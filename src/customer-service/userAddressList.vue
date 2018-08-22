@@ -167,7 +167,7 @@ export default {
   padding-right: 28px;
   padding-bottom: 12px;
   text-align: left;
-  max-width: 450px;
+  max-width: 400px;
   /* width: 450px; */
 }
 .text-tag {

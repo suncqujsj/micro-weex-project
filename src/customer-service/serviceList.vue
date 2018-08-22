@@ -53,7 +53,7 @@ export default {
 
 <style>
 .wrapper {
-  background-color: #ffffff;
+  background-color: #f2f2f2;
   position: relative;
 }
 .list-item {

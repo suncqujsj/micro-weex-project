@@ -1,7 +1,7 @@
 <template>
     <scroller class="content" show-scrollbar="false">
         <div class="box">
-                <div v-if="onlineStatus == '1'"  @click="showControlPanelPage">
+                <div v-if="onlineStatus == '1'" @click="showControlPanelPage">
                     <div v-if="onoff == 'on'">
                         <div class="card" :class="[mode =='heat'?'card-hot':''] " v-if="PD004 != 0">
                             <div class="card-left">
@@ -76,7 +76,6 @@
                     </div>
                     <text class="text-offline-center">已离线</text>
                 </div>
-            </div>
             <situation @statusChanged="queryStatus"></situation>
             <!--downloading by zhouhg-->
             <midea-download></midea-download>

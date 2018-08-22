@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="updateAutoList更新自动化列表" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="updateAutoList更新自动化列表" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-button text="更新自动化列表" type="green" @mideaButtonClicked="updateAutoList">
         </midea-button>
     </div>

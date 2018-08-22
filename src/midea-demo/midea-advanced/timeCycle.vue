@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header title="timeCycle时间转盘" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="timeCycle时间转盘" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
 
         <!-- <midea-title-bar title="时间:"></midea-title-bar>
         <textarea type="text" placeholder="Input Text" class="textarea" :value="messageParamString" @input="dataChange" rows=3 /> -->

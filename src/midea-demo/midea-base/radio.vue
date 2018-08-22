@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="Promt" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="Promt" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <div style="padding:24px">
             <text style="font-size:28px">当前选中 {{checkedInfo.title}}</text>
         </div>

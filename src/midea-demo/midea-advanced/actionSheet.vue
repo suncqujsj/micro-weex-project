@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="actionSheet" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="actionSheet" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-button text="操作面板" type="green" @mideaButtonClicked="openActionsheet">
         </midea-button>
 

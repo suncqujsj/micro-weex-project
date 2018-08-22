@@ -207,13 +207,13 @@ export default {
             })
         },
         getErrorMessage(error) {
-            let msg = "请求失败，请稍后重试。", errorCode
+            let msg = "系统出错，请稍后重试。", errorCode
             if (error) {
                 errorCode = error.code
                 let unNormalErrorCode = ['']
                 if (unNormalErrorCode.indexOf(errorCode) < 0) {
                     //若是正常的错误码，则显示错误信息
-                    msg = this.errorMessages[errorCode] || "请求失败，请稍后重试。"
+                    msg = this.errorMessages[errorCode] || "系统出错，请稍后重试。"
                 }
                 if (errorCode) {
                     msg += "(" + errorCode + ")"

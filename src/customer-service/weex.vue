@@ -182,10 +182,22 @@ export default {
             })
         },
         showHotLine() {
-            this.showBar = true;
-            this.$nextTick(e => {
-                this.$refs.actionsheet.open();
-            });
+            let param = [
+                {
+                    tel: '4008899315',
+                    title: '美的：',
+                    desc: '400-889-9315'
+                }, {
+                    tel: '4008228228',
+                    title: '小天鹅：',
+                    desc: '400-822-8228'
+                }
+            ]
+            nativeService.callTelList(param)
+            // this.showBar = true;
+            // this.$nextTick(e => {
+            //     this.$refs.actionsheet.open();
+            // });
         },
         closeActionsheet() {
             this.showBar = false

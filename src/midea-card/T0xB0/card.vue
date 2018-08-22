@@ -1,7 +1,7 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
-		<div class="box" @click="showControlPanelPage">
-			<div v-if="onlineStatus == '1'">
+		<div class="box" >
+			<div v-if="onlineStatus == '1'" @click="showControlPanelPage">
 				<div class="card card-hot">
 					<div class="card-left">
 						<div class="main-status-div">
@@ -191,10 +191,6 @@ export default {
 				controlPanelName: "controlPanel.html"
 			};
 			bridgeModule.showControlPanelPage(params);
-			nativeService.burialPoint({
-                pageName: 'applianceDetailPage',
-                subAction: 'page_view'
-            });
 		},
 		reload() {
 			let params = {};

@@ -1,7 +1,7 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
-	    <div class="box" @click="showControlPanelPage">
-	        <div v-if="onlineStatus == '1'">
+	    <div class="box" >
+	        <div v-if="onlineStatus == '1'" @click="showControlPanelPage">
 		    	 <div class="card card-hot" v-if="onoff == 'on'">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
@@ -35,7 +35,7 @@
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image @click="showControlPanelPage" class="icon-offline" src="./assets/img/smart_img_equip040@3x.png"></image>
+		        		<image class="icon-offline" src="./assets/img/smart_img_equip040@3x.png"></image>
 		        	</div>
 		        </div>
 	        </div>
@@ -248,10 +248,6 @@
             		controlPanelName:"controlPanel.html"
             	};
             	bridgeModule.showControlPanelPage(params);
-            	nativeService.burialPoint({
-	                pageName: 'applianceDetailPage',
-	                subAction: 'page_view'
-	            });
             },
             reload() {
             	let params = {};

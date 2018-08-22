@@ -36,6 +36,7 @@
 				<text class="text-offline-center">已离线</text>
 			</div>
       <situation></situation>
+			<cookbook-list></cookbook-list>
 			<midea-download></midea-download>
 		</div>
 	</scroller>
@@ -46,6 +47,7 @@ import nativeService from '@/common/services/nativeService.js'
 import mideaSwitch from '@/midea-component/switch.vue'
 import mideaItem from '@/midea-component/item.vue'
 import situation from '@/midea-card/midea-components/situation.vue'
+import cookbookList from '@/midea-card/midea-components/cookbookList.vue'
 import mideaDownload from '@/midea-card/midea-components/download.vue';
 import Mock from './settings/mock'
 import { DEVICE_STATUS } from './settings/deviceStatus'
@@ -59,6 +61,7 @@ export default {
 		mideaSwitch,
 		mideaItem,
 		situation,
+		cookbookList,
 		mideaDownload
 	},
 	data() {

@@ -19,6 +19,7 @@
                             <div class="row-e">
                                 <text v-if="item.type == 'list'" class="property-text">{{item.currentStatusName}}</text>
                                 <text v-if="item.type=='range'" class="property-text">{{item.currentStatus}}</text>
+                                <!-- <text v-if="item.property == 'temperature'" class="property-text">℃</text> -->
                                 <image class="icon" :src="icon.more"></image>
                             </div>
                         </div>
@@ -38,6 +39,9 @@
                 <div v-if="item.type == 'range'">
                     <scroll-picker :height="375" v-if="item.property == 'temperature'" :listArray="rangeArrays[item.property]" @onChange="setActiveTemperature"></scroll-picker>
                     <scroll-picker :height="375" v-if="item.property == 'wind_speed'" :listArray="rangeArrays[item.property]" @onChange="setActiveWindSpeed"></scroll-picker>
+                    <text v-if="item.property == 'temperature'" class="unit">℃</text>
+                    <div class="line1" ></div>
+                    <div class="line2"></div>
                 </div>
             </midea-confirm2>
         </div>
@@ -114,6 +118,27 @@
     }
     .pop-item{ padding: 22px; font-size: 30px; color: #777;  text-align: center; width: 750px;}
     .pop-item-active { color: #333}
+    .line1, .line2{
+        background-color: #e2e2e2;
+        width: 750px;
+        height: 1px;
+        position: absolute;
+        left: 0;
+        right: 0;
+    }
+    .unit{
+        position: absolute;
+        left: 410px;
+        font-size: 27px;
+        top: 155px;
+        color: #333;
+    }
+    .line1{
+        top: 130px;
+    }
+    .line2{
+        top: 210px;
+    }
 </style>
 
 <script>

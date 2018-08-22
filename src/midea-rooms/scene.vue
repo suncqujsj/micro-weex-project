@@ -526,7 +526,7 @@
                     4: '阳台'
                 },
                 icon:{
-                    back: 'assets/img/b_white.png',
+                    back: 'assets/img/public_ic_back_white@3x.png',
                     next: 'assets/img/more_w.png',
                     success: '',
                     fail: '',
@@ -747,7 +747,6 @@
                         if (this.sceneId !== '') {
                             let reqUrl = url.scene.detail
                             let reqParams = {
-                                // uid: res.uid,
                                 homegroupId: res.homegroupId,
                                 sceneId: this.sceneId
                             }
@@ -782,7 +781,6 @@
                     if (this.sceneId !== '') {
                         let reqUrl = url.scene.optimize
                         let reqParams = {
-                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             sceneId: this.sceneId,
                         }
@@ -817,7 +815,6 @@
                         this.checkQuickOptimizeTimes += 1
                         let reqUrl = url.scene.optimizeStatus
                         let reqParams = {
-                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             sceneId: this.sceneId,
                             resultId: resultId
@@ -867,7 +864,6 @@
                     this.checkLogin().then( (res) => {
                         let reqUrl = url.scene.modelExecute
                         let reqParams = {
-                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             sceneId: this.sceneId,
                             modelId: modelId
@@ -901,7 +897,6 @@
                         this.checkModelExeTimes += 1
                         let reqUrl = url.scene.modelStatus
                         let reqParams = {
-                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             sceneId: this.sceneId,
                             modelId: modelId,
@@ -978,7 +973,6 @@
                     if (this.washerCode) {
                         let reqUrl = url.scene.washerConsumption
                         let reqParams = {
-                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             applianceCode: this.washerCode
                         }
@@ -1175,7 +1169,6 @@
                     this.checkLogin().then( (res) => {
                         let reqUrl = url.scene.supportList
                         let reqParams = {
-                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             sceneId: this.sceneId
                         }
@@ -1217,6 +1210,7 @@
                 
                 nativeService.burialPoint({//埋点客厅
                     pageName: 'sceneMainPage',
+                    actionType: 'scene',
                     subAction: 'scene_livingroom_operate'
                 })
             }else if (this.roomType == 2) {
@@ -1237,10 +1231,12 @@
 
                 nativeService.burialPoint({//埋点洗衣机用水
                     pageName: 'sceneMainPage',
+                    actionType: 'scene',
                     subAction: 'scene_balcony_water_operate'
                 })
                 nativeService.burialPoint({//埋点洗衣机用电
                     pageName: 'sceneMainPage',
+                    actionType: 'scene',
                     subAction: 'scene_balcony_electric_operate'
                 })
             }

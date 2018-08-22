@@ -3,21 +3,21 @@
         <div class="addauto-hd">
             <midea-header :title="title" :isImmersion="isImmersion" :bgColor="header.bgColor" :titleText="header.color"  @leftImgClick="goBack"></midea-header>
         </div>
-        <scroller class="content-scroller">
-            <div class="map-box" v-if="sceneType == 3">
-                <wxc-searchbar ref="wxc-searchbar" returnKeyType="search"
-                    @wxcSearchbarCancelClicked="searchCancel"
-                    @wxcSearchbarInputReturned="searchInputReturned"
-                    @wxcSearchbarInputOnInput="searchInputOnInput"
-                    @wxcSearchbarCloseClicked="searchClose"
-                    @wxcSearchbarInputOnFocus="searchInputFocus"
-                    @wxcSearchbarInputOnBlur="searchInputBlur">
-                </wxc-searchbar>
-                <div style="width:750px;height:760px;">
-                    <midea-map-view class="map" :data="mapData" @point-pick="mapPointPick"></midea-map-view>
-                </div>
+        <div v-if="sceneType == 3">
+            <wxc-searchbar ref="wxc-searchbar" returnKeyType="search"
+                @wxcSearchbarCancelClicked="searchCancel"
+                @wxcSearchbarInputReturned="searchInputReturned"
+                @wxcSearchbarInputOnInput="searchInputOnInput"
+                @wxcSearchbarCloseClicked="searchClose"
+                @wxcSearchbarInputOnFocus="searchInputFocus"
+                @wxcSearchbarInputOnBlur="searchInputBlur">
+            </wxc-searchbar>
+            <div  class="map-box">
+                <midea-map-view class="map" :data="mapData" @point-pick="mapPointPick"></midea-map-view>
                 <image class="map-icon" :src="icon.map" @click="goCurrentLocation"></image>
             </div>
+        </div>
+        <scroller class="content-scroller">
             <div v-if="sceneType==4">
                 <text class="hd">设置为</text>
                 <div class="row-sb time-floor"  @click="showPop('time')">
@@ -139,7 +139,7 @@
     }
     .content-scroller{
         flex: 1;
-        padding-bottom: 100px;
+        /* padding-bottom: 100px; */
     }
     .time-floor{
         background-color: #fff;
@@ -224,11 +224,13 @@
         height: 760px;
     }
     .map-box{
-        background-color: #fff;
+        width: 750px;
+        height: 760px;
         position: relative;
         flex: 1;
         flex-direction: column;
-        height: 834px;
+        /* height: 834px; */
+        
     }
     .map-icon{
         position: absolute;
@@ -745,6 +747,10 @@
                     params.templateCode = nativeService.getParameters('templateCode')
                 }
                 if (this.sceneType == 3) {
+                    if (!this.destination.latitude || !this.destination.longitude) {
+                        nativeService.toast('还没选择地点')
+                        return
+                    }
                     let destination = this.destination
                     let tmpDestination = []
                     Object.keys(destination).map(function(x){

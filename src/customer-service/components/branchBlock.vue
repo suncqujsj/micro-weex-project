@@ -134,8 +134,8 @@ export default {
   margin-left: 24px;
 }
 .branch-tel-img {
-  height: 58px;
-  width: 58px;
+  height: 60px;
+  width: 60px;
 }
 .branch-tel-desc {
   font-family: PingFangSC-Regular;
@@ -151,8 +151,8 @@ export default {
   margin-left: 24px;
 }
 .branch-map-img {
-  height: 58px;
-  width: 58px;
+  height: 60px;
+  width: 60px;
 }
 .branch-map-desc {
   font-family: PingFangSC-Regular;

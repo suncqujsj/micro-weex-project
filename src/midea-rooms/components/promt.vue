@@ -12,10 +12,10 @@
           <input ref="input0" maxlength="15"  @input="onInput" :value="inputName" class="box-input" type="text" :placeholder="placeholder" />
        </div>
        <div class="box-btn-group">
-          <div @click="onCancled" class="box-btn-wrapper">
+          <div @click="onCancled" class="box-btn-wrapper box-btn-wrapper-l">
             <text class="box-btn-text">取消</text>
           </div>
-          <div  @click="onOkClicked" class="box-btn-wrapper">
+          <div  @click="onOkClicked" class="box-btn-wrapper box-btn-wrapper-r">
             <text  class="box-btn-text">确定</text>
           </div>
        </div>
@@ -34,15 +34,15 @@
     width: 750px;
     height: 1344px;
     align-items: center;
-    background-color:#333;
-    opacity:0.3;
+    background-color:#000;
+    opacity:0.4;
     position:fixed;
     z-index:1000;
   }
   .operate-box {
     background-color: #F8F8F8;
     width: 558px;
-    border-radius:10px;
+    border-radius: 25px;
     position:fixed;
     left:96px;
   }
@@ -50,22 +50,25 @@
     padding-top:30px;padding-bottom:20px
   }
   .box-title-text{
-   font-size:32px;color:#333;text-align:center
+   font-size:34px;color:#000;text-align:center; font-weight: bold;
   }
   .box-input-wrapper{
-    padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:20px;
+    padding-left:25px;padding-right:25px;padding-top:20px;padding-bottom:30px;
   }
   .box-input{
-    color:#333;background-color:#FFF;height:80px;font-size:28px;padding-left: 10px;
+    border-color:#9F9F9F; border-width: 1px; border-style: solid; color:#333;background-color:#FFF;height:50px;font-size:28px;padding-left: 10px;
   }
   .box-btn-group{
     flex-direction:row;border-top-style:solid;border-top-width:1px;border-top-color:#e5e5e5;height:84px;
   }
   .box-btn-wrapper{
-  flex-direction:row;height:84px;flex:1;align-items:center;justify-content:center;border-right-style:solid;border-right-width:1px;border-right-color:#e5e5e5;
+    flex-direction:row;height:90px;flex:1;align-items:center;justify-content:center;
+  }
+  .box-btn-wrapper-l{
+    border-right-style:solid;border-right-width:1px;border-right-color:#e5e5e5;
   }
   .box-btn-text{
-    text-align:center;color:#387EF5;font-size:32px
+    text-align:center;color:#387EF5;font-size:34px
   }
   .wrapper{
     background-color:#F7F7F7;

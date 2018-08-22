@@ -271,6 +271,9 @@ export default {
                     this.userAddress = JSON.parse(resp.data)
                 }
             })
+            this.title='修改地址'
+        }else{
+            this.title='我的地址'
         }
     }
 }

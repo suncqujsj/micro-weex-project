@@ -1009,8 +1009,8 @@ export default {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 140px;
-  height: 140px;
+  width: 128px;
+  height: 128px;
   background-color: #ffffff;
   margin-right: 24px;
 }
@@ -1029,8 +1029,8 @@ export default {
 }
 .photo-delete-img {
   position: absolute;
-  right: 0px;
-  top: 0px;
+  right: -4px;
+  top: -10px;
   width: 30px;
   height: 30px;
 }

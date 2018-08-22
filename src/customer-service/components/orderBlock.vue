@@ -175,8 +175,9 @@ export default {
   justify-content: center;
 }
 .order-block-label {
-  font-family: PingFangSC-Regular;
-  font-size: 32px;
+  font-family: PingFangSC-Medium;
+  font-weight: 600;
+  font-size: 28px;
   color: #000000;
 }
 .order-block-desc {

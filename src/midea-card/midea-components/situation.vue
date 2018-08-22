@@ -1,5 +1,5 @@
 <template>
-    <div class="smart">
+    <div class="smart" @viewappear="viewappear">
         <div class="smart-title">
             <text class="smart-text">智能</text>
         </div>
@@ -19,7 +19,6 @@ export default {
     mixins: [situationBase],
     data() {
         return {
-            uid: "",
             deviceId: "",
             situationList: [],
             isSituationLoaded: false
@@ -56,13 +55,10 @@ export default {
         }
     },
     created() {
-        nativeService.getUserInfo().then((data) => {
-            this.uid = data.uid
-            nativeService.getDeviceInfo().then((data) => {
-                this.deviceId = data.result.deviceId
-                this.getSituationList()
-            }, (error) => { })
-        }).catch((error) => { })
+        nativeService.getDeviceInfo().then((data) => {
+            this.deviceId = data.result.deviceId
+            this.getSituationList()
+        }, (error) => { })
     }
 }
 </script>

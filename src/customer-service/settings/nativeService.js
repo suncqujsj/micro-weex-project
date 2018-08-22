@@ -3,6 +3,7 @@ import appConfig from './config'
 import nativeService from '@/common/services/nativeService'
 import util from '@/common/util/util'
 import debugUtil from '@/common/util/debugUtil'
+import ERROR_MESSAGES from './errorMessages';
 import { SERVICE_STORAGE_KEYS } from './globalKeys'
 const cssRrequestSendWithApp = true
 const requestSendWithApp = true
@@ -65,13 +66,13 @@ let customizeNativeService = Object.assign(nativeService, {
         ).join('&')
     },
     getErrorMessage(error) {
-        let msg = "请求失败，请稍后重试。", errorCode
+        let msg = "系统出错，请稍后再试。", errorCode
         if (error) {
             errorCode = error.code || error.errorCode
             let unNormalErrorCode = ['error_system']
             if (unNormalErrorCode.indexOf(errorCode) < 0) {
                 //若是正常的错误码，则显示错误信息
-                msg = error.msg || error.errorMsg || error.returnMsg || error.errorMessage || "请求失败，请稍后重试。"
+                msg = ERROR_MESSAGES[errorCode] || error.msg || error.errorMsg || error.returnMsg || error.errorMessage || "系统出错，请稍后再试。"
             }
             if (errorCode) {
                 msg += "(" + errorCode + ")"

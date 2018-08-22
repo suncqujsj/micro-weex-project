@@ -1,10 +1,11 @@
 <template>
     <div class="wrapper" @viewappear="refreshPage">
         <!-- 不可删除此空div行，否则list会自动调整移动至状态栏下 -->
+        <div style="background-color: #ffffff;"></div>
         <list class="list">
-            <cell>
+            <header>
                 <div :class="[isImmersion?(isipx? 'immersion-ipx': 'immersion'):'']"></div>
-            </cell>
+            </header>
             <cell>
                 <div class="service-header">
                     <div style="flex: 1;"> </div>
@@ -44,7 +45,7 @@
                 </midea-item>
             </template>
             <cell class="group-gap-top"></cell>
-            <midea-item title="网点查询" @mideaCellClick="goTo('productSelection', {}, { from: 'rootView', to:'branchList' })">
+            <midea-item title="网点查询" @mideaCellClick="goToBranchList">
                 <image slot="itemImg" src="./assets/img/service_ic_location@3x.png" class="service-item-img" resize='contain'>
                 </image>
             </midea-item>
@@ -181,10 +182,22 @@ export default {
             })
         },
         showHotLine() {
-            this.showBar = true;
-            this.$nextTick(e => {
-                this.$refs.actionsheet.open();
-            });
+            let param = [
+                {
+                    tel: '4008899315',
+                    title: '美的：',
+                    desc: '400-889-9315'
+                }, {
+                    tel: '4008228228',
+                    title: '小天鹅：',
+                    desc: '400-822-8228'
+                }
+            ]
+            nativeService.callTelList(param)
+            // this.showBar = true;
+            // this.$nextTick(e => {
+            //     this.$refs.actionsheet.open();
+            // });
         },
         closeActionsheet() {
             this.showBar = false
@@ -206,6 +219,13 @@ export default {
             nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, this.order, () => {
                 this.goTo("orderDetail", {}, { from: 'orderList', id: this.order.serviceOrderNo })
             })
+        },
+        goToBranchList() {
+            nativeService.burialPoint({
+                pageName: 'serviceOnlineShopInquiriesPage',
+                subAction: 'page_view'
+            })
+            this.goTo('productSelection', {}, { from: 'rootView', to: 'branchList' })
         },
         resetStorage() {
             //清楚本地缓存数据

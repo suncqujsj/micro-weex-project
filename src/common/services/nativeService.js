@@ -569,7 +569,7 @@ export default {
                             reject(resData);
                         }
                     }, (error) => {
-                    // this.alert(error)
+                        // this.alert(error)
                         debugUtil.debugLog(debugLogSeperator, `Lua request(${msgid}): `, params)
                         debugUtil.debugLog(`=======> Lua error(${msgid}): `, error, debugLogSeperator)
                         if (isShowLoading) {
@@ -612,47 +612,47 @@ export default {
     // 获取套系列表
     getTxList(isShowLoading = true) {
         // if (this.isDummy != true) {
-            return new Promise((resolve, reject) => {
-                if (isShowLoading) {
-                    this.showLoading()
+        return new Promise((resolve, reject) => {
+            if (isShowLoading) {
+                this.showLoading()
+            }
+            bridgeModule.getTXList({}, (resData) => {
+                if (typeof resData == 'string') {
+                    // this.alert(resData)
+                    var resDataObj = JSON.parse(resData);
+                    if (isShowLoading) {
+                        this.hideLoading()
+                    }
+                    if (resDataObj.errorCode && resDataObj.errorCode !== 0) {
+                        //失败
+                        reject(resDataObj);
+                    } else {
+                        //成功
+                        resolve(resDataObj)
+                    }
                 }
-                bridgeModule.getTXList({}, (resData) => {
-                    if (typeof resData == 'string') {
-                        // this.alert(resData)
-                        var resDataObj = JSON.parse(resData);
-                        if (isShowLoading) {
-                            this.hideLoading()
-                        }
-                        if (resDataObj.errorCode && resDataObj.errorCode !== 0) {
-                            //失败
-                            reject(resDataObj);
-                        } else {
-                            //成功
-                            resolve(resDataObj)
-                        }
+                else {
+                    //Android 可能直接传个对象
+                    var resDataObj = resData;
+                    if (isShowLoading) {
+                        this.hideLoading()
                     }
-                    else{
-                        //Android 可能直接传个对象
-                        var resDataObj = resData;
-                        if (isShowLoading) {
-                            this.hideLoading()
-                        }
-                        if (resDataObj.errorCode && resDataObj.errorCode !== 0) {
-                            //失败
-                            reject(resDataObj);
-                        } else {
-                            //成功
-                            resolve(resDataObj)
-                        }
+                    if (resDataObj.errorCode && resDataObj.errorCode !== 0) {
+                        //失败
+                        reject(resDataObj);
+                    } else {
+                        //成功
+                        resolve(resDataObj)
                     }
-                }, (error) => {
-                    if (typeof error == 'string') {
-                        error = JSON.parse(error)
-                        mm.modal({"message": error}, 3)
-                    }
-                    reject(error);
-                });
-            })
+                }
+            }, (error) => {
+                if (typeof error == 'string') {
+                    error = JSON.parse(error)
+                    mm.modal({ "message": error }, 3)
+                }
+                reject(error);
+            });
+        })
         // }else{
         //     return new Promise((resolve, reject) => {
         //         let data = Mock.getMock('queryTXList');
@@ -788,6 +788,19 @@ export default {
         let param = Object.assign(params, {
             operation: 'callTel'
         })
+        return this.commandInterfaceWrapper(param)
+    },
+    //弹出全局电话列表
+    /* param: [{
+        tel: '10086',
+        title: '客户服务',
+        desc: '拨打热线电话：'
+    },{...}] */
+    callTelList(params) {
+        let param = {
+            'operation': 'callTelList',
+            'params': params
+        }
         return this.commandInterfaceWrapper(param)
     },
     //触发手机震动
@@ -929,6 +942,7 @@ export default {
         })
         return this.commandInterfaceWrapper(param)
     },
+    /* 选择相册照片，并返回相片数据 */
     choosePhoto(params) {
         /* params =  {
             compressRage:60, , //number, 返回照片的压缩率，范围为0~100，数值越高保真率越高
@@ -937,6 +951,16 @@ export default {
         } */
         let param = Object.assign(params, {
             operation: 'choosePhoto'
+        })
+        return this.commandInterfaceWrapper(param)
+    },
+    /* 选择多张相册照片，并返回相片数据，不支持base64的转换 */
+    chooseMulPhoto(params) {
+        /* params =  {
+            max:number, //一次最多可选择的数量，默认为9，最多9张。
+        } */
+        let param = Object.assign(params, {
+            operation: 'chooseMulPhoto'
         })
         return this.commandInterfaceWrapper(param)
     },
@@ -963,7 +987,7 @@ export default {
             operation: 'getWeatherInfo'
         })
         return this.commandInterfaceWrapper(param)
-    }, 
+    },
     /*  ^5.0.0  百度开放接口，通过经纬度返回对应的位置信息 */
     baiduGeocoder(params) {
         let param = Object.assign(params, {

@@ -1,5 +1,5 @@
 <template>
-    <div class="smart">
+    <div class="smart" @viewappear="viewappear">
         <div class="smart-title">
             <text class="smart-text">智能</text>
         </div>

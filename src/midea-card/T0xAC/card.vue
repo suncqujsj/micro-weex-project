@@ -1,7 +1,7 @@
 <template>
     <scroller class="content" show-scrollbar="false">
         <div class="box">
-                <div v-if="onlineStatus == '1'">
+                <div v-if="onlineStatus == '1'" @click="showControlPanelPage">
                     <div v-if="onoff == 'on'">
                         <div class="card" :class="[mode =='heat'?'card-hot':''] " v-if="PD004 != 0">
                             <div class="card-left">

@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="Modal" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="Modal" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-button text="打开确认面板" type="green" @mideaButtonClicked="openConfirmModal">
         </midea-button>
 

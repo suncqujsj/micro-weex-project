@@ -1,7 +1,7 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
-	    <div class="box" @click="showControlPanelPage">
-	       <div v-if="onlineStatus == '1'">
+	    <div class="box" >
+	        <div v-if="onlineStatus == '1'" @click="showControlPanelPage">
 		    	 <div class="card" v-if="onoff == 'on'">
 		        	<div class="card-left" v-if="heat == 'on' || cool == 'on'">
 	        			<div class="main-status-div">
@@ -38,7 +38,7 @@
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image @click="showControlPanelPage" class="icon-offline" src="./assets/img/smart_img_equip031@3x.png"></image>
+		        		<image class="icon-offline" src="./assets/img/smart_img_equip031@3x.png"></image>
 		        	</div>
 		        </div>
 	        </div>

@@ -33,7 +33,6 @@ export default {
     },
     data() {
         return {
-            uid: "",
             deviceSn: "",
             cockbookList: null
         }
@@ -49,32 +48,28 @@ export default {
         }
     },
     created() {
-        nativeService.getUserInfo().then((data) => {
-            this.uid = data.uid
-            nativeService.getDeviceInfo().then((data) => {
-                this.deviceSn = data.result.deviceSn
-                let requestParam = {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json;charset=utf-8"
-                    },
-                    data: {
-                        reqId: nativeService.generateUUID(),
-                        uid: this.uid,
-                        sn: this.deviceSn,
-                        deviceId: data.result.deviceId,
-                        deviceName: data.result.deviceName,
-                        size: this.count,
-                        stamp: util.dateFormat(new Date(), "yyyyMMddhhmmss") //时间戳
-                    }
+        nativeService.getDeviceInfo().then((data) => {
+            this.deviceSn = data.result.deviceSn
+            let requestParam = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json;charset=utf-8"
+                },
+                data: {
+                    reqId: nativeService.generateUUID(),
+                    sn: this.deviceSn,
+                    deviceId: data.result.deviceId,
+                    deviceName: data.result.deviceName,
+                    size: this.count,
+                    stamp: util.dateFormat(new Date(), "yyyyMMddhhmmss") //时间戳
                 }
-                nativeService.sendCentralCloundRequest("/smart-recipe/api/v1/recipe/devicerecommend", requestParam, { isShowLoading: false }).then((resp) => {
-                    if (resp.code == 0 && resp.data) {
-                        this.cockbookList = resp.data.healthData || []
-                    }
-                }).catch((error) => { })
-            }, (error) => { })
-        })
+            }
+            nativeService.sendCentralCloundRequest("/smart-recipe/api/v1/recipe/devicerecommend", requestParam, { isShowLoading: false }).then((resp) => {
+                if (resp.code == 0 && resp.data) {
+                    this.cockbookList = resp.data.healthData || []
+                }
+            }).catch((error) => { })
+        }, (error) => { })
     }
 }
 </script>

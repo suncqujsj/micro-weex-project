@@ -1,8 +1,7 @@
 <template>
 	<scroller class="content">
-		<div class="box" @click="showControlPanelPage">
-			<div>
-				<div class="card" v-if="onlineStatus == '1'">
+		<div class="box" >
+				<div class="card" v-if="onlineStatus == '1'" @click="showControlPanelPage">
 					<div class="card-left">
 						<div class="main-status-div">
 							<text class="main-status main-status-simple">{{display_value2}}</text>
@@ -35,7 +34,6 @@
 					</div>
 					<text class="text-offline-center">已离线</text>
 				</div>
-			</div>
 			<situation></situation>
 			<cookbook-list></cookbook-list>
 			<midea-download></midea-download>

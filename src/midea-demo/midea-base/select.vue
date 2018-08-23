@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header title="Select" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="Select" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <scroller class="wrapper">
             <midea-button text="默认选择列表" type="green" @mideaButtonClicked="isShow = true">
             </midea-button>

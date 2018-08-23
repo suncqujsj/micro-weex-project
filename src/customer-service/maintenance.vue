@@ -1029,8 +1029,8 @@ export default {
 }
 .photo-delete-img {
   position: absolute;
-  right: 0px;
-  top: 0px;
+  right: -4px;
+  top: -10px;
   width: 30px;
   height: 30px;
 }

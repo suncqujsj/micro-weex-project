@@ -1,5 +1,5 @@
 const appConfig = {
-    plugin_version: "0.0.36_20180820",
+    plugin_version: "0.0.37_20180822",
     plugin_name: '',
     default_locale: 'cn',
     enable_debug: false,

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header title="Nav List" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="Nav List" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <scroller class="wrapper">
             <div style="padding:24px;">
                 <text style="font-size:28px">居中，默认高度</text>

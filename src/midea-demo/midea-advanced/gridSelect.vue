@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="GridSelect" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="GridSelect" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <div style="padding:24px">
             <text style="font-size:28px">自定义</text>
         </div>

@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="Dialog" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="Dialog" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-button text="打开对话框" type="green" @mideaButtonClicked="openDialog">
         </midea-button>
 

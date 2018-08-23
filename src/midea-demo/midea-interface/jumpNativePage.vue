@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="打开指定的原生页面" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="打开指定的原生页面" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-title-bar title="'接口参数:（可修改）"></midea-title-bar>
         <textarea type="text" placeholder="Input Text" class="textarea" :value="messageParamString" @input="dataChange" rows=3 />
 

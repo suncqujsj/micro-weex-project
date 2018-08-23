@@ -12,6 +12,7 @@ export const DEVICE_STATUS = {
 			cloud :"云菜谱段结束",
 	  },
 	  mode: {
+	  	none:"未设置",
 	  	microwave	:"微波",
 			baking	:"烧烤",
 			ferment	:"发酵",

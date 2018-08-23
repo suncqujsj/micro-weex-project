@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" :style="{paddingTop:isIos?'0px':'0px'}">
-        <midea-header title="视频" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="视频" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-title-bar title="默认视频组件"></midea-title-bar>
         <video class="video" :src="src" autoplay controls @start="onstart" @pause="onpause" @finish="onfinish" @fail="onfail"></video>
 

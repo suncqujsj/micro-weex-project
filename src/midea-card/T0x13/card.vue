@@ -2,7 +2,7 @@
 	<scroller class="content" show-scrollbar="false">
 	    <div class="box" >
 	        <div v-if="onlineStatus == '1'" @click="showControlPanelPage">
-		    	 <div class="card" v-if="onoff == 'on'">
+		    	 <div class="card" v-if="onoff == 'on'" @click="showControlPanelPage">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
 	        				<text class="main-status main-status-simple" >{{display_value1}}</text>
@@ -25,7 +25,7 @@
 	        			</div>
 		        	</div>
 		        </div>
-		        <div class="card-power-off" v-else>
+		        <div class="card-power-off" v-else @click="showControlPanelPage">
 		        	<div>
 		        		<image class="icon-offline" src="./assets/img/smart_img_equip013@3x.png"></image>
 		        	</div>

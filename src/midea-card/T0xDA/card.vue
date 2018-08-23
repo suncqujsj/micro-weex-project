@@ -2,7 +2,7 @@
 	<scroller class="content" show-scrollbar="false">
 	    <div class="box" >
 	       <div v-if="onlineStatus == '1'" @click="showControlPanelPage">
-		    	 <div class="card" v-if="onoff == 'on'">
+		    	 <div class="card" v-if="onoff == 'on'" @click="showControlPanelPage">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
 	        				<text class="main-status" :class="[danwei==''? 'main-status-simple' :'', intelligentFlag=='1'? 'main-status-small' :'']">{{display_value2}}</text>
@@ -29,7 +29,7 @@
 	        			</div>
 		        	</div>
 		        </div>
-		        <div class="card-power-off" v-else>
+		        <div class="card-power-off" v-else @click="showControlPanelPage">
 		        	<div class="control-div-offline" >
 		        		<image class="card-control-img" :src="powerIcon_poweroff"  @click="poweronoff(1)"></image>
 		        		<text class="text-offline">电源</text>

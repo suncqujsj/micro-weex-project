@@ -308,6 +308,7 @@
                                 if (home.isLocal === '1'){//场景不支持本地家庭
                                     this.isLocalHome = true
                                 }else{
+                                    this.isLocalHome = false
                                     if (home.homeId === '' || home.homeId == undefined) {
                                         this.setTmpl() //填充静态模板
                                     }else{
@@ -322,12 +323,12 @@
                                 }
                             }).catch((err)=>{
                                 this.setTmpl()//填充静态模板
-                                nativeService.toast(this.getErrorMessage(err))
+                                // nativeService.toast(this.getErrorMessage(err)
                             })
                         }).catch((err)=>{
                             this.setTmpl()
                             this.isLogin = false
-                            nativeService.toast(this.getErrorMessage(err))
+                            // nativeService.toast(this.getErrorMessage(err))
                         })
                     } else if (result.status == 0){
                         this.setTmpl()

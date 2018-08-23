@@ -247,6 +247,7 @@ export default {
                                                 nativeService.toast('获取家庭失败，请稍后重试')
                                             } else {
                                                 let result = {
+                                                    isLogin: login.isLogin,
                                                     homegroupId: home.homeId,
                                                     isOwner: home.isOwner
                                                 }

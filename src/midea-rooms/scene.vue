@@ -2,7 +2,7 @@
     <div @viewappear="initData">
         <scroller class="wrap">
             <div :style="sceneStyle">
-                <midea-header :title="sceneName[roomType]" :isImmersion="isImmersion" bgColor="transparent" titleText="#fff" :leftImg="icon.back" @leftImgClick="goBack" :showRightText="hasUseableDevice && network ? true : false" rightText="设置" rightColor="#fff" @rightTextClick="goSetting"></midea-header>
+                <midea-header :title="sceneName[roomType]" :isImmersion="isImmersion" bgColor="transparent" titleText="#fff" :leftImg="icon.back" @leftImgClick="goBack" :showRightText="isOwner==1 && hasUseableDevice && network ? true : false" rightText="设置" rightColor="#fff" @rightTextClick="goSetting"></midea-header>
                 <div v-if="roomType=='1' || roomType=='2' || roomType=='3' " class="up-block" >
                     <div v-if="hasUseableDevice">
                         <div class="up-desc">
@@ -518,6 +518,7 @@
         data(){
             return {
                 homegroupId: '',
+                isOwner: '',
                 scene: {},
                 sceneName: {
                     1: '客厅',
@@ -744,6 +745,7 @@
             getSceneDetail(){
                 return new Promise((resolve, reject)=>{
                     this.checkLogin().then( (res) => {
+                        this.isOwner = res.isOwner
                         if (this.sceneId !== '') {
                             let reqUrl = url.scene.detail
                             let reqParams = {

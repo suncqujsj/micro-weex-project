@@ -3,6 +3,7 @@
     <scroller class="wrapper"  :show-scrollbar="false" @viewappear="initData">
         <div v-if="isLocalHome">
             <image class="local-home-img" :src="localHomeImg"></image>
+            <text class="local-home-text">本地设备暂不支持场景{{'\n'}}请到首页切换家庭</text>
         </div>
         <div v-else>
             <div>
@@ -31,16 +32,16 @@
                 </scroller>
             </div>
             <div>
-                <div class="hd"><text class="hd-name">场景</text></div> 
+                <div class="hd"><text class="hd-name">场景</text></div>
                 <div class="scene-list" v-if="sceneList" :style="sceneListStyle">
                     <div class="scene" v-for="scene in sceneList" @click="goScene(scene)">
                         <image class="scene-bg" :src="sceneImg[scene.roomType]"></image>
-                        <div v-if="isLogin && scene.applianceCount !== 0" class="scene-info">
+                        <div v-if="isLogin && scene.applianceCount > 0" class="scene-info">
                             <text class="scene-name">{{scene.name}}</text>
                             <div>
-                                <div v-if="[1, 2].indexOf(scene.roomType) > -1 && scene.indicator" class="row-s">
-                                    <text v-if="scene.indicator.temperature" class="scene-desc">室温{{scene.indicator.temperature}}, </text>
-                                    <text v-if="scene.indicator.humidity" class="scene-desc">湿度{{scene.indicator.humidity}}, </text>
+                                <div v-if="(scene.roomType==1 || scene.roomType==2) && scene.indicator" class="row-s">
+                                    <text v-if="scene.indicator.temperature" class="scene-desc">室温{{scene.indicator.temperature}}</text>
+                                    <text v-if="scene.indicator.humidity" class="scene-desc">湿度{{scene.indicator.humidity}}</text>
                                     <text v-if="scene.indicator.pm25" class="scene-desc">空气质量{{scene.indicator.pm25}} </text>
                                     <text v-if="!scene.indicator.temperature && !scene.indicator.humidity && !scene.indicator.pm25" class="scene-desc">该场景暂无设备信息</text>
                                 </div>
@@ -102,7 +103,7 @@
         border-radius: 4px;
     }
     .auto-info {margin-left: 20px; width: 175px; }
-    .auto-name{ width: 175px; font-size: 28px; color: #000; font-weight: bold; margin-bottom: 8px; text-overflow: clip; }
+    .auto-name{ width: 175px; font-size: 28px; color: #000; font-weight: bold; margin-bottom: 8px; text-overflow: ellipsis; lines: 1; }
     .auto-desc{ width: 175px; }
     .auto-desc-text{ font-size: 24px; color: #C7C7CC; margin-right: 6px;}
     .scene-list{  padding-left:30px; padding-right:30px;}
@@ -129,9 +130,17 @@
     .toast-desc{ color: #8A8A8F; margin-right: 4px; font-size: 24px; }
     .toast-icon{ width: 50px; height: 50px; }
     .local-home-img{
-        width: 700px;
-        height: 700px;
-        margin-left: 25px;
+        width: 750px;
+        height: 444px;
+        margin-top: 200px;
+    }
+    .local-home-text{
+        margin-top: 60px;
+        text-align: center;
+        font-size: 28px;
+        font-weight: 500;
+        color: #8A8A8F;
+        line-height: 36px;
     }
 </style>
 
@@ -210,7 +219,7 @@
                         '6': 'assets/img/scene_ic_weather@3x.png',
                     }
                 },
-                localHomeImg: 'assets/img/scene_ic_switch_off@3x.png',
+                localHomeImg: 'assets/img/smart_ic_none@3x.png',
                 sceneImg: {
                     1: 'assets/img/sence_pic_parlour@3x.png',
                     2: 'assets/img/sence_pic_bedroom@3x.png',
@@ -294,6 +303,7 @@
                 nativeService.getNetworkStatus().then((result)=>{
                     if (result.status == 1){
                         nativeService.getUserInfo().then((user)=>{
+                            this.isLogin = true
                             nativeService.getCurrentHomeInfo().then( (home)=>{
                                 if (home.isLocal === '1'){//场景不支持本地家庭
                                     this.isLocalHome = true
@@ -306,8 +316,8 @@
                                             this.userDevices = home.deviceList
                                             this.userDevicesStr = encodeURIComponent(JSON.stringify(home.deviceList))
                                         }
-                                        this.getAutoList( home.homeId) //获取自动化列表数据
-                                        this.getSceneList( home.homeId)//获取场景列表数据
+                                        this.getAutoList(home.homeId) //获取自动化列表数据
+                                        this.getSceneList(home.homeId)//获取场景列表数据
                                     }
                                 }
                             }).catch((err)=>{
@@ -316,6 +326,7 @@
                             })
                         }).catch((err)=>{
                             this.setTmpl()
+                            this.isLogin = false
                             nativeService.toast(this.getErrorMessage(err))
                         })
                     } else if (result.status == 0){

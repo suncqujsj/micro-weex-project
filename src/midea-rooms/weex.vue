@@ -1,9 +1,10 @@
 // 美居场景首页
 <template>
     <scroller class="wrapper"  :show-scrollbar="false" @viewappear="initData">
-        <div v-if="isLocalHome">
+        <div class="local-home" v-if="isLocalHome">
             <image class="local-home-img" :src="localHomeImg"></image>
-            <text class="local-home-text">本地设备暂不支持场景{{'\n'}}请到首页切换家庭</text>
+            <text class="local-home-text">本地设备暂不支持场景</text>
+            <text class="local-home-text">请到首页切换家庭</text>
         </div>
         <div v-else>
             <div>
@@ -40,25 +41,25 @@
                             <text class="scene-name">{{scene.name}}</text>
                             <div>
                                 <div v-if="(scene.roomType==1 || scene.roomType==2) && scene.indicator" class="row-s">
-                                    <text v-if="scene.indicator.temperature" class="scene-desc">室温{{scene.indicator.temperature}}</text>
-                                    <text v-if="scene.indicator.humidity" class="scene-desc">湿度{{scene.indicator.humidity}}</text>
-                                    <text v-if="scene.indicator.pm25" class="scene-desc">空气质量{{scene.indicator.pm25}} </text>
-                                    <text v-if="!scene.indicator.temperature && !scene.indicator.humidity && !scene.indicator.pm25" class="scene-desc">该场景暂无设备信息</text>
+                                    <text v-if="scene.indicator.temperature" class="scene-desc">室温{{scene.indicator.temperature}}℃</text>
+                                    <text v-if="scene.indicator.humidity" class="scene-desc">湿度{{getHumidityDesc(scene.indicator.humidity)}}</text>
+                                    <text v-if="scene.indicator.pm25" class="scene-desc">空气质量{{getPMDesc(scene.indicator.pm25)}} </text>
+                                    <text v-if="!scene.indicator.temperature && !scene.indicator.humidity && !scene.indicator.pm25" class="scene-desc">{{roomDesc[scene.roomType]}}</text>
                                 </div>
-                                <div v-else-if="scene.roomType == 3 && scene.indicator" class="scene-desc">
-                                    <text v-if="scene.indicator.level" class="scene-desc">{{feel[scene.indicator.level]}}</text>
-                                    <text v-else class="scene-desc">该场景暂无设备信息</text>
+                                <div v-else-if="scene.roomType == 3 && scene.indicator">
+                                    <text v-if="scene.indicator.work_status" class="scene-desc">{{feel[scene.indicator.work_status]}}</text>
+                                    <text v-else class="scene-desc">{{roomDesc[scene.roomType]}}</text>
                                 </div>
-                                <div v-else-if="scene.roomType == 4 && scene.indicator" class="scene-dexc">
+                                <div v-else-if="scene.roomType == 4 && scene.indicator">
                                     <text v-if="scene.indicator.work_stats" class="scene-desc">{{scene.indicator.work_stats}}</text>
-                                    <text v-else class="scene-desc">该场景暂无设备信息</text>
+                                    <text v-else class="scene-desc">{{roomDesc[scene.roomType]}}</text>
                                 </div>
                             </div>
                             <image class="next" :src="icon.next"></image>
                         </div>
                         <div v-else>
                             <text class="scene-name">{{scene.name}}</text>
-                            <text class="scene-desc">该场景暂无设备信息</text>
+                            <text class="scene-desc">{{roomDesc[scene.roomType]}}</text>
                             <image class="next" :src="icon.next"></image>
                         </div>
                     </div>
@@ -129,13 +130,16 @@
     }
     .toast-desc{ color: #8A8A8F; margin-right: 4px; font-size: 24px; }
     .toast-icon{ width: 50px; height: 50px; }
+    .local-home{
+        width: 750px;
+    }
     .local-home-img{
         width: 750px;
         height: 444px;
         margin-top: 200px;
+        margin-bottom: 60px;
     }
     .local-home-text{
-        margin-top: 60px;
         text-align: center;
         font-size: 28px;
         font-weight: 500;
@@ -227,10 +231,9 @@
                     4: 'assets/img/sence_pic_sun@3x.png',
                 },
                 feel: {
-                    1: '未知',
-                    2: '热水不足',
-                    4: '加热中',
-                    5: '热水充足'
+                    'warm': '热水充足',
+                    'off': '关机',
+                    'on': '待机'
                 },
                 autoList: [],
                 autoListTmpl: [
@@ -281,6 +284,12 @@
                         "roomType": 4
                     }
                 ],
+                roomDesc: {
+                    1: '清新、节能',
+                    2: '舒适、健康',
+                    3: '温暖、舒适',
+                    4: '洁净、节能'
+                },
                 userDevices: [],
                 userDevicesStr: '',
                 user: null,
@@ -578,6 +587,33 @@
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
                 })
+            },
+            getHumidityDesc(humidity) {
+                if (humidity){
+                    if (humidity <=30){
+                        return '干燥'
+                    }else if (humidity >80){
+                        return '潮湿'
+                    }else if (humidity>30 && humidity <=80){
+                        return '适宜'
+                    }
+                }else{
+                    return ''
+                }
+            },
+            getPMDesc(pm25){
+                if (pm25 == 0) {
+                    return
+                }
+                else if (pm25 < 51 && pm25 > 0 ) {
+                    return '优'
+                }
+                else if (pm25 < 101) {
+                    return '良好'
+                }
+                else if (pm25 < 1000) {
+                    return '差'
+                }
             }
         },
         created(){

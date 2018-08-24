@@ -795,16 +795,16 @@
                                 this.checkQuickOptimizeTimes = 0
                                 this.checkQuickOptimize(res.data.resultId)
                             }else if (res.code == 1711){
-                                nativeService.toast(res.msg)
+                                nativeService.toast(res.msg, 3)
                             }else{
                                 if (codeDesc.scene.hasOwnProperty(res.code)) {
-                                    nativeService.toast(codeDesc.scene[res.code])
+                                    nativeService.toast(codeDesc.scene[res.code], 3)
                                 }else{
-                                    nativeService.toast(res.msg)
+                                    nativeService.toast(res.msg, 3)
                                 }
                             }
                         }).catch((err)=>{
-                            nativeService.toast(this.getErrorMessage(err))
+                            nativeService.toast(this.getErrorMessage(err), 3)
                         })
                     }else{
                         nativeService.toast('该场景暂无设备信息')

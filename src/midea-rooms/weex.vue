@@ -231,6 +231,7 @@
                     4: 'assets/img/sence_pic_sun@3x.png',
                 },
                 feel: {
+                    'hot': '加热中',
                     'warm': '热水充足',
                     'off': '关机',
                     'on': '待机'

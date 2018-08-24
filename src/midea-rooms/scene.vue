@@ -481,6 +481,10 @@
                 if(this.scene.applianceList && this.scene.applianceList.length > 0) {
                     if (this.scene.indicator.work_status == 'warm') {
                         return '热水充足'
+                    }else if (this.scene.indicator.work_status == 'off') {
+                        return '关机'
+                    }else if (this.scene.indicator.work_status == 'on') {
+                        return '待机'
                     }else if (this.scene.indicator.work_status) {
                         return '加热中'
                     }else{

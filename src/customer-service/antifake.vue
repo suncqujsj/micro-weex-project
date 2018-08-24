@@ -134,6 +134,7 @@ export default {
     created() {
         nativeService.burialPoint({
             pageName: 'serviceAntiFakePage',
+            actionType: 'view',
             subAction: 'page_view'
         })
     }

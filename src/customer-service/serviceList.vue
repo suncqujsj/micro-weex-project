@@ -45,6 +45,7 @@ export default {
     created() {
         nativeService.burialPoint({
             pageName: 'serviceChargePolicyPage',
+            actionType: 'view',
             subAction: 'page_view'
         })
     }

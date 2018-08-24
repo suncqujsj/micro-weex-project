@@ -73,10 +73,52 @@ module.exports = {
         isShowCardList: false,
         cardIndex: null,
         cardList: [
-            { key: "T0xAC", value: "空调T0xAC" },
-            { key: "T0xCA", value: "冰箱T0xCA" },
-            { key: "T0xFA", value: "风扇T0xFA" },
-            { key: "T0xFC", value: "净化器T0xFC" }
+            { key: "T0x0F", value: "T0x0F健康秤" },
+            { key: "T0x10", value: "T0x10智能插座" },
+            { key: "T0x13", value: "T0x13智能灯具" },
+            { key: "T0x15", value: "T0x15电水壶" },
+            { key: "T0x1B", value: "T0x1B智能路由" },
+            { key: "T0x1D", value: "T0x1D空调伴侣" },
+            { key: "T0x1F", value: "T0x1F燃气传感器" },
+            { key: "T0x20", value: "T0x20zigbee子设备" },
+            { key: "T0x2B", value: "T0x2B摄像头" },
+            { key: "T0x9A", value: "T0x9A微波烤箱" },
+            { key: "T0x9B", value: "T0x9B蒸汽烤箱" },
+            { key: "T0xA1", value: "T0xA1除湿机" },
+            { key: "T0xAC", value: "T0xAC空调" },
+            { key: "T0xB0", value: "T0xB0微波炉" },
+            { key: "T0xB1", value: "T0xB1大烤箱" },
+            { key: "T0xB2", value: "T0xB2蒸汽炉" },
+            { key: "T0xB3", value: "T0xB3消毒柜" },
+            { key: "T0xB4", value: "T0xB4小烤箱" },
+            { key: "T0xB6", value: "T0xB6抽油烟机" },
+            { key: "T0xB7", value: "T0xB7燃气炉" },
+            { key: "T0xB8", value: "T0xB8吸尘器" },
+            { key: "T0xBF", value: "T0xBF微波蒸汽烤箱" },
+            { key: "T0xBF", value: "T0xBF微波蒸汽烤箱" },
+            { key: "T0xCA", value: "T0xCA冰箱" },
+            { key: "T0xCC", value: "T0xCC中央空调" },
+            { key: "T0xCD", value: "T0xCD空气能热水器" },
+            { key: "T0xDA", value: "T0xDA波轮洗衣机" },
+            { key: "T0xDB", value: "T0xDB滚筒洗衣机" },
+            { key: "T0xDC", value: "T0xDC干衣机" },
+            { key: "T0xE1", value: "T0xE1洗碗机" },
+            { key: "T0xE2", value: "T0xE2电热水器" },
+            { key: "T0xE3", value: "T0xE3燃热水器" },
+            { key: "T0xE6", value: "T0xE6壁挂炉" },
+            { key: "T0xE7", value: "T0xE7电磁炉" },
+            { key: "T0xE8", value: "T0xE8电炖锅" },
+            { key: "T0xE9", value: "T0xE9面包机" },
+            { key: "T0xEA", value: "T0xEA电饭煲" },
+            { key: "T0xEB", value: "T0xEB烹饪机" },
+            { key: "T0xEC", value: "T0xEC压力锅" },
+            { key: "T0xED", value: "T0xED净水机" },
+            { key: "T0xEF", value: "T0xEF豆浆机" },
+            { key: "T0xF1", value: "T0xF1破壁机" },
+            { key: "T0xFA", value: "T0xFA风扇" },
+            { key: "T0xFB", value: "T0xFB取暖器" },
+            { key: "T0xFC", value: "T0xFC净化器" },
+            { key: "T0xFD", value: "T0xFD加湿器" }
         ],
         url: "",
         history: []
@@ -127,7 +169,7 @@ module.exports = {
             let cardPath = ''
             let indexPath = '/weex.js'
             if (this.module == "midea-card") {
-                cardPath = "/" + this.card
+                cardPath = "/" + this.card + "/midea-card"
                 indexPath = "/card.js"
             }
             return "http://" + this.host + ":8080/dist/" + this.module + cardPath + indexPath + "?root=" + this.module + cardPath + "&ip=" + this.host

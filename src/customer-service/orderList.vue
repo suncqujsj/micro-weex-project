@@ -328,6 +328,7 @@ export default {
 
         nativeService.burialPoint({
             pageName: 'serviceProgressQueryPage',
+            actionType: 'view',
             subAction: 'page_view'
         })
     }

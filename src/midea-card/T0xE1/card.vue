@@ -179,7 +179,7 @@
 	                	}
 	                }
 	            }else {
-	                modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+	            	nativeService.toast("连接设备超时");
 	            }
             },
             updateDeviceInfo(data) {

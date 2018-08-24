@@ -141,7 +141,7 @@
             	self.updateDeviceInfo(data.result);
             	self.handleNotification();
             },function(error) {
-            	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+            	nativeService.toast("连接设备超时");
             })
         }
     }

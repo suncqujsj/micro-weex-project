@@ -2,7 +2,7 @@
 	<scroller class="content" show-scrollbar="false">
 	    <div class="box" >
 	    	<div v-if="onlineStatus == '1'" @click="showControlPanelPage">
-	    		<div v-if="onoff == 'on'">
+	    		<div v-if="onoff == 'on'" @click="showControlPanelPage">
 			        <div>
 				    	 <div class="card card-hot">
 				        	<div class="card-left">
@@ -36,7 +36,7 @@
 			        	<scroller-bar :max="75" :min="30" :currentTemperture="currentTemperture" :offsetStep="5" @scrollerBarScroll="scrollerBarScroll"></scroller-bar>
 			        </div>
 			    </div>
-			    <div class="card-power-off" v-else>
+			    <div class="card-power-off" v-else @click="showControlPanelPage">
 		        	<div class="control-div-offline">
 		        		<image class="card-control-img" :src="powerIcon_poweroff"  @click="poweronoff(1)"></image>
 		        		<text class="text-offline">电源</text>
@@ -186,7 +186,7 @@
 					this.currentTemperture = params.temperature;
 					this.mode = this.return_mode[params.mode] || "--";
 	            }else {
-	                modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+	            	nativeService.toast("连接设备超时");
 	            }
             },
             updateDeviceInfo(data) {
@@ -216,11 +216,11 @@
             },
             up () {
 	        	if(this.deviceTip) {
-	        		modal.toast({ 'message': "设备故障，暂无法操作", 'duration': 2 });
+	        		nativeService.toast("设备故障，暂无法操作");
 	           		return;
 	           	}
 	        	if(this.temperature >= 75) {
-	        		modal.toast({ 'message': "已达到最高温度", 'duration': 2 });
+	        		nativeService.toast("已达到最高温度");
 	           		return;
 	           	}
 	            let me = this;
@@ -238,11 +238,11 @@
 	        },
 	        down () {
 	        	if(this.deviceTip) {
-	           		modal.toast({ 'message': "设备故障，暂无法操作", 'duration': 2 });
+	        		nativeService.toast("设备故障，暂无法操作");
 	           		return;
 	           	}
 	        	if(this.temperature <= 30) {
-	        		modal.toast({ 'message': "已达到最低温度", 'duration': 2 });
+	        		nativeService.toast("已达到最低温度");
 	           		return;
 	           	}
 	            let me = this;
@@ -333,7 +333,7 @@
             	self.handleNotification();
         		self.queryStatus();
             },function(error) {
-            	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+            	nativeService.toast("连接设备超时");
             })
         }
     }

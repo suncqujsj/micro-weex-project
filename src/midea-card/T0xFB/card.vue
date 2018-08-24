@@ -2,7 +2,7 @@
 	<scroller class="content" show-scrollbar="false">
 	    <div class="box" >
 	        <div v-if="onlineStatus == '1'" @click="showControlPanelPage">
-		    	 <div class="card card-hot" v-if="onoff == 'on'">
+		    	 <div class="card card-hot" v-if="onoff == 'on'" @click="showControlPanelPage">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
 	        				<text class="main-status">{{gear}}</text>
@@ -29,7 +29,7 @@
 	        			</div>
 		        	</div>
 		        </div>
-		        <div class="card-power-off" v-else>
+		        <div class="card-power-off" v-else @click="showControlPanelPage">
 		        	<div class="control-div-offline">
 		        		<image class="card-control-img" :src="powerIcon_poweroff"  @click="poweronoff(1)"></image>
 		        		<text class="text-offline">电源</text>
@@ -132,7 +132,7 @@
 	            	this.temperature = params.temperature;
 	            	this.display_value1 = this.return_mode[this.mode] + " 设定温度 " + this.temperature + "℃";
 	            }else {
-	                modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+	            	nativeService.toast("连接设备超时");
 	            }
             },
             updateDeviceInfo(data) {
@@ -164,21 +164,21 @@
             up () {
 	        	if(this.deviceSubType == "5") {
 	        	 	if(this.deviceLock == "on") {
-		        		modal.toast({ 'message': '取暖器已开启童锁，请关闭童锁后再尝试！', 'duration': 2 });
+	        	 		nativeService.toast("取暖器已开启童锁，请关闭童锁后再尝试！");
 		                return;
 		        	}
 	        	}
 	            let set_gear = "";
 	            if(this.deviceSubType == "5") {
 	            	if(this.gear >= 10) {
-	            		modal.toast({ 'message': '档位已达最大值', 'duration': 2 });
+	            		nativeService.toast("档位已达最大值");
 		                return;
 	            	} else {
 	            		set_gear = parseInt(this.gear) + 1;
 	            	}
 	            } else {
 	            	if(this.gear >= 3) {
-	            		modal.toast({ 'message': '档位已达最大值', 'duration': 2 });
+	            		nativeService.toast("档位已达最大值");
 		                return;
 		            } else {
 		            	set_gear = parseInt(this.gear) + 1;
@@ -200,13 +200,13 @@
 	        down () {
 	        	if(this.deviceSubType == "5") {
 	        		if(this.deviceLock == "on") {
-	        			modal.toast({ 'message': '取暖器已开启童锁，请关闭童锁后再尝试！', 'duration': 2 });
+	        			nativeService.toast("取暖器已开启童锁，请关闭童锁后再尝试！");
 		                return;
 		        	}
 	        	}
 	             let set_gear = "";
 	            if(this.gear == 1) {
-	            	modal.toast({ 'message': '档位已达最小值', 'duration': 2 });
+	            	nativeService.toast("档位已达最小值");
 	                return;
 	            } else {
 	            	set_gear = parseInt(this.gear) -1;
@@ -272,7 +272,7 @@
             	self.handleNotification();
         		self.queryStatus();
             },function(error) {
-            	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+            	nativeService.toast("连接设备超时");
             })
         }
     }

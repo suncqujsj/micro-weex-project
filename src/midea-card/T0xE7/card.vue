@@ -2,7 +2,7 @@
 	<scroller class="content" show-scrollbar="false">
 	    <div class="box" >
 	        <div v-if="onlineStatus == '1'" @click="showControlPanelPage">
-		    	 <div class="card" v-if="onoff == 'on'">
+		    	 <div class="card" v-if="onoff == 'on'" @click="showControlPanelPage">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
 	        				<text class="main-status" :class="[work_status != 2?'main-status-simple':'']">{{display_value1}}</text>
@@ -25,7 +25,7 @@
 	        			</div>
 		        	</div>
 		        </div>
-		        <div class="card-power-off" v-else>
+		        <div class="card-power-off" v-else @click="showControlPanelPage">
 		        	<div class="control-div-offline">
 		        		<image class="card-control-img" :src="powerIcon_poweroff"  @click="poweronoff(1)"></image>
 		        		<text class="text-offline">电源</text>
@@ -170,7 +170,7 @@
 						this.danwei = "";
 					}
 	            }else {
-	                modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+	            	nativeService.toast("连接设备超时");
 	            }
             },
             updateDeviceInfo(data) {
@@ -208,12 +208,12 @@
 				this.deviceSubtype = parseInt(this.deviceSubtype);
 	        	if(this.deviceSubtype == 10) {
 	        		if(!(this.mode == "normal" || this.mode == "sleep")) {
-	        			modal.toast({ 'message': '只有正常风或睡眠风模式下可以设置档位', 'duration': 2 });
+	        			nativeService.toast("只有正常风或睡眠风模式下可以设置档位");
 		                return;
 		        	} 
 	        	} else {
 	        		if(this.mode != "normal") {
-		        		modal.toast({ 'message': '只有正常风模式下可以设置档位', 'duration': 2 });
+	        			nativeService.toast("只有正常风模式下可以设置档位");
 		                return;
 		        	} 
 	        	}
@@ -221,7 +221,7 @@
 	            let gear = 'up';
 	            let set_gear = "";
 	            if(this.gear >= 26) {
-	            	modal.toast({ 'message': '风速已达最大值', 'duration': 2 });
+	            	nativeService.toast("风速已达最大值");
 	                return;
 	            } else {
 	            	set_gear = parseInt(this.gear) + 1;
@@ -241,18 +241,18 @@
 	        down () {
 	        	if(this.deviceSubtype == 10) {
 	        		if(!(this.mode == "normal" || this.mode == "sleep")) {
-	        			modal.toast({ 'message': '只有正常风或睡眠风模式下可以设置档位', 'duration': 2 });
+	        			nativeService.toast("只有正常风或睡眠风模式下可以设置档位");
 		                return;
 		        	} 
 	        	} else {
 	        		if(this.mode != "normal") {
-	        			modal.toast({ 'message': '只有正常风模式下可以设置档位', 'duration': 2 });
+	        			nativeService.toast("只有正常风模式下可以设置档位");
 		                return;
 		        	} 
 	        	}
 	            let set_gear = "";
 	            if(this.gear == 1) {
-	            	modal.toast({ 'message': '风速已达最小值', 'duration': 2 });
+	            	nativeService.toast("风速已达最小值");
 	                return;
 	            } else {
 	            	set_gear = parseInt(this.gear) -1;
@@ -318,7 +318,7 @@
             	self.handleNotification();
         		self.queryStatus();
             },function(error) {
-            	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+            	nativeService.toast("连接设备超时");
             })
         }
     }

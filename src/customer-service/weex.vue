@@ -223,6 +223,7 @@ export default {
         goToBranchList() {
             nativeService.burialPoint({
                 pageName: 'serviceOnlineShopInquiriesPage',
+                actionType: 'view',
                 subAction: 'page_view'
             })
             this.goTo('productSelection', {}, { from: 'rootView', to: 'branchList' })

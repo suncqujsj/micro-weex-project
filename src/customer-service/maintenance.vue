@@ -794,6 +794,7 @@ export default {
 
         nativeService.burialPoint({
             pageName: 'serviceRepairPage',
+            actionType: 'view',
             subAction: 'page_view'
         })
     }

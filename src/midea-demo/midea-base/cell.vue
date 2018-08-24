@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <midea-header title="Cell" :isImmersion="false" @leftImgClick="back"></midea-header>
+    <midea-header title="Cell" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
     <midea-cell title="仅标题且带底部边距" :hasArrow="true" :hasMargin="true" :hasTopBorder="true" :clickActivied="true" style="margin-top:24px" @mideaCellClick="itemClicked">
     </midea-cell>
     <midea-cell title="标题附5444带描述" desc="描述" :hasMargin="true" :hasArrow="true" :clickActivied="true" :hasTopBorder="true" @mideaCellClick="itemClicked">

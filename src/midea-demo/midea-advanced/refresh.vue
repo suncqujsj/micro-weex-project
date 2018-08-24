@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header title="Refresh" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="Refresh" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <scroller class="scroller">
             <refresh class="refresh" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing ? 'show' : 'hide'">
                 <loading-indicator class="indicator"></loading-indicator>

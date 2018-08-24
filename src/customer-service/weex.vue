@@ -1,10 +1,11 @@
 <template>
     <div class="wrapper" @viewappear="refreshPage">
         <!-- 不可删除此空div行，否则list会自动调整移动至状态栏下 -->
+        <div style="background-color: #ffffff;"></div>
         <list class="list">
-            <cell>
+            <header>
                 <div :class="[isImmersion?(isipx? 'immersion-ipx': 'immersion'):'']"></div>
-            </cell>
+            </header>
             <cell>
                 <div class="service-header">
                     <div style="flex: 1;"> </div>
@@ -44,7 +45,7 @@
                 </midea-item>
             </template>
             <cell class="group-gap-top"></cell>
-            <midea-item title="网点查询" @mideaCellClick="goTo('productSelection', {}, { from: 'rootView', to:'branchList' })">
+            <midea-item title="网点查询" @mideaCellClick="goToBranchList">
                 <image slot="itemImg" src="./assets/img/service_ic_location@3x.png" class="service-item-img" resize='contain'>
                 </image>
             </midea-item>
@@ -181,10 +182,22 @@ export default {
             })
         },
         showHotLine() {
-            this.showBar = true;
-            this.$nextTick(e => {
-                this.$refs.actionsheet.open();
-            });
+            let param = [
+                {
+                    tel: '4008899315',
+                    title: '美的：',
+                    desc: '400-889-9315'
+                }, {
+                    tel: '4008228228',
+                    title: '小天鹅：',
+                    desc: '400-822-8228'
+                }
+            ]
+            nativeService.callTelList(param)
+            // this.showBar = true;
+            // this.$nextTick(e => {
+            //     this.$refs.actionsheet.open();
+            // });
         },
         closeActionsheet() {
             this.showBar = false
@@ -206,6 +219,13 @@ export default {
             nativeService.setItem(this.SERVICE_STORAGE_KEYS.currentOrder, this.order, () => {
                 this.goTo("orderDetail", {}, { from: 'orderList', id: this.order.serviceOrderNo })
             })
+        },
+        goToBranchList() {
+            nativeService.burialPoint({
+                pageName: 'serviceOnlineShopInquiriesPage',
+                subAction: 'page_view'
+            })
+            this.goTo('productSelection', {}, { from: 'rootView', to: 'branchList' })
         },
         resetStorage() {
             //清楚本地缓存数据
@@ -241,11 +261,11 @@ export default {
 }
 
 .immersion {
-  height: 40px;
+  height: 20wx;
   background-color: #ffffff;
 }
 .immersion-ipx {
-  height: 68px;
+  height: 34wx;
   background-color: #ffffff;
 }
 .list {
@@ -253,21 +273,21 @@ export default {
 }
 .service-header {
   background-color: #ffffff;
-  height: 88px;
+  height: 44wx;
   display: flex;
   flex-direction: row;
 }
 .service-header-image-wrapper {
-  height: 88px;
+  height: 44wx;
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  padding-right: 32px;
+  padding-right: 16wx;
   /* background-color: red; */
 }
 .header-left-image {
-  height: 56px;
-  width: 56px;
+  height: 28wx;
+  width: 28wx;
 }
 .wrapper-gap {
   height: 100px;
@@ -282,16 +302,16 @@ export default {
 .service-title {
   font-family: PingFangSC-Medium;
   font-weight: 600;
-  font-size: 56px;
+  font-size: 28wx;
+  line-height: 32wx;
   color: #000000;
-  line-height: 68px;
+  padding-top: 0px;
 }
 .service-desc {
   font-family: PingFangSC-Regular;
-  font-size: 28px;
+  font-size: 14wx;
   color: #8a8a8f;
   letter-spacing: 0;
-  line-height: 44px;
 }
 .service-desc-img-wrapper {
   margin-top: 38px;
@@ -322,7 +342,7 @@ export default {
 }
 .navigation-desc {
   padding-top: 24px;
-  font-size: 24px;
+  font-size: 12wx;
   color: #000000;
 }
 .arraw-line {
@@ -359,21 +379,21 @@ export default {
 }
 .order-title {
   font-family: PingFangSC-Semibold;
-  font-size: 28px;
+  font-size: 14wx;
   color: #000000;
   line-height: 40px;
   padding-bottom: 4px;
 }
 .order-desc {
   font-family: PingFangSC-Regular;
-  font-size: 24px;
+  font-size: 12wx;
   color: #8a8a8f;
   padding-bottom: 4px;
 }
 .order-time {
   justify-self: flex-end;
   font-family: PingFangSC-Regular;
-  font-size: 24px;
+  font-size: 12wx;
   color: #8a8a8f;
   line-height: 38px;
 }
@@ -387,7 +407,7 @@ export default {
 }
 .service-item-title {
   font-family: PingFangSC-Regular;
-  font-size: 32px;
+  font-size: 16wx;
   color: #000000;
 }
 .actionsheet-popup {
@@ -403,14 +423,14 @@ export default {
   flex: 1;
   font-family: PingFangSC-Regular;
   text-align: right;
-  font-size: 32px;
+  font-size: 16wx;
   color: #000000;
 }
 .actionsheet-item-desc {
   flex: 1.5;
   font-family: PingFangSC-Regular;
   text-align: left;
-  font-size: 32px;
+  font-size: 16wx;
   color: #267aff;
 }
 </style>

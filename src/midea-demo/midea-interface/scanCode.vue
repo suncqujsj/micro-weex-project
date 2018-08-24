@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="scanCode扫描" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="scanCode扫描" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-button text="扫描" type="green" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <midea-title-bar title="代码"></midea-title-bar>

@@ -39,6 +39,13 @@ export default {
     computed: {
         pageHeight() {
             return 750 / weex.config.env.deviceWidth * weex.config.env.deviceHeight
+        },
+        isImmersion: function () {
+            let result = true
+            if (weex.config.env.isImmersion == "false") {
+                result = false
+            }
+            return result
         }
     },
     methods: {

@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="getCurrentHomeInfo" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="getCurrentHomeInfo" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-button text="执行getCurrentHomeInfo" type="green" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <midea-title-bar title="代码"></midea-title-bar>

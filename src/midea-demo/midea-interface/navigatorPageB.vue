@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="页面B" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="页面B" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-button text="跳转至页面C" type="green" @mideaButtonClicked="goToPageC">
         </midea-button>
         <midea-button text="返回至页面A" type="green" @mideaButtonClicked="backToPageA">

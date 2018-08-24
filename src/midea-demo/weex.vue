@@ -1,24 +1,23 @@
 <template>
     <div class="wrapper" ref="wrapper">
-        <midea-header title="DolphinWeex" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="DolphinWeex" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-tab ref="mTab" :tabArray="tabData" @tabClicked="tabClicked">
         </midea-tab>
-
-        <slider :value="val" :index="index" @change="changeArea" class="slider" auto-play="false">
-            <div class="sample-list">
-                <list show-scrollbar="true">
+        <slider :value="val" :index="index" @change="changeArea" :class="['slider', env.platform=='Web'&&'web-page']" auto-play="false">
+            <div :class="['sample-div', env.platform=='Web'&&'web-page']">
+                <list :class="['sample-list', env.platform=='Web'&&'web-page']" show-scrollbar="true">
                     <midea-cell :clickActivied="true" v-for="(item,index) in sortedBaseList" :key="'tab1'+index" :title="item.title" height="120" :has-arrow="true" @mideaCellClick="goToBase(item.link)">
                     </midea-cell>
                 </list>
             </div>
-            <div class="sample-list">
-                <list show-scrollbar="true">
+            <div :class="['sample-div', env.platform=='Web'&&'web-page']">
+                <list :class="['sample-list', env.platform=='Web'&&'web-page']" show-scrollbar="true">
                     <midea-cell :clickActivied="true" v-for="(item,index) in sortedAdvancedlist" :key="'tab2'+index" :title="item.title" height="120" :has-arrow="true" @mideaCellClick="goToAdvanced(item.link)">
                     </midea-cell>
                 </list>
             </div>
-            <div class="sample-list">
-                <list show-scrollbar="true">
+            <div :class="['sample-div', env.platform=='Web'&&'web-page']">
+                <list :class="['sample-list', env.platform=='Web'&&'web-page']" show-scrollbar="true">
                     <midea-cell :clickActivied="true" v-for="(item,index) in sortedInterfacelist" :key="'tab2'+index" :title="item.title" height="120" :has-arrow="true" @mideaCellClick="goToInterface(item.link)">
                     </midea-cell>
                 </list>
@@ -29,14 +28,24 @@
 <style scoped>
 .wrapper {
   position: relative;
-}
-.sample-list {
-  width: 750px;
-  height: 1050px;
+  flex: 1;
+  flex-direction: column;
 }
 .slider {
   width: 750px;
-  height: 1050px;
+  flex: 1;
+}
+.sample-div {
+  width: 750px;
+  flex: 1;
+}
+.sample-list {
+  width: 750px;
+  flex: 1;
+}
+.web-page {
+  height: 1200px;
+  overflow: scroll;
 }
 </style>
 <script>  
@@ -53,6 +62,7 @@ module.exports = {
     },
     mixins: [base],
     data: () => ({
+        env: weex.config.env,
         tabData: [
             { "name": "基本组件", "selected": true },
             { "name": "高级组件", "selected": false },
@@ -101,6 +111,7 @@ module.exports = {
         interfacelist: [
             { title: 'callTel打电话', link: "callTel" },
             { title: 'choosePhoto选相片', link: "choosePhoto" },
+            { title: 'chooseMulPhoto多选相片', link: "chooseMulPhoto" },
             { title: 'downloadImageWithCookie', link: "downloadImageWithCookie" },
             { title: 'getCurrentHomeInfo获取当前家庭信息', link: "getCurrentHomeInfo" },
             { title: 'getDeviceInfo获取当前设备信息', link: "getDeviceInfo" },

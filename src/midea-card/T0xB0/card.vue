@@ -1,7 +1,7 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
-		<div class="box" @click="showControlPanelPage">
-			<div v-if="onlineStatus == '1'">
+		<div class="box" >
+			<div v-if="onlineStatus == '1'" @click="showControlPanelPage">
 				<div class="card card-hot">
 					<div class="card-left">
 						<div class="main-status-div">
@@ -36,6 +36,7 @@
 				<text class="text-offline-center">已离线</text>
 			</div>
       <situation></situation>
+			<cookbook-list></cookbook-list>
 			<midea-download></midea-download>
 		</div>
 	</scroller>
@@ -46,6 +47,7 @@ import nativeService from '@/common/services/nativeService.js'
 import mideaSwitch from '@/midea-component/switch.vue'
 import mideaItem from '@/midea-component/item.vue'
 import situation from '@/midea-card/midea-components/situation.vue'
+import cookbookList from '@/midea-card/midea-components/cookbookList.vue'
 import mideaDownload from '@/midea-card/midea-components/download.vue';
 import Mock from './settings/mock'
 import { DEVICE_STATUS } from './settings/deviceStatus'
@@ -59,6 +61,7 @@ export default {
 		mideaSwitch,
 		mideaItem,
 		situation,
+		cookbookList,
 		mideaDownload
 	},
 	data() {
@@ -74,11 +77,11 @@ export default {
 			pushKeyOnline: "receiveMessageFromApp",
 			onoff: "",
 			work_status: "",
-			mode: "",
+			mode: "--",
 			minutes: "",
 			second: "",
 			lock: "",
-			display_value: "",
+			display_value: "--",
 			display_value2: "",
 			powerIcon_offline: "./assets/img/smart_ic_reline@3x.png",
 			list: [

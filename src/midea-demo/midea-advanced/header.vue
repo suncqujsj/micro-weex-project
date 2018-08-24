@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="Header" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="Header" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <div style="height: 220px; margin-top: 20px;">
             <midea-header :title="title1" :isImmersion="isipx?false:true"></midea-header>
         </div>
@@ -10,11 +10,11 @@
         </div>
 
         <div style="height: 220px;">
-            <midea-header :title="title3" :isImmersion="false"></midea-header>
+            <midea-header :title="title3" :isImmersion="isImmersion"></midea-header>
         </div>
 
         <div style="height: 220px;">
-            <midea-header :title="title4" :isImmersion="false" :showRightImg="true" @leftImgClick="leftImgClick2" @rightImgClick="rightImgClick2"></midea-header>
+            <midea-header :title="title4" :isImmersion="isImmersion" :showRightImg="true" @leftImgClick="leftImgClick2" @rightImgClick="rightImgClick2"></midea-header>
         </div>
     </div>
 </template>

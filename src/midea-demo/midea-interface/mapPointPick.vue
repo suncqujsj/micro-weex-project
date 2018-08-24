@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="mapPointPick地图选点" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="mapPointPick地图选点" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-title-bar title="接口参数:"></midea-title-bar>
         <text>{{mapData}}</text>
         <midea-map-view class="map" :data="mapData" @marker-pick="mapMarkerPick" @point-pick="mapPointPick"></midea-map-view>

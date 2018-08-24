@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" :style="{paddingTop:isIos?'0px':'0px'}">
-        <midea-header title="手势" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="手势" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
 
         <div ref="swipeArea" class="swipe-area" v-on:swipe="onSwipe($event,item)">
             <div ref="swipeInnerArea" class="swipe-inner-area">

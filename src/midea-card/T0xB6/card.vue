@@ -1,8 +1,8 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
-	    <div class="box" @click="showControlPanelPage">
-	        <div v-if="onlineStatus == '1'">
-		    	 <div class="card card-hot" v-if="onoff == 'on'">
+	    <div class="box" >
+	        <div v-if="onlineStatus == '1'" @click="showControlPanelPage">
+		    	 <div class="card card-hot" v-if="onoff == 'on'" @click="showControlPanelPage">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
 	        				<text class="main-status">{{minutes}}</text>
@@ -32,7 +32,7 @@
 	        			</div>
 		        	</div>
 		        </div>
-		        <div class="card-power-off" v-else>
+		        <div class="card-power-off" v-else @click="showControlPanelPage">
 		        	<div class="control-div-offline" >
 						<div class="right-btn">
 						<image class="card-control-img" :src="powerIcon_poweroff" @click="poweronoff(1)"></image>

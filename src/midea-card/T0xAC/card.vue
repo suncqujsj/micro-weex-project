@@ -1,9 +1,8 @@
 <template>
     <scroller class="content" show-scrollbar="false">
         <div class="box">
-            <div @click="showControlPanelPage">
-                <div v-if="onlineStatus == '1'">
-                    <div v-if="onoff == 'on'">
+                <div v-if="onlineStatus == '1'" @click="showControlPanelPage">
+                    <div v-if="onoff == 'on'" @click="showControlPanelPage">
                         <div class="card" :class="[mode =='heat'?'card-hot':''] " v-if="PD004 != 0">
                             <div class="card-left">
                                 <div class="main-status-div">
@@ -57,7 +56,7 @@
                             <div class="card-right-margin"></div>
                         </div>
                     </div>
-                    <div class="card-power-off" v-else>
+                    <div class="card-power-off" v-else @click="showControlPanelPage">
                         <div class="control-div-offline" @click="poweronoff(1)">
                             <image class="card-control-img" :src="powerIcon_poweroff" ></image>
                             <text class="text-offline">电源</text>
@@ -77,7 +76,6 @@
                     </div>
                     <text class="text-offline-center">已离线</text>
                 </div>
-            </div>
             <situation @statusChanged="queryStatus"></situation>
             <!--downloading by zhouhg-->
             <midea-download></midea-download>

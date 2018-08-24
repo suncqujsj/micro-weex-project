@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="receiveMessageFromApp（APP主动调用）" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="receiveMessageFromApp（APP主动调用）" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-title-bar :title="receiveTIme"></midea-title-bar>
         <text class="display-block">{{result}}</text>
     </div>

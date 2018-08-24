@@ -1,21 +1,21 @@
 <template>
     <div class="wrapper">
-        <midea-header title="getGPSInfo获取GPS定位信息" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="takePhoto拍照" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-title-bar title="接口参数:"></midea-title-bar>
         <textarea type="text" placeholder="Input Text" class="textarea" :value="messageParamString" @input="dataChange" rows=2 />
-        <midea-button text="获取GPS定位" type="green" @mideaButtonClicked="mideaButtonClicked">
+        <midea-button text="选择照片" type="green" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <midea-title-bar title="代码"></midea-title-bar>
         <text class="display-block">
-            nativeService.getGPSInfo(messageParam).then(
-                (resp) => {
-                    this.result = resp
-                }
-            )
+            nativeService.choosePhoto(this.messageParam).then( (resp) => { this.result = resp } )
         </text>
         <midea-title-bar title="结果"></midea-title-bar>
 
         <scroller>
+            <div v-for="(item,index) in result.list" :key="index">
+                <text class="display-block">{{item.filePath}}</text>
+                <image :src="item.filePath" class="photo" resize="contain"></image>
+            </div>
             <text class="display-block">{{result?('返回类型:'+typeof result):''}}</text>
             <text class="display-block">{{result}}</text>
         </scroller>
@@ -28,7 +28,7 @@
   border-color: gray;
   padding-left: 20px;
   padding-right: 20px;
-  margin-bottom: 100px;
+  margin-bottom: 30px;
 }
 .display-block {
   font-size: 30px;
@@ -36,6 +36,13 @@
   padding-right: 10px;
   padding-top: 10px;
   padding-bottom: 10px;
+}
+.photo {
+  margin: 5px;
+  width: 200px;
+  height: 200px;
+  border-color: #e2e2e2;
+  border-width: 1px;
 }
 </style>
 <script>
@@ -51,9 +58,7 @@ module.exports = {
     data() {
         return {
             messageParam: {
-                desiredAccuracy: "10",  //定位的精确度
-                distanceFilter: "10", //移动多少米回调一次定位信息，
-                alwaysAuthorization: "0" //是否需要一直定位, 0:不一直定位，1：一直定位
+                max: 4
             },
             result: ''
         }
@@ -71,7 +76,7 @@ module.exports = {
             }
         },
         mideaButtonClicked() {
-            nativeService.getGPSInfo(this.messageParam).then(
+            nativeService.chooseMulPhoto(this.messageParam).then(
                 (resp) => {
                     this.result = resp
                 }

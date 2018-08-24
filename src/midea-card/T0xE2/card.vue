@@ -1,8 +1,8 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
-	    <div class="box" @click="showControlPanelPage">
-	    	<div v-if="onlineStatus == '1'">
-	    		<div v-if="onoff == 'on'">
+	    <div class="box" >
+	    	<div v-if="onlineStatus == '1'" @click="showControlPanelPage">
+	    		<div v-if="onoff == 'on'" @click="showControlPanelPage">
 			        <div>
 				    	 <div class="card card-hot">
 				        	<div class="card-left">
@@ -36,13 +36,13 @@
 			        	<scroller-bar :max="75" :min="30" :currentTemperture="currentTemperture" :offsetStep="5" @scrollerBarScroll="scrollerBarScroll"></scroller-bar>
 			        </div>
 			    </div>
-			    <div class="card-power-off" v-else>
+			    <div class="card-power-off" v-else @click="showControlPanelPage">
 		        	<div class="control-div-offline">
 		        		<image class="card-control-img" :src="powerIcon_poweroff"  @click="poweronoff(1)"></image>
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image @click="showControlPanelPage" class="icon-offline" src="./assets/img/smart_img_equip021@3x.png"></image>
+		        		<image class="icon-offline" src="./assets/img/smart_img_equip021@3x.png"></image>
 		        	</div>
 		        </div>
 		    </div>

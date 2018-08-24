@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="Switch" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="Switch" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
 
         <midea-cell title="Midea切换按钮">
             <midea-switch2 :checked="mideaChecked" @change="onMideachange" :width="70" :height="38" slot="value"></midea-switch2>

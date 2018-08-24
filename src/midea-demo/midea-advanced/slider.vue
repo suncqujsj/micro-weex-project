@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="Slider" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="Slider" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
 
         <midea-title-bar title="工作温度℃" bgColor="#EEF4F7"></midea-title-bar>
         <div style="height:320px;">

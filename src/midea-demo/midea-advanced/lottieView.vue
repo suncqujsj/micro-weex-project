@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" :style="{paddingTop:isIos?'0px':'0px'}">
-        <midea-header title="lottieView动效视图" :isImmersion="false" @leftImgClick="back"></midea-header>
+        <midea-header title="lottieView动效视图" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-lottie-view class="lottie" :data="lottieData" :loop="true"></midea-lottie-view>
         <midea-button text="加载数据" type="green" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>

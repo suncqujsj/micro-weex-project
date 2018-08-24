@@ -1,8 +1,8 @@
 <template>
 	<scroller class="content" show-scrollbar="false">
-	    <div class="box" @click="showControlPanelPage">
-	        <div v-if="onlineStatus == '1'">
-		    	 <div class="card card-hot" v-if="onoff == 'on'">
+	    <div class="box" >
+	        <div v-if="onlineStatus == '1'" @click="showControlPanelPage">
+		    	 <div class="card card-hot" v-if="onoff == 'on'" @click="showControlPanelPage">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
 	        				<text class="main-status">{{gear}}</text>
@@ -29,13 +29,13 @@
 	        			</div>
 		        	</div>
 		        </div>
-		        <div class="card-power-off" v-else>
+		        <div class="card-power-off" v-else @click="showControlPanelPage">
 		        	<div class="control-div-offline">
 		        		<image class="card-control-img" :src="powerIcon_poweroff"  @click="poweronoff(1)"></image>
 		        		<text class="text-offline">电源</text>
 		        	</div>
 		        	<div>
-		        		<image @click="showControlPanelPage" class="icon-offline" src="./assets/img/smart_img_equip040@3x.png"></image>
+		        		<image class="icon-offline" src="./assets/img/smart_img_equip040@3x.png"></image>
 		        	</div>
 		        </div>
 	        </div>

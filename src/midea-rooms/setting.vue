@@ -382,13 +382,17 @@
                     }
                     if (this.userSupportDevicesGroup[appliance.applianceType].length == 1 && appliance.isRelation == 1 ) {
                         this.initData()
-                        nativeService.toast('设备已关联场景')
+                        setTimeout(()=>{
+                            nativeService.toast('设备已关联场景')
+                        }, 500)
                         return
                     }
                     this.webRequest(reqUrl, reqParams).then((res)=>{
                         if (res.code == 0) {
-                            nativeService.toast('绑定成功！')
                             this.initData()
+                            setTimeout(()=>{
+                                nativeService.toast('绑定成功！')
+                            }, 500)
                         }else{
                             if (codeDesc.scene.hasOwnProperty(res.code)) {
                                 nativeService.toast(codeDesc.scene[res.code])

@@ -812,7 +812,6 @@
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
                 })
-                
             },
             checkQuickOptimize(resultId){
                 // status 1-成功，2-执行中，3-失败
@@ -921,12 +920,10 @@
                                     this.showModelToastDialog = false
                                     nativeService.toast('执行失败，请再试一次')
                                 } else {
+                                    this.showModelToastDialog = false
+                                    this.initData()
                                     setTimeout(()=>{
-                                        this.showModelToastDialog = false
-                                        this.initData()
-                                        setTimeout(()=>{
-                                            nativeService.toast('场景模式执行成功!')
-                                        }, 200)
+                                        nativeService.toast('场景模式执行成功!')
                                     },1000)
                                 }
                                 

@@ -278,9 +278,9 @@ export default {
                     //若是正常的错误码，则显示错误信息
                     msg = error.msg || error.errorMsg || error.returnMsg || error.errorMessage || "系统繁忙，请稍后再试"
                 }
-                if (errorCode) {
-                    msg += "(" + errorCode + ")"
-                }
+                // if (errorCode) {
+                //     msg += "(" + errorCode + ")"
+                // }
             }
             debugUtil.debugLog(error)
             return msg

@@ -128,7 +128,7 @@ export default {
 				}
 
 			} else {
-				modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+				nativeService.toast("连接设备超时");
 			}
 		},
 		updateUILock(data) {
@@ -226,7 +226,7 @@ export default {
 			self.handleNotification();
 			self.queryStatus();
 		}, function (error) {
-			modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+			nativeService.toast("连接设备超时");
 		})
 	}
 }

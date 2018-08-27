@@ -437,7 +437,7 @@
             	self.handleNotification();
         		self.queryStatus();
             },function(error) {
-            	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+            	nativeService.toast("连接设备超时");
             })
         }
     }
@@ -496,10 +496,6 @@
 	}
 	.control-div-offline {
 		position: absolute;
-		padding-top: 24px;
-		padding-right: 24px;
-		padding-left:14px;
-		padding-bottom: 6px;
 		top: 0px;
 		right: 0px;
 		align-items: center;

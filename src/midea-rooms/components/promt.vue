@@ -59,10 +59,10 @@
     border-color:#9F9F9F; border-width: 1px; border-style: solid; color:#333;background-color:#FFF;height:50px;font-size:28px;padding-left: 10px;
   }
   .box-btn-group{
-    flex-direction:row;border-top-style:solid;border-top-width:1px;border-top-color:#e5e5e5;height:84px;
+    flex-direction:row;border-top-style:solid;border-top-width:1px;border-top-color:#e5e5e5;height:90px;
   }
   .box-btn-wrapper{
-    flex-direction:row;height:90px;flex:1;align-items:center;justify-content:center;
+    flex-direction:row;height:89px;flex:1;align-items:center;justify-content:center;
   }
   .box-btn-wrapper-l{
     border-right-style:solid;border-right-width:1px;border-right-color:#e5e5e5;

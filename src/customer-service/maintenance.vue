@@ -794,6 +794,7 @@ export default {
 
         nativeService.burialPoint({
             pageName: 'serviceRepairPage',
+            actionType: 'view',
             subAction: 'page_view'
         })
     }
@@ -1009,12 +1010,17 @@ export default {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 128px;
-  height: 128px;
+  width: 140px;
+  height: 140px;
   background-color: #ffffff;
   margin-right: 24px;
 }
 .photo-item-detail-default {
+  margin-top: 6px;
+  margin-bottom: 6px;
+  margin-left: 6px;
+  width: 128px;
+  height: 128px;
   background-color: #f2f2f2;
 }
 .photo-item-img {
@@ -1029,8 +1035,8 @@ export default {
 }
 .photo-delete-img {
   position: absolute;
-  right: -4px;
-  top: -10px;
+  right: 0px;
+  top: 0px;
   width: 30px;
   height: 30px;
 }

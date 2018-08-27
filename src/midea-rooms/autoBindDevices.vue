@@ -349,7 +349,7 @@
                         this.unbindDevicesActions = Object.assign({}, this.unbindDevicesActions, tmpUnbindDevicesActions)
                     }
                 }else{
-                    nativeService.alert('您当前无设备，请绑定设备后重试!', function(){
+                    nativeService.alert('您当前无设备，请绑定设备!', function(){
                         nativeService.goBack()
                     })
                 }

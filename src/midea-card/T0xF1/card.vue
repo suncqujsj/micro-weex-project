@@ -150,7 +150,7 @@
 						this.danwei = "";
 					}
 	            }else {
-	                nativeService.toast("连接设备超时");
+	            	nativeService.toast("连接设备超时");
 	            }
             },
             return_display_time(allMin) {
@@ -221,7 +221,7 @@
             	self.handleNotification();
         		self.queryStatus();
             },function(error) {
-            	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+            	nativeService.toast("连接设备超时");
             })
         }
     }

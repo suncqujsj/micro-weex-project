@@ -153,7 +153,7 @@
 	                }
 	            }else {
 	                this.temperature = this.tmpTemperatureValue; //记录临时温度值
-	                modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+	                nativeService.toast("连接设备超时");
 	            }
             },
             updateDeviceInfo(data) {
@@ -260,7 +260,7 @@
             	self.handleNotification();
         		self.queryStatus();
             },function(error) {
-            	modal.toast({ 'message': "连接设备超时", 'duration': 2 });
+            	nativeService.toast("连接设备超时");
             })
         }
     }

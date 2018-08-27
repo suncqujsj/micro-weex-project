@@ -626,6 +626,7 @@ export default {
 
         nativeService.burialPoint({
             pageName: 'serviceInstallationPage',
+            actionType: 'view',
             subAction: 'page_view'
         })
     }

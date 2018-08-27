@@ -1027,8 +1027,6 @@
                                 this.washerWaterData['x']['label'] = tmpWaterXLabel
                                 this.washerWaterData['y'][0]['value'] = tmpWaterYValue
                                 this.washerWaterData['y'][0]['label'] = tmpWaterYLabel
-                                
-                                // nativeService.alert(JSON.stringify(this.washerPowerData.y) + '\n\n' + JSON.stringify( this.washerWaterData.y[0]))
 
                                 this.hasWasherPowerData = true
                                 this.hasWasherWaterData = true

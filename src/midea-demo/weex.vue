@@ -96,6 +96,7 @@ module.exports = {
             { title: 'Loading上拉加载', link: "loading" },
             { title: 'lottieView动效视图', link: "lottieView" },
             { title: 'map地图', link: "map" },
+            { title: 'mapPointPick地图选点', link: "mapPointPick" },
             { title: 'Nav List', link: "navList" },
             { title: 'Picker', link: "picker" },
             { title: 'Progress进度条', link: "progress" },
@@ -141,8 +142,7 @@ module.exports = {
             { title: 'updateAutoList更新自动化列表', link: "updateAutoList" },
             { title: 'weexBundleToWeb跳转web页面', link: "weexBundleToWeb" },
             { title: 'weex环境变量', link: "weexEnv" },
-            { title: '美居埋点', link: "mideaBurial" },
-            { title: 'mapPointPick地图选点', link: "mapPointPick" }
+            { title: 'burialPoint美居埋点', link: "burialPoint" }
         ]
     }),
     computed: {

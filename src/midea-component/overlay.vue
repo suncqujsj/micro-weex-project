@@ -59,9 +59,15 @@
       },
       shouldShow () {
         const { show, hasAnimation } = this;
+        try {
         hasAnimation && setTimeout(() => {
           this.appearOverlay(show);
         }, 50);
+        } catch (error) {
+          this.$nextTick(()=>{
+            this.appearOverlay(show);
+          })
+        }
         return show;
       }
     },

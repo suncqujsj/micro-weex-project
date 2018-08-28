@@ -592,7 +592,6 @@
                     if (this.activeWeatherLogical == '') {
                         this.activeWeatherLogical = this.weatherLogicalList[0].name
                     }
-                    // nativeService.alert(this.weatherLogicalList[0].name)
                 }
                 this.closePop(autoTypeName)
             },
@@ -629,10 +628,10 @@
                         this.mapSearchResult = res.resultList
                         this.showMapSearchResult = true
                     }else {
-                        nativeService.alert('查询地址失败')
+                        nativeService.toast('查询地址失败')
                     }
                 }).catch((error) => {
-                    nativeService.alert('搜到火星都搜不到呢 TAT')
+                    nativeService.toast('搜到火星都搜不到呢 TAT')
                 })
             },
             searchCancel(){
@@ -734,7 +733,7 @@
                     weeklyString += this.week[i].repeat
                 }
                 if (weeklyString == '0000000')  {
-                    nativeService.alert('还没有设置重复日数哦')
+                    nativeService.toast('还没有设置重复日数哦')
                     return
                 }
                 let params = {
@@ -762,7 +761,7 @@
                 }
                 if (this.sceneType == 4) {
                     if ( !this.activeMinute || !this.activeHour ) {
-                        nativeService.alert('还没有设置启动时间哦')
+                        nativeService.toast('还没有设置启动时间哦')
                         return
                     }
                     params.startTimeHour = this.activeHour
@@ -770,7 +769,7 @@
                 }
                 if (this.sceneType == 6 ) {
                     if ( !this.activeWeatherTemperature ) {
-                        nativeService.alert('还没有设定温度哦')
+                        nativeService.toast('还没有设定温度哦')
                         return
                     }
                     params.weatherTemperature = this.activeWeatherTemperature

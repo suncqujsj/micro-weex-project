@@ -279,9 +279,8 @@
                     this.sceneSupportDevices = tmpSceneSupoortDevices
 
                     if (this.sceneSupportDevices.length == 0) {
-                        nativeService.alert('您当前无可用于' + this.sceneTypeName + '类型快捷操作的设备，请绑定设备后重试!', function(){
-                            nativeService.goBack()
-                        })
+                        nativeService.toast('您当前无可用于' + this.sceneTypeName + '类型快捷操作的设备，请绑定设备后重试!')
+                        nativeService.goBack()
                     }
 
                     if (this.from == 'addAuto'){
@@ -336,10 +335,10 @@
                                         this.cityWeatherNo = city.cityNo
                                     }
                                 }).catch((err)=>{
-                                    nativeService.alert('获取不到当前设置天气城市，请检查是否开启定位权限')
+                                    nativeService.toast('获取不到当前设置天气城市，请检查是否开启定位权限')
                                 })
                             }).catch((error) => {
-                                nativeService.alert('获取不到当前设置天气城市，请检查是否开启定位权限')
+                                nativeService.toast('获取不到当前设置天气城市，请检查是否开启定位权限')
                             })
                         }
                     }else if (this.from == 'editAuto'){
@@ -349,9 +348,11 @@
                         this.unbindDevicesActions = Object.assign({}, this.unbindDevicesActions, tmpUnbindDevicesActions)
                     }
                 }else{
-                    nativeService.alert('您当前无设备，请绑定设备!', function(){
-                        nativeService.goBack()
-                    })
+                    nativeService.toast('您当前无设备，请绑定设备!')
+                    nativeService.goBack()
+
+                    nativeService.toast('您当前无设备，请绑定设备!')
+                    nativeService.goBack()
                 }
                
             },
@@ -406,7 +407,7 @@
             },
             getDone(){
                 if ( Object.keys(this.checkedDevices).length == 0) {
-                    nativeService.alert('没有选择绑定设备哦')
+                    nativeService.toast('没有选择绑定设备哦')
                     return
                 }
                 if (this.from == 'addAuto') {//为新增就直接弹窗命名，下一步请求新增接口

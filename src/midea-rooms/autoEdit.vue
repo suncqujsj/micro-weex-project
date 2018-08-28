@@ -413,8 +413,8 @@
                             }
                         }
                     }).catch((err)=>{
-                        nativeService.alert(err)
-                        // nativeService.toast(this.getErrorMessage(err))
+                        // nativeService.alert(err)
+                        nativeService.toast(this.getErrorMessage(err))
                     })
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
@@ -603,7 +603,7 @@
                         }
                         this.goTo('autoBindDevices', {}, params)
                     }else{
-                        nativeService.alert('没有更多设备可以绑定了')
+                        nativeService.toast('没有更多设备可以绑定了')
                     }
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
@@ -641,7 +641,7 @@
                         return
                     }
                     if (Object.keys(this.editParams).length === 0 && !reqParams.task) {
-                        nativeService.alert('没有改动哦')
+                        nativeService.toast('没有改动哦')
                         return
                     }
                     reqParams.name = this.autoName || this.autoDetail.name
@@ -679,9 +679,8 @@
                             if (this.sceneType == 3) {
                                 nativeService.updateAutoList()//通知原生位置类型自动化列表需要更新
                             }
-                            nativeService.alert('修改成功', function(){
-                                nativeService.backToNative()
-                            })
+                            nativeService.toast('修改成功')
+                            nativeService.backToNative()
                         }else{
                             if (codeDesc.auto.hasOwnProperty(rtnData.code)){
                                 nativeService.toast(codeDesc.auto[rtnData.code])

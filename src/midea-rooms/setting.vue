@@ -495,7 +495,7 @@
                             }
                         }
                     }).catch( (err )=>{
-                        nativeService.alert('设置场景属性失败')
+                        nativeService.toast('设置场景属性失败')
                     })
                 })
             },

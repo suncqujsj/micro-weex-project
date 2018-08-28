@@ -100,9 +100,15 @@
     }),
     computed: {
       isNeedShow () {
+        try {
         setTimeout(() => {
           this.appearPopup(this.show);
         }, 50)
+        } catch (error) {
+          this.$nextTick(()=>{
+            this.appearPopup(this.show)
+          })
+        }
         return this.show;
       },
       _height () {

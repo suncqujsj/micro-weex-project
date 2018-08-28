@@ -155,7 +155,6 @@
                 this.checkLogin().then( (res) => {
                     let params = {
                         from: 'addAuto',
-                        // uid: res.uid,
                         homegroupId: res.homegroupId,
                         sceneType: item.sceneType,
                         userDevices: nativeService.getParameters('userDevices')

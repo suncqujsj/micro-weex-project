@@ -1,77 +1,84 @@
 // 美居场景首页
 <template>
     <scroller class="wrapper"  :show-scrollbar="false" @viewappear="initData">
-        <div>
-            <div class="hd row-sb">
-                <text class="hd-name">快捷操作</text>
-                <text class="hd-btn" @click="goAddAuto">添加</text>
-            </div>
-            <scroller class="scroller" scroll-direction="horizontal" :show-scrollbar="false">
-                <div v-for="col in colList">
-                    <div v-for="item in col" class="auto row-sb"  @click="editAuto(item)">
-                        <div class="row-s">
-                            <image class="icon" :src="item.sceneType == 3? icon.auto[item.sceneType+'.'+item.location.direction] :  icon.auto[item.sceneType]"></image>
-                            <div class="auto-info">
-                                <text class="auto-name">{{item.name}}</text>
-                                <div class="auto-desc row-s">
-                                    <div v-for="(device, i) in item.task">
-                                        <text v-if="i==0" class="auto-desc-text">{{formatUserDevices[device.applianceCode]}}</text>
+        <div class="local-home" v-if="isLocalHome">
+            <image class="local-home-img" :src="localHomeImg"></image>
+            <text class="local-home-text">本地设备暂不支持场景</text>
+            <text class="local-home-text">请到首页切换家庭</text>
+        </div>
+        <div v-else>
+            <div>
+                <div class="hd row-sb">
+                    <text class="hd-name">快捷操作</text>
+                    <text class="hd-btn" @click="goAddAuto">添加</text>
+                </div>
+                <scroller class="scroller" scroll-direction="horizontal" :show-scrollbar="false">
+                    <div v-for="col in colList">
+                        <div v-for="item in col" class="auto row-sb"  @click="editAuto(item)">
+                            <div class="row-s">
+                                <image class="icon" :src="item.sceneType == 3? icon.auto[item.sceneType+'.'+item.location.direction] :  icon.auto[item.sceneType]"></image>
+                                <div class="auto-info">
+                                    <text class="auto-name">{{item.name}}</text>
+                                    <div class="auto-desc row-s">
+                                        <div v-for="(device, i) in item.task">
+                                            <text v-if="i==0" class="auto-desc-text">{{formatUserDevices[device.applianceCode]}}</text>
+                                        </div>
+                                        <text v-if="item.task && item.task.length > 1" class="auto-desc-text">...</text>
                                     </div>
-                                    <text v-if="item.task && item.task.length > 1" class="auto-desc-text">...</text>
+                                </div>
+                                <image v-if="item.sceneType==2" class="auto-btn" :src="icon.autoBtn"  @click="executeAuto(item.sceneId)">
+                            </div>
+                        </div>
+                    </div>
+                </scroller>
+            </div>
+            <div>
+                <div class="hd"><text class="hd-name">场景</text></div>
+                <div class="scene-list" v-if="sceneList" :style="sceneListStyle">
+                    <div class="scene" v-for="scene in sceneList" @click="goScene(scene)">
+                        <image class="scene-bg" :src="sceneImg[scene.roomType]"></image>
+                        <div v-if="isLogin && scene.applianceCount > 0" class="scene-info">
+                            <text class="scene-name">{{scene.name}}</text>
+                            <div>
+                                <div v-if="(scene.roomType==1 || scene.roomType==2) && scene.indicator" class="row-s">
+                                    <text v-if="scene.indicator.temperature" class="scene-desc">室温{{scene.indicator.temperature}}℃</text>
+                                    <text v-if="scene.indicator.humidity" class="scene-desc">湿度{{getHumidityDesc(scene.indicator.humidity)}}</text>
+                                    <text v-if="scene.indicator.pm25" class="scene-desc">空气质量{{getPMDesc(scene.indicator.pm25)}} </text>
+                                    <text v-if="!scene.indicator.temperature && !scene.indicator.humidity && !scene.indicator.pm25" class="scene-desc">{{roomDesc[scene.roomType]}}</text>
+                                </div>
+                                <div v-else-if="scene.roomType == 3 && scene.indicator">
+                                    <text v-if="scene.indicator.work_status" class="scene-desc">{{feel[scene.indicator.work_status]}}</text>
+                                    <text v-else class="scene-desc">{{roomDesc[scene.roomType]}}</text>
+                                </div>
+                                <div v-else-if="scene.roomType == 4 && scene.indicator">
+                                    <text v-if="scene.indicator.work_stats" class="scene-desc">{{scene.indicator.work_stats}}</text>
+                                    <text v-else class="scene-desc">{{roomDesc[scene.roomType]}}</text>
                                 </div>
                             </div>
-                            <image v-if="item.sceneType==2" class="auto-btn" :src="icon.autoBtn"  @click="executeAuto(item.sceneId)">
+                            <image class="next" :src="icon.next"></image>
+                        </div>
+                        <div v-else>
+                            <text class="scene-name">{{scene.name}}</text>
+                            <text class="scene-desc">{{roomDesc[scene.roomType]}}</text>
+                            <image class="next" :src="icon.next"></image>
                         </div>
                     </div>
                 </div>
-            </scroller>
-        </div>
-        <div>
-            <div class="hd"><text class="hd-name">场景</text></div> 
-            <div class="scene-list" v-if="sceneList" :style="sceneListStyle">
-                <div class="scene" v-for="scene in sceneList" @click="goScene(scene)">
-                    <image class="scene-bg" :src="sceneImg[scene.roomType]"></image>
-                    <div v-if="isLogin && scene.applianceCount !== 0" class="scene-info">
-                        <text class="scene-name">{{scene.name}}</text>
+            </div>
+            <toast-dialog :show="showToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}" contentPadding="0px">
+                <div class="auto-toast" v-for="(item,i) in autoExecuteDevices">
+                    <div :class="['row-sb','toast-line', i>0?'toast-border':'']">
                         <div>
-                            <div v-if="[1, 2].indexOf(scene.roomType) > -1 && scene.indicator" class="row-s">
-                                <text v-if="scene.indicator.temperature" class="scene-desc">室温{{scene.indicator.temperature}}, </text>
-                                <text v-if="scene.indicator.humidity" class="scene-desc">湿度{{scene.indicator.humidity}}, </text>
-                                <text v-if="scene.indicator.pm25" class="scene-desc">空气质量{{scene.indicator.pm25}} </text>
-                                <text v-if="!scene.indicator.temperature && !scene.indicator.humidity && !scene.indicator.pm25" class="scene-desc">该场景暂无设备信息</text>
-                            </div>
-                            <div v-else-if="scene.roomType == 3 && scene.indicator" class="scene-desc">
-                                <text v-if="scene.indicator.level" class="scene-desc">{{feel[scene.indicator.level]}}</text>
-                                <text v-else class="scene-desc">该场景暂无设备信息</text>
-                            </div>
-                            <div v-else-if="scene.roomType == 4 && scene.indicator" class="scene-dexc">
-                                <text v-if="scene.indicator.work_stats" class="scene-desc">{{scene.indicator.work_stats}}</text>
-                                <text v-else class="scene-desc">该场景暂无设备信息</text>
+                            <text class="toast-hd">{{item.applianceName}}</text>
+                            <div class="row-s">
+                                <text class="toast-desc" v-for="desc in item.describe">{{desc.actionValue}}</text>
                             </div>
                         </div>
-                        <image class="next" :src="icon.next"></image>
-                    </div>
-                    <div v-else>
-                        <text class="scene-name">{{scene.name}}</text>
-                        <text class="scene-desc">该场景暂无设备信息</text>
-                        <image class="next" :src="icon.next"></image>
+                        <image class="toast-icon" :src="icon.exe[item.status]"></image>
                     </div>
                 </div>
-            </div>
+            </toast-dialog>
         </div>
-        <toast-dialog :show="showToastDialog" :maskStyle="{backgroundColor: 'rgba(0,0,0,0.6)'}" contentPadding="0px">
-            <div class="auto-toast" v-for="(item,i) in autoExecuteDevices">
-                <div :class="['row-sb','toast-line', i>0?'toast-border':'']">
-                    <div>
-                        <text class="toast-hd">{{item.applianceName}}</text>
-                        <div class="row-s">
-                            <text class="toast-desc" v-for="desc in item.describe">{{desc.actionValue}}</text>
-                        </div>
-                    </div>
-                    <image class="toast-icon" :src="icon.exe[item.status]"></image>
-                </div>
-            </div>
-        </toast-dialog>
     </scroller>
 </template>
 
@@ -97,7 +104,7 @@
         border-radius: 4px;
     }
     .auto-info {margin-left: 20px; width: 175px; }
-    .auto-name{ width: 175px; font-size: 28px; color: #000; font-weight: bold; margin-bottom: 8px; text-overflow: clip; }
+    .auto-name{ width: 175px; font-size: 28px; color: #000; font-weight: bold; margin-bottom: 8px; text-overflow: ellipsis; lines: 1; }
     .auto-desc{ width: 175px; }
     .auto-desc-text{ font-size: 24px; color: #C7C7CC; margin-right: 6px;}
     .scene-list{  padding-left:30px; padding-right:30px;}
@@ -123,6 +130,22 @@
     }
     .toast-desc{ color: #8A8A8F; margin-right: 4px; font-size: 24px; }
     .toast-icon{ width: 50px; height: 50px; }
+    .local-home{
+        width: 750px;
+    }
+    .local-home-img{
+        width: 750px;
+        height: 444px;
+        margin-top: 200px;
+        margin-bottom: 60px;
+    }
+    .local-home-text{
+        text-align: center;
+        font-size: 28px;
+        font-weight: 500;
+        color: #8A8A8F;
+        line-height: 36px;
+    }
 </style>
 
 <script>
@@ -183,6 +206,7 @@
             return {
                 isLogin: false,
                 homegroupId: '',
+                isLocalHome: false,
                 icon: {
                     next: 'assets/img/more_w.png',
                     autoBtn: 'assets/img/sence_ic_action_on@3x.png',
@@ -199,6 +223,7 @@
                         '6': 'assets/img/scene_ic_weather@3x.png',
                     }
                 },
+                localHomeImg: 'assets/img/smart_ic_none@3x.png',
                 sceneImg: {
                     1: 'assets/img/sence_pic_parlour@3x.png',
                     2: 'assets/img/sence_pic_bedroom@3x.png',
@@ -206,10 +231,10 @@
                     4: 'assets/img/sence_pic_sun@3x.png',
                 },
                 feel: {
-                    1: '未知',
-                    2: '热水不足',
-                    4: '加热中',
-                    5: '热水充足'
+                    'hot': '加热中',
+                    'warm': '热水充足',
+                    'off': '关机',
+                    'on': '待机'
                 },
                 autoList: [],
                 autoListTmpl: [
@@ -260,6 +285,12 @@
                         "roomType": 4
                     }
                 ],
+                roomDesc: {
+                    1: '清新、节能',
+                    2: '舒适、健康',
+                    3: '温暖、舒适',
+                    4: '洁净、节能'
+                },
                 userDevices: [],
                 userDevicesStr: '',
                 user: null,
@@ -282,10 +313,12 @@
                 nativeService.getNetworkStatus().then((result)=>{
                     if (result.status == 1){
                         nativeService.getUserInfo().then((user)=>{
+                            this.isLogin = true
                             nativeService.getCurrentHomeInfo().then( (home)=>{
                                 if (home.isLocal === '1'){//场景不支持本地家庭
-                                    this.setTmpl() //填充静态模板
+                                    this.isLocalHome = true
                                 }else{
+                                    this.isLocalHome = false
                                     if (home.homeId === '' || home.homeId == undefined) {
                                         this.setTmpl() //填充静态模板
                                     }else{
@@ -294,17 +327,18 @@
                                             this.userDevices = home.deviceList
                                             this.userDevicesStr = encodeURIComponent(JSON.stringify(home.deviceList))
                                         }
-                                        this.getAutoList( home.homeId) //获取自动化列表数据
-                                        this.getSceneList( home.homeId)//获取场景列表数据
+                                        this.getAutoList(home.homeId) //获取自动化列表数据
+                                        this.getSceneList(home.homeId)//获取场景列表数据
                                     }
                                 }
                             }).catch((err)=>{
                                 this.setTmpl()//填充静态模板
-                                nativeService.toast(this.getErrorMessage(err))
+                                // nativeService.toast(this.getErrorMessage(err)
                             })
                         }).catch((err)=>{
                             this.setTmpl()
-                            nativeService.toast(this.getErrorMessage(err))
+                            this.isLogin = false
+                            // nativeService.toast(this.getErrorMessage(err))
                         })
                     } else if (result.status == 0){
                         this.setTmpl()
@@ -554,6 +588,33 @@
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
                 })
+            },
+            getHumidityDesc(humidity) {
+                if (humidity){
+                    if (humidity <=30){
+                        return '干燥'
+                    }else if (humidity >80){
+                        return '潮湿'
+                    }else if (humidity>30 && humidity <=80){
+                        return '适宜'
+                    }
+                }else{
+                    return ''
+                }
+            },
+            getPMDesc(pm25){
+                if (pm25 == 0) {
+                    return
+                }
+                else if (pm25 < 51 && pm25 > 0 ) {
+                    return '优'
+                }
+                else if (pm25 < 101) {
+                    return '良好'
+                }
+                else if (pm25 < 1000) {
+                    return '差'
+                }
             }
         },
         created(){

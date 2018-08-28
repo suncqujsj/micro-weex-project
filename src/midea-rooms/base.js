@@ -177,8 +177,8 @@ export default {
                     //         }
                     //     })
                 */
-                // let sendUid = false
-                let sendUid = true
+                let sendUid = false
+                // let sendUid = true
                 if (sendUid) {
                     nativeService.getUserInfo().then((user)=>{
                         reqParams = Object.assign({
@@ -230,49 +230,57 @@ export default {
         },
         checkLogin(){
             return new Promise((resolve, reject)=>{
-                nativeService.getLoginInfo().then((login)=>{
-                    if (login.isLogin === '0') {
-                        nativeService.jumpNativePage({
-                            pageName: 'login'
+                nativeService.getNetworkStatus().then((result) => {
+                    if (result.status == 1) {
+                        nativeService.getLoginInfo().then((login)=>{
+                            if (login.isLogin === '0') {
+                                nativeService.jumpNativePage({
+                                    pageName: 'login'
+                                })
+                            }else{
+                                nativeService.getUserInfo().then((user) => {
+                                    nativeService.getCurrentHomeInfo().then((home) => {
+                                        if (home.isLocal === '1') {
+                                            nativeService.toast('本地设备暂不支持场景功能')
+                                        }else{
+                                            if (home.homeId === '' || home.homeId == undefined) {
+                                                nativeService.toast('获取家庭失败，请稍后重试')
+                                            } else {
+                                                let result = {
+                                                    isLogin: login.isLogin,
+                                                    homegroupId: home.homeId,
+                                                    isOwner: home.isOwner
+                                                }
+                                                resolve(result)
+                                            }
+                                        }
+                                    }).catch((err) => {
+                                        nativeService.toast('获取家庭失败，请稍后重试')
+                                    })
+                                })
+                            }
                         })
                     }else{
-                        nativeService.getUserInfo().then((user) => {
-                            nativeService.getCurrentHomeInfo().then((home) => {
-                                if (home.isLocal === '1') {
-                                    nativeService.toast('本地设备暂不支持场景功能')
-                                }else{
-                                    if (home.homeId === '' || home.homeId == undefined) {
-                                        nativeService.toast('获取家庭失败，请稍后重试')
-                                    } else {
-                                        let result = {
-                                            homegroupId: home.homeId,
-                                            isOwner: home.isOwner
-                                        }
-                                        resolve(result)
-                                    }
-                                }
-                            }).catch((err) => {
-                                nativeService.toast('获取家庭失败，请稍后重试')
-                            })
-                        })
+                        nativeService.toast('网络未连接，请稍后再试')
                     }
+                }).catch((err)=>{
+                    nativeService.toast('网络未连接，请稍后再试')
                 })
-               
             })
         },
         getErrorMessage(error) {
-            let msg = "请求失败，请稍后重试。",
+            let msg = "系统繁忙，请稍后再试",
                 errorCode
             if (error) {
                 errorCode = error.code || error.errorCode
                 let unNormalErrorCode = ['error_system']
                 if (unNormalErrorCode.indexOf(errorCode) < 0) {
                     //若是正常的错误码，则显示错误信息
-                    msg = error.msg || error.errorMsg || error.returnMsg || error.errorMessage || "请求失败，请稍后重试。"
+                    msg = error.msg || error.errorMsg || error.returnMsg || error.errorMessage || "系统繁忙，请稍后再试"
                 }
-                if (errorCode) {
-                    msg += "(" + errorCode + ")"
-                }
+                // if (errorCode) {
+                //     msg += "(" + errorCode + ")"
+                // }
             }
             debugUtil.debugLog(error)
             return msg

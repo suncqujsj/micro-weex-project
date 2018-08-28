@@ -3,21 +3,21 @@
         <div class="addauto-hd">
             <midea-header :title="title" :isImmersion="isImmersion" :bgColor="header.bgColor" :titleText="header.color"  @leftImgClick="goBack"></midea-header>
         </div>
-        <scroller class="content-scroller">
-            <div class="map-box" v-if="sceneType == 3">
-                <wxc-searchbar ref="wxc-searchbar" returnKeyType="search"
-                    @wxcSearchbarCancelClicked="searchCancel"
-                    @wxcSearchbarInputReturned="searchInputReturned"
-                    @wxcSearchbarInputOnInput="searchInputOnInput"
-                    @wxcSearchbarCloseClicked="searchClose"
-                    @wxcSearchbarInputOnFocus="searchInputFocus"
-                    @wxcSearchbarInputOnBlur="searchInputBlur">
-                </wxc-searchbar>
-                <div style="width:750px;height:760px;">
-                    <midea-map-view class="map" :data="mapData" @point-pick="mapPointPick"></midea-map-view>
-                </div>
+        <div v-if="sceneType == 3">
+            <wxc-searchbar ref="wxc-searchbar" returnKeyType="search"
+                @wxcSearchbarCancelClicked="searchCancel"
+                @wxcSearchbarInputReturned="searchInputReturned"
+                @wxcSearchbarInputOnInput="searchInputOnInput"
+                @wxcSearchbarCloseClicked="searchClose"
+                @wxcSearchbarInputOnFocus="searchInputFocus"
+                @wxcSearchbarInputOnBlur="searchInputBlur">
+            </wxc-searchbar>
+            <div  class="map-box">
+                <midea-map-view class="map" :data="mapData" @point-pick="mapPointPick"></midea-map-view>
                 <image class="map-icon" :src="icon.map" @click="goCurrentLocation"></image>
             </div>
+        </div>
+        <scroller class="content-scroller">
             <div v-if="sceneType==4">
                 <text class="hd">设置为</text>
                 <div class="row-sb time-floor"  @click="showPop('time')">
@@ -139,7 +139,7 @@
     }
     .content-scroller{
         flex: 1;
-        padding-bottom: 100px;
+        /* padding-bottom: 100px; */
     }
     .time-floor{
         background-color: #fff;
@@ -224,11 +224,13 @@
         height: 760px;
     }
     .map-box{
-        background-color: #fff;
+        width: 750px;
+        height: 760px;
         position: relative;
         flex: 1;
         flex-direction: column;
-        height: 834px;
+        /* height: 834px; */
+        
     }
     .map-icon{
         position: absolute;
@@ -590,7 +592,6 @@
                     if (this.activeWeatherLogical == '') {
                         this.activeWeatherLogical = this.weatherLogicalList[0].name
                     }
-                    // nativeService.alert(this.weatherLogicalList[0].name)
                 }
                 this.closePop(autoTypeName)
             },
@@ -627,10 +628,10 @@
                         this.mapSearchResult = res.resultList
                         this.showMapSearchResult = true
                     }else {
-                        nativeService.alert('查询地址失败')
+                        nativeService.toast('查询地址失败')
                     }
                 }).catch((error) => {
-                    nativeService.alert('搜到火星都搜不到呢 TAT')
+                    nativeService.toast('搜到火星都搜不到呢 TAT')
                 })
             },
             searchCancel(){
@@ -732,7 +733,7 @@
                     weeklyString += this.week[i].repeat
                 }
                 if (weeklyString == '0000000')  {
-                    nativeService.alert('还没有设置重复日数哦')
+                    nativeService.toast('还没有设置重复日数哦')
                     return
                 }
                 let params = {
@@ -745,6 +746,10 @@
                     params.templateCode = nativeService.getParameters('templateCode')
                 }
                 if (this.sceneType == 3) {
+                    if (!this.destination.latitude || !this.destination.longitude) {
+                        nativeService.toast('还没选择地点')
+                        return
+                    }
                     let destination = this.destination
                     let tmpDestination = []
                     Object.keys(destination).map(function(x){
@@ -756,7 +761,7 @@
                 }
                 if (this.sceneType == 4) {
                     if ( !this.activeMinute || !this.activeHour ) {
-                        nativeService.alert('还没有设置启动时间哦')
+                        nativeService.toast('还没有设置启动时间哦')
                         return
                     }
                     params.startTimeHour = this.activeHour
@@ -764,7 +769,7 @@
                 }
                 if (this.sceneType == 6 ) {
                     if ( !this.activeWeatherTemperature ) {
-                        nativeService.alert('还没有设定温度哦')
+                        nativeService.toast('还没有设定温度哦')
                         return
                     }
                     params.weatherTemperature = this.activeWeatherTemperature

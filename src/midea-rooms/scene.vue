@@ -2,7 +2,7 @@
     <div @viewappear="initData">
         <scroller class="wrap">
             <div :style="sceneStyle">
-                <midea-header :title="sceneName[roomType]" :isImmersion="isImmersion" bgColor="transparent" titleText="#fff" :leftImg="icon.back" @leftImgClick="goBack" :showRightText="hasUseableDevice && network ? true : false" rightText="设置" rightColor="#fff" @rightTextClick="goSetting"></midea-header>
+                <midea-header :title="sceneName[roomType]" :isImmersion="isImmersion" bgColor="transparent" titleText="#fff" :leftImg="icon.back" @leftImgClick="goBack" :showRightText="isOwner==1 && hasUseableDevice && network ? true : false" rightText="设置" rightColor="#fff" @rightTextClick="goSetting"></midea-header>
                 <div v-if="roomType=='1' || roomType=='2' || roomType=='3' " class="up-block" >
                     <div v-if="hasUseableDevice">
                         <div class="up-desc">
@@ -173,7 +173,6 @@
                 </div>
             </toast-dialog>
         </scroller>
-        
     </div>
 </template>
 
@@ -481,6 +480,10 @@
                 if(this.scene.applianceList && this.scene.applianceList.length > 0) {
                     if (this.scene.indicator.work_status == 'warm') {
                         return '热水充足'
+                    }else if (this.scene.indicator.work_status == 'off') {
+                        return '关机'
+                    }else if (this.scene.indicator.work_status == 'on') {
+                        return '待机'
                     }else if (this.scene.indicator.work_status) {
                         return '加热中'
                     }else{
@@ -518,6 +521,7 @@
         data(){
             return {
                 homegroupId: '',
+                isOwner: '',
                 scene: {},
                 sceneName: {
                     1: '客厅',
@@ -526,7 +530,7 @@
                     4: '阳台'
                 },
                 icon:{
-                    back: 'assets/img/b_white.png',
+                    back: 'assets/img/public_ic_back_white@3x.png',
                     next: 'assets/img/more_w.png',
                     success: '',
                     fail: '',
@@ -744,10 +748,10 @@
             getSceneDetail(){
                 return new Promise((resolve, reject)=>{
                     this.checkLogin().then( (res) => {
+                        this.isOwner = res.isOwner
                         if (this.sceneId !== '') {
                             let reqUrl = url.scene.detail
                             let reqParams = {
-                                // uid: res.uid,
                                 homegroupId: res.homegroupId,
                                 sceneId: this.sceneId
                             }
@@ -782,7 +786,6 @@
                     if (this.sceneId !== '') {
                         let reqUrl = url.scene.optimize
                         let reqParams = {
-                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             sceneId: this.sceneId,
                         }
@@ -791,16 +794,16 @@
                                 this.checkQuickOptimizeTimes = 0
                                 this.checkQuickOptimize(res.data.resultId)
                             }else if (res.code == 1711){
-                                nativeService.toast(res.msg)
+                                nativeService.toast(res.msg, 3)
                             }else{
                                 if (codeDesc.scene.hasOwnProperty(res.code)) {
-                                    nativeService.toast(codeDesc.scene[res.code])
+                                    nativeService.toast(codeDesc.scene[res.code], 3)
                                 }else{
-                                    nativeService.toast(res.msg)
+                                    nativeService.toast(res.msg, 3)
                                 }
                             }
                         }).catch((err)=>{
-                            nativeService.toast(this.getErrorMessage(err))
+                            nativeService.toast(this.getErrorMessage(err), 3)
                         })
                     }else{
                         nativeService.toast('该场景暂无设备信息')
@@ -808,7 +811,6 @@
                 }).catch((err)=>{
                     nativeService.toast(this.getErrorMessage(err))
                 })
-                
             },
             checkQuickOptimize(resultId){
                 // status 1-成功，2-执行中，3-失败
@@ -817,7 +819,6 @@
                         this.checkQuickOptimizeTimes += 1
                         let reqUrl = url.scene.optimizeStatus
                         let reqParams = {
-                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             sceneId: this.sceneId,
                             resultId: resultId
@@ -867,7 +868,6 @@
                     this.checkLogin().then( (res) => {
                         let reqUrl = url.scene.modelExecute
                         let reqParams = {
-                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             sceneId: this.sceneId,
                             modelId: modelId
@@ -901,7 +901,6 @@
                         this.checkModelExeTimes += 1
                         let reqUrl = url.scene.modelStatus
                         let reqParams = {
-                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             sceneId: this.sceneId,
                             modelId: modelId,
@@ -920,12 +919,10 @@
                                     this.showModelToastDialog = false
                                     nativeService.toast('执行失败，请再试一次')
                                 } else {
+                                    this.showModelToastDialog = false
+                                    this.initData()
                                     setTimeout(()=>{
-                                        this.showModelToastDialog = false
-                                        this.initData()
-                                        setTimeout(()=>{
-                                            nativeService.toast('场景模式执行成功!')
-                                        }, 200)
+                                        nativeService.toast('场景模式执行成功!')
                                     },1000)
                                 }
                                 
@@ -978,7 +975,6 @@
                     if (this.washerCode) {
                         let reqUrl = url.scene.washerConsumption
                         let reqParams = {
-                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             applianceCode: this.washerCode
                         }
@@ -1030,8 +1026,6 @@
                                 this.washerWaterData['x']['label'] = tmpWaterXLabel
                                 this.washerWaterData['y'][0]['value'] = tmpWaterYValue
                                 this.washerWaterData['y'][0]['label'] = tmpWaterYLabel
-                                
-                                // nativeService.alert(JSON.stringify(this.washerPowerData.y) + '\n\n' + JSON.stringify( this.washerWaterData.y[0]))
 
                                 this.hasWasherPowerData = true
                                 this.hasWasherWaterData = true
@@ -1175,7 +1169,6 @@
                     this.checkLogin().then( (res) => {
                         let reqUrl = url.scene.supportList
                         let reqParams = {
-                            // uid: res.uid,
                             homegroupId: res.homegroupId,
                             sceneId: this.sceneId
                         }
@@ -1217,6 +1210,7 @@
                 
                 nativeService.burialPoint({//埋点客厅
                     pageName: 'sceneMainPage',
+                    actionType: 'scene',
                     subAction: 'scene_livingroom_operate'
                 })
             }else if (this.roomType == 2) {
@@ -1237,10 +1231,12 @@
 
                 nativeService.burialPoint({//埋点洗衣机用水
                     pageName: 'sceneMainPage',
+                    actionType: 'scene',
                     subAction: 'scene_balcony_water_operate'
                 })
                 nativeService.burialPoint({//埋点洗衣机用电
                     pageName: 'sceneMainPage',
+                    actionType: 'scene',
                     subAction: 'scene_balcony_electric_operate'
                 })
             }

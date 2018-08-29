@@ -451,23 +451,16 @@
                 let humidity = this.indicator.humidity
                 let desc
                 if (pm25){
-                    if (humidity <=30){
-                        desc = '空气干燥'
-                    }else if (humidity >80){
-                        desc = '空气潮湿'
+                    if (pm25>0 && pm25 < 51){
+                        desc = '空气清新'
+                    }else if (pm25 < 101){
+                        desc = '空气良好'
+                    }else if (pm25 < 201){
+                        desc = '空气浑浊'
+                    }else if (pm25 < 501){
+                        desc = '空气污染严重 '
                     }else{
-                        
-                        if (pm25 <=50){
-                            desc = '空气清新'
-                        }else if (pm25 >50 && value<=100){
-                            desc = '空气良好'
-                        }else if (pm25 >100 && value<=200){
-                            desc = '空气浑浊'
-                        }else if (pm25 >200 && value<=500){
-                            desc = '空气污染严重 '
-                        }else{
-                            desc = '未知'
-                        }
+                        desc = '空气质量异常'
                     }
                 }else{
                     // desc = '未知'

@@ -1,6 +1,6 @@
 <template>
     <div class="box" @click="mideaClick">
-        <image :src="data.recipeThumb" class="img"></image>
+        <image :src="data.recipeThumb + imageType" class="img"></image>
         <text class="cookbook-title">{{data.recipeName}}</text>
         <text class="cookbook-detail">{{recipeDesc}}</text>
     </div>
@@ -17,7 +17,9 @@ export default {
         },
     },
     data() {
-        return {}
+        return {
+            imageType: "/334_226"
+        }
     },
     methods: {
     },

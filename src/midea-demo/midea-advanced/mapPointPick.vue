@@ -10,14 +10,15 @@
     </div>
 </template>
 <style scoped>
-.map{
-    width: 750px;
-    height: 750px;
+.map {
+  width: 750px;
+  height: 750px;
 }
 </style>
 <script>
 import base from '../base'
 
+import mideaButton from '@/midea-component/button.vue'
 import mideaTitleBar from '@/midea-component/title-bar.vue'
 import nativeService from '@/common/services/nativeService'
 
@@ -35,7 +36,7 @@ module.exports = {
         }
     },
     computed: {
-        mapData(){
+        mapData() {
             let tmp = {
                 center: this.mapCenter,
                 markers: [{
@@ -63,8 +64,8 @@ module.exports = {
         nativeService.getGPSInfo({
             desiredAccuracy: "10",
             distanceFilter: "10",
-            alwaysAuthorization: "0" 
-        }).then( (res) => {
+            alwaysAuthorization: "0"
+        }).then((res) => {
             this.mapCenter.latitude = res.latitude || '39.92'
             this.mapCenter.longitude = res.longitude || '116.46'
             this.mapMarkerList = [{ latitude: this.mapCenter.latitude, longitude: this.mapCenter.longitude, id: 1 }]

@@ -1,0 +1,84 @@
+<template>
+    <div class="wrapper">
+        <midea-header :title="title" :isImmersion="isImmersion" @headerClick="headerClick" titleText="#000000" @leftImgClick="back">
+        </midea-header>
+        <scroller class="scroller">
+            <div class="top-gap"> </div>
+            <div class="scroller-item-wrapper" v-for="(item, index) in faultList" @click="selectItem(item)" :key="index">
+                <text class="scroller-item">{{item.serviceRequireItemName}}</text>
+            </div>
+            <div class="bottom-gap"> </div>
+        </scroller>
+    </div>
+</template>
+
+<script>
+import base from './base'
+import nativeService from './settings/nativeService'
+
+export default {
+    components: {
+    },
+    mixins: [base],
+    data() {
+        return {
+            title: '故障类型',
+            selectedProduct: null,
+            faultList: []
+        }
+    },
+    methods: {
+        selectItem(item) {
+            this.appPageDataChannel.postMessage({ page: this.fromPage, key: "selectedFault", data: item })
+            this.back()
+        }
+    },
+    created() {
+        nativeService.getItem(this.SERVICE_STORAGE_KEYS.selectedProductArray, (resp) => {
+            if (resp.result == 'success') {
+                this.selectedProduct = JSON.parse(resp.data)[0] || {}
+                let param = {
+                    interfaceSource: "SMART",
+                    depth: 3,
+                    parentServiceRequireCode: "BX",
+                    brandCode: this.selectedProduct.brandCode, //查询品牌
+                    prodCode: this.selectedProduct.prodCode, //查询品类
+                }
+                nativeService.queryservicerequireproduct(param).then((data) => {
+                    this.faultList = data.list
+                }).catch((error) => {
+                    nativeService.toast(nativeService.getErrorMessage(error))
+                })
+            }
+        })
+    }
+}
+</script>
+
+<style>
+.wrapper {
+  background-color: #f2f2f2;
+  position: relative;
+}
+.top-gap {
+  background-color: #f2f2f2;
+  height: 28px;
+}
+.bottom-gap {
+  background-color: #f2f2f2;
+  height: 128px;
+}
+.scroller-item-wrapper {
+  padding-top: 28px;
+  padding-left: 32px;
+  padding-bottom: 28px;
+  border-bottom-color: #e5e5e8;
+  border-bottom-width: 1px;
+  background-color: #ffffff;
+}
+.scroller-item {
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #000000;
+}
+</style>

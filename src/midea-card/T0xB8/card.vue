@@ -2,7 +2,7 @@
 	<scroller class="content" show-scrollbar="false">
 	    <div class="box" >
 	          <div v-if="onlineStatus == '1'" @click="showControlPanelPage">
-		    	 <div class="card">
+		    	 <div class="card" @click="showControlPanelPage">
 		        	<div class="card-left">
 	        			<div class="main-status-div">
 	        				<text class="main-status main-status-only">{{display_value1}}</text>

@@ -1,6 +1,8 @@
-const env = 'sit'
+const env = 'prod'
+// const env = 'sit'
 // const env = 'dev'
 const domains = {
+    'prod': '',
     'sit': '',
     'dev': 'http://iot-dev.smartmidea.net'
 }

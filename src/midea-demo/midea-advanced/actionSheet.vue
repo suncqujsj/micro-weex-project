@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <midea-header title="actionSheet" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
-        <midea-button text="操作面板" type="green" @mideaButtonClicked="openActionsheet">
+        <midea-button text="操作面板" @mideaButtonClicked="openActionsheet">
         </midea-button>
 
         <midea-actionsheet :items="actionsheetItems" :show="showBar" @close="closeActionsheet" @itemClick="actionsheetItemClick" @btnClick="actionsheetBtnClick" ref="actionsheet"></midea-actionsheet>

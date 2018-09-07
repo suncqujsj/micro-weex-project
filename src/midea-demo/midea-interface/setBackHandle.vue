@@ -1,9 +1,9 @@
 <template>
     <div class="wrapper">
         <midea-header title="setBackHandle监听安卓返回键" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
-        <midea-button text="设置安卓返回键监听" type="green" @mideaButtonClicked="setBackHandle('on')">
+        <midea-button text="设置安卓返回键监听" @mideaButtonClicked="setBackHandle('on')">
         </midea-button>
-        <midea-button text="去除安卓返回键监听" type="green" @mideaButtonClicked="setBackHandle('off')">
+        <midea-button text="去除安卓返回键监听" @mideaButtonClicked="setBackHandle('off')">
         </midea-button>
 
         <midea-title-bar title="当前状态"></midea-title-bar>

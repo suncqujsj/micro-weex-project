@@ -2,7 +2,7 @@
     <div>
         <midea-header title="map" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-map-view class="map" :data="mapData" @marker-pick="markerPick" @point-pick="pointPick"></midea-map-view>
-        <midea-button text="刷新数据" type="green" @mideaButtonClicked="mideaButtonClicked">
+        <midea-button text="刷新数据" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <text class="display-text">
             {{JSON.stringify(mapData)}}

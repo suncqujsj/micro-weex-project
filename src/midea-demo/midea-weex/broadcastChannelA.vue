@@ -1,18 +1,8 @@
 <template>
     <div class="wrapper">
-        <midea-header title="getLoginInfo" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
-        <midea-button text="执行getLoginInfo" @mideaButtonClicked="mideaButtonClicked">
+        <midea-header title="页面A" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-button text="跳转至页面B" @mideaButtonClicked="goToPageB">
         </midea-button>
-        <midea-title-bar title="代码"></midea-title-bar>
-        <text class="display-block">
-            nativeService.getLoginInfo().then(
-                (resp) => {
-                    this.result = resp
-                }
-            ).catch((error) => {
-                nativeService.toast(error)
-            })
-        </text>
         <midea-title-bar title="结果"></midea-title-bar>
         <scroller>
             <text class="display-block">{{result?('返回类型:'+typeof result):''}}</text>
@@ -35,6 +25,7 @@ import base from '../base'
 import mideaButton from '@/midea-component/button.vue'
 import mideaTitleBar from '@/midea-component/title-bar.vue'
 import nativeService from '@/common/services/nativeService'
+const appPageDataChannel = new BroadcastChannel('appPageData')
 
 module.exports = {
     components: { mideaButton, mideaTitleBar },
@@ -45,17 +36,15 @@ module.exports = {
         }
     },
     methods: {
-        mideaButtonClicked() {
-            nativeService.getLoginInfo().then(
-                (resp) => {
-                    this.result = resp
-                }
-            ).catch((error) => {
-                nativeService.toast(error)
-            })
+        goToPageB() {
+            nativeService.goTo('midea-weex/broadcastChannelB.js')
         }
     },
     created() {
+        appPageDataChannel.onmessage = (event) => {
+            nativeService.toast(event.data)
+            this.result = event.data
+        }
     }
 };
 </script>

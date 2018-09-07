@@ -1,33 +1,33 @@
 <template>
-    <div>
+    <div class="wrapper">
         <midea-header title="Select" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <scroller class="wrapper">
-            <midea-button text="默认选择列表" type="green" @mideaButtonClicked="isShow = true">
+            <midea-button text="默认选择列表" @mideaButtonClicked="isShow = true">
             </midea-button>
             <midea-select :show="isShow" title="选择设备" :items="list" :index="index" @close="isShow=false" @itemClick="itemClick"></midea-select>
             <text>{{result}}</text>
 
-            <midea-button text="默认选择列表1" type="green" @mideaButtonClicked="isShow1 = true">
+            <midea-button text="默认选择列表1" @mideaButtonClicked="isShow1 = true">
             </midea-button>
             <text>{{result1}}</text>
             <midea-select :show="isShow1" title="选择设备1" :items="list1" :index="index1" @close="isShow1=false" @itemClick="itemClick1"></midea-select>
 
-            <midea-button text="点击背景不关闭" type="green" @mideaButtonClicked="isShow2 = true">
+            <midea-button text="点击背景不关闭" @mideaButtonClicked="isShow2 = true">
             </midea-button>
             <text>{{result2}}</text>
             <midea-select :show="isShow2" title="选择设备2" :items="list2" :index="index2" @close="isShow2=false" @itemClick="itemClick2" :hideOnMask="false"></midea-select>
 
-            <midea-button text="自定义显示个数" type="green" @mideaButtonClicked="isShow3 = true">
+            <midea-button text="自定义显示个数" @mideaButtonClicked="isShow3 = true">
             </midea-button>
             <text>{{result3}}</text>
             <midea-select :show="isShow3" title="选择设备3" :items="list3" :index="index3" :rows="9" @close="isShow3=false" @itemClick="itemClick3" keyField="otherKey" valueField="otherValue"></midea-select>
 
-            <midea-button text="自定义显示字段" type="green" @mideaButtonClicked="isShow4 = true">
+            <midea-button text="自定义显示字段" @mideaButtonClicked="isShow4 = true">
             </midea-button>
             <text>{{result4}}</text>
             <midea-select :show="isShow4" title="选择设备4" :items="list4" :index="index4" @close="isShow4=false" @itemClick="itemClick4" keyField="otherKey" valueField="otherValue"></midea-select>
 
-            <midea-button text="自定义显示字段(组合)" type="green" @mideaButtonClicked="isShow5 = true">
+            <midea-button text="自定义显示字段(组合)" @mideaButtonClicked="isShow5 = true">
             </midea-button>
             <text>{{result5}}</text>
             <midea-select :show="isShow5" title="选择设备5" :items="list5" :index="index5" @close="isShow5=false" @itemClick="itemClick5" keyField="otherKey" :valueField="['value',' ','otherValue']"></midea-select>
@@ -36,7 +36,9 @@
     </div>
 </template>
 <style scoped>
-
+.wrapper {
+  background-color: #f2f2f2;
+}
 </style>
 <script>  
 import base from '../base'

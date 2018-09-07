@@ -6,7 +6,7 @@
         <div style="background-color: #e2e2e2;">
             <input type="input" placeholder="请输入显示文本" class="input" :value="newValue" @input="oninput" />
         </div>
-        <midea-button text="执行showLoadingWithMsg" type="green" @mideaButtonClicked="mideaButtonClicked">
+        <midea-button text="执行showLoadingWithMsg" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <midea-title-bar title="代码"></midea-title-bar>
         <text class="display-block">

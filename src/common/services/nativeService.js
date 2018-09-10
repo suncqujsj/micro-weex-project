@@ -510,6 +510,7 @@ export default {
             // parker 这里用二进制指令
             // callback(this.Mock.getMock(name).messageBody);
             callback(mockArray[name].messageBody);
+            // callback(this.Mock.getMock(name).messageBody);
         }
     },
 

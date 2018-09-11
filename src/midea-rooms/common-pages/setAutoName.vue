@@ -52,7 +52,7 @@
     }
 </style>
 <script>
-    import base from './base'
+    import base from '@/midea-rooms/base'
 
     import nativeService from '@/common/services/nativeService.js'
     import MideaHeader from '@/midea-component/header.vue'

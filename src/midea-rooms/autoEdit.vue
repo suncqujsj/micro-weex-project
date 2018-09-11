@@ -425,7 +425,7 @@
                     let params = {
                         autoName: encodeURIComponent(this.autoName)
                     }
-                    this.goTo('setAutoName', {}, params)
+                    this.goTo('common-pages/setAutoName', {}, params)
                 }
             },
             initBindDevices(){
@@ -578,7 +578,7 @@
                         deviceName: encodeURIComponent(this.autoBindDevices[deviceId].deviceName),
                         pageStamp: this.pageStamp
                     }
-                    this.goTo('setDevice', {}, params)
+                    this.goTo('common-pages/setDevice', {}, params)
                 }
             },
             checkOn(item, index){

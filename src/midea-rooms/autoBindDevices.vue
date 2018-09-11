@@ -394,7 +394,7 @@
                         deviceId: device.deviceId,
                         pageStamp: this.pageStamp
                     }
-                    this.goTo('setDevice', {}, params)
+                    this.goTo('common-pages/setDevice', {}, params)
                 }
             },
             generateAllDeviceActions(){

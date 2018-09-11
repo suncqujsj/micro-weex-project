@@ -143,9 +143,9 @@
 
 <script>
     const { platform } = weex.config.env;
-    import { url, applianceActions, autoSupportActions } from './config/config.js'
+    import { url, applianceActions, autoSupportActions } from '@/midea-rooms/config/config.js'
 
-    import base from './base'
+    import base from '@/midea-rooms/base'
     import nativeService from '@/common/services/nativeService.js'
     import MideaHeader from '@/midea-component/header.vue'
     import MideaCell from '@/midea-component/cell.vue'

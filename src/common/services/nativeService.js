@@ -1072,6 +1072,32 @@ export default {
             operation: 'burialPoint'
         })
         return this.commandInterfaceWrapper(param)
+    },
+    /* weex卡片页打开控制页页面接口 */
+    showControlPanelPage(pageName) {
+        let param = {
+            controlPanelName: pageName || "controlPanel.html"
+        }
+        bridgeModule.showControlPanelPage(params)
+    },
+    /* 上传图片文件，调用一次，上传一份图片文件 */
+    uploadImgFile(params, callback, callbackFail) {
+        /* params = {
+            path: string, //值为 图片在手机中的路径
+            url: string, //值为服务器上传图片的url
+            maxWidth: number, //最大宽度，如果不设置，则使用图片宽度
+            maxHeight: number, //最大高度，如果不设置，则使用图片高度
+            compressRage: number, //图片的压缩率，范围为0~100，数值越高保真率越高。默认值：100，不压缩，直接上传图片 ps: 压缩后的图片文件格式，固定为jpg 格式
+            netParam: {
+                xxx: xxx, //weex需要原生填充给服务器的post 表单参数1
+                xxx: xxx, //weex需要原生填充给服务器的post 表单参数2
+            },
+            fileKey: string, //值为原生在post表单中传输图片文件的key值，缺省默认值为“file”
+        } */
+        let param = Object.assign(params, {
+            operation: 'uploadImgFile'
+        })
+        bridgeModule.commandInterface(param, callback, callbackFail)
     }
     //**********APP业务接口***************END
 }

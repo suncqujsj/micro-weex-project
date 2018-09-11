@@ -6,7 +6,7 @@
         <div style="background-color: #e2e2e2;">
             <input type="input" placeholder="请输入新的设备名称" class="input" :value="newValue" @input="oninput" />
         </div>
-        <midea-button text="执行updateDeviceInfo" type="green" @mideaButtonClicked="mideaButtonClicked">
+        <midea-button text="执行updateDeviceInfo" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <midea-title-bar title="代码"></midea-title-bar>
         <text class="display-block">

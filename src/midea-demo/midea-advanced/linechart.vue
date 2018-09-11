@@ -2,7 +2,7 @@
     <div>
         <midea-header title="Linechart折线图" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-linechart-view class="linechart" :data="chartData"></midea-linechart-view>
-        <midea-button text="刷新数据" type="green" @mideaButtonClicked="mideaButtonClicked">
+        <midea-button text="刷新数据" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <text class="display-text">
             {{JSON.stringify(chartData)}}

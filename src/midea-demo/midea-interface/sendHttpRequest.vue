@@ -3,7 +3,7 @@
         <midea-header title="sendHttpRequest" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-title-bar title="接口参数:"></midea-title-bar>
         <textarea type="text" placeholder="Input Text" class="textarea" :value="messageParamString" @input="dataChange" rows=6 />
-        <midea-button text="发送网络请求" type="green" @mideaButtonClicked="mideaButtonClicked">
+        <midea-button text="发送网络请求" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <midea-title-bar title="代码"></midea-title-bar>
         <text class="display-block">

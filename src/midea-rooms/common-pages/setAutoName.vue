@@ -52,7 +52,7 @@
     }
 </style>
 <script>
-    import base from './base'
+    import base from '@/midea-rooms/base'
 
     import nativeService from '@/common/services/nativeService.js'
     import MideaHeader from '@/midea-component/header.vue'
@@ -66,7 +66,7 @@
             return {
                 autoName: '',
                 icon: {
-                    clear: 'assets/img/me_ic_return@3x.png'
+                    clear: '../assets/img/me_ic_return@3x.png'
                 },
             }
         },

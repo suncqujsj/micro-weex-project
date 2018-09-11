@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <midea-header title="openNativeSystemSetting" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
-        <midea-button text="打开系统蓝牙设置页面" type="green" @mideaButtonClicked="mideaButtonClicked">
+        <midea-button text="打开系统蓝牙设置页面" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <midea-title-bar title="代码"></midea-title-bar>
         <text class="display-block">

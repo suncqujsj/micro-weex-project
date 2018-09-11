@@ -8,19 +8,18 @@
     </div>
 </template>
 <style scoped>
+.wrapper {
+  background-color: #f2f2f2;
+}
 .link-text {
   color: #333;
   font-size: 24px;
-}
-.wrapper {
-  background-color: #f7f7f7;
-  position: relative;
 }
 </style>
 <script>  
 import base from '../base'
 import mideaCell from '@/component/cell.vue'
-import mideaSwitch2 from '@/midea-component/switch.vue'
+import mideaSwitch2 from '@/midea-component/switch2.vue'
 import nativeService from '@/common/services/nativeService'
 const modal = weex.requireModule('modal');
 

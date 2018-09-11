@@ -4,7 +4,7 @@
 
         <midea-title-bar title="接口参数:"></midea-title-bar>
         <textarea type="text" placeholder="Input Text" class="textarea" :value="messageParamString" @input="dataChange" rows=3 />
-        <midea-button text="执行callTel" type="green" @mideaButtonClicked="mideaButtonClicked">
+        <midea-button text="执行callTel" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <text class="display-block">
             let messageParam = {

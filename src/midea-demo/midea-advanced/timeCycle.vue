@@ -12,7 +12,7 @@
                 <image ref="rightImg" class="time-cycle-right-img" resize="contain" src="../assets/img/time_cycle_right.png"></image>
             </div>
         </div>
-        <midea-button text="开始旋转" type="green" @mideaButtonClicked="mideaButtonClicked">
+        <midea-button text="开始旋转" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
     </div>
 </template>

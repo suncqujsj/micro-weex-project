@@ -2,7 +2,7 @@
     <div class="wrapper" @viewappear="viewappear" @viewdisappear="viewdisappear">
         <midea-header title="storage数据" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
 
-        <midea-button text="获取storage数据" type="green" @mideaButtonClicked="getAll"></midea-button>
+        <midea-button text="获取storage数据" @mideaButtonClicked="getAll"></midea-button>
         <scroller>
             <text class="display-block">{{result}}</text>
         </scroller>
@@ -45,7 +45,13 @@ module.exports = {
             if (keys.length > 0) {
                 let key = keys.pop()
                 storage.getItem(key, event => {
-                    this.result += key + ' : ' + event.data + '\n'
+                    let data = event.data
+                    try {
+                        // data = JSON.stringify(JSON.parse(event.data), null, 2)
+                    } catch (error) {
+
+                    }
+                    this.result += key + ' : ' + data + '\n'
                     this.getStorageItem(keys)
                 })
             }

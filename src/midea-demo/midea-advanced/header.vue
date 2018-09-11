@@ -10,16 +10,18 @@
         </div>
 
         <div style="height: 220px;">
-            <midea-header :title="title3" :isImmersion="isImmersion"></midea-header>
+            <midea-header :title="title3" :isImmersion="false"></midea-header>
         </div>
 
         <div style="height: 220px;">
-            <midea-header :title="title4" :isImmersion="isImmersion" :showRightImg="true" @leftImgClick="leftImgClick2" @rightImgClick="rightImgClick2"></midea-header>
+             <midea-header :title="title4" :isImmersion="false" :showRightImg="true" @leftImgClick="leftImgClick2" @rightImgClick="rightImgClick2"></midea-header>
         </div>
     </div>
 </template>
 <style scoped>
-
+.wrapper{
+    background-color: #f2f2f2;
+}
 </style>
 <script>  
 import base from '../base'

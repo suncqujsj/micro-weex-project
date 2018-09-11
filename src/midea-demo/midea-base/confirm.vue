@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <midea-header title="Confirm" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
-        <midea-button text="点击弹出底部面板" type="green" @mideaButtonClicked="show=true">
+        <midea-button text="点击弹出底部面板" @mideaButtonClicked="show=true">
         </midea-button>
 
         <midea-confirm :show="show" @mideaPopupOverlayClicked="popupOverlayBottomClick" :title="title" :content="content" :leftBtnText="leftBtnText" :rightBtnText="rightBtnText" @leftBtnClick="leftBtnClick" @rightBtnClick="rightBtnClick">
@@ -9,6 +9,9 @@
     </div>
 </template>
 <style scoped>
+.wrapper {
+  background-color: #f2f2f2;
+}
 .btn-grp {
   padding-left: 24px;
   padding-right: 24px;
@@ -16,7 +19,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background-color: #f7f7f7;
+  background-color: #f2f2f2;
 }
 .btn-grp-text {
   color: #00b9ef;

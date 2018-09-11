@@ -1,16 +1,16 @@
 <template>
     <div class="wrapper">
         <midea-header title="Popup" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
-        <midea-button text="点击弹出顶部面板" type="green" @mideaButtonClicked="openTopOverlay">
+        <midea-button text="点击弹出顶部面板" @mideaButtonClicked="openTopOverlay">
         </midea-button>
 
-        <midea-button text="点击弹出底部面板" type="green" @mideaButtonClicked="openBottomOverlay">
+        <midea-button text="点击弹出底部面板" @mideaButtonClicked="openBottomOverlay">
         </midea-button>
 
-        <midea-button text="点击弹出左侧面板" type="green" @mideaButtonClicked="openLeftOverlay">
+        <midea-button text="点击弹出左侧面板" @mideaButtonClicked="openLeftOverlay">
         </midea-button>
 
-        <midea-button text="点击弹出右侧面板" type="green" @mideaButtonClicked="openRightOverlay">
+        <midea-button text="点击弹出右侧面板" @mideaButtonClicked="openRightOverlay">
         </midea-button>
 
         <midea-popup :show="isBottomShow" @mideaPopupOverlayClicked="popupOverlayBottomClick" pos="bottom" height="472">
@@ -41,6 +41,9 @@
     </div>
 </template>
 <style scoped>
+.wrapper {
+  background-color: #f2f2f2;
+}
 .btn-grp {
   padding-left: 24px;
   padding-right: 24px;
@@ -48,7 +51,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background-color: #f7f7f7;
+  background-color: #f2f2f2;
 }
 .btn-grp-text {
   color: #00b9ef;

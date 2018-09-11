@@ -2,7 +2,7 @@
     <div>
         <midea-header title="barchart" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-barchart-view class="barchart" :data="chartData"></midea-barchart-view>
-        <midea-button text="刷新数据" type="green" @mideaButtonClicked="mideaButtonClicked">
+        <midea-button text="刷新数据" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <text class="display-text">
             {{JSON.stringify(chartData)}}

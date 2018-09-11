@@ -11,7 +11,7 @@
         </div>
         <midea-checkbox-list :list="list1" :needShowTopBorder="true" @mideaCheckBoxListChecked="imgItemChecked"></midea-checkbox-list>
 
-        <midea-button text="点击弹出底部面板" type="green" @mideaButtonClicked="openBottomOverlay">
+        <midea-button text="点击弹出底部面板" @mideaButtonClicked="openBottomOverlay">
         </midea-button>
         <midea-popup :show="isBottomShow" @mideaPopupOverlayClicked="popupOverlayBottomClick" pos="bottom" height="472">
             <div class="btn-grp">
@@ -27,7 +27,7 @@
 </template>
 <style scoped>
 .wrapper {
-  background-color: #f7f7f7;
+  background-color: #f2f2f2;
   position: relative;
 }
 .btn-grp {
@@ -37,7 +37,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background-color: #f7f7f7;
+  background-color: #f2f2f2;
 }
 .btn-grp-text {
   color: #00b9ef;

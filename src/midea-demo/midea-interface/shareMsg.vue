@@ -4,17 +4,17 @@
 
         <midea-title-bar title="接口参数:"></midea-title-bar>
         <textarea type="text" placeholder="Input Text" class="textarea" :value="messageParamString" @input="dataChange" rows=5 />
-        <midea-button text="微信分享" type="green" @mideaButtonClicked="mideaButtonClicked('wx')">
+        <midea-button text="微信分享" @mideaButtonClicked="mideaButtonClicked('wx')">
         </midea-button>
-        <midea-button text="QQ分享" type="green" @mideaButtonClicked="mideaButtonClicked('qq')">
+        <midea-button text="QQ分享" @mideaButtonClicked="mideaButtonClicked('qq')">
         </midea-button>
-        <midea-button text="短信分享" type="green" @mideaButtonClicked="mideaButtonClicked('sms')">
+        <midea-button text="短信分享" @mideaButtonClicked="mideaButtonClicked('sms')">
         </midea-button>
-        <midea-button text="新浪微博分享" type="green" @mideaButtonClicked="mideaButtonClicked('weibo')">
+        <midea-button text="新浪微博分享" @mideaButtonClicked="mideaButtonClicked('weibo')">
         </midea-button>
-        <midea-button text="QQ空间分享" type="green" @mideaButtonClicked="mideaButtonClicked('qzone')">
+        <midea-button text="QQ空间分享" @mideaButtonClicked="mideaButtonClicked('qzone')">
         </midea-button>
-        <midea-button text="微信朋友圈分享" type="green" @mideaButtonClicked="mideaButtonClicked('wxTimeline')">
+        <midea-button text="微信朋友圈分享" @mideaButtonClicked="mideaButtonClicked('wxTimeline')">
         </midea-button>
 
     </div>

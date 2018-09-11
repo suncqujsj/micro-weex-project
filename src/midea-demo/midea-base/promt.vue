@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <midea-header title="Promt" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
-        <midea-button text="打开带输入框的对话框" type="green" @mideaButtonClicked="openRenameDialog">
+        <midea-button text="打开带输入框的对话框" @mideaButtonClicked="openRenameDialog">
         </midea-button>
 
         <midea-promt :title="nameTitle" ref="promt" :placeholder="namePlaceholder" :inputValue="inputName" :show="show" @okClicked="confirmRename" @onPromtClose="onPromtClose" @onPromtInput="onPromtInput">
@@ -10,7 +10,9 @@
     </div>
 </template>
 <style scoped>
-
+.wrapper {
+  background-color: #f2f2f2;
+}
 </style>
 <script>  
 import base from '../base'

@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <midea-header title="Share" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
-        <midea-button text="点击调用分享功能" type="green" @mideaButtonClicked="showSharePannel"></midea-button>
+        <midea-button text="点击调用分享功能" @mideaButtonClicked="showSharePannel"></midea-button>
     </div>
 </template>
 

@@ -3,7 +3,7 @@
         <midea-header title="launchMapApp打开地图软件" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-title-bar title="接口参数:"></midea-title-bar>
         <textarea type="text" placeholder="Input Text" class="textarea" v-model="messageParamString" @input="dataChange" rows=2 />
-        <midea-button text="打开地图" type="green" @mideaButtonClicked="mideaButtonClicked">
+        <midea-button text="打开地图" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <midea-title-bar title="代码"></midea-title-bar>
         <text class="display-block">

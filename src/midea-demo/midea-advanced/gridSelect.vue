@@ -32,7 +32,7 @@
 
 <style scoped>
 .wrapper {
-  background-color: #f7f7f7;
+  background-color: #f2f2f2;
   position: relative;
 }
 </style>

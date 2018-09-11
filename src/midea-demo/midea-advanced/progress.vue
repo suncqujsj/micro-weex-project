@@ -2,14 +2,14 @@
     <div class="wrapper">
         <midea-header title="Progress" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-progress style="margin-top:24px" v-if="bgColorProgressVisible" :value="value" :bar-width="702"></midea-progress>
-        <midea-button text="显示带背景色进度条" type="green" @mideaButtonClicked="showProgress('bgColorProgressVisible')">
+        <midea-button text="显示带背景色进度条" @mideaButtonClicked="showProgress('bgColorProgressVisible')">
         </midea-button>
 
         <midea-progress style="margin-top:24px" v-if="progressVisible" :value="value" :bar-width="702" :needGradient="true"></midea-progress>
-        <midea-button text="显示带渐变颜色进度条" type="green" @mideaButtonClicked="showProgress('progressVisible')">
+        <midea-button text="显示带渐变颜色进度条" @mideaButtonClicked="showProgress('progressVisible')">
         </midea-button>
 
-        <midea-button text="显示进度条面板" type="green" @mideaButtonClicked="showProgressDialog()">
+        <midea-button text="显示进度条面板" @mideaButtonClicked="showProgressDialog()">
         </midea-button>
         <midea-progress-dialog title="加载进度" :show="isShowDiaglog" :value="value" @onProgressDialogClose="onDialogClose">
         </midea-progress-dialog>

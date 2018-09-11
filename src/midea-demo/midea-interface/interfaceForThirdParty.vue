@@ -4,17 +4,17 @@
         <midea-title-bar title="接口参数:"></midea-title-bar>
         <textarea type="text" placeholder="Input Text" class="textarea" :value="messageParamString" @input="dataChange" rows=3 />
         <midea-title-bar title="调用第三方SDK接口"></midea-title-bar>
-        <midea-button text="没有参数和回调" type="green" @mideaButtonClicked="methodWithNoArg">
+        <midea-button text="没有参数和回调" @mideaButtonClicked="methodWithNoArg">
         </midea-button>
-        <midea-button text="只有参数" type="green" @mideaButtonClicked="methodWithArg">
+        <midea-button text="只有参数" @mideaButtonClicked="methodWithArg">
         </midea-button>
-        <midea-button text="只有一个回调" type="green" @mideaButtonClicked="methodWithCallback">
+        <midea-button text="只有一个回调" @mideaButtonClicked="methodWithCallback">
         </midea-button>
-        <midea-button text="只有两个回调" type="green" @mideaButtonClicked="methodWithCallback2">
+        <midea-button text="只有两个回调" @mideaButtonClicked="methodWithCallback2">
         </midea-button>
-        <midea-button text="一个参数一个回调" type="green" @mideaButtonClicked="methodWithArgAndCallback">
+        <midea-button text="一个参数一个回调" @mideaButtonClicked="methodWithArgAndCallback">
         </midea-button>
-        <midea-button text="参数和两个回调" type="green" @mideaButtonClicked="methodWithArgAndCallback2">
+        <midea-button text="参数和两个回调" @mideaButtonClicked="methodWithArgAndCallback2">
         </midea-button>
         <text class="display-block">
 

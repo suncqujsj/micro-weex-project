@@ -1,16 +1,22 @@
 <template>
     <div class="wrapper">
         <midea-header title="Modal" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
-        <midea-button text="打开确认面板" type="green" @mideaButtonClicked="openConfirmModal">
+        <midea-button text="打开确认面板" @mideaButtonClicked="openConfirmModal">
         </midea-button>
 
-        <midea-button text="打开提示面板" type="green" @mideaButtonClicked="toast">
+        <midea-button text="打开提示面板" @mideaButtonClicked="toast">
         </midea-button>
 
-        <midea-button text="打开警告面板" type="green" @mideaButtonClicked="openAlertModal">
+        <midea-button text="打开警告面板" @mideaButtonClicked="openAlertModal">
         </midea-button>
     </div>
 </template>
+
+<style scoped>
+.wrapper {
+  background-color: #f2f2f2;
+}
+</style>
 <script>  
 import base from '../base'
 import mideaButton from '@/midea-component/button.vue'

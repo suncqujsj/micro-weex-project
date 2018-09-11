@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="wrapper">
+        <midea-header title="accordion" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
         <midea-accordion :menus="menus"></midea-accordion>
     </div>
 </template>
@@ -8,146 +9,51 @@
 </style>
 
 <script>
-  const modal = weex.requireModule('modal');
-  import MideaAccordion from '@/midea-component/accordion.vue'
+import base from '../base'
+import MideaAccordion from '@/midea-component/accordion.vue'
 
-  export default {
+export default {
     components: { MideaAccordion },
+    mixins: [base],
     data: () => ({
         menus: [
             {
-                name: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+                name: '标题标题标题标题标题',
                 iconPath: '',
                 subMenu: [{
                     title: 'a1',
                     key: ''
-                },{
+                }, {
                     title: 'a2',
                     key: ''
-                },{
+                }, {
                     title: 'a3',
                     key: ''
-                },{
+                }, {
                     title: 'a4',
                     key: ''
-                },{
+                }, {
                     title: 'a5',
                     key: ''
-                },{
+                }, {
                     title: 'a6',
                     key: ''
-                },{
+                }, {
                     title: 'a7',
                     key: ''
                 }]
-            },{
-                name: 'BBBBBBBBBB',
+            }, {
+                name: '标题标题标题标题标题标题标题',
                 subMenu: [{
                     title: 'b1',
-                    key: ''
-                }]
-            },{
-                name: 'CCCCCCCCCCCCCC',
-                subMenu: [{
-                    title: 'c1',
-                    key: ''
-                }]
-            },{
-                name: 'DDDDDDDDDDDDDDD',
-                subMenu: [{
-                    title: 'd1',
-                    key: ''
-                }]
-            },{
-                name: 'EEEEEEEEEEEEEE',
-                subMenu: [{
-                    title: 'e1',
-                    key: ''
-                }]
-            },{
-                name: 'FFFFFFFFFFF',
-                subMenu: [{
-                    title: 'f1',
-                    key: ''
-                }]
-            },{
-                name: 'GGGGGGGGGGGGGGGGGG',
-                subMenu: [{
-                    title: 'g1',
-                    key: ''
-                }]
-            },{
-                name: 'HHHHHHHHHHHHHHHHHHH',
-                subMenu: [{
-                    title: 'h1',
-                    key: ''
-                }]
-            },{
-                name: 'IIIIIIIIIIIIIIIIIIIIIII',
-                subMenu: [{
-                    title: 'i1',
-                    key: ''
-                }]
-            },{
-                name: 'JJJJJJJJJJJJJJJJJJJ',
-                subMenu: [{
-                    title: 'j1',
-                    key: ''
-                }]
-            },{
-                name: 'KKKKKKKKKKKKKKKKKKKKK',
-                subMenu: [{
-                    title: 'k1',
-                    key: ''
-                }]
-            },{
-                name: 'LLLLLLLLLLLLLLLLLLLLLL',
-                subMenu: [{
-                    title: 'l1',
-                    key: ''
-                }]
-            },{
-                name: 'MMMMMMMMMMMMMM',
-                subMenu: [{
-                    title: 'm1',
-                    key: ''
-                }]
-            },{
-                name: 'NNNNNNNN',
-                subMenu: [{
-                    title: 'n1',
-                    key: ''
-                }]
-            },{
-                name: 'OOOOOOOO',
-                subMenu: [{
-                    title: 'o1',
-                    key: ''
-                }]
-            },{
-                name: 'PPPPPPPPPPP',
-                subMenu: [{
-                    title: 'p1',
-                    key: ''
-                }]
-            },{
-                name: 'QQQQQQQQQQQQQQQQQQQ',
-                subMenu: [{
-                    title: 'q1',
-                    key: ''
-                }]
-            },{
-                name: 'RRRRRRRRRRRRR',
-                subMenu: [{
-                    title: 'r1',
                     key: ''
                 }]
             }
         ]
     }),
-    created () {
+    created() {
     },
     methods: {
     }
-  };
+};
 </script>

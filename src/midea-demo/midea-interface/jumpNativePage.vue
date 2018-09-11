@@ -11,7 +11,7 @@
                 "data": {}
             })
         </text>
-        <midea-button text="打开指定原生页面" type="green" @mideaButtonClicked="methodWithNoArg">
+        <midea-button text="打开指定原生页面" @mideaButtonClicked="methodWithNoArg">
         </midea-button>
         <text class="display-block">
 

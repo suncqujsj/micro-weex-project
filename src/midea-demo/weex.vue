@@ -22,6 +22,12 @@
                     </midea-cell>
                 </list>
             </div>
+            <div :class="['sample-div', env.platform=='Web'&&'web-page']">
+                <list :class="['sample-list', env.platform=='Web'&&'web-page']" show-scrollbar="true">
+                    <midea-cell :clickActivied="true" v-for="(item,index) in sortedWeexlist" :key="'tab2'+index" :title="item.title" height="120" :has-arrow="true" @mideaCellClick="goToWeex(item.link)">
+                    </midea-cell>
+                </list>
+            </div>
         </slider>
     </div>
 </template>
@@ -30,6 +36,7 @@
   position: relative;
   flex: 1;
   flex-direction: column;
+  background-color: #f2f2f2;
 }
 .slider {
   width: 750px;
@@ -66,7 +73,8 @@ module.exports = {
         tabData: [
             { "name": "基本组件", "selected": true },
             { "name": "高级组件", "selected": false },
-            { "name": "Dolphin接口", "selected": false }
+            { "name": "Dolphin接口", "selected": false },
+            { "name": "Weex接口", "selected": false }
         ],
         val: 0,
         index: 0,
@@ -83,6 +91,7 @@ module.exports = {
             { title: 'Radio', link: "radio" },
             { title: 'Select', link: "select" },
             { title: 'Switch', link: "switch" },
+            { title: 'Swiper', link: "swiper" },
             { title: 'Accordion', link: "accordion" },
         ],
         advancedlist: [
@@ -136,13 +145,17 @@ module.exports = {
             { title: 'showLoading打开原生loading界面', link: "showLoading" },
             { title: 'showLoadingWithMsg打开原生loading界面', link: "showLoadingWithMsg" },
             { title: 'showSharePanel打开分享界面', link: "showSharePanel" },
-            { title: 'storage数据', link: "storage" },
             { title: 'takePhoto照相', link: "takePhoto" },
             { title: 'updateDeviceInfo更新当前设备信息', link: "updateDeviceInfo" },
             { title: 'updateAutoList更新自动化列表', link: "updateAutoList" },
+            { title: 'uploadImgFile上传图片', link: "uploadImgFile" },
             { title: 'weexBundleToWeb跳转web页面', link: "weexBundleToWeb" },
-            { title: 'weex环境变量', link: "weexEnv" },
             { title: 'burialPoint美居埋点', link: "burialPoint" }
+        ],
+        weexList: [
+            { title: 'BroadcastChannel示例', link: "broadcastChannelA" },
+            { title: 'storage数据', link: "storage" },
+            { title: 'weex环境变量', link: "weexEnv" },
         ]
     }),
     computed: {
@@ -154,6 +167,9 @@ module.exports = {
         },
         sortedInterfacelist() {
             return this.interfacelist.sort(this.compare)
+        },
+        sortedWeexlist() {
+            return this.weexList.sort(this.compare)
         }
     },
     methods: {
@@ -177,6 +193,10 @@ module.exports = {
         },
         goToInterface(link) {
             var path = "midea-interface/" + link + ".js";
+            nativeService.goTo(path, { viewTag: link });
+        },
+        goToWeex(link) {
+            var path = "midea-weex/" + link + ".js";
             nativeService.goTo(path, { viewTag: link });
         }
     }

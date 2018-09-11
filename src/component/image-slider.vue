@@ -2,6 +2,7 @@
     <slider :style="sliderStyle" :interval="interval" :auto-play="autoplay" :infinite="infinite"
             @change="_change">
         <div v-for="(item,index) in items">
+            {{imgHeight}}
             <image @click="_click($event,index)"
                    :resize="imgResize"
                    :style="{width:imgWidth,height:imgHeight}"

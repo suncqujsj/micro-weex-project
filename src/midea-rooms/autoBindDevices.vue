@@ -406,10 +406,17 @@
                 this.allDeviceActions = Object.assign({}, tmpAllDeviceActions)
             },
             getDone(){
-                if ( Object.keys(this.checkedDevices).length == 0) {
+                let isEmptyBind = true
+                for (var x in this.checkedDevices) {
+                    if (this.checkedDevices[x]) {
+                        isEmptyBind = false
+                    }
+                }
+                if ( isEmptyBind ) {//未勾选设备时提示用户不能新建自动化
                     nativeService.toast('没有选择绑定设备哦')
                     return
                 }
+
                 if (this.from == 'addAuto') {//为新增就直接弹窗命名，下一步请求新增接口
                     this.showPrompt = true
                 }else if(this.from == 'editAuto'){ //为编辑时，提交数据到edit页面并返回

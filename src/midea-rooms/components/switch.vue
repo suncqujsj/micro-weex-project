@@ -65,7 +65,7 @@
         data(){
             return {
                 icon: {
-                    btn: 'assets/img/sence_ic_switch@3x.png'
+                    btn: '../assets/img/sence_ic_switch@3x.png'
                 },
                 barStyle: {}
             }

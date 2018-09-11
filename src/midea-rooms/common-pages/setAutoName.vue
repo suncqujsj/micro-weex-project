@@ -66,7 +66,7 @@
             return {
                 autoName: '',
                 icon: {
-                    clear: 'assets/img/me_ic_return@3x.png'
+                    clear: '../assets/img/me_ic_return@3x.png'
                 },
             }
         },

@@ -163,7 +163,7 @@
         data(){
             return {
                 icon: {
-                    more: 'assets/img/more.png'
+                    more: '../assets/img/more.png'
                 },
                 from: '',
                 deviceName: '',

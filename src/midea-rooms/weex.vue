@@ -90,7 +90,7 @@
     .row-e { flex-direction: row; align-items: center; justify-content: flex-end; }
     .hd { margin-top: 44px; padding-left:30px; padding-right:30px; margin-bottom: 24px; }
     .hd-name{ font-weight: bold; font-size: 36px; color: #000; }
-    .hd-btn{ font-size: 26px; color: #666; padding: 10px;}
+    .hd-btn{ font-size: 26px; color: #666; }
     .scroller{ padding-left:30px; padding-right:30px; flex-direction: row; height: 276px;}
     .icon { width: 82px; height: 82px;  }
     .auto-btn{ width: 50px; height: 50px; }

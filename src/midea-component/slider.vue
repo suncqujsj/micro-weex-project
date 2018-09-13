@@ -46,7 +46,7 @@ export default {
         },
         pointColor: {
             type: String,
-            default: '#0E90FF'
+            default: '#267AFF'
         },
         axisColor: {
             type: String,
@@ -62,7 +62,7 @@ export default {
         },
         tipColor: {
             type: String,
-            default: '#0E90FF'
+            default: '#267AFF'
         },
         tipPadding: {
             type: String,

@@ -41,7 +41,7 @@ module.exports = {
         },
         onMideachange(event) {
             this.mideaChecked = event.value;
-            //nativeService.toast(this.checked);
+            // nativeService.alert(this.mideaChecked);
         },
     },
     created() {

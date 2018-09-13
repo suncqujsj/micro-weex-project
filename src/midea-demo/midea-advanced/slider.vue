@@ -3,8 +3,15 @@
         <midea-header title="Slider" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
 
         <midea-title-bar title="工作温度℃" bgColor="#EEF4F7"></midea-title-bar>
-        <div style="height:320px;">
-            <midea-slider @slideEnd="slideEnd" @tipFormat="tempFormat" :max="max" :min="min" :value="value" :step="step" :axisH="axisH" :pointH="pointH" :axisColor="axisColor" :pointColor="pointColor" :tipTxt="tipTemp"></midea-slider>
+        <div class="slider-sample">
+            <text class="slider-sample-range">{{min}}℃</text>
+            <midea-slider class="slider-sample-area" @slideEnd="slideEnd" :max="max" :min="min" :value="value" :step="step" :axisH="axisH" :pointH="pointH" :axisColor="axisColor" :pointColor="pointColor" @tipFormat="tempFormat" :tipTxt="tipTemp"></midea-slider>
+            <text class="slider-sample-range slider-sample-range-right">{{max}}℃</text>
+        </div>
+        <div class="slider-sample">
+            <text class="slider-sample-range">{{min}}℃</text>
+            <midea-slider class="slider-sample-area" @slideEnd="slideEnd" :max="max" :min="min" :value="value" :step="step" :axisH="axisH" :pointH="pointH" :axisBgColor="axisColor" :axisColor="axisColor" :pointColor="pointColor"></midea-slider>
+            <text class="slider-sample-range slider-sample-range-right">{{max}}℃</text>
         </div>
 
         <midea-title-bar title="工作时长" bgColor="#EEF4F7"></midea-title-bar>
@@ -20,7 +27,7 @@
  -->
 
         <midea-title-bar title="自定义背景" bgColor="#EEF4F7"></midea-title-bar>
-         <div class="silder-container">
+        <div class="silder-container">
             <div class="line-container">
                 <div class="line"></div>
                 <div class="line"></div>
@@ -29,13 +36,34 @@
                 <div class="line"></div>
                 <div class="line"></div>
             </div>
-            <midea-slider @slideEnd="slideEnd" :max="7" :min="1" :value="1" :step="1" :axisH="0" :pointH="26" :axisColor="axisColor"  pointColor="#EEF4F7" showTip="false"></midea-slider>
+            <midea-slider @slideEnd="slideEnd" :max="7" :min="1" :value="1" :step="1" :axisH="0" :pointH="26" :axisColor="axisColor" pointColor="#EEF4F7" showTip="false"></midea-slider>
         </div>
 
     </div>
 </template>
 <style scoped>
-.silder-container{
+.slider-sample {
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+  width: 750px;
+  padding-bottom: 20px;
+}
+.slider-sample-range {
+  width: 60px;
+  font-size: 28px;
+  color: #888888;
+  text-align: right;
+}
+.slider-sample-range-right {
+  width: 90px;
+  text-align: left;
+}
+.slider-sample-area {
+  flex: 1;
+  padding-bottom: 13px;
+}
+.silder-container {
   position: relative;
   height: 52px;
   margin-top: 50px;
@@ -87,10 +115,10 @@ export default {
             min: 0, //最小值
             value: 210, //初始化值
             step: 5, //步长
-            axisH: 10, //轴高度(px)
+            axisH: 4, //轴高度(px)
             pointH: 26, //圆球高度（px）
             axisColor: '#DFE5E7',//滑条颜色
-            pointColor: '#0E90FF', //圆球颜色 
+            pointColor: '#267AFF', //圆球颜色 
             showTip: false,
             tipTemp: '',
             tipTime: ''
@@ -113,38 +141,6 @@ export default {
             nativeService.toast('slideEnd:' + event.value);
             // nativeService.toast(JSON.stringify(data));
             return false;
-        },
-        pickDate() {
-            picker.meijuPickDate({
-                'value': '2016-11-28', //默认初始化值，如果format='MMDD',则value格式为：'11-28',以此类推
-                'max': '2029-11-28', //最大范围值
-                'min': '2015-11-28', //最小范围
-                'label': '年-月-日', //日期后的标签文字,如果format='MMDD'，则label为：'月-日'，以此类推
-                'format': 'YYMMDD', //日期格式，YYMMDD:显示年月日，MMDD:'月日'， M:'月'， D:'日'
-                'title': '选择日期', //取消和确定中间那标题
-                'cancelTxt': '取消', //取消按钮文字
-                'confirmTxt': '确定' //确定按钮文字
-            }, function (ret) {
-                var result = ret.result;
-                if (result == 'success') {
-                    nativeService.toast('meijuPickDate:' + ret.data);
-
-                }
-            });
-        },
-        pickTime() {
-            picker.meijuPickTime({
-                'value': '23:58:32',
-                'label': '时-分-秒',
-                'format': 'HHIISS',
-                'title': '选择时间',
-                'cancelTxt': '取消',
-                'confirmTxt': '确定'
-            }, event => {
-                if (event.result === 'success') {
-                    nativeService.toast('meijuPickTime:' + event.data);
-                }
-            })
         }
     },
     created() {

@@ -245,7 +245,7 @@
                         location: {
                             direction: 1,
                         },
-                        name: '回家'
+                        name: '回家模式'
                     },
                     {
                         isAdd: true,
@@ -254,19 +254,19 @@
                         location: {
                             direction: 2,
                         },
-                        name: '离家'
+                        name: '离家模式'
                     },
                     {
                         isAdd: true,
                         image: 'assets/img/samrt_ic_clock@3x.png',
                         sceneType: 4,
-                        name: '晚安'
+                        name: '定时模式'
                     },
                     {
                         isAdd: true,
                         image: 'assets/img/scene_ic_weather@3x.png',
                         sceneType: 6,
-                        name: '天气变化'
+                        name: '天气模块'
                     }
                 ],
                 sceneList: [],
@@ -489,7 +489,7 @@
                                 location: {
                                     direction: 1
                                 },
-                                name: '回家'
+                                name: '回家模式'
                             },
                             '3.2': {
                                 isAdd: true,
@@ -498,19 +498,19 @@
                                 location: {
                                     direction: 2
                                 },
-                                name: '离家'
+                                name: '离家模式'
                             },
                             '4': {
                                 isAdd: true,
                                 image: 'assets/img/samrt_ic_clock@3x.png',
                                 sceneType: 4,
-                                name: '晚安'
+                                name: '定时模式'
                             },
                             '6': {
                                 isAdd: true,
                                 image: 'assets/img/scene_ic_weather@3x.png',
                                 sceneType: 6,
-                                name: '天气变化'
+                                name: '天气模块'
                             }
                         }
                         let templateName = ['3.1', '3.2', '4', '6'], tmpTemp =  []

@@ -266,7 +266,7 @@
                         isAdd: true,
                         image: 'assets/img/scene_ic_weather@3x.png',
                         sceneType: 6,
-                        name: '天气模块'
+                        name: '天气模式'
                     }
                 ],
                 sceneList: [],
@@ -510,7 +510,7 @@
                                 isAdd: true,
                                 image: 'assets/img/scene_ic_weather@3x.png',
                                 sceneType: 6,
-                                name: '天气模块'
+                                name: '天气模式'
                             }
                         }
                         let templateName = ['3.1', '3.2', '4', '6'], tmpTemp =  []

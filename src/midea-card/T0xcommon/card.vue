@@ -87,9 +87,9 @@
             	this.onlineStatus = data.isOnline;
             	this.device_info = DEVICE_INFO[this.deviceType];
             	//M1蓝牙门锁（子类型为：13）只显示在线状态（无离线状态）
-            	if(this.deviceType == "0x20" && this.deviceSubType == "13") {
-            		this.onlineStatus = "1";
-            	}
+//          	if(this.deviceType == "0x20" && this.deviceSubType == "13") {
+//          		this.onlineStatus = "1";
+//          	}
             },
             handleNotification() {
             	console.log("handleNotification Yoram");

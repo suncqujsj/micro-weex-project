@@ -150,7 +150,8 @@
 					baby_clothes_min: "婴儿服（mini）",
 					diy0: "DIY0",
 					diy1: "DIY1",
-					diy2: "DIY2"
+					diy2: "DIY2",
+					silk_wash: "真丝柔洗/摇摇洗"
 				},
 				return_running_status:{
 	            	idle:"空闲",

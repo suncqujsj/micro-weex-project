@@ -34,7 +34,7 @@
                             <div class="scene-status">
                                 <text class="info-text font14 white">空气质量</text>
                                 <div class="row-c status-value">
-                                    <text v-if="indicator.pm25 != undefined && indicator.pm25 !== ''" class="font36 white">{{indicator.pm25}}</text>
+                                    <text v-if="indicator.pm25 != undefined && indicator.pm25 !== '' && indicator.pm25 != '65535'" class="font36 white">{{indicator.pm25}}</text>
                                     <text v-else class="font36 white">--</text>
                                 </div>
                                 <text class="info-text font12 white">{{pm25Status}}</text>
@@ -459,6 +459,8 @@
                         desc = '空气浑浊'
                     }else if (pm25 < 501){
                         desc = '空气污染严重 '
+                    }else if(pm25 == '65535'){
+                        desc = ''
                     }else{
                         desc = '空气质量异常'
                     }

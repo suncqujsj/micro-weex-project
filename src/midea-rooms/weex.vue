@@ -43,7 +43,7 @@
                                 <div v-if="(scene.roomType==1 || scene.roomType==2) && scene.indicator" class="row-s">
                                     <text v-if="scene.indicator.temperature" class="scene-desc">室温{{scene.indicator.temperature}}℃</text>
                                     <text v-if="scene.indicator.humidity" class="scene-desc">湿度{{getHumidityDesc(scene.indicator.humidity)}}</text>
-                                    <text v-if="scene.indicator.pm25" class="scene-desc">空气质量{{getPMDesc(scene.indicator.pm25)}} </text>
+                                    <text v-if="scene.indicator.pm25 && scene.indicator.pm25 != '65535'" class="scene-desc">空气质量{{getPMDesc(scene.indicator.pm25)}} </text>
                                     <text v-if="!scene.indicator.temperature && !scene.indicator.humidity && !scene.indicator.pm25" class="scene-desc">{{roomDesc[scene.roomType]}}</text>
                                 </div>
                                 <div v-else-if="scene.roomType == 3 && scene.indicator">

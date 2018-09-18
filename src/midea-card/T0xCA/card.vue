@@ -21,7 +21,7 @@
 	        					</div>
 	        				</div>
 	        			</div>
-	        			<div style="margin-bottom: 114px;"><text class="main-status-mode">{{mode}}</text></div>
+	        			<div style="margin-bottom: 80px;margin-left: -50px;"><text class="main-status-mode">{{mode}}</text></div>
 		        	</div>
 		        	<div class="card-right">
 		        		<div class="card-control">
@@ -317,7 +317,7 @@
 		font-family: PingFangSC-Regular;
 		font-size: 24px;
 		color: #FFFFFF;
-		margin-left: -30px;
+		/*margin-left: -30px;*/
 	}
 	.main-status-separate {
 		opacity: 0.3;

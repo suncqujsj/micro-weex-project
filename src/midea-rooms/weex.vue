@@ -43,7 +43,7 @@
                                 <div v-if="(scene.roomType==1 || scene.roomType==2) && scene.indicator" class="row-s">
                                     <text v-if="scene.indicator.temperature" class="scene-desc">室温{{scene.indicator.temperature}}℃</text>
                                     <text v-if="scene.indicator.humidity" class="scene-desc">湿度{{getHumidityDesc(scene.indicator.humidity)}}</text>
-                                    <text v-if="scene.indicator.pm25" class="scene-desc">空气质量{{getPMDesc(scene.indicator.pm25)}} </text>
+                                    <text v-if="scene.indicator.pm25 && scene.indicator.pm25 != '65535'" class="scene-desc">空气质量{{getPMDesc(scene.indicator.pm25)}} </text>
                                     <text v-if="!scene.indicator.temperature && !scene.indicator.humidity && !scene.indicator.pm25" class="scene-desc">{{roomDesc[scene.roomType]}}</text>
                                 </div>
                                 <div v-else-if="scene.roomType == 3 && scene.indicator">
@@ -90,7 +90,7 @@
     .row-e { flex-direction: row; align-items: center; justify-content: flex-end; }
     .hd { margin-top: 44px; padding-left:30px; padding-right:30px; margin-bottom: 24px; }
     .hd-name{ font-weight: bold; font-size: 36px; color: #000; }
-    .hd-btn{ font-size: 26px; color: #666; padding: 10px;}
+    .hd-btn{ font-size: 26px; color: #666; }
     .scroller{ padding-left:30px; padding-right:30px; flex-direction: row; height: 276px;}
     .icon { width: 82px; height: 82px;  }
     .auto-btn{ width: 50px; height: 50px; }
@@ -266,7 +266,7 @@
                         isAdd: true,
                         image: 'assets/img/scene_ic_weather@3x.png',
                         sceneType: 6,
-                        name: '天气模块'
+                        name: '天气模式'
                     }
                 ],
                 sceneList: [],
@@ -510,7 +510,7 @@
                                 isAdd: true,
                                 image: 'assets/img/scene_ic_weather@3x.png',
                                 sceneType: 6,
-                                name: '天气模块'
+                                name: '天气模式'
                             }
                         }
                         let templateName = ['3.1', '3.2', '4', '6'], tmpTemp =  []

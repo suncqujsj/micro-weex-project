@@ -103,5 +103,15 @@ export const DEVICE_INFO = {
 	  		img: "smart_img_equip2b@3x.png",
 	  		controlPanel: "",
 	  		deviceStyle:"cold"
+	  	},
+			"0xCE" :{
+	  		img: "smart_img_equipce@3x.png",
+	  		controlPanel: "",
+	  		deviceStyle:"cold"
+	  	},
+			"0xCF" :{
+	  		img: "smart_img_equipcf@3x.png",
+	  		controlPanel: "",
+	  		deviceStyle:"warm"
 	  	}
 }

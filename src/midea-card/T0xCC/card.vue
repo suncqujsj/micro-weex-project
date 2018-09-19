@@ -484,7 +484,7 @@
 	.card-right-margin {
 		width:32px;
 		height:392px;
-		background-color: white;
+		background-color: #f2f2f2;
 	}
 	.mark{
 		position: absolute;

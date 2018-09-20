@@ -519,6 +519,46 @@ export default {
             callback(this.Mock.getMock(name).messageBody);
         }
     },
+    
+    //发送指令透传接口(套系)
+    startCmdProcessTX(name, messageBody,deviceId, callback, callbackFail) {
+        let commandId = Math.floor(Math.random() * 1000);
+        var param = {
+            commandId: commandId
+        }
+        if (messageBody != undefined) {
+            param.messageBody = messageBody;
+        }
+        if (deviceId != undefined) {
+        	param.deviceId = deviceId;
+        }
+        var finalCallBack = function (resData) {
+            if (typeof resData == 'string') {
+                resData = JSON.parse(resData);
+            }
+            if (resData.errorCode != 0) {
+                callbackFail(resData);
+            } else {
+                callback(resData.messageBody);
+            }
+        }
+        var finalCallbackFail = function (resData) {
+            if (typeof resData == 'string') {
+                resData = JSON.parse(resData);
+            }
+            callbackFail(resData);
+        }
+        if (this.isDummy != true) {
+            if (isIos) {
+                this.createCallbackFunctionListener();
+                this.callbackFunctions[commandId] = finalCallBack;
+                this.callbackFailFunctions[commandId] = finalCallbackFail;
+            }
+            bridgeModule.startCmdProcess(JSON.stringify(param), finalCallBack, finalCallbackFail);
+        } else {
+            callback(this.Mock.getMock(name).messageBody);
+        }
+    },
 
     /* *****即将删除, IOS已经做了改进，不在需要已callbackFunction回调callback ********/
     isCreateListener: false,

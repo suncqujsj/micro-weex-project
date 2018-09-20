@@ -54,6 +54,9 @@
 	        	</div>
 	        	<text class="text-offline-center">已离线</text>
 	        </div>
+	        <div class="icon-nono-div">
+				<image class="icon-nono" src="./assets/img/smart_ic_nono@3x.png"></image>
+			</div>
 	        <midea-download></midea-download>
 	    </div>
     </scroller>
@@ -263,7 +266,7 @@
 		background-color: #f2f2f2;
 	}
 	.box {
-		margin-bottom:650px
+		margin-bottom:200px
 	}
 	.card {
 		width:686px;
@@ -367,6 +370,13 @@
 		height:248px;
 		margin-bottom: 50px;
 		opacity: 0.3;
+	}
+	.icon-nono-div {
+		margin-top: 136px;
+	}
+	.icon-nono {
+		width:750px;
+		height:456px;
 	}
 	.card-icon {
 		align-items: flex-end;

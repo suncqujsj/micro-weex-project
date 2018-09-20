@@ -206,6 +206,7 @@
         height: 56px;
         color: #fff;
         font-size: 28px;
+        font-weight: bold;
         text-align: center;
         padding-top: 13px;
     }

@@ -423,7 +423,7 @@ export default {
   align-items: flex-end;
   margin-top: 38px;
   margin-right: 38px;
-  height:100px;
+  height:26px;
 }
 .card-control-div {
 	flex-direction: row;
@@ -542,7 +542,7 @@ export default {
 .card-right-margin {
   width: 32px;
   height: 392px;
-  background-color: white;
+  background-color: #f2f2f2;
 }
 .smart {
   flex-direction: column;

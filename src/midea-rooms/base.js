@@ -261,10 +261,10 @@ export default {
                             }
                         })
                     }else{
-                        nativeService.toast('网络未连接，请稍后再试')
+                        nativeService.toast('网络未连接，请检查您的网络设置')
                     }
                 }).catch((err)=>{
-                    nativeService.toast('网络未连接，请稍后再试')
+                    nativeService.toast('网络未连接，请检查您的网络设置')
                 })
             })
         },

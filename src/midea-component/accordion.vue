@@ -1,115 +1,65 @@
-//手风琴菜单
 <template>
-    <scroller class="scroller" :style="style.scroller">
-        <div v-for="(menu, mIndex) in menus" :class="['menu', mIndex == 0 ? 'menu-first': '']">
-            <div class="menu-bar" @click="makeSwitch" :data-menu-name="menu.name">
-                <!-- <image class="icon"></image> -->
-                <text class="menu-name">{{menu.name}}</text>
-                <div class="switch-wrap">
-                    <image v-if="activeMenu==menu.name" class="switch" :src="switchOpen"></image>
-                    <image v-else class="switch" :src="switchClose"></image>
-                </div>
-            </div>
-            <div class="sub-menu" v-if="activeMenu == menu.name">
-                <midea-grid-select :cols="3" class="grid-floor" :list="menu.subMenu" @select="itemSelected" :customStyles="gridStyle"></midea-grid-select>
-            </div>
+    <div class="accordion-wrapper">
+        <div class="accordion-item" @click="makeSwitch">
+            <text class="accordion-title">{{title}}</text>
+            <image class="accordion-icon" :src="isFoldedStatus?foldIcon:unfoldIcon"></image>
         </div>
-    </scroller>
+        <div v-if="!isFoldedStatus">
+            <slot name="content"></slot>
+        </div>
+    </div>
 </template>
 
 <script>
-import nativeService from '@/common/services/nativeService.js'
-import mideaGridSelect from '@/component/optionList.vue'
-
 export default {
     props: {
-        menus: {
-            type: Array,
-            default: []
+        title: "",
+        isFolded: {
+            type: Boolean,
+            default: true
         }
     },
-    components: {
-        mideaGridSelect
-    },
-    computed: {
-        style() {
-            return {
-                scroller: {
-                    height: WXEnvironment.deviceHeight + 'px'
-                }
-            }
+    watch: {
+        isFolded(value) {
+            this.isFoldedStatus = value
         }
     },
     data() {
         return {
-            activeMenu: '',
-            switchOpen: 'img/open.png',
-            switchClose: 'img/close.png',
-            gridStyle: {
-                width: '222px'
-            },
-            headerHeight: '',
-            listsHeight: '',
+            unfoldIcon: '../img/service_ic_show@3x.png',
+            foldIcon: '../img/service_ic_hide@3x.png',
+            isFoldedStatus: true
         }
     },
     methods: {
         makeSwitch(e) {
-            console.log(e)
-            let theName = e.target.attr.dataMenuName
-            this.activeMenu = (this.activeMenu == theName) ? '' : theName
-        },
-        itemSelected(e) {
+            this.isFoldedStatus = !this.isFoldedStatus
         }
-    },
-    created() {
-
     }
 }
 </script>
 
 <style>
-.title {
-  margin-top: 20px;
-  margin-bottom: 30px;
-  padding-left: 25px;
+.accordion-wrapper {
+  padding-left: 32px;
 }
-.menu {
-  border-bottom-style: solid;
-  border-width: 1px;
-  border-color: #cccccc;
-  padding-left: 30px;
-  padding-right: 30px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
-.menu-bar {
+.accordion-item {
   align-items: center;
   justify-content: space-between;
   flex-direction: row;
+  height: 92px;
+  border-bottom-color: #e5e5e8;
+  border-bottom-width: 1px;
 }
-.menu-first {
-  border-top-style: solid;
+.accordion-title {
+  flex: 1;
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #000000;
 }
-.menu-name {
-  width: 620px;
-}
-.switch-wrap {
-  justify-content: right;
-  padding-left: 30px;
-  padding-right: 30px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-.switch {
-  width: 30px;
-  height: 30px;
-}
-
-.sub-menu {
-  margin-top: -20px;
-}
-.grid-floor {
-  justify-content: left;
-  padding-top: 30px;
+.accordion-icon {
+  height: 40px;
+  width: 40px;
+  margin-right: 24px;
 }
 </style>

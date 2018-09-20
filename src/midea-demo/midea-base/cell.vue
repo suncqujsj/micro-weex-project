@@ -1,24 +1,24 @@
 <template>
   <div class="wrapper">
     <midea-header title="Cell" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
-    <midea-cell title="仅标题且带底部边距" :hasArrow="true" :hasMargin="true" :hasTopBorder="true" :clickActivied="true" style="margin-top:24px" @mideaCellClick="itemClicked">
+    <midea-cell title="仅标题且带底部边距" :hasArrow="true" :hasMargin="true" :hasTopBorder="false" :clickActivied="true" style="margin-top:24px" @mideaCellClick="itemClicked">
     </midea-cell>
-    <midea-cell title="标题附5444带描述" desc="描述" :hasMargin="true" :hasArrow="true" :clickActivied="true" :hasTopBorder="true" @mideaCellClick="itemClicked">
+    <midea-cell title="标题附带描述" desc="描述" :hasMargin="true" :hasArrow="true" :clickActivied="true" :hasTopBorder="false" @mideaCellClick="itemClicked">
     </midea-cell>
-    <midea-cell title="带右边文字" rightText="设置" :hasTopBorder="true" :hasMargin="true" @mideaCellClick="itemClicked">
+    <midea-cell title="带右边文字" rightText="设置" :hasTopBorder="false" :hasMargin="true" @mideaCellClick="itemClicked">
     </midea-cell>
-    <midea-cell title="带右边文字和导航" rightText="设置" :hasTopBorder="true" :hasArrow="true" :clickActivied="true" @mideaCellClick="itemClicked">
+    <midea-cell title="带右边文字和导航" rightText="设置" :hasTopBorder="false" :hasArrow="true" :clickActivied="true" @mideaCellClick="itemClicked">
     </midea-cell>
-    <midea-cell title="带图标且自动设置高度" desc="描述" height="120" rightText="设置" :hasArrow="true" :clickActivied="true" itemImg="../img/check/checked.png" @mideaCellClick="itemClicked">
+    <midea-cell title="带图标且自动设置高度" desc="描述" rightText="设置" :hasArrow="true" :clickActivied="true" itemImg="../img/check/checked.png" @mideaCellClick="itemClicked">
     </midea-cell>
 
-    <midea-cell label="动态插入文本" @mideaCellClick="itemClicked">
+    <midea-cell label="动态插入文本" @mideaCellClick="itemClicked" :hasArrow="false">
       <text class="link-text" slot="text" v-if="selected==1"> 不可关联</text>
       <text class="link-text" slot="text" v-if="selected==2"> 已关联</text>
     </midea-cell>
 
-    <midea-cell title="动态插入切换按键" @mideaCellClick="itemClicked">
-      <switch slot="value"> </switch>
+    <midea-cell label="动态插入切换按键" @mideaCellClick="itemClicked" :hasArrow="false">
+      <midea-switch2 class="value" slot="value"> </midea-switch2>
     </midea-cell>
 
   </div>
@@ -26,7 +26,9 @@
 <style scoped>
 .link-text {
   color: #333;
-  font-size: 24px;
+  font-size: 28px;
+}
+.value {
 }
 .wrapper {
   background-color: #f2f2f2;
@@ -36,11 +38,12 @@
 <script>  
 import base from '../base'
 
-import mideaCell from '@/component/cell.vue'
+import mideaCell from '@/midea-component/cell2.vue'
+import MideaSwitch2 from '@/midea-component/switch2.vue'
 import nativeService from '@/common/services/nativeService'
 
 module.exports = {
-  components: { mideaCell },
+  components: { mideaCell, MideaSwitch2 },
   mixins: [base],
   data() {
     return {

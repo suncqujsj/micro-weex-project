@@ -8,19 +8,19 @@
         <div :class="['midea-sub-cell',hasSubTopBorder && 'cell-sub-top-border', hasSubBottomBorder && 'cell-sub-bottom-border', hasVerticalIndent && 'cell-indent']">
             <div class="midea-sub-cell-inner">
                 <slot name="label">
-                    <div v-if="label">
+                    <div v-if="label" style="flex:1;">
                         <text class="cell-label-text">{{label}}</text>
                     </div>
                 </slot>
+                <slot name="value"></slot>
+                <slot name="text"></slot>
+
                 <div class="cell-title">
                     <slot name="title">
                         <text class="cell-content">{{title}}</text>
                         <text class="cell-desc-text" v-if="desc">{{desc}}</text>
                     </slot>
                 </div>
-
-                <slot name="value"></slot>
-                <slot name="text"></slot>
                 <slot name="rightText">
                     <text v-if="rightText" class="right-text">{{rightText}}</text>
                     <text v-else-if="placeHolder" class="placeholder-text">{{placeHolder}}</text>
@@ -57,10 +57,10 @@
   padding-top: 28px;
 }
 
-.has-desc {
+/* .has-desc {
   padding-bottom: 18px;
   padding-top: 18px;
-}
+} */
 
 .cell-top-border {
   border-top-color: #e5e5e8;
@@ -94,9 +94,10 @@
 }
 
 .cell-label-text {
-  font-size: 30px;
-  color: #666666;
-  width: 188px;
+  flex: 1;
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
+  color: #000000;
   margin-right: 10px;
 }
 
@@ -129,9 +130,9 @@
 
 .cell-desc-text {
   color: #999999;
-  font-size: 24px;
+  font-size: 28px;
   line-height: 30px;
-  margin-top: 4px;
+  margin-top: 8px;
 }
 .item-img {
   width: 80px;

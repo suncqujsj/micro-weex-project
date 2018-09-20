@@ -155,11 +155,11 @@
       },
       mainBtnColor: {
         type: String,
-        default: '#00B9EF'
+        default: '#267aff'
       },
       secondBtnColor: {
         type: String,
-        default: '#666666'
+        default: '#267aff'
       },
       showNoPrompt: {
         type: Boolean,

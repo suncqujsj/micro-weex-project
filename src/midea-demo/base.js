@@ -63,7 +63,7 @@ export default {
             if (!results[2]) return '';
             return decodeURIComponent(results[2].replace(/\+/g, " "));
         },
-        goTo(pageName, options, params) {
+        goTo(pageName, options = {}, params) {
             if (!this.isNavigating) {
                 this.isNavigating = true
                 // 离开时同步全局应用数据
@@ -75,7 +75,8 @@ export default {
                             encodeURIComponent(k) + '=' + encodeURIComponent(params[k])
                         ).join('&')
                     }
-                    nativeService.goTo(path);
+                    options.viewTag = pageName
+                    nativeService.goTo(path, options);
                     setTimeout(() => {
                         this.isNavigating = false
                     }, 500);

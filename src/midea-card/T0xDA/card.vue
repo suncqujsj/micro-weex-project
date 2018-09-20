@@ -99,7 +99,7 @@
 					memory:"记忆程序",
 					child:"童装程序",
 					strong_wash:"强洗程序",
-					down_jacket:"羽绒服程序",
+					down_jacket:"羽绒程序",
 					stir:"搅拌洗程序",
 					mute:"静音/夜间洗程序",
 					bucket_self_clean:"桶自洁程序",

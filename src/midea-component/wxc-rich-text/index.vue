@@ -1,9 +1,6 @@
-<!-- CopyRight (C) 2017-2022 Alibaba Group Holding Limited. -->
-<!-- Created by Tw93 on 17/07/28. -->
-
 <template>
   <div>
-    <div class="wxc-rich-text" v-if="isNotEmptyArray">
+    <div class="wxc-rich-text" :style="outputTextStyle" v-if="isNotEmptyArray">
       <div v-for="v in configList">
         <wxc-rich-text-text v-if="v.type=='text' && v.value"
                             :text-value="v.value"
@@ -64,6 +61,10 @@
       hasTextMargin: {
         type: Boolean,
         default: true
+      },
+      textStyle: {
+        type: Object,
+        default: () => ({})
       }
     },
     data: () => ({}),
@@ -74,6 +75,10 @@
       },
       isString () {
         return typeof (this.configList) === 'string'; 
+      },
+      outputTextStyle () {
+        const { textStyle} = this;
+        return {...textStyle };
       }
     }
   };

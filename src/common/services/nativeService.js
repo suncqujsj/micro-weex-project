@@ -17,8 +17,14 @@ const debugLogSeperator = "**************************************\n"
 
 
 var ipParam = weex.config.bundleUrl.match(new RegExp("[\?\&]ip=([^\&]+)", "i"));
+var port = 8080
 if (ipParam && ipParam.length > 1) {
     ipParam = ipParam[1]
+    var portParam = weex.config.bundleUrl.match(new RegExp(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}[^\d]+(\d+)[^\d]/, "i"));
+    if (portParam && portParam.length > 1) {
+        port = portParam[1]
+        console.log(port)
+    }
     // 测试
     isDummy = true
 }
@@ -74,9 +80,16 @@ export default {
             transparent: 'true/false', //新页面背景是否透明
             animatedType: 'slide_bottomToTop' //新页面出现动效类型
         }
+
     */
-    goTo(path, options) {
+    goTo(path, options, params) {
         var url
+        
+        if (params) {
+            path += (path.indexOf("?") == -1 ? '?' : "&") + Object.keys(params).map(k =>
+                encodeURIComponent(k) + '=' + encodeURIComponent(params[k] || '')
+            ).join('&')
+        }
         // mm.toast({ message: isRemote, duration: 2 })
         if (this.isDummy != true && !isRemote) {
             //手机本地页面跳转
@@ -97,9 +110,9 @@ export default {
                 targetPath += '?root=' + root + '&ip=' + ip
             }
             if (ip == null || ip.length < 1) {
-                url = "http://localhost:8080/dist/" + root + '/' + targetPath;
+                url = "http://localhost:" + port + "/dist/" + root + '/' + targetPath;
             } else {
-                url = "http://" + ip + ":8080" + "/dist/" + root + '/' + targetPath;
+                url = "http://" + ip + ":" + port + "/dist/" + root + '/' + targetPath;
             }
             this.runGo(url, options);
         } else {
@@ -145,9 +158,9 @@ export default {
             let root = theRequest['root']
             let weexPath
             if (ip == null || ip.length < 1) {
-                weexPath = "http://localhost:8080/dist/" + root + '/'
+                weexPath = "http://localhost:" + port + "/dist/" + root + '/'
             } else {
-                weexPath = "http://" + ip + ":8080" + "/dist/" + root + '/'
+                weexPath = "http://" + ip + ":" + port + "/dist/" + root + '/'
             }
             callBack(weexPath);
         } else {
@@ -219,7 +232,11 @@ export default {
         if (typeof message == 'object') {
             message = JSON.stringify(message)
         }
-        bridgeModule.toast({ message: message, duration: duration || 1.5 });
+        if (platform == 'Web') {
+            mm.toast({ message: message, duration: duration || 1.5 })
+        } else {
+            bridgeModule.toast({ message: message, duration: duration || 1.5 });
+        }
     },
     alert(message, callback, okTitle) {
         var callbackFunc = callback || function (value) { }
@@ -511,6 +528,46 @@ export default {
             // callback(this.Mock.getMock(name).messageBody);
             callback(mockArray[name].messageBody);
             // callback(this.Mock.getMock(name).messageBody);
+        }
+    },
+    
+    //发送指令透传接口(套系)
+    startCmdProcessTX(name, messageBody,deviceId, callback, callbackFail) {
+        let commandId = Math.floor(Math.random() * 1000);
+        var param = {
+            commandId: commandId
+        }
+        if (messageBody != undefined) {
+            param.messageBody = messageBody;
+        }
+        if (deviceId != undefined) {
+        	param.deviceId = deviceId;
+        }
+        var finalCallBack = function (resData) {
+            if (typeof resData == 'string') {
+                resData = JSON.parse(resData);
+            }
+            if (resData.errorCode != 0) {
+                callbackFail(resData);
+            } else {
+                callback(resData.messageBody);
+            }
+        }
+        var finalCallbackFail = function (resData) {
+            if (typeof resData == 'string') {
+                resData = JSON.parse(resData);
+            }
+            callbackFail(resData);
+        }
+        if (this.isDummy != true) {
+            if (isIos) {
+                this.createCallbackFunctionListener();
+                this.callbackFunctions[commandId] = finalCallBack;
+                this.callbackFailFunctions[commandId] = finalCallbackFail;
+            }
+            bridgeModule.startCmdProcess(JSON.stringify(param), finalCallBack, finalCallbackFail);
+        } else {
+            callback(this.Mock.getMock(name).messageBody);
         }
     },
 

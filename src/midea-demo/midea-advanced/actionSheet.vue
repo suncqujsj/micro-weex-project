@@ -13,7 +13,7 @@
 <script>  
 
 import base from '../base'
-import mideaActionsheet from '@/component/actionsheet.vue'
+import mideaActionsheet from '@/midea-component/actionsheet.vue'
 import mideaButton from '@/midea-component/button.vue'
 import nativeService from '@/common/services/nativeService'
 const modal = weex.requireModule('modal');

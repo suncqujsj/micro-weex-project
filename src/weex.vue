@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" ref="wrapper">
-        <midea-header title="跳转页" :isImmersion="false" @leftImgClick="leftImgClick"></midea-header>
+        <midea-header title="跳转页" :isImmersion="isImmersion" @leftImgClick="leftImgClick"></midea-header>
 
         <scroller>
             <div class="item-group">
@@ -123,6 +123,15 @@ module.exports = {
         url: "",
         history: []
     }),
+    computed: {
+        isImmersion: function () {
+            let result = true
+            if (weex.config.env.isImmersion == "false") {
+                result = false
+            }
+            return result
+        }
+    },
     methods: {
         leftImgClick() {
             nativeService.goBack()

@@ -50,7 +50,7 @@ export default {
         },
         rightImg: {
             type: String,
-            default: './img/header/me_ic_add@3x.png'
+            default: './img/header/me_ic_set@3x.png'
         },
         showLeftImg: {
             type: Boolean,

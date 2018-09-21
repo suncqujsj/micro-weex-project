@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header title="barchart" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="barchart" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <midea-barchart-view class="barchart" :data="chartData"></midea-barchart-view>
         <midea-button text="刷新数据" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>

@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="swiper" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="swiper" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <midea-image-slider :sliderStyle="{height:'750px'}" imgHeight="750px" :items="items" @change="onchange">
         </midea-image-slider>
     </div>

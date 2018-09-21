@@ -83,7 +83,7 @@ export default {
     */
     goTo(path, options, params) {
         var url
-        
+
         if (params) {
             path += (path.indexOf("?") == -1 ? '?' : "&") + Object.keys(params).map(k =>
                 encodeURIComponent(k) + '=' + encodeURIComponent(params[k] || '')
@@ -519,9 +519,9 @@ export default {
             callback(this.Mock.getMock(name).messageBody);
         }
     },
-    
+
     //发送指令透传接口(套系)
-    startCmdProcessTX(name, messageBody,deviceId, callback, callbackFail) {
+    startCmdProcessTX(name, messageBody, deviceId, callback, callbackFail) {
         let commandId = Math.floor(Math.random() * 1000);
         var param = {
             commandId: commandId
@@ -530,7 +530,7 @@ export default {
             param.messageBody = messageBody;
         }
         if (deviceId != undefined) {
-        	param.deviceId = deviceId;
+            param.deviceId = deviceId;
         }
         var finalCallBack = function (resData) {
             if (typeof resData == 'string') {
@@ -558,6 +558,24 @@ export default {
         } else {
             callback(this.Mock.getMock(name).messageBody);
         }
+    },
+    /* 服务透传接口。提供给插件发送请求至事业部的品类服务器。此接口美居APP会将请求内容加密，然后发送给“云平台”进行中转发送至事业部品类服务器。
+        params: {
+            type:服务类型，如果weex没有传，或者传入类似""的空字节，则取当前插件类型作为该数值
+            queryStrings:与H5内容一致
+            transmitData:与H5内容一致
+        }
+    */
+    requestDataTransmit(params) {
+        return new Promise((resolve, reject) => {
+            bridgeModule.requestDataTransmit(JSON.stringify(params),
+                (resData) => {
+                    resolve(this.convertToJson(resData))
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
     },
 
     /* *****即将删除, IOS已经做了改进，不在需要已callbackFunction回调callback ********/

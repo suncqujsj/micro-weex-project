@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header title="Linechart折线图" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="Linechart折线图" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <midea-linechart-view class="linechart" :data="chartData"></midea-linechart-view>
         <midea-button text="刷新数据" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>

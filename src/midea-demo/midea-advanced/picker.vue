@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" :style="{paddingTop:isIos?'0px':'0px'}">
-        <midea-header title="Picker" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="Picker" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <midea-title-bar title="选择城市（单列选择）"></midea-title-bar>
         <midea-cell title="城市" :hasTopBorder="true" :rightText="city ? city :'请选择城市'" @mideaCellClick="pickCity">
         </midea-cell>

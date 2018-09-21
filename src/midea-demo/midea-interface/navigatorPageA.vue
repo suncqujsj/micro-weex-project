@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="页面A" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="页面A" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <midea-button text="跳转至页面B" @mideaButtonClicked="goToPageB">
         </midea-button>
         <midea-button text="跳转至页面B（带简单参数）" @mideaButtonClicked="goToPageBWithParam">

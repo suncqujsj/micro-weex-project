@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="Header" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="Header" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <div style="height: 220px; margin-top: 20px;">
             <midea-header :title="title1" :isImmersion="isipx?false:true"></midea-header>
         </div>

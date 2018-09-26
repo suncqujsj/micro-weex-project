@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="Device Status" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="Device Status" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <midea-device-status :mainStatus="mainStatus" :unit="unit" :showSubStatus="true" :deviceTip="deviceTip" @hideDeviceTip="hideDeviceTip" :mainStatusColor="mainStatusColor" :mainStatusFontSize="mainStatusFontSize" :unitColor="unitColor" :unitFontSize="unitFontSize">
             <text slot="line1" class="subStatus">{{substatus1}}</text>
             <text slot="line2" class="subStatus">{{substatus2}}</text>

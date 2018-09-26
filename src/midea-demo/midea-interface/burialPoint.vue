@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-header title="burialPoint埋点" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="burialPoint埋点" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <midea-button text="执行burialPoint" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
     </div>

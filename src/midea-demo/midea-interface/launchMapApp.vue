@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="launchMapApp打开地图软件" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="launchMapApp打开地图软件" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <midea-title-bar title="接口参数:"></midea-title-bar>
         <textarea type="text" placeholder="Input Text" class="textarea" v-model="messageParamString" @input="dataChange" rows=2 />
         <midea-button text="打开地图" @mideaButtonClicked="mideaButtonClicked">

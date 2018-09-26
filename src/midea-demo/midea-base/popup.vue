@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="Popup" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="Popup" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <midea-button text="点击弹出顶部面板" @mideaButtonClicked="openTopOverlay">
         </midea-button>
 

@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="Promt" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="Promt" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <midea-button text="打开带输入框的对话框" @mideaButtonClicked="openRenameDialog">
         </midea-button>
 

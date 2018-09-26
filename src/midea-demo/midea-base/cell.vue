@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <midea-header title="Cell" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+    <midea-header title="Cell" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
     <midea-cell title="仅标题且带底部边距" :hasArrow="true" :hasMargin="true" :hasTopBorder="false" :clickActivied="true" style="margin-top:24px" @mideaCellClick="itemClicked">
     </midea-cell>
     <midea-cell title="标题附带描述" desc="描述" :hasMargin="true" :hasArrow="true" :clickActivied="true" :hasTopBorder="false" @mideaCellClick="itemClicked">

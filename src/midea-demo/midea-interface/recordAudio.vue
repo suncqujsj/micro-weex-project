@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="recordAudio录音" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="recordAudio录音" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <midea-title-bar title="接口参数:"></midea-title-bar>
         <textarea type="text" placeholder="Input Text" class="textarea" :value="messageParamString" @input="dataChange" rows=2 />
         <midea-button :text="isRecording?'停止录音':'开始录音'" @mideaButtonClicked="recordAudio(isRecording?false:true)">

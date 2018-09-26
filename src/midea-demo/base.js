@@ -128,6 +128,9 @@ export default {
         handleNotification(data) {
             //处理推送消息
             debugUtil.debugLog(srcFileName, this.pushKey, data)
+        },
+        reload(){
+            nativeService.reload()
         }
     },
     created() {

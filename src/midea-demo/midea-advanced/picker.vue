@@ -189,6 +189,12 @@ export default {
                 'titleColor': '#020F13', //标题颜色
                 'titleBgColor': '#E7EDEF' //标题栏颜色
             }, event => {
+                nativeService.toast(event.result)
+                if (event.result === 'success') {
+                    this.time = event.data;
+                }
+            }, event => {
+                nativeService.toast(event.result)
                 if (event.result === 'success') {
                     this.time = event.data;
                 }

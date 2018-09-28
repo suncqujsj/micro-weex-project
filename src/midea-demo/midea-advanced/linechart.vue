@@ -60,10 +60,16 @@ export default {
                         "smooth": 0  //0直线，1平滑
                     }
                 ],
+                "xAxisColor": "#000000", //x轴线的颜色，如果不设置，则默认是黑色线
+                "xAxisLabelColor": "#000000", //x label的字体颜色，如果不设置，则默认是黑色字体颜色
+                "yAxisColor": "#000000", //y轴线的颜色，如果不设置，则默认是黑色线
+                "yAxisLabelColor": "#000000", // label的字体颜色，如果不设置，则默认是黑色字体颜色
+                "background": "#ffffff", //不传，则默认使用透明背景
                 "description": "",
                 "legend": {
                     "position": "TOP_LEFT", //"TOP_LEFT"/"TOP_RIGHT"
-                    "orientation": "HORIZONTAL" //"HORIZONTAL"/"BOTTOM_RIGHT"
+                    "orientation": "HORIZONTAL", //"HORIZONTAL"/"BOTTOM_RIGHT"
+                    "show": false //是否显示标识
                 },
                 "unit": {
                     "x": "日期",

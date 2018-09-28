@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import IndexPage from './midea-demo/weex.vue'
+import IndexPage from './weex.vue'
 
 export default {
     components: { IndexPage }

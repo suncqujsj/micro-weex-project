@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" ref="wrapper">
-        <midea-header title="DolphinWeex" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
+        <midea-header title="DolphinWeex" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="./assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <midea-tab ref="mTab" :tabArray="tabData" @tabClicked="tabClicked">
         </midea-tab>
         <slider :value="val" :index="index" @change="changeArea" :class="['slider', env.platform=='Web'&&'web-page']" auto-play="false">
@@ -126,7 +126,7 @@ module.exports = {
             { title: 'getCurrentHomeInfo获取当前家庭信息', link: "getCurrentHomeInfo" },
             { title: 'getDeviceInfo获取当前设备信息', link: "getDeviceInfo" },
             { title: 'getGPSInfo获取GPS定位信息', link: "getGPSInfo" },
-            { title: 'getLogonInfo获取登录态', link: "getLogonInfo" },
+            { title: 'getLoginInfo获取登录态', link: "getLoginInfo" },
             { title: 'getNetworkStatus获取网络信息', link: "getNetworkStatus" },
             { title: 'getUserInfo获取用户信息', link: "getUserInfo" },
             { title: 'hapticFeedback手机震动', link: "hapticFeedback" },

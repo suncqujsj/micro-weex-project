@@ -26,7 +26,7 @@ if (ipParam && ipParam.length > 1) {
         console.log(port)
     }
     // 测试
-    isDummy = true
+    isDummy = util.getParameters(weex.config.bundleUrl, "isDummy") == "true"
 }
 const platform = weex.config.env.platform;
 if (platform == 'Web') {
@@ -102,11 +102,12 @@ export default {
             let theRequest = this.getParameters()
             let ip = theRequest['ip']
             let root = theRequest['root']
+            let isDummy = this.isDummy
             let targetPath = path
             if (targetPath.indexOf("?") != -1) {
-                targetPath += '&root=' + root + '&ip=' + ip
+                targetPath += '&root=' + root + '&ip=' + ip + '&isDummy=' + isDummy
             } else {
-                targetPath += '?root=' + root + '&ip=' + ip
+                targetPath += '?root=' + root + '&ip=' + ip + '&isDummy=' + isDummy
             }
             if (ip == null || ip.length < 1) {
                 url = "http://localhost:" + port + "/dist/" + root + '/' + targetPath;
@@ -753,7 +754,6 @@ export default {
     //根据设备信息获取插件信息
     getDevicePluginInfo(params) {
         return new Promise((resolve, reject) => {
-            let that = this;
             if (this.isDummy != true) {
                 bridgeModule.getDevicePluginInfo(params,
                     (resData) => {
@@ -928,11 +928,15 @@ export default {
         }
         if (this.isDummy == true) {
             return new Promise((resolve, reject) => {
-                let resData = Mock.getMock(param.operation);
-                if (resData.errorCode == 0) {
-                    resolve(resData);
-                } else {
-                    reject(resData)
+                try {
+                    let resData = Mock.getMock(param.operation);
+                    if (resData.errorCode == 0) {
+                        resolve(resData);
+                    } else {
+                        reject(resData)
+                    }
+                } catch (error) {
+                    reject("获取模拟数据出错")
                 }
             });
         } else {

@@ -1,14 +1,15 @@
 <template>
-    <div>
-        {{test}}
+    <div >
+        <text class="r test">{{test}}</text>
     </div>
 </template>
 
-<style>
-.indicator{
-    bottom: 10px;
-    color: #59a
-}
+<style lang="less">
+@import "../common/less/common";
+    .r{
+        .red;
+        font-size: 36px;
+    }
 </style>
 
 <script>
@@ -43,12 +44,12 @@
                 var self = this;
                 var sendCmd = cmdFun.createQueryMessage();
                 //nativeService.showLoading();
+                debugger;
                 nativeService.startCmdProcess(
                     "query",
                     sendCmd,
                     function (result) {
                         //nativeService.hideLoading();
-                        nativeService.toast(123);
                         nativeService.toast(result);
                         var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
                         var arr = result_arr.split(",");
@@ -61,7 +62,7 @@
                     function (result) {
                         //nativeService.hideLoading();
                         nativeService.toast(result);
-                        nativeService.toast("查询失败" + JSON.stringify(result));
+                        // nativeService.toast("查询失败" + JSON.stringify(result));
                     }
                 );
             },

@@ -28,7 +28,7 @@
             </div>
             <div class="action-bar">
                 <midea-title-bar title="输入远端目标页面地址"></midea-title-bar>
-                <textarea type="text" placeholder="输入远端目标页面地址" class="textarea" v-model="url" rows=3 />
+                <textarea type="text" placeholder="输入远端目标页面地址" class="textarea" v-model="url" rows=4 />
                 <midea-button text="进入远端目标页面" @mideaButtonClicked="mideaButtonClicked"></midea-button>
             </div>
 
@@ -73,7 +73,8 @@ module.exports = {
             { key: 0, value: "midea-demo" },
             { key: 1, value: "customer-service" },
             { key: 2, value: "midea-rooms" },
-            { key: 3, value: "midea-card" }
+            { key: 3, value: "midea-card" },
+            { key: 3, value: "community" }
         ],
         card: 'T0xAC',
         isShowCardList: false,

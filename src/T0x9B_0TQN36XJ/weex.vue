@@ -43,21 +43,22 @@
             queryStatus() {
                 var self = this;
                 var sendCmd = cmdFun.createQueryMessage();
+                // nativeService.alert(JSON.stringify(sendCmd));
                 //nativeService.showLoading();
-                debugger;
+                // debugger;
                 nativeService.startCmdProcess(
                     "query",
                     sendCmd,
                     function (result) {
                         //nativeService.hideLoading();
-                        nativeService.toast(result);
+                        nativeService.alert(JSON.stringify(result));
                         var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
                         var arr = result_arr.split(",");
                         //nativeService.alert(arr[11]);
                         var analysisObj = cmdFun.analysisCmd(arr);
                         // self.analysisFun(analysisObj);
                         // nativeService.toast(analysisObj);
-                        self.test = JSON.stringify(analysisObj);
+                        // self.test = JSON.stringify(analysisObj);
                     },
                     function (result) {
                         //nativeService.hideLoading();

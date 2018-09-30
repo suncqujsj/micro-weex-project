@@ -15,8 +15,8 @@ export default {
   },
   // 查询指令
   createQueryMessage() {
-    var messageBody = message.createMessageBody(34); 
-    message.setByte(messageBody, 0, 0);
+    var messageBody = message.createMessageBody(20);
+    message.setByte(messageBody, 0, 0x31);
     var sendMessage = message.createMessage(0x9B, 0x03, messageBody);
     //nativeService.alert(sendMessage);    
     return sendMessage;

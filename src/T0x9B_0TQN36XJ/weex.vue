@@ -34,7 +34,7 @@
             // nativeService.initMockData({
             //     query: query
             // });
-            this.queryStatus();
+            // this.queryStatus();
         },
         methods: {
             goBack(){

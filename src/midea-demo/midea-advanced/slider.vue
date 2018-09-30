@@ -6,32 +6,36 @@
             <midea-title-bar title="工作温度℃" bgColor="#EEF4F7"></midea-title-bar>
             <div class="slider-sample">
                 <text class="slider-sample-range">{{min}}℃</text>
-                <midea-slider class="slider-sample-area" @slideEnd="slideEnd" :max="max" :min="min" :value="value" :step="step" :axisH="axisH" :pointH="pointH" :axisColor="axisColor" :pointColor="pointColor" @tipFormat="tempFormat" :tipTxt="tipTemp"></midea-slider>
+                <midea-slider class="slider-sample-area" @slideEnd="slideEnd" :max="max" :min="min" :value="value" :step="step" :axisH="axisH" :pointH="pointH" :axisColor="axisColor" :axisBgColor="axisColor" :pointColor="pointColor" @tipFormat="tempFormat" :tipTxt="tipTemp"></midea-slider>
                 <text class="slider-sample-range slider-sample-range-right">{{max}}℃</text>
             </div>
-            <div class="slider-sample">
+            <midea-title-bar title="固定高度" bgColor="#EEF4F7"></midea-title-bar>
+            <div class="slider-sample-fix">
                 <text class="slider-sample-range">{{min}}℃</text>
-                <midea-slider class="slider-sample-area" @slideEnd="slideEnd" :max="max" :min="min" :value="value" :step="step" :axisH="axisH" :pointH="pointH" :axisBgColor="axisColor" :axisColor="axisColor" :pointColor="pointColor"></midea-slider>
+                <midea-seek-bar class="slider-fix-area" @slideEnd="slideEnd" :max="max" :min="min" :value="value" :step="step" :axisH="axisH" :pointH="pointH" :axisBgColor="axisColor" :axisColor="axisColor" :pointColor="pointColor" :showTip=false></midea-seek-bar>
                 <text class="slider-sample-range slider-sample-range-right">{{max}}℃</text>
             </div>
 
             <midea-title-bar title="工作时长" bgColor="#EEF4F7"></midea-title-bar>
-            <div style="height:200px;">
-                <midea-slider @slideEnd="slideEnd" @tipFormat="timeFormat" max="120" min="0" value="84" :step="step" :axisH="axisH" :pointH="pointH" :axisColor="axisColor" :pointColor="pointColor" :tipTxt="tipTime"></midea-slider>
+            <div class="slider-sample">
+                <midea-slider class="slider-sample-area" @slideEnd="slideEnd" @tipFormat="timeFormat" max="120" min="0" value="84" :step="step" :axisH="axisH" :pointH="pointH" :axisColor="axisColor" :pointColor="pointColor" :tipTxt="tipTime"></midea-slider>
             </div>
 
-            <!-- <midea-title-bar title="自定义背景" bgColor="#EEF4F7"></midea-title-bar>
-            <div class="silder-container">
-                <div class="line-container">
-                    <div class="line"></div>
-                    <div class="line"></div>
-                    <div class="line"></div>
-                    <div class="line"></div>
-                    <div class="line"></div>
-                    <div class="line"></div>
+            <midea-title-bar title="自定义背景" bgColor="#EEF4F7"></midea-title-bar>
+
+            <div>
+                <div class="silder-container">
+                    <div class="line-container">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                    </div>
+                    <midea-seek-bar class="slider-fix-area" @slideEnd="slideEnd" :max="7" :min="1" :value="1" :step="1" :axisH="axisH" :pointH="pointH" :axisBgColor="axisColor" :axisColor="axisColor" :pointColor="pointColor" :showTip=false axisAlpha="0" axisBgAlpha="0"></midea-seek-bar>
                 </div>
-                <midea-slider @slideEnd="slideEnd" :max="7" :min="1" :value="1" :step="1" :axisH="0" :pointH="26" :axisColor="axisColor" pointColor="#EEF4F7" :showTip="false"></midea-slider>
-            </div> -->
+            </div>
 
             <midea-title-bar :title="'weex模拟组件:'+pointIndex" bgColor="#EEF4F7"></midea-title-bar>
             <div class="custome-wrapper">
@@ -61,7 +65,6 @@
   justify-content: center;
   align-items: flex-end;
   width: 750px;
-  padding-bottom: 20px;
 }
 .slider-sample-range {
   width: 60px;
@@ -75,25 +78,33 @@
 }
 .slider-sample-area {
   flex: 1;
-  padding-bottom: 13px;
+  border-color: #5d75f6;
+  border-width: 1px;
+}
+.slider-sample-fix {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 750px;
+}
+.slider-fix-area {
+  flex: 1;
+  height: 80px;
+  border-color: #5d75f6;
+  border-width: 1px;
 }
 .silder-container {
   position: relative;
-  height: 52px;
-  margin-top: 50px;
-  padding-top: 25px;
+  height: 80px;
 }
 .line-container {
   position: absolute;
-  top: 24px;
   left: 20px;
-  height: 6px;
+  height: 80px;
   width: 710px;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  border-color: #5d75f6;
-  border-width: 1px;
 }
 .line {
   height: 6px;
@@ -109,7 +120,7 @@
   background-color: #fff;
   flex: 0.1;
 }
-.custome-wrapper{
+.custome-wrapper {
   justify-content: center;
   align-items: center;
 }

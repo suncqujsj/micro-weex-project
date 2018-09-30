@@ -515,6 +515,7 @@ export default {
                 this.callbackFunctions[commandId] = finalCallBack;
                 this.callbackFailFunctions[commandId] = finalCallbackFail;
             }
+            this.alert(JSON.stringify(param))
             bridgeModule.startCmdProcess(JSON.stringify(param), finalCallBack, finalCallbackFail);
         } else {
             callback(this.Mock.getMock(name).messageBody);

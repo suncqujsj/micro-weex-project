@@ -21,7 +21,6 @@
     </div>
 </template>
 <style scoped>
-
 </style>
 <script> 
 import base from '../base'
@@ -68,6 +67,7 @@ export default {
                 'titleColor': '#020F13', //标题颜色
                 'titleBgColor': '#E7EDEF' //标题栏颜色
             }, event => {
+                nativeService.toast(event.result)
                 if (event.result == 'success') {
                     var dataArr = event.data.replace("[", "").replace("]", "").split(",");
                     that.cityIndex = dataArr[0];
@@ -100,11 +100,14 @@ export default {
                 'titleColor': '#020F13', //标题颜色
                 'titleBgColor': '#E7EDEF' //标题栏颜色
             }, event => {
-                var data = event.data;
-                var dataArr = data.replace("[", "").replace("]", "").split(",");
-                that.colorIndex = dataArr[0];
-                that.sizeIndex = dataArr[1];
-                that.attribute = itemsColor[dataArr[0]] + ',' + itemsSize[dataArr[1]];
+                nativeService.toast(event.result)
+                if (event.result == 'success') {
+                    var data = event.data;
+                    var dataArr = data.replace("[", "").replace("]", "").split(",");
+                    that.colorIndex = dataArr[0];
+                    that.sizeIndex = dataArr[1];
+                    that.attribute = itemsColor[dataArr[0]] + ',' + itemsSize[dataArr[1]];
+                }
             });
         },
         pickCascade() {
@@ -153,8 +156,11 @@ export default {
                 'titleColor': '#020F13', //标题颜色
                 'titleBgColor': '#E7EDEF' //标题栏颜色
             }, event => {
-                this.cascadedItem = JSON.parse(event.data)
-                this.cascadedDesc = this.cascadedItem[0].name + "," + this.cascadedItem[1].name + "," + this.cascadedItem[2].name
+                nativeService.toast(event.result)
+                if (event.result == 'success') {
+                    this.cascadedItem = JSON.parse(event.data)
+                    this.cascadedDesc = this.cascadedItem[0].name + "," + this.cascadedItem[1].name + "," + this.cascadedItem[2].name
+                }
             });
         },
         pickDate() {
@@ -172,6 +178,7 @@ export default {
                 'titleBgColor': '#E7EDEF' //标题栏颜色
 
             }, event => {
+                nativeService.toast(event.result)
                 var result = event.result;
                 if (result == 'success') {
                     self.date = event.data;
@@ -188,11 +195,6 @@ export default {
                 'confirmTxtColor': '#020F13', //标题颜色
                 'titleColor': '#020F13', //标题颜色
                 'titleBgColor': '#E7EDEF' //标题栏颜色
-            }, event => {
-                nativeService.toast(event.result)
-                if (event.result === 'success') {
-                    this.time = event.data;
-                }
             }, event => {
                 nativeService.toast(event.result)
                 if (event.result === 'success') {

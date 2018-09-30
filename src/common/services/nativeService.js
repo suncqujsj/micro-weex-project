@@ -523,6 +523,7 @@ export default {
                 this.callbackFunctions[commandId] = finalCallBack;
                 this.callbackFailFunctions[commandId] = finalCallbackFail;
             }
+            this.alert(JSON.stringify(param))
             bridgeModule.startCmdProcess(JSON.stringify(param), finalCallBack, finalCallbackFail);
         } else {
             // parker 这里用二进制指令

@@ -23,6 +23,7 @@
             </div>
             <div class="item-group">
                 <text class="text-label">模拟数据:</text>
+                <text>isDummy:{{isDummy}}</text>
                 <midea-switch2 :checked="isDummy" @change="onIsDummyChange"></midea-switch2>
             </div>
             <div class="action-bar">
@@ -125,7 +126,7 @@ module.exports = {
             { key: "T0xFC", value: "T0xFC净化器" },
             { key: "T0xFD", value: "T0xFD加湿器" }
         ],
-        isDummy: true,
+        isDummy: false,
         url: "",
         history: []
     }),

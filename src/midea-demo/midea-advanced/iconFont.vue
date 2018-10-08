@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" ref="wrapper">
-        <midea-header title="IconFont字体图标" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="IconFont字体图标" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <scroller style='align-items:center'>
             <div style='margin-top:20px'>
                 <text style="color:red;font-size:50px">only support font for ttf and woff</text>

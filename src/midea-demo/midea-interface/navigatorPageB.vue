@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="页面B" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="页面B" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <midea-button text="跳转至页面C" @mideaButtonClicked="goToPageC">
         </midea-button>
         <midea-button text="返回至页面A" @mideaButtonClicked="backToPageA">
@@ -9,6 +9,7 @@
         </midea-button>
         <midea-button text="退出至主页面" @mideaButtonClicked="backToNative">
         </midea-button>
+        <text v-if="param">  url参数：{{param}}</text>
     </div>
 </template>
 <style scoped>
@@ -31,7 +32,8 @@ module.exports = {
     mixins: [base],
     data() {
         return {
-            result: ''
+            result: '',
+            param: null
         }
     },
     methods: {
@@ -39,16 +41,17 @@ module.exports = {
             nativeService.goBack({ viewTag: 'navigatorPageA' })
         },
         goToPageC() {
-            nativeService.goTo('midea-interface/navigatorPageC.js', {viewTag: 'navigatorPageC'})
+            nativeService.goTo('midea-interface/navigatorPageC.js', { viewTag: 'navigatorPageC' })
         },
         backToRoot() {
             nativeService.goBack({ viewTag: 'rootView' })
         },
-        backToNative(){
+        backToNative() {
             nativeService.backToNative()
         }
     },
     created() {
+        this.param = nativeService.getParameters('param')
     }
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" @viewappear="viewappear" @viewdisappear="viewdisappear">
-        <midea-header title="weex.config.env变量" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="weex.config.env变量" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <scroller>
             <div class="group">
                 <text class="text key">生命周期钩子和事件</text>

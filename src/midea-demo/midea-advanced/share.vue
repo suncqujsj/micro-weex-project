@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="Share" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="Share" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <midea-button text="点击调用分享功能" @mideaButtonClicked="showSharePannel"></midea-button>
     </div>
 </template>

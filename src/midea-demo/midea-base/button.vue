@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="Button按钮" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="Button按钮" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <scroller class="scroller">
             <midea-button text="按钮" type="primary" :btnStyle="{'width': '120px', 'height':'56px'}" @mideaButtonClicked="mideaButtonClicked">
             </midea-button>

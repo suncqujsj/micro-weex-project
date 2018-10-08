@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="showLoadingWithMsg" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="showLoadingWithMsg" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <midea-title-bar title="显示文本"></midea-title-bar>
 
         <div style="background-color: #e2e2e2;">

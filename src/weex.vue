@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" ref="wrapper">
-        <midea-header title="跳转页" :isImmersion="false" @leftImgClick="leftImgClick"></midea-header>
+        <midea-header title="跳转页" :isImmersion="isImmersion" @leftImgClick="leftImgClick"></midea-header>
 
         <scroller>
             <div class="item-group">
@@ -21,9 +21,14 @@
                 <midea-button text="选择" :btnStyle="{width: '120px', height: '60px'}" @mideaButtonClicked="isShowCardList=true">
                 </midea-button>
             </div>
+            <div class="item-group">
+                <text class="text-label">模拟数据:</text>
+                <text>isDummy:{{isDummy}}</text>
+                <midea-switch2 :checked="isDummy" @change="onIsDummyChange"></midea-switch2>
+            </div>
             <div class="action-bar">
                 <midea-title-bar title="输入远端目标页面地址"></midea-title-bar>
-                <textarea type="text" placeholder="输入远端目标页面地址" class="textarea" v-model="url" rows=3 />
+                <textarea type="text" placeholder="输入远端目标页面地址" class="textarea" v-model="url" rows=4 />
                 <midea-button text="进入远端目标页面" @mideaButtonClicked="mideaButtonClicked"></midea-button>
             </div>
 
@@ -45,14 +50,15 @@
 <script>
 import nativeService from '@/common/services/nativeService'
 
-import { MideaHeader, MideaTitleBar, MideaButton, MideaSelect } from '@/index'
+import { MideaHeader, MideaTitleBar, MideaButton, MideaSelect, MideaSwitch2 } from '@/index'
 
 module.exports = {
     components: {
         MideaHeader,
         MideaTitleBar,
         MideaButton,
-        MideaSelect
+        MideaSelect,
+        MideaSwitch2
     },
     data: () => ({
         host: '10.8.81.45',
@@ -67,7 +73,8 @@ module.exports = {
             { key: 0, value: "midea-demo" },
             { key: 1, value: "customer-service" },
             { key: 2, value: "midea-rooms" },
-            { key: 3, value: "midea-card" }
+            { key: 3, value: "midea-card" },
+            { key: 3, value: "community" }
         ],
         card: 'T0xAC',
         isShowCardList: false,
@@ -120,9 +127,19 @@ module.exports = {
             { key: "T0xFC", value: "T0xFC净化器" },
             { key: "T0xFD", value: "T0xFD加湿器" }
         ],
+        isDummy: false,
         url: "",
         history: []
     }),
+    computed: {
+        isImmersion: function () {
+            let result = true
+            if (weex.config.env.isImmersion == "false") {
+                result = false
+            }
+            return result
+        }
+    },
     methods: {
         leftImgClick() {
             nativeService.goBack()
@@ -165,6 +182,10 @@ module.exports = {
             this.card = event.item.key
             this.url = this.generateUrl()
         },
+        onIsDummyChange(event) {
+            this.isDummy = event.value;
+            this.url = this.generateUrl()
+        },
         generateUrl() {
             let cardPath = ''
             let indexPath = '/weex.js'
@@ -172,7 +193,7 @@ module.exports = {
                 cardPath = "/" + this.card + "/midea-card"
                 indexPath = "/card.js"
             }
-            return "http://" + this.host + ":8080/dist/" + this.module + cardPath + indexPath + "?root=" + this.module + cardPath + "&ip=" + this.host
+            return "http://" + this.host + ":8080/dist/" + this.module + cardPath + indexPath + "?root=" + this.module + cardPath + "&ip=" + this.host + "&isDummy=" + this.isDummy
         }
     },
     created() {
@@ -259,6 +280,8 @@ module.exports = {
   font-size: 32px;
   color: #000000;
   width: 140px;
+  padding-top: 22px;
+  padding-bottom: 22px;
 }
 .text-input {
   flex: 1;

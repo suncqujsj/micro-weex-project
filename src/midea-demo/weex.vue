@@ -1,29 +1,29 @@
 <template>
     <div class="wrapper" ref="wrapper">
-        <midea-header title="DolphinWeex" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="DolphinWeex" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="./assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <midea-tab ref="mTab" :tabArray="tabData" @tabClicked="tabClicked">
         </midea-tab>
-        <slider :value="val" :index="index" @change="changeArea" :class="['slider', env.platform=='Web'&&'web-page']" auto-play="false">
+        <slider ref="slider" :value="val" :index="index" @change="changeArea" :class="['slider', env.platform=='Web'&&'web-page']" auto-play="false">
             <div :class="['sample-div', env.platform=='Web'&&'web-page']">
-                <list :class="['sample-list', env.platform=='Web'&&'web-page']" show-scrollbar="true">
+                <list :class="['sample-list', env.platform=='Web'&&'web-page']" :style="{'height':containerHeight}" show-scrollbar="true">
                     <midea-cell :clickActivied="true" v-for="(item,index) in sortedBaseList" :key="'tab1'+index" :title="item.title" height="120" :has-arrow="true" @mideaCellClick="goToBase(item.link)">
                     </midea-cell>
                 </list>
             </div>
             <div :class="['sample-div', env.platform=='Web'&&'web-page']">
-                <list :class="['sample-list', env.platform=='Web'&&'web-page']" show-scrollbar="true">
+                <list :class="['sample-list', env.platform=='Web'&&'web-page']" :style="{'height':containerHeight}" show-scrollbar="true">
                     <midea-cell :clickActivied="true" v-for="(item,index) in sortedAdvancedlist" :key="'tab2'+index" :title="item.title" height="120" :has-arrow="true" @mideaCellClick="goToAdvanced(item.link)">
                     </midea-cell>
                 </list>
             </div>
             <div :class="['sample-div', env.platform=='Web'&&'web-page']">
-                <list :class="['sample-list', env.platform=='Web'&&'web-page']" show-scrollbar="true">
+                <list :class="['sample-list', env.platform=='Web'&&'web-page']" :style="{'height':containerHeight}" show-scrollbar="true">
                     <midea-cell :clickActivied="true" v-for="(item,index) in sortedInterfacelist" :key="'tab2'+index" :title="item.title" height="120" :has-arrow="true" @mideaCellClick="goToInterface(item.link)">
                     </midea-cell>
                 </list>
             </div>
             <div :class="['sample-div', env.platform=='Web'&&'web-page']">
-                <list :class="['sample-list', env.platform=='Web'&&'web-page']" show-scrollbar="true">
+                <list :class="['sample-list', env.platform=='Web'&&'web-page']" :style="{'height':containerHeight}" show-scrollbar="true">
                     <midea-cell :clickActivied="true" v-for="(item,index) in sortedWeexlist" :key="'tab2'+index" :title="item.title" height="120" :has-arrow="true" @mideaCellClick="goToWeex(item.link)">
                     </midea-cell>
                 </list>
@@ -45,10 +45,10 @@
 .sample-div {
   width: 750px;
   flex: 1;
+  position: relative;
 }
 .sample-list {
   width: 750px;
-  flex: 1;
 }
 .web-page {
   height: 1200px;
@@ -61,6 +61,7 @@ import base from './base'
 import mideaTab from '@/midea-component/mTab.vue';
 import mideaCell from '@/midea-component/item.vue';
 import nativeService from '@/common/services/nativeService'
+const dom = weex.requireModule('dom')
 
 module.exports = {
     components: {
@@ -126,7 +127,7 @@ module.exports = {
             { title: 'getCurrentHomeInfo获取当前家庭信息', link: "getCurrentHomeInfo" },
             { title: 'getDeviceInfo获取当前设备信息', link: "getDeviceInfo" },
             { title: 'getGPSInfo获取GPS定位信息', link: "getGPSInfo" },
-            { title: 'getLogonInfo获取登录态', link: "getLogonInfo" },
+            { title: 'getLoginInfo获取登录态', link: "getLoginInfo" },
             { title: 'getNetworkStatus获取网络信息', link: "getNetworkStatus" },
             { title: 'getUserInfo获取用户信息', link: "getUserInfo" },
             { title: 'hapticFeedback手机震动', link: "hapticFeedback" },
@@ -145,6 +146,7 @@ module.exports = {
             { title: 'showLoading打开原生loading界面', link: "showLoading" },
             { title: 'showLoadingWithMsg打开原生loading界面', link: "showLoadingWithMsg" },
             { title: 'showSharePanel打开分享界面', link: "showSharePanel" },
+            { title: 'startCmdProcess透传', link: "startCmdProcess" },
             { title: 'takePhoto照相', link: "takePhoto" },
             { title: 'updateDeviceInfo更新当前设备信息', link: "updateDeviceInfo" },
             { title: 'updateAutoList更新自动化列表', link: "updateAutoList" },
@@ -156,7 +158,8 @@ module.exports = {
             { title: 'BroadcastChannel示例', link: "broadcastChannelA" },
             { title: 'storage数据', link: "storage" },
             { title: 'weex环境变量', link: "weexEnv" },
-        ]
+        ],
+        containerHeight: 1200
     }),
     computed: {
         sortedBaseList() {
@@ -199,6 +202,11 @@ module.exports = {
             var path = "midea-weex/" + link + ".js";
             nativeService.goTo(path, { viewTag: link });
         }
+    },
+    mounted() {
+        dom.getComponentRect(this.$refs.slider, option => {
+            this.containerHeight = option.size.height
+        })
     }
 };
 </script>

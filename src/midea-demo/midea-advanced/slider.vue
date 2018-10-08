@@ -1,57 +1,110 @@
 <template>
     <div class="wrapper">
-        <midea-header title="Slider" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="Slider" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
-        <midea-title-bar title="工作温度℃" bgColor="#EEF4F7"></midea-title-bar>
-        <div style="height:320px;">
-            <midea-slider @slideEnd="slideEnd" @tipFormat="tempFormat" :max="max" :min="min" :value="value" :step="step" :axisH="axisH" :pointH="pointH" :axisColor="axisColor" :pointColor="pointColor" :tipTxt="tipTemp"></midea-slider>
-        </div>
-
-        <midea-title-bar title="工作时长" bgColor="#EEF4F7"></midea-title-bar>
-        <div style="height:380px;">
-            <midea-slider @slideEnd="slideEnd" @tipFormat="timeFormat" max="120" min="0" value="84" :step="step" :axisH="axisH" :pointH="pointH" :axisColor="axisColor" :pointColor="pointColor" :tipTxt="tipTime"></midea-slider>
-        </div>
-
-        <!--
-   <midea-title-bar title="跟随变化" bgColor="#EEF4F7"></midea-title-bar>
-   <div style="height:200px;">
-   <midea-slider @slideEnd="slideEnd" :showTip="true" max="100" min="0" value="60" unit="度" :step="10"
-   ></midea-slider>
- -->
-
-        <midea-title-bar title="自定义背景" bgColor="#EEF4F7"></midea-title-bar>
-         <div class="silder-container">
-            <div class="line-container">
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
+        <scroller class="scroller-wrapper">
+            <midea-title-bar title="工作温度℃" bgColor="#EEF4F7"></midea-title-bar>
+            <div class="slider-sample">
+                <text class="slider-sample-range">{{min}}℃</text>
+                <midea-slider class="slider-sample-area" @slideEnd="slideEnd" :max="max" :min="min" :value="value" :step="step" :axisH="axisH" :pointH="pointH" :axisColor="axisColor" :axisBgColor="axisColor" :pointColor="pointColor" @tipFormat="tempFormat" :tipTxt="tipTemp"></midea-slider>
+                <text class="slider-sample-range slider-sample-range-right">{{max}}℃</text>
             </div>
-            <midea-slider @slideEnd="slideEnd" :max="7" :min="1" :value="1" :step="1" :axisH="0" :pointH="26" :axisColor="axisColor"  pointColor="#EEF4F7" showTip="false"></midea-slider>
-        </div>
+            <midea-title-bar title="固定高度" bgColor="#EEF4F7"></midea-title-bar>
+            <div class="slider-sample-fix">
+                <text class="slider-sample-range">{{min}}℃</text>
+                <midea-seek-bar class="slider-fix-area" @slideEnd="slideEnd" :max="max" :min="min" :value="value" :step="step" :axisH="axisH" :pointH="pointH" :axisBgColor="axisColor" :axisColor="axisColor" :pointColor="pointColor" :showTip=false></midea-seek-bar>
+                <text class="slider-sample-range slider-sample-range-right">{{max}}℃</text>
+            </div>
 
+            <midea-title-bar title="工作时长" bgColor="#EEF4F7"></midea-title-bar>
+            <div class="slider-sample">
+                <midea-slider class="slider-sample-area" @slideEnd="slideEnd" @tipFormat="timeFormat" max="120" min="0" value="84" :step="step" :axisH="axisH" :pointH="pointH" :axisColor="axisColor" :pointColor="pointColor" :tipTxt="tipTime"></midea-slider>
+            </div>
+
+            <midea-title-bar title="自定义背景" bgColor="#EEF4F7"></midea-title-bar>
+
+            <div>
+                <div class="silder-container">
+                    <div class="line-container">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                    </div>
+                    <midea-seek-bar class="slider-fix-area" @slideEnd="slideEnd" :max="7" :min="1" :value="1" :step="1" :axisH="axisH" :pointH="pointH" :axisBgColor="axisColor" :axisColor="axisColor" :pointColor="pointColor" :showTip=false axisAlpha="0" axisBgAlpha="0"></midea-seek-bar>
+                </div>
+            </div>
+
+            <midea-title-bar :title="'weex模拟组件:'+pointIndex" bgColor="#EEF4F7"></midea-title-bar>
+            <div class="custome-wrapper">
+                <div class="custome-container" :style="{'width':(customeSliderWidth+40)+'px'}">
+                    <div class="custome-line-container" :style="{'width':(customeSliderWidth+20)+'px'}">
+                        <div v-for="(item,index) in customeSliderCount" class="line" :key="index"></div>
+                    </div>
+                    <scroller class="custome-scroller" scroll-direction="horizontal" show-scrollbar="false" @scroll="scroll" @scrollend="scrollEnd">
+                        <div :ref="'customeScroller'" class="point-wrapper" :style="{'width':(2*customeSliderWidth+40)+'px'}">
+                            <div class="point" :style="{'margin-left':customeSliderWidth+'px'}"></div>
+                        </div>
+                    </scroller>
+                </div>
+            </div>
+        </scroller>
     </div>
 </template>
 <style scoped>
-.silder-container{
+.wrapper {
+  flex: 1;
+}
+.scroller-wrapper {
+  padding-bottom: 50px;
+}
+.slider-sample {
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+  width: 750px;
+}
+.slider-sample-range {
+  width: 60px;
+  font-size: 28px;
+  color: #888888;
+  text-align: right;
+}
+.slider-sample-range-right {
+  width: 90px;
+  text-align: left;
+}
+.slider-sample-area {
+  flex: 1;
+  border-color: #5d75f6;
+  border-width: 1px;
+}
+.slider-sample-fix {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 750px;
+}
+.slider-fix-area {
+  flex: 1;
+  height: 80px;
+  border-color: #5d75f6;
+  border-width: 1px;
+}
+.silder-container {
   position: relative;
-  height: 52px;
-  margin-top: 50px;
-  padding-top: 25px;
+  height: 80px;
 }
 .line-container {
   position: absolute;
-  top: 24px;
   left: 20px;
-  height: 6px;
+  height: 80px;
   width: 710px;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  border-color: #5d75f6;
-  border-width: 1px;
 }
 .line {
   height: 6px;
@@ -67,6 +120,40 @@
   background-color: #fff;
   flex: 0.1;
 }
+.custome-wrapper {
+  justify-content: center;
+  align-items: center;
+}
+.custome-container {
+  position: relative;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  overflow: hidden;
+}
+.custome-line-container {
+  position: absolute;
+  top: 40px;
+  left: 20px;
+  height: 6px;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  border-color: #5d75f6;
+  border-width: 1px;
+}
+.custome-scroller {
+  flex: 1;
+  height: 40px;
+}
+.point {
+  height: 40px;
+  width: 40px;
+  border-radius: 40px;
+  background-color: #5d75f6;
+}
 </style>
 <script>  
 import base from '../base'
@@ -77,6 +164,7 @@ import mideaSlider from '@/midea-component/slider.vue'
 import nativeService from '@/common/services/nativeService'
 const modal = weex.requireModule('modal');
 const picker = weex.requireModule('picker');
+const dom = weex.requireModule('dom')
 
 export default {
     components: { mideaTitleBar, mideaSlider },
@@ -87,13 +175,18 @@ export default {
             min: 0, //最小值
             value: 210, //初始化值
             step: 5, //步长
-            axisH: 10, //轴高度(px)
+            axisH: 4, //轴高度(px)
             pointH: 26, //圆球高度（px）
             axisColor: '#DFE5E7',//滑条颜色
-            pointColor: '#0E90FF', //圆球颜色 
+            pointColor: '#267AFF', //圆球颜色 
             showTip: false,
             tipTemp: '',
-            tipTime: ''
+            tipTime: '',
+
+            customeSliderWidth: 670,
+            customeSliderCount: 4,
+            pointIndex: '',
+            customeInfo: '12'
         }
     },
     methods: {
@@ -114,38 +207,30 @@ export default {
             // nativeService.toast(JSON.stringify(data));
             return false;
         },
-        pickDate() {
-            picker.meijuPickDate({
-                'value': '2016-11-28', //默认初始化值，如果format='MMDD',则value格式为：'11-28',以此类推
-                'max': '2029-11-28', //最大范围值
-                'min': '2015-11-28', //最小范围
-                'label': '年-月-日', //日期后的标签文字,如果format='MMDD'，则label为：'月-日'，以此类推
-                'format': 'YYMMDD', //日期格式，YYMMDD:显示年月日，MMDD:'月日'， M:'月'， D:'日'
-                'title': '选择日期', //取消和确定中间那标题
-                'cancelTxt': '取消', //取消按钮文字
-                'confirmTxt': '确定' //确定按钮文字
-            }, function (ret) {
-                var result = ret.result;
-                if (result == 'success') {
-                    nativeService.toast('meijuPickDate:' + ret.data);
-
-                }
-            });
+        customeScrolTo(int) {
+            let targetIndex = this.customeSliderCount - int
+            let pointGap = this.customeSliderWidth / this.customeSliderCount
+            const el = this.$refs['customeScroller']
+            dom.scrollToElement(el, { offset: targetIndex * pointGap, animated: false })
         },
-        pickTime() {
-            picker.meijuPickTime({
-                'value': '23:58:32',
-                'label': '时-分-秒',
-                'format': 'HHIISS',
-                'title': '选择时间',
-                'cancelTxt': '取消',
-                'confirmTxt': '确定'
-            }, event => {
-                if (event.result === 'success') {
-                    nativeService.toast('meijuPickTime:' + event.data);
-                }
-            })
-        }
+        scroll(event) {
+            let pointGap = this.customeSliderWidth / this.customeSliderCount
+            let offsetX = event.contentOffset.x
+            if (offsetX > 0) return false
+            if (offsetX % pointGap != 0) {
+                let tempIndex = Math.abs(Math.round(offsetX / pointGap))
+                this.pointIndex = this.customeSliderCount - tempIndex
+            }
+            let offsetY = event.contentOffset.y;
+            this.customeInfo = " offsetX:" + offsetX + " offsetY:" + offsetY;
+        },
+        scrollEnd(event) {
+            this.customeScrolTo(this.pointIndex)
+            nativeService.toast('slideEnd:' + this.pointIndex);
+        },
+    },
+    mounted() {
+        this.customeScrolTo(1)
     },
     created() {
         //this.isIos=weex.config.env.platform=='iOS'?true:false;

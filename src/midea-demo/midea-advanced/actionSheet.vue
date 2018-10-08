@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="actionSheet" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="actionSheet" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <midea-button text="操作面板" @mideaButtonClicked="openActionsheet">
         </midea-button>
 
@@ -13,7 +13,7 @@
 <script>  
 
 import base from '../base'
-import mideaActionsheet from '@/component/actionsheet.vue'
+import mideaActionsheet from '@/midea-component/actionsheet.vue'
 import mideaButton from '@/midea-component/button.vue'
 import nativeService from '@/common/services/nativeService'
 const modal = weex.requireModule('modal');

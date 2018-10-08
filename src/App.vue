@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import IndexPage from './T0x99/weex.vue'
+import IndexPage from './weex.vue'
 
 export default {
     components: { IndexPage }

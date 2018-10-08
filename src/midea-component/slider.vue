@@ -5,7 +5,8 @@
     </div>
 </template>
 <style scoped>
-.tip-txt {}
+.tip-txt {
+}
 </style>
 <script>
 import nativeService from '../common/services/nativeService'
@@ -13,23 +14,23 @@ export default {
     components: {},
     props: {
         max: {
-            type: String,
+            type: [String, Number],
             default: '100'
         },
         min: {
-            type: String,
+            type: [String, Number],
             default: '0'
         },
         value: {
-            type: String,
+            type: [String, Number],
             default: '50'
         },
         step: {
-            type: String,
+            type: [String, Number],
             default: '1'
         },
         index: {
-            type: String,
+            type: [String, Number],
             default: '0'
         },
         attr: {
@@ -37,16 +38,16 @@ export default {
             default: 'level'
         },
         axisH: {
-            type: String,
+            type: [String, Number],
             default: '4'
         },
         pointH: {
-            type: String,
+            type: [String, Number],
             default: '20'
         },
         pointColor: {
             type: String,
-            default: '#0E90FF'
+            default: '#267AFF'
         },
         axisColor: {
             type: String,
@@ -62,7 +63,7 @@ export default {
         },
         tipColor: {
             type: String,
-            default: '#0E90FF'
+            default: '#267AFF'
         },
         tipPadding: {
             type: String,
@@ -76,11 +77,15 @@ export default {
             type: String,
             default: 'center'
         },
+        unit: {
+            type: String,
+            default: ''
+        },
     },
     data: () => ({}),
     computed: {
         tipStyle() {
-            const { tipColor, tipFontSize, tipAlign,tipPadding } = this;
+            const { tipColor, tipFontSize, tipAlign, tipPadding } = this;
             return {
                 'color': tipColor,
                 'font-size': tipFontSize,
@@ -94,23 +99,23 @@ export default {
         slideEnd(event) {
             const { unit, attr, index } = this;
             this.$emit('slideEnd', { value: event.value, attr: attr, index: index });
-            if(this.showTip == false) {
+            if (this.showTip == false) {
                 this.$emit('tipFormat', { value: event.value, attr: attr, index: index });
             }
         },
         slideChange(event) {
             const { unit, attr, index } = this;
             this.$emit('slideChange', { value: event.value, attr: attr, index: index });
-            if(this.showTip == false) {
+            if (this.showTip == false) {
                 this.$emit('tipFormat', { value: event.value, attr: attr, index: index });
             }
         }
     },
     created() {
-        if(this.showTip == false) {
+        if (this.showTip == false) {
             this.$emit('tipFormat', { value: this.value });
         }
-        
+
     }
 }
 </script>

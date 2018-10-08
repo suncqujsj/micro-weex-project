@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="Tab" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="Tab" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <div style="background-color:#FFF;padding:24px;border-bottom-width:1px;border-bottom-color:#e2e2e2">
             <text style="font-size:28px">导航Tab</text>
         </div>

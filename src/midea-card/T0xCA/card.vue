@@ -21,7 +21,7 @@
 	        					</div>
 	        				</div>
 	        			</div>
-	        			<div style="margin-bottom: 114px;"><text class="main-status-mode">{{mode}}</text></div>
+	        			<div style="margin-bottom: 80px;margin-left: -50px;"><text class="main-status-mode">{{mode}}</text></div>
 		        	</div>
 		        	<div class="card-right">
 		        		<div class="card-control">
@@ -243,8 +243,12 @@
 	}
 	.control-div-offline {
 		position: absolute;
-		right:32px;
-		top:32px;
+		right:0px;
+		top:0px;
+		padding-top: 24px;
+		padding-right: 24px;
+		padding-left:14px;
+		padding-bottom: 6px;
 		align-items: center;
 	}
 	.icon-offline {
@@ -317,7 +321,7 @@
 		font-family: PingFangSC-Regular;
 		font-size: 24px;
 		color: #FFFFFF;
-		margin-left: -30px;
+		/*margin-left: -30px;*/
 	}
 	.main-status-separate {
 		opacity: 0.3;

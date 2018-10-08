@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="checkBox" :isImmersion="isImmersion" @leftImgClick="back"></midea-header>
+        <midea-header title="checkBox" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <div style="padding:24px">
             <text style="font-size:28px">当前选中 {{checkedList.toString()}}</text>
         </div>

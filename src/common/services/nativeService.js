@@ -17,10 +17,16 @@ const debugLogSeperator = "**************************************\n"
 
 
 var ipParam = weex.config.bundleUrl.match(new RegExp("[\?\&]ip=([^\&]+)", "i"));
+var port = 8080
 if (ipParam && ipParam.length > 1) {
     ipParam = ipParam[1]
+    var portParam = weex.config.bundleUrl.match(new RegExp(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}[^\d]+(\d+)[^\d]/, "i"));
+    if (portParam && portParam.length > 1) {
+        port = portParam[1]
+        console.log(port)
+    }
     // 测试
-    isDummy = true
+    isDummy = util.getParameters(weex.config.bundleUrl, "isDummy") == "true"
 }
 const platform = weex.config.env.platform;
 if (platform == 'Web') {
@@ -74,9 +80,16 @@ export default {
             transparent: 'true/false', //新页面背景是否透明
             animatedType: 'slide_bottomToTop' //新页面出现动效类型
         }
+
     */
-    goTo(path, options) {
+    goTo(path, options, params) {
         var url
+
+        if (params) {
+            path += (path.indexOf("?") == -1 ? '?' : "&") + Object.keys(params).map(k =>
+                encodeURIComponent(k) + '=' + encodeURIComponent(params[k] || '')
+            ).join('&')
+        }
         // mm.toast({ message: isRemote, duration: 2 })
         if (this.isDummy != true && !isRemote) {
             //手机本地页面跳转
@@ -90,16 +103,17 @@ export default {
             let theRequest = this.getParameters()
             let ip = theRequest['ip']
             let root = theRequest['root']
+            let isDummy = this.isDummy
             let targetPath = path
             if (targetPath.indexOf("?") != -1) {
-                targetPath += '&root=' + root + '&ip=' + ip
+                targetPath += '&root=' + root + '&ip=' + ip + '&isDummy=' + isDummy
             } else {
-                targetPath += '?root=' + root + '&ip=' + ip
+                targetPath += '?root=' + root + '&ip=' + ip + '&isDummy=' + isDummy
             }
             if (ip == null || ip.length < 1) {
-                url = "http://localhost:8080/dist/" + root + '/' + targetPath;
+                url = "http://localhost:" + port + "/dist/" + root + '/' + targetPath;
             } else {
-                url = "http://" + ip + ":8080" + "/dist/" + root + '/' + targetPath;
+                url = "http://" + ip + ":" + port + "/dist/" + root + '/' + targetPath;
             }
             this.runGo(url, options);
         } else {
@@ -145,9 +159,9 @@ export default {
             let root = theRequest['root']
             let weexPath
             if (ip == null || ip.length < 1) {
-                weexPath = "http://localhost:8080/dist/" + root + '/'
+                weexPath = "http://localhost:" + port + "/dist/" + root + '/'
             } else {
-                weexPath = "http://" + ip + ":8080" + "/dist/" + root + '/'
+                weexPath = "http://" + ip + ":" + port + "/dist/" + root + '/'
             }
             callBack(weexPath);
         } else {
@@ -219,7 +233,11 @@ export default {
         if (typeof message == 'object') {
             message = JSON.stringify(message)
         }
-        bridgeModule.toast({ message: message, duration: duration || 1.5 });
+        if (platform == 'Web') {
+            mm.toast({ message: message, duration: duration || 1.5 })
+        } else {
+            bridgeModule.toast({ message: message, duration: duration || 1.5 });
+        }
     },
     alert(message, callback, okTitle) {
         var callbackFunc = callback || function (value) { }
@@ -505,6 +523,7 @@ export default {
                 this.callbackFunctions[commandId] = finalCallBack;
                 this.callbackFailFunctions[commandId] = finalCallbackFail;
             }
+            this.alert(JSON.stringify(param))
             bridgeModule.startCmdProcess(JSON.stringify(param), finalCallBack, finalCallbackFail);
         } else {
             // parker 这里用二进制指令
@@ -512,6 +531,64 @@ export default {
             callback(mockArray[name].messageBody);
             // callback(this.Mock.getMock(name).messageBody);
         }
+    },
+
+    //发送指令透传接口(套系)
+    startCmdProcessTX(name, messageBody, deviceId, callback, callbackFail) {
+        let commandId = Math.floor(Math.random() * 1000);
+        var param = {
+            commandId: commandId
+        }
+        if (messageBody != undefined) {
+            param.messageBody = messageBody;
+        }
+        if (deviceId != undefined) {
+            param.deviceId = deviceId;
+        }
+        var finalCallBack = function (resData) {
+            if (typeof resData == 'string') {
+                resData = JSON.parse(resData);
+            }
+            if (resData.errorCode != 0) {
+                callbackFail(resData);
+            } else {
+                callback(resData.messageBody);
+            }
+        }
+        var finalCallbackFail = function (resData) {
+            if (typeof resData == 'string') {
+                resData = JSON.parse(resData);
+            }
+            callbackFail(resData);
+        }
+        if (this.isDummy != true) {
+            if (isIos) {
+                this.createCallbackFunctionListener();
+                this.callbackFunctions[commandId] = finalCallBack;
+                this.callbackFailFunctions[commandId] = finalCallbackFail;
+            }
+            bridgeModule.startCmdProcess(JSON.stringify(param), finalCallBack, finalCallbackFail);
+        } else {
+            callback(this.Mock.getMock(name).messageBody);
+        }
+    },
+    /* 服务透传接口。提供给插件发送请求至事业部的品类服务器。此接口美居APP会将请求内容加密，然后发送给“云平台”进行中转发送至事业部品类服务器。
+        params: {
+            type:服务类型，如果weex没有传，或者传入类似""的空字节，则取当前插件类型作为该数值
+            queryStrings:与H5内容一致
+            transmitData:与H5内容一致
+        }
+    */
+    requestDataTransmit(params) {
+        return new Promise((resolve, reject) => {
+            bridgeModule.requestDataTransmit(JSON.stringify(params),
+                (resData) => {
+                    resolve(this.convertToJson(resData))
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
     },
 
     /* *****即将删除, IOS已经做了改进，不在需要已callbackFunction回调callback ********/
@@ -689,7 +766,6 @@ export default {
     //根据设备信息获取插件信息
     getDevicePluginInfo(params) {
         return new Promise((resolve, reject) => {
-            let that = this;
             if (this.isDummy != true) {
                 bridgeModule.getDevicePluginInfo(params,
                     (resData) => {
@@ -864,11 +940,15 @@ export default {
         }
         if (this.isDummy == true) {
             return new Promise((resolve, reject) => {
-                let resData = Mock.getMock(param.operation);
-                if (resData.errorCode == 0) {
-                    resolve(resData);
-                } else {
-                    reject(resData)
+                try {
+                    let resData = Mock.getMock(param.operation);
+                    if (resData.errorCode == 0) {
+                        resolve(resData);
+                    } else {
+                        reject(resData)
+                    }
+                } catch (error) {
+                    reject("获取模拟数据出错")
                 }
             });
         } else {

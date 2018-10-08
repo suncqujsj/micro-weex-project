@@ -33,7 +33,7 @@
         data(){
             return {
                 test:'123',
-                progress:60
+                progress:1
             }
         },
         components: {MideaHeader,wxcProgress,wxProgress},
@@ -56,10 +56,10 @@
                 if(this.progress === 100) {
                     return;
                 }
-                this.progress++;
+                ++this.progress;
                 // this.progress += '1';
                 let context = this;
-                setTimeout(function () {
+                window.setTimeout(function () {
                     context.doing();
                 }, 1000);
             },

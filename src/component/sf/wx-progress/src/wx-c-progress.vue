@@ -121,7 +121,6 @@ export default {
     },
     methods: {
         rightAnim(percent, end = false){
-            debugger;
             let rightTransformerDegree = (end ? 0 : ((percent > 50 ? 50 : percent) * 3.6)) + 'deg';
             let _duration = this.duration * ((percent > 50 ? 50 : percent) / percent);
             let _right = this.$refs.wx_right;

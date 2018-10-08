@@ -3,7 +3,7 @@ const storage = weex.requireModule('storage');
 const mm = weex.requireModule('modal');
 const debugInfoDataChannel = new BroadcastChannel('debugInfoDataChannel')
 const debugUtil = {
-    isEnableDebugInfo: true,
+    isEnableDebugInfo: false,
     debugInfoKey: 'debugInfo',
     debugInfoDataChannel: debugInfoDataChannel,
     debugInfoExist: '',

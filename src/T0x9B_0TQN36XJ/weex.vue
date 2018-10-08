@@ -1,6 +1,13 @@
 <template>
     <div >
-        <text class="r test">{{test}}</text>
+        <text class="r test" @click="doing">{{progress}}</text>
+        <!--<wxProgress :percent='progress' :bar_width='650'></wxProgress>-->
+        <wxcProgress :percent="progress"
+                     :wxc_radius='200'>
+            <!--<div class="cen">-->
+                <!--<text class="demo-text">{{progress}}%</text>-->
+            <!--</div>-->
+        </wxcProgress>
     </div>
 </template>
 
@@ -19,15 +26,17 @@
     import nativeService from "../common/services/nativeService";
     import cmdFun from "./util.js"; //解析指令
     import query from "../dummy/query";
+    import {wxcProgress, wxProgress} from "@/component/sf/wx-progress";
 
 
     export default {
         data(){
             return {
-                test:'123'
+                test:'123',
+                progress:60
             }
         },
-        components: {MideaHeader },
+        components: {MideaHeader,wxcProgress,wxProgress},
         created(){
             // nativeService.toast(1);
             //模拟设备数据
@@ -35,10 +44,24 @@
             //     query: query
             // });
             // this.queryStatus();
+            // debugger;
+            this.doing();
+
         },
         methods: {
             goBack(){
                 nativeService.goBack()
+            },
+            doing: function(){
+                if(this.progress === 100) {
+                    return;
+                }
+                this.progress++;
+                // this.progress += '1';
+                let context = this;
+                setTimeout(function () {
+                    context.doing();
+                }, 1000);
             },
             queryStatus() {
                 var self = this;

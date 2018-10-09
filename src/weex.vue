@@ -74,9 +74,11 @@ module.exports = {
             { key: 1, value: "customer-service" },
             { key: 2, value: "midea-rooms" },
             { key: 3, value: "midea-card" },
-            { key: 3, value: "community" }
+            { key: 4, value: "community" },
+            { key: 5, value: "T0xE1_000000H3" },
+            { key: 6, value: "T0xE1_000000H5" }
         ],
-        card: 'T0xAC',
+        card: 'T0xB1',
         isShowCardList: false,
         cardIndex: null,
         cardList: [

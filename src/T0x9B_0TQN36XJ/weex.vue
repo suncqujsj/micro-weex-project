@@ -1,21 +1,28 @@
 <template>
-    <div >
-        <text class="r test" @click="doing">{{progress}}</text>
+    <div>
+        <midea-header class="bg" leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"></midea-header>
+        <!--<text class="r test" @click="doing">{{progress}}</text>-->
         <!--<wxProgress :percent='progress' :bar_width='650'></wxProgress>-->
-        <wxcProgress :percent="progress"
-                     :wxc_radius='200'>
+        <!--<wxcProgress :percent="progress"-->
+                     <!--:wxc_radius='200'>-->
             <!--<div class="cen">-->
                 <!--<text class="demo-text">{{progress}}%</text>-->
             <!--</div>-->
-        </wxcProgress>
+        <!--</wxcProgress>-->
     </div>
 </template>
 
 <style lang="less">
 @import "../common/less/common";
+    .root{
+        height: 100%;
+    }
     .r{
         .red;
         font-size: 36px;
+    }
+    .bg {
+        background-image: linear-gradient(to bottom, #FFCD00, #FFB632);
     }
 </style>
 
@@ -32,6 +39,7 @@
     export default {
         data(){
             return {
+
                 test:'123',
                 progress:1
             }
@@ -45,7 +53,7 @@
             // });
             // this.queryStatus();
             // debugger;
-            this.doing();
+            // this.doing();
 
         },
         methods: {

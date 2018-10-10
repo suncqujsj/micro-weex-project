@@ -179,25 +179,30 @@ const getBaseConfig = () => (
                     loader: 'css-loader'
                 }]
             },
-                {test: /\.(png|jpg|gif)$/,
-                    use: [
-                        {
-                            loader: 'url-loader',
-                            options: {
-                                limit: 1000
-                            }
+            {
+                test: /\.less$/,
+                use: ["css-loader", "less-loader"]
+            },
+            {
+                test: /\.(png|jpg|gif)$/,
+                use: [
+                    {
+                        loader: 'url-loader',
+                        options: {
+                            limit: 1000
                         }
-                    ]
-                },
-                {
-                    test: /\.(png|jpg|gif)$/,
-                    use: [
-                        {
-                            loader: 'file-loader',
-                            options: {}
-                        }
-                    ]
-                }
+                    }
+                ]
+            },
+            {
+                test: /\.(png|jpg|gif)$/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {}
+                    }
+                ]
+            }
             ]
         },
         plugins,

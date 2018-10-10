@@ -4,8 +4,8 @@
         <div class="panel">
             <text class="panel-state">待机中</text>
             <div class="tabs">
-                <div class="tab"><text class="tab-text">自动菜单</text></div>
-                <div class="tab">加热模式</div>
+                <text class="tab">自动菜单</text>
+                <text class="tab cur">加热模式</text>
             </div>
         </div>
         <!--<text class="r test" @click="doing">{{progress}}</text>-->
@@ -19,7 +19,7 @@
     </scroller>
 </template>
 
-<style lang="less">
+<style lang="less" type="text/less">
 @import "../common/less/common";
     .root{
         height: 100%;
@@ -36,15 +36,18 @@
     }
     .tabs{
         .row;
-        .tab{
-            .flex;
-            justify-content: center;
-            align-content: center;
-            height: 50px;
-            .tab-text{
-                .white;
-            }
-        }
+    }
+    .tab{
+        .flex;
+        .row;
+        justify-content: center;
+        .lh(50px);
+        .f(14px);
+        color:rgba(255,255,255,.8);
+    }
+    .cur{
+        .f(18px);
+        .white;
     }
 </style>
 

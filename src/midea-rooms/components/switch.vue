@@ -4,12 +4,12 @@
         <div v-if="isActive" class="row-s content" ref="switchBar" style="transform: translateX(0px)">
             <div class="left-bar"></div>
             <div class="right-bar"></div>
-            <image class="icon" :src="icon.btn"></image>
+            <image class="icon" :src="btnIcon"></image>
         </div>
         <div v-else class="row-s content" ref="switchBar" style="transform: translateX(-61px)">
             <div class="left-bar"></div>
             <div class="right-bar"></div>
-            <image class="icon" :src="icon.btn"></image>
+            <image class="icon" :src="btnIcon"></image>
         </div>
     </div>
 </template>
@@ -58,15 +58,16 @@
             disabled: {
                 type: Boolean,
                 default: false
-            }
+            },
+            btnIcon: {
+                type: String,
+                default: 'assets/img/sence_ic_switch@3x.png'
+            },
         },
         computed(){
         },
         data(){
             return {
-                icon: {
-                    btn: '../assets/img/sence_ic_switch@3x.png'
-                },
                 barStyle: {}
             }
         },

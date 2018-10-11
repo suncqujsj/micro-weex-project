@@ -4,8 +4,18 @@
         <div class="panel">
             <text class="panel-state">待机中</text>
             <div class="tabs">
-                <text class="tab">自动菜单</text>
-                <text class="tab cur">加热模式</text>
+                <div class="tab">
+                    <text class="tab-text">自动菜单</text>
+                </div>
+                <div class="tab">
+                    <text class="tab-text cur">加热模式</text>
+                </div>
+            </div>
+        </div>
+        <div class="icon-buttons" :style="{height: wrapHeight - 224*2}">
+            <div class="icon-button" v-for="item in modes">
+                <image class="button_icon" src="item.icon"></image>
+                <text class="button-text">{{item.text}}</text>
             </div>
         </div>
         <!--<text class="r test" @click="doing">{{progress}}</text>-->
@@ -28,11 +38,13 @@
         background-image: linear-gradient(to bottom, #FFCD00, #FFB632);
     }
     .panel-state{
-        .f(30px);
+        @h:30*2px;
+        .f(@h);
         .white;
         .ta;
-        .lh(30px);
-        .ma-t(36px);
+        .lh(60px);
+        .ma-t(36*2px);
+        .ma-b(60*2px);
     }
     .tabs{
         .row;
@@ -41,13 +53,21 @@
         .flex;
         .row;
         justify-content: center;
-        .lh(50px);
-        .f(14px);
+        align-items: flex-end;
+        height: 18*2px;
+        .ma-b(16*2px);
+
+    }
+    .tab-text{
+        .f(14*2px);
         color:rgba(255,255,255,.8);
     }
     .cur{
-        .f(18px);
+        .f(18*2px);
         .white;
+    }
+    .icon-buttons{
+        .bg-white;
     }
 </style>
 
@@ -66,7 +86,15 @@
             return {
                 wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
                 test:'123',
-                progress:1
+                progress:1,
+                autoMenu: [],
+                modes: [
+                    {
+                        'icon': 'assets/img/modes/hot_wind@3x.png',
+                        'text': '蒸汽'
+                    }
+
+                ]
             }
         },
         components: {MideaHeader,wxcProgress,wxProgress},

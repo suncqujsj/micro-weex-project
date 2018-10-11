@@ -1,6 +1,13 @@
 <template>
-    <div>
+    <scroller class="bg" :style="{height: wrapHeight}">
         <midea-header class="bg" leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"></midea-header>
+        <div class="panel">
+            <text class="panel-state">待机中</text>
+            <div class="tabs">
+                <text class="tab">自动菜单</text>
+                <text class="tab cur">加热模式</text>
+            </div>
+        </div>
         <!--<text class="r test" @click="doing">{{progress}}</text>-->
         <!--<wxProgress :percent='progress' :bar_width='650'></wxProgress>-->
         <!--<wxcProgress :percent="progress"-->
@@ -9,20 +16,38 @@
                 <!--<text class="demo-text">{{progress}}%</text>-->
             <!--</div>-->
         <!--</wxcProgress>-->
-    </div>
+    </scroller>
 </template>
 
-<style lang="less">
+<style lang="less" type="text/less">
 @import "../common/less/common";
     .root{
         height: 100%;
     }
-    .r{
-        .red;
-        font-size: 36px;
-    }
     .bg {
         background-image: linear-gradient(to bottom, #FFCD00, #FFB632);
+    }
+    .panel-state{
+        .f(30px);
+        .white;
+        .ta;
+        .lh(30px);
+        .ma-t(36px);
+    }
+    .tabs{
+        .row;
+    }
+    .tab{
+        .flex;
+        .row;
+        justify-content: center;
+        .lh(50px);
+        .f(14px);
+        color:rgba(255,255,255,.8);
+    }
+    .cur{
+        .f(18px);
+        .white;
     }
 </style>
 
@@ -39,7 +64,7 @@
     export default {
         data(){
             return {
-
+                wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
                 test:'123',
                 progress:1
             }

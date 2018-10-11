@@ -180,10 +180,6 @@ const getBaseConfig = () => (
                 }]
             },
             {
-                test: /\.less$/,
-                use: ["css-loader", "less-loader"]
-            },
-            {
                 test: /\.(png|jpg|gif)$/,
                 use: [
                     {

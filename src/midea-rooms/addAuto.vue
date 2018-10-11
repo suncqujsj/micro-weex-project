@@ -1,21 +1,38 @@
 <template>
    <div class="wrap" :style="wrapStyle">
         <midea-header :title="header.title" :isImmersion="isImmersion" :bgColor="header.bgColor" :titleText="header.color" :leftImg="header.leftImg" @leftImgClick="goBack"></midea-header>
-        <div class="content">
-            <!-- <text class="hd">选择条件</text> -->
-            <midea-list v-for="(item,idx) in autos" :idx="idx" :hasWrapBorder="false" leftMargin="25px" :style="{backgroundColor: '#fff'}">
-                <div class="list-item row-sb" @click="goNext(item)">
-                    <div class="row-s">
-                        <image class="icon-type" :src="item.icon"></image>
-                        <div>
-                            <text class="name">{{item.title}}</text>
-                            <text class="desc">{{item.desc}}</text>
+        <list>
+            <cell class="content">
+                <div class="group">
+                    <midea-list v-for="(item,idx) in autos" :idx="idx" :hasWrapBorder="false" leftMargin="25px" :style="{backgroundColor: '#fff'}">
+                        <div class="list-item row-sb" @click="goNext(item)">
+                            <div class="row-s">
+                                <image class="icon-type" :src="item.icon"></image>
+                                <div>
+                                    <text class="name">{{item.title}}</text>
+                                    <text class="desc">{{item.desc}}</text>
+                                </div>
+                            </div>
+                            <image class="next" :src="icon.more"></image>
                         </div>
-                    </div>
-                    <image class="next" :src="icon.more"></image>
+                    </midea-list>
                 </div>
-            </midea-list>
-        </div>
+                <div class="group">
+                    <midea-list v-for="(item,idx) in specialAutos" :idx="idx" :hasWrapBorder="false" leftMargin="25px" :style="{backgroundColor: '#fff'}">
+                        <div class="list-item row-sb" @click="goSpecialAuto(item)">
+                            <div class="row-s">
+                                <image class="icon-type" :src="item.icon"></image>
+                                <div>
+                                    <text class="name">{{item.title}}</text>
+                                    <text class="desc">{{item.desc}}</text>
+                                </div>
+                            </div>
+                            <image class="next" :src="icon.more"></image>
+                        </div>
+                    </midea-list>
+                </div>
+            </cell>
+        </list>
    </div>
 </template>
 
@@ -42,7 +59,7 @@
         height: 16px;
         margin-right: 25px;
     }
-    .content{
+    .group{
         margin-top: 25px;
     }
     .icon-type{
@@ -73,14 +90,6 @@
 
     export default {
         components:{ MideaHeader, MideaCell, mideaList, checkItem },
-        computed:{
-            wrapStyle(){
-                let tmp = {
-                    height: this.pageHeight+'px'
-                }
-                return tmp
-            }
-        },
         mixins: [base],
         data(){
             return {
@@ -92,6 +101,11 @@
                     bgColor: '#fff',
                     color: '#111',
                     leftImg: 'assets/img/public_ic_back@3x.png'
+                },
+                style: {
+                    title: {
+                        fontSize: '32px'
+                    }
                 },
                 autos: [ // 自动化项目类型，1-设备事件，2-手动执行， 3-距离触发， 4-定时执行 ， 5-区域， 6-天气变化
                     {
@@ -139,13 +153,16 @@
                     //     sceneType: 1
                     // }
                 ],
-                activeTypeIndex: 0,
-                style: {
-                    title: {
-                        fontSize: '32px'
-                    }
-                }
+                specialAutos: []
             }
+        },
+        computed:{
+            wrapStyle(){
+                let tmp = {
+                    height: this.pageHeight+'px'
+                }
+                return tmp
+            },
         },
         methods: {
             goBack(){
@@ -168,12 +185,65 @@
                         this.goTo('autoTypeSet', {}, params)
                     }
                 })
+            },
+            goSpecialAuto(item){
+                this.checkLogin().then( (res) => {
+                    let params = {
+                        from: 'addAuto',
+                        homegroupId: res.homegroupId,
+                        sceneType: item.sceneType,
+                        isOwner: 1
+                    }
+                    this.goTo('specialAuto/auto', {}, params)
+                })
+            },
+            setSpecialAutos(){//检查是否满足迅速制冷或者制热补湿的条件
+                this.checkLogin().then((result) => {
+                    let specialDevices = this.getSpecialDevices(result.devices)
+
+                    let tmp = []
+                    let specialAutosTmpl = {
+                        quickCool: {
+                            title: '迅速制冷',
+                            desc: '',
+                            icon: 'assets/img/scene_ic_coldsoon@3x.png',
+                            sceneType: 10
+                        },
+                        humidify:  {
+                            title: '制热补湿',
+                            desc: '',
+                            icon: 'assets/img/scene_ic_warmsoon@3x.png',
+                            sceneType: 11
+                        }
+                    }
+                    if ( specialDevices.acTank.length > 0 && specialDevices.fa.length > 0) {// 空调柜机、风扇-迅速制冷
+                        tmp.push(specialAutosTmpl.quickCool)
+                    }
+                    if( (specialDevices.acTank.length>0 || specialDevices.ac.length>0) && specialDevices.fd.length > 0 ) {
+                        tmp.push(specialAutosTmpl.humidify)
+                    }
+                    this.specialAutos = tmp
+                })
             }
         },
         created(){
-            this.homegroupId = nativeService.getParameters('homegroupId')
+            if (this.isDummy) {
+                this.homeDevices = [
+                    { 
+                        "deviceType": "0xAC", 
+                        "deviceSn": "22211005"
+                    },
+                    { 
+                        "deviceType": "0xAC", 
+                        "deviceSn": "22011005"
+                    },
+                    { "deviceType": "0xFA"},
+                    { "deviceType": "0xFD"}
+                ]
+            }else{
+                this.setSpecialAutos()
+            }
         }
     }
 </script>
-
 

@@ -17,39 +17,41 @@
                 <image class="map-icon" :src="icon.map" @click="goCurrentLocation"></image>
             </div>
         </div>
-        <scroller class="content-scroller">
-            <div v-if="sceneType==4">
-                <text class="hd">设置为</text>
-                <div class="row-sb time-floor"  @click="showPop('time')">
-                    <text class="font16">时间</text>
-                    <div class="row-sb">
-                        <text v-if="from == 'addAuto' && startTime==''" class="font-light-grey text">点击设置时间</text>
-                        <text v-else class="font-light-grey text">{{startTime}}</text>
-                        <image class="icon-next" :src="icon.next"></image>
+        <list>
+            <cell class="content-scroller">
+                <div v-if="sceneType==4">
+                    <text class="hd">设置为</text>
+                    <div class="row-sb time-floor"  @click="showPop('time')">
+                        <text class="font16">时间</text>
+                        <div class="row-sb">
+                            <text v-if="from == 'addAuto' && startTime==''" class="font-light-grey text">点击设置时间</text>
+                            <text v-else class="font-light-grey text">{{startTime}}</text>
+                            <image class="icon-next" :src="icon.next"></image>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div v-if="sceneType==6">
-                <text class="hd">天气</text>
-                <div>
-                    <midea-list style="background-color:#fff" v-for="(item,i) in weather.type" :idx="i" :hasWrapBorder="false" leftMargin="25px">
-                        <check-item :title="item" :titleStyle="{fontSize:'30px'}" @itemClick="selectWeather(i)" :status="weather.activeTypeIndex==i" mode="radio"></check-item>
-                    </midea-list>
+                <div v-if="sceneType==6">
+                    <text class="hd">天气</text>
+                    <div>
+                        <midea-list style="background-color:#fff" v-for="(item,i) in weather.type" :idx="i" :hasWrapBorder="false" leftMargin="25px">
+                            <check-item :title="item" :titleStyle="{fontSize:'30px'}" @itemClick="selectWeather(i)" :status="weather.activeTypeIndex==i" mode="radio"></check-item>
+                        </midea-list>
+                    </div>
+                    <div class="box">
+                        <!-- <midea-cell title="气温" :hasArrow="true" @mideaCellClick="setWeatherSwitch" :cellStyle="{paddingLeft: '30px'}" :rightText="switchs[weather.activeSwitch]"></midea-cell> -->
+                        <midea-cell title="气温" :hasArrow="true" @mideaCellClick="showPop('weather')" :cellStyle="{paddingLeft: '30px'}" :rightText="weatherTemperatureDesc"></midea-cell>
+                    </div>
                 </div>
-                <div class="box">
-                    <!-- <midea-cell title="气温" :hasArrow="true" @mideaCellClick="setWeatherSwitch" :cellStyle="{paddingLeft: '30px'}" :rightText="switchs[weather.activeSwitch]"></midea-cell> -->
-                    <midea-cell title="气温" :hasArrow="true" @mideaCellClick="showPop('weather')" :cellStyle="{paddingLeft: '30px'}" :rightText="weatherTemperatureDesc"></midea-cell>
+                <div class="repeat">
+                    <text class="hd">重复</text>
+                    <div class="row-sa repeat-week">
+                        <text :class="['week', item.repeat==1?'week-active':'']" v-for="(item,i) in week" @click="setRepeat(i)">{{item.title}}</text>
+                    </div>
                 </div>
-            </div>
-            <div class="repeat">
-                <text class="hd">重复</text>
-                <div class="row-sa repeat-week">
-                    <text :class="['week', item.repeat==1?'week-active':'']" v-for="(item,i) in week" @click="setRepeat(i)">{{item.title}}</text>
-                </div>
-            </div>
-            <text v-if="from=='editAuto'" class="save-btn" @click="saveChange">确定</text>
-            <text v-if="from=='addAuto'" class="save-btn" @click="goNext">确定</text>
-        </scroller>
+                <text v-if="from=='editAuto'" class="save-btn" @click="saveChange">确定</text>
+                <text v-if="from=='addAuto'" class="save-btn" @click="goNext">确定</text>
+            </cell>
+        </list>
         <scroller v-if="sceneType== 3 && showMapSearchResult" class="map-result" :style="mapListStyle">
             <div v-if="mapSearchResult.length > 0">
                 <div v-for="(item,i) in mapSearchResult" @click="selectMapSearchResult(item)">

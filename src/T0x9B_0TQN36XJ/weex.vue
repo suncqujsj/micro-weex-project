@@ -14,7 +14,7 @@
         </div>
         <div class="icon-buttons" :style="{height: wrapHeight - 224*2}">
             <div class="icon-button" v-for="item in modes">
-                <image class="button_icon" src="item.icon"></image>
+                <image class="button_icon" :src="item.icon"></image>
                 <text class="button-text">{{item.text}}</text>
             </div>
         </div>
@@ -68,6 +68,9 @@
     }
     .icon-buttons{
         .bg-white;
+    }
+    .icon-button{
+
     }
 </style>
 

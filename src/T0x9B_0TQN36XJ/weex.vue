@@ -12,10 +12,12 @@
                 </div>
             </div>
         </div>
-        <div class="icon-buttons" :style="{height: wrapHeight - 224*2}">
-            <div class="icon-button column" v-for="item in modes">
-                <image class="button-icon" :src="item.icon"></image>
-                <text class="button-text">{{item.text}}</text>
+        <div class="area" :style="{height: wrapHeight - 224*2}">
+            <div class="icon-buttons" v-for="rows in modes">
+                <div class="icon-button column" v-for="item in rows">
+                    <image class="button-icon" :src="item.icon"></image>
+                    <text class="button-text">{{item.text}}</text>
+                </div>
             </div>
         </div>
         <!--<text class="r test" @click="doing">{{progress}}</text>-->
@@ -66,24 +68,27 @@
         .f(18*2px);
         .white;
     }
-    .icon-buttons{
+    .area{
         .bg-white;
+    }
+    .icon-buttons{
         .row;
-        flex-wrap: wrap;
-        margin: 0 -9*2px;
+        padding: 0 3.5*2px;
     }
     .icon-button{
         .ma-t(25*2px);
-        .ma-b(39*2px);
+        .ma-b(14*2px);
         .a-c;
-        width: 98*2px;
+        width: 92*2px;
+        height: 78*2px;
     }
     .button-icon{
         .square(112px);
         .ma-b(10*2px);
     }
     .button-text{
-        .f(16*2px);
+        .f(12*2px);
+        .lh(12*2px);
     }
 </style>
 
@@ -105,43 +110,41 @@
                 progress:1,
                 autoMenu: [],
                 modes: [
-                    {
-                        'icon': 'assets/img/modes/steam@3x.png',
-                        'text': '蒸汽'
-                    },
-                    {
-                        'icon': 'assets/img/modes/steam_and_hot_wind@3x.png',
-                        'text': '蒸汽+热风'
-                    },
-                    {
-                        'icon': 'assets/img/modes/broil@3x.png',
-                        'text': '烧烤'
-                    },
-                    {
-                        'icon': 'assets/img/modes/steam@3x.png',
-                        'text': '烧烤'
-                    },
-                    {
-                        'icon': 'assets/img/modes/steam@3x.png',
-                        'text': '蒸汽'
-                    },
-                    {
-                        'icon': 'assets/img/modes/steam@3x.png',
-                        'text': '蒸汽'
-                    },
-                    {
-                        'icon': 'assets/img/modes/steam@3x.png',
-                        'text': '蒸汽'
-                    },
-                    {
-                        'icon': 'assets/img/modes/steam@3x.png',
-                        'text': '蒸汽'
-                    },
-                    {
-                        'icon': 'assets/img/modes/hot_wind@3x.png',
-                        'text': '热风对流'
-                    }
-
+                    [
+                        {
+                            'icon': 'assets/img/modes/steam@3x.png',
+                            'text': '蒸汽'
+                        },
+                        {
+                            'icon': 'assets/img/modes/steam_and_hot_wind@3x.png',
+                            'text': '蒸汽+热风'
+                        },
+                        {
+                            'icon': 'assets/img/modes/broil@3x.png',
+                            'text': '烧烤'
+                        },
+                        {
+                            'icon': 'assets/img/modes/hot_wind@3x.png',
+                            'text': '热风对流'
+                        },
+                    ],[
+                        {
+                            'icon': 'assets/img/modes/hot_wind_and_broil@3x.png',
+                            'text': '热风烧烤'
+                        },
+                        {
+                            'icon': 'assets/img/modes/clean@3x.png',
+                            'text': '清洁'
+                        },
+                        {
+                            'icon': 'assets/img/modes/heat_preservation@3x.png',
+                            'text': '保温'
+                        },
+                        {
+                            'icon': 'assets/img/modes/fermentation@3x.png',
+                            'text': '发酵'
+                        }
+                    ]
                 ]
             }
         },

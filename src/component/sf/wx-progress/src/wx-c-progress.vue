@@ -26,11 +26,11 @@ export default {
     props: {
         wxc_color: {
             type: String,
-            default: '#42b983'
+            default: '#ffffff'
         },
         wxc_bgColor: {
             type: String,
-            default: '#EEEEEE'
+            default: '#f3cccc'
         },
         duration: {
             type: Number,
@@ -55,7 +55,7 @@ export default {
         return {
             height: `${wxc_radius * 2}px`,
             width: `${wxc_radius * 2}px`,
-            borderRadius: `${wxc_radius}px`,
+            borderRadius: `${wxc_radius}px`,       
         }
       },
       circleStyle () {
@@ -72,7 +72,7 @@ export default {
         return {
             height: `${(wxc_radius - wxc_stokenWidth) * 2}px`,
             width: `${(wxc_radius - wxc_stokenWidth) * 2}px`,
-            backgroundColor: '#FFFFFF',
+            backgroundColor: '#FFCD00',
             borderRadius: `${wxc_radius - wxc_stokenWidth}px`,
             top: `${wxc_stokenWidth}`,
             left: `${wxc_stokenWidth}`,
@@ -85,7 +85,7 @@ export default {
             width: `${wxc_radius}px`,
             backgroundColor: wxc_bgColor,
             borderTopLeftRadius: `${wxc_radius}px`,
-            borderBottomLeftRadius: `${wxc_radius}px`
+            borderBottomLeftRadius: `${wxc_radius}px`,
         }
       },
       rightStyle () {
@@ -95,7 +95,7 @@ export default {
             width: `${wxc_radius}px`,
             backgroundColor: wxc_bgColor,
             borderTopRightRadius: `${wxc_radius}px`,
-            borderBottomRightRadius: `${wxc_radius}px`
+            borderBottomRightRadius: `${wxc_radius}px`,
         }
 	  },
       rightStyle_mask(){
@@ -116,7 +116,15 @@ export default {
     },
     watch: {
         percent: function (newPercent, oldPercent) {
-            this.rightAnim(newPercent, false);
+            if(newPercent<=50){
+                this.rightAnim(newPercent, false);
+                if(newPercent==50){
+                    this.rightAnim(newPercent, true);
+                }
+            }else{
+                this.leftAnim(newPercent);
+                this.rightAnim(newPercent, true);
+            }
         }
     },
     methods: {
@@ -134,16 +142,21 @@ export default {
                 timingFunction: 'linear',
                 delay: 0 //ms
             }, () => {
-                if(percent >= 50){
-                    if(end){
-                        if(this.$getConfig().env.platform.toLowerCase() == 'ios'){
-                            this.rightMask = true;
-                        }
-                        this.leftAnim(percent);
-                    } else {
-                        this.rightAnim(percent, true);
+                 if(end){
+                    if(this.$getConfig().env.platform.toLowerCase() == 'ios'){
+                        this.rightMask = true;
                     }
                 }
+                // if(percent >= 50){
+                //     if(end){
+                //         if(this.$getConfig().env.platform.toLowerCase() == 'ios'){
+                //             this.rightMask = true;
+                //         }
+                //         this.leftAnim(percent);
+                //     } else {
+                //         this.rightAnim(percent, true);
+                //     }
+                // }
             })
         },
         leftAnim(percent){

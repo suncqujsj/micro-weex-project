@@ -1,21 +1,14 @@
 <template>
-    <scroller :style="{height: wrapHeight}">
+    <scroller class="all_section" :style="{height: wrapHeight}">
         <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="backClick" ></midea-header>
-        <div class="panel">
-            <text class="panel-state">工作中</text>
-            <div class="tabs">
-                <div class="tab"><text >自动菜单</text></div>
-                <div class="tab cur"><text >加热模式</text></div>
+        <div class="progress_section">
+            <wxcProgress :percent="progress"
+                    :wxc_radius='200'>
+            <div class="cen">
+                <text class="demo-text">{{progress}}%</text>
             </div>
+        </wxcProgress>
         </div>
-        <text class="r test" @click="doing">{{progress}}</text>
-        <wxProgress :percent='progress' :bar_width='650'></wxProgress>
-        <wxcProgress :percent="progress"
-                   :wxc_radius='200'>
-          <div class="cen">
-               <text class="demo-text">{{progress}}%</text>
-           </div>
-       </wxcProgress>
     </scroller>
 </template>
 
@@ -24,8 +17,15 @@
     .root{
         height: 100%;
     }
+    .all_section{
+        background-color: #FFCD00;
+        width: 750px;
+    }
     .bg {
         background-image: linear-gradient(to bottom, #FFCD00, #FFB632);
+    }
+    .progress_section{
+        margin-top: 100px;
     }
     .panel-state{
         .f(30px);

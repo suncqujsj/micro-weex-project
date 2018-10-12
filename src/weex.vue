@@ -76,7 +76,8 @@ module.exports = {
             { key: 3, value: "midea-card" },
             { key: 4, value: "community" },
             { key: 5, value: "T0xE1_000000H3" },
-            { key: 6, value: "T0xE1_000000H5" }
+            { key: 6, value: "T0xE1_000000H5" },
+            { key: 7, value: "T0x9B_0TQN36XJ" }
         ],
         card: 'T0xB1',
         isShowCardList: false,

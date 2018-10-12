@@ -92,7 +92,7 @@
                 if(this.progress === 100) {
                     return;
                 }
-                ++this.progress;
+                this.progress += 9;
                 // this.progress += '1';
                 let context = this;
                 let setTimeout = setTimeout || window.setTimeout;

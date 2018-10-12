@@ -1,25 +1,25 @@
 <template>
     <scroller class="bg" :style="{height: wrapHeight}">
         <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="red" :isImmersion="true"  :showLeftImg="true" @headerClick="backClick" ></midea-header>
-        <div class="panel">
-            <text class="panel-state">待机中</text>
-            <div class="tabs">
-                <div class="tab">
-                    <text class="tab-text">自动菜单</text>
-                </div>
-                <div class="tab">
-                    <text class="tab-text cur">加热模式</text>
-                </div>
-            </div>
-        </div>
-        <div class="area" :style="{height: wrapHeight - 224*2}">
-            <div class="icon-buttons" v-for="rows in modes">
-                <div class="icon-button column" v-for="item in rows">
-                    <image class="button-icon" :src="item.icon"></image>
-                    <text class="button-text">{{item.text}}</text>
-                </div>
-            </div>
-        </div>
+        <!--<div class="panel">-->
+            <!--<text class="panel-state">待机中</text>-->
+            <!--<div class="tabs">-->
+                <!--<div class="tab">-->
+                    <!--<text class="tab-text">自动菜单</text>-->
+                <!--</div>-->
+                <!--<div class="tab">-->
+                    <!--<text class="tab-text cur">加热模式</text>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="area" :style="{height: wrapHeight - 224*2}">-->
+            <!--<div class="icon-buttons" v-for="rows in modes">-->
+                <!--<div class="icon-button column" v-for="item in rows">-->
+                    <!--<image class="button-icon" :src="item.icon"></image>-->
+                    <!--<text class="button-text">{{item.text}}</text>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
         <!--<text class="r test" @click="doing">{{progress}}</text>-->
         <!--<wxProgress :percent='progress' :bar_width='650'></wxProgress>-->
         <!--<wxcProgress :percent="progress"-->

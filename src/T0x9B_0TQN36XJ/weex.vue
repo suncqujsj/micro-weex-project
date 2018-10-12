@@ -13,8 +13,8 @@
             </div>
         </div>
         <div class="icon-buttons" :style="{height: wrapHeight - 224*2}">
-            <div class="icon-button" v-for="item in modes">
-                <image class="button_icon" :src="item.icon"></image>
+            <div class="icon-button column" v-for="item in modes">
+                <image class="button-icon" :src="item.icon"></image>
                 <text class="button-text">{{item.text}}</text>
             </div>
         </div>
@@ -68,9 +68,22 @@
     }
     .icon-buttons{
         .bg-white;
+        .row;
+        flex-wrap: wrap;
+        margin: 0 -9*2px;
     }
     .icon-button{
-
+        .ma-t(25*2px);
+        .ma-b(39*2px);
+        .a-c;
+        width: 98*2px;
+    }
+    .button-icon{
+        .square(112px);
+        .ma-b(10*2px);
+    }
+    .button-text{
+        .f(16*2px);
     }
 </style>
 
@@ -93,8 +106,40 @@
                 autoMenu: [],
                 modes: [
                     {
-                        'icon': 'assets/img/modes/hot_wind@3x.png',
+                        'icon': 'assets/img/modes/steam@3x.png',
                         'text': '蒸汽'
+                    },
+                    {
+                        'icon': 'assets/img/modes/steam_and_hot_wind@3x.png',
+                        'text': '蒸汽+热风'
+                    },
+                    {
+                        'icon': 'assets/img/modes/broil@3x.png',
+                        'text': '烧烤'
+                    },
+                    {
+                        'icon': 'assets/img/modes/steam@3x.png',
+                        'text': '烧烤'
+                    },
+                    {
+                        'icon': 'assets/img/modes/steam@3x.png',
+                        'text': '蒸汽'
+                    },
+                    {
+                        'icon': 'assets/img/modes/steam@3x.png',
+                        'text': '蒸汽'
+                    },
+                    {
+                        'icon': 'assets/img/modes/steam@3x.png',
+                        'text': '蒸汽'
+                    },
+                    {
+                        'icon': 'assets/img/modes/steam@3x.png',
+                        'text': '蒸汽'
+                    },
+                    {
+                        'icon': 'assets/img/modes/hot_wind@3x.png',
+                        'text': '热风对流'
                     }
 
                 ]

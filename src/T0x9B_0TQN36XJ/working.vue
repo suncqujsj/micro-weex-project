@@ -1,21 +1,21 @@
 <template>
-    <scroller class="bg" :style="{height: wrapHeight}">
-        <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="red" :isImmersion="true"  :showLeftImg="true" @headerClick="backClick" ></midea-header>
+    <scroller :style="{height: wrapHeight}">
+        <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="backClick" ></midea-header>
         <div class="panel">
-            <text class="panel-state">待机中</text>
+            <text class="panel-state">工作中</text>
             <div class="tabs">
-                <text class="tab">自动菜单</text>
-                <text class="tab cur">加热模式</text>
+                <div class="tab"><text >自动菜单</text></div>
+                <div class="tab cur"><text >加热模式</text></div>
             </div>
         </div>
-        <!--<text class="r test" @click="doing">{{progress}}</text>-->
-        <!--<wxProgress :percent='progress' :bar_width='650'></wxProgress>-->
-        <!--<wxcProgress :percent="progress"-->
-                     <!--:wxc_radius='200'>-->
-            <!--<div class="cen">-->
-                <!--<text class="demo-text">{{progress}}%</text>-->
-            <!--</div>-->
-        <!--</wxcProgress>-->
+        <text class="r test" @click="doing">{{progress}}</text>
+        <wxProgress :percent='progress' :bar_width='650'></wxProgress>
+        <wxcProgress :percent="progress"
+                   :wxc_radius='200'>
+          <div class="cen">
+               <text class="demo-text">{{progress}}%</text>
+           </div>
+       </wxcProgress>
     </scroller>
 </template>
 
@@ -78,7 +78,7 @@
             // });
             // this.queryStatus();
             // debugger;
-            // this.doing();
+             this.doing();
 
         },
         methods: {
@@ -95,7 +95,7 @@
                 ++this.progress;
                 // this.progress += '1';
                 let context = this;
-                window.setTimeout(function () {
+                setTimeout(function () {
                     context.doing();
                 }, 1000);
             },

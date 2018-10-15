@@ -10,15 +10,20 @@
                 <text class="slider-sample-range slider-sample-range-right">{{max}}℃</text>
             </div>
             <midea-title-bar title="固定高度" bgColor="#EEF4F7"></midea-title-bar>
+            <div><text style="text-align: center;">{{fixTemp}}</text></div>
             <div class="slider-sample-fix">
-                <text class="slider-sample-range">{{min}}℃</text>
-                <midea-seek-bar class="slider-fix-area" @slideEnd="slideEnd" :max="max" :min="min" :value="value" :step="step" :axisH="axisH" :pointH="pointH" :axisBgColor="axisColor" :axisColor="axisColor" :pointColor="pointColor" :showTip=false></midea-seek-bar>
+                <text class="slider-sample-range">{{min}}℃ </text>
+                <midea-seek-bar class="slider-fix-area" @slideEnd="fixEnd" @slideChange="fixChange" :max="max" :min="min" :value="value" :step="step" :axisH="axisH" :pointH="pointH" :axisBgColor="axisColor" :axisColor="axisColor" :pointColor="pointColor" :showTip=false ></midea-seek-bar>
                 <text class="slider-sample-range slider-sample-range-right">{{max}}℃</text>
             </div>
 
             <midea-title-bar title="工作时长" bgColor="#EEF4F7"></midea-title-bar>
             <div class="slider-sample">
                 <midea-slider class="slider-sample-area" @slideEnd="slideEnd" @tipFormat="timeFormat" max="120" min="0" value="84" :step="step" :axisH="axisH" :pointH="pointH" :axisColor="axisColor" :pointColor="pointColor" :tipTxt="tipTime"></midea-slider>
+            </div>
+            <midea-title-bar title="disable" bgColor="#EEF4F7"></midea-title-bar>
+            <div class="slider-sample">
+            	<midea-slider class="slider-sample-area" @slideEnd="slideEnd"  max="120" min="0"  :step="step" :axisH="axisH" :pointH="pointH" :axisColor="axisColor" :pointColor="pointColor" :showTip=true :disable=true :tipTxt="tipTime"></midea-slider>
             </div>
 
             <midea-title-bar title="自定义背景" bgColor="#EEF4F7"></midea-title-bar>
@@ -182,6 +187,7 @@ export default {
             showTip: false,
             tipTemp: '',
             tipTime: '',
+            fixTemp: 210,
 
             customeSliderWidth: 670,
             customeSliderCount: 4,
@@ -206,6 +212,12 @@ export default {
             nativeService.toast('slideEnd:' + event.value);
             // nativeService.toast(JSON.stringify(data));
             return false;
+        },
+        fixEnd(event) {
+        	this.fixTemp = event.value;
+        },
+        fixChange(event) {
+        	this.fixTemp = event.value;
         },
         customeScrolTo(int) {
             let targetIndex = this.customeSliderCount - int

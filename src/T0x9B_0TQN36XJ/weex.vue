@@ -28,6 +28,35 @@
                 <!--<text class="demo-text">{{progress}}%</text>-->
             <!--</div>-->
         <!--</wxcProgress>-->
+        <!--<midea-dialog title="使用协议"-->
+                      <!--:show="show"-->
+                      <!--@close="closeDialog"-->
+                      <!--@mideaDialogCancelBtnClicked="mideaDialogCancelBtnClicked"-->
+                      <!--@mideaDialogConfirmBtnClicked="mideaDialogCancelBtnClicked"-->
+                      <!--content="美的智慧生活解决方案"-->
+                      <!--:single="false" >-->
+        <!--</midea-dialog>-->
+        <sf-dialog :show="show" @close="closeCustomDialog" @mideaDialogCancelBtnClicked="closeCustomDialog" @mideaDialogConfirmBtnClicked="closeCustomDialog">
+            <div slot="content">
+                <text class="content-title">加热模式</text>
+                <sf-accordion title="设置时间">
+                    <div slot="content">
+                        <wx-picker :data="data" :visible="true" @wxChange="handleChange"></wx-picker>
+                    </div>
+                </sf-accordion>
+                <sf-accordion title="设置温度">
+                    <div slot="content">
+                        <wx-picker :data="data" :visible="true" @wxChange="handleChange"></wx-picker>
+                    </div>
+                </sf-accordion>
+                <sf-accordion title="设置预热" :hideIcon="true">
+                    <div slot="right">
+                        <midea-switch2 :checked="mideaChecked" @change="onMideachange" :width="70" :height="38" slot="value"></midea-switch2>
+                    </div>
+                </sf-accordion>
+            </div>
+        </sf-dialog>
+        <text @click="show=true">111111</text>
     </scroller>
 </template>
 
@@ -90,17 +119,48 @@
         .f(12*2px);
         .lh(12*2px);
     }
+    .content-title {
+        color: #333333;
+        font-size: 36px;
+        text-align: center;
+        margin-bottom: 24px;
+    }
 </style>
 
 <script>
-    const storage = weex.requireModule('storage')
     import MideaHeader from '@/midea-component/header.vue'
-    // import mideaItem from '@/midea-component/item.vue'
+    import sfAccordion from '@/component/sf/custom/accordion.vue'
+    import sfDialog from '@/component/sf/custom/dialog.vue'
     import nativeService from "../common/services/nativeService";
     import cmdFun from "./util.js"; //解析指令
     import query from "../dummy/query";
     import {wxcProgress, wxProgress} from "@/component/sf/wx-progress";
+    import mideaSwitch2 from '@/midea-component/switch2.vue'
 
+
+
+    import { WxPicker } from 'weex-droplet-ui';
+
+    const PICKER_DATA = {
+        list: [
+            { name: '李娜', value: 0 },
+            { name: '丁超', value: 1 },
+            { name: '江武', value: 2 },
+            { name: '尹士鹏', value: 3 },
+            { name: '周灰灰', value: 4 },
+            { name: '杨泉', value: 5 },
+            { name: '厚本金融公司', value: 6 },
+            { name: '揽胜', value: 7 },
+            { name: '陆地巡洋舰', value: 8 },
+            { name: '航空母舰', value: 9 },
+            { name: '天宫一号', value: 10 },
+            { name: '红岸工程', value: 11 },
+        ],
+        defaultValue: { name: '厚本金融公司', value: 6 },
+        displayValue (item) {
+            return item.name;
+        }
+    };
 
     export default {
         data(){
@@ -145,10 +205,16 @@
                             'text': '发酵'
                         }
                     ]
-                ]
+                ],
+                show: true,
+                single: false,
+                data: PICKER_DATA,
+                visible: false,
+                selectedData: PICKER_DATA.defaultValue,
+                mideaChecked: false
             }
         },
-        components: {MideaHeader,wxcProgress,wxProgress},
+        components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2},
         created(){
             // nativeService.toast(1);
             //模拟设备数据
@@ -161,11 +227,34 @@
 
         },
         methods: {
+            onMideachange(event) {
+                this.mideaChecked = event.value;
+                // nativeService.alert(this.mideaChecked);
+            },
+            closeCustomDialog() {
+                this.show = false;
+                console.log(this.$refs['container']);
+            },
             goBack(){
                 nativeService.goBack()
             },
             backClick(){
                this.goTo("working");
+            },
+            handleBottom (visible) {
+                this.visible = visible;
+            },
+
+            handleChange (data) {
+                this.selectedData = data;
+            },
+
+            handleCancel () {
+                this.$refs.wxPopup.hide();
+            },
+
+            handleFinish () {
+                this.$refs.wxPopup.hide();
             },
             doing: function(){
                 if(this.progress === 100) {

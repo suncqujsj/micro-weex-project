@@ -1,4 +1,11 @@
 {
-  "presets": ["es2015"],
-  "plugins": ["transform-object-rest-spread"]
+  "presets": ["es2015", "stage-0"],
+  "plugins": ["transform-object-rest-spread", [
+            "component",
+            {
+                "libraryName": "weex-droplet-ui",
+                "libDir": "packages",
+                "style": false
+            }
+        ]]
 }

@@ -1,15 +1,22 @@
 <template>
-    <scroller class="all_section" :style="{height: wrapHeight}">
+    <div class="all_section" :style="{height: wrapHeight}">
         <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="backClick" ></midea-header>
-        <div class="progress_section">
+        <div class="progress_section" :style="progress_style">
             <wxcProgress :percent="progress"
-                    :wxc_radius='200'>
+                    :wxc_radius='progress_radius'>
+                      <text class="number_prev">时</text>
             <div class="cen">
-                <text class="demo-text">{{progress}}%</text>
+              
+                <text class="number-text">{{progress}}</text>
             </div>
+                <text class="number_next">{{tag_next}}</text>
+            
         </wxcProgress>
         </div>
-    </scroller>
+        <div class="detail_section">
+            <text class="detail_text">高火180°</text>
+        </div>
+    </div>
 </template>
 
 <style lang="less" type="text/less">
@@ -18,36 +25,48 @@
         height: 100%;
     }
     .all_section{
-        background-color: #FFCD00;
+        background-color: #FFCF23;
         width: 750px;
     }
     .bg {
-        background-image: linear-gradient(to bottom, #FFCD00, #FFB632);
+        background-image: linear-gradient(to bottom, #FFCD00, #FF9217);
     }
     .progress_section{
-        margin-top: 100px;
+        .pos(r);
     }
-    .panel-state{
-        .f(30px);
-        .white;
-        .ta;
-        .lh(30px);
-        .ma-t(36px);
-    }
-    .tabs{
-        .row;
-    }
-    .tab{
+    .cen{
         .flex;
         .row;
-        justify-content: center;
-        .lh(50px);
-        .f(14px);
-        color:rgba(255,255,255,.8);
+        .j-c;
+        .a-c;
     }
-    .cur{
-        .f(18px);
+    .number-text{
+        .f(160px);
         .white;
+    }
+    .number_prev{
+        .pos(a);
+        top: 100px;
+        left: 120px;
+        .white;
+        .f(32px);
+    }
+    .number_next{
+        .pos(a);
+        top: 100px;
+        right: 120px;
+        .white;
+        .f(32px);
+    }
+    .detail_section{
+        .flex;
+        .row;
+        .j-c;
+    }
+    .detail_text{
+        .white;
+        .f(36px);
+        margin-top: 60px;
     }
 </style>
 
@@ -66,7 +85,9 @@
             return {
                 wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
                 test:'123',
-                progress:1
+                progress:1,
+                progress_radius: 250,
+                tag_next: '分'
             }
         },
         components: {MideaHeader,wxcProgress,wxProgress},
@@ -81,6 +102,14 @@
              this.doing();
 
         },
+        computed: {
+            progress_style(){
+                let {wrapHeight,progress_radius} = this;
+                return{
+                    marginTop: `${wrapHeight/2-progress_radius*2}px`
+                }
+            }
+        },
         methods: {
             goBack(){
                 nativeService.goBack()
@@ -94,10 +123,18 @@
                 }
                 ++this.progress;
                 // this.progress += '1';
-                let context = this;>
-                setTimeout(function () {
-                    context.doing();
-                }, 1000);
+                let context = this;
+                const platform = weex.config.env.platform;//weex没有window对象，调试需要区分下
+                if (platform == 'Web') {
+                     window.setTimeout(function () {
+                        context.doing();
+                    }, 1000);
+                }else{
+                    setTimeout(function () {
+                        context.doing();
+                    }, 1000);
+                }
+               
             },
             queryStatus() {
                 var self = this;

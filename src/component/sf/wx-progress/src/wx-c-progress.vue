@@ -7,7 +7,7 @@
         <div v-if="rightMask" class="wx_right-box" :style="rightStyle_mask"></div>
         <div class="wx_innerCircle" :style="innerCircleStyle">
             <slot></slot>
-            <text>props:{{percent}}</text>
+            <!--<text>props:{{percent}}</text>-->
         </div>
     </div>
   </div>

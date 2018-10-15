@@ -36,12 +36,12 @@
                       <!--content="美的智慧生活解决方案"-->
                       <!--:single="false" >-->
         <!--</midea-dialog>-->
-        <midea-dialog :show="show" @close="closeCustomDialog" @mideaDialogCancelBtnClicked="closeCustomDialog" @mideaDialogConfirmBtnClicked="closeCustomDialog">
+        <custom-dialog :show="show" @close="closeCustomDialog" @mideaDialogCancelBtnClicked="closeCustomDialog" @mideaDialogConfirmBtnClicked="closeCustomDialog">
             <div slot="content">
                 <text class="content-title">加热模式</text>
-                <text class="custom-content">是否启动香浓粥？</text>
+                <wx-picker :data="data" :visible="true" @wxChange="handleChange"></wx-picker>
             </div>
-        </midea-dialog>
+        </custom-dialog>
         <text @click="show=true">111111</text>
     </scroller>
 </template>
@@ -116,12 +116,35 @@
 <script>
     const storage = weex.requireModule('storage')
     import MideaHeader from '@/midea-component/header.vue'
-    import mideaDialog from '@/midea-component/dialog.vue'
+    import customDialog from '@/component/sf/custom/dialog.vue'
     import nativeService from "../common/services/nativeService";
     import cmdFun from "./util.js"; //解析指令
     import query from "../dummy/query";
     import {wxcProgress, wxProgress} from "@/component/sf/wx-progress";
 
+
+    import { WxPicker } from 'weex-droplet-ui';
+
+    const PICKER_DATA = {
+        list: [
+            { name: '李娜', value: 0 },
+            { name: '丁超', value: 1 },
+            { name: '江武', value: 2 },
+            { name: '尹士鹏', value: 3 },
+            { name: '周灰灰', value: 4 },
+            { name: '杨泉', value: 5 },
+            { name: '厚本金融公司', value: 6 },
+            { name: '揽胜', value: 7 },
+            { name: '陆地巡洋舰', value: 8 },
+            { name: '航空母舰', value: 9 },
+            { name: '天宫一号', value: 10 },
+            { name: '红岸工程', value: 11 },
+        ],
+        defaultValue: { name: '厚本金融公司', value: 6 },
+        displayValue (item) {
+            return item.name;
+        }
+    };
 
     export default {
         data(){
@@ -168,10 +191,13 @@
                     ]
                 ],
                 show: false,
-                single: false
+                single: false,
+                data: PICKER_DATA,
+                visible: false,
+                selectedData: PICKER_DATA.defaultValue,
             }
         },
-        components: {MideaHeader,wxcProgress,wxProgress,mideaDialog},
+        components: {MideaHeader,wxcProgress,wxProgress,customDialog,WxPicker},
         created(){
             // nativeService.toast(1);
             //模拟设备数据
@@ -193,6 +219,21 @@
             },
             backClick(){
                this.goTo("working");
+            },
+            handleBottom (visible) {
+                this.visible = visible;
+            },
+
+            handleChange (data) {
+                this.selectedData = data;
+            },
+
+            handleCancel () {
+                this.$refs.wxPopup.hide();
+            },
+
+            handleFinish () {
+                this.$refs.wxPopup.hide();
             },
             doing: function(){
                 if(this.progress === 100) {

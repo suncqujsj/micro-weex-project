@@ -94,6 +94,7 @@ module.exports = {
             { title: 'Switch', link: "switch" },
             { title: 'Swiper', link: "swiper" },
             { title: 'Accordion', link: "accordion" },
+            { title: 'confirmBox底部确认弹出框', link: "confirmBox" },
         ],
         advancedlist: [
             { title: 'Action Sheet', link: "actionSheet" },
@@ -117,7 +118,7 @@ module.exports = {
             { title: 'Tab', link: "tab" },
             { title: 'TimeCycle时间转盘', link: "timeCycle" },
             { title: 'Video视频', link: "video" },
-
+            { title: 'scrollPicker滚动选择器', link: "scrollPicker" },
         ],
         interfacelist: [
             { title: 'callTel打电话', link: "callTel" },

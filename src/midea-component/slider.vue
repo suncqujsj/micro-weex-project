@@ -1,7 +1,7 @@
 <template>
     <div>
         <text :style="tipStyle" class="tip-txt" v-if="!showTip">{{tipTxt}}</text>
-        <midea-seek-bar :max="max" :min="min" :value="value" :unit="unit" :showTip="showTip" :step="step" :axisH="axisH" :pointH="pointH" :pointColor='pointColor' :axisColor='axisColor' @slideChange="slideChange" @slideEnd="slideEnd"></midea-seek-bar>
+        <midea-seek-bar :max="max" :min="min" :value="value" :unit="unit" :showTip="showTip" :step="step" :axisH="axisH" :pointH="pointH" :pointColor='pointColor' :axisColor='axisColor' :disable='disable' @slideChange="slideChange" @slideEnd="slideEnd"></midea-seek-bar>
     </div>
 </template>
 <style scoped>
@@ -81,6 +81,10 @@ export default {
             type: String,
             default: ''
         },
+        disable: {
+        	type: Boolean,
+            default: false
+        }
     },
     data: () => ({}),
     computed: {

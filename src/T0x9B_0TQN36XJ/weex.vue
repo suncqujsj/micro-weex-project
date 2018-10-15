@@ -28,6 +28,21 @@
                 <!--<text class="demo-text">{{progress}}%</text>-->
             <!--</div>-->
         <!--</wxcProgress>-->
+        <!--<midea-dialog title="使用协议"-->
+                      <!--:show="show"-->
+                      <!--@close="closeDialog"-->
+                      <!--@mideaDialogCancelBtnClicked="mideaDialogCancelBtnClicked"-->
+                      <!--@mideaDialogConfirmBtnClicked="mideaDialogCancelBtnClicked"-->
+                      <!--content="美的智慧生活解决方案"-->
+                      <!--:single="false" >-->
+        <!--</midea-dialog>-->
+        <midea-dialog :show="show" @close="closeCustomDialog" @mideaDialogCancelBtnClicked="closeCustomDialog" @mideaDialogConfirmBtnClicked="closeCustomDialog">
+            <div slot="content">
+                <text class="content-title">加热模式</text>
+                <text class="custom-content">是否启动香浓粥？</text>
+            </div>
+        </midea-dialog>
+        <text @click="show=true">111111</text>
     </scroller>
 </template>
 
@@ -90,12 +105,18 @@
         .f(12*2px);
         .lh(12*2px);
     }
+    .content-title {
+        color: #333333;
+        font-size: 36px;
+        text-align: center;
+        margin-bottom: 24px;
+    }
 </style>
 
 <script>
     const storage = weex.requireModule('storage')
     import MideaHeader from '@/midea-component/header.vue'
-    // import mideaItem from '@/midea-component/item.vue'
+    import mideaDialog from '@/midea-component/dialog.vue'
     import nativeService from "../common/services/nativeService";
     import cmdFun from "./util.js"; //解析指令
     import query from "../dummy/query";
@@ -145,10 +166,12 @@
                             'text': '发酵'
                         }
                     ]
-                ]
+                ],
+                show: false,
+                single: false
             }
         },
-        components: {MideaHeader,wxcProgress,wxProgress},
+        components: {MideaHeader,wxcProgress,wxProgress,mideaDialog},
         created(){
             // nativeService.toast(1);
             //模拟设备数据
@@ -161,6 +184,10 @@
 
         },
         methods: {
+            closeCustomDialog() {
+                this.show = false;
+                console.log(this.$refs['container']);
+            },
             goBack(){
                 nativeService.goBack()
             },

@@ -76,7 +76,7 @@
             // nativeService.initMockData({
             //     query: query
             // });
-            // this.queryStatus();
+            // this. ();
             // debugger;
              this.doing();
 
@@ -92,10 +92,9 @@
                 if(this.progress === 100) {
                     return;
                 }
-                this.progress += 9;
+                ++this.progress;
                 // this.progress += '1';
-                let context = this;
-                let setTimeout = setTimeout || window.setTimeout;
+                let context = this;>
                 setTimeout(function () {
                     context.doing();
                 }, 1000);

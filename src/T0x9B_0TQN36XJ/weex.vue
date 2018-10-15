@@ -49,6 +49,11 @@
                         <wx-picker :data="data" :visible="true" @wxChange="handleChange"></wx-picker>
                     </div>
                 </sf-accordion>
+                <sf-accordion title="设置预热" :hideIcon="true">
+                    <div slot="right">
+                        <midea-switch2 :checked="mideaChecked" @change="onMideachange" :width="70" :height="38" slot="value"></midea-switch2>
+                    </div>
+                </sf-accordion>
             </div>
         </sf-dialog>
         <text @click="show=true">111111</text>
@@ -123,7 +128,6 @@
 </style>
 
 <script>
-    const storage = weex.requireModule('storage')
     import MideaHeader from '@/midea-component/header.vue'
     import sfAccordion from '@/component/sf/custom/accordion.vue'
     import sfDialog from '@/component/sf/custom/dialog.vue'
@@ -131,6 +135,8 @@
     import cmdFun from "./util.js"; //解析指令
     import query from "../dummy/query";
     import {wxcProgress, wxProgress} from "@/component/sf/wx-progress";
+    import mideaSwitch2 from '@/midea-component/switch2.vue'
+
 
 
     import { WxPicker } from 'weex-droplet-ui';
@@ -205,9 +211,10 @@
                 data: PICKER_DATA,
                 visible: false,
                 selectedData: PICKER_DATA.defaultValue,
+                mideaChecked: false
             }
         },
-        components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion},
+        components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2},
         created(){
             // nativeService.toast(1);
             //模拟设备数据
@@ -220,6 +227,10 @@
 
         },
         methods: {
+            onMideachange(event) {
+                this.mideaChecked = event.value;
+                // nativeService.alert(this.mideaChecked);
+            },
             closeCustomDialog() {
                 this.show = false;
                 console.log(this.$refs['container']);

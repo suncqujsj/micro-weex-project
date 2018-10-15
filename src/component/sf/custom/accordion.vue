@@ -2,7 +2,8 @@
     <div class="accordion-wrapper">
         <div class="accordion-item" @click="makeSwitch">
             <text class="accordion-title">{{title}}</text>
-            <image class="accordion-icon" :src="isFoldedStatus?foldIcon:unfoldIcon"></image>
+            <image v-if="!hideIcon" class="accordion-icon" :src="isFoldedStatus?foldIcon:unfoldIcon"></image>
+            <slot v-if="hideIcon" name="right"></slot>
         </div>
         <div v-if="!isFoldedStatus">
             <slot name="content"></slot>
@@ -14,6 +15,10 @@
 export default {
     props: {
         title: "",
+        hideIcon: {
+            type: Boolean,
+            default: false
+        },
         isFolded: {
             type: Boolean,
             default: true

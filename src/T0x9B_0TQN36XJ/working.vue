@@ -94,7 +94,7 @@
                 }
                 ++this.progress;
                 // this.progress += '1';
-                let context = this;>
+                let context = this;
                 setTimeout(function () {
                     context.doing();
                 }, 1000);

@@ -39,19 +39,19 @@
         <sf-dialog :show="show" @close="closeCustomDialog" @mideaDialogCancelBtnClicked="closeCustomDialog" @mideaDialogConfirmBtnClicked="closeCustomDialog">
             <div slot="content">
                 <text class="content-title">加热模式</text>
-                <sf-accordion title="设置时间">
+                <sf-accordion :index="0" title="设置时间" :isFolded="accordionArr[0]" @callback="updateAccordionArr">
                     <div slot="content">
                         <wx-picker :data="data" :visible="true" @wxChange="handleChange"></wx-picker>
                     </div>
                 </sf-accordion>
-                <sf-accordion title="设置温度">
+                <sf-accordion :index="1" title="设置温度" :isFolded="accordionArr[1]" @callback="updateAccordionArr">
                     <div slot="content">
                         <wx-picker :data="data" :visible="true" @wxChange="handleChange"></wx-picker>
                     </div>
                 </sf-accordion>
                 <sf-accordion title="设置预热" :hideIcon="true">
                     <div slot="right">
-                        <midea-switch2 :checked="mideaChecked" @change="onMideachange" :width="70" :height="38" slot="value"></midea-switch2>
+                        <midea-switch2 :checked="mideaChecked" @change="onMideachange" width="70" height="38" slot="value"></midea-switch2>
                     </div>
                 </sf-accordion>
             </div>
@@ -211,7 +211,8 @@
                 data: PICKER_DATA,
                 visible: false,
                 selectedData: PICKER_DATA.defaultValue,
-                mideaChecked: false
+                mideaChecked: false,
+                accordionArr:[true, true]
             }
         },
         components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2},
@@ -227,6 +228,19 @@
 
         },
         methods: {
+            updateAccordionArr: function(key, value){
+                let accordionArr = JSON.parse(JSON.stringify(this.accordionArr));
+                for(let index=0;index<this.accordionArr.length;index++) {
+                    if (key === index) {
+                        accordionArr[index] = value;
+                    } else {
+                        if (!value && !this.accordionArr[index]) {
+                            accordionArr[index] = true;
+                        }
+                    }
+                }
+                this.accordionArr = accordionArr;
+            },
             onMideachange(event) {
                 this.mideaChecked = event.value;
                 // nativeService.alert(this.mideaChecked);

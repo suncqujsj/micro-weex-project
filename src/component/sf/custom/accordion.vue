@@ -15,6 +15,10 @@
 export default {
     props: {
         title: "",
+        index: {
+            type: Number,
+            default: -1
+        },
         hideIcon: {
             type: Boolean,
             default: false
@@ -33,12 +37,14 @@ export default {
         return {
             unfoldIcon: '../img/service_ic_show@3x.png',
             foldIcon: '../img/service_ic_hide@3x.png',
-            isFoldedStatus: true
+            isFoldedStatus: this.isFolded
         }
     },
     methods: {
         makeSwitch(e) {
-            this.isFoldedStatus = !this.isFoldedStatus
+            this.isFoldedStatus = !this.isFoldedStatus;
+            if(this.index === -1) return;
+            this.$emit('callback', this.index, this.isFoldedStatus);
         }
     }
 }

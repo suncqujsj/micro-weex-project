@@ -51,7 +51,7 @@
                 </sf-accordion>
                 <sf-accordion title="设置预热" :hideIcon="true">
                     <div slot="right">
-                        <midea-switch2 :checked="mideaChecked" @change="onMideachange" :width="70" :height="38" slot="value"></midea-switch2>
+                        <midea-switch2 :checked="mideaChecked" @change="onMideachange" width="70" height="38" slot="value"></midea-switch2>
                     </div>
                 </sf-accordion>
             </div>

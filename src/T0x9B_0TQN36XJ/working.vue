@@ -93,13 +93,15 @@
         components: {MideaHeader,wxcProgress,wxProgress},
         created(){
             // nativeService.toast(1);
-            //模拟设备数据
-            // nativeService.initMockData({
-            //     query: query
-            // });
-            // this. ();
+           // 模拟设备数据
+            nativeService.initMockData({
+                query: query
+            });
+            this.queryStatus();
             // debugger;
+          
              this.doing();
+             
 
         },
         computed: {
@@ -109,6 +111,13 @@
                     marginTop: `${wrapHeight/2-progress_radius*2}px`
                 }
             }
+        },
+        mounted() {
+            //  nativeService.getDeviceInfo().then((resp)=>{
+            //      nativeService.alert(resp);
+            //  }).catch((error) => {
+            //         nativeService.toast(error)
+            //     })
         },
         methods: {
             goBack(){

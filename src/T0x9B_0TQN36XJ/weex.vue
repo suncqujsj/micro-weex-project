@@ -1,25 +1,25 @@
 <template>
     <scroller class="bg" :style="{height: wrapHeight}">
         <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="red" :isImmersion="true"  :showLeftImg="true" @headerClick="backClick" ></midea-header>
-        <!--<div class="panel">-->
-            <!--<text class="panel-state">待机中</text>-->
-            <!--<div class="tabs">-->
-                <!--<div class="tab">-->
-                    <!--<text class="tab-text">自动菜单</text>-->
-                <!--</div>-->
-                <!--<div class="tab">-->
-                    <!--<text class="tab-text cur">加热模式</text>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div class="area" :style="{height: wrapHeight - 224*2}">-->
-            <!--<div class="icon-buttons" v-for="rows in modes">-->
-                <!--<div class="icon-button column" v-for="item in rows">-->
-                    <!--<image class="button-icon" :src="item.icon"></image>-->
-                    <!--<text class="button-text">{{item.text}}</text>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
+        <div class="panel">
+            <text class="panel-state">待机中</text>
+            <div class="tabs">
+                <div class="tab">
+                    <text class="tab-text">自动菜单</text>
+                </div>
+                <div class="tab">
+                    <text class="tab-text cur">加热模式</text>
+                </div>
+            </div>
+        </div>
+        <div class="area" :style="{height: wrapHeight - 224*2}">
+            <div class="icon-buttons" v-for="rows in modes">
+                <div class="icon-button column" v-for="item in rows" @click="onModeButtonClicked(item.mode)">
+                    <image class="button-icon" :src="item.icon"></image>
+                    <text class="button-text">{{item.text}}</text>
+                </div>
+            </div>
+        </div>
         <!--<text class="r test" @click="doing">{{progress}}</text>-->
         <!--<wxProgress :percent='progress' :bar_width='650'></wxProgress>-->
         <!--<wxcProgress :percent="progress"-->
@@ -36,22 +36,22 @@
                       <!--content="美的智慧生活解决方案"-->
                       <!--:single="false" >-->
         <!--</midea-dialog>-->
-        <sf-dialog :show="show" @close="closeCustomDialog" @mideaDialogCancelBtnClicked="closeCustomDialog" @mideaDialogConfirmBtnClicked="closeCustomDialog">
+        <sf-dialog :show="show" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <text class="content-title">加热模式</text>
                 <sf-accordion :index="0" title="设置时间" :isFolded="accordionArr[0]" @callback="updateAccordionArr">
                     <div slot="content">
-                        <wx-picker :data="data" :visible="true" @wxChange="handleChange"></wx-picker>
+                        <wx-picker :data="timeRange" :visible="true" @wxChange="handleTimeChange"></wx-picker>
                     </div>
                 </sf-accordion>
                 <sf-accordion :index="1" title="设置温度" :isFolded="accordionArr[1]" @callback="updateAccordionArr">
                     <div slot="content">
-                        <wx-picker :data="data" :visible="true" @wxChange="handleChange"></wx-picker>
+                        <wx-picker :data="temperatureRange" :visible="true" @wxChange="handleTemperatureChange"></wx-picker>
                     </div>
                 </sf-accordion>
                 <sf-accordion title="设置预热" :hideIcon="true">
                     <div slot="right">
-                        <midea-switch2 :checked="mideaChecked" @change="onMideachange" width="70" height="38" slot="value"></midea-switch2>
+                        <midea-switch2 :checked="preheat" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
                     </div>
                 </sf-accordion>
             </div>
@@ -141,25 +141,13 @@
 
     import { WxPicker } from 'weex-droplet-ui';
 
-    const PICKER_DATA = {
-        list: [
-            { name: '李娜', value: 0 },
-            { name: '丁超', value: 1 },
-            { name: '江武', value: 2 },
-            { name: '尹士鹏', value: 3 },
-            { name: '周灰灰', value: 4 },
-            { name: '杨泉', value: 5 },
-            { name: '厚本金融公司', value: 6 },
-            { name: '揽胜', value: 7 },
-            { name: '陆地巡洋舰', value: 8 },
-            { name: '航空母舰', value: 9 },
-            { name: '天宫一号', value: 10 },
-            { name: '红岸工程', value: 11 },
-        ],
-        defaultValue: { name: '厚本金融公司', value: 6 },
-        displayValue (item) {
-            return item.name;
-        }
+    Array.prototype.range = function(start, end){
+        let length = end - start + 1;
+        let step = start - 1;
+        return Array.apply(null, {length:length}).map(function(){
+            step++;
+            return step;
+        });
     };
 
     export default {
@@ -173,45 +161,53 @@
                     [
                         {
                             'icon': 'assets/img/modes/steam@3x.png',
-                            'text': '蒸汽'
+                            'text': '蒸汽',
+                            'mode': 0x20
                         },
                         {
                             'icon': 'assets/img/modes/steam_and_hot_wind@3x.png',
-                            'text': '蒸汽+热风'
+                            'text': '蒸汽+热风',
+                            'mode': 0x31
                         },
                         {
                             'icon': 'assets/img/modes/broil@3x.png',
-                            'text': '烧烤'
+                            'text': '烧烤',
+                            'mode': 0x40
                         },
                         {
                             'icon': 'assets/img/modes/hot_wind@3x.png',
-                            'text': '热风对流'
+                            'text': '热风对流',
+                            'mode': 0x41
                         },
                     ],[
                         {
                             'icon': 'assets/img/modes/hot_wind_and_broil@3x.png',
-                            'text': '热风烧烤'
+                            'text': '热风烧烤',
+                            'mode': 0x43
                         },
                         {
                             'icon': 'assets/img/modes/clean@3x.png',
-                            'text': '清洁'
+                            'text': '清洁',
+                            'mode': 0xC1
                         },
                         {
                             'icon': 'assets/img/modes/heat_preservation@3x.png',
-                            'text': '保温'
+                            'text': '保温',
+                            'mode': 0xD0
                         },
                         {
                             'icon': 'assets/img/modes/fermentation@3x.png',
-                            'text': '发酵'
+                            'text': '发酵',
+                            'mode': 0xB0
                         }
                     ]
                 ],
-                show: true,
-                single: false,
-                data: PICKER_DATA,
+                currentMode: 0x20,
+                currentTime: null,
+                currentTemperature:null,
+                preheat:false,
+                show: false,
                 visible: false,
-                selectedData: PICKER_DATA.defaultValue,
-                mideaChecked: false,
                 accordionArr:[true, true]
             }
         },
@@ -227,7 +223,74 @@
             // this.doing();
 
         },
+        computed:{
+            timeRange: function(){
+                let list = null;
+                switch (this.currentMode) {
+                    case 0x20: // 蒸汽
+                    case 0x31: // 热风烧烤
+                    case 0x40: // 烧烤
+                    case 0x33: // 蒸汽+热风烧烤
+                        list = [].range(1,90);
+                        break;
+                    case 0x41: // 热风
+                    case 0x43: // 热风烧烤
+                    case 0xD0: // 保温
+                    case 0xB0: // 发酵
+                        list = [].range(1,300);
+                        break;
+                    case 0xC1: // 清洁
+                        break;
+                    default:
+                        break;
+                }
+                return {
+                    list,
+                    defaultValue: this.currentTime,
+                    displayValue (item) {
+                        return item;
+                    }
+                };
+            },
+            temperatureRange: function(){
+                let list = null;
+                switch (this.currentMode) {
+                    case 0x20: // 蒸汽
+                        list = [].range(50,100);
+                        break;
+                    case 0x31: // 热风烧烤
+                        list = [].range(100,180);
+                        break;
+                    case 0x41: // 热风
+                        list = [].range(100,230);
+                        break;
+                    case 0x33: // 蒸汽+热风烧烤
+                        list = [].range(180,220);
+                        break;
+                    case 0x40: // 烧烤
+                    case 0xC1: // 清洁
+                    case 0xB0: // 发酵
+                    case 0xD0: // 保温
+                        break;
+                    default:
+                        break;
+                }
+                return {
+                    list,
+                    defaultValue: this.currentTemperature,
+                    displayValue (item) {
+                        return item;
+                    }
+                };
+            },
+
+        },
         methods: {
+            onModeButtonClicked: function(mode){
+                console.log(mode);
+                this.currentMode = mode;
+                this.show = true;
+            },
             updateAccordionArr: function(key, value){
                 let accordionArr = JSON.parse(JSON.stringify(this.accordionArr));
                 for(let index=0;index<this.accordionArr.length;index++) {
@@ -241,13 +304,28 @@
                 }
                 this.accordionArr = accordionArr;
             },
-            onMideachange(event) {
-                this.mideaChecked = event.value;
-                // nativeService.alert(this.mideaChecked);
-            },
-            closeCustomDialog() {
+            closeDialog(e) {
                 this.show = false;
-                console.log(this.$refs['container']);
+                if (e.type === 'cancel') return;
+
+                let jsonCmd = {
+                    mode: this.currentMode,
+                    minute: this.currentTime,
+                    temperature: this.currentTemperature,
+                    preheat: this.preheat
+                };
+                console.log(jsonCmd);
+                let deviceCmd = cmdFun.createControlMessage(jsonCmd);
+                nativeService.startCmdProcess(
+                    "control",
+                    deviceCmd,
+                    function(result){
+                        console.log('success', result);
+                    },
+                    function(result){
+                        console.log('fail', result);
+                    }
+                )
             },
             goBack(){
                 nativeService.goBack()
@@ -255,20 +333,17 @@
             backClick(){
                this.goTo("working");
             },
-            handleBottom (visible) {
-                this.visible = visible;
+            handleTimeChange (data) {
+                this.currentTime = data;
+                console.log('currentTime', this.currentTime);
             },
-
-            handleChange (data) {
-                this.selectedData = data;
+            handleTemperatureChange (data) {
+                this.currentTemperature = data;
+                console.log('currentTemperature', this.currentTemperature);
             },
-
-            handleCancel () {
-                this.$refs.wxPopup.hide();
-            },
-
-            handleFinish () {
-                this.$refs.wxPopup.hide();
+            onPreheatChange(event) {
+                this.preheat = event.value;
+                console.log('preheat', this.preheat);
             },
             doing: function(){
                 if(this.progress === 100) {

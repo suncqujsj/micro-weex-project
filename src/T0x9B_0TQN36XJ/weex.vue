@@ -1,6 +1,6 @@
 <template>
-    <scroller class="bg" :style="{height: wrapHeight}">
-        <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="red" :isImmersion="true"  :showLeftImg="true" @headerClick="backClick" ></midea-header>
+    <scroller class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
+        <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="red" :isImmersion="true"  :showLeftImg="true" @headerClick="backClick" @leftImgClick="goBack" ></midea-header>
         <div class="panel">
             <text class="panel-state">待机中</text>
             <div class="tabs">
@@ -136,18 +136,31 @@
     import query from "../dummy/query";
     import {wxcProgress, wxProgress} from "@/component/sf/wx-progress";
     import mideaSwitch2 from '@/midea-component/switch2.vue'
-
-
-
     import { WxPicker } from 'weex-droplet-ui';
+    const globalEvent = weex.requireModule("globalEvent");
 
-    Array.prototype.range = function(start, end){
-        let length = end - start + 1;
-        let step = start - 1;
-        return Array.apply(null, {length:length}).map(function(){
-            step++;
-            return step;
-        });
+    // Array.prototype.range = function(start, end){
+    //     let length = end - start + 1;
+    //     let step = start - 1;
+    //     return Array.apply(null, {length:length}).map(function(){
+    //         step++;
+    //         return step;
+    //     });
+    // };
+    var settingArrData = function(start,end){
+        var arr=[];
+        if(start > end){
+            return arr;
+        }
+        for(var i=0;i <= end-start;i++){
+            var value = start+i;
+            if(value < 0){
+                continue;
+            }
+            // value = value > 9 ? value:"0"+value;
+            arr[i]=value;
+        }
+        return arr;
     };
 
     export default {
@@ -213,15 +226,15 @@
         },
         components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2},
         created(){
-            // nativeService.toast(1);
             //模拟设备数据
             // nativeService.initMockData({
             //     query: query
             // });
-            // this.queryStatus();
-            // debugger;
-            // this.doing();
-
+            this.queryStatus();
+            this.isIos = weex.config.env.platform == "iOS" ? true : false;
+            if (this.isIos){
+                this.listenerFun();
+            }
         },
         computed:{
             timeRange: function(){
@@ -231,13 +244,13 @@
                     case 0x31: // 热风烧烤
                     case 0x40: // 烧烤
                     case 0x33: // 蒸汽+热风烧烤
-                        list = [].range(1,90);
+                        list = settingArrData(1,90);
                         break;
                     case 0x41: // 热风
                     case 0x43: // 热风烧烤
                     case 0xD0: // 保温
                     case 0xB0: // 发酵
-                        list = [].range(1,300);
+                        list = settingArrData(1,300);
                         break;
                     case 0xC1: // 清洁
                         break;
@@ -256,16 +269,16 @@
                 let list = null;
                 switch (this.currentMode) {
                     case 0x20: // 蒸汽
-                        list = [].range(50,100);
+                        list = settingArrData(50,100);
                         break;
                     case 0x31: // 热风烧烤
-                        list = [].range(100,180);
+                        list = settingArrData(100,180);
                         break;
                     case 0x41: // 热风
-                        list = [].range(100,230);
+                        list = settingArrData(100,230);
                         break;
                     case 0x33: // 蒸汽+热风烧烤
-                        list = [].range(180,220);
+                        list = settingArrData(180,220);
                         break;
                     case 0x40: // 烧烤
                     case 0xC1: // 清洁
@@ -286,6 +299,29 @@
 
         },
         methods: {
+            analysisFun(analysisObj) {
+                //nativeService.alert(JSON.stringify(analysisObj));
+                if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 6) {
+                    this.goTo("working");
+                }
+            },
+            listenerFun(){
+                var self = this;        
+                globalEvent.addEventListener("receiveMessage", function(e) {//暂时发现失效了
+                     nativeService.alert(e);
+                    var str = e.data;
+                    nativeService.alert(str);
+                    var arr = str.split(",");
+                    var analysisObj = cmdFun.analysisCmd(arr); //解析04上行指令
+                    self.analysisFun(analysisObj);
+                });
+            },
+            viewdisappear(){
+                globalEvent.removeEventListener("receiveMessage");
+            },
+            viewappear(){
+                this.listenerFun();
+            },
             onModeButtonClicked: function(mode){
                 console.log(mode);
                 this.currentMode = mode;
@@ -305,8 +341,12 @@
                 this.accordionArr = accordionArr;
             },
             closeDialog(e) {
+                var self = this;
                 this.show = false;
-                if (e.type === 'cancel') return;
+                if (e.type === 'cancel'){
+                    this.show = false;
+                    return;
+                } 
 
                 let jsonCmd = {
                     mode: this.currentMode,
@@ -314,13 +354,13 @@
                     temperature: this.currentTemperature,
                     preheat: this.preheat
                 };
-                console.log(jsonCmd);
                 let deviceCmd = cmdFun.createControlMessage(jsonCmd);
+                //nativeService.alert(deviceCmd);
                 nativeService.startCmdProcess(
                     "control",
                     deviceCmd,
                     function(result){
-                        console.log('success', result);
+                       self.queryStatus();
                     },
                     function(result){
                         console.log('fail', result);
@@ -359,7 +399,6 @@
             queryStatus() {
                 var self = this;
                 var sendCmd = cmdFun.createQueryMessage();
-                // nativeService.alert(JSON.stringify(sendCmd));
                 //nativeService.showLoading();
                 // debugger;
                 nativeService.startCmdProcess(
@@ -367,25 +406,21 @@
                     sendCmd,
                     function (result) {
                         //nativeService.hideLoading();
-                        nativeService.alert(JSON.stringify(result));
+                        //nativeService.alert(JSON.stringify(result));
                         var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
                         var arr = result_arr.split(",");
-                        //nativeService.alert(arr[11]);
                         var analysisObj = cmdFun.analysisCmd(arr);
-                        // self.analysisFun(analysisObj);
-                        // nativeService.toast(analysisObj);
-                        // self.test = JSON.stringify(analysisObj);
+                        self.analysisFun(analysisObj);
                     },
                     function (result) {
                         //nativeService.hideLoading();
-                        nativeService.toast(result);
                         // nativeService.toast("查询失败" + JSON.stringify(result));
                     }
                 );
             },
             goTo(url){
                 let path = url + '.js'
-                nativeService.goTo(path)
+                nativeService.goTo(path,false, true)
             }
         }
     }

@@ -1,6 +1,6 @@
 <template>
     <div class="all_section" :style="{height: wrapHeight}">
-        <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="backClick" ></midea-header>
+        <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
         <div class="progress_section" :style="progress_style">
             <wxcProgress :percent="progress"
                     :wxc_radius='progress_radius'>
@@ -15,6 +15,24 @@
         </div>
         <div class="detail_section">
             <text class="detail_text">高火180°</text>
+        </div>
+        <div class="footer_section">
+            <div class="btn_section">
+                <div class="image_section" @click="cancle">
+                    <image class="icon_image" src="assets/img/footer/icon_cancle@2x.png"></image>
+                </div>
+                 <div class="decs_section">
+                    <text class="decs_text">关闭</text>
+                </div>
+            </div>
+             <div class="btn_section">
+                <div class="image_section" @click="startOrPause">
+                    <image class="icon_image" :src="btnSrc"></image>
+                </div>
+                 <div class="decs_section" >
+                    <text class="decs_text">{{btnText}}</text>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -68,6 +86,29 @@
         .f(36px);
         margin-top: 60px;
     }
+    .footer_section{
+        .row;
+        .pos(a);
+        bottom: 0px;
+        left: 0px;
+        width: 750px;
+        height: 400px;
+    }
+    .btn_section{
+        .flex;
+        .j-c;
+        .a-c;
+    }
+    .icon_image{
+        width: 108px;
+        height: 108px;
+    }
+    .decs_section{
+        margin-top: 24px;
+    }
+    .decs_text{
+       .white; 
+    }
 </style>
 
 <script>
@@ -87,21 +128,20 @@
                 test:'123',
                 progress:1,
                 progress_radius: 250,
-                tag_next: '分'
+                tag_next: '分',
+                btnText: "暂停",
+                btnSrc: "assets/img/footer/icon_pause@2x.png"
             }
         },
         components: {MideaHeader,wxcProgress,wxProgress},
         created(){
-            // nativeService.toast(1);
            // 模拟设备数据
-            nativeService.initMockData({
-                query: query
-            });
+            // nativeService.initMockData({
+            //     query: query
+            // });
             this.queryStatus();
             // debugger;
-          
              this.doing();
-             
 
         },
         computed: {
@@ -120,11 +160,28 @@
             //     })
         },
         methods: {
+            analysisFun(analysisObj) {
+                if (analysisObj.workingState.value == 2) {
+                    this.goTo("weex");
+                }
+                if(analysisObj.workingState.value == 3){
+                    this.btnText = "暂停";
+                    this.btnSrc = "assets/img/footer/icon_pause@2x.png";
+                }
+                 if(analysisObj.workingState.value == 6){
+                    this.btnText = "继续";
+                    this.btnSrc = "assets/img/footer/icon_start@2x.png";
+                }
+            },
             goBack(){
                 nativeService.goBack()
             },
             backClick(){
                this.goTo("working");
+            },
+            goTo(url){
+                let path = url + '.js'
+                nativeService.goTo(path)
             },
             doing: function(){
                 if(this.progress === 100) {
@@ -148,34 +205,61 @@
             queryStatus() {
                 var self = this;
                 var sendCmd = cmdFun.createQueryMessage();
-                // nativeService.alert(JSON.stringify(sendCmd));
-                //nativeService.showLoading();
-                // debugger;
                 nativeService.startCmdProcess(
                     "query",
                     sendCmd,
                     function (result) {
-                        //nativeService.hideLoading();
-                        nativeService.alert(JSON.stringify(result));
+                       //nativeService.hideLoading();
                         var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
                         var arr = result_arr.split(",");
-                        //nativeService.alert(arr[11]);
                         var analysisObj = cmdFun.analysisCmd(arr);
-                        // self.analysisFun(analysisObj);
-                        // nativeService.toast(analysisObj);
-                        // self.test = JSON.stringify(analysisObj);
+                        self.analysisFun(analysisObj);
                     },
                     function (result) {
                         //nativeService.hideLoading();
-                        nativeService.toast(result);
+                        //nativeService.toast(result);
                         // nativeService.toast("查询失败" + JSON.stringify(result));
                     }
                 );
             },
-            goTo(url){
-                let path = url + '.js'
-                nativeService.goTo(path)
-            }
+            cancle(){
+                var self = this;
+                var deviceCmd = cmdFun.cmdCancelWork();
+                nativeService.startCmdProcess(
+                    "control",
+                    deviceCmd,
+                    function(result){
+                       var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
+                        var arr = result_arr.split(",");
+                        var analysisObj = cmdFun.analysisCmd(arr);
+                        self.analysisFun(analysisObj);
+                    },
+                    function(result){
+                        console.log('fail', result);
+                    }
+                )
+            },
+            startOrPause(){
+                var self = this;
+                var record = 3;
+                if(this.btnText == "暂停"){
+                    record = 6;
+                }
+                 if(this.btnText == "继续"){
+                    record = 3;
+                }
+                var deviceCmd = cmdFun.cmdStartOrPause(record);
+                nativeService.startCmdProcess(
+                    "control",
+                    deviceCmd,
+                    function(result){
+                        self.queryStatus();
+                    },
+                    function(result){
+                        console.log('fail', result);
+                    }
+                )
+            },
         }
     }
 </script>

@@ -15,286 +15,143 @@ export default {
   },
   // 查询指令
   createQueryMessage() {
-    var messageBody = message.createMessageBody(20);
+    var messageBody = message.createMessageBody(1);//createMessageBody默认从10开始，1表示11，2表示12....
     message.setByte(messageBody, 0, 0x31);
     var sendMessage = message.createMessage(0x9B, 0x03, messageBody);
-    //nativeService.alert(sendMessage);    
     return sendMessage;
   },
-   // 查询统计指令
-   createCountQueryMessage() {
-    var messageBody = message.createMessageBody(34); 
-    message.setByte(messageBody, 0, 1);
-    var sendMessage = message.createMessage(0xe1, 0x03, messageBody);
-    //nativeService.alert(sendMessage);    
-    return sendMessage;
-  },
+ 
   //控制启动指令
-  createControlMessage(mode, additionalMode) {
-    var messageBody = message.createMessageBody(24); 
-    message.setByte(messageBody, 0, 0x08);
-    message.setByte(messageBody, 1, 0x03);
-    message.setByte(messageBody, 2, mode);
-    message.setByte(messageBody, 3, additionalMode);
-    message.setBit(messageBody, 5, 3, 0x01);
-    var sendcmd = message.createMessage(0xe1, 0x02, messageBody);
-    //nativeService.alert(sendcmd);    
+  createControlMessage(params) {
+    var time = params.minute;
+    var hour = time/60;
+    var minute = time%60;
+    var second = 0;
+    var messageBody = message.createMessageBody(22); 
+    message.setByte(messageBody, 0, 0x22);
+    message.setByte(messageBody, 1, 0x01);
+    message.setByte(messageBody, 6, params.preheat?1:0);
+    message.setByte(messageBody, 7, hour);
+    message.setByte(messageBody, 8, minute);
+    message.setByte(messageBody, 9, second);
+    message.setByte(messageBody, 10, params.mode?params.mode:0x21);
+    message.setByte(messageBody, 12, params.temperature);
+    message.setByte(messageBody, 14, params.temperature);
+    var sendcmd = message.createMessage(0x9B, 0x02, messageBody);
     return sendcmd;
-  },
-   //预约中直接启动指令
-   createOrderControlMessage(mode, additionalMode) {
-    var messageBody = message.createMessageBody(24); 
-    message.setByte(messageBody, 0, 0x08);
-    message.setByte(messageBody, 1, 0x03);
-    message.setByte(messageBody, 2, mode);
-    message.setByte(messageBody, 3, additionalMode);
-    message.setBit(messageBody, 5, 3, 0x01);
-    message.setByte(messageBody, 7, 0);
-    message.setByte(messageBody, 8, 0);
-    var sendcmd = message.createMessage(0xe1, 0x02, messageBody);
-    //nativeService.alert(sendcmd);    
-    return sendcmd;
-  },
-   //关机指令
-   cmdShutDown(){
-    var messageBody = message.createMessageBody(19); 
-    message.setByte(messageBody, 0,0x08);
-    message.setByte(messageBody, 1,0x00);
-    var sendMessage = message.createMessage(0xe1, 0x02, messageBody);
-    //nativeService.alert(sendMessage);
-    return sendMessage;
   },
   //取消工作指令
-  cmdCancelWash(){
-    var messageBody = message.createMessageBody(19); 
-    message.setByte(messageBody, 0,0x08);
-    message.setByte(messageBody, 1,0x01);
-    var sendMessage = message.createMessage(0xe1, 0x02, messageBody);
-    //nativeService.alert(sendMessage);
+  cmdCancelWork(){
+    var messageBody = message.createMessageBody(7); 
+    message.setByte(messageBody, 0,0x22);
+    message.setByte(messageBody, 1,0x02);
+    message.setByte(messageBody, 2,0x02);
+    message.setByte(messageBody, 3,0xff);
+    message.setByte(messageBody, 4,0xff);
+    message.setByte(messageBody, 5,0xff);
+    message.setByte(messageBody, 6,0xff);
+    var sendMessage = message.createMessage(0x9B, 0x02, messageBody);
     return sendMessage;
   },
   //暂停or继续指令
-  cmdStartPause(pauseRecord){
-    var messageBody = message.createMessageBody(12); 
-    message.setByte(messageBody, 0,0x83);
-    message.setByte(messageBody, 1,pauseRecord==0?2:1);
-    var sendMessage = message.createMessage(0xe1, 0x02, messageBody);
-    //nativeService.alert(sendMessage);
+  cmdStartOrPause(record){
+    var messageBody = message.createMessageBody(7); 
+    message.setByte(messageBody, 0,0x22);
+    message.setByte(messageBody, 1,0x02);
+    message.setByte(messageBody, 2,record);
+    message.setByte(messageBody, 3,0xff);
+    message.setByte(messageBody, 4,0xff);
+    message.setByte(messageBody, 5,0xff);
+    message.setByte(messageBody, 6,0xff);
+    var sendMessage = message.createMessage(0x9B, 0x02, messageBody);
     return sendMessage;
   },
   //解锁
   cmdNotLock(){
-    var messageBody = message.createMessageBody(12); 
-    message.setByte(messageBody, 0,0x83);
-    message.setByte(messageBody, 1, 4);
-    var sendMessage = message.createMessage(0xe1, 0x02, messageBody);
-    //nativeService.alert(sendMessage);
+    var messageBody = message.createMessageBody(7); 
+    message.setByte(messageBody, 0,0x22);
+    message.setByte(messageBody, 1,0x02);
+    message.setByte(messageBody, 2,0xff);
+    message.setByte(messageBody, 3,0x00);
+    message.setByte(messageBody, 4,0xff);
+    message.setByte(messageBody, 5,0xff);
+    message.setByte(messageBody, 6,0xff);
+    var sendMessage = message.createMessage(0x9B, 0x02, messageBody);
     return sendMessage;
   },
    //上锁
    cmdLock(){
-    var messageBody = message.createMessageBody(12); 
-    message.setByte(messageBody, 0,0x83);
-    message.setByte(messageBody, 1, 3);
-    var sendMessage = message.createMessage(0xe1, 0x02, messageBody);
-    //nativeService.alert(sendMessage);
+    var messageBody = message.createMessageBody(7); 
+    message.setByte(messageBody, 0,0x22);
+    message.setByte(messageBody, 1,0x02);
+    message.setByte(messageBody, 2,0xff);
+    message.setByte(messageBody, 3,0x01);
+    message.setByte(messageBody, 4,0xff);
+    message.setByte(messageBody, 5,0xff);
+    message.setByte(messageBody, 6,0xff);
+    var sendMessage = message.createMessage(0x9B, 0x02, messageBody);
     return sendMessage;
-  },
-  //预约指令
-  cmdOrderWashing:function(mode,additionalMode,timeH,timeM){
-    var messageBody = message.createMessageBody(13);
-    message.setByte(messageBody,0,0x08);
-    message.setByte(messageBody,1,0x02);
-    message.setByte(messageBody,2,mode);
-    message.setByte(messageBody,3,additionalMode);
-    message.setByte(messageBody,7,timeH);
-    message.setByte(messageBody,8,timeM);
-    var sendMessage = message.createMessage(0xE1,0x02,messageBody);
-    //nativeService.alert(sendMessage); 
-    return sendMessage;
-  },
-  //取消预约指令
-  cmdCancelOrderWashing:function(){
-      var messageBody = message.createMessageBody(13);
-      message.setByte(messageBody,0,0x08);
-      message.setByte(messageBody,1,0x04);
-      var sendMessage = message.createMessage(0xE1,0x02,messageBody);
-      //nativeService.alert(sendMessage);   
-      return sendMessage;
-  },
-   //设定保管时间
-   cmdSetSafeKeep:function(value){
-    var messageBody = message.createMessageBody(12);
-    message.setByte(messageBody,0,0x86);
-    message.setByte(messageBody,1,value);
-    var sendMessage = message.createMessage(0xE1,0x02,messageBody);
-    return sendMessage;
-  },
-  //启动保管
-  cmdSafeKeep:function(value){
-    var messageBody = message.createMessageBody(15);
-    message.setByte(messageBody,0,0x81);
-    message.setByte(messageBody,4,value);
-    var sendMessage = message.createMessage(0xE1,0x02,messageBody);
-    return sendMessage;
-  },
-   //设置软水盐档位
-   cmdSetSalt:function(value){
-    var messageBody = message.createMessageBody(12);
-    message.setByte(messageBody,0,0x80);
-    message.setByte(messageBody,1,value);
-    var sendMessage = message.createMessage(0xE1,0x02,messageBody);
-    return sendMessage;
-  },
-   //设置亮碟剂档位
-   cmdSetBrightDish:function(value){
-    var messageBody = message.createMessageBody(12);
-    message.setByte(messageBody,0,0x84);
-    message.setByte(messageBody,1,value);
-    var sendMessage = message.createMessage(0xE1,0x02,messageBody);
-    return sendMessage;
-  },
-  //设置自定义洗涤
-  cmdStartDiyWashing: function(washTime, washTemperature, dryTemperature){
-      var messageBody = message.createMessageBody(6);
-      message.setByte(messageBody,0,0x82);
-      message.setByte(messageBody,1,washTime);
-      message.setByte(messageBody,3,washTemperature);
-      message.setByte(messageBody,5,dryTemperature);
-      var sendMessage = message.createMessage(0xE1,0x02,messageBody);
-      return sendMessage;
   },
   analysisCmd: function(requestCmd) {
-   //nativeService.alert(requestCmd);
     var obj = {
       workingState:{
-          name:"工作状态",value:0x00,view:{0:"省电",1:"待机",2:"预约",3:"运行",4:"错误",5:"软水档位设置",8:"在线一",9:"在线二"}
+          name:"工作状态",value:0x00,view:{1:"省电",2:"待机",3:"工作中",4:"烹饪完成",5:"预约中",6:"暂停",7:"云菜谱段间等待",8:"爱心3秒"}
       },
-      program:{
-          name:"程序",value:0x00,view:{0:"空档",1:"智能洗",2:"强力洗",3:"即时洗",4:"节能洗",5:"玻璃洗",6:"1小时洗",7:"超快洗",8:"预冲洗",9:"90分钟洗",10:"自清洁洗",11:"水果洗",12:"自定义洗"}
-      },
-      functionOptions:{
-          name:"附加功能",value:0x00,view:{0:"不附加",1:"加强干燥",2:"节能",3:"加速",4:"加强洗涤",5:"增加漂洗",6:"增加预洗",7:"半载"}
-      },
-      regionalOptions:{
-          name:"洗涤区域",value:0x00,view:{1:"上半区域",2:"下半区域",3:"上下区域交替"}
+      mode:{
+          name:"烹饪模式",value:0x00
       },
       displaySign:{
           name:"显示标志",
-          detail:{
-              doorSwitch:{name:"门开关",value:0x00,view:{0:"开门",1:"关门"}},
-              brightDishAgent:{name:"缺亮碟剂",value:0x00,view:{0:"不缺",1:"缺少"}},
-              salt:{name:"缺盐",value:0x00,view:{0:"不缺",1:"缺少"}},
-              startStop:{name:"启停",value:0x00,view:{0:"暂停",1:"启动"}},
-              lockable:{name:"童锁",value:0x00,view:{0:"未锁",1:"已锁"}},
-              keepFresh:{name:"保鲜",value:0x00,view:{0:"无保鲜",1:"正在保鲜"}},
-              noWater:{name:"缺水",value:0x00,view:{0:"不缺",1:"缺水"}}
-          }
+          lock:{name:"童锁",value:0x00,view:{0:"未锁",1:"已锁"}},
+          doorSwitch:{name:"门状态",value:0x00,view:{0:"门关",1:"门开"}},
+          waterBox:{name:"水箱位",value:0x00,view:{0:"有水箱",1:"缺水箱"}},
+          lackWater:{name:"缺水位",value:0x00,view:{0:"不缺水",1:"缺水"}},
+          changeWater:{name:"换水位",value:0x00,view:{0:"不需要换水",1:"要换水"}},
+          preheat:{name:"是否预热",value:0x00,view:{0:"非预热中",1:"预热中"}},
+          preheatTemperature:{name:"预热温度位",value:0x00,view:{0:"预热温度未到",1:"预热温度已到"}},
+          isError:{name:"是否故障",value:0x00,view:{0:"无故障",1:"有故障"}},
       },
-      programTimeRemaining:{
-          name:"程序剩余时间",value:0x00
+      timeRemaining:{
+          name:"程序剩余时间",
+          hour: {name:"小时",value: 0x00},
+          minute: {name:"分钟",value: 0x00},
+          second: {name:"秒",value: 0x00},
       },
-      appointmentHour:{
-          name:"预约时间（小时）",value:0x00
+      temperature:{
+        name:"发热管实际温度",
+        upHighTemperature: {name:"上管实际温度：高",value: 0x00},
+        upLowTemperature: {name:"上管实际温度：低",value: 0x00},
+        downHighTemperature: {name:"下管实际温度：高",value: 0x00},
+        downLowTemperature: {name:"下管实际温度：低",value: 0x00},
       },
-      appointmentMinute:{
-          name:"预约时间（分钟）",value:0x00
-      },
-      setAppointmentHour:{
-        name:"设定的预约时间（小时）",value:0x00
-      },
-      setAppointmentMinute:{
-          name:"设定的预约时间（分钟）",value:0x00
-      },
-      washingStage:{
-          name:"洗涤阶段",value:0x00,view:{0:"未洗涤，不标",1:"预洗/智能洗为'智能分析'",2:"主洗",3:"漂洗",4:"干燥",5:"结束"}
-      },
+      fire:{name: "火力",value: 0x00},
+      weight:{name: "重量",value: 0x00},
+      steam:{name: "蒸汽量",value: 0x00},
       errorCode:{
           name:"错误代码",value:0x00,view:{1:"进水故障",3:"加热故障",4:"溢流故障",8:"分水阀定位故障",9:"触摸提示"}
       },
-      realTimeTemperature:{
-          name:"实时温度",value:0x00
-      },
-      waterLevel:{
-          name:"软水档位",value:0x01
-      },
-      fenpeiqiLevel:{
-          name:"分配器",value:0x01
-      },
-      setKeepTime:{
-        name:"设定保管时间",value:0x00
-      },
-      keepTime:{
-        name:"保管时间",value:0x00
-      },
-      washingTimes:{
-          name:"洗涤次数",value:0x01
-      },
-      mainWashingTemperature:{
-          name:"主洗温度",value:45
-      },
-      piaoWashTemperature:{
-          name:"漂洗温度",value:50
-      },
-      countSalt:{
-        name:"投放盐次数",value:21
-      },
-      countBrightDishAgent:{
-        name:"投放亮碟剂次数",value:0
-      },
-      isError:{
-        name:"是否故障",value:false
-      }
   };
   // if((parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)) && parseInt(requestCmd[10])==0){
     obj.workingState.value = parseInt(requestCmd[11]);    
-    obj.program.value = parseInt(requestCmd[12]);      
-    obj.functionOptions.value = parseInt(requestCmd[13]); 
-    var byte15Str = this.tranformTo2Bit(parseInt(requestCmd[15]));
-    //nativeService.alert(byte15Str);
-    obj.displaySign.detail.doorSwitch.value = parseInt(byte15Str[7-0]); 
-    obj.displaySign.detail.brightDishAgent.value = parseInt(byte15Str[7-1]); 
-    obj.displaySign.detail.salt.value = parseInt(byte15Str[7-2]); 
-    if(parseInt(byte15Str[7-1])==1){
-      nativeService.setItem("brightDishAgentRecord", 1);
-    }else{
-      nativeService.setItem("brightDishAgentRecord", 0);
-    }
-    if(parseInt(byte15Str[7-2])==1){
-      nativeService.setItem("saltRecord", 1);      
-    }else{
-      nativeService.setItem("saltRecord", 0);      
-    }
-    obj.displaySign.detail.startStop.value = parseInt(byte15Str[7-3]); 
-    obj.displaySign.detail.lockable.value = parseInt(byte15Str[7-4]); 
-    obj.displaySign.detail.keepFresh.value = parseInt(byte15Str[7-5]); 
-   // nativeService.toast(parseInt(byte15Str[7-5]));
-    obj.displaySign.detail.noWater.value = parseInt(byte15Str[7-6]);  
-    obj.programTimeRemaining.value = parseInt(requestCmd[16]); 
-    obj.appointmentHour.value = parseInt(requestCmd[17]); 
-    obj.appointmentMinute.value = parseInt(requestCmd[18]); 
-    obj.washingStage.value = parseInt(requestCmd[19]); 
-    obj.errorCode.value = parseInt(requestCmd[20]); 
-    //故障
-    if(parseInt(requestCmd[11]) == 4){
-      if(parseInt(requestCmd[20])==1 || parseInt(requestCmd[20])==3 || parseInt(requestCmd[20])==4 ||
-        parseInt(requestCmd[20])==8 || parseInt(requestCmd[20])==9
-      ){
-          obj.isError.value = true;
-      }
-    }
-    
-    obj.realTimeTemperature.value = parseInt(requestCmd[21]); 
-    obj.waterLevel.value = parseInt(requestCmd[23]); 
-    obj.setKeepTime.value = parseInt(requestCmd[27]);
-    obj.keepTime.value = parseInt(requestCmd[28]);
-    obj.washingTimes.value = parseInt(requestCmd[32]); 
-    obj.setAppointmentHour.value = parseInt(requestCmd[29]);
-    obj.setAppointmentMinute.value = parseInt(requestCmd[30]);
-    obj.mainWashingTemperature.value = parseInt(requestCmd[31]); 
-    obj.piaoWashTemperature.value = parseInt(requestCmd[33]);  
-    obj.fenpeiqiLevel.value = parseInt(requestCmd[34]); 
-   //}
+    obj.mode.value = parseInt(requestCmd[19]);      
+    obj.displaySign.lock = message.getBit(requestCmd, 26, 0);
+    obj.displaySign.doorSwitch = message.getBit(requestCmd, 26, 1);
+    obj.displaySign.waterBox = message.getBit(requestCmd, 26, 2);
+    obj.displaySign.lackWater = message.getBit(requestCmd, 26, 3);
+    obj.displaySign.changeWater = message.getBit(requestCmd, 26, 4);
+    obj.displaySign.preheat = message.getBit(requestCmd, 26, 5);
+    obj.displaySign.preheatTemperature = message.getBit(requestCmd, 26, 6);
+    obj.displaySign.isError = message.getBit(requestCmd, 26, 7);
+    obj.timeRemaining.hour = parseInt(requestCmd[16]);
+    obj.timeRemaining.minute = parseInt(requestCmd[17]);
+    obj.timeRemaining.second = parseInt(requestCmd[18]);
+    obj.temperature.upHighTemperature = parseInt(requestCmd[20]);
+    obj.temperature.upLowTemperature = parseInt(requestCmd[21]);
+    obj.temperature.downHighTemperature = parseInt(requestCmd[22]);
+    obj.temperature.downLowTemperature = parseInt(requestCmd[23]);
+    obj.fire.value = parseInt(requestCmd[24]);
+    obj.weight.value = parseInt(requestCmd[25]);
+    obj.steam.value = parseInt(requestCmd[25]);
     return obj;
   }
 };

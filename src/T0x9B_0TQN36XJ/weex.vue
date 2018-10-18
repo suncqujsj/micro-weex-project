@@ -308,9 +308,8 @@
             listenerFun(){
                 var self = this;        
                 globalEvent.addEventListener("receiveMessage", function(e) {//暂时发现失效了
-                     nativeService.alert(e);
                     var str = e.data;
-                    nativeService.alert(str);
+                    // nativeService.alert(str);
                     var arr = str.split(",");
                     var analysisObj = cmdFun.analysisCmd(arr); //解析04上行指令
                     self.analysisFun(analysisObj);

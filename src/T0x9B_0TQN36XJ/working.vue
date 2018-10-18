@@ -1,5 +1,5 @@
 <template>
-    <div class="all_section" :style="{height: wrapHeight}">
+    <div class="all_section" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
         <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
         <div class="progress_section" :style="progress_style">
             <wxcProgress :percent="progress"
@@ -119,6 +119,7 @@
     import cmdFun from "./util.js"; //解析指令
     import query from "../dummy/query";
     import {wxcProgress, wxProgress} from "@/component/sf/wx-progress";
+    const globalEvent = weex.requireModule("globalEvent");
 
 
     export default {
@@ -172,6 +173,22 @@
                     this.btnText = "继续";
                     this.btnSrc = "assets/img/footer/icon_start@2x.png";
                 }
+            },
+            listenerFun(){
+                var self = this;        
+                globalEvent.addEventListener("receiveMessage", function(e) {//暂时发现失效了
+                    var str = e.data;
+                    //nativeService.alert(str);
+                    var arr = str.split(",");
+                    var analysisObj = cmdFun.analysisCmd(arr); //解析04上行指令
+                    self.analysisFun(analysisObj);
+                });
+            },
+            viewdisappear(){
+                globalEvent.removeEventListener("receiveMessage");
+            },
+            viewappear(){
+                this.listenerFun();
             },
             goBack(){
                 nativeService.goBack()

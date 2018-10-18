@@ -40,7 +40,7 @@ export default {
     },
     computed: {
     },
-    methods: {
+    methods: { 
         cancel() {
             this.show = false
             this.$emit('mideaPopupOverlayClicked')

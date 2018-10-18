@@ -312,33 +312,40 @@
             initData(){// 初始化场景首页
                 nativeService.getNetworkStatus().then((result)=>{
                     if (result.status == 1){
-                        nativeService.getUserInfo().then((user)=>{
-                            this.isLogin = true
-                            nativeService.getCurrentHomeInfo().then( (home)=>{
-                                if (home.isLocal === '1'){//场景不支持本地家庭
-                                    this.isLocalHome = true
-                                }else{
-                                    this.isLocalHome = false
-                                    if (home.homeId === '' || home.homeId == undefined) {
-                                        this.setTmpl() //填充静态模板
-                                    }else{
-                                        this.userDevicesStr = ''
-                                        if (home.deviceList) {
-                                            this.userDevices = home.deviceList
-                                            this.userDevicesStr = encodeURIComponent(JSON.stringify(home.deviceList))
+                        nativeService.getLoginInfo().then((login)=>{
+                            if (login.isLogin === '0') {
+                                this.setTmpl()
+                                this.isLogin = false
+                            }else{
+                                nativeService.getUserInfo().then((user)=>{
+                                    this.isLogin = true
+                                    nativeService.getCurrentHomeInfo().then( (home)=>{
+                                        if (home.isLocal === '1'){//场景不支持本地家庭
+                                            this.isLocalHome = true
+                                        }else{
+                                            this.isLocalHome = false
+                                            if (home.homeId === '' || home.homeId == undefined) {
+                                                this.setTmpl() //填充静态模板
+                                            }else{
+                                                this.userDevicesStr = ''
+                                                if (home.deviceList) {
+                                                    this.userDevices = home.deviceList
+                                                    this.userDevicesStr = encodeURIComponent(JSON.stringify(home.deviceList))
+                                                }
+                                                this.getAutoList(home.homeId) //获取自动化列表数据
+                                                this.getSceneList(home.homeId)//获取场景列表数据
+                                            }
                                         }
-                                        this.getAutoList(home.homeId) //获取自动化列表数据
-                                        this.getSceneList(home.homeId)//获取场景列表数据
-                                    }
-                                }
-                            }).catch((err)=>{
-                                this.setTmpl()//填充静态模板
-                                // nativeService.toast(this.getErrorMessage(err)
-                            })
-                        }).catch((err)=>{
-                            this.setTmpl()
-                            this.isLogin = false
-                            // nativeService.toast(this.getErrorMessage(err))
+                                    }).catch((err)=>{
+                                        this.setTmpl()//填充静态模板
+                                        // nativeService.toast(this.getErrorMessage(err)
+                                    })
+                                }).catch((err)=>{
+                                    this.setTmpl()
+                                    this.isLogin = false
+                                    // nativeService.toast(this.getErrorMessage(err))
+                                })
+                            }
                         })
                     } else if (result.status == 0){
                         this.setTmpl()

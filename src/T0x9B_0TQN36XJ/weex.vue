@@ -31,16 +31,30 @@
         .f(14*2px);
         color:rgba(255,255,255,.8);
     }
-    .cur{
+    .tab-active{
         .f(18*2px);
         .white;
     }
-    .area{
+    .tab-content-0{
+        background-color: #F3F3F3;
+    }
+    .tab-content-1{
         .bg-white;
+    }
+    .block-title{
+        .f(12*2px);
+        .black;
+        .ta;
+        .lh(12*2px);
+        .ma-t(14*2px);
     }
     .icon-buttons{
         .row;
         padding: 0 3.5*2px;
+    }
+    .auto_menu{
+        .ma-b(12px);
+        //.bg-white;
     }
     .icon-button{
         .ma-t(25*2px);
@@ -71,22 +85,47 @@
         <div class="panel">
             <text class="panel-state">待机中</text>
             <div class="tabs">
-                <div class="tab">
-                    <text class="tab-text">自动菜单</text>
-                </div>
-                <div class="tab">
-                    <text class="tab-text cur">加热模式</text>
+                <div class="tab" v-for="(tab, x) in tabs">
+                    <text class="tab-text" :class="[tab.active && 'tab-active' ]" @click="onTabClicked(x)">{{tab.name}}</text>
                 </div>
             </div>
         </div>
-        <div class="area" :style="{height: wrapHeight - 224*2}">
-            <div class="icon-buttons" v-for="rows in modes">
-                <div class="icon-button column" v-for="item in rows" @click="onModeButtonClicked(item.mode)">
-                    <image class="button-icon" :src="item.icon"></image>
-                    <text class="button-text">{{item.text}}</text>
+
+        <template v-for="(tab, x) in tabs">
+            <div :class="['tab-content-' + x]" v-if="tab.active" :style="{height: wrapHeight - 224*2}">
+                <div class="bg-white" :class="[x=1 && 'auto_menu']" v-for="row in tab.rows">
+                    <text v-if="row.title" class="block-title">{{row.title}}</text>
+                    <div class="icon-buttons">
+                        <div class="icon-button column" v-for="item in row.iconButtons" @click="onModeButtonClicked(item.mode)">
+                            <image class="button-icon" :src="item.icon"></image>
+                            <text class="button-text">{{item.text}}</text>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </template>
+
+
+        <!--自动菜单-->
+        <!--<div class="tab-content-0" :style="{height: wrapHeight - 224*2}">-->
+            <!--<text class="block-title">1-7岁儿童</text>-->
+            <!--<div class="icon-buttons auto-menu" v-for="rows in modes">-->
+                <!--<div class="icon-button column" v-for="item in rows" @click="onModeButtonClicked(item.mode)">-->
+                    <!--<image class="button-icon" :src="item.icon"></image>-->
+                    <!--<text class="button-text">{{item.text}}</text>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--加热模式-->
+        <!--<div class="tab-content-1" :style="{height: wrapHeight - 224*2}">-->
+            <!--<div class="icon-buttons auto-menu" v-for="rows in modes">-->
+                <!--<div class="icon-button column" v-for="item in rows" @click="onModeButtonClicked(item.mode)">-->
+                    <!--<image class="button-icon" :src="item.icon"></image>-->
+                    <!--<text class="button-text">{{item.text}}</text>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
         <!--<text class="r test" @click="doing">{{progress}}</text>-->
         <!--<wxProgress :percent='progress' :bar_width='650'></wxProgress>-->
         <!--<wxcProgress :percent="progress"-->
@@ -171,52 +210,132 @@
                 wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
                 test:'123',
                 progress:1,
-                autoMenu: [],
-                modes: [
-                    [
-                        {
-                            'icon': 'assets/img/modes/steam@3x.png',
-                            'text': '蒸汽',
-                            'mode': 0x20
-                        },
-                        {
-                            'icon': 'assets/img/modes/steam_and_hot_wind@3x.png',
-                            'text': '蒸汽+热风',
-                            'mode': 0x31
-                        },
-                        {
-                            'icon': 'assets/img/modes/broil@3x.png',
-                            'text': '烧烤',
-                            'mode': 0x40
-                        },
-                        {
-                            'icon': 'assets/img/modes/hot_wind@3x.png',
-                            'text': '热风对流',
-                            'mode': 0x41
-                        },
-                    ],[
-                        {
-                            'icon': 'assets/img/modes/hot_wind_and_broil@3x.png',
-                            'text': '热风烧烤',
-                            'mode': 0x43
-                        },
-                        {
-                            'icon': 'assets/img/modes/clean@3x.png',
-                            'text': '清洁',
-                            'mode': 0xC1
-                        },
-                        {
-                            'icon': 'assets/img/modes/heat_preservation@3x.png',
-                            'text': '保温',
-                            'mode': 0xD0
-                        },
-                        {
-                            'icon': 'assets/img/modes/fermentation@3x.png',
-                            'text': '发酵',
-                            'mode': 0xB0
+                tabs:[
+                    {
+                        name:'自动菜单',
+                        active:false,
+                        rows:[
+                                {
+                                    title: '1-7岁儿童',
+                                    iconButtons: [
+                                        {
+                                            'icon': 'assets/img/modes/steam@3x.png',
+                                            'text': '蒸汽',
+                                            'mode': 0x20,
+                                            pickTime: true,
+                                            pickTemperature: true,
+                                            switchPreheat:false,
+                                            defaultTime: 10,
+                                            defaultTemperature: 100
+                                        },
+                                        {
+                                            'icon': 'assets/img/modes/steam_and_hot_wind@3x.png',
+                                            'text': '蒸汽+热风',
+                                            'mode': 0x31
+                                        },
+                                        {
+                                            'icon': 'assets/img/modes/broil@3x.png',
+                                            'text': '烧烤',
+                                            'mode': 0x40
+                                        },
+                                        {
+                                            'icon': 'assets/img/modes/hot_wind@3x.png',
+                                            'text': '热风对流',
+                                            'mode': 0x41
+                                        }
+                                    ]
+                                },
+                                {
+                                    title: '1-8岁儿童',
+                                    iconButtons: [
+                                        {
+                                            'icon': 'assets/img/modes/hot_wind_and_broil@3x.png',
+                                            'text': '热风烧烤',
+                                            'mode': 0x43
+                                        },
+                                        {
+                                            'icon': 'assets/img/modes/clean@3x.png',
+                                            'text': '清洁',
+                                            'mode': 0xC1
+                                        },
+                                        {
+                                            'icon': 'assets/img/modes/heat_preservation@3x.png',
+                                            'text': '保温',
+                                            'mode': 0xD0
+                                        },
+                                        {
+                                            'icon': 'assets/img/modes/fermentation@3x.png',
+                                            'text': '发酵',
+                                            'mode': 0xB0
+                                        }
+                                    ]
+                                }
+                            ]
+                    },
+                    {
+                        name:'加热模式',
+                        active:true,
+                        rows:[
+                                {
+                                    title: '',
+                                    iconButtons: [
+                                        {
+                                            'icon': 'assets/img/modes/steam@3x.png',
+                                            'text': '蒸汽',
+                                            'mode': 0x20,
+                                            pickTime: true,
+                                            pickTemperature: true,
+                                            switchPreheat:false,
+                                            defaultTime: 10,
+                                            defaultTemperature: 100
+                                        },
+                                        {
+                                            'icon': 'assets/img/modes/steam_and_hot_wind@3x.png',
+                                            'text': '蒸汽+热风',
+                                            'mode': 0x31
+                                        },
+                                        {
+                                            'icon': 'assets/img/modes/broil@3x.png',
+                                            'text': '烧烤',
+                                            'mode': 0x40
+                                        },
+                                        {
+                                            'icon': 'assets/img/modes/hot_wind@3x.png',
+                                            'text': '热风对流',
+                                            'mode': 0x41
+                                        }
+                                    ]
+                                },
+                                {
+                                    title: '',
+                                    iconButtons: [
+                                        {
+                                            'icon': 'assets/img/modes/hot_wind_and_broil@3x.png',
+                                            'text': '热风烧烤',
+                                            'mode': 0x43
+                                        },
+                                        {
+                                            'icon': 'assets/img/modes/clean@3x.png',
+                                            'text': '清洁',
+                                            'mode': 0xC1
+                                        },
+                                        {
+                                            'icon': 'assets/img/modes/heat_preservation@3x.png',
+                                            'text': '保温',
+                                            'mode': 0xD0
+                                        },
+                                        {
+                                            'icon': 'assets/img/modes/fermentation@3x.png',
+                                            'text': '发酵',
+                                            'mode': 0xB0
+                                        }
+                                    ]
+                                }
+                            ]
                         }
-                    ]
-                ],
+                    ],
+                autoMenu: [],
+                modes:[] ,
                 currentMode: 0x20,
                 currentTime: null,
                 currentTemperature:null,
@@ -301,6 +420,20 @@
 
         },
         methods: {
+            onTabClicked: function(index){
+                // debugger;
+                // let tabs = JSON.parse(JSON.stringify(this.tabs));
+                let tabs = this.tabs;
+                if(tabs[index].active) return;
+                for(let i=0; i<tabs.length; i++) {
+                    if(parseInt(i) === index) {
+                        tabs[i].active = true;
+                        continue;
+                    }
+                    tabs[i].active = false;
+                }
+                this.tabs = tabs;
+            },
             analysisFun(analysisObj) {
                 //nativeService.alert(JSON.stringify(analysisObj));
                 if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 6) {
@@ -324,7 +457,7 @@
                 globalEvent.removeEventListener("receiveMessage");
             },
             viewappear(){
-                this.listenerFun();
+                // this.listenerFun();
             },
             onModeButtonClicked: function(mode){
                 console.log(mode);
@@ -399,6 +532,7 @@
                 }, 1000);
             },
             queryStatus() {
+                return;
                 var self = this;
                 var sendCmd = cmdFun.createQueryMessage();
                 //nativeService.showLoading();

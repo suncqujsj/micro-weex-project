@@ -67,7 +67,7 @@
 
 <template>
     <scroller class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
-        <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="red" :isImmersion="true"  :showLeftImg="true" @headerClick="backClick" @leftImgClick="goBack" ></midea-header>
+        <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="red" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
         <div class="panel">
             <text class="panel-state">待机中</text>
             <div class="tabs">
@@ -162,6 +162,8 @@
         }
         return arr;
     };
+
+    var numberRecord = 0; //记录跳页面的次数
 
     export default {
         data(){
@@ -302,12 +304,15 @@
             analysisFun(analysisObj) {
                 //nativeService.alert(JSON.stringify(analysisObj));
                 if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 6) {
-                    this.goTo("working");
+                    numberRecord++;
+                    if(numberRecord==1){ //防止多次获取设备状态，多次跳转
+                        this.goTo("working");
+                    }
                 }
             },
             listenerFun(){
                 var self = this;        
-                globalEvent.addEventListener("receiveMessage", function(e) {//暂时发现失效了
+                globalEvent.addEventListener("receiveMessage", function(e) {
                     var str = e.data;
                     // nativeService.alert(str);
                     var arr = str.split(",");
@@ -354,23 +359,21 @@
                     preheat: this.preheat
                 };
                 let deviceCmd = cmdFun.createControlMessage(jsonCmd);
-                //nativeService.alert(deviceCmd);
                 nativeService.startCmdProcess(
                     "control",
                     deviceCmd,
                     function(result){
+                        nativeService.alert(result);
                        self.queryStatus();
                     },
                     function(result){
+                        nativeService.alert(result);
                         console.log('fail', result);
                     }
                 )
             },
             goBack(){
-                nativeService.goBack()
-            },
-            backClick(){
-               this.goTo("working");
+                nativeService.backToNative()
             },
             handleTimeChange (data) {
                 this.currentTime = data;

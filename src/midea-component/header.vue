@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" style="width:750px;">
-        <div :style="{backgroundColor:bgColor}" class="box" :class="[isImmersion?(isipx? 'immersion-ipx': 'immersion'):'']">
+        <div  class="box" :class="[isImmersion?(isipx? 'immersion-ipx': 'immersion'):'']">
             <div class="header-left-image-wrapper" @click="leftImgClick">
                 <image v-if="showLeftImg" class="header-left-image" :src="leftImg"></image>
             </div>

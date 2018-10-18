@@ -4,17 +4,16 @@
         <div class="progress_section" :style="progress_style">
             <wxcProgress :percent="progress"
                     :wxc_radius='progress_radius'>
-                      <text class="number_prev">时</text>
-            <div class="cen">
-              
-                <text class="number-text">{{progress}}</text>
-            </div>
-                <text class="number_next">{{tag_next}}</text>
-            
-        </wxcProgress>
+                <text class="number_prev">时</text>
+                <div class="cen">
+                    <text class="number-text">{{progress}} {{timeRemain}}</text>
+                </div>
+                 <text class="number_next">{{tag_next}}</text>
+                
+            </wxcProgress>
         </div>
         <div class="detail_section">
-            <text class="detail_text">高火180°</text>
+            <text class="detail_text">{{modeText}}{{modeTemperature}}°</text>
         </div>
         <div class="footer_section">
             <div class="btn_section">
@@ -121,6 +120,7 @@
     import {wxcProgress, wxProgress} from "@/component/sf/wx-progress";
     const globalEvent = weex.requireModule("globalEvent");
 
+    var numberRecord = 0; //记录跳页面的次数
 
     export default {
         data(){
@@ -131,7 +131,10 @@
                 progress_radius: 250,
                 tag_next: '分',
                 btnText: "暂停",
-                btnSrc: "assets/img/footer/icon_pause@2x.png"
+                btnSrc: "assets/img/footer/icon_pause@2x.png",
+                modeText: '',
+                modeTemperature: 0,
+                timeRemain: 0
             }
         },
         components: {MideaHeader,wxcProgress,wxProgress},
@@ -162,21 +165,29 @@
         },
         methods: {
             analysisFun(analysisObj) {
+                var self = this;
                 if (analysisObj.workingState.value == 2) {
-                    this.goTo("weex");
+                    numberRecord++;
+                    if(numberRecord==1){ //防止多次获取设备状态，多次跳转
+                        this.goTo("weex");
+                    }
                 }
+                // nativeService.alert(analysisObj);
+                self.modeText = analysisObj.mode.text;
+                self.modeTemperature = analysisObj.temperature.upLowTemperature;
+                self.timeRemain = analysisObj.timeRemaining.minute;
                 if(analysisObj.workingState.value == 3){
-                    this.btnText = "暂停";
-                    this.btnSrc = "assets/img/footer/icon_pause@2x.png";
+                    self.btnText = "暂停";
+                    self.btnSrc = "assets/img/footer/icon_pause@2x.png";
                 }
                  if(analysisObj.workingState.value == 6){
-                    this.btnText = "继续";
-                    this.btnSrc = "assets/img/footer/icon_start@2x.png";
+                    self.btnText = "继续";
+                    self.btnSrc = "assets/img/footer/icon_start@2x.png";
                 }
             },
             listenerFun(){
                 var self = this;        
-                globalEvent.addEventListener("receiveMessage", function(e) {//暂时发现失效了
+                globalEvent.addEventListener("receiveMessage", function(e) {
                     var str = e.data;
                     //nativeService.alert(str);
                     var arr = str.split(",");
@@ -191,10 +202,7 @@
                 this.listenerFun();
             },
             goBack(){
-                nativeService.goBack()
-            },
-            backClick(){
-               this.goTo("working");
+                 nativeService.backToNative()
             },
             goTo(url){
                 let path = url + '.js'

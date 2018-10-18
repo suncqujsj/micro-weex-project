@@ -1,5 +1,6 @@
 import message from "../common/util/smartMessage";
 import nativeService from "../common/services/nativeService";
+// import { nativeService } from '@/common/services/nativeService.js';
 export default {
   //10进制转换8位2进制的方法
   tranformTo2Bit: function(val) {
@@ -12,6 +13,25 @@ export default {
     }
     var str_2 = _str + _str_val;
     return str_2;
+  },
+  modeValueToModeText(modeValue){
+      var text = '';
+      var modeArr =  [
+      {'text': '蒸汽','mode': 0x20},
+      {'text': '蒸汽+热风','mode': 0x31},
+      {'text': '烧烤', 'mode': 0x40},
+      {'text': '热风对流','mode': 0x41},
+      {'text': '热风烧烤','mode': 0x43},
+      {'text': '清洁','mode': 0xC1},
+      {'text': '保温','mode': 0xD0},
+      {'text': '发酵','mode': 0xB0}
+    ];
+    for(var i=0; i<modeArr.length; i++){
+      if(modeValue == modeArr[i].mode){
+         text = modeArr[i].text;
+      }
+    }
+    return text;
   },
   // 查询指令
   createQueryMessage() {
@@ -93,12 +113,13 @@ export default {
     return sendMessage;
   },
   analysisCmd: function(requestCmd) {
+    // nativeService.alert(requestCmd);
     var obj = {
       workingState:{
           name:"工作状态",value:0x00,view:{1:"省电",2:"待机",3:"工作中",4:"烹饪完成",5:"预约中",6:"暂停",7:"云菜谱段间等待",8:"爱心3秒"}
       },
       mode:{
-          name:"烹饪模式",value:0x00
+          name:"烹饪模式",text: '',value:0x00
       },
       displaySign:{
           name:"显示标志",
@@ -133,7 +154,8 @@ export default {
   };
   // if((parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)) && parseInt(requestCmd[10])==0){
     obj.workingState.value = parseInt(requestCmd[11]);    
-    obj.mode.value = parseInt(requestCmd[19]);      
+    obj.mode.value = parseInt(requestCmd[19]);
+    obj.mode.text = this.modeValueToModeText(parseInt(requestCmd[19]));        
     obj.displaySign.lock = message.getBit(requestCmd, 26, 0);
     obj.displaySign.doorSwitch = message.getBit(requestCmd, 26, 1);
     obj.displaySign.waterBox = message.getBit(requestCmd, 26, 2);
@@ -145,10 +167,10 @@ export default {
     obj.timeRemaining.hour = parseInt(requestCmd[16]);
     obj.timeRemaining.minute = parseInt(requestCmd[17]);
     obj.timeRemaining.second = parseInt(requestCmd[18]);
-    obj.temperature.upHighTemperature = parseInt(requestCmd[20]);
-    obj.temperature.upLowTemperature = parseInt(requestCmd[21]);
-    obj.temperature.downHighTemperature = parseInt(requestCmd[22]);
-    obj.temperature.downLowTemperature = parseInt(requestCmd[23]);
+    obj.temperature.upHighTemperature = parseInt(requestCmd[28]);
+    obj.temperature.upLowTemperature = parseInt(requestCmd[29]);
+    obj.temperature.downHighTemperature = parseInt(requestCmd[30]);
+    obj.temperature.downLowTemperature = parseInt(requestCmd[31]);
     obj.fire.value = parseInt(requestCmd[24]);
     obj.weight.value = parseInt(requestCmd[25]);
     obj.steam.value = parseInt(requestCmd[25]);

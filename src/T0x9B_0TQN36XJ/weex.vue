@@ -1,67 +1,5 @@
-<template>
-    <scroller class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
-        <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="red" :isImmersion="true"  :showLeftImg="true" @headerClick="backClick" @leftImgClick="goBack" ></midea-header>
-        <div class="panel">
-            <text class="panel-state">待机中</text>
-            <div class="tabs">
-                <div class="tab">
-                    <text class="tab-text">自动菜单</text>
-                </div>
-                <div class="tab">
-                    <text class="tab-text cur">加热模式</text>
-                </div>
-            </div>
-        </div>
-        <div class="area" :style="{height: wrapHeight - 224*2}">
-            <div class="icon-buttons" v-for="rows in modes">
-                <div class="icon-button column" v-for="item in rows" @click="onModeButtonClicked(item.mode)">
-                    <image class="button-icon" :src="item.icon"></image>
-                    <text class="button-text">{{item.text}}</text>
-                </div>
-            </div>
-        </div>
-        <!--<text class="r test" @click="doing">{{progress}}</text>-->
-        <!--<wxProgress :percent='progress' :bar_width='650'></wxProgress>-->
-        <!--<wxcProgress :percent="progress"-->
-                     <!--:wxc_radius='200'>-->
-            <!--<div class="cen">-->
-                <!--<text class="demo-text">{{progress}}%</text>-->
-            <!--</div>-->
-        <!--</wxcProgress>-->
-        <!--<midea-dialog title="使用协议"-->
-                      <!--:show="show"-->
-                      <!--@close="closeDialog"-->
-                      <!--@mideaDialogCancelBtnClicked="mideaDialogCancelBtnClicked"-->
-                      <!--@mideaDialogConfirmBtnClicked="mideaDialogCancelBtnClicked"-->
-                      <!--content="美的智慧生活解决方案"-->
-                      <!--:single="false" >-->
-        <!--</midea-dialog>-->
-        <sf-dialog :show="show" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
-            <div slot="content">
-                <text class="content-title">加热模式</text>
-                <sf-accordion :index="0" title="设置时间" :isFolded="accordionArr[0]" @callback="updateAccordionArr">
-                    <div slot="content">
-                        <wx-picker :data="timeRange" :visible="true" @wxChange="handleTimeChange"></wx-picker>
-                    </div>
-                </sf-accordion>
-                <sf-accordion :index="1" title="设置温度" :isFolded="accordionArr[1]" @callback="updateAccordionArr">
-                    <div slot="content">
-                        <wx-picker :data="temperatureRange" :visible="true" @wxChange="handleTemperatureChange"></wx-picker>
-                    </div>
-                </sf-accordion>
-                <sf-accordion title="设置预热" :hideIcon="true">
-                    <div slot="right">
-                        <midea-switch2 :checked="preheat" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
-                    </div>
-                </sf-accordion>
-            </div>
-        </sf-dialog>
-        <text @click="show=true">111111</text>
-    </scroller>
-</template>
-
 <style lang="less" type="text/less">
-@import "../common/less/common";
+    @import "../common/less/common";
     .root{
         height: 100%;
     }
@@ -126,6 +64,68 @@
         margin-bottom: 24px;
     }
 </style>
+
+<template>
+    <scroller class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
+        <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="red" :isImmersion="true"  :showLeftImg="true" @headerClick="backClick" @leftImgClick="goBack" ></midea-header>
+        <div class="panel">
+            <text class="panel-state">待机中</text>
+            <div class="tabs">
+                <div class="tab">
+                    <text class="tab-text">自动菜单</text>
+                </div>
+                <div class="tab">
+                    <text class="tab-text cur">加热模式</text>
+                </div>
+            </div>
+        </div>
+        <div class="area" :style="{height: wrapHeight - 224*2}">
+            <div class="icon-buttons" v-for="rows in modes">
+                <div class="icon-button column" v-for="item in rows" @click="onModeButtonClicked(item.mode)">
+                    <image class="button-icon" :src="item.icon"></image>
+                    <text class="button-text">{{item.text}}</text>
+                </div>
+            </div>
+        </div>
+        <!--<text class="r test" @click="doing">{{progress}}</text>-->
+        <!--<wxProgress :percent='progress' :bar_width='650'></wxProgress>-->
+        <!--<wxcProgress :percent="progress"-->
+                     <!--:wxc_radius='200'>-->
+            <!--<div class="cen">-->
+                <!--<text class="demo-text">{{progress}}%</text>-->
+            <!--</div>-->
+        <!--</wxcProgress>-->
+        <!--<midea-dialog title="使用协议"-->
+                      <!--:show="show"-->
+                      <!--@close="closeDialog"-->
+                      <!--@mideaDialogCancelBtnClicked="mideaDialogCancelBtnClicked"-->
+                      <!--@mideaDialogConfirmBtnClicked="mideaDialogCancelBtnClicked"-->
+                      <!--content="美的智慧生活解决方案"-->
+                      <!--:single="false" >-->
+        <!--</midea-dialog>-->
+        <sf-dialog :show="show" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
+            <div slot="content">
+                <text class="content-title">加热模式</text>
+                <sf-accordion :index="0" title="设置时间" :isFolded="accordionArr[0]" @callback="updateAccordionArr">
+                    <div slot="content">
+                        <wx-picker :data="timeRange" :visible="true" @wxChange="handleTimeChange"></wx-picker>
+                    </div>
+                </sf-accordion>
+                <sf-accordion :index="1" title="设置温度" :isFolded="accordionArr[1]" @callback="updateAccordionArr">
+                    <div slot="content">
+                        <wx-picker :data="temperatureRange" :visible="true" @wxChange="handleTemperatureChange"></wx-picker>
+                    </div>
+                </sf-accordion>
+                <sf-accordion title="设置预热" :hideIcon="true">
+                    <div slot="right">
+                        <midea-switch2 :checked="preheat" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
+                    </div>
+                </sf-accordion>
+            </div>
+        </sf-dialog>
+        <text @click="show=true">111111</text>
+    </scroller>
+</template>
 
 <script>
     import MideaHeader from '@/midea-component/header.vue'

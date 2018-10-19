@@ -10,7 +10,7 @@
                     <div v-if="item.type == 'switch'" :class="['row-sb','floor', i=='0'?'no-border':'']">
                         <text class="property-name">{{item.propertyName}}</text>
                         <div>
-                            <switch-bar :isActive="item.currentStatus =='on'" @onSwitch="switchAction(item,i)"></switch-bar>
+                            <switch-bar  :btnIcon="icon.switch" :isActive="item.currentStatus =='on'" @onSwitch="switchAction(item,i)"></switch-bar>
                         </div>
                     </div>
                     <div v-if="(item.type == 'list' || item.type=='range') && showOtherActions" :class="['row-sb','floor', i=='0'?'no-border':'']"  @click="showPop(item.property)">
@@ -163,7 +163,8 @@
         data(){
             return {
                 icon: {
-                    more: '../assets/img/more.png'
+                    more: '../assets/img/more.png',
+                    switch: '../assets/img/sence_ic_switch@3x.png'
                 },
                 from: '',
                 deviceName: '',

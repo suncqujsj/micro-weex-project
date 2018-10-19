@@ -539,9 +539,9 @@
         components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2},
         created(){
             //模拟设备数据
-            // nativeService.initMockData({
-            //     query: query
-            // });
+            nativeService.initMockData({
+                query: query
+            });
             this.queryStatus();
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             if (this.isIos){
@@ -549,50 +549,6 @@
             }
         },
         computed:{
-            // timeRange: function(){
-            //     let currentItem = this.currentItem;
-            //     let list = settingArrData(currentItem.time.range[0],currentItem.time.range[1]);
-            //     return {
-            //         list,
-            //         defaultValue: this.current.time || currentItem.time.default,
-            //         displayValue (item) {
-            //             return item;
-            //         }
-            //     };
-            // },
-            // temperatureRange: function(){
-            //     let list = null;
-            //     let currentItem = this.currentItem;
-            //     switch (currentItem.mode) {
-            //         case 0x20: // 蒸汽
-            //             list = settingArrData(50,100);
-            //             break;
-            //         case 0x31: // 热风烧烤
-            //             list = settingArrData(100,180);
-            //             break;
-            //         case 0x41: // 热风
-            //             list = settingArrData(100,230);
-            //             break;
-            //         case 0x33: // 蒸汽+热风烧烤
-            //             list = settingArrData(180,220);
-            //             break;
-            //         case 0x40: // 烧烤
-            //         case 0xC1: // 清洁
-            //         case 0xB0: // 发酵
-            //         case 0xD0: // 保温
-            //             break;
-            //         default:
-            //             break;
-            //     }
-            //     return {
-            //         list,
-            //         defaultValue: this.currentTemperature,
-            //         displayValue (item) {
-            //             return item;
-            //         }
-            //     };
-            // },
-
         },
         methods: {
             range: function(key){ // pick属性范围
@@ -707,7 +663,7 @@
                 console.log('currentTime', this.current.time);
             },
             handleTemperatureChange (data) {
-                this.currentTemperature = data;
+                this.current.temperature = data;
                 console.log('currentTemperature', this.currentTemperature);
             },
             onPreheatChange(event) {

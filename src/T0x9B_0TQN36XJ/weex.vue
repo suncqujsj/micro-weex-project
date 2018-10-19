@@ -96,7 +96,7 @@
                 <div class="bg-white" :class="[x=1 && 'auto_menu']" v-for="row in tab.rows">
                     <text v-if="row.title" class="block-title">{{row.title}}</text>
                     <div class="icon-buttons">
-                        <div class="icon-button column" v-for="item in row.iconButtons" @click="onModeButtonClicked(item.mode)">
+                        <div class="icon-button column" v-for="item in row.iconButtons" @click="onIconButtonClicked(item)">
                             <image class="button-icon" :src="item.icon"></image>
                             <text class="button-text">{{item.text}}</text>
                         </div>
@@ -110,7 +110,7 @@
         <!--<div class="tab-content-0" :style="{height: wrapHeight - 224*2}">-->
             <!--<text class="block-title">1-7岁儿童</text>-->
             <!--<div class="icon-buttons auto-menu" v-for="rows in modes">-->
-                <!--<div class="icon-button column" v-for="item in rows" @click="onModeButtonClicked(item.mode)">-->
+                <!--<div class="icon-button column" v-for="item in rows" @click="onIconButtonClicked(item.mode)">-->
                     <!--<image class="button-icon" :src="item.icon"></image>-->
                     <!--<text class="button-text">{{item.text}}</text>-->
                 <!--</div>-->
@@ -120,7 +120,7 @@
         <!--加热模式-->
         <!--<div class="tab-content-1" :style="{height: wrapHeight - 224*2}">-->
             <!--<div class="icon-buttons auto-menu" v-for="rows in modes">-->
-                <!--<div class="icon-button column" v-for="item in rows" @click="onModeButtonClicked(item.mode)">-->
+                <!--<div class="icon-button column" v-for="item in rows" @click="onIconButtonClicked(item.mode)">-->
                     <!--<image class="button-icon" :src="item.icon"></image>-->
                     <!--<text class="button-text">{{item.text}}</text>-->
                 <!--</div>-->
@@ -145,19 +145,29 @@
         <sf-dialog :show="show" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <text class="content-title">加热模式</text>
-                <sf-accordion :index="0" title="设置时间" :isFolded="accordionArr[0]" @callback="updateAccordionArr">
+                <sf-accordion v-if="currentItem && currentItem.time.set" :value="setValue('time')" :index="0" title="设置时间" :isFolded="accordionArr[0]"  @callback="updateAccordionArr">
                     <div slot="content">
-                        <wx-picker :data="timeRange" :visible="true" @wxChange="handleTimeChange"></wx-picker>
+                        <wx-picker :data="range('time')" :visible="true" @wxChange="handleTimeChange"></wx-picker>
                     </div>
                 </sf-accordion>
-                <sf-accordion :index="1" title="设置温度" :isFolded="accordionArr[1]" @callback="updateAccordionArr">
+                <sf-accordion v-if="currentItem && currentItem.temperature.set" :value="setValue('temperature')" :index="1" title="设置温度" :isFolded="accordionArr[1]" @callback="updateAccordionArr">
                     <div slot="content">
-                        <wx-picker :data="temperatureRange" :visible="true" @wxChange="handleTemperatureChange"></wx-picker>
+                        <wx-picker :data="range('temperature')" :visible="true" @wxChange="handleTemperatureChange"></wx-picker>
                     </div>
                 </sf-accordion>
-                <sf-accordion title="设置预热" :hideIcon="true">
+                <sf-accordion v-if="currentItem && currentItem.steamAmount.set" :value="setValue('steamAmount')" :index="2" title="设置蒸汽量" :isFolded="accordionArr[2]" @callback="updateAccordionArr">
+                    <div slot="content">
+                        <wx-picker :data="range('steamAmount')" :visible="true" @wxChange="handleSteamAmountChange"></wx-picker>
+                    </div>
+                </sf-accordion>
+                <sf-accordion v-if="currentItem && currentItem.fireAmount.set" :value="setValue('fireAmount')" :index="3" title="设置火力" :isFolded="accordionArr[3]" @callback="updateAccordionArr">
+                    <div slot="content">
+                        <wx-picker :data="range('fireAmount')" :visible="true" @wxChange="handleFireAmountChange"></wx-picker>
+                    </div>
+                </sf-accordion>
+                <sf-accordion v-if="currentItem && currentItem.preheat.set" title="设置预热" :hideIcon="true">
                     <div slot="right">
-                        <midea-switch2 :checked="preheat" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
+                        <midea-switch2 :checked="current.preheat" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
                     </div>
                 </sf-accordion>
             </div>
@@ -185,19 +195,19 @@
     //         return step;
     //     });
     // };
-    var settingArrData = function(start,end){
+    var settingArrData = function(start,end,step){
         var arr=[];
         if(start > end){
             return arr;
         }
-        for(var i=0;i <= end-start;i++){
-            var value = start+i;
+        for(var i=0;start+i*step <= end;i++){
+            var value = start+step*i;
             if(value < 0){
                 continue;
             }
-            // value = value > 9 ? value:"0"+value;
             arr[i]=value;
         }
+        console.log(arr.length);
         return arr;
     };
 
@@ -282,26 +292,113 @@
                                             'icon': 'assets/img/modes/steam@3x.png',
                                             'text': '蒸汽',
                                             'mode': 0x20,
-                                            pickTime: true,
-                                            pickTemperature: true,
-                                            switchPreheat:false,
-                                            defaultTime: 10,
-                                            defaultTemperature: 100
+                                            time:{
+                                                set: true,
+                                                default:90,
+                                                range:[1,90,1]
+                                            },
+                                            temperature:{
+                                                set: true,
+                                                default:100,
+                                                range:[50,100,10]
+                                            },
+                                            preheat:{
+                                                set:false,
+                                                default: false
+                                            },
+                                            steamAmount:{
+                                                set:false,
+                                                default:0
+                                            },
+                                            fireAmount:{
+                                                set:false,
+                                                default:0
+                                            }
                                         },
                                         {
                                             'icon': 'assets/img/modes/steam_and_hot_wind@3x.png',
-                                            'text': '蒸汽+热风',
-                                            'mode': 0x31
+                                            'text': '蒸汽+热风对流',
+                                            'mode': 0x31,
+                                            time:{
+                                                set: true,
+                                                default:10,
+                                                range:[1,90,1]
+                                            },
+                                            temperature:{
+                                                set: true,
+                                                default:180,
+                                                range:[180,220,10]
+                                            },
+                                            preheat:{
+                                                set:false,
+                                                default: false
+                                            },
+                                            steamAmount:{
+                                                set:true,
+                                                default:3,
+                                                range:[1,3,1]
+                                            },
+                                            fireAmount:{
+                                                set:false,
+                                                default:0
+                                            }
                                         },
                                         {
                                             'icon': 'assets/img/modes/broil@3x.png',
                                             'text': '烧烤',
-                                            'mode': 0x40
+                                            'mode': 0x40,
+                                            time:{
+                                                set: true,
+                                                default:10,
+                                                range:[1,90,1]
+                                            },
+                                            temperature:{
+                                                set: false,
+                                                default:180,
+                                                range:null
+                                            },
+                                            preheat:{
+                                                set:false,
+                                                default: false
+                                            },
+                                            steamAmount:{
+                                                set:true,
+                                                default:3,
+                                                range:[1,3,1]
+                                            },
+                                            fireAmount:{
+                                                set:false,
+                                                default:0
+                                            }
                                         },
                                         {
                                             'icon': 'assets/img/modes/hot_wind@3x.png',
                                             'text': '热风对流',
-                                            'mode': 0x41
+                                            'mode': 0x41,
+                                            time:{
+                                                set: true,
+                                                default:10,
+                                                range:[1,300,1]
+                                            },
+                                            temperature:{
+                                                set: true,
+                                                default:180,
+                                                range:[100,230,5]
+                                            },
+                                            preheat:{
+                                                set:false,
+                                                default: false
+                                            },
+                                            steamAmount:{
+                                                set:false,
+                                                default:0,
+                                                range:[1,3,1]
+                                            },
+                                            fireAmount:{
+                                                set:false,
+                                                default:0,
+                                                range:null
+                                            }
                                         }
                                     ]
                                 },
@@ -311,37 +408,132 @@
                                         {
                                             'icon': 'assets/img/modes/hot_wind_and_broil@3x.png',
                                             'text': '热风烧烤',
-                                            'mode': 0x43
+                                            'mode': 0x43,
+                                            time:{
+                                                set: true,
+                                                default:90,
+                                                range:[1,300,1]
+                                            },
+                                            temperature:{
+                                                set: true,
+                                                default:160,
+                                                range:[100,180,5]
+                                            },
+                                            preheat:{
+                                                set:false,
+                                                default: false
+                                            },
+                                            steamAmount:{
+                                                set:false,
+                                                default:0
+                                            },
+                                            fireAmount:{
+                                                set:false,
+                                                default:0
+                                            }
                                         },
                                         {
                                             'icon': 'assets/img/modes/clean@3x.png',
                                             'text': '清洁',
-                                            'mode': 0xC1
+                                            'mode': 0xC1,
+                                            time:{
+                                                set: false,
+                                                default:0,
+                                                range:null
+                                            },
+                                            temperature:{
+                                                set: false,
+                                                default:0,
+                                                range:null
+                                            },
+                                            preheat:{
+                                                set:false,
+                                                default: false
+                                            },
+                                            steamAmount:{
+                                                set:false,
+                                                default:0,
+                                                range:null
+                                            },
+                                            fireAmount:{
+                                                set:false,
+                                                default:0,
+                                                range:null
+                                            }
                                         },
                                         {
                                             'icon': 'assets/img/modes/heat_preservation@3x.png',
                                             'text': '保温',
-                                            'mode': 0xD0
+                                            'mode': 0xD0,
+                                            time:{
+                                                set: true,
+                                                default:10,
+                                                range:[1,300,1]
+                                            },
+                                            temperature:{
+                                                set: false,
+                                                default:50,
+                                                range:null
+                                            },
+                                            preheat:{
+                                                set:false,
+                                                default: false
+                                            },
+                                            steamAmount:{
+                                                set:false,
+                                                default:0,
+                                                range:null
+                                            },
+                                            fireAmount:{
+                                                set:false,
+                                                default:0,
+                                                range:null
+                                            }
                                         },
                                         {
                                             'icon': 'assets/img/modes/fermentation@3x.png',
                                             'text': '发酵',
-                                            'mode': 0xB0
+                                            'mode': 0xB0,
+                                            time:{
+                                                set: true,
+                                                default:10,
+                                                range:[1,300,1]
+                                            },
+                                            temperature:{
+                                                set: false,
+                                                default:35,
+                                                range:null
+                                            },
+                                            preheat:{
+                                                set:false,
+                                                default: false
+                                            },
+                                            steamAmount:{
+                                                set:false,
+                                                default:0,
+                                                range:null
+                                            },
+                                            fireAmount:{
+                                                set:false,
+                                                default:0,
+                                                range:null
+                                            }
                                         }
                                     ]
                                 }
                             ]
                         }
                     ],
-                autoMenu: [],
-                modes:[] ,
-                currentMode: 0x20,
-                currentTime: null,
-                currentTemperature:null,
-                preheat:false,
+                currentItem:null,
+                current:{
+                    time: null,
+                    temperature: null,
+                    preheat:false,
+                    steamAmount:0,
+                    fireAmount:0
+                },
                 show: false,
-                visible: false,
-                accordionArr:[true, true]
+                accordionArr:[true, true, true, true, true]
             }
         },
         components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2},
@@ -357,68 +549,67 @@
             }
         },
         computed:{
-            timeRange: function(){
-                let list = null;
-                switch (this.currentMode) {
-                    case 0x20: // 蒸汽
-                    case 0x31: // 热风烧烤
-                    case 0x40: // 烧烤
-                    case 0x33: // 蒸汽+热风烧烤
-                        list = settingArrData(1,90);
-                        break;
-                    case 0x41: // 热风
-                    case 0x43: // 热风烧烤
-                    case 0xD0: // 保温
-                    case 0xB0: // 发酵
-                        list = settingArrData(1,300);
-                        break;
-                    case 0xC1: // 清洁
-                        break;
-                    default:
-                        break;
-                }
-                return {
-                    list,
-                    defaultValue: this.currentTime,
-                    displayValue (item) {
-                        return item;
-                    }
-                };
-            },
-            temperatureRange: function(){
-                let list = null;
-                switch (this.currentMode) {
-                    case 0x20: // 蒸汽
-                        list = settingArrData(50,100);
-                        break;
-                    case 0x31: // 热风烧烤
-                        list = settingArrData(100,180);
-                        break;
-                    case 0x41: // 热风
-                        list = settingArrData(100,230);
-                        break;
-                    case 0x33: // 蒸汽+热风烧烤
-                        list = settingArrData(180,220);
-                        break;
-                    case 0x40: // 烧烤
-                    case 0xC1: // 清洁
-                    case 0xB0: // 发酵
-                    case 0xD0: // 保温
-                        break;
-                    default:
-                        break;
-                }
-                return {
-                    list,
-                    defaultValue: this.currentTemperature,
-                    displayValue (item) {
-                        return item;
-                    }
-                };
-            },
+            // timeRange: function(){
+            //     let currentItem = this.currentItem;
+            //     let list = settingArrData(currentItem.time.range[0],currentItem.time.range[1]);
+            //     return {
+            //         list,
+            //         defaultValue: this.current.time || currentItem.time.default,
+            //         displayValue (item) {
+            //             return item;
+            //         }
+            //     };
+            // },
+            // temperatureRange: function(){
+            //     let list = null;
+            //     let currentItem = this.currentItem;
+            //     switch (currentItem.mode) {
+            //         case 0x20: // 蒸汽
+            //             list = settingArrData(50,100);
+            //             break;
+            //         case 0x31: // 热风烧烤
+            //             list = settingArrData(100,180);
+            //             break;
+            //         case 0x41: // 热风
+            //             list = settingArrData(100,230);
+            //             break;
+            //         case 0x33: // 蒸汽+热风烧烤
+            //             list = settingArrData(180,220);
+            //             break;
+            //         case 0x40: // 烧烤
+            //         case 0xC1: // 清洁
+            //         case 0xB0: // 发酵
+            //         case 0xD0: // 保温
+            //             break;
+            //         default:
+            //             break;
+            //     }
+            //     return {
+            //         list,
+            //         defaultValue: this.currentTemperature,
+            //         displayValue (item) {
+            //             return item;
+            //         }
+            //     };
+            // },
 
         },
         methods: {
+            range: function(key){ // pick属性范围
+                let currentItem = this.currentItem;
+                // debugger;
+                let list = settingArrData(currentItem[key].range[0],currentItem[key].range[1],currentItem[key].range[2]);
+                return {
+                    list,
+                    defaultValue: this.setValue(key),
+                    displayValue (item) {
+                        return item;
+                    }
+                };
+            },
+            setValue: function(key){
+                return this.current[key] || this.currentItem[key].default;
+            },
             onTabClicked: function(index){
                 // debugger;
                 // let tabs = JSON.parse(JSON.stringify(this.tabs));
@@ -432,6 +623,11 @@
                     tabs[i].active = false;
                 }
                 this.tabs = tabs;
+            },
+            onIconButtonClicked: function(item){
+                console.log('pressed', item);
+                this.currentItem = item;
+                this.show = true;
             },
             analysisFun(analysisObj) {
                 // nativeService.alert(JSON.stringify(analysisObj));
@@ -458,11 +654,6 @@
             viewappear(){
                 // this.listenerFun();
             },
-            onModeButtonClicked: function(mode){
-                console.log(mode);
-                this.currentMode = mode;
-                this.show = true;
-            },
             updateAccordionArr: function(key, value){
                 let accordionArr = JSON.parse(JSON.stringify(this.accordionArr));
                 for(let index=0;index<this.accordionArr.length;index++) {
@@ -485,11 +676,15 @@
                 } 
 
                 let jsonCmd = {
-                    mode: this.currentMode,
-                    minute: this.currentTime,
-                    temperature: this.currentTemperature,
-                    preheat: this.preheat
+                    mode: this.currentItem.mode,
+                    minute: this.setValue('time'),
+                    temperature: this.setValue('temperature'),
+                    preheat: this.setValue('preheat'),
+                    steamAmount: this.setValue('steamAmount'),
+                    fireAmount: this.setValue('fireAmount')
                 };
+                // debugger;
+                // return;
                 let deviceCmd = cmdFun.createControlMessage(jsonCmd);
                 nativeService.startCmdProcess(
                     "control",
@@ -508,16 +703,24 @@
                 nativeService.backToNative()
             },
             handleTimeChange (data) {
-                this.currentTime = data;
-                console.log('currentTime', this.currentTime);
+                this.current.time = data;
+                console.log('currentTime', this.current.time);
             },
             handleTemperatureChange (data) {
                 this.currentTemperature = data;
                 console.log('currentTemperature', this.currentTemperature);
             },
             onPreheatChange(event) {
-                this.preheat = event.value;
-                console.log('preheat', this.preheat);
+                this.current.preheat = event.value;
+                console.log('currentPreheat', this.current.preheat);
+            },
+            handleSteamAmountChange (data) {
+                this.current.steamAmount = data;
+                console.log('currentSteamAmount', this.current.steamAmount);
+            },
+            handleFireAmountChange (data) {
+                this.current.fireAmount = data;
+                console.log('currentFireAmount', this.current.fireAmount);
             },
             doing: function(){
                 if(this.progress === 100) {

@@ -294,7 +294,7 @@
                                             'mode': 0x20,
                                             time:{
                                                 set: true,
-                                                default:90,
+                                                default:10,
                                                 range:[1,90,1]
                                             },
                                             temperature:{

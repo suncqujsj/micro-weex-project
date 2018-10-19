@@ -362,14 +362,14 @@
                                                 default: false
                                             },
                                             steamAmount:{
+                                                set:false,
+                                                default:0
+                                            },
+                                            fireAmount:{
                                                 set:true,
                                                 default:3,
                                                 range:[1,3,1]
                                             },
-                                            fireAmount:{
-                                                set:false,
-                                                default:0
-                                            }
                                         },
                                         {
                                             'icon': 'assets/img/modes/hot_wind@3x.png',

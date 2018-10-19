@@ -195,19 +195,19 @@
     //         return step;
     //     });
     // };
-    var settingArrData = function(start,end){
+    var settingArrData = function(start,end,step){
         var arr=[];
         if(start > end){
             return arr;
         }
-        for(var i=0;i <= end-start;i++){
-            var value = start+i;
+        for(var i=0;start+i*step <= end;i++){
+            var value = start+step*i;
             if(value < 0){
                 continue;
             }
-            // value = value > 9 ? value:"0"+value;
             arr[i]=value;
         }
+        console.log(arr.length);
         return arr;
     };
 
@@ -294,13 +294,13 @@
                                             'mode': 0x20,
                                             time:{
                                                 set: true,
-                                                default:10,
-                                                range:[1,90]
+                                                default:90,
+                                                range:[1,90,1]
                                             },
                                             temperature:{
                                                 set: true,
                                                 default:100,
-                                                range:[50,100]
+                                                range:[50,100,5]
                                             },
                                             preheat:{
                                                 set:false,
@@ -346,7 +346,30 @@
                                         {
                                             'icon': 'assets/img/modes/broil@3x.png',
                                             'text': '烧烤',
-                                            'mode': 0x40
+                                            'mode': 0x40,
+                                            time:{
+                                                set: true,
+                                                default:10,
+                                                range:[1,90]
+                                            },
+                                            temperature:{
+                                                set: false,
+                                                default:180,
+                                                range:null
+                                            },
+                                            preheat:{
+                                                set:false,
+                                                default: false
+                                            },
+                                            steamAmount:{
+                                                set:true,
+                                                default:3,
+                                                range:[1,3]
+                                            },
+                                            fireAmount:{
+                                                set:false,
+                                                default:0
+                                            }
                                         },
                                         {
                                             'icon': 'assets/img/modes/hot_wind@3x.png',
@@ -392,7 +415,6 @@
                     fireAmount:0
                 },
                 show: false,
-                visible: false,
                 accordionArr:[true, true, true, true, true]
             }
         },
@@ -409,59 +431,59 @@
             }
         },
         computed:{
-            timeRange: function(){
-                debugger;
-                let currentItem = this.currentItem;
-                let list = settingArrData(currentItem.time.range[0],currentItem.time.range[1]);
-                return {
-                    list,
-                    defaultValue: this.current.time || currentItem.time.default,
-                    displayValue (item) {
-                        return item;
-                    }
-                };
-            },
-            temperatureRange: function(){
-                let list = null;
-                let currentItem = this.currentItem;
-                switch (currentItem.mode) {
-                    case 0x20: // 蒸汽
-                        list = settingArrData(50,100);
-                        break;
-                    case 0x31: // 热风烧烤
-                        list = settingArrData(100,180);
-                        break;
-                    case 0x41: // 热风
-                        list = settingArrData(100,230);
-                        break;
-                    case 0x33: // 蒸汽+热风烧烤
-                        list = settingArrData(180,220);
-                        break;
-                    case 0x40: // 烧烤
-                    case 0xC1: // 清洁
-                    case 0xB0: // 发酵
-                    case 0xD0: // 保温
-                        break;
-                    default:
-                        break;
-                }
-                return {
-                    list,
-                    defaultValue: this.currentTemperature,
-                    displayValue (item) {
-                        return item;
-                    }
-                };
-            },
+            // timeRange: function(){
+            //     let currentItem = this.currentItem;
+            //     let list = settingArrData(currentItem.time.range[0],currentItem.time.range[1]);
+            //     return {
+            //         list,
+            //         defaultValue: this.current.time || currentItem.time.default,
+            //         displayValue (item) {
+            //             return item;
+            //         }
+            //     };
+            // },
+            // temperatureRange: function(){
+            //     let list = null;
+            //     let currentItem = this.currentItem;
+            //     switch (currentItem.mode) {
+            //         case 0x20: // 蒸汽
+            //             list = settingArrData(50,100);
+            //             break;
+            //         case 0x31: // 热风烧烤
+            //             list = settingArrData(100,180);
+            //             break;
+            //         case 0x41: // 热风
+            //             list = settingArrData(100,230);
+            //             break;
+            //         case 0x33: // 蒸汽+热风烧烤
+            //             list = settingArrData(180,220);
+            //             break;
+            //         case 0x40: // 烧烤
+            //         case 0xC1: // 清洁
+            //         case 0xB0: // 发酵
+            //         case 0xD0: // 保温
+            //             break;
+            //         default:
+            //             break;
+            //     }
+            //     return {
+            //         list,
+            //         defaultValue: this.currentTemperature,
+            //         displayValue (item) {
+            //             return item;
+            //         }
+            //     };
+            // },
 
         },
         methods: {
             range: function(key){ // pick属性范围
                 let currentItem = this.currentItem;
-                let list = settingArrData(currentItem[key].range[0],currentItem[key].range[1]);
+                // debugger;
+                let list = settingArrData(currentItem[key].range[0],currentItem[key].range[1],currentItem[key].range[2]);
                 return {
                     list,
-                    defaultValue: this.current[key] || currentItem[key].default,
+                    defaultValue: this.setValue(key),
                     displayValue (item) {
                         return item;
                     }

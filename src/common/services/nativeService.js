@@ -288,6 +288,12 @@ export default {
             animated: "false"
         }, event => { })
     },
+    //关闭键盘
+    killKeyboard() {
+        if (this.isDummy != true) {
+            bridgeModule.killKeyboard();
+        }
+    },
     //**********非APP业务接口***************END
 
     //**********网络请求接口***************START

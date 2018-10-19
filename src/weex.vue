@@ -64,16 +64,8 @@ module.exports = {
         host: '10.8.81.45',
         isShowHostList: false,
         hostIndex: null,
-        hostList: [
-            {
-                key:13,
-                value:'192.168.1.107'
-            },
-            {
-                key:13,
-                value:'192.168.1.119'
-            }
-        ],
+        hostList: [],
+
         module: 'midea-demo',
         isShowModuleList: false,
         moduleIndex: null,

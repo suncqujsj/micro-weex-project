@@ -676,11 +676,15 @@
                 } 
 
                 let jsonCmd = {
-                    mode: this.currentMode,
-                    minute: this.currentTime,
-                    temperature: this.currentTemperature,
-                    preheat: this.preheat
+                    mode: this.currentItem.mode,
+                    minute: this.setValue('time'),
+                    temperature: this.setValue('temperature'),
+                    preheat: this.setValue('preheat'),
+                    steamAmount: this.setValue('steamAmount'),
+                    fireAmount: this.setValue('fireAmount')
                 };
+                // debugger;
+                // return;
                 let deviceCmd = cmdFun.createControlMessage(jsonCmd);
                 nativeService.startCmdProcess(
                     "control",

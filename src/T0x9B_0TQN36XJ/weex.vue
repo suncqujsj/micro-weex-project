@@ -586,8 +586,8 @@
                 this.show = true;
             },
             analysisFun(analysisObj) {
-                //nativeService.alert(JSON.stringify(analysisObj));
-                if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 6) {
+                // nativeService.alert(JSON.stringify(analysisObj));
+                if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6) {
                     numberRecord++;
                     if(numberRecord==1){ //防止多次获取设备状态，多次跳转
                         this.goTo("working");
@@ -646,7 +646,7 @@
                     "control",
                     deviceCmd,
                     function(result){
-                        nativeService.alert(result);
+                        //nativeService.alert(result);
                        self.queryStatus();
                     },
                     function(result){
@@ -690,7 +690,6 @@
                 }, 1000);
             },
             queryStatus() {
-                return;
                 var self = this;
                 var sendCmd = cmdFun.createQueryMessage();
                 //nativeService.showLoading();

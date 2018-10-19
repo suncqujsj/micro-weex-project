@@ -300,7 +300,7 @@
                                             temperature:{
                                                 set: true,
                                                 default:100,
-                                                range:[50,100,5]
+                                                range:[50,100,10]
                                             },
                                             preheat:{
                                                 set:false,
@@ -322,12 +322,12 @@
                                             time:{
                                                 set: true,
                                                 default:10,
-                                                range:[1,90]
+                                                range:[1,90,1]
                                             },
                                             temperature:{
                                                 set: true,
                                                 default:180,
-                                                range:[180,220]
+                                                range:[180,220,10]
                                             },
                                             preheat:{
                                                 set:false,
@@ -336,7 +336,7 @@
                                             steamAmount:{
                                                 set:true,
                                                 default:3,
-                                                range:[1,3]
+                                                range:[1,3,1]
                                             },
                                             fireAmount:{
                                                 set:false,
@@ -350,7 +350,7 @@
                                             time:{
                                                 set: true,
                                                 default:10,
-                                                range:[1,90]
+                                                range:[1,90,1]
                                             },
                                             temperature:{
                                                 set: false,
@@ -364,7 +364,7 @@
                                             steamAmount:{
                                                 set:true,
                                                 default:3,
-                                                range:[1,3]
+                                                range:[1,3,1]
                                             },
                                             fireAmount:{
                                                 set:false,
@@ -374,7 +374,31 @@
                                         {
                                             'icon': 'assets/img/modes/hot_wind@3x.png',
                                             'text': '热风对流',
-                                            'mode': 0x41
+                                            'mode': 0x41,
+                                            time:{
+                                                set: true,
+                                                default:10,
+                                                range:[1,300,1]
+                                            },
+                                            temperature:{
+                                                set: true,
+                                                default:180,
+                                                range:[100,230,5]
+                                            },
+                                            preheat:{
+                                                set:false,
+                                                default: false
+                                            },
+                                            steamAmount:{
+                                                set:false,
+                                                default:0,
+                                                range:[1,3,1]
+                                            },
+                                            fireAmount:{
+                                                set:false,
+                                                default:0,
+                                                range:null
+                                            }
                                         }
                                     ]
                                 },
@@ -384,22 +408,116 @@
                                         {
                                             'icon': 'assets/img/modes/hot_wind_and_broil@3x.png',
                                             'text': '热风烧烤',
-                                            'mode': 0x43
+                                            'mode': 0x43,
+                                            time:{
+                                                set: true,
+                                                default:90,
+                                                range:[1,300,1]
+                                            },
+                                            temperature:{
+                                                set: true,
+                                                default:160,
+                                                range:[100,180,5]
+                                            },
+                                            preheat:{
+                                                set:false,
+                                                default: false
+                                            },
+                                            steamAmount:{
+                                                set:false,
+                                                default:0
+                                            },
+                                            fireAmount:{
+                                                set:false,
+                                                default:0
+                                            }
                                         },
                                         {
                                             'icon': 'assets/img/modes/clean@3x.png',
                                             'text': '清洁',
-                                            'mode': 0xC1
+                                            'mode': 0xC1,
+                                            time:{
+                                                set: false,
+                                                default:0,
+                                                range:null
+                                            },
+                                            temperature:{
+                                                set: false,
+                                                default:0,
+                                                range:null
+                                            },
+                                            preheat:{
+                                                set:false,
+                                                default: false
+                                            },
+                                            steamAmount:{
+                                                set:false,
+                                                default:0,
+                                                range:null
+                                            },
+                                            fireAmount:{
+                                                set:false,
+                                                default:0,
+                                                range:null
+                                            }
                                         },
                                         {
                                             'icon': 'assets/img/modes/heat_preservation@3x.png',
                                             'text': '保温',
-                                            'mode': 0xD0
+                                            'mode': 0xD0,
+                                            time:{
+                                                set: true,
+                                                default:10,
+                                                range:[1,300,1]
+                                            },
+                                            temperature:{
+                                                set: false,
+                                                default:50,
+                                                range:null
+                                            },
+                                            preheat:{
+                                                set:false,
+                                                default: false
+                                            },
+                                            steamAmount:{
+                                                set:false,
+                                                default:0,
+                                                range:null
+                                            },
+                                            fireAmount:{
+                                                set:false,
+                                                default:0,
+                                                range:null
+                                            }
                                         },
                                         {
                                             'icon': 'assets/img/modes/fermentation@3x.png',
                                             'text': '发酵',
-                                            'mode': 0xB0
+                                            'mode': 0xB0,
+                                            time:{
+                                                set: true,
+                                                default:10,
+                                                range:[1,300,1]
+                                            },
+                                            temperature:{
+                                                set: false,
+                                                default:35,
+                                                range:null
+                                            },
+                                            preheat:{
+                                                set:false,
+                                                default: false
+                                            },
+                                            steamAmount:{
+                                                set:false,
+                                                default:0,
+                                                range:null
+                                            },
+                                            fireAmount:{
+                                                set:false,
+                                                default:0,
+                                                range:null
+                                            }
                                         }
                                     ]
                                 }

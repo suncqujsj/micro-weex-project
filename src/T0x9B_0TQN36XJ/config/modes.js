@@ -157,7 +157,7 @@ let modes = [
                 'mode': 0xC1,
                 time:{
                     set: false,
-                    default:0,
+                    default:20,
                     range:null
                 },
                 temperature:{
@@ -183,7 +183,7 @@ let modes = [
             {
                 'icon': 'assets/img/modes/heat_preservation@3x.png',
                 'text': '保温',
-                'mode': 0xD0,
+                'mode': 0x41,
                 time:{
                     set: true,
                     default:10,

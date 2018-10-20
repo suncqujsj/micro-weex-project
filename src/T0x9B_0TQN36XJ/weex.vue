@@ -126,7 +126,7 @@
                 <text class="content-title">加热模式</text>
                 <sf-accordion v-if="currentItem && currentItem.time.set" :value="setValue('time')" :index="0" title="设置时间" :isFolded="accordionArr[0]"  @callback="updateAccordionArr">
                     <div slot="content">
-                        <wx-picker :data="range('time')" :visible="true" @wxChange="handleTimeChange"></wx-picker>
+                        <wx-picker :data="range('time')" :target="'time'" :visible="true" @wxChange="handleTimeChange"></wx-picker>
                     </div>
                 </sf-accordion>
                 <sf-accordion v-if="currentItem && currentItem.temperature.set" :value="setValue('temperature')" :index="1" title="设置温度" :isFolded="accordionArr[1]" @callback="updateAccordionArr">
@@ -164,6 +164,7 @@
     import {wxcProgress, wxProgress} from "@/component/sf/wx-progress";
     import mideaSwitch2 from '@/midea-component/switch2.vue'
     import { WxPicker } from 'weex-droplet-ui';
+    // import WxPicker from '@/component/sf/custom/picker.vue';
     const globalEvent = weex.requireModule("globalEvent");
 
     // data
@@ -214,7 +215,15 @@
                 currentItem:null,
                 current:this.initCurrentData(),
                 show: false,
-                accordionArr:[true, true, true, true, true]
+                accordionArr:[true, true, true, true, true],
+                test:[{
+                    target:'time',
+                    type:'picker',
+                    isFolded: true,
+                    subtitle:'设置时间',
+                    unit:'分',
+                    hideArrow:false
+        }]
             }
         },
         components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2},
@@ -349,13 +358,13 @@
             goBack(){
                 nativeService.backToNative()
             },
-            handleTimeChange (data) {
+            handleTimeChange (data, target) {
+                debugger;
                 this.current.time = data;
-                console.log('currentTime', this.current.time);
+                console.log('key', target);
             },
             handleTemperatureChange (data) {
                 this.current.temperature = data;
-                console.log('currentTemperature', this.currentTemperature);
             },
             onPreheatChange(event) {
                 this.current.preheat = event.value;

@@ -60,6 +60,8 @@
   "dependencies": {
     "echarts": "^4.1.0",
     "vue": "^2.1.10",
+    "weex-bindingx": "0.0.48",
+    "weex-gcanvas": "^0.5.49",
     "weex-html5": "^0.4.1",
     "weex-marquee": "^1.1.2",
     "weex-vue-render": "^0.2.0"

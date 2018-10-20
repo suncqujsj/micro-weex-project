@@ -98,7 +98,9 @@ module.exports = {
         ],
         advancedlist: [
             { title: 'Action Sheet', link: "actionSheet" },
+            { title: 'BindingX动效(^5.2.0)', link: "bindingx" },
             { title: 'Barchart柱状图', link: "barchart" },
+            { title: 'GCanvas画布(^5.2.0)', link: "gcanvas" },
             { title: 'Grid Select', link: "gridSelect" },
             { title: 'Header', link: "header" },
             { title: 'IconFont字体图标', link: "iconFont" },

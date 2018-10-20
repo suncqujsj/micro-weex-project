@@ -105,27 +105,6 @@
             </div>
         </template>
 
-
-        <!--自动菜单-->
-        <!--<div class="tab-content-0" :style="{height: wrapHeight - 224*2}">-->
-            <!--<text class="block-title">1-7岁儿童</text>-->
-            <!--<div class="icon-buttons auto-menu" v-for="rows in modes">-->
-                <!--<div class="icon-button column" v-for="item in rows" @click="onIconButtonClicked(item.mode)">-->
-                    <!--<image class="button-icon" :src="item.icon"></image>-->
-                    <!--<text class="button-text">{{item.text}}</text>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-
-        <!--加热模式-->
-        <!--<div class="tab-content-1" :style="{height: wrapHeight - 224*2}">-->
-            <!--<div class="icon-buttons auto-menu" v-for="rows in modes">-->
-                <!--<div class="icon-button column" v-for="item in rows" @click="onIconButtonClicked(item.mode)">-->
-                    <!--<image class="button-icon" :src="item.icon"></image>-->
-                    <!--<text class="button-text">{{item.text}}</text>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
         <!--<text class="r test" @click="doing">{{progress}}</text>-->
         <!--<wxProgress :percent='progress' :bar_width='650'></wxProgress>-->
         <!--<wxcProgress :percent="progress"-->
@@ -221,7 +200,6 @@
         data(){
             return {
                 wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
-                test:'123',
                 progress:1,
                 tabs:[{
                         name:'自动菜单',

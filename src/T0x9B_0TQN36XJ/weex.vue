@@ -235,7 +235,7 @@
             this.queryStatus();
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             if (this.isIos){
-                this.listenerFun();
+                this.listenerDeviceReiveMessage();
             }
         },
         computed:{
@@ -284,7 +284,7 @@
                     }
                 }
             },
-            listenerFun(){
+            listenerDeviceReiveMessage(){
                 var self = this;        
                 globalEvent.addEventListener("receiveMessage", function(e) {
                     var str = e.data;
@@ -298,7 +298,7 @@
                 globalEvent.removeEventListener("receiveMessage");
             },
             viewappear(){
-                this.listenerFun();
+                this.listenerDeviceReiveMessage();
             },
             updateAccordionArr: function(key, value){
                 let accordionArr = JSON.parse(JSON.stringify(this.accordionArr));

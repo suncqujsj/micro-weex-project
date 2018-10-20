@@ -212,13 +212,7 @@
                         rows:modes
                     }],
                 currentItem:null,
-                current:{
-                    time: null,
-                    temperature: null,
-                    preheat:false,
-                    steamAmount:0,
-                    fireAmount:0
-                },
+                current:this.initCurrentData(),
                 show: false,
                 accordionArr:[true, true, true, true, true]
             }
@@ -310,11 +304,21 @@
                 }
                 this.accordionArr = accordionArr;
             },
+            initCurrentData: function(){
+                return {
+                    time: null,
+                    temperature: null,
+                    preheat:false,
+                    steamAmount:0,
+                    fireAmount:0
+                }
+            },
             closeDialog(e) {
                 var self = this;
                 this.show = false;
                 if (e.type === 'cancel'){
                     this.show = false;
+                    this.current = this.initCurrentData();
                     return;
                 } 
 

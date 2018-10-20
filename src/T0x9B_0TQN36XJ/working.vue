@@ -4,7 +4,7 @@
         <div class="progress_section" :style="progress_style">
             <wxcProgress :percent="progress"
                     :wxc_radius='progress_radius'>
-               
+
             </wxcProgress>
               <div class="time_section" :style="{ height: `${progress_radius*2}px`}">
                 <text class="number_prev" v-if="hasSplit">时</text>
@@ -31,7 +31,7 @@
                     <text class="decs_text">关闭</text>
                 </div>
             </div>
-             <div class="btn_section"  @click="startOrPause">
+             <div class="btn_section" v-if="!workFinishStatus"  @click="startOrPause">
                 <div class="image_section">
                     <image class="icon_image" :src="btnSrc"></image>
                 </div>
@@ -174,6 +174,10 @@
             });
             this.queryStatus();
             this.queryRunTimer(20);//20秒轮询 
+            this.isIos = weex.config.env.platform == "iOS" ? true : false;
+            if (this.isIos){
+                this.listenerDeviceReiveMessage();
+            }
             // debugger;
              this.doing();
 
@@ -222,7 +226,7 @@
             },
             analysisFun(analysisObj) {
                 var self = this , timer = null;
-                clearInterval(this.countDownTimer);
+                // clearInterval(this.countDownTimer);
                 if (analysisObj.workingState.value == 2) {
                     numberRecord++;
                     if(numberRecord==1){ //防止多次获取设备状态，多次跳转
@@ -232,6 +236,7 @@
                 // nativeService.alert(analysisObj);
                 console.log(1);
                 this.tag_next = '分';
+                this.workFinishStatus = false;
                 this.isTimerStop = false;
                 this.modeText = analysisObj.mode.text;
                 this.modeTemperature = analysisObj.temperature.upLowTemperature;
@@ -279,7 +284,7 @@
                
                 // nativeService.alert(self.timeRemain);
             },
-            listenerFun(){
+            listenerDeviceReiveMessage(){
                 var self = this;        
                 globalEvent.addEventListener("receiveMessage", function(e) {
                     var str = e.data;
@@ -295,7 +300,7 @@
                 clearInterval(this.countDownTimer);
             },
             viewappear(){
-                this.listenerFun();
+                this.listenerDeviceReiveMessage();
             },
             goBack(){
                  nativeService.backToNative()

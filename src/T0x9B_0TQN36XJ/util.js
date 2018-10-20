@@ -57,6 +57,8 @@ export default {
     message.setByte(messageBody, 10, params.mode);
     message.setByte(messageBody, 12, params.temperature);
     // message.setByte(messageBody, 14, params.temperature);
+    message.setByte(messageBody, 15, params.fireAmount);
+    message.setByte(messageBody, 16, params.steamAmount);
     var sendcmd = message.createMessage(0x9B, 0x02, messageBody);
     return sendcmd;
   },

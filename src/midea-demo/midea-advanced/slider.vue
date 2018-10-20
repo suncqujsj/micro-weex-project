@@ -177,7 +177,6 @@ font-size: 46px;
 import base from '../base'
 
 import mideaTitleBar from '@/midea-component/title-bar.vue'
-import mideaSlider from '@/midea-component/slider.vue'
 
 import nativeService from '@/common/services/nativeService'
 const modal = weex.requireModule('modal');
@@ -185,7 +184,7 @@ const picker = weex.requireModule('picker');
 const dom = weex.requireModule('dom')
 
 export default {
-    components: { mideaTitleBar, mideaSlider },
+    components: { mideaTitleBar },
     mixins: [base],
     data() {
         return {

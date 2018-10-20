@@ -200,26 +200,26 @@
                     self.queryStatus();
                 },timeSet*1000);
             },
-             countDownRunTimer(timeSet){
-                var self = this;
-                 this.countDownTimer = setInterval(function(){
-                    self.queryStatus();
-                },timeSet*1000);
-            },
-            // countDownRunTimer(minute,second,timeSet){
+            //  countDownRunTimer(timeSet){
             //     var self = this;
-            //     var allSeconds = minute*60+second;
-            //     this.countDownTimer = setInterval(function(){
-            //         if(self.isTimerStop){
-            //             return;
-            //         }
-            //         allSeconds--;
-            //         if(allSeconds<60){
-            //              self.tag_next = '秒';
-            //              self.timeRemainMinute = allSeconds;
-            //         }
+            //      this.countDownTimer = setInterval(function(){
+            //         self.queryStatus();
             //     },timeSet*1000);
             // },
+            countDownRunTimer(minute,second,timeSet){
+                var self = this;
+                var allSeconds = minute*60+second;
+                this.countDownTimer = setInterval(function(){
+                    if(self.isTimerStop){
+                        return;
+                    }
+                    allSeconds--;
+                    if(allSeconds<60){
+                         self.tag_next = '秒';
+                         self.timeRemainMinute = allSeconds;
+                    }
+                },timeSet*1000);
+            },
             analysisFun(analysisObj) {
                 var self = this , timer = null;
                 clearInterval(this.countDownTimer);
@@ -229,7 +229,7 @@
                         this.goTo("weex");
                     }
                 }
-                //nativeService.alert(analysisObj);
+                // nativeService.alert(analysisObj);
                 console.log(1);
                 this.tag_next = '分';
                 this.isTimerStop = false;
@@ -271,8 +271,8 @@
                 if(analysisObj.timeRemaining.hour == 0 && analysisObj.timeRemaining.minute <= 2){
                     timerRecord++;
                    if(timerRecord){
-                        //this.countDownRunTimer(analysisObj.timeRemaining.minute,analysisObj.timeRemaining.second,1);
-                        this.countDownRunTimer(1);//1秒03轮询
+                        this.countDownRunTimer(analysisObj.timeRemaining.minute,analysisObj.timeRemaining.second,1);
+                        //this.countDownRunTimer(1);//1秒03轮询
                    }
                     
                 }
@@ -371,7 +371,6 @@
                 }
                 
                 var deviceCmd = cmdFun.cmdStartOrPause(record);
-                nativeService.alert(deviceCmd);
                 nativeService.startCmdProcess(
                     "control",
                     deviceCmd,

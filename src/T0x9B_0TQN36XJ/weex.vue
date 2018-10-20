@@ -652,7 +652,7 @@
                 globalEvent.removeEventListener("receiveMessage");
             },
             viewappear(){
-                // this.listenerFun();
+                this.listenerFun();
             },
             updateAccordionArr: function(key, value){
                 let accordionArr = JSON.parse(JSON.stringify(this.accordionArr));
@@ -694,7 +694,7 @@
                        self.queryStatus();
                     },
                     function(result){
-                        nativeService.alert(result);
+                        //nativeService.alert(result);
                         console.log('fail', result);
                     }
                 )

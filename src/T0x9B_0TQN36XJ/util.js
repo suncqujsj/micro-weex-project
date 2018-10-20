@@ -58,7 +58,6 @@ export default {
     message.setByte(messageBody, 12, params.temperature);
     // message.setByte(messageBody, 14, params.temperature);
     var sendcmd = message.createMessage(0x9B, 0x02, messageBody);
-    nativeService.alert(sendcmd);
     return sendcmd;
   },
   //取消工作指令

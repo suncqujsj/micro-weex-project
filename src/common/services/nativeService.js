@@ -114,7 +114,7 @@ export default {
             if (ip == null || ip.length < 1) {
                 url = "http://localhost:" + port + "/dist/" + root + '/' + targetPath;
             } else {
-                url = "http://" + ip + port?(":"+port):"" + "/dist/" + root + '/' + targetPath;
+                url = "http://" + ip + (port?(":"+port):"") + "/dist/" + root + '/' + targetPath;
             }
             this.runGo(url, options);
         } else {

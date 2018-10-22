@@ -174,7 +174,6 @@
             }
             arr[i]=value;
         }
-        console.log(arr.length);
         return arr;
     };
 
@@ -248,7 +247,6 @@
                 this.tabs = tabs;
             },
             onIconButtonClicked: function(item){
-                console.log('pressed', item);
                 this.currentItem = item;
                 this.show = true;
             },

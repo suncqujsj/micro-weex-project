@@ -103,7 +103,7 @@ const accordionMixin = {
                 mode: this.currentItem.mode,
                 minute: this.setValue('time'),
                 temperature: this.setValue('temperature'),
-                preheat: this.setValue('preheat'),
+                preheat: this.currentItem.preheat,
                 steamAmount: this.setValue('steamAmount'),
                 fireAmount: this.setValue('fireAmount')
             };

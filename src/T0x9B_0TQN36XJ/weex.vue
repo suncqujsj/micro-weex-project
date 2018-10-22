@@ -126,7 +126,7 @@
                 <text class="content-title">加热模式</text>
                 <template v-for="(item, index) in accordions">
                     <template v-if="item.type==='picker'">
-                        <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionArr">
+                        <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                             <div slot="content">
                                 <wx-picker :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickChange"></wx-picker>
                             </div>
@@ -276,7 +276,7 @@
             viewappear(){
                 this.listenerDeviceReiveMessage();
             },
-            updateAccordionArr: function(key, value){
+            updateAccordionFoldingStatus: function(key, value){
                 // debugger;
                 let accordions = JSON.parse(JSON.stringify(this.accordions));
                 let accordionLen = this.accordions.length;

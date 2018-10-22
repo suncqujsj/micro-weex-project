@@ -319,7 +319,7 @@ const menus = [
     },
     {
         id: 20,
-        title: '家庭管理',
+        title: '我的家庭',
         subMenus: [
             {
                 id: 2002,
@@ -327,7 +327,7 @@ const menus = [
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '创建新的家庭',
                 descInfos: [
-                    '登录美居App，设置-家庭管理-点右上加号，输入家庭名称及家庭描述，点击“添加”按钮即可完成家庭创建'
+                    '登录美居App，在个人中心-我的家庭-点右上加号，输入家庭名称及家庭描述，点击“添加”按钮即可完成家庭创建'
                 ]
             },
             {
@@ -336,7 +336,7 @@ const menus = [
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '编辑家庭信息',
                 descInfos: [
-                    '登录美居App，在个人中心—>设置—>家庭管理中进行编辑',
+                    '登录美居App，在个人中心—>我的家庭中进行编辑',
                     '注：编辑家庭信息仅限于家庭创建者，家庭成员无法修改'
                 ]
             },
@@ -346,7 +346,7 @@ const menus = [
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '删除家庭成员',
                 descInfos: [
-                    '登录美居App，在个人中心—>设置—>家庭管理—>家庭详情中删除家庭成员',
+                    '登录美居App，在个人中心—>我的家庭—>家庭详情中删除家庭成员',
                     '注:删除家庭成员仅限于家庭创建者，家庭成员无法修改；被删除成员将不能控制该家庭中的设备'
                 ]
             },
@@ -356,7 +356,7 @@ const menus = [
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '邀请家庭成员',
                 descInfos: [
-                    '登录美居App，在个人中心—>设置—>家庭管理—>家庭详情—>邀请成员，通过搜索手机号添加',
+                    '登录美居App，在个人中心—>我的家庭—>家庭详情—>邀请成员，通过搜索手机号添加',
                     '家庭成员此时会收到邀请信息，点击“同意”则成功加入家庭，点击“忽略”则拒绝加入家庭',
                     '注：邀请家庭成员仅限于家庭创建者，家庭成员无法邀请；被邀请的成员将能控制该家庭中的所有设备'
                 ]
@@ -367,7 +367,7 @@ const menus = [
                 link: 'deviceProblems/problemDetail',
                 detailTitle: '删除/退出家庭',
                 descInfos: [
-                    '登录美居App，在个人中心—>设置—>家庭管理'
+                    '登录美居App，在个人中心—>我的家庭'
                 ],
                 delTipTitle: '删除家庭',
                 delTipInfo: '家庭创建者删除家庭后，该家庭的成员和设备关系都会删除',

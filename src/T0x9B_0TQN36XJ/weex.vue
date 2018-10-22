@@ -226,7 +226,6 @@
                 if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6) {
                     numberRecord++;
                     if(numberRecord==1){ //防止多次获取设备状态，多次跳转
-                        nativeService.alert('come in');
                         this.goTo("working");
                     }
                 }

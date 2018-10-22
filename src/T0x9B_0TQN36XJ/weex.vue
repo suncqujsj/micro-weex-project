@@ -337,24 +337,9 @@
             handlePickChange(data, key){
                 this.current[key] = data;
             },
-            handleTimeChange (data, target) {
-                this.current.time = data;
-                console.log('key', target);
-            },
-            handleTemperatureChange (data) {
-                this.current.temperature = data;
-            },
             onPreheatChange(event) {
                 this.current.preheat = event.value;
                 console.log('currentPreheat', this.current.preheat);
-            },
-            handleSteamAmountChange (data) {
-                this.current.steamAmount = data;
-                console.log('currentSteamAmount', this.current.steamAmount);
-            },
-            handleFireAmountChange (data) {
-                this.current.fireAmount = data;
-                console.log('currentFireAmount', this.current.fireAmount);
             },
             doing: function(){
                 if(this.progress === 100) {

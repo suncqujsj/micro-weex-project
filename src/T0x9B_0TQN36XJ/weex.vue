@@ -126,7 +126,7 @@
                     <template v-if="item.type==='picker'">
                         <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                             <div slot="content">
-                                <wx-picker :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickChange"></wx-picker>
+                                <wx-picker :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                             </div>
                         </sf-accordion>
                     </template>
@@ -336,7 +336,7 @@
             goBack(){
                 nativeService.backToNative()
             },
-            handlePickChange(data, key){
+            handlePickerChange(data, key){
                 this.current[key] = data;
             },
             onPreheatChange(event) {

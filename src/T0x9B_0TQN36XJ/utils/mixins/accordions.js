@@ -68,7 +68,7 @@ const accordionMixin = {
             return {
                 time: null,
                 temperature: null,
-                preheat:null,
+                preheat:false,
                 steamAmount:0,
                 fireAmount:0
             }
@@ -76,6 +76,7 @@ const accordionMixin = {
         resetState: function(){
             this.accordions = this.initAccordions();
             this.current = this.initCurrentData();
+            this.currentItem = null;
         },
         handlePickerChange(data, key){
             this.current[key] = data;
@@ -83,6 +84,12 @@ const accordionMixin = {
         onPreheatChange(event) {
             this.current.preheat = event.value;
             console.log('currentPreheat', this.current.preheat);
+        },
+        openDialog(){
+            this.show = true;
+            if(this.currentItem && this.currentItem['preheat'].default){
+                this.current.preheat = true;
+            }
         },
         closeDialog(e) {
             this.show = false;

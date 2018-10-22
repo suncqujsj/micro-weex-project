@@ -13,7 +13,7 @@
         .ta;
         .lh(60px);
         .ma-t(36*2px);
-        .ma-b(60*2px);
+        .ma-b(44*2px);
     }
     .tabs{
         .row;
@@ -24,7 +24,8 @@
         justify-content: center;
         align-items: flex-end;
         height: 18*2px;
-        .ma-b(16*2px);
+        .bs(padding-box);
+        padding: 16*2px 0;
 
     }
     .tab-text{
@@ -82,15 +83,17 @@
 <template>
     <scroller class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
 
-        <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="red" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
+        <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.jpg" title="烤箱" titleText="white" bgColor="red" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
 
         <!--面板切换tabs-->
         <div class="panel">
             <text class="panel-state">待机中</text>
             <div class="tabs">
-                <div class="tab" v-for="(tab, x) in tabs">
-                    <text class="tab-text" :class="[tab.active && 'tab-active' ]" @click="onTabClicked(x)">{{tab.name}}</text>
-                </div>
+                <template v-for="(tab, x) in tabs">
+                    <div class="tab" @click="onTabClicked(x)">
+                        <text class="tab-text" :class="[tab.active && 'tab-active' ]">{{tab.name}}</text>
+                    </div>
+                </template>
             </div>
         </div>
 
@@ -133,7 +136,7 @@
                     <template v-if="item.type==='switch'">
                         <sf-accordion v-if="currentItem && currentItem[item.key].set" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
                             <div slot="right">
-                                <midea-switch2 :checked="current[item.key]||currentItem[item.key].default" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
+                                <midea-switch2 :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
                             </div>
                         </sf-accordion>
                     </template>
@@ -219,7 +222,7 @@
             },
             onIconButtonClicked: function(item){
                 this.currentItem = item;
-                this.show = true;
+                this.openDialog();
             },
             analysisFun(analysisObj) {
                 // nativeService.alert(JSON.stringify(analysisObj));

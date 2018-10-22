@@ -216,7 +216,7 @@
         computed:{
         },
         methods: {
-            range: function(key){ // pick属性范围
+            range: function(key){ // picker属性范围
                 let currentItem = this.currentItem;
                 // debugger;
                 let list = settingArrData(currentItem[key].range[0],currentItem[key].range[1],currentItem[key].range[2]);

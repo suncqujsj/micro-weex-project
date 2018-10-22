@@ -2,9 +2,9 @@
     <div class="accordion-wrapper">
         <div class="accordion-item" @click="makeSwitch">
             <text class="accordion-title">{{title}}</text>
-            <text v-if="value" class="accordion-value">{{value}}</text>
-            <image v-if="!hideIcon" class="accordion-icon" :src="isFoldedStatus?foldIcon:unfoldIcon"></image>
-            <slot v-if="hideIcon" name="right"></slot>
+            <text v-if="value" class="accordion-value">{{value}}{{unit}}</text>
+            <image v-if="!hideArrow" class="accordion-icon" :src="isFoldedStatus?foldIcon:unfoldIcon"></image>
+            <slot v-if="hideArrow" name="right"></slot>
         </div>
         <div v-if="!isFoldedStatus">
             <slot name="content"></slot>
@@ -24,7 +24,11 @@
                 type: Number,
                 default: 0
             },
-            hideIcon: {
+            unit: {
+                type:String,
+                default:''
+            },
+            hideArrow: {
                 type: Boolean,
                 default: false
             },

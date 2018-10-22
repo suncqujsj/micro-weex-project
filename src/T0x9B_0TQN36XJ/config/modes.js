@@ -105,7 +105,7 @@ let modes = [
                     range:[100,230,5]
                 },
                 preheat:{
-                    set:false,
+                    set:true,
                     default: false
                 },
                 steamAmount:{

@@ -124,31 +124,47 @@
         <sf-dialog :show="show" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <text class="content-title">加热模式</text>
-                <sf-accordion v-if="currentItem && currentItem.time.set" :value="setValue('time')" :index="0" title="设置时间" :isFolded="accordionArr[0]"  @callback="updateAccordionArr">
-                    <div slot="content">
-                        <wx-picker :data="range('time')" :target="'time'" :visible="true" @wxChange="handleTimeChange"></wx-picker>
-                    </div>
-                </sf-accordion>
-                <sf-accordion v-if="currentItem && currentItem.temperature.set" :value="setValue('temperature')" :index="1" title="设置温度" :isFolded="accordionArr[1]" @callback="updateAccordionArr">
-                    <div slot="content">
-                        <wx-picker :data="range('temperature')" :visible="true" @wxChange="handleTemperatureChange"></wx-picker>
-                    </div>
-                </sf-accordion>
-                <sf-accordion v-if="currentItem && currentItem.steamAmount.set" :value="setValue('steamAmount')" :index="2" title="设置蒸汽量" :isFolded="accordionArr[2]" @callback="updateAccordionArr">
-                    <div slot="content">
-                        <wx-picker :data="range('steamAmount')" :visible="true" @wxChange="handleSteamAmountChange"></wx-picker>
-                    </div>
-                </sf-accordion>
-                <sf-accordion v-if="currentItem && currentItem.fireAmount.set" :value="setValue('fireAmount')" :index="3" title="设置火力" :isFolded="accordionArr[3]" @callback="updateAccordionArr">
-                    <div slot="content">
-                        <wx-picker :data="range('fireAmount')" :visible="true" @wxChange="handleFireAmountChange"></wx-picker>
-                    </div>
-                </sf-accordion>
-                <sf-accordion v-if="currentItem && currentItem.preheat.set" title="设置预热" :hideIcon="true">
-                    <div slot="right">
-                        <midea-switch2 :checked="current.preheat" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
-                    </div>
-                </sf-accordion>
+                <template v-for="(item, index) in accordions">
+                    <template v-if="item.type==='picker'">
+                        <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionArr">
+                            <div slot="content">
+                                <wx-picker :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickChange"></wx-picker>
+                            </div>
+                        </sf-accordion>
+                    </template>
+                    <template v-if="item.type==='switch'">
+                        <sf-accordion v-if="currentItem && currentItem[item.key].set" :title="item.subtitle" :hideArrow="item.hideArrow">
+                            <div slot="right">
+                                <midea-switch2 :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
+                            </div>
+                        </sf-accordion>
+                    </template>
+                </template>
+                <!--<sf-accordion v-if="currentItem && currentItem.time.set" :value="setValue('time')" :index="0" title="设置时间" :isFolded="accordionArr[0]"  @callback="updateAccordionArr">-->
+                    <!--<div slot="content">-->
+                        <!--<wx-picker :data="range('time')" :target="'time'" :visible="true" @wxChange="handlePickChange"></wx-picker>-->
+                    <!--</div>-->
+                <!--</sf-accordion>-->
+                <!--<sf-accordion v-if="currentItem && currentItem.temperature.set" :value="setValue('temperature')" :index="1" title="设置温度" :isFolded="accordionArr[1]" @callback="updateAccordionArr">-->
+                    <!--<div slot="content">-->
+                        <!--<wx-picker :data="range('temperature')" :visible="true" @wxChange="handleTemperatureChange"></wx-picker>-->
+                    <!--</div>-->
+                <!--</sf-accordion>-->
+                <!--<sf-accordion v-if="currentItem && currentItem.steamAmount.set" :value="setValue('steamAmount')" :index="2" title="设置蒸汽量" :isFolded="accordionArr[2]" @callback="updateAccordionArr">-->
+                    <!--<div slot="content">-->
+                        <!--<wx-picker :data="range('steamAmount')" :visible="true" @wxChange="handleSteamAmountChange"></wx-picker>-->
+                    <!--</div>-->
+                <!--</sf-accordion>-->
+                <!--<sf-accordion v-if="currentItem && currentItem.fireAmount.set" :value="setValue('fireAmount')" :index="3" title="设置火力" :isFolded="accordionArr[3]" @callback="updateAccordionArr">-->
+                    <!--<div slot="content">-->
+                        <!--<wx-picker :data="range('fireAmount')" :visible="true" @wxChange="handleFireAmountChange"></wx-picker>-->
+                    <!--</div>-->
+                <!--</sf-accordion>-->
+                <!--<sf-accordion v-if="currentItem && currentItem.preheat.set" title="设置预热" :hideIcon="true">-->
+                    <!--<div slot="right">-->
+                        <!--<midea-switch2 :checked="current.preheat" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>-->
+                    <!--</div>-->
+                <!--</sf-accordion>-->
             </div>
         </sf-dialog>
     </scroller>
@@ -163,8 +179,8 @@
     import query from "../dummy/query";
     import {wxcProgress, wxProgress} from "@/component/sf/wx-progress";
     import mideaSwitch2 from '@/midea-component/switch2.vue'
-    import { WxPicker } from 'weex-droplet-ui';
-    // import WxPicker from '@/component/sf/custom/picker.vue';
+    // import { WxPicker } from 'weex-droplet-ui';
+    import WxPicker from '@/component/sf/custom/picker.vue';
     const globalEvent = weex.requireModule("globalEvent");
 
     // data
@@ -216,14 +232,48 @@
                 current:this.initCurrentData(),
                 show: false,
                 accordionArr:[true, true, true, true, true],
-                test:[{
-                    target:'time',
-                    type:'picker',
-                    isFolded: true,
-                    subtitle:'设置时间',
-                    unit:'分',
-                    hideArrow:false
-        }]
+                accordions:[
+                    {
+                        key:'time',
+                        type:'picker',
+                        isFolded: true,
+                        subtitle:'设置时间',
+                        unit:'分',
+                        hideArrow:false
+                    },
+                    {
+                        key:'temperature',
+                        type:'picker',
+                        isFolded: true,
+                        subtitle:'设置温度',
+                        unit:'°C',
+                        hideArrow:false
+                    },
+                    {
+                        key:'steamAmount',
+                        type:'picker',
+                        isFolded: true,
+                        subtitle:'设置蒸汽量',
+                        unit:'档',
+                        hideArrow:false
+                    },
+                    {
+                        key:'fireAmount',
+                        type:'picker',
+                        isFolded: true,
+                        subtitle:'设置火力',
+                        unit:'档',
+                        hideArrow:false
+                    },
+                    {
+                        key:'preheat',
+                        type:'switch',
+                        isFolded: true,
+                        subtitle:'设置预热',
+                        unit:'',
+                        hideArrow:true
+                    },
+                ]
             }
         },
         components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2},
@@ -358,8 +408,10 @@
             goBack(){
                 nativeService.backToNative()
             },
+            handlePickChange(data, key){
+                this.current[key] = data;
+            },
             handleTimeChange (data, target) {
-                debugger;
                 this.current.time = data;
                 console.log('key', target);
             },

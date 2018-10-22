@@ -24,6 +24,8 @@ if (ipParam && ipParam.length > 1) {
     if (portParam && portParam.length > 1) {
         port = portParam[1]
         console.log(port)
+    } else {
+        port = ""
     }
     // 测试
     isDummy = util.getParameters(weex.config.bundleUrl, "isDummy") == "true"
@@ -113,7 +115,7 @@ export default {
             if (ip == null || ip.length < 1) {
                 url = "http://localhost:" + port + "/dist/" + root + '/' + targetPath;
             } else {
-                url = "http://" + ip + ":" + port + "/dist/" + root + '/' + targetPath;
+                url = "http://" + ip + (port?(":"+port):"") + "/dist/" + root + '/' + targetPath;
             }
             this.runGo(url, options);
         } else {
@@ -295,6 +297,12 @@ export default {
             hidden: '1',
             animated: "false"
         }, event => { })
+    },
+    //关闭键盘
+    killKeyboard() {
+        if (this.isDummy != true) {
+            bridgeModule.killKeyboard();
+        }
     },
     //**********非APP业务接口***************END
 

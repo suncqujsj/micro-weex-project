@@ -168,7 +168,7 @@
         margin-bottom: 12px;
     }
     .device-name{
-        height: 32px;
+        height: 36px;
         font-size: 32px;
         margin-bottom: 10px;
     }

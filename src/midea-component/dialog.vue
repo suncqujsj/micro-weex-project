@@ -63,6 +63,7 @@
     font-size: 36px;
     text-align: center;
     margin-bottom: 24px;
+    line-height: 48px;
   }
 
   .content-subtext {
@@ -176,6 +177,9 @@
       maskBgColor: {
         type: String,
         default: 'rgba(0,0,0,0.6)'
+      },
+      custDialogTop: {
+        type: Number
       }
     },
     data: () => ({
@@ -188,7 +192,7 @@
        },300);*/
       var env=weex.config.env;
       this.maskHeight=env.deviceHeight / env.deviceWidth * 750;
-      this.dialogTop= (this.maskHeight-300)/2;
+      this.dialogTop= this.custDialogTop ? this.custDialogTop : (this.maskHeight-300)/2;
     },
     methods: {
       checkDomHeight(){

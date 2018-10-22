@@ -1,0 +1,134 @@
+<template>
+    <div>
+        <midea-header title="gcanvas" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
+
+        <div ref="test" style="flex:1;background-color: #1ba1e2">
+            <div style="height:100px;">
+                <text class="display-text">GCanvas主页 (请使用桌面浏览器打开)</text>
+                <text class="display-link" @click="openWeb('https://alibaba.github.io/GCanvas/')">https://alibaba.github.io/GCanvas/</text>
+            </div>
+            <gcanvas ref="canvas_holder" style="width:750; height:350; background-color:rgba(0, 0, 0, 0.1)"></gcanvas>
+            <gcanvas @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend" ref="gcanvess" style="width: 650px;height: 600px;background-color: yellow;margin-left: 50px">
+            </gcanvas>
+        </div>
+    </div>
+</template>
+
+<style scoped>
+.display-text {
+  font-size: 30px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.display-link {
+  font-size: 30px;
+  margin-left: 10px;
+  margin-right: 10px;
+  color: blue;
+  text-decoration: blue;
+}
+</style>
+<script>  
+import base from '../base'
+import mideaHeader from '@/midea-component/header.vue'
+import nativeService from '@/common/services/nativeService'
+
+var GCanvas = require('weex-gcanvas')
+var Image = require('weex-gcanvas/gcanvasimage');
+var modal = weex.requireModule("modal");
+export default {
+    mixins: [base],
+    data() {
+        return {
+            startX: 0,
+            startY: 0,
+            currentX: 0,
+            currentY: 0,
+            context: {},
+            canvasObj: {}
+        }
+    },
+    methods: {
+        openWeb(url) {
+            nativeService.weexBundleToWeb({
+                url: url,
+                title: "GCanvas主页"
+            })
+        },
+        touchstart(event) {
+            this.startX = event.changedTouches[0].pageX;
+            this.startY = event.changedTouches[0].pageY;
+            this.context.strokeStyle = "#17acf6";  //设置线的颜色状态
+            this.context.lineWidth = 10;  //设置线宽状态
+        },
+        touchmove(event) {
+            this.currentX = event.changedTouches[0].pageX;
+            this.currentY = event.changedTouches[0].pageY;
+            //进行绘制
+            this.context.moveTo(this.startX, this.startY);
+            this.context.lineTo(this.currentX, this.currentY);
+            this.context.stroke();
+
+            this.startX = event.changedTouches[0].pageX;
+            this.startY = event.changedTouches[0].pageY;
+
+        },
+        touchend(event) {
+
+        }
+    },
+    mounted() {
+        // 第一部分canvas
+        //1、初始化 GCanvas
+        var ref = this.$refs.canvas_holder;
+        var gcanvas = GCanvas.start(ref);
+        var ctx = gcanvas.getContext('2d');
+
+        //2、执行渲染操作
+        //rect
+        ctx.fillStyle = 'red';
+        ctx.fillRect(0, 0, 100, 100);
+
+        //rect
+        ctx.fillStyle = 'black';
+        ctx.fillRect(100, 100, 100, 100);
+        ctx.fillRect(25, 210, 700, 5);
+
+        //circle
+        ctx.arc(450, 200, 100, 0, Math.PI * 2, true);
+        ctx.fill();
+
+        //drawImage
+        var image = new Image();
+        image.onload = function () {
+            ctx.drawImage(image, 100, 330);
+            ctx.drawImage(image, 100 + 300, 330, 225, 75);
+        }
+        image.src = 'https://www.khronos.org/assets/uploads/ceimg/made/assets/uploads/apis/OpenGL-ES_100px_May16_225_75.png';
+
+
+        // 第二部分canvas
+        /*获取元素引用*/
+        var ref = this.$refs.gcanvess
+        /*通过元素引用获取canvas对象*/
+        this.canvasObj = GCanvas.start(ref)
+        /*获取绘图所需的上下文，目前不支持3d*/
+        this.context = this.canvasObj.getContext('2d')
+        /*设置字体大小*/
+        this.context.font = '34px'
+        /*在指定位置绘制文字*/
+        this.context.fillText('Hello Word', 200, 100)
+        /*指定绘制图形的线的宽度*/
+        this.context.lineWidth = 10
+        /*在指定位置绘制矩形*/
+        this.context.strokeRect(200, 200, 200, 90)
+        /*绘制三角形*/
+        this.context.beginPath()
+        this.context.moveTo(20, 20)
+        this.context.lineTo(20, 100)
+        this.context.lineTo(0, 100)
+        this.context.closePath()
+        this.context.stroke()
+    }
+}
+</script>

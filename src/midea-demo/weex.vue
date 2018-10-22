@@ -98,7 +98,9 @@ module.exports = {
         ],
         advancedlist: [
             { title: 'Action Sheet', link: "actionSheet" },
+            { title: 'BindingX动效(^5.2.0)', link: "bindingx" },
             { title: 'Barchart柱状图', link: "barchart" },
+            { title: 'GCanvas画布(^5.2.0)', link: "gcanvas" },
             { title: 'Grid Select', link: "gridSelect" },
             { title: 'Header', link: "header" },
             { title: 'IconFont字体图标', link: "iconFont" },
@@ -134,6 +136,7 @@ module.exports = {
             { title: 'hapticFeedback手机震动', link: "hapticFeedback" },
             { title: 'interfaceForThirdParty第三方SDK接口', link: "interfaceForThirdParty" },
             { title: 'jumpNativePage打开原生页面', link: "jumpNativePage" },
+            { title: 'killKeyboard关闭键盘', link: "killKeyboard" },
             { title: 'launchMapApp打开地图软件', link: "launchMapApp" },
             { title: 'navigator页面跳转', link: "navigatorPageA" },
             { title: 'openNativeSystemPage打开系统页面', link: "openNativeSystemPage" },

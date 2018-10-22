@@ -196,7 +196,7 @@
                         rows:modes
                     }
                 ],
-                accordions:accordions,
+                accordions: this.initAccordions(),
                 currentItem:null,
                 current:this.initCurrentData(),
                 show: false
@@ -291,6 +291,9 @@
                 }
                 this.accordions = accordions;
             },
+            initAccordions: function(){
+                return accordions;
+            },
             initCurrentData: function(){
                 return {
                     time: null,
@@ -300,12 +303,16 @@
                     fireAmount:0
                 }
             },
+            resetState: function(){
+                this.accordions = this.initAccordions();
+                this.current = this.initCurrentData();
+            },
             closeDialog(e) {
                 var self = this;
                 this.show = false;
                 if (e.type === 'cancel'){
                     this.show = false;
-                    this.current = this.initCurrentData();
+                    this.resetState();
                     return;
                 } 
 

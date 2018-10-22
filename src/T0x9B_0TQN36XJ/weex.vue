@@ -133,7 +133,7 @@
                         </sf-accordion>
                     </template>
                     <template v-if="item.type==='switch'">
-                        <sf-accordion v-if="currentItem && currentItem[item.key].set" :title="item.subtitle" :hideArrow="item.hideArrow">
+                        <sf-accordion v-if="currentItem && currentItem[item.key].set" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
                             <div slot="right">
                                 <midea-switch2 :checked="current[item.key]||currentItem[item.key].default" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
                             </div>
@@ -277,17 +277,20 @@
                 this.listenerDeviceReiveMessage();
             },
             updateAccordionArr: function(key, value){
-                let accordionArr = JSON.parse(JSON.stringify(this.accordionArr));
-                for(let index=0;index<this.accordionArr.length;index++) {
+                // debugger;
+                let accordions = JSON.parse(JSON.stringify(this.accordions));
+                let accordionLen = this.accordions.length;
+                for(let index=0;index < accordionLen;index++) {
+                    let item = accordions[index];
                     if (key === index) {
-                        accordionArr[index] = value;
+                        item.isFolded = value;
                     } else {
-                        if (!value && !this.accordionArr[index]) {
-                            accordionArr[index] = true;
+                        if (!value && !item.isFolded) {
+                            item.isFolded = true;
                         }
                     }
                 }
-                this.accordionArr = accordionArr;
+                this.accordions = accordions;
             },
             initCurrentData: function(){
                 return {

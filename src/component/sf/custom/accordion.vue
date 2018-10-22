@@ -51,6 +51,7 @@
         },
         methods: {
             makeSwitch(e) {
+                // debugger;
                 this.isFoldedStatus = !this.isFoldedStatus;
                 if(this.index === -1) return;
                 this.$emit('callback', this.index, this.isFoldedStatus);

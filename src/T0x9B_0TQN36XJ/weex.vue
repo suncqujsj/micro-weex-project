@@ -81,7 +81,10 @@
 
 <template>
     <scroller class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
+
         <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="red" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
+
+        <!--面板切换tabs-->
         <div class="panel">
             <text class="panel-state">待机中</text>
             <div class="tabs">
@@ -91,6 +94,7 @@
             </div>
         </div>
 
+        <!--模式操作按钮-->
         <template v-for="(tab, x) in tabs">
             <div :class="['tab-content-' + x]" v-if="tab.active" :style="{height: wrapHeight - 224*2}">
                 <div class="bg-white" :class="[x=1 && 'auto_menu']" v-for="row in tab.rows">
@@ -113,14 +117,8 @@
                 <!--<text class="demo-text">{{progress}}%</text>-->
             <!--</div>-->
         <!--</wxcProgress>-->
-        <!--<midea-dialog title="使用协议"-->
-                      <!--:show="show"-->
-                      <!--@close="closeDialog"-->
-                      <!--@mideaDialogCancelBtnClicked="mideaDialogCancelBtnClicked"-->
-                      <!--@mideaDialogConfirmBtnClicked="mideaDialogCancelBtnClicked"-->
-                      <!--content="美的智慧生活解决方案"-->
-                      <!--:single="false" >-->
-        <!--</midea-dialog>-->
+
+        <!--模式参数设置弹窗-->
         <sf-dialog :show="show" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <text class="content-title">加热模式</text>
@@ -142,6 +140,7 @@
                 </template>
             </div>
         </sf-dialog>
+
     </scroller>
 </template>
 

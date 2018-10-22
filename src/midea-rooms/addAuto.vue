@@ -170,19 +170,25 @@
             },
             goNext(item){
                 this.checkLogin().then( (res) => {
-                    let params = {
-                        from: 'addAuto',
-                        homegroupId: res.homegroupId,
-                        sceneType: item.sceneType,
-                        userDevices: nativeService.getParameters('userDevices')
-                    }
-                    if (item.sceneType == 2){
-                        this.goTo('autoBindDevices', {}, params)
-                    }else if ( item.sceneType == 3){
-                        params.direction = item.direction
-                        this.goTo('autoTypeSet', {}, params)
+                    let userDevices = nativeService.getParameters('userDevices')
+                    if (userDevices) {
+                        let params = {
+                            from: 'addAuto',
+                            homegroupId: res.homegroupId,
+                            sceneType: item.sceneType,
+                            userDevices: userDevices
+                        }
+                        if (item.sceneType == 2){
+                            this.goTo('autoBindDevices', {}, params)
+                        }else if ( item.sceneType == 3){
+                            params.direction = item.direction
+                            this.goTo('autoTypeSet', {}, params)
+                        }else{
+                            this.goTo('autoTypeSet', {}, params)
+                        }
                     }else{
-                        this.goTo('autoTypeSet', {}, params)
+                        nativeService.toast('您当前无设备，请绑定设备!')
+                        // return
                     }
                 })
             },

@@ -7489,6 +7489,16 @@ weex-bindingx@0.0.17:
     simple-lodash "^0.0.2"
     universal-env "0.x.x"
 
+weex-bindingx@0.0.48:
+  version "0.0.48"
+  resolved "https://registry.yarnpkg.com/weex-bindingx/-/weex-bindingx-0.0.48.tgz#f37a82c313c199026c013de834bc496128260e9b"
+  dependencies:
+    bindingx-parser "0.x.x"
+    bindingx-web-polyfill "0.x.x"
+    object-assign "^4.1.1"
+    simple-lodash "^0.0.2"
+    universal-env "0.x.x"
+
 weex-components@^0.2.0:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/weex-components/-/weex-components-0.2.1.tgz#33a250a5ac7d264c3f396def893d992d30fe5707"
@@ -7499,6 +7509,10 @@ weex-droplet-ui@^1.0.0-alpha.100:
   dependencies:
     gh-pages "^1.1.0"
     url-parse "^1.1.9"
+
+weex-gcanvas@^0.5.49:
+  version "0.5.49"
+  resolved "https://registry.yarnpkg.com/weex-gcanvas/-/weex-gcanvas-0.5.49.tgz#96c8d9831bc1b78ad748453a25ad245728cf7730"
 
 weex-html5@^0.4.1:
   version "0.4.1"

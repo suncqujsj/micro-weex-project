@@ -6,6 +6,7 @@
                     :wxc_radius='progress_radius'>
 
             </wxcProgress>
+             <midea-progresscycle-view class="circleprogress" :data="chartJson"></midea-progresscycle-view>
               <div class="time_section" :style="{ height: `${progress_radius*2}px`}">
                 <text class="number_prev" v-if="hasSplit">时</text>
                 <div class="cen">
@@ -136,14 +137,17 @@
     import MideaHeader from '@/midea-component/header.vue'
     // import mideaItem from '@/midea-component/item.vue'
     import nativeService from "../common/services/nativeService";
-    import cmdFun from "./util.js"; //解析指令
+    import cmdFun from "./utils/util.js"; //解析指令
     import query from "../dummy/query";
     import {wxcProgress, wxProgress} from "@/component/sf/wx-progress";
-    const globalEvent = weex.requireModule("globalEvent");
+
+    import accordionMixin from  "./utils/mixins/accordions"
+    import deviceMessageMixin from  "./utils/mixins/deviceMessage"
 
     var numberRecord = 0; //记录跳页面的次数
     var timerRecord = 0;
     export default {
+        mixins: [deviceMessageMixin, accordionMixin],
         data(){
             return {
                 wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
@@ -168,7 +172,7 @@
         components: {MideaHeader,wxcProgress,wxProgress},
         created(){
             var self = this;
-           // 模拟设备数据
+           // 模拟设备数据,正式上线，可不注销
             nativeService.initMockData({
                 query: query
             });
@@ -178,8 +182,9 @@
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
             }
+
             // debugger;
-             this.doing();
+             //this.doing();
 
         },
         computed: {
@@ -215,6 +220,8 @@
                 var allSeconds = minute*60+second;
                 this.countDownTimer = setInterval(function(){
                     if(self.isTimerStop){
+                         self.tag_next = '秒';
+                         self.timeRemainMinute = allSeconds;
                         return;
                     }
                     allSeconds--;
@@ -226,14 +233,13 @@
             },
             analysisFun(analysisObj) {
                 var self = this , timer = null;
-                // clearInterval(this.countDownTimer);
+                clearInterval(this.countDownTimer);
                 if (analysisObj.workingState.value == 2) {
                     numberRecord++;
                     if(numberRecord==1){ //防止多次获取设备状态，多次跳转
                         this.goTo("weex");
                     }
                 }
-                // nativeService.alert(analysisObj);
                 console.log(1);
                 this.tag_next = '分';
                 this.workFinishStatus = false;
@@ -284,31 +290,6 @@
                
                 // nativeService.alert(self.timeRemain);
             },
-            listenerDeviceReiveMessage(){
-                var self = this;        
-                globalEvent.addEventListener("receiveMessage", function(e) {
-                    var str = e.data;
-                    //nativeService.alert(str);
-                    var arr = str.split(",");
-                    var analysisObj = cmdFun.analysisCmd(arr); //解析04上行指令
-                    self.analysisFun(analysisObj);
-                });
-            },
-            viewdisappear(){
-                globalEvent.removeEventListener("receiveMessage");
-                clearInterval(this.queryTimer);
-                clearInterval(this.countDownTimer);
-            },
-            viewappear(){
-                this.listenerDeviceReiveMessage();
-            },
-            goBack(){
-                 nativeService.backToNative()
-            },
-            goTo(url){
-                let path = url + '.js'
-                nativeService.goTo(path)
-            },
             doing: function(){
                 if(this.progress === 100) {
                     return;
@@ -327,26 +308,6 @@
                     }, 1000);
                 }
                
-            },
-            queryStatus() {
-                var self = this;
-                var sendCmd = cmdFun.createQueryMessage();
-                nativeService.startCmdProcess(
-                    "query",
-                    sendCmd,
-                    function (result) {
-                       //nativeService.hideLoading();
-                        var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
-                        var arr = result_arr.split(",");
-                        var analysisObj = cmdFun.analysisCmd(arr);
-                        self.analysisFun(analysisObj);
-                    },
-                    function (result) {
-                        //nativeService.hideLoading();
-                        //nativeService.toast(result);
-                        // nativeService.toast("查询失败" + JSON.stringify(result));
-                    }
-                );
             },
             cancle(){
                 var self = this;

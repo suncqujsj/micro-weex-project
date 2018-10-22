@@ -185,7 +185,8 @@
             return {
                 wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
                 progress:1,
-                tabs:[{
+                tabs:[
+                    {
                         name:'自动菜单',
                         active:false,
                         rows:autoMenu
@@ -194,11 +195,12 @@
                         name:'加热模式',
                         active:true,
                         rows:modes
-                    }],
+                    }
+                ],
+                accordions:accordions,
                 currentItem:null,
                 current:this.initCurrentData(),
-                show: false,
-                accordions:accordions
+                show: false
             }
         },
         components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2},

@@ -149,37 +149,22 @@
     import sfAccordion from '@/component/sf/custom/accordion.vue'
     import sfDialog from '@/component/sf/custom/dialog.vue'
     import nativeService from "../common/services/nativeService";
-    import cmdFun from "./util.js"; //解析指令
     import query from "../dummy/query";
     import {wxcProgress, wxProgress} from "@/component/sf/wx-progress";
     import mideaSwitch2 from '@/midea-component/switch2.vue'
-    // import { WxPicker } from 'weex-droplet-ui';
     import WxPicker from '@/component/sf/custom/picker.vue';
-    const globalEvent = weex.requireModule("globalEvent");
 
     // config data
     import modes from "./config/modes.js";
     import autoMenu from "./config/auto-menu.js";
-    import accordions from "./config/accordions.js";
 
-    var settingArrData = function(start,end,step){
-        var arr=[];
-        if(start > end){
-            return arr;
-        }
-        for(var i=0;start+i*step <= end;i++){
-            var value = start+step*i;
-            if(value < 0){
-                continue;
-            }
-            arr[i]=value;
-        }
-        return arr;
-    };
+    import accordionMixin from  "./utils/mixins/accordions"
+    import deviceMessageMixin from  "./utils/mixins/deviceMessage"
 
     var numberRecord = 0; //记录跳页面的次数
 
     export default {
+        mixins: [deviceMessageMixin, accordionMixin],
         data(){
             return {
                 wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
@@ -196,10 +181,10 @@
                         rows:modes
                     }
                 ],
-                accordions: this.initAccordions(),
-                currentItem:null,
-                current:this.initCurrentData(),
-                show: false
+                // accordions: this.initAccordions(),
+                // currentItem:null,
+                // current:this.initCurrentData(),
+                // show: false
             }
         },
         components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2},
@@ -217,21 +202,7 @@
         computed:{
         },
         methods: {
-            range: function(key){ // picker属性范围
-                let currentItem = this.currentItem;
-                // debugger;
-                let list = settingArrData(currentItem[key].range[0],currentItem[key].range[1],currentItem[key].range[2]);
-                return {
-                    list,
-                    defaultValue: this.setValue(key),
-                    displayValue (item) {
-                        return item;
-                    }
-                };
-            },
-            setValue: function(key){
-                return this.current[key] || this.currentItem[key].default;
-            },
+
             onTabClicked: function(index){
                 // debugger;
                 // let tabs = JSON.parse(JSON.stringify(this.tabs));
@@ -255,100 +226,10 @@
                 if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6) {
                     numberRecord++;
                     if(numberRecord==1){ //防止多次获取设备状态，多次跳转
+                        nativeService.alert('come in');
                         this.goTo("working");
                     }
                 }
-            },
-            listenerDeviceReiveMessage(){
-                var self = this;        
-                globalEvent.addEventListener("receiveMessage", function(e) {
-                    var str = e.data;
-                    // nativeService.alert(str);
-                    var arr = str.split(",");
-                    var analysisObj = cmdFun.analysisCmd(arr); //解析04上行指令
-                    self.analysisFun(analysisObj);
-                });
-            },
-            viewdisappear(){
-                globalEvent.removeEventListener("receiveMessage");
-            },
-            viewappear(){
-                this.listenerDeviceReiveMessage();
-            },
-            updateAccordionFoldingStatus: function(key, value){
-                // debugger;
-                let accordions = JSON.parse(JSON.stringify(this.accordions));
-                let accordionLen = this.accordions.length;
-                for(let index=0;index < accordionLen;index++) {
-                    let item = accordions[index];
-                    if (key === index) {
-                        item.isFolded = value;
-                    } else {
-                        if (!value && !item.isFolded) {
-                            item.isFolded = true;
-                        }
-                    }
-                }
-                this.accordions = accordions;
-            },
-            initAccordions: function(){
-                return accordions;
-            },
-            initCurrentData: function(){
-                return {
-                    time: null,
-                    temperature: null,
-                    preheat:null,
-                    steamAmount:0,
-                    fireAmount:0
-                }
-            },
-            resetState: function(){
-                this.accordions = this.initAccordions();
-                this.current = this.initCurrentData();
-            },
-            closeDialog(e) {
-                var self = this;
-                this.show = false;
-                if (e.type === 'cancel'){
-                    this.show = false;
-                    this.resetState();
-                    return;
-                } 
-
-                let jsonCmd = {
-                    mode: this.currentItem.mode,
-                    minute: this.setValue('time'),
-                    temperature: this.setValue('temperature'),
-                    preheat: this.setValue('preheat'),
-                    steamAmount: this.setValue('steamAmount'),
-                    fireAmount: this.setValue('fireAmount')
-                };
-                // debugger;
-                // return;
-                let deviceCmd = cmdFun.createControlMessage(jsonCmd);
-                nativeService.startCmdProcess(
-                    "control",
-                    deviceCmd,
-                    function(result){
-                        //nativeService.alert(result);
-                       self.queryStatus();
-                    },
-                    function(result){
-                        //nativeService.alert(result);
-                        console.log('fail', result);
-                    }
-                )
-            },
-            goBack(){
-                nativeService.backToNative()
-            },
-            handlePickerChange(data, key){
-                this.current[key] = data;
-            },
-            onPreheatChange(event) {
-                this.current.preheat = event.value;
-                console.log('currentPreheat', this.current.preheat);
             },
             doing: function(){
                 if(this.progress === 100) {
@@ -360,32 +241,6 @@
                 window.setTimeout(function () {
                     context.doing();
                 }, 1000);
-            },
-            queryStatus() {
-                var self = this;
-                var sendCmd = cmdFun.createQueryMessage();
-                //nativeService.showLoading();
-                // debugger;
-                nativeService.startCmdProcess(
-                    "query",
-                    sendCmd,
-                    function (result) {
-                        //nativeService.hideLoading();
-                        //nativeService.alert(JSON.stringify(result));
-                        var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
-                        var arr = result_arr.split(",");
-                        var analysisObj = cmdFun.analysisCmd(arr);
-                        self.analysisFun(analysisObj);
-                    },
-                    function (result) {
-                        //nativeService.hideLoading();
-                        // nativeService.toast("查询失败" + JSON.stringify(result));
-                    }
-                );
-            },
-            goTo(url){
-                let path = url + '.js'
-                nativeService.goTo(path,false, true)
             }
         }
     }

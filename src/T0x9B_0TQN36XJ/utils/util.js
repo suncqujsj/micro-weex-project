@@ -1,6 +1,5 @@
-import message from "../common/util/smartMessage";
-import nativeService from "../common/services/nativeService";
-// import { nativeService } from '@/common/services/nativeService.js';
+import message from "../../common/util/smartMessage";
+
 export default {
   //10进制转换8位2进制的方法
   tranformTo2Bit: function(val) {

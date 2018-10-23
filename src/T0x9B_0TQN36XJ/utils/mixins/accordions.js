@@ -88,9 +88,7 @@ const accordionMixin = {
         },
         openDialog(){
             this.show = true;
-            if(this.currentItem && this.currentItem['preheat'].default){
-                this.current.preheat = true;
-            }
+            this.current.preheat = this.currentItem['preheat'].default;
         },
         closeDialog(e) {
             this.show = false;
@@ -104,12 +102,10 @@ const accordionMixin = {
                 mode: this.currentItem.mode,
                 minute: this.setValue('time'),
                 temperature: this.setValue('temperature'),
-                preheat: this.setValue('preheat'),
+                preheat: this.current.preheat,
                 steamAmount: this.setValue('steamAmount'),
                 fireAmount: this.setValue('fireAmount')
             };
-            nativeService.alert(jsonCmd);
-            return;
             this.controlDevice(jsonCmd);
 
         },

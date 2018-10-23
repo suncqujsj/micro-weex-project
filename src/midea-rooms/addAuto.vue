@@ -188,7 +188,6 @@
                         }
                     }else{
                         nativeService.toast('您当前无设备，请绑定设备!')
-                        // return
                     }
                 })
             },

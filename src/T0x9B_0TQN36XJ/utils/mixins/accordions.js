@@ -87,9 +87,7 @@ const accordionMixin = {
         },
         openDialog(){
             this.show = true;
-            if(this.currentItem && this.currentItem['preheat'].default){
-                this.current.preheat = true;
-            }
+            this.current.preheat = this.currentItem['preheat'].default;
         },
         closeDialog(e) {
             this.show = false;

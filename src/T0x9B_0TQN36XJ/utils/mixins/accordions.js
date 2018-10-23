@@ -4,6 +4,7 @@
  */
 
 import accordions from "../../config/accordions.js";
+import  nativeService  from '@/common/services/nativeService.js';
 
 var settingArrData = function(start,end,step){
     var arr=[];
@@ -105,7 +106,6 @@ const accordionMixin = {
                 steamAmount: this.setValue('steamAmount'),
                 fireAmount: this.setValue('fireAmount')
             };
-
             this.controlDevice(jsonCmd);
 
         },

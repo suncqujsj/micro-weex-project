@@ -6,13 +6,14 @@
                     :wxc_radius='progress_radius'>
 
             </wxcProgress>
-             <midea-progresscycle-view class="circleprogress" :data="chartJson"></midea-progresscycle-view>
               <div class="time_section" :style="{ height: `${progress_radius*2}px`}">
                 <text class="number_prev" v-if="hasSplit">时</text>
                 <div class="cen">
                     <!--<text class="number-text">{{progress}} {{timeRemain}}</text>-->
                     <text class="number-text">{{timeRemainHour}}{{hasSplit?':':''}}{{timeRemainMinute}}</text>
-                    <text class="work_finish" v-if="workFinishStatus">工作完成</text>
+                    <text class="work_finish" v-if="workSpecialStatus">{{workSpecialStatusText}}</text>
+                    <text class="work_finish" v-if="preheat">预热中</text>
+                    <text class="work_finish" v-if="preheatFinish">预热完成</text>
                 </div>
                 <text class="number_next">{{tag_next}}</text>
             </div>
@@ -163,7 +164,8 @@
                 timeRemainMinute: null,
                 timeRemainSecond: null,
                 hasSplit: false,
-                workFinishStatus: false,
+                workSpecialStatus: false,
+                workSpecialStatusText: '',
                 queryTimer: null,
                 countDownTimer: null,
                 isTimerStop: false,
@@ -240,9 +242,11 @@
                         this.goTo("weex");
                     }
                 }
+                nativeService.toast(analysisObj,5);
                 console.log(1);
                 this.tag_next = '分';
-                this.workFinishStatus = false;
+                this.workSpecialStatus = false;
+                this.workSpecialStatusText = "";
                 this.isTimerStop = false;
                 this.modeText = analysisObj.mode.text;
                 this.modeTemperature = analysisObj.temperature.upLowTemperature;
@@ -273,11 +277,27 @@
                     this.timeRemainMinute = analysisObj.timeRemaining.second;
                 }
                 if(analysisObj.workingState.value == 4){
-                   this.workFinishStatus = true;
+                   this.workSpecialStatus = true;
+                   this.workSpecialStatusText = "工作完成";
                    this.isTimerStop = true;
                    this.tag_next = '';
                    this.timeRemainMinute = '';
+                   return;
                   
+                }
+                 if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 0){
+                    this.workSpecialStatus = true;
+                    this.workSpecialStatusText = "预热中";
+                    this.tag_next = '';
+                    this.timeRemainMinute = '';
+                    return;
+                }
+                if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 1){
+                     this.workSpecialStatus = true;
+                    this.workSpecialStatusText = "预热完成";
+                    this.tag_next = '';
+                    this.timeRemainMinute = '';
+                    return;
                 }
                 if(analysisObj.timeRemaining.hour == 0 && analysisObj.timeRemaining.minute <= 2){
                     timerRecord++;
@@ -287,8 +307,6 @@
                    }
                     
                 }
-               
-                // nativeService.alert(self.timeRemain);
             },
             doing: function(){
                 if(this.progress === 100) {

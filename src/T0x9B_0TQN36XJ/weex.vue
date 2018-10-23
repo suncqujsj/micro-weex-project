@@ -4,7 +4,7 @@
         height: 100%;
     }
     .bg {
-        background-image: linear-gradient(to bottom, #FFCD00, #FFB632);
+        background-image: linear-gradient(to bottom, #FFD321, #FFB632);
     }
     .panel-state{
         @h:30*2px;
@@ -83,7 +83,7 @@
 <template>
     <scroller class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
 
-        <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.jpg" title="烤箱" titleText="white" bgColor="red" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
+        <midea-header leftImg="assets/img/header/icon_back_white@3x.jpg" title="烤箱" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
 
         <!--面板切换tabs-->
         <div class="panel">

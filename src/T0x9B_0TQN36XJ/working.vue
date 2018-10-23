@@ -11,7 +11,7 @@
                 <div class="cen">
                     <!--<text class="number-text">{{progress}} {{timeRemain}}</text>-->
                     <text class="number-text">{{timeRemainHour}}{{hasSplit?':':''}}{{timeRemainMinute}}</text>
-                    <text class="work_finish" v-if="workFinishStatus">工作完成</text>
+                    <text class="work_finish" v-if="workSpecialStatus">{{workSpecialStatusText}}</text>
                     <text class="work_finish" v-if="preheat">预热中</text>
                     <text class="work_finish" v-if="preheatFinish">预热完成</text>
                 </div>
@@ -164,9 +164,8 @@
                 timeRemainMinute: null,
                 timeRemainSecond: null,
                 hasSplit: false,
-                workFinishStatus: false,
-                preheat: false,
-                preheatFinish: false,
+                workSpecialStatus: false,
+                workSpecialStatusText: '',
                 queryTimer: null,
                 countDownTimer: null,
                 isTimerStop: false,
@@ -246,9 +245,8 @@
                 nativeService.toast(analysisObj,5);
                 console.log(1);
                 this.tag_next = '分';
-                this.workFinishStatus = false;
-                this.preheatFinish = false;
-                this.preheat = false;
+                this.workSpecialStatus = false;
+                this.workSpecialStatusText = "";
                 this.isTimerStop = false;
                 this.modeText = analysisObj.mode.text;
                 this.modeTemperature = analysisObj.temperature.upLowTemperature;
@@ -279,7 +277,8 @@
                     this.timeRemainMinute = analysisObj.timeRemaining.second;
                 }
                 if(analysisObj.workingState.value == 4){
-                   this.workFinishStatus = true;
+                   this.workSpecialStatus = true;
+                   this.workSpecialStatusText = "工作完成";
                    this.isTimerStop = true;
                    this.tag_next = '';
                    this.timeRemainMinute = '';
@@ -287,13 +286,15 @@
                   
                 }
                  if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 0){
-                    this.preheat = true;
+                    this.workSpecialStatus = true;
+                    this.workSpecialStatusText = "预热中";
                     this.tag_next = '';
                     this.timeRemainMinute = '';
                     return;
                 }
                 if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 1){
-                    this.preheatFinish = true;
+                     this.workSpecialStatus = true;
+                    this.workSpecialStatusText = "预热完成";
                     this.tag_next = '';
                     this.timeRemainMinute = '';
                     return;

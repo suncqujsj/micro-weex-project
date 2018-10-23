@@ -12,8 +12,8 @@
         .white;
         .ta;
         .lh(60px);
-        .ma-t(36*2px);
-        .ma-b(44*2px);
+        .ma-t(35*2px);
+        .ma-b(45*2px);
     }
     .tabs{
         .row;
@@ -81,7 +81,7 @@
 </style>
 
 <template>
-    <scroller class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
+    <div class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
 
         <midea-header leftImg="assets/img/header/icon_back_white@3x.jpg" title="烤箱" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
 
@@ -99,7 +99,7 @@
 
         <!--模式操作按钮-->
         <template v-for="(tab, x) in tabs">
-            <div :class="['tab-content-' + x]" v-if="tab.active" :style="{height: wrapHeight - 224*2}">
+            <scroller :class="['tab-content-' + x]" v-if="tab.active" :style="{height: wrapHeight - 204*2}">
                 <div class="bg-white" :class="[x=1 && 'auto_menu']" v-for="row in tab.rows">
                     <text v-if="row.title" class="block-title">{{row.title}}</text>
                     <div class="icon-buttons">
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </scroller>
         </template>
 
         <!--<text class="r test" @click="doing">{{progress}}</text>-->
@@ -144,7 +144,7 @@
             </div>
         </sf-dialog>
 
-    </scroller>
+    </div>
 </template>
 
 <script>

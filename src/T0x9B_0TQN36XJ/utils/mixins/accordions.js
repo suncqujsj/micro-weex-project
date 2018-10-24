@@ -106,9 +106,8 @@ const accordionMixin = {
                 steamAmount: this.setValue('steamAmount'),
                 fireAmount: this.setValue('fireAmount')
             };
-            nativeService.alert(jsonCmd);
-            this.controlDevice(jsonCmd);
 
+            this.controlDevice(jsonCmd, e.working);
         },
     }
 };

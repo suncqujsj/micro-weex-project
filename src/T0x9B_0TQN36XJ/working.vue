@@ -7,10 +7,10 @@
 
             </wxcProgress>
               <div class="time_section" :style="{ height: `${progress_radius*2}px`}">
-                <text class="number_prev" v-if="hasSplit">时</text>
+                <text class="number_prev" v-if="hasSplit && !workSpecialStatusText">时</text>
                 <div class="cen">
                     <!--<text class="number-text">{{progress}} {{timeRemain}}</text>-->
-                    <text class="number-text">{{timeRemainHour}}{{hasSplit?':':''}}{{timeRemainMinute}}</text>
+                    <text class="number-text"  v-if="!workSpecialStatusText">{{timeRemainHour}}{{hasSplit?':':''}}{{timeRemainMinute}}</text>
                     <text class="work_finish" v-if="workSpecialStatusText">{{workSpecialStatusText}}</text>
                 </div>
                 <text class="number_next">{{tag_next}}</text>
@@ -25,7 +25,7 @@
         <div class="detail_section">
             <text class="detail_text">{{modeText}}{{modeTemperature}}°</text>
         </div>
-        <div class="detail_section" v-if="!workSpecialStatus">
+        <div class="detail_section" v-if="!workSpecialStatusText">
             <image class="setting_icon" src="assets/img/group_setting@3x.png" @click="setting"></image>
         </div>
         <div class="footer_section">
@@ -231,6 +231,9 @@
                 mode: null,
                 modeText: '',
                 modeTemperature: null,
+                preheat: null,
+                fire: null,
+                steam: null,
                 timeRemainHour: null,
                 timeRemainMinute: null,
                 timeRemainSecond: null,
@@ -323,7 +326,7 @@
                 }
                 // nativeService.toast(analysisObj,5);
                 console.log(1);
-                this.mode = analysisObj.mode.value;
+                this.hasSplit = false;
                 this.warningDialogShow = false;
                 this.tag_next = '分';
                 this.workSpecialStatus = false;
@@ -332,6 +335,11 @@
                 this.statusTag = '剩余时间';
                 this.modeText = analysisObj.mode.text;
                 this.modeTemperature = analysisObj.temperature.upLowTemperature;
+                this.preheat = analysisObj.displaySign.preheat;
+                this.fire = analysisObj.fire.value;
+                this.steam = analysisObj.steam.value;
+                this.mode = analysisObj.mode.value;
+                
                 //提示
                 if(analysisObj.displaySign.isError){
                     this.warningDialogShow = true;
@@ -357,10 +365,10 @@
                     this.timeRemainMinute = analysisObj.timeRemaining.minute>9?analysisObj.timeRemaining.minute:'0'+analysisObj.timeRemaining.minute;
                 }
                 this.timeRemainSecond = analysisObj.timeRemaining.second;
-                this.hasSplit = true;
-                if(parseInt(self.timeRemainHour) == 0){
+                if(parseInt(self.timeRemainHour) > 0){
+                    this.hasSplit = true;
+                }else{
                     this.timeRemainHour = '';
-                    this.hasSplit = false;
                 }
                 if(analysisObj.workingState.value == 3){
                     this.btnText = "暂停";
@@ -471,6 +479,10 @@
                 }
                 this.currentItem = _item;
                 this.current.time = this.timeRemainMinute;
+                this.current.temperature = this.modeTemperature;
+                this.current.preheat = this.preheat;
+                this.current.fireAmount = this.fire;
+                this.current.steamAmount = this.steam;
                 this.openDialog();
             },
             knowClicked(){

@@ -48,7 +48,6 @@ const deviceMessageMixin = {
             );
         },
         controlDevice(jsonCmd, working){
-            // return;
             let context = this;
             let deviceCmd = cmdFun.createControlMessage(jsonCmd, working);
             nativeService.alert(deviceCmd);

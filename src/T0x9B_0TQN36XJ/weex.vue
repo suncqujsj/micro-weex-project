@@ -65,8 +65,9 @@
         height: 78*2px;
     }
     .button-icon{
-        .square(112px);
+        .round(112px);
         .ma-b(10*2px);
+        .bg-gray;
     }
     .button-text{
         .f(12*2px);
@@ -104,7 +105,10 @@
                     <text v-if="row.title" class="block-title">{{row.title}}</text>
                     <div class="icon-buttons">
                         <div class="icon-button column" v-for="item in row.iconButtons" @click="onIconButtonClicked(item)">
-                            <image class="button-icon" :src="item.icon"></image>
+                            <image v-if="item.icon" class="button-icon" :src="item.icon"></image>
+                            <div v-else class="button-icon row a-c j-c">
+                                <text>{{item.time.default}}'</text>
+                            </div>
                             <text class="button-text">{{item.text}}</text>
                         </div>
                     </div>

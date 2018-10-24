@@ -8,7 +8,7 @@ let data = [
         title: 'S类菜单',
         iconButtons: [
             {
-                'icon': 'assets/img/modes/steam@3x.png',
+                'icon': '',
                 'text': '清蒸鱼',
                 'mode': 0xE0,
                 time:{
@@ -47,7 +47,7 @@ let data = [
         title: 'P类菜单',
         iconButtons: [
             {
-                'icon': 'assets/img/modes/steam@3x.png',
+                'icon': '',
                 'text': '披萨',
                 'mode': 0xE0,
                 time:{

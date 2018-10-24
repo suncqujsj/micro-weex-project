@@ -25,7 +25,7 @@
         <div class="detail_section">
             <text class="detail_text">{{modeText}}{{modeTemperature}}°</text>
         </div>
-        <div class="detail_section">
+        <div class="detail_section" v-if="!workSpecialStatus">
             <image class="setting_icon" src="assets/img/group_setting@3x.png" @click="setting"></image>
         </div>
         <div class="footer_section">
@@ -162,7 +162,7 @@
     .detail_text{
         .white;
         .f(36px);
-        margin-top: 30px;
+        margin-top: 60px;
     }
     .setting_icon{
         width: 48px;

@@ -36,10 +36,10 @@
         .f(18*2px);
         .white;
     }
-    .tab-content-0{
+    .tab-content-gray{
         background-color: #F3F3F3;
     }
-    .tab-content-1{
+    .tab-content-white{
         .bg-white;
     }
     .block-title{
@@ -88,7 +88,7 @@
         <!--面板切换tabs-->
         <div class="panel">
             <text class="panel-state">待机中</text>
-            <div class="tabs">
+            <div v-if="tabs.length>1" class="tabs">
                 <template v-for="(tab, x) in tabs">
                     <div class="tab" @click="onTabClicked(x)">
                         <text class="tab-text" :class="[tab.active && 'tab-active' ]">{{tab.name}}</text>
@@ -99,8 +99,8 @@
 
         <!--模式操作按钮-->
         <template v-for="(tab, x) in tabs">
-            <scroller :class="['tab-content-' + x]" v-if="tab.active" :style="{height: wrapHeight - 204*2}">
-                <div class="bg-white" :class="[x=1 && 'auto_menu']" v-for="row in tab.rows">
+            <scroller :class="[tab.rows[0].title ?  'tab-content-gray' : 'tab-content-white' ]" v-if="tab.active" :style="{height: wrapHeight - 204*2}">
+                <div class="bg-white" :class="[tab.rows[0].title && 'auto_menu']" v-for="row in tab.rows">
                     <text v-if="row.title" class="block-title">{{row.title}}</text>
                     <div class="icon-buttons">
                         <div class="icon-button column" v-for="item in row.iconButtons" @click="onIconButtonClicked(item)">
@@ -184,11 +184,11 @@
                 wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
                 progress:1,
                 tabs:[
-                    {
-                        name:'自动菜单',
-                        active:false,
-                        rows:autoMenu
-                    },
+                    // {
+                    //     name:'自动菜单',
+                    //     active:true,
+                    //     rows:autoMenu
+                    // },
                     {
                         name:'加热模式',
                         active:true,

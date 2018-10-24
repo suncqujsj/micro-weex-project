@@ -5,7 +5,7 @@
 
 let data = [
     {
-        title: '1-7岁儿童',
+        title: 'S类菜单',
         iconButtons: [
             {
                 'icon': 'assets/img/modes/steam@3x.png',
@@ -40,7 +40,12 @@ let data = [
                     default: 1,
                     range:null
                 }
-            },
+            }
+        ]
+    },
+    {
+        title: 'P类菜单',
+        iconButtons: [
             {
                 'icon': 'assets/img/modes/steam@3x.png',
                 'text': '披萨',

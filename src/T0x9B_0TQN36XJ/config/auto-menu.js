@@ -40,6 +40,40 @@ let data = [
                     default: 1,
                     range:null
                 }
+            },
+            {
+                'icon': 'assets/img/modes/steam@3x.png',
+                'text': '披萨',
+                'mode': 0xE0,
+                time:{
+                    set: true,
+                    default:10,
+                    range:[1,90,1]
+                },
+                temperature:{
+                    set: false,
+                    default:220,
+                    range:null
+                },
+                preheat:{
+                    set:false,
+                    default: false
+                },
+                steamAmount:{
+                    set:false,
+                    default:0,
+                    range:null
+                },
+                fireAmount:{
+                    set:false,
+                    default:0,
+                    range:null
+                },
+                recipeId:{
+                    set:false,
+                    default: 12,
+                    range:null
+                }
             }
         ]
     }

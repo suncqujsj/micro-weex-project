@@ -10,7 +10,7 @@ let data = [
             {
                 'icon': 'assets/img/modes/steam@3x.png',
                 'text': '清蒸鱼',
-                'mode': 0x10,
+                'mode': 0xE0,
                 time:{
                     set: true,
                     default:10,

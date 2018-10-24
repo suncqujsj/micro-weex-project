@@ -5,7 +5,7 @@
 
 let data = [
     {
-        title: 'S类菜单',
+        title: '蒸汽菜单',
         iconButtons: [
             {
                 'icon': '',

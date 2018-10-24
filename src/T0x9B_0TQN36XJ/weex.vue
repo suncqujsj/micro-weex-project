@@ -52,6 +52,8 @@
     .icon-buttons{
         .row;
         padding: 0 3.5*2px;
+        width: 736px;
+        overflow-x: scroll;
     }
     .auto_menu{
         .ma-b(12px);
@@ -126,7 +128,7 @@
         <!--</wxcProgress>-->
 
         <!--模式参数设置弹窗-->
-        <sf-dialog :show="show" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog()" @mideaDialogConfirmBtnClicked="closeDialog">
+        <sf-dialog :show="show" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <template v-for="tab in tabs">
                     <text v-if="tab.active" class="content-title">{{tab.name}}</text>

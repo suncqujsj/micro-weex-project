@@ -44,7 +44,7 @@ const accordionMixin = {
             };
         },
         setValue: function(key){
-            return this.current[key] || this.currentItem[key].default;
+            return this.current[key] || (this.currentItem[key] ? this.currentItem[key].default : null);
         },
         updateAccordionFoldingStatus: function(key, value){
             // debugger;
@@ -106,9 +106,12 @@ const accordionMixin = {
                 preheat: this.current.preheat,
                 steamAmount: this.setValue('steamAmount'),
                 fireAmount: this.setValue('fireAmount'),
-                recipeId: this.setValue('recipeId'),
+                recipeId:this.setValue('recipeId')
             };
 
+            // if(jsonCmd.mode === 0xE0) { // 自动菜单
+            //     jsonCmd.recipeId =  this.setValue('recipeId');
+            // }
             this.controlDevice(jsonCmd, e.working);
         },
     }

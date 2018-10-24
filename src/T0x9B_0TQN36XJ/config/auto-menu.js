@@ -9,53 +9,37 @@ let data = [
         iconButtons: [
             {
                 'icon': 'assets/img/modes/steam@3x.png',
-                'text': '蒸汽',
-                'mode': 0x20,
-                pickTime: true,
-                pickTemperature: true,
-                switchPreheat:false,
-                defaultTime: 10,
-                defaultTemperature: 100
-            },
-            {
-                'icon': 'assets/img/modes/steam_and_hot_wind@3x.png',
-                'text': '蒸汽+热风',
-                'mode': 0x31
-            },
-            {
-                'icon': 'assets/img/modes/broil@3x.png',
-                'text': '烧烤',
-                'mode': 0x40
-            },
-            {
-                'icon': 'assets/img/modes/hot_wind@3x.png',
-                'text': '热风对流',
-                'mode': 0x41
-            }
-        ]
-    },
-    {
-        title: '1-8岁儿童',
-        iconButtons: [
-            {
-                'icon': 'assets/img/modes/hot_wind_and_broil@3x.png',
-                'text': '热风烧烤',
-                'mode': 0x43
-            },
-            {
-                'icon': 'assets/img/modes/clean@3x.png',
-                'text': '清洁',
-                'mode': 0xC1
-            },
-            {
-                'icon': 'assets/img/modes/heat_preservation@3x.png',
-                'text': '保温',
-                'mode': 0xD0
-            },
-            {
-                'icon': 'assets/img/modes/fermentation@3x.png',
-                'text': '发酵',
-                'mode': 0xB0
+                'text': '清蒸鱼',
+                'mode': 0x10,
+                time:{
+                    set: true,
+                    default:10,
+                    range:[1,90,1]
+                },
+                temperature:{
+                    set: false,
+                    default:100,
+                    range:null
+                },
+                preheat:{
+                    set:false,
+                    default: false
+                },
+                steamAmount:{
+                    set:false,
+                    default:0,
+                    range:null
+                },
+                fireAmount:{
+                    set:false,
+                    default:0,
+                    range:null
+                },
+                recipeId:{
+                    set:false,
+                    default: 1,
+                    range:null
+                }
             }
         ]
     }

@@ -124,7 +124,9 @@
         <!--模式参数设置弹窗-->
         <sf-dialog :show="show" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog()" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
-                <text class="content-title">加热模式</text>
+                <template v-for="tab in tabs">
+                    <text v-if="tab.active" class="content-title">{{tab.name}}</text>
+                </template>
                 <template v-for="(item, index) in accordions">
                     <template v-if="item.type==='picker'">
                         <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">

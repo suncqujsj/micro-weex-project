@@ -71,7 +71,8 @@ const accordionMixin = {
                 temperature: null,
                 preheat:false,
                 steamAmount:0,
-                fireAmount:0
+                fireAmount:0,
+                recipeId:null
             }
         },
         resetState: function(){
@@ -104,7 +105,8 @@ const accordionMixin = {
                 temperature: this.setValue('temperature'),
                 preheat: this.current.preheat,
                 steamAmount: this.setValue('steamAmount'),
-                fireAmount: this.setValue('fireAmount')
+                fireAmount: this.setValue('fireAmount'),
+                recipeId: this.setValue('recipeId'),
             };
 
             this.controlDevice(jsonCmd, e.working);

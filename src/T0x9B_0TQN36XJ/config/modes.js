@@ -183,7 +183,7 @@ let modes = [
             {
                 'icon': 'assets/img/modes/heat_preservation@3x.png',
                 'text': '保温',
-                'mode': 0x41,
+                'mode': 0xD0,
                 time:{
                     set: true,
                     default:10,

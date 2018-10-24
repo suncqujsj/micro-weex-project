@@ -23,9 +23,9 @@
 
        
         <div class="detail_section">
-            <text class="detail_text">{{modeText}}{{modeTemperature}}°</text>
+            <text class="detail_text">{{modeText}}{{modeTemperature>0?modeTemperature+'°':''}}</text>
         </div>
-        <div class="detail_section" v-if="!workSpecialStatusText">
+        <div class="detail_section" v-if="hasSetting">
             <image class="setting_icon" src="assets/img/group_setting@3x.png" @click="setting"></image>
         </div>
         <div class="footer_section">
@@ -244,6 +244,8 @@
                 countDownTimer: null,
                 isTimerStop: false,
                 statusTag: "剩余时间",
+                hasSetting: false, //是否有时间温度设置
+                recipeId: 0,
 
                 warningDialogShow: false,
                 warningDialogTitle: "温馨提示",
@@ -303,16 +305,23 @@
                 var self = this;
                 var allSeconds = minute*60+second;
                 this.countDownTimer = setInterval(function(){
-                    if(self.isTimerStop && allSeconds<60){
+                   
+                    if(self.isTimerStop && allSeconds<60 && allSeconds>0){
                          self.tag_next = '秒';
                          self.timeRemainMinute = allSeconds;
-                        return;
+                         return;
                     }
-                    allSeconds--;
-                    if(allSeconds<60){
+                     if(self.isTimerStop && allSeconds<=0){
+                         self.tag_next = '';
+                         clearInterval(this.countDownTimer);
+                         return;
+                    }
+                     allSeconds--;
+                     if(allSeconds<60 && allSeconds>0){
                          self.tag_next = '秒';
                          self.timeRemainMinute = allSeconds;
                     }
+                   
                 },timeSet*1000);
             },
             analysisFun(analysisObj) {
@@ -331,6 +340,7 @@
                 this.tag_next = '分';
                 this.workSpecialStatus = false;
                 this.workSpecialStatusText = "";
+                this.hasSetting = false;
                 this.isTimerStop = false;
                 this.statusTag = '剩余时间';
                 this.modeText = analysisObj.mode.text;
@@ -339,6 +349,17 @@
                 this.fire = analysisObj.fire.value;
                 this.steam = analysisObj.steam.value;
                 this.mode = analysisObj.mode.value;
+                this.recipeId = analysisObj.recipeId.value;
+
+                //特殊处理，其他型号要去掉
+                if(this.modeTemperature<100 && this.mode == 0x41){
+                    this.mode = 0xD0;
+                    this.modeText = "保温";
+                }
+                 if(this.modeTemperature<100 && this.mode == 0x43){
+                    this.mode = 0xB0;
+                    this.modeText = "发酵";
+                }
                 
                 //提示
                 if(analysisObj.displaySign.isError){
@@ -371,14 +392,22 @@
                     this.timeRemainHour = '';
                 }
                 if(analysisObj.workingState.value == 3){
+                    this.hasSetting = true;
                     this.btnText = "暂停";
                     this.btnSrc = "assets/img/footer/icon_pause@2x.png";
+                    // if(analysisObj.mode.value == 0xE0){//云菜谱没有设置时间温度蒸汽那些
+                    //      this.hasSetting = false;
+                    // }
                 }
                  if(analysisObj.workingState.value == 6){
+                    this.hasSetting = true;
                     this.btnText = "继续";
                     this.btnSrc = "assets/img/footer/icon_start@2x.png";
                     this.isTimerStop = true;
                     this.statusTag = '暂停中';
+                    // if(analysisObj.mode.value == 0xE0){//云菜谱没有设置时间温度蒸汽那些
+                    //      this.hasSetting = false;
+                    // }
                 }
 
                 if(analysisObj.timeRemaining.hour == 0 && analysisObj.timeRemaining.minute == 0 && analysisObj.timeRemaining.second > 0){
@@ -392,7 +421,7 @@
                    this.tag_next = '';
                    this.timeRemainMinute = '';
                    this.statusTag = '';
-                   return;
+                   
                   
                 }
                  if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 0){
@@ -401,17 +430,20 @@
                     this.tag_next = '';
                     this.timeRemainMinute = '';
                     this.statusTag = '';
-                    return;
+                    this.hasSetting = false;
+                    
                 }
                 if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 1){
                      this.workSpecialStatus = false;
                     this.workSpecialStatusText = "预热完成";
+                    this.warningDialogShow = true;
+                    this.warningDialogContent = "预热已完成，请放进食物再按'继续'，继续烹饪";
                     this.tag_next = '';
                     this.timeRemainMinute = '';
                     this.statusTag = '';
                     this.btnText = "继续";
                     this.btnSrc = "assets/img/footer/icon_start@2x.png";
-                    return;
+                   
                 }
                 if(analysisObj.timeRemaining.hour == 0 && analysisObj.timeRemaining.minute <= 2){
                     timerRecord++;
@@ -468,22 +500,54 @@
                 )
             },
             setting(){
-                var _item = {};
-                for(var i=0; i<modes.length; i++){
-                    var iconButtons = modes[i].iconButtons;
-                    for(var m=0; m<iconButtons.length; m++){
-                        if(this.mode == modes[i].iconButtons[m].mode){
-                            _item = modes[i].iconButtons[m];
-                        }
-                    }
+                var _isRecipe = false;
+                if(this.mode == 0xE0){
+                    _isRecipe = true;
                 }
+                var _item = this.getCurrentItem(_isRecipe);
                 this.currentItem = _item;
-                this.current.time = this.timeRemainMinute;
+                var time = this.timeRemainMinute;
+                if(this.tag_next == '秒'){
+                    time = 1;
+                }
+                this.current.time = time;
                 this.current.temperature = this.modeTemperature;
                 this.current.preheat = this.preheat;
                 this.current.fireAmount = this.fire;
                 this.current.steamAmount = this.steam;
                 this.openDialog();
+            },
+            getCurrentItem(isRecipe){
+                var  _item = {};
+                if(isRecipe){
+                    var  currentModes = autoMenu;
+                     for(var i=0; i<currentModes.length; i++){
+                        var iconButtons = currentModes[i].iconButtons;
+                        for(var m=0; m<iconButtons.length; m++){
+                            if(this.recipeId == currentModes[i].iconButtons[m].recipeId.default){
+                                _item = currentModes[i].iconButtons[m];
+                                break;
+                            }
+                        
+                        }
+                    }
+                }else{
+                     var  currentModes = modes;
+                     for(var i=0; i<currentModes.length; i++){
+                        var iconButtons = currentModes[i].iconButtons;
+                        for(var m=0; m<iconButtons.length; m++){
+                           
+                            if(this.mode == currentModes[i].iconButtons[m].mode){
+                                _item = currentModes[i].iconButtons[m];
+                                 break;
+                            }
+                        
+                        }
+                    }
+                }
+               
+               
+                return _item;
             },
             knowClicked(){
                 this.warningDialogShow = false;

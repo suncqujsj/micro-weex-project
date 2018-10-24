@@ -1,4 +1,5 @@
 import message from "../../common/util/smartMessage";
+import  nativeService from '@/common/services/nativeService';
 
 export default {
   //10进制转换8位2进制的方法
@@ -23,7 +24,8 @@ export default {
       {'text': '热风烧烤','mode': 0x43},
       {'text': '清洁','mode': 0xC1},
       {'text': '保温','mode': 0xD0},
-      {'text': '发酵','mode': 0xB0}
+      {'text': '发酵','mode': 0xB0},
+      {'text': '自动菜谱','mode': 0xE0},
     ];
     for(var i=0; i<modeArr.length; i++){
       if(modeValue == modeArr[i].mode){
@@ -46,8 +48,15 @@ export default {
     var hour = time/60;
     var minute = time%60;
     var second = 0;
+    var set_mode = params.mode;
     var messageBody = message.createMessageBody(22); 
     if(working){//工作中设置类 byte11 发04，其他byte发ff
+      if(params.mode == 0xB0){ //这款设备特殊处理，发酵，下发0x43
+        set_mode = 0x43;
+      }
+      if(params.mode == 0xD0){ //这款设备特殊处理，保温，下发0x41
+        set_mode = 0x41;
+      }
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 4);
       message.setByte(messageBody, 2, 0xff);
@@ -58,24 +67,35 @@ export default {
       message.setByte(messageBody, 7, hour);
       message.setByte(messageBody, 8, minute);
       message.setByte(messageBody, 9, second);
-      message.setByte(messageBody, 10, params.mode);
+      message.setByte(messageBody, 10, set_mode);
       message.setByte(messageBody, 12, params.temperature);
       // message.setByte(messageBody, 14, params.temperature);
       message.setByte(messageBody, 15, params.fireAmount);
       message.setByte(messageBody, 16, params.steamAmount);
     }else{
+      if(params.mode == 0xB0){ //这款设备特殊处理，发酵，下发0x43
+        set_mode = 0x43;
+      }
+      if(params.mode == 0xD0){ //这款设备特殊处理，保温，下发0x41
+        set_mode = 0x41;
+      }
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 1);
+      message.setByte(messageBody, 2, 0);
+      message.setByte(messageBody, 3, 0);
+      message.setByte(messageBody, 4, params.recipeId);
+      message.setByte(messageBody, 5, 0);
       message.setByte(messageBody, 6, params.preheat?1:0);
       message.setByte(messageBody, 7, hour);
       message.setByte(messageBody, 8, minute);
       message.setByte(messageBody, 9, second);
-      message.setByte(messageBody, 10, params.mode);
+      message.setByte(messageBody, 10, set_mode);
       message.setByte(messageBody, 12, params.temperature);
       // message.setByte(messageBody, 14, params.temperature);
       message.setByte(messageBody, 15, params.fireAmount);
       message.setByte(messageBody, 16, params.steamAmount);
     }
+    
   
     var sendcmd = message.createMessage(0x9B, 0x02, messageBody);
     return sendcmd;
@@ -133,13 +153,16 @@ export default {
     return sendMessage;
   },
   analysisCmd: function(requestCmd) {
-    // nativeService.alert(requestCmd);
+    // nativeService.toast(requestCmd,6);
     var obj = {
       workingState:{
           name:"工作状态",value:0x00,view:{1:"省电",2:"待机",3:"工作中",4:"烹饪完成",5:"预约中",6:"暂停",7:"云菜谱段间等待",8:"爱心3秒"}
       },
       mode:{
           name:"烹饪模式",text: '',value:0x00
+      },
+      recipeId:{
+        name:"菜谱id",text: '',value:0x00
       },
       displaySign:{
           name:"显示标志",
@@ -165,12 +188,20 @@ export default {
         downHighTemperature: {name:"下管设置温度：高",value: 0x00},
         downLowTemperature: {name:"下管设置温度：低",value: 0x00},
       },
+      realTemperature:{
+        name:"发热管实际的温度",
+        upHighTemperature: {name:"上管实际温度：高",value: 0x00},
+        upLowTemperature: {name:"上管实际温度：低",value: 0x00},
+        downHighTemperature: {name:"下管实际温度：高",value: 0x00},
+        downLowTemperature: {name:"下管实际温度：低",value: 0x00},
+      },
       fire:{name: "火力",value: 0x00},
       weight:{name: "重量",value: 0x00},
       steam:{name: "蒸汽量",value: 0x00},
   };
   // if((parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)) && parseInt(requestCmd[10])==0){
     obj.workingState.value = parseInt(requestCmd[11]);    
+    obj.recipeId.value = parseInt(requestCmd[12])*256*256+parseInt(requestCmd[13])*256+parseInt(requestCmd[14]);
     obj.mode.value = parseInt(requestCmd[19]);
     obj.mode.text = this.modeValueToModeText(parseInt(requestCmd[19]));        
     obj.displaySign.lock = message.getBit(requestCmd, 26, 0);
@@ -184,10 +215,19 @@ export default {
     obj.timeRemaining.hour = parseInt(requestCmd[16]);
     obj.timeRemaining.minute = parseInt(requestCmd[17]);
     obj.timeRemaining.second = parseInt(requestCmd[18]);
+    
+     //实际温度
+     obj.realTemperature.upHighTemperature = parseInt(requestCmd[20]);
+     obj.realTemperature.upLowTemperature = parseInt(requestCmd[21]);
+     obj.realTemperature.downHighTemperature = parseInt(requestCmd[22]);
+     obj.realTemperature.downLowTemperature = parseInt(requestCmd[23]);
+
+    //设置温度
     obj.temperature.upHighTemperature = parseInt(requestCmd[28]);
     obj.temperature.upLowTemperature = parseInt(requestCmd[29]);
     obj.temperature.downHighTemperature = parseInt(requestCmd[30]);
     obj.temperature.downLowTemperature = parseInt(requestCmd[31]);
+
     obj.fire.value = parseInt(requestCmd[24]);
     obj.weight.value = parseInt(requestCmd[25]);
     obj.steam.value = parseInt(requestCmd[25]);

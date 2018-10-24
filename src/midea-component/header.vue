@@ -123,8 +123,8 @@ export default {
   height: 128px;
 }
 .immersion-ipx {
-  padding-top: 68px;
-  height: 156px;
+  padding-top: 88px;
+  height: 176px;
 }
 .header-title {
   flex: 1;

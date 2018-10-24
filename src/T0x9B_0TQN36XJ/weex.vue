@@ -99,7 +99,7 @@
 
         <!--模式操作按钮-->
         <template v-for="(tab, x) in tabs">
-            <scroller :class="[tab.rows[0].title ?  'tab-content-gray' : 'tab-content-white' ]" v-if="tab.active" :style="{height: wrapHeight - 204*2}">
+            <scroller :class="[tab.rows[0].title ?  'tab-content-gray' : 'tab-content-white' ]" v-if="tab.active" :style="{height: wrapHeight - (tab.rows[0].title ? 204*2 : 174*2)}">
                 <div class="bg-white" :class="[tab.rows[0].title && 'auto_menu']" v-for="row in tab.rows">
                     <text v-if="row.title" class="block-title">{{row.title}}</text>
                     <div class="icon-buttons">
@@ -184,14 +184,14 @@
                 wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
                 progress:1,
                 tabs:[
-                    // {
-                    //     name:'自动菜单',
-                    //     active:true,
-                    //     rows:autoMenu
-                    // },
+                    {
+                        name:'自动菜单',
+                        active:true,
+                        rows:autoMenu
+                    },
                     {
                         name:'加热模式',
-                        active:true,
+                        active:false,
                         rows:modes
                     }
                 ],

@@ -1,6 +1,6 @@
 <template>
     <div class="all_section" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
-        <midea-header class="bg"  leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
+        <midea-header   leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
         <div class="progress_section" :style="progress_style">
             <wxcProgress :percent="progress"
                     :wxc_radius='progress_radius'>
@@ -11,18 +11,22 @@
                 <div class="cen">
                     <!--<text class="number-text">{{progress}} {{timeRemain}}</text>-->
                     <text class="number-text">{{timeRemainHour}}{{hasSplit?':':''}}{{timeRemainMinute}}</text>
-                    <text class="work_finish" v-if="workSpecialStatus">{{workSpecialStatusText}}</text>
-                    <text class="work_finish" v-if="preheat">预热中</text>
-                    <text class="work_finish" v-if="preheatFinish">预热完成</text>
+                    <text class="work_finish" v-if="workSpecialStatusText">{{workSpecialStatusText}}</text>
                 </div>
                 <text class="number_next">{{tag_next}}</text>
             </div>
+               <div class="cen status_tag_section">
+                    <text class="status_tag">{{statusTag}}</text>
+                </div>
         
         </div>
 
        
         <div class="detail_section">
             <text class="detail_text">{{modeText}}{{modeTemperature}}°</text>
+        </div>
+        <div class="detail_section">
+            <image class="setting_icon" src="assets/img/group_setting@3x.png" @click="setting"></image>
         </div>
         <div class="footer_section">
             <div class="btn_section" @click="cancle">
@@ -33,7 +37,7 @@
                     <text class="decs_text">关闭</text>
                 </div>
             </div>
-             <div class="btn_section" v-if="!workFinishStatus"  @click="startOrPause">
+             <div class="btn_section" v-if="!workSpecialStatus"  @click="startOrPause">
                 <div class="image_section">
                     <image class="icon_image" :src="btnSrc"></image>
                 </div>
@@ -42,6 +46,51 @@
                 </div>
             </div>
         </div>
+
+        <!--模式参数设置弹窗-->
+        <sf-dialog :show="show" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
+            <div slot="content">
+                <text class="content-title">加热模式</text>
+                <template v-for="(item, index) in accordions">
+                    <template v-if="item.type==='picker'">
+                        <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                            <div slot="content">
+                                <wx-picker :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                            </div>
+                        </sf-accordion>
+                    </template>
+                    <template v-if="item.type==='switch'">
+                        <sf-accordion v-if="currentItem && currentItem[item.key].set" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
+                            <div slot="right">
+                                <midea-switch2 :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
+                            </div>
+                        </sf-accordion>
+                    </template>
+                </template>
+            </div>
+        </sf-dialog>
+
+        <!--故障提示弹窗-->
+        <midea-dialog :title="warningDialogTitle"
+                        :show="warningDialogShow"
+                        :single="true"
+                        @mideaDialogConfirmBtnClicked="knowClicked"
+                        :content="warningDialogContent"
+                        mainBtnColor="#FFB632"
+                        >
+        </midea-dialog>
+
+        <!--确定/取消弹窗-->
+        <midea-actionsheet
+            :items="actionsheetItems"
+            :show="showBar"
+            @close="closeActionsheet"
+            @itemClick="actionsheetItemClick"
+            @btnClick="actionsheetBtnClick"
+            ref="actionsheet"
+            button="我再想想"
+        ></midea-actionsheet>
+
     </div>
 </template>
 
@@ -76,12 +125,20 @@
         .j-c;
         .a-c;
     }
+    .status_tag_section{
+        .pos(r);
+        top: -120px;
+    }
     .number-text{
         .f(160px);
         .white;
     }
     .work_finish{
         .f(60px);
+        .white;
+    }
+    .status_tag{
+        .f(32px);
         .white;
     }
     .number_prev{
@@ -99,14 +156,18 @@
         .f(32px);
     }
     .detail_section{
-        .flex;
         .row;
         .j-c;
     }
     .detail_text{
         .white;
         .f(36px);
-        margin-top: 60px;
+        margin-top: 30px;
+    }
+    .setting_icon{
+        width: 48px;
+        height: 48px;
+        margin-top: 20px;
     }
     .footer_section{
         .row;
@@ -141,6 +202,15 @@
     import cmdFun from "./utils/util.js"; //解析指令
     import query from "../dummy/query";
     import {wxcProgress, wxProgress} from "@/component/sf/wx-progress";
+    import sfAccordion from '@/component/sf/custom/accordion.vue'
+    import sfDialog from '@/component/sf/custom/dialog.vue'
+    import WxPicker from '@/component/sf/custom/picker.vue';
+    import mideaDialog from '@/component/dialog.vue';
+    import mideaActionsheet from '@/midea-component/actionsheet.vue'
+
+        // config data
+    import modes from "./config/modes.js";
+    import autoMenu from "./config/auto-menu.js";
 
     import accordionMixin from  "./utils/mixins/accordions"
     import deviceMessageMixin from  "./utils/mixins/deviceMessage"
@@ -158,6 +228,7 @@
                 tag_next: '分',
                 btnText: "暂停",
                 btnSrc: "assets/img/footer/icon_pause@2x.png",
+                mode: null,
                 modeText: '',
                 modeTemperature: null,
                 timeRemainHour: null,
@@ -169,9 +240,17 @@
                 queryTimer: null,
                 countDownTimer: null,
                 isTimerStop: false,
+                statusTag: "剩余时间",
+
+                warningDialogShow: false,
+                warningDialogTitle: "温馨提示",
+                warningDialogContent: "主人，您的水箱缺水了，要及时添加水哦",
+
+                showBar:false,
+                actionsheetItems:['确定关闭']
             }
         },
-        components: {MideaHeader,wxcProgress,wxProgress},
+        components: {MideaHeader,wxcProgress,wxProgress, mideaDialog, mideaActionsheet,sfDialog,WxPicker,sfAccordion},
         created(){
             var self = this;
            // 模拟设备数据,正式上线，可不注销
@@ -221,7 +300,7 @@
                 var self = this;
                 var allSeconds = minute*60+second;
                 this.countDownTimer = setInterval(function(){
-                    if(self.isTimerStop){
+                    if(self.isTimerStop && allSeconds<60){
                          self.tag_next = '秒';
                          self.timeRemainMinute = allSeconds;
                         return;
@@ -242,14 +321,35 @@
                         this.goTo("weex");
                     }
                 }
-                nativeService.toast(analysisObj,5);
+                // nativeService.toast(analysisObj,5);
                 console.log(1);
+                this.mode = analysisObj.mode.value;
+                this.warningDialogShow = false;
                 this.tag_next = '分';
                 this.workSpecialStatus = false;
                 this.workSpecialStatusText = "";
                 this.isTimerStop = false;
+                this.statusTag = '剩余时间';
                 this.modeText = analysisObj.mode.text;
                 this.modeTemperature = analysisObj.temperature.upLowTemperature;
+                //提示
+                if(analysisObj.displaySign.isError){
+                    this.warningDialogShow = true;
+                    this.warningDialogContent = "设备故障，请联系售后人员";
+                }
+                 if(analysisObj.displaySign.lackWater){
+                    this.warningDialogShow = true;
+                    this.warningDialogContent = "主人，您的水箱缺水了，要及时添加水哦";
+                }
+                if(analysisObj.displaySign.waterBox){
+                    this.warningDialogShow = true;
+                    this.warningDialogContent = "缺水盒";
+                }
+                if(analysisObj.displaySign.doorSwitch){
+                    this.warningDialogShow = true;
+                    this.warningDialogContent = "炉门开了";
+                }
+
                 //倒计时按照设计来
                 this.timeRemainHour = analysisObj.timeRemaining.hour>9?analysisObj.timeRemaining.hour:'0'+analysisObj.timeRemaining.hour;
                 this.timeRemainMinute = analysisObj.timeRemaining.minute;
@@ -270,6 +370,7 @@
                     this.btnText = "继续";
                     this.btnSrc = "assets/img/footer/icon_start@2x.png";
                     this.isTimerStop = true;
+                    this.statusTag = '暂停中';
                 }
 
                 if(analysisObj.timeRemaining.hour == 0 && analysisObj.timeRemaining.minute == 0 && analysisObj.timeRemaining.second > 0){
@@ -282,21 +383,26 @@
                    this.isTimerStop = true;
                    this.tag_next = '';
                    this.timeRemainMinute = '';
+                   this.statusTag = '';
                    return;
                   
                 }
                  if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 0){
-                    this.workSpecialStatus = true;
+                    this.workSpecialStatus = false;
                     this.workSpecialStatusText = "预热中";
                     this.tag_next = '';
                     this.timeRemainMinute = '';
+                    this.statusTag = '';
                     return;
                 }
                 if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 1){
-                     this.workSpecialStatus = true;
+                     this.workSpecialStatus = false;
                     this.workSpecialStatusText = "预热完成";
                     this.tag_next = '';
                     this.timeRemainMinute = '';
+                    this.statusTag = '';
+                    this.btnText = "继续";
+                    this.btnSrc = "assets/img/footer/icon_start@2x.png";
                     return;
                 }
                 if(analysisObj.timeRemaining.hour == 0 && analysisObj.timeRemaining.minute <= 2){
@@ -329,20 +435,7 @@
             },
             cancle(){
                 var self = this;
-                var deviceCmd = cmdFun.cmdCancelWork();
-                nativeService.startCmdProcess(
-                    "control",
-                    deviceCmd,
-                    function(result){
-                       var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
-                        var arr = result_arr.split(",");
-                        var analysisObj = cmdFun.analysisCmd(arr);
-                        self.analysisFun(analysisObj);
-                    },
-                    function(result){
-                        console.log('fail', result);
-                    }
-                )
+                this.openActionsheet();            
             },
             startOrPause(){
                 var self = this;
@@ -366,6 +459,60 @@
                     }
                 )
             },
+            setting(){
+                var _item = {};
+                for(var i=0; i<modes.length; i++){
+                    var iconButtons = modes[i].iconButtons;
+                    for(var m=0; m<iconButtons.length; m++){
+                        if(this.mode == modes[i].iconButtons[m].mode){
+                            _item = modes[i].iconButtons[m];
+                        }
+                    }
+                }
+                this.currentItem = _item;
+                this.current.time = this.timeRemainMinute;
+                this.openDialog();
+            },
+            knowClicked(){
+                this.warningDialogShow = false;
+            },
+             //打开上拉菜单
+            openActionsheet: function () {
+                this.showBar = true;
+                this.$nextTick(e=>{
+                    this.$refs.actionsheet.open();
+                });
+            },
+            //关闭事件
+            closeActionsheet: function () {
+                this.showBar = false;
+            },
+            //点击某个item的事件
+            actionsheetItemClick: function (event) {
+                var self = this;
+                if(event.index == 0){
+                    var deviceCmd = cmdFun.cmdCancelWork();
+                    nativeService.startCmdProcess(
+                        "control",
+                        deviceCmd,
+                        function(result){
+                        var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
+                            var arr = result_arr.split(",");
+                            var analysisObj = cmdFun.analysisCmd(arr);
+                            this.showBar = false;
+                            self.analysisFun(analysisObj);
+                        },
+                        function(result){
+                            console.log('fail', result);
+                        }
+                    )
+                }
+               
+            },
+            //点击取消/确定按钮事件
+            actionsheetBtnClick: function () {
+                this.showBar = false;
+            }
         }
     }
 </script>

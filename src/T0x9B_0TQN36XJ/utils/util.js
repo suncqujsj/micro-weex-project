@@ -140,18 +140,15 @@ export default {
           second: {name:"秒",value: 0x00},
       },
       temperature:{
-        name:"发热管实际温度",
-        upHighTemperature: {name:"上管实际温度：高",value: 0x00},
-        upLowTemperature: {name:"上管实际温度：低",value: 0x00},
-        downHighTemperature: {name:"下管实际温度：高",value: 0x00},
-        downLowTemperature: {name:"下管实际温度：低",value: 0x00},
+        name:"发热管设置的温度",
+        upHighTemperature: {name:"上管设置温度：高",value: 0x00},
+        upLowTemperature: {name:"上管设置温度：低",value: 0x00},
+        downHighTemperature: {name:"下管设置温度：高",value: 0x00},
+        downLowTemperature: {name:"下管设置温度：低",value: 0x00},
       },
       fire:{name: "火力",value: 0x00},
       weight:{name: "重量",value: 0x00},
       steam:{name: "蒸汽量",value: 0x00},
-      errorCode:{
-          name:"错误代码",value:0x00,view:{1:"进水故障",3:"加热故障",4:"溢流故障",8:"分水阀定位故障",9:"触摸提示"}
-      },
   };
   // if((parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)) && parseInt(requestCmd[10])==0){
     obj.workingState.value = parseInt(requestCmd[11]);    

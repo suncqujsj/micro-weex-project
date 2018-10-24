@@ -144,6 +144,15 @@
             </div>
         </sf-dialog>
 
+        <midea-dialog :title="warningDialogTitle"
+                        :show="warningDialogShow"
+                        :single="true"
+                        @mideaDialogConfirmBtnClicked="knowClicked"
+                        :content="warningDialogContent"
+                        mainBtnColor="#FFB632"
+                        >
+        </midea-dialog>
+
     </scroller>
 </template>
 
@@ -163,6 +172,8 @@
 
     import accordionMixin from  "./utils/mixins/accordions"
     import deviceMessageMixin from  "./utils/mixins/deviceMessage"
+    
+    import mideaDialog from '@/component/dialog.vue';
 
     var numberRecord = 0; //记录跳页面的次数
 
@@ -188,9 +199,12 @@
                 // currentItem:null,
                 // current:this.initCurrentData(),
                 // show: false
+                warningDialogShow: false,
+                warningDialogTitle: "温馨提示",
+                warningDialogContent: "主人，您的水箱缺水了，要及时添加水哦"
             }
         },
-        components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2},
+        components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2, mideaDialog},
         created(){
             //模拟设备数据
             nativeService.initMockData({
@@ -226,6 +240,23 @@
             },
             analysisFun(analysisObj) {
                 // nativeService.alert(JSON.stringify(analysisObj));
+                this.warningDialogShow = false;
+                if(analysisObj.displaySign.isError){
+                    this.warningDialogShow = true;
+                    this.warningDialogContent = "设备故障，请联系售后人员";
+                }
+                 if(analysisObj.displaySign.lackWater){
+                    this.warningDialogShow = true;
+                    this.warningDialogContent = "主人，您的水箱缺水了，要及时添加水哦";
+                }
+                if(analysisObj.displaySign.waterBox){
+                    this.warningDialogShow = true;
+                    this.warningDialogContent = "缺水盒";
+                }
+                if(analysisObj.displaySign.doorSwitch){
+                    this.warningDialogShow = true;
+                    this.warningDialogContent = "炉门开了";
+                }
                 if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6) {
                     numberRecord++;
                     if(numberRecord==1){ //防止多次获取设备状态，多次跳转
@@ -233,16 +264,8 @@
                     }
                 }
             },
-            doing: function(){
-                if(this.progress === 100) {
-                    return;
-                }
-                ++this.progress;
-                // this.progress += '1';
-                let context = this;
-                window.setTimeout(function () {
-                    context.doing();
-                }, 1000);
+            knowClicked(){
+                this.warningDialogShow = false;
             }
         }
     }

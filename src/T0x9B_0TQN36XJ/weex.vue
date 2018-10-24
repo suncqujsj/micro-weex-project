@@ -122,7 +122,7 @@
         <!--</wxcProgress>-->
 
         <!--模式参数设置弹窗-->
-        <sf-dialog :show="show" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
+        <sf-dialog :show="show" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog()" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <text class="content-title">加热模式</text>
                 <template v-for="(item, index) in accordions">

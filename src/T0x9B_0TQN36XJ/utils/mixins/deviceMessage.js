@@ -47,10 +47,10 @@ const deviceMessageMixin = {
                 }
             );
         },
-        controlDevice(jsonCmd){
+        controlDevice(jsonCmd, working){
             // return;
             let context = this;
-            let deviceCmd = cmdFun.createControlMessage(jsonCmd);
+            let deviceCmd = cmdFun.createControlMessage(jsonCmd, working);
             nativeService.alert(deviceCmd);
             // return;
             nativeService.startCmdProcess(

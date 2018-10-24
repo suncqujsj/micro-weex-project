@@ -132,6 +132,10 @@
         type: Boolean,
         default: false
       },
+      working: {
+          type: Boolean,
+          default: false
+      },
       single: {
         type: Boolean,
         default: false
@@ -213,7 +217,8 @@
       },
       primaryClicked (e) {
         this.$emit('mideaDialogConfirmBtnClicked', {
-          type: 'confirm'
+          type: 'confirm',
+          working: this.working
         });
       },
       noPromptClicked (e) {

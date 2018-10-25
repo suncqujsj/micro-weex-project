@@ -279,7 +279,7 @@
                     this.sceneSupportDevices = tmpSceneSupoortDevices
 
                     if (this.sceneSupportDevices.length == 0) {
-                        nativeService.toast('您当前无可用于' + this.sceneTypeName + '类型快捷操作的设备，请绑定设备后重试!')
+                        nativeService.toast('您当前无设备，请绑定设备!')
                         nativeService.goBack()
                     }
 
@@ -348,9 +348,6 @@
                         this.unbindDevicesActions = Object.assign({}, this.unbindDevicesActions, tmpUnbindDevicesActions)
                     }
                 }else{
-                    nativeService.toast('您当前无设备，请绑定设备!')
-                    nativeService.goBack()
-
                     nativeService.toast('您当前无设备，请绑定设备!')
                     nativeService.goBack()
                 }

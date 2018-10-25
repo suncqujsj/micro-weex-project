@@ -106,7 +106,7 @@
     .auto-info {margin-left: 20px; width: 175px; }
     .auto-name{ width: 175px; font-size: 28px; color: #000; font-weight: bold; margin-bottom: 8px; text-overflow: ellipsis; lines: 1; }
     .auto-desc{ width: 175px; }
-    .auto-desc-text{ font-size: 24px; color: #C7C7CC; margin-right: 6px;}
+    .auto-desc-text{ font-size: 24px; color: #C7C7CC; margin-right: 6px; width: 170px; lines: 1; text-overflow: ellipsis;}
     .scene-list{  padding-left:30px; padding-right:30px;}
     .scene { width: 690px; height: 206px; padding-bottom: 16px; position: relative; }
     .scene-bg{ width: 690px; height: 185px; position: absolute; }

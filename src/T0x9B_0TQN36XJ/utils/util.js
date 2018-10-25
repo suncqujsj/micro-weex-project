@@ -126,26 +126,13 @@ export default {
     var sendMessage = message.createMessage(0x9B, 0x02, messageBody);
     return sendMessage;
   },
-  //解锁
-  cmdNotLock(){
-    var messageBody = message.createMessageBody(7); 
-    message.setByte(messageBody, 0,0x22);
-    message.setByte(messageBody, 1,0x02);
-    message.setByte(messageBody, 2,0xff);
-    message.setByte(messageBody, 3,0x00);
-    message.setByte(messageBody, 4,0xff);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,0xff);
-    var sendMessage = message.createMessage(0x9B, 0x02, messageBody);
-    return sendMessage;
-  },
    //上锁
-   cmdLock(){
+   cmdLock(params){
     var messageBody = message.createMessageBody(7); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
     message.setByte(messageBody, 2,0xff);
-    message.setByte(messageBody, 3,0x01);
+    message.setByte(messageBody, 3,params.childLock?1:0);
     message.setByte(messageBody, 4,0xff);
     message.setByte(messageBody, 5,0xff);
     message.setByte(messageBody, 6,0xff);

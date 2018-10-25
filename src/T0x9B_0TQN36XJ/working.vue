@@ -1,39 +1,43 @@
 <template>
     <div class="all_section" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
         <midea-header leftImg="assets/img/header/public_ic_back_white@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
-        <div class="progress_section" :style="progress_style">
-            <wxcProgress :percent="progress"
-                    :wxc_radius='progress_radius'>
+        <div class="progress_content">
+            <div class="progress_section" :style="progress_style">
+                <wxcProgress :percent="progress" :progressShow="progressShow"
+                        :wxc_radius='progress_radius'>
 
-            </wxcProgress>
-              <div class="time_section" :style="{ height: `${progress_radius*2}px`}">
-                <text class="number_prev" v-if="hasHour">时</text>
-                <div class="cen">
-                    <!--<text class="number-text">{{progress}} {{timeRemain}}</text>-->
-                    <text :class="['number-text',noTimeShow && 'work_finish']">{{workSpecialStatusText}}</text>
+                </wxcProgress>
+                <div class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
+                    <text class="number_prev" v-if="hasHour">时</text>
+                    <div class="cen">
+                        <!--<text class="number-text">{{progress}} {{timeRemain}}</text>-->
+                        <text :class="['number-text',noTimeShow && 'work_finish']">{{workSpecialStatusText}}</text>
+                    </div>
+                    <text class="number_next">{{tag_next}}</text>
                 </div>
-                <text class="number_next">{{tag_next}}</text>
+                <div class="cen status_tag_section" :style="{width:`${progress_radius*2}px`}">
+                        <text class="status_tag">{{statusTag}}</text>
+                    </div>
+            
             </div>
-               <div class="cen status_tag_section">
-                    <text class="status_tag">{{statusTag}}</text>
-                </div>
-        
         </div>
 
        
-        <div class="detail_section">
+        <div class="detail_section" v-if="!finishStatus">
             <text class="detail_text">{{cmdObj.mode.text}}{{cmdObj.temperature.upLowTemperature>0?cmdObj.temperature.upLowTemperature+'°':''}}</text>
         </div>
         <div class="detail_section" v-if="hasSetting">
-            <image class="setting_icon" src="assets/img/group_setting@3x.png" @click="setting"></image>
+            <div class="edit_section" @click="setting">
+                <image class="setting_icon" src="assets/img/edit_icon@2x.png" ></image>
+            </div>
         </div>
         <div class="footer_section">
             <div class="btn_section">
                 <div class="image_section" @click="cancle">
-                    <image class="icon_image" src="assets/img/footer/icon_cancle@2x.png"></image>
+                    <image class="icon_image" :src="cancleIcon"></image>
                 </div>
                  <div class="decs_section">
-                    <text class="decs_text">关闭</text>
+                    <text class="decs_text">{{cancleBtnText}}</text>
                 </div>
             </div>
              <div class="btn_section" v-if="hasStopOrContinueBtn" >
@@ -105,12 +109,15 @@
     .bg {
         background-image: linear-gradient(to bottom, #FFCD00, #FF9217);
     }
+    .progress_content{
+        .row;
+        .j-c;
+    }
     .progress_section{
         .pos(r);
     }
     .time_section{
         .pos(a);
-        width: 750px;
         top: 0px;
         left: 0px;
          .flex;
@@ -125,8 +132,11 @@
         .a-c;
     }
     .status_tag_section{
-        .pos(r);
-        top: -120px;
+        .pos(a);
+         bottom: 80px;
+        
+        .row;
+        .j-c;
     }
     .number-text{
         .f(160px);
@@ -142,15 +152,15 @@
     }
     .number_prev{
         .pos(a);
+        left: 100px;
         top: 100px;
-        left: 230px;
         .white;
         .f(32px);
     }
     .number_next{
         .pos(a);
+         right: 100px;
         top: 100px;
-        right: 230px;
         .white;
         .f(32px);
     }
@@ -161,12 +171,18 @@
     .detail_text{
         .white;
         .f(36px);
-        margin-top: 60px;
+        margin-top: 40px;
+    }
+    .edit_section{
+        width: 32px;
+        height: 36px;
     }
     .setting_icon{
-        width: 48px;
-        height: 48px;
-        margin-top: 20px;
+        .row;
+        .j-c;
+        width: 32px;
+        height: 18px;
+        margin-top: 30px;
     }
     .footer_section{
         .row;
@@ -225,9 +241,13 @@
                 wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
                 progress:1,
                 progress_radius: 250,
-                tag_next: '分',
+                tag_next: '',
                 btnText: "暂停",
                 btnSrc: "assets/img/footer/icon_pause@2x.png",
+                cancleBtnText: '关闭',
+                cancleIcon: 'assets/img/footer/icon_cancle@2x.png',
+                progressShow: true,
+                finishStatus: false,
 
                 cmdObj:{},
               
@@ -271,6 +291,8 @@
             progress_style(){
                 let {wrapHeight,progress_radius} = this;
                 return{
+                    height: `${progress_radius * 2}px`,
+                    width: `${progress_radius * 2}px`,
                     marginTop: `${wrapHeight/2-progress_radius*2}px`
                 }
             }
@@ -328,15 +350,19 @@
                     }
                 }
                 // nativeService.toast(analysisObj,5);
-                console.log(1);
+                //console.log(1);
                 this.warningDialogShow = false;
                 // this.tag_next = '分';
                 this.noTimeShow = false;
+                this.progressShow = true;
+                this.finishStatus = false;
                 // this.workSpecialStatusText = "";
                 this.hasSetting = false;
                 this.isTimerStop = false;
                 this.statusTag = '剩余时间';
                 this.hasStopOrContinueBtn = false;
+                this.cancleBtnText = '关闭';
+                this.cancleIcon = 'assets/img/footer/icon_cancle@2x.png';
 
                 this.cmdObj = analysisObj;
                
@@ -369,25 +395,7 @@
                     this.warningDialogContent = "炉门开了";
                 }
 
-                    //倒计时按照设计来
-                var _hour = analysisObj.timeRemaining.hour, _minute = analysisObj.timeRemaining.minute, _second = analysisObj.timeRemaining.second;
-                var allSeconds = _hour*60*60+_minute*60+_second;
-                if(allSeconds>60*60){ //大于1小时，有‘时’显示
-                    this.workSpecialStatusText = (_hour>9?_hour:'0'+_hour)+":"+(_minute>9?_minute:'0'+_minute);
-                    this.tag_next = '分';
-                    this.hasHour = true;
-                }else if(allSeconds>2*60){//大于2分钟，小于1小时，只显示分
-                    this.workSpecialStatusText = _minute;
-                    this.tag_next = '分';
-                    this.hasHour = false;
-                }else{ //小于2分钟开始倒计时
-                    timerRecord++;
-                    if(timerRecord){
-                            this.countDownRunTimer(_minute,_second,1);
-                            //this.countDownRunTimer(1);//1秒03轮询
-                    }
-                }
-                
+              
                 if(analysisObj.workingState.value == 3){
                     this.hasSetting = true;
                     this.btnText = "暂停";
@@ -412,11 +420,14 @@
 
                 if(analysisObj.workingState.value == 4){
                    this.noTimeShow = true;
-                   this.workSpecialStatusText = "工作完成";
+                   this.workSpecialStatusText = "烹饪完成";
                    this.isTimerStop = true;
                    this.tag_next = '';
-                   this.statusTag = '';
-                   
+                   this.statusTag = '取出时小心烫手';
+                   this.progressShow = false;
+                   this.finishStatus = true;
+                   this.cancleBtnText = '完成';
+                   this.cancleIcon = 'assets/img/finish_icon@2x.png';
                   
                 }
                  if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 0){
@@ -441,6 +452,30 @@
                     this.btnSrc = "assets/img/footer/icon_start@2x.png";
                    
                 }
+                      //倒计时按照设计来
+                var _hour = analysisObj.timeRemaining.hour, _minute = analysisObj.timeRemaining.minute, _second = analysisObj.timeRemaining.second;
+                var allSeconds = _hour*60*60+_minute*60+_second;
+
+                if(!this.noTimeShow){
+                    if(allSeconds>60*60){ //大于1小时，有‘时’显示
+                        this.workSpecialStatusText = (_hour>9?_hour:'0'+_hour)+":"+(_minute>9?_minute:'0'+_minute);
+                        this.tag_next = '分';
+                        this.hasHour = true;
+                    }else if(allSeconds>2*60){//大于2分钟，小于1小时，只显示分
+                        this.workSpecialStatusText = _minute;
+                        this.tag_next = '分';
+                        this.hasHour = false;
+                    }else{ //小于2分钟开始倒计时
+                        this.hasHour = false;
+                        timerRecord++;
+                        if(timerRecord){
+                                this.countDownRunTimer(_minute,_second,1);
+                                //this.countDownRunTimer(1);//1秒03轮询
+                        }
+                    }
+                }
+              
+                
               
     
             },

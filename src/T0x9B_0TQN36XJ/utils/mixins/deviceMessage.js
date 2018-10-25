@@ -50,7 +50,7 @@ const deviceMessageMixin = {
         controlDevice(jsonCmd, working){
             let context = this;
             let deviceCmd = cmdFun.createControlMessage(jsonCmd, working);
-            nativeService.alert(deviceCmd);
+            //nativeService.alert(deviceCmd);
             // return;
             nativeService.startCmdProcess(
                 "control",
@@ -75,7 +75,7 @@ const deviceMessageMixin = {
 
              //监听设备在线离线状态
              globalEvent.addEventListener("receiveMessageFromApp", (data) => {
-                nativeService.toast(data,5);
+                nativeService.toast(data);
                if(data && data.messageType == "deviceOnlineStatus") {
                    if(data.messageBody && data.messageBody.onlineStatus == "online") {
                        // this.onlineStatus = "1";

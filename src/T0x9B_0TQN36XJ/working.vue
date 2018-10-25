@@ -1,6 +1,6 @@
 <template>
     <div class="all_section" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
-        <midea-header leftImg="assets/img/header/public_ic_back_white@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
+        <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
         <div class="progress_section" :style="progress_style">
             <wxcProgress :percent="progress"
                     :wxc_radius='progress_radius'>

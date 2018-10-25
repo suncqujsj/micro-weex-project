@@ -1,5 +1,5 @@
 <template>
-  <div class="wx_c">
+  <div class="wx_c" v-if="progressShow">
     <div class="wx_container" :style="containerStyle">
         <div ref="wx_circle" class="wx_circle" :style="circleStyle"></div>
         <div ref="wx_left" class="wx_left-box" :style="leftStyle"></div>
@@ -39,6 +39,10 @@ export default {
         percent: {
             type: Number,
             default: 0
+        },
+        progressShow:{
+            type: Boolean,
+            default: true
         },
         wxc_radius: {
             type: Number,

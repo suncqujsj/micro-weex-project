@@ -53,7 +53,7 @@
         .row;
         padding: 0 3.5*2px;
         width: 736px;
-        overflow-x: scroll;
+        /*overflow-x: scroll;*/
     }
     .auto_menu{
         .ma-b(12px);
@@ -105,7 +105,18 @@
             <scroller :class="[tab.rows[0].title ?  'tab-content-gray' : 'tab-content-white' ]" v-if="tab.active" :style="{height: wrapHeight - (tab.length > 1 ? 204*2 : 174*2)}">
                 <div class="bg-white" :class="[tab.rows[0].title && 'auto_menu']" v-for="row in tab.rows">
                     <text v-if="row.title" class="block-title">{{row.title}}</text>
-                    <div scroll-direction="row" class="icon-buttons">
+                    <slider v-if="tab.rows[0].title">
+                        <div class="icon-buttons" v-for="items in row.iconButtons">
+                            <div class="icon-button column" v-for="item in items" @click="onIconButtonClicked(item)">
+                                <image v-if="item.icon" class="button-icon" :src="item.icon"></image>
+                                <div v-else class="button-icon row a-c j-c">
+                                    <text>{{item.time.default}}'</text>
+                                </div>
+                                <text class="button-text">{{item.text}}</text>
+                            </div>
+                        </div>
+                    </slider>
+                    <div class="icon-buttons" v-else>
                         <div class="icon-button column" v-for="item in row.iconButtons" @click="onIconButtonClicked(item)">
                             <image v-if="item.icon" class="button-icon" :src="item.icon"></image>
                             <div v-else class="button-icon row a-c j-c">
@@ -194,12 +205,12 @@
                 tabs:[
                     {
                         name:'自动菜单',
-                        active:true,
+                        active:false,
                         rows:autoMenu
                     },
                     {
                         name:'加热模式',
-                        active:false,
+                        active:true,
                         rows:modes
                     }
                 ],

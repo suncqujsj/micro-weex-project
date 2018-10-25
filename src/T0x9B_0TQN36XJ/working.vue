@@ -1,24 +1,25 @@
 <template>
     <div class="all_section" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
         <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
-        <div class="progress_section" :style="progress_style">
-            <wxcProgress :percent="progress"
-                    :wxc_radius='progress_radius'>
+        <div class="progress_content">
+            <div class="progress_section" :style="progress_style">
+                <wxcProgress :percent="progress"
+                        :wxc_radius='progress_radius'>
 
-                </wxcProgress>
-                <div class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
-                    <text class="number_prev" v-if="hasHour">时</text>
-                    <div class="cen">
-                        <!--<text class="number-text">{{progress}} {{timeRemain}}</text>-->
-                        <text :class="['number-text',noTimeShow && 'work_finish']">{{workSpecialStatusText}}</text>
+                    </wxcProgress>
+                    <div class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
+                        <text class="number_prev" v-if="hasHour">时</text>
+                        <div class="cen">
+                            <!--<text class="number-text">{{progress}} {{timeRemain}}</text>-->
+                            <text :class="['number-text',noTimeShow && 'work_finish']">{{workSpecialStatusText}}</text>
+                        </div>
+                        <text class="number_next">{{tag_next}}</text>
                     </div>
-                    <text class="number_next">{{tag_next}}</text>
-                </div>
-                <div class="cen status_tag_section" :style="{width:`${progress_radius*2}px`}">
+                    <div class="cen status_tag_section" :style="{width:`${progress_radius*2}px`}">
                         <text class="status_tag">{{statusTag}}</text>
                     </div>
 
-            </div>
+                </div>
         </div>
 
        

@@ -75,7 +75,7 @@ const deviceMessageMixin = {
 
              //监听设备在线离线状态
              globalEvent.addEventListener("receiveMessageFromApp", (data) => {
-                nativeService.alert(data);
+                nativeService.toast(data,5);
                if(data && data.messageType == "deviceOnlineStatus") {
                    if(data.messageBody && data.messageBody.onlineStatus == "online") {
                        // this.onlineStatus = "1";

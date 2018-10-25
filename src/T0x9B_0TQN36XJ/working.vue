@@ -7,11 +7,10 @@
 
             </wxcProgress>
               <div class="time_section" :style="{ height: `${progress_radius*2}px`}">
-                <text class="number_prev" v-if="hasSplit && !workSpecialStatusText">时</text>
+                <text class="number_prev" v-if="hasHour">时</text>
                 <div class="cen">
                     <!--<text class="number-text">{{progress}} {{timeRemain}}</text>-->
-                    <text class="number-text"  v-if="!workSpecialStatusText">{{timeRemainHour}}{{hasSplit?':':''}}{{timeRemainMinute}}</text>
-                    <text class="work_finish" v-if="workSpecialStatusText">{{workSpecialStatusText}}</text>
+                    <text :class="['number-text',noTimeShow && 'work_finish']">{{workSpecialStatusText}}</text>
                 </div>
                 <text class="number_next">{{tag_next}}</text>
             </div>
@@ -23,22 +22,22 @@
 
        
         <div class="detail_section">
-            <text class="detail_text">{{modeText}}{{modeTemperature>0?modeTemperature+'°':''}}</text>
+            <text class="detail_text">{{cmdObj.mode.text}}{{cmdObj.temperature.upLowTemperature>0?cmdObj.temperature.upLowTemperature+'°':''}}</text>
         </div>
         <div class="detail_section" v-if="hasSetting">
             <image class="setting_icon" src="assets/img/group_setting@3x.png" @click="setting"></image>
         </div>
         <div class="footer_section">
-            <div class="btn_section" @click="cancle">
-                <div class="image_section" >
+            <div class="btn_section">
+                <div class="image_section" @click="cancle">
                     <image class="icon_image" src="assets/img/footer/icon_cancle@2x.png"></image>
                 </div>
                  <div class="decs_section">
                     <text class="decs_text">关闭</text>
                 </div>
             </div>
-             <div class="btn_section" v-if="!workSpecialStatus"  @click="startOrPause">
-                <div class="image_section">
+             <div class="btn_section" v-if="hasStopOrContinueBtn" >
+                <div class="image_section" @click="startOrPause">
                     <image class="icon_image" :src="btnSrc"></image>
                 </div>
                  <div class="decs_section" >
@@ -217,35 +216,29 @@
 
     var numberRecord = 0; //记录跳页面的次数
     var timerRecord = 0;
+    const platform = weex.config.env.platform;//weex没有window对象，调试需要区分下
     export default {
         mixins: [deviceMessageMixin, accordionMixin],
         data(){
             return {
                 wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
-                test:'123',
                 progress:1,
                 progress_radius: 250,
                 tag_next: '分',
                 btnText: "暂停",
                 btnSrc: "assets/img/footer/icon_pause@2x.png",
-                mode: null,
-                modeText: '',
-                modeTemperature: null,
-                preheat: null,
-                fire: null,
-                steam: null,
-                timeRemainHour: null,
-                timeRemainMinute: null,
-                timeRemainSecond: null,
-                hasSplit: false,
-                workSpecialStatus: false,
+
+                cmdObj:{},
+              
+                noTimeShow: false,
                 workSpecialStatusText: '',
                 queryTimer: null,
                 countDownTimer: null,
                 isTimerStop: false,
                 statusTag: "剩余时间",
                 hasSetting: false, //是否有时间温度设置
-                recipeId: 0,
+                hasHour: false, //是否有小时
+                hasStopOrContinueBtn: false,
 
                 warningDialogShow: false,
                 warningDialogTitle: "温馨提示",
@@ -305,10 +298,10 @@
                 var self = this;
                 var allSeconds = minute*60+second;
                 this.countDownTimer = setInterval(function(){
-                   
+                    //nativeService.toast(self.workSpecialStatusText,4);
                     if(self.isTimerStop && allSeconds<60 && allSeconds>0){
                          self.tag_next = '秒';
-                         self.timeRemainMinute = allSeconds;
+                         self.workSpecialStatusText = allSeconds;
                          return;
                     }
                      if(self.isTimerStop && allSeconds<=0){
@@ -319,7 +312,7 @@
                      allSeconds--;
                      if(allSeconds<60 && allSeconds>0){
                          self.tag_next = '秒';
-                         self.timeRemainMinute = allSeconds;
+                         self.workSpecialStatusText = allSeconds;
                     }
                    
                 },timeSet*1000);
@@ -335,30 +328,26 @@
                 }
                 // nativeService.toast(analysisObj,5);
                 console.log(1);
-                this.hasSplit = false;
                 this.warningDialogShow = false;
-                this.tag_next = '分';
-                this.workSpecialStatus = false;
-                this.workSpecialStatusText = "";
+                // this.tag_next = '分';
+                this.noTimeShow = false;
+                // this.workSpecialStatusText = "";
                 this.hasSetting = false;
                 this.isTimerStop = false;
                 this.statusTag = '剩余时间';
-                this.modeText = analysisObj.mode.text;
-                this.modeTemperature = analysisObj.temperature.upLowTemperature;
-                this.preheat = analysisObj.displaySign.preheat;
-                this.fire = analysisObj.fire.value;
-                this.steam = analysisObj.steam.value;
-                this.mode = analysisObj.mode.value;
-                this.recipeId = analysisObj.recipeId.value;
+                this.hasStopOrContinueBtn = false;
+
+                this.cmdObj = analysisObj;
+               
 
                 //特殊处理，其他型号要去掉
-                if(this.modeTemperature<100 && this.mode == 0x41){
-                    this.mode = 0xD0;
-                    this.modeText = "保温";
+                if(analysisObj.temperature.upLowTemperature<100 && analysisObj.mode.value == 0x41){
+                    this.cmdObj.mode.value = 0xD0;
+                    this.cmdObj.mode.text = "保温";
                 }
-                 if(this.modeTemperature<100 && this.mode == 0x43){
-                    this.mode = 0xB0;
-                    this.modeText = "发酵";
+                 if(analysisObj.temperature.upLowTemperatur<100 && analysisObj.mode.value == 0x43){
+                    this.cmdObj.mode.value = 0xB0;
+                    this.cmdObj.mode.text = "发酵";
                 }
                 
                 //提示
@@ -379,22 +368,31 @@
                     this.warningDialogContent = "炉门开了";
                 }
 
-                //倒计时按照设计来
-                this.timeRemainHour = analysisObj.timeRemaining.hour>9?analysisObj.timeRemaining.hour:'0'+analysisObj.timeRemaining.hour;
-                this.timeRemainMinute = analysisObj.timeRemaining.minute;
-                if(analysisObj.timeRemaining.hour>0){
-                    this.timeRemainMinute = analysisObj.timeRemaining.minute>9?analysisObj.timeRemaining.minute:'0'+analysisObj.timeRemaining.minute;
+                    //倒计时按照设计来
+                var _hour = analysisObj.timeRemaining.hour, _minute = analysisObj.timeRemaining.minute, _second = analysisObj.timeRemaining.second;
+                var allSeconds = _hour*60*60+_minute*60+_second;
+                if(allSeconds>60*60){ //大于1小时，有‘时’显示
+                    this.workSpecialStatusText = (_hour>9?_hour:'0'+_hour)+":"+(_minute>9?_minute:'0'+_minute);
+                    this.tag_next = '分';
+                    this.hasHour = true;
+                }else if(allSeconds>2*60){//大于2分钟，小于1小时，只显示分
+                    this.workSpecialStatusText = _minute;
+                    this.tag_next = '分';
+                    this.hasHour = false;
+                }else{ //小于2分钟开始倒计时
+                    timerRecord++;
+                    if(timerRecord){
+                            this.countDownRunTimer(_minute,_second,1);
+                            //this.countDownRunTimer(1);//1秒03轮询
+                    }
                 }
-                this.timeRemainSecond = analysisObj.timeRemaining.second;
-                if(parseInt(self.timeRemainHour) > 0){
-                    this.hasSplit = true;
-                }else{
-                    this.timeRemainHour = '';
-                }
+                
                 if(analysisObj.workingState.value == 3){
                     this.hasSetting = true;
                     this.btnText = "暂停";
                     this.btnSrc = "assets/img/footer/icon_pause@2x.png";
+                    this.hasStopOrContinueBtn = true;
+                     this.hasSetting = true;
                     // if(analysisObj.mode.value == 0xE0){//云菜谱没有设置时间温度蒸汽那些
                     //      this.hasSetting = false;
                     // }
@@ -405,54 +403,45 @@
                     this.btnSrc = "assets/img/footer/icon_start@2x.png";
                     this.isTimerStop = true;
                     this.statusTag = '暂停中';
+                    this.hasStopOrContinueBtn = true;
                     // if(analysisObj.mode.value == 0xE0){//云菜谱没有设置时间温度蒸汽那些
                     //      this.hasSetting = false;
                     // }
                 }
 
-                if(analysisObj.timeRemaining.hour == 0 && analysisObj.timeRemaining.minute == 0 && analysisObj.timeRemaining.second > 0){
-                    this.tag_next = '秒';
-                    this.timeRemainMinute = analysisObj.timeRemaining.second;
-                }
                 if(analysisObj.workingState.value == 4){
-                   this.workSpecialStatus = true;
+                   this.noTimeShow = true;
                    this.workSpecialStatusText = "工作完成";
                    this.isTimerStop = true;
                    this.tag_next = '';
-                   this.timeRemainMinute = '';
                    this.statusTag = '';
                    
                   
                 }
                  if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 0){
-                    this.workSpecialStatus = false;
+                    this.noTimeShow = true;
                     this.workSpecialStatusText = "预热中";
                     this.tag_next = '';
-                    this.timeRemainMinute = '';
                     this.statusTag = '';
                     this.hasSetting = false;
+                    this.hasStopOrContinueBtn = true;
                     
                 }
                 if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 1){
-                     this.workSpecialStatus = false;
+                     this.noTimeShow = true;
                     this.workSpecialStatusText = "预热完成";
                     this.warningDialogShow = true;
                     this.warningDialogContent = "预热已完成，请放进食物再按'继续'，继续烹饪";
                     this.tag_next = '';
-                    this.timeRemainMinute = '';
                     this.statusTag = '';
+                    this.hasStopOrContinueBtn = true;
+                    this.hasSetting = false;
                     this.btnText = "继续";
                     this.btnSrc = "assets/img/footer/icon_start@2x.png";
                    
                 }
-                if(analysisObj.timeRemaining.hour == 0 && analysisObj.timeRemaining.minute <= 2){
-                    timerRecord++;
-                   if(timerRecord){
-                        this.countDownRunTimer(analysisObj.timeRemaining.minute,analysisObj.timeRemaining.second,1);
-                        //this.countDownRunTimer(1);//1秒03轮询
-                   }
-                    
-                }
+              
+    
             },
             doing: function(){
                 if(this.progress === 100) {
@@ -461,7 +450,6 @@
                 ++this.progress;
                 // this.progress += '1';
                 let context = this;
-                const platform = weex.config.env.platform;//weex没有window对象，调试需要区分下
                 if (platform == 'Web') {
                      window.setTimeout(function () {
                         context.doing();
@@ -501,20 +489,22 @@
             },
             setting(){
                 var _isRecipe = false;
-                if(this.mode == 0xE0){
+                if(this.cmdObj.mode.value == 0xE0){
                     _isRecipe = true;
                 }
                 var _item = this.getCurrentItem(_isRecipe);
                 this.currentItem = _item;
-                var time = this.timeRemainMinute;
-                if(this.tag_next == '秒'){
+                var time = this.cmdObj.timeRemaining.hour*60+this.cmdObj.timeRemaining.minute;
+                if(this.tag_next == '秒'){//倒计时为秒时，都设置1分钟
                     time = 1;
                 }
                 this.current.time = time;
-                this.current.temperature = this.modeTemperature;
-                this.current.preheat = this.preheat;
-                this.current.fireAmount = this.fire;
-                this.current.steamAmount = this.steam;
+                this.current.temperature = this.cmdObj.temperature.upLowTemperature;
+                this.current.preheat = this.cmdObj.displaySign.preheat?true:false;
+                this.current.fireAmount = this.cmdObj.fire.value;
+                this.current.steamAmount = this.cmdObj.steam.value;
+                nativeService.toast(this.current,6);
+                
                 this.openDialog();
             },
             getCurrentItem(isRecipe){
@@ -524,7 +514,7 @@
                      for(var i=0; i<currentModes.length; i++){
                         var iconButtons = currentModes[i].iconButtons;
                         for(var m=0; m<iconButtons.length; m++){
-                            if(this.recipeId == currentModes[i].iconButtons[m].recipeId.default){
+                            if(this.cmdObj.recipeId.value == currentModes[i].iconButtons[m].recipeId.default){
                                 _item = currentModes[i].iconButtons[m];
                                 break;
                             }
@@ -537,7 +527,7 @@
                         var iconButtons = currentModes[i].iconButtons;
                         for(var m=0; m<iconButtons.length; m++){
                            
-                            if(this.mode == currentModes[i].iconButtons[m].mode){
+                            if(this.cmdObj.mode.value == currentModes[i].iconButtons[m].mode){
                                 _item = currentModes[i].iconButtons[m];
                                  break;
                             }

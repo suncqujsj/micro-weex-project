@@ -1,6 +1,6 @@
 <template>
     <div class="all_section" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
-        <midea-header   leftImg="assets/img/header/icon_back_white@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
+        <midea-header leftImg="assets/img/header/public_ic_back_white@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
         <div class="progress_section" :style="progress_style">
             <wxcProgress :percent="progress"
                     :wxc_radius='progress_radius'>
@@ -206,6 +206,7 @@
     import WxPicker from '@/component/sf/custom/picker.vue';
     import mideaDialog from '@/component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
+    import mideaSwitch2 from '@/midea-component/switch2.vue'
 
         // config data
     import modes from "./config/modes.js";
@@ -248,7 +249,7 @@
                 actionsheetItems:['确定关闭']
             }
         },
-        components: {MideaHeader,wxcProgress,wxProgress, mideaDialog, mideaActionsheet,sfDialog,WxPicker,sfAccordion},
+        components: {MideaHeader,wxcProgress,wxProgress, mideaDialog, mideaActionsheet,sfDialog,WxPicker,sfAccordion,mideaSwitch2},
         created(){
             var self = this;
            // 模拟设备数据,正式上线，可不注销

@@ -10,11 +10,11 @@ let data = [
             [
                 {
                     'icon': '',
-                    'text': '蒸汽菜单',
+                    'text': '清蒸鱼',
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:10,
+                        default:15,
                         range:[1,90,1]
                     },
                     temperature:{
@@ -48,7 +48,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:10,
+                        default:12,
                         range:[1,90,1]
                     },
                     temperature:{
@@ -82,7 +82,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:10,
+                        default:16,
                         range:[1,90,1]
                     },
                     temperature:{
@@ -116,7 +116,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:10,
+                        default:19,
                         range:[1,90,1]
                     },
                     temperature:{
@@ -152,7 +152,7 @@ let data = [
                 'mode': 0xE0,
                 time:{
                     set: true,
-                    default:10,
+                    default:58,
                     range:[1,90,1]
                 },
                 temperature:{
@@ -186,7 +186,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:10,
+                        default:12,
                         range:[1,90,1]
                     },
                     temperature:{
@@ -220,7 +220,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:10,
+                        default:45,
                         range:[1,90,1]
                     },
                     temperature:{
@@ -254,7 +254,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:10,
+                        default:20,
                         range:[1,90,1]
                     },
                     temperature:{
@@ -290,7 +290,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:10,
+                        default:20,
                         range:[1,90,1]
                     },
                     temperature:{
@@ -324,7 +324,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:10,
+                        default:40,
                         range:[1,90,1]
                     },
                     temperature:{
@@ -358,7 +358,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:10,
+                        default:24,
                         range:[1,90,1]
                     },
                     temperature:{
@@ -399,7 +399,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:10,
+                        default:18,
                         range:[1,90,1]
                     },
                     temperature:{
@@ -433,7 +433,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:10,
+                        default:50,
                         range:[1,90,1]
                     },
                     temperature:{
@@ -467,7 +467,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:10,
+                        default:11,
                         range:[1,90,1]
                     },
                     temperature:{
@@ -501,7 +501,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:10,
+                        default:18,
                         range:[1,90,1]
                     },
                     temperature:{
@@ -537,7 +537,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:10,
+                        default:24,
                         range:[1,90,1]
                     },
                     temperature:{
@@ -571,7 +571,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:10,
+                        default:17,
                         range:[1,90,1]
                     },
                     temperature:{
@@ -605,7 +605,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:10,
+                        default:30,
                         range:[1,90,1]
                     },
                     temperature:{
@@ -639,7 +639,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:10,
+                        default:45,
                         range:[1,90,1]
                     },
                     temperature:{
@@ -675,7 +675,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:10,
+                        default:45,
                         range:[1,90,1]
                     },
                     temperature:{

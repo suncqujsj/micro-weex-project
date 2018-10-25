@@ -86,7 +86,7 @@
 <template>
     <div class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
 
-        <midea-header leftImg="assets/img/header/icon_back_white@3x.jpg" title="烤箱" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
+        <midea-header leftImg="assets/img/header/public_ic_back_white@3x.png" title="烤箱" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
 
         <!--面板切换tabs-->
         <div class="panel">

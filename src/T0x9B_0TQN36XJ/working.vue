@@ -493,6 +493,7 @@
                     _isRecipe = true;
                 }
                 var _item = this.getCurrentItem(_isRecipe);
+                
                 this.currentItem = _item;
                 var time = this.cmdObj.timeRemaining.hour*60+this.cmdObj.timeRemaining.minute;
                 if(this.tag_next == '秒'){//倒计时为秒时，都设置1分钟
@@ -500,26 +501,30 @@
                 }
                 this.current.time = time;
                 this.current.temperature = this.cmdObj.temperature.upLowTemperature;
-                this.current.preheat = this.cmdObj.displaySign.preheat?true:false;
+                this.currentItem.preheat.default = this.cmdObj.displaySign.preheat?true:false;
                 this.current.fireAmount = this.cmdObj.fire.value;
                 this.current.steamAmount = this.cmdObj.steam.value;
-                nativeService.toast(this.current,6);
+                //nativeService.toast(this.current,3);
                 
                 this.openDialog();
             },
             getCurrentItem(isRecipe){
                 var  _item = {};
+                
                 if(isRecipe){
                     var  currentModes = autoMenu;
                      for(var i=0; i<currentModes.length; i++){
-                        var iconButtons = currentModes[i].iconButtons;
-                        for(var m=0; m<iconButtons.length; m++){
-                            if(this.cmdObj.recipeId.value == currentModes[i].iconButtons[m].recipeId.default){
-                                _item = currentModes[i].iconButtons[m];
-                                break;
+                         var iconButtonsArr = currentModes[i].iconButtons; 
+                        for(var r=0; r<iconButtonsArr.length; r++){
+                            var iconButtons = iconButtonsArr[r];
+                             for(var m=0; m<iconButtons.length; m++){
+                                if(this.cmdObj.recipeId.value == iconButtons[m].recipeId.default){
+                                    _item = iconButtons[m];
+                                    break;
+                                }
                             }
-                        
-                        }
+                        }                      
+                       
                     }
                 }else{
                      var  currentModes = modes;
@@ -535,7 +540,6 @@
                         }
                     }
                 }
-               
                
                 return _item;
             },

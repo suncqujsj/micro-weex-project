@@ -349,7 +349,7 @@
                         this.goTo("weex");
                     }
                 }
-                // nativeService.toast(analysisObj,5);
+                //nativeService.toast(analysisObj,5);
                 //console.log(1);
                 this.warningDialogShow = false;
                 // this.tag_next = '分';
@@ -372,10 +372,12 @@
                     this.cmdObj.mode.value = 0xD0;
                     this.cmdObj.mode.text = "保温";
                 }
-                 if(analysisObj.temperature.upLowTemperatur<100 && analysisObj.mode.value == 0x43){
+                 if((analysisObj.temperature.upLowTemperature == 35) && (analysisObj.mode.value == 0x43)){
                     this.cmdObj.mode.value = 0xB0;
                     this.cmdObj.mode.text = "发酵";
                 }
+                
+                
                 
                 //提示
                 if(analysisObj.displaySign.isError){

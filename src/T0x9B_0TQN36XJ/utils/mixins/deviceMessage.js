@@ -18,10 +18,19 @@ const deviceMessageMixin = {
         viewappear(){
             this.listenerDeviceReiveMessage();
         },
-        babyLock: function(childLock=true){
-            nativeService.cmdLock({
-                childLock
-            });
+        childLock: function(childLock){
+            let context = this;
+            let deviceCmd = cmdFun.cmdLock({childLock});
+            nativeService.startCmdProcess(
+                "control",
+                deviceCmd,
+                function(result){
+                    context.queryStatus();
+                },
+                function(result){
+                    console.log('fail', result);
+                }
+            )
         },
         goBack(){
             nativeService.backToNative()
@@ -52,10 +61,10 @@ const deviceMessageMixin = {
                 }
             );
         },
-        controlDevice(jsonCmd, working=false){
+        controlDevice(jsonCmd, working){
             let context = this;
             let deviceCmd = cmdFun.createControlMessage(jsonCmd, working);
-            //nativeService.alert(deviceCmd);
+            // nativeService.alert(deviceCmd);
             // return;
             nativeService.startCmdProcess(
                 "control",

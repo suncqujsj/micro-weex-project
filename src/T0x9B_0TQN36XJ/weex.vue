@@ -121,7 +121,7 @@
         <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="烤箱" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" >
             <div slot="customerContent" class="header-top-wrapper">
                 <div class="header-top-inner-wrapper">
-                    <div class="header-right-image-wrapper" @click="babyLock">
+                    <div class="header-right-image-wrapper" @click="childLock(true)">
                         <image class="header-right-image" :src="'assets/img/header/public_ic_babylock@3x.png'"></image>
                     </div>
                     <!--<div class="header-right-image-wrapper" @click="test">-->
@@ -324,8 +324,9 @@
                 }
 
                 if(analysisObj.displaySign.lock){
+                    let context = this;
                     this.setWarningDialog("你需要关闭童锁吗？", function(){
-                        this.childLock(false);
+                        context.childLock(false);
                     });
                 }
 
@@ -338,6 +339,7 @@
             },
             knowClicked(){
                 this.show = false;
+                // nativeService.alert(typeof this.warningDialog.callback);
                 this.warningDialog.callback && this.warningDialog.callback();
                 this.warningDialog = this.initWarningDialog();
             }

@@ -121,7 +121,7 @@
         <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="烤箱" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" >
             <div slot="customerContent" class="header-top-wrapper">
                 <div class="header-top-inner-wrapper">
-                    <div class="header-right-image-wrapper" @click="test">
+                    <div class="header-right-image-wrapper" @click="babyLock">
                         <image class="header-right-image" :src="'assets/img/header/public_ic_babylock@3x.png'"></image>
                     </div>
                     <!--<div class="header-right-image-wrapper" @click="test">-->
@@ -206,11 +206,11 @@
             </div>
         </sf-dialog>
 
-        <midea-dialog :title="warningDialogTitle"
-                        :show="warningDialogShow"
+        <midea-dialog :title="warningDialog.title"
+                        :show="warningDialog.show"
                         :single="true"
                         @mideaDialogConfirmBtnClicked="knowClicked"
-                        :content="warningDialogContent"
+                        :content="warningDialog.content"
                         mainBtnColor="#FFB632"
                         >
         </midea-dialog>
@@ -257,13 +257,7 @@
                         rows:modes
                     }
                 ],
-                // accordions: this.initAccordions(),
-                // currentItem:null,
-                // current:this.initCurrentData(),
-                // show: false
-                warningDialogShow: false,
-                warningDialogTitle: "温馨提示",
-                warningDialogContent: "主人，您的水箱缺水了，要及时添加水哦"
+                warningDialog: this.initWarningDialog()
             }
         },
         components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2, mideaDialog},
@@ -281,7 +275,6 @@
         computed:{
         },
         methods: {
-            test: function(){},
             onTabClicked: function(index){
                 // debugger;
                 // let tabs = JSON.parse(JSON.stringify(this.tabs));
@@ -300,25 +293,42 @@
                 this.currentItem = item;
                 this.openDialog();
             },
+            initWarningDialog(){
+                return {
+                    show: false,
+                    title: "温馨提示",
+                    content: "主人，您的水箱缺水了，要及时添加水哦",
+                    callback: null
+                };
+            },
+            setWarningDialog(content, callback=null, show=true){
+                this.warningDialog.show = show;
+                this.warningDialog.content = content;
+                this.warningDialog.callback = callback;
+            },
             analysisFun(analysisObj) {
                 // nativeService.alert(JSON.stringify(analysisObj));
-                this.warningDialogShow = false;
+                this.show = false;
                 if(analysisObj.displaySign.isError){
-                    this.warningDialogShow = true;
-                    this.warningDialogContent = "设备故障，请联系售后人员";
+                    this.setWarningDialog("设备故障，请联系售后人员");
                 }
-                 if(analysisObj.displaySign.lackWater){
-                    this.warningDialogShow = true;
-                    this.warningDialogContent = "主人，您的水箱缺水了，要及时添加水哦";
+                if(analysisObj.displaySign.lackWater){
+                    this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
                 }
                 if(analysisObj.displaySign.waterBox){
-                    this.warningDialogShow = true;
-                    this.warningDialogContent = "缺水盒";
+                    this.setWarningDialog("缺水盒");
+
                 }
                 if(analysisObj.displaySign.doorSwitch){
-                    this.warningDialogShow = true;
-                    this.warningDialogContent = "炉门开了";
+                    this.setWarningDialog("炉门开了");
                 }
+
+                if(analysisObj.displaySign.lock){
+                    this.setWarningDialog("你需要关闭童锁吗？", function(){
+                        this.childLock(false);
+                    });
+                }
+
                 if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6) {
                     numberRecord++;
                     if(numberRecord==1){ //防止多次获取设备状态，多次跳转
@@ -327,7 +337,9 @@
                 }
             },
             knowClicked(){
-                this.warningDialogShow = false;
+                this.show = false;
+                this.warningDialog.callback && this.warningDialog.callback();
+                this.warningDialog = this.initWarningDialog();
             }
         }
     }

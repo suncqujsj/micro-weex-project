@@ -18,6 +18,11 @@ const deviceMessageMixin = {
         viewappear(){
             this.listenerDeviceReiveMessage();
         },
+        babyLock: function(childLock=true){
+            nativeService.cmdLock({
+                childLock
+            });
+        },
         goBack(){
             nativeService.backToNative()
         },
@@ -47,7 +52,7 @@ const deviceMessageMixin = {
                 }
             );
         },
-        controlDevice(jsonCmd, working){
+        controlDevice(jsonCmd, working=false){
             let context = this;
             let deviceCmd = cmdFun.createControlMessage(jsonCmd, working);
             nativeService.alert(deviceCmd);

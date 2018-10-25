@@ -81,12 +81,55 @@
         text-align: center;
         margin-bottom: 24px;
     }
+
+    .header-top-wrapper {
+        position: absolute;
+        right: 0px;
+        bottom: 0px;
+        height: 88px;
+    }
+    .header-top-inner-wrapper {
+        position: relative;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        height: 88px;
+    }
+    .header-right{
+        .pos(a);
+        right: 0;
+        top: 0;
+        height: 88px;
+    }
+    .header-right-image-wrapper {
+        width: 88px;
+        height: 88px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /*padding-right: 32px;*/
+    }
+    .header-right-image {
+        height: 44px;
+        width: 44px;
+    }
 </style>
 
 <template>
     <div class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
 
-        <midea-header leftImg="assets/img/header/public_ic_back_white@3x.png" title="烤箱" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
+        <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="烤箱" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" >
+            <div slot="customerContent" class="header-top-wrapper">
+                <div class="header-top-inner-wrapper">
+                    <div class="header-right-image-wrapper" @click="test">
+                        <image class="header-right-image" :src="'assets/img/header/public_ic_babylock@3x.png'"></image>
+                    </div>
+                    <!--<div class="header-right-image-wrapper" @click="test">-->
+                        <!--<image class="header-right-image" :src="'assets/img/header/public_ic_lots@3x.png'"></image>-->
+                    <!--</div>-->
+                </div>
+            </div>
+        </midea-header>
 
         <!--面板切换tabs-->
         <div class="panel">
@@ -238,7 +281,7 @@
         computed:{
         },
         methods: {
-
+            test: function(){},
             onTabClicked: function(index){
                 // debugger;
                 // let tabs = JSON.parse(JSON.stringify(this.tabs));

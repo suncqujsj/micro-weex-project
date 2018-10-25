@@ -443,24 +443,24 @@
               
     
             },
-            doing: function(){
-                if(this.progress === 100) {
-                    return;
-                }
-                ++this.progress;
-                // this.progress += '1';
-                let context = this;
-                if (platform == 'Web') {
-                     window.setTimeout(function () {
-                        context.doing();
-                    }, 1000);
-                }else{
-                    setTimeout(function () {
-                        context.doing();
-                    }, 1000);
-                }
+            // doing: function(){
+            //     if(this.progress === 100) {
+            //         return;
+            //     }
+            //     ++this.progress;
+            //     // this.progress += '1';
+            //     let context = this;
+            //     if (platform == 'Web') {
+            //          window.setTimeout(function () {
+            //             context.doing();
+            //         }, 1000);
+            //     }else{
+            //         setTimeout(function () {
+            //             context.doing();
+            //         }, 1000);
+            //     }
                
-            },
+            // },
             cancle(){
                 var self = this;
                 this.openActionsheet();            

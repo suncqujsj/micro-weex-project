@@ -1,11 +1,11 @@
 <template>
     <div v-if="show" class="bg" @click="cancel">
-        <div class="wrap" :style="{height: height+ 'px'}">
+        <div class="wrap" :style="{height: wrapHeight}">
             <div class="slot-floor">
                 <slot></slot>
             </div>
-            <div class="confirm-buttons row-sb">
-               <text class="left-button" @click="leftBtnClick">{{leftBtnText}}</text>
+            <div :class="['confirm-buttons', 'row-sb', isipx?'bottom-offset':'']">
+                <text class="left-button" @click="leftBtnClick">{{leftBtnText}}</text>
                 <text class="right-button" @click="rightBtnClick">{{rightBtnText}}</text>
             </div>
         </div>
@@ -13,8 +13,6 @@
 </template>
 
 <script>
-const dom = weex.requireModule('dom')
-
 export default {
     props: {
         show: {
@@ -39,6 +37,18 @@ export default {
         }
     },
     computed: {
+        isipx: function () {
+            return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6');
+        },
+        wrapHeight: function(){
+            let tmp = ''
+            if (this.isipx) {
+                tmp = this.height + 34
+            } else {
+                tmp = this.height
+            }
+            return tmp + 'px'
+        }
     },
     methods: { 
         cancel() {
@@ -79,25 +89,21 @@ export default {
         height: 500px;
         background-color: #f2f2f2;
     }
-    .row-sb{ flex-direction: row; align-items: center; justify-content: space-between; }
+    .row-sb{ flex-direction: row; justify-content: space-between; }
     .confirm-buttons{
         position: fixed;
         height: 120px;
         bottom: 0;
         left: 0;
         right: 0;
+        padding-top: 24px;
         background-color: #fff;
-        /* padding-top: 25px;
-        padding-bottom: 25px; */
     }
     .left-button, .right-button {
         width: 375px;
-        margin-top: 20px;
-        margin-bottom: 20px;
         height: 80px;
         padding-top: 24px;
         flex:1;
-        align-items: center;
         text-align: center;
     }
     .left-button {
@@ -109,5 +115,8 @@ export default {
     .right-button {
         font-size: 32px;
         color: #000;
+    }
+    .bottom-offset{
+        height: 154px;
     }
 </style>

@@ -1,5 +1,6 @@
 import message from "../../common/util/smartMessage";
 import  nativeService from '@/common/services/nativeService';
+import {device} from "../config/constant"
 
 export default {
   //10进制转换8位2进制的方法
@@ -38,7 +39,7 @@ export default {
   createQueryMessage() {
     var messageBody = message.createMessageBody(1);//createMessageBody默认从10开始，1表示11，2表示12....
     message.setByte(messageBody, 0, 0x31);
-    var sendMessage = message.createMessage(0x9B, 0x03, messageBody);
+    var sendMessage = message.createMessage(device.type, 0x03, messageBody);
     return sendMessage;
   },
  
@@ -97,7 +98,7 @@ export default {
     }
     
   
-    var sendcmd = message.createMessage(0x9B, 0x02, messageBody);
+    var sendcmd = message.createMessage(device.type, 0x02, messageBody);
     return sendcmd;
   },
   //取消工作指令
@@ -110,7 +111,7 @@ export default {
     message.setByte(messageBody, 4,0xff);
     message.setByte(messageBody, 5,0xff);
     message.setByte(messageBody, 6,0xff);
-    var sendMessage = message.createMessage(0x9B, 0x02, messageBody);
+    var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
   //暂停or继续指令
@@ -123,7 +124,7 @@ export default {
     message.setByte(messageBody, 4,0xff);
     message.setByte(messageBody, 5,0xff);
     message.setByte(messageBody, 6,0xff);
-    var sendMessage = message.createMessage(0x9B, 0x02, messageBody);
+    var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
    //上锁
@@ -136,7 +137,7 @@ export default {
     message.setByte(messageBody, 4,0xff);
     message.setByte(messageBody, 5,0xff);
     message.setByte(messageBody, 6,0xff);
-    var sendMessage = message.createMessage(0x9B, 0x02, messageBody);
+    var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
   analysisCmd: function(requestCmd) {

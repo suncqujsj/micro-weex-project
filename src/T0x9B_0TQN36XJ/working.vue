@@ -3,7 +3,7 @@
         <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
         <div class="progress_content">
             <div class="progress_section" :style="progress_style">
-                <wxcProgress :percent="progress"
+                <wxcProgress :percent="progress" :progressShow="progressShow"
                         :wxc_radius='progress_radius'>
 
                     </wxcProgress>
@@ -293,7 +293,7 @@
                 return{
                     height: `${progress_radius * 2}px`,
                     width: `${progress_radius * 2}px`,
-                    marginTop: `${wrapHeight/2-progress_radius*2}px`
+                    marginTop: `${wrapHeight/2-progress_radius*2 -60}px`
                 }
             }
         },

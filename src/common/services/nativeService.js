@@ -124,7 +124,6 @@ export default {
         }
     },
     runGo(url, options) {
-        // mm.toast({ message: url, duration: 2 })
         if (!options) {
             options = {
                 animated: 'true',

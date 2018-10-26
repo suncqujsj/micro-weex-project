@@ -3,8 +3,8 @@
  * 2018/10/22
  */
 
-import nativeService from "../../../common/services/nativeService";
 import cmdFun from "../util.js"; //解析指令
+import nativeService from '@/common/services/nativeService';
 const globalEvent = weex.requireModule("globalEvent");
 
 const deviceMessageMixin = {
@@ -17,6 +17,21 @@ const deviceMessageMixin = {
         },
         viewappear(){
             this.listenerDeviceReiveMessage();
+        },
+        onlongpress(){//隐藏调试，查看设备上报数据
+            var self = this;
+            var sendCmd = cmdFun.createQueryMessage();
+            nativeService.toast("下发03查询:"+JSON.stringify(sendCmd),2);
+            nativeService.startCmdProcess(
+                "query",
+                sendCmd,
+                function (result) {
+                    nativeService.alert(JSON.stringify(result));
+                },
+                function (result) {
+                    nativeService.toast("查询失败" + JSON.stringify(result));
+                }
+            );
         },
         childLock: function(childLock){
             let context = this;
@@ -37,7 +52,7 @@ const deviceMessageMixin = {
         },
         goTo(url){
             let path = url + '.js'
-            nativeService.goTo(path,false, true)
+            nativeService.goTo(path, {animated: false, replace: true})
         },
         queryStatus() {
             var self = this;
@@ -57,7 +72,7 @@ const deviceMessageMixin = {
                 },
                 function (result) {
                     //nativeService.hideLoading();
-                    // nativeService.toast("查询失败" + JSON.stringify(result));
+                    //nativeService.toast("查询失败" + JSON.stringify(result));
                 }
             );
         },
@@ -73,7 +88,8 @@ const deviceMessageMixin = {
                     context.queryStatus();
                 },
                 function(result){
-                    console.log('fail', result);
+                    nativeService.toast('控制失败，请检查网络或者设置的参数');
+                    //console.log('fail', result);
                 }
             )
         },

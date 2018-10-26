@@ -1,25 +1,28 @@
 <template>
-    <div class="all_section" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
-        <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" ></midea-header>
+    <div class="all_section" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear"  @longpress="onlongpress"><!--隐藏长按组件触发03查询，方便调试-->
+        <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack"></midea-header>
         <div class="progress_content">
-            <div class="progress_section" :style="progress_style">
+            <div class="progress_section" :style="progress_style" > 
                 <wxcProgress :percent="progress" :progressShow="progressShow"
-                        :wxc_radius='progress_radius'>
+                    :wxc_radius='progress_radius'>
 
-                    </wxcProgress>
-                    <div class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
-                        <text class="number_prev" v-if="hasHour">时</text>
-                        <div class="cen">
-                            <!--<text class="number-text">{{progress}} {{timeRemain}}</text>-->
-                            <text :class="['number-text',noTimeShow && 'work_finish']">{{workSpecialStatusText}}</text>
-                        </div>
-                        <text class="number_next">{{tag_next}}</text>
+                </wxcProgress>
+                <!--<midea-progresscycle-view class="circleprogress" :data="chartJson"></midea-progresscycle-view>-->
+                <div class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
+                    <text class="number_prev" v-if="hasHour">时</text>
+                    <div class="cen">
+                        <!--<text class="number-text">{{progress}} {{timeRemain}}</text>-->
+                        <text :class="['number-text',noTimeShow && 'work_finish']">{{workSpecialStatusText}}</text>
                     </div>
-                    <div class="cen status_tag_section" :style="{width:`${progress_radius*2}px`}">
-                        <text class="status_tag">{{statusTag}}</text>
-                    </div>
-
+                    <text class="number_next">{{tag_next}}</text>
                 </div>
+                <div class="cen status_tag_section" :style="{width:`${progress_radius*2}px`}">
+                    <text class="status_tag">{{statusTag}}</text>
+                </div>
+                <!--<div class="animate_section" ref="modeBox">
+                    <image class="animate_circle" src="assets/img/oval_2@2x.png"></image>
+                </div>-->
+            </div>
         </div>
 
        
@@ -116,6 +119,10 @@
     .progress_section{
         .pos(r);
     }
+    .circleprogress {
+        width: 500px;
+        height: 500px;
+        }
     .time_section{
         .pos(a);
         top: 0px;
@@ -207,6 +214,15 @@
     .decs_text{
        .white; 
     }
+    .animate_section{
+        .pos(a);
+        top: 0px;
+        right: 250px;
+    }
+    .animate_circle{
+        width: 18px;
+        height: 18px;
+    }
 </style>
 
 <script>
@@ -238,6 +254,21 @@
         mixins: [deviceMessageMixin, accordionMixin],
         data(){
             return {
+                //   chartJson: {
+                //     "completedColor":"#FFFFFF", //环形进度条未完成后的颜色默认#267AFF
+                //     "incompletedColor":"#ffe0e0", //环形进度条未完成后的颜色，默认透明
+                //     "thickness":6, //环形进度条宽度，默认4
+                //     "cornerRadius" : 120,  //环形的半径，默认是width/2
+                //     "totalCounter" : 360, //环形进度条的最大值，默认是360
+                //     "progressCounter" : 0, //设置进度值，默认是从0-360, 默认为0
+                //     "autoProgress" : false, //设置是否需要自动执行环形进度，默认false, 如果设置为true，则每秒进度值+1操作
+                //     "clockwise" : true, //环形自动执行进度的方向，默认是true，即顺时针方向，false为逆时针方向
+                //     "startingSlice" : 360, //环形进度开始的起始位置，当totalCounter为360的时候，0: 0点钟位置起点，90:3点钟位置起点 180:6点钟位置起点
+                //     "pointShow" : true, //环形进度中的进度球是否需要显示，默认不显示
+                //     "pointRadius" : 3, //默认是环形进度宽度的一半
+                //     "pointColor" :  "#FFFFFF", //环形进度中的进度球颜色
+                //     "pointImageBase64" :  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAhCAYAAABX5MJvAAAERklEQVRYR82Yf2jUdRjHX5875137cbcfOF1Omfij1DDC3BKEWeCPUMERy2pgkQvBQUY5EfrB6AfIlrVFG4gYJWmaxASV/AHlQKptRTRSywyHu5oudttOt+623T3x3Pe8rbntbiTdvv99P5/n83ne3/fn/Tyf5/ka4nkqxObKJd3RS1Y/FCI8JpBnDLOATASvQJuBVoSvptpoCKTQ6fPQTYUJxXJhYhlkV8t0PxRjWIeQH3Ya6zF0As0IJ51wtOMlc2O8JWOD2CtJbj9FCK8KLACcsXyPMu83cBnDOz1O6tlqBkbbY1QQGXvFHQpQJiHeABy6cKodpiXD/AxYPxcezIbcVEh3QrcfPLfgpw448Tv81gV/9UF/MOoyYGy8aXNQ27XV9IwEcgcI13syDzsVwDMI4fn7MmHT/ZbzBZlYg2M8Alz2WmCO/AK/eiOGBp06RJAK38vmyvDl/9pPGQj6qUV4CrAbA88uhp0FMD0ZptjiP5DBENzog8pG+OQCiEKAIIbDdidlwxkZAqEaCFAuwtvKQHISlD0EryyDe6ZYznsH4JoPzrbC6Va42gNdfshwwhw3rMmDVXkw2wUpSdaavwdhTzPU/gh9qgiDGMNrPQ6qbmskCsJdI0+KcEA1oAzsWDYEICjw/XU4cAGOX4GewNiMuB2wYR5sXgwPz1A6h4C82xxlJGAMm3u2m891pzAIDcMAnBFYou/PPQC7C4cY+PIqlJ8Dz83oJuOei35EbhpUrYTH5wwxsqsBPv7ZejfQ4oDVGr4GTUSZbCNElYahirC+CGamgjJwphVKTkAwZsq5E5fdBgfXw+o8i5E/bkLRsahY/dgo93mpM2kfSpYJ8inCWg3DXQWwfaklwsZ22HIK2nzxC3Kk5SwX7F8LBTkwEIIPfoDdjZHwNZwiSImZViPzA8J3mglnpkH9RiskVYQ7G+DgxfiOYCyYejQli6Cy0BKrhqyyoawAXofhEeOukVIR9unIytlwrMgSyqVOWHN0fBHGy4+K9XQxLMwinCw21sO5axFtCC8Yd7UcEnhah/Y8CqVhaVq0vX4+Xjex7d5aAS8utez2tcCOr6MC/cy4quUbYLkOnd0E+TOsyXVfwHlP7M3jtViRCyefsKybrsOqI9GV3+pxtImQq0OXtsC9qdbkoo+i5xavn3HtVG8Xn7dM/rwFC/dHmDB4FESvCMk61F4GyZHsmFMXyXB3BQJoBm7fZm3WNwg5tVEQfaqJNiGBTIBnkmhiMkSH+30pFZPgPJHQjGnodMDyyXF3hG/RdDR4/v9bFMp93dRNknoikowSXlmFcUyGGlNxjFlt50N2CiRNoNrWAqajFyqbJlJtR44l4X3H7bsqVge2YS4siXRgWu5r2a8dWEsHHL8bHVj00kx0Lzr89g535TaKkQl05eDF0PTfu/LhSDShuUh32MnqD1GIGfF/ArwiI/5PBOn0+eL7P/EPYtpkF4ik2AkAAAAASUVORK5CYII=", //环形进度中的进度球的图片base64
+                // },
                 wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
                 progress:1,
                 progress_radius: 250,
@@ -298,6 +329,7 @@
             }
         },
         mounted() {
+            //this.moveTest(0);
             //  nativeService.getDeviceInfo().then((resp)=>{
             //      nativeService.alert(resp);
             //  }).catch((error) => {
@@ -457,6 +489,8 @@
                       //倒计时按照设计来
                 var _hour = analysisObj.timeRemaining.hour, _minute = analysisObj.timeRemaining.minute, _second = analysisObj.timeRemaining.second;
                 var allSeconds = _hour*60*60+_minute*60+_second;
+                var progress_step = (10*60-allSeconds)/(10*60)*360; //360度倒计时为例
+                //this.chartJson.progressCounter = progress_step;
 
                 if(!this.noTimeShow){
                     if(allSeconds>60*60){ //大于1小时，有‘时’显示
@@ -476,9 +510,6 @@
                         }
                     }
                 }
-
-
-
 
             },
             // doing: function(){
@@ -521,7 +552,8 @@
                         self.queryStatus();
                     },
                     function(result){
-                        console.log('fail', result);
+                         nativeService.toast('控制失败，请检查网络或者设置的参数');
+                        //console.log('fail', result);
                     }
                 )
             },
@@ -611,7 +643,8 @@
                             self.analysisFun(analysisObj);
                         },
                         function(result){
-                            console.log('fail', result);
+                            nativeService.toast('控制失败，请检查网络或者设置的参数');
+                            //console.log('fail', result);
                         }
                     )
                 }
@@ -620,7 +653,33 @@
             //点击取消/确定按钮事件
             actionsheetBtnClick: function () {
                 this.showBar = false;
-            }
+            },
+             moveTest(val) {
+                var self = this;
+                var testEl = this.$refs.modeBox;
+                animation.transition(
+                    testEl,
+                    {
+                    styles: {
+                        // color: "#FF0000",
+                        //transform: "translateY(" + val + "px)",
+                        top: val+"px"
+                    },
+                    duration: 3000, //ms
+                    timingFunction: "linear",
+                    delay: 0 //ms
+                    },
+                    function() {
+                    if (self.val <= 0) {
+                        self.val = self.val + 60;
+                    } else {
+                        self.val = self.val - 80;
+                    }
+
+                    self.moveTest(self.val);
+                    }
+                );
+                },
         }
     }
 </script>

@@ -121,6 +121,9 @@
         <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="烤箱" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" >
             <div slot="customerContent" class="header-top-wrapper">
                 <div class="header-top-inner-wrapper">
+                    <div class="header-right-image-wrapper" @click="openCloudRecipe">
+                        <image class="header-right-image" :src="'assets/img/header/public_ic_cloud_recipe@3x.png'"></image>
+                    </div>
                     <div class="header-right-image-wrapper" @click="childLock(true)">
                         <image class="header-right-image" :src="'assets/img/header/public_ic_babylock@3x.png'"></image>
                     </div>
@@ -276,7 +279,7 @@
         computed:{
         },
         methods: {
-            openCloudMenu: function(){
+            openCloudRecipe: function(){
                 nativeService.jumpNativePage({
                     "pageName": "CookbookHome",
                     "data": {}

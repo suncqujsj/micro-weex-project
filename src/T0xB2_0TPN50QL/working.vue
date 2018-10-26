@@ -182,14 +182,14 @@
     }
     .edit_section{
         width: 32px;
-        height: 36px;
+        height: 50px;
+        margin-top: 30px;
     }
     .setting_icon{
         .row;
         .j-c;
         width: 32px;
         height: 18px;
-        margin-top: 30px;
     }
     .footer_section{
         .row;

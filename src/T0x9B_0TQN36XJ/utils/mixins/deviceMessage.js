@@ -54,6 +54,7 @@ const deviceMessageMixin = {
                     context.queryStatus();
                 },
                 function(result){
+                    context.loading = false;
                     console.log('fail', result);
                 }
             )

@@ -8,6 +8,11 @@ import nativeService from '@/common/services/nativeService';
 const globalEvent = weex.requireModule("globalEvent");
 
 const deviceMessageMixin = {
+    data () {
+        return {
+            loading: false
+        }
+    },
     methods: {
         viewdisappear(){
             globalEvent.removeEventListener("receiveMessage");
@@ -34,12 +39,18 @@ const deviceMessageMixin = {
             );
         },
         childLock: function(childLock){
+
+            if(this.loading) return;
+
+            this.loading=true;
+
             let context = this;
             let deviceCmd = cmdFun.cmdLock({childLock});
             nativeService.startCmdProcess(
                 "control",
                 deviceCmd,
                 function(result){
+                    context.loading = false;
                     context.queryStatus();
                 },
                 function(result){

@@ -26,7 +26,8 @@ export default {
     props: {
         wxc_color: {
             type: String,
-            default: '#ffffff'
+            // default: '#ffffff'
+            default: '#f3cccc'
         },
         wxc_bgColor: {
             type: String,

@@ -23,9 +23,9 @@
         .row;
         justify-content: center;
         align-items: flex-end;
-        height: 18*2px;
+        height: (18+16)*2px;
         .bs(padding-box);
-        padding: 16*2px 0;
+        padding-bottom: 16*2px;
 
     }
     .tab-text{
@@ -249,12 +249,12 @@
                 tabs:[
                     {
                         name:'自动菜单',
-                        active:false,
+                        active:true,
                         rows:autoMenu
                     },
                     {
                         name:'加热模式',
-                        active:true,
+                        active:false,
                         rows:modes
                     }
                 ],

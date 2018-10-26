@@ -27,6 +27,7 @@ export default {
       {'text': '保温','mode': 0xD0},
       {'text': '发酵','mode': 0xB0},
       {'text': '自动菜谱','mode': 0xE0},
+      {'text': '烘干','mode': 0xC4},
     ];
     for(var i=0; i<modeArr.length; i++){
       if(modeValue == modeArr[i].mode){

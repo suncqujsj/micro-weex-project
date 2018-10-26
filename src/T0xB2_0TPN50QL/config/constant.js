@@ -5,6 +5,6 @@
 
 module.exports = {
     device: {
-        type: 0x9B
+        type: 0xB2
     }
 };

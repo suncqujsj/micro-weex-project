@@ -276,6 +276,12 @@
         computed:{
         },
         methods: {
+            openCloudMenu: function(){
+                nativeService.jumpNativePage({
+                    "pageName": "CookbookHome",
+                    "data": {}
+                })
+            },
             onTabClicked: function(index){
                 // debugger;
                 // let tabs = JSON.parse(JSON.stringify(this.tabs));

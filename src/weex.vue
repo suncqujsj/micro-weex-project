@@ -71,24 +71,16 @@ module.exports = {
         isShowModuleList: false,
         moduleIndex: null,
         moduleList: [
-<<<<<<< HEAD
-            { key: 0, value: "midea-demo" },
-            { key: 1, value: "customer-service" },
-            { key: 2, value: "midea-rooms" },
-            { key: 3, value: "midea-card" },
-            { key: 4, value: "community" },
-            { key: 5, value: "T0xE1_000000H3" },
-            { key: 6, value: "T0xE1_000000H5" },
-            { key: 7, value: "T0x9B_0TQN36XJ" },
-            { key: 8, value: "T0xB2_0TPN50QL" }
-=======
             { key: 0, value: "midea-demo", desc: "midea-demo 美居Demo" },
             { key: 1, value: "plugin", desc: "plugin 插件" },
             { key: 2, value: "midea-card", desc: "midea-card卡片页" },
             { key: 3, value: "community", desc: "community 社区模块" },
             { key: 4, value: "midea-rooms", desc: "midea-rooms场景" },
-            { key: 5, value: "customer-service", desc: "customer-service 服务模块" }
->>>>>>> b482bfff8775dc72d9fd46164f5244ebd0a650e9
+            { key: 5, value: "customer-service", desc: "customer-service 服务模块" },
+            { key: 6, value: "T0xE1_000000H3",desc: "T0xE1_000000H3" },
+            { key: 7, value: "T0xE1_000000H5",desc: "T0xE1_000000H5" },
+            { key: 8, value: "T0x9B_0TQN36XJ",desc: "T0x9B_0TQN36XJ" },
+            { key: 9, value: "T0xB2_0TPN50QL",desc: "T0xB2_0TPN50QL" }
         ],
         card: 'T0xB1',
         isShowCardList: false,

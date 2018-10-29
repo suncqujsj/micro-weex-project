@@ -127,9 +127,9 @@
                     <div class="header-right-image-wrapper" @click="childLock(true)">
                         <image class="header-right-image" :src="'assets/img/header/public_ic_babylock@3x.png'"></image>
                     </div>
-                    <!--<div class="header-right-image-wrapper" @click="test">-->
-                        <!--<image class="header-right-image" :src="'assets/img/header/public_ic_lots@3x.png'"></image>-->
-                    <!--</div>-->
+                    <div class="header-right-image-wrapper" @click="openMorePage">
+                        <image class="header-right-image" :src="'assets/img/header/public_ic_lots@3x.png'"></image>
+                    </div>
                 </div>
             </div>
         </midea-header>
@@ -284,6 +284,9 @@
                     "pageName": "CookbookHome",
                     "data": {}
                 })
+            },
+            openMorePage: function(){
+                nativeService.goTo('more.js', {animated: true});
             },
             onTabClicked: function(index){
                 // debugger;

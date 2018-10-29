@@ -8,6 +8,7 @@
                 <input class="text-input" type="text" placeholder="请输入目标地址" v-model="host" @input="hostChange" />
                 <midea-button text="选择" :btnStyle="{width: '120px', height: '60px'}" @mideaButtonClicked="isShowHostList=true">
                 </midea-button>
+                <input style="width:100px;padding-left:10px;" type="text" placeholder="端口" v-model="port" @input="portChange" />
             </div>
             <div class="item-group">
                 <text class="text-label">测试模块:</text>
@@ -15,7 +16,7 @@
                 <midea-button text="选择" :btnStyle="{width: '120px', height: '60px'}" @mideaButtonClicked="isShowModuleList=true">
                 </midea-button>
             </div>
-            <div class="item-group" v-if="module == 'midea-card' || module==''">
+            <div class="item-group" v-if="module == 'midea-card' || module=='plugin'">
                 <text class="text-label">测试插件:</text>
                 <input class="text-input" type="text" placeholder="请输入插件" v-model="card" @input="cardChange" />
                 <midea-button text="选择" :btnStyle="{width: '120px', height: '60px'}" @mideaButtonClicked="isShowCardList=true">
@@ -65,17 +66,17 @@ module.exports = {
         isShowHostList: false,
         hostIndex: null,
         hostList: [],
-
+        port: "8080",
         module: 'midea-demo',
         isShowModuleList: false,
         moduleIndex: null,
         moduleList: [
-            { key: 0, value: "midea-demo", desc: "美居Demo" },
-            { key: 1, value: "customer-service", desc: "服务模块" },
-            { key: 2, value: "midea-rooms", desc: "场景" },
-            { key: 3, value: "midea-card", desc: "卡片页" },
-            { key: 4, value: "community", desc: "社区模块" },
-            { key: 5, value: "", desc: "插件" }
+            { key: 0, value: "midea-demo", desc: "midea-demo 美居Demo" },
+            { key: 1, value: "plugin", desc: "plugin 插件" },
+            { key: 2, value: "midea-card", desc: "midea-card卡片页" },
+            { key: 3, value: "community", desc: "community 社区模块" },
+            { key: 4, value: "midea-rooms", desc: "midea-rooms场景" },
+            { key: 5, value: "customer-service", desc: "customer-service 服务模块" }
         ],
         card: 'T0xAC',
         isShowCardList: false,
@@ -169,6 +170,9 @@ module.exports = {
             this.host = event.item.value
             this.url = this.generateUrl()
         },
+        portChange() {
+            this.url = this.generateUrl()
+        },
         moduleChange() {
             this.url = this.generateUrl()
         },
@@ -188,13 +192,17 @@ module.exports = {
             this.url = this.generateUrl()
         },
         generateUrl() {
+            let module = this.module
             let cardPath = ''
             let indexPath = '/weex.js'
             if (this.module == "midea-card") {
                 cardPath = "/" + this.card + "/midea-card"
                 indexPath = "/card.js"
+            } else if (this.module == "plugin") {
+                module = ""
+                cardPath = this.card
             }
-            return "http://" + this.host + ":8080/dist/" + this.module + cardPath + indexPath + "?root=" + this.module + cardPath + "&ip=" + this.host + "&isDummy=" + this.isDummy
+            return "http://" + this.host + ":" + this.port + "/dist/" + module + cardPath + indexPath + "?root=" + module + cardPath + "&ip=" + this.host + "&isDummy=" + this.isDummy
         }
     },
     created() {

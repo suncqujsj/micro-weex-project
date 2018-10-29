@@ -413,11 +413,11 @@
                         desc = '温度极低'
                     }else if (temperature >10 && temperature<=15){
                         desc = '温度偏低'
-                    }else if (temperature >15 && temperature<=23){
+                    }else if (temperature >15 && temperature<= this.roomProp.temperature.split(',')[0] ){
                         desc = '温度凉爽'
-                    }else if (temperature >23 && temperature<=28){
+                    }else if (temperature >this.roomProp.temperature.split(',')[0] && temperature<=this.roomProp.temperature.split(',')[1]){
                         desc = '温度适宜 '
-                    }else if (temperature > 28 ){
+                    }else if (temperature > this.roomProp.temperature.split(',')[1]){
                         desc = '有点闷热'
                     }else{
                         desc = '温度未知'
@@ -432,11 +432,11 @@
                 let humidity = this.indicator.humidity
                 let desc
                 if (humidity){
-                     if (humidity <=30){
+                     if (humidity <=this.roomProp.humidity.split(',')[0]){
                         desc = '干燥'
-                    }else if (humidity >80){
+                    }else if (humidity >this.roomProp.humidity.split(',')[1]){
                         desc = '潮湿'
-                    }else if (humidity>30 && humidity <=80){
+                    }else if (humidity>this.roomProp.humidity.split(',')[0] && humidity <=this.roomProp.humidity.split(',')[1]){
                         desc = '适宜'
                     }
                 }else{
@@ -592,6 +592,7 @@
                 indicator: {
                     level: 1
                 },
+                roomProp: {},
                 unit: {
                     temperature: '℃',
                     percent: '%'
@@ -722,7 +723,7 @@
                                                 this.washerCode = this.scene.applianceList[0].applianceCode || ''
                                                 this.getWashData()
                                                 this.luaQueryStatus()
-                                            }else{
+                                            } else {
                                                 this.hasWasher = false
                                             }
                                         }
@@ -756,6 +757,9 @@
                                     this.scene = res.data
                                     if (res.data.indicator) {
                                         this.indicator = res.data.indicator
+                                    }
+                                    if (res.data.prop) {
+                                        this.roomProp = res.data.prop
                                     }
                                     resolve()
                                 }else{

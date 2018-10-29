@@ -8,6 +8,7 @@
                 <input class="text-input" type="text" placeholder="请输入目标地址" v-model="host" @input="hostChange" />
                 <midea-button text="选择" :btnStyle="{width: '120px', height: '60px'}" @mideaButtonClicked="isShowHostList=true">
                 </midea-button>
+                <input style="width:100px;padding-left:10px;" type="text" placeholder="端口" v-model="port" @input="portChange" />
             </div>
             <div class="item-group">
                 <text class="text-label">测试模块:</text>
@@ -15,7 +16,7 @@
                 <midea-button text="选择" :btnStyle="{width: '120px', height: '60px'}" @mideaButtonClicked="isShowModuleList=true">
                 </midea-button>
             </div>
-            <div class="item-group" v-if="module == 'midea-card'">
+            <div class="item-group" v-if="module == 'midea-card' || module=='plugin'">
                 <text class="text-label">测试插件:</text>
                 <input class="text-input" type="text" placeholder="请输入插件" v-model="card" @input="cardChange" />
                 <midea-button text="选择" :btnStyle="{width: '120px', height: '60px'}" @mideaButtonClicked="isShowCardList=true">
@@ -23,12 +24,12 @@
             </div>
             <div class="item-group">
                 <text class="text-label">模拟数据:</text>
-                <text>isDummy:{{isDummy}}</text>
+                <text class="text-input" style="flex:1;">isDummy:{{isDummy}}</text>
                 <midea-switch2 :checked="isDummy" @change="onIsDummyChange"></midea-switch2>
             </div>
             <div class="action-bar">
                 <midea-title-bar title="输入远端目标页面地址"></midea-title-bar>
-                <textarea type="text" placeholder="输入远端目标页面地址" class="textarea" v-model="url" rows=4 />
+                <textarea type="text" placeholder="输入远端目标页面地址" class="textarea" v-model="url" rows=5 />
                 <midea-button text="进入远端目标页面" @mideaButtonClicked="mideaButtonClicked"></midea-button>
             </div>
 
@@ -42,9 +43,9 @@
 
         <midea-select :show="isShowHostList" title="选择HOST" :items="hostList" :index="hostIndex" @close="isShowHostList=false" @itemClick="selectHost"></midea-select>
 
-        <midea-select :show="isShowModuleList" title="选择模块" :items="moduleList" :index="moduleIndex" @close="isShowModuleList=false" @itemClick="selectModule"></midea-select>
+        <midea-select :show="isShowModuleList" title="选择模块" :items="moduleList" :index="moduleIndex" @close="isShowModuleList=false" @itemClick="selectModule" valueField="desc"></midea-select>
 
-        <midea-select :show="isShowCardList" title="选择模块" :items="cardList" :index="cardIndex" @close="isShowCardList=false" @itemClick="selectCard"></midea-select>
+        <midea-select :show="isShowCardList" title="选择品类" :items="cardList" :index="cardIndex" @close="isShowCardList=false" @itemClick="selectCard"></midea-select>
     </div>
 </template>
 <script>
@@ -65,11 +66,12 @@ module.exports = {
         isShowHostList: false,
         hostIndex: null,
         hostList: [],
-
+        port: "8080",
         module: 'midea-demo',
         isShowModuleList: false,
         moduleIndex: null,
         moduleList: [
+<<<<<<< HEAD
             { key: 0, value: "midea-demo" },
             { key: 1, value: "customer-service" },
             { key: 2, value: "midea-rooms" },
@@ -79,6 +81,14 @@ module.exports = {
             { key: 6, value: "T0xE1_000000H5" },
             { key: 7, value: "T0x9B_0TQN36XJ" },
             { key: 8, value: "T0xB2_0TPN50QL" }
+=======
+            { key: 0, value: "midea-demo", desc: "midea-demo 美居Demo" },
+            { key: 1, value: "plugin", desc: "plugin 插件" },
+            { key: 2, value: "midea-card", desc: "midea-card卡片页" },
+            { key: 3, value: "community", desc: "community 社区模块" },
+            { key: 4, value: "midea-rooms", desc: "midea-rooms场景" },
+            { key: 5, value: "customer-service", desc: "customer-service 服务模块" }
+>>>>>>> b482bfff8775dc72d9fd46164f5244ebd0a650e9
         ],
         card: 'T0xB1',
         isShowCardList: false,
@@ -172,6 +182,9 @@ module.exports = {
             this.host = event.item.value
             this.url = this.generateUrl()
         },
+        portChange() {
+            this.url = this.generateUrl()
+        },
         moduleChange() {
             this.url = this.generateUrl()
         },
@@ -191,13 +204,17 @@ module.exports = {
             this.url = this.generateUrl()
         },
         generateUrl() {
+            let module = this.module
             let cardPath = ''
             let indexPath = '/weex.js'
             if (this.module == "midea-card") {
                 cardPath = "/" + this.card + "/midea-card"
                 indexPath = "/card.js"
+            } else if (this.module == "plugin") {
+                module = ""
+                cardPath = this.card
             }
-            return "http://" + this.host + ":8080/dist/" + this.module + cardPath + indexPath + "?root=" + this.module + cardPath + "&ip=" + this.host + "&isDummy=" + this.isDummy
+            return "http://" + this.host + ":" + this.port + "/dist/" + module + cardPath + indexPath + "?root=" + module + cardPath + "&ip=" + this.host + "&isDummy=" + this.isDummy
         }
     },
     created() {
@@ -210,7 +227,7 @@ module.exports = {
                     let temp = {}
                     for (let index = 0; index < this.history.length; index++) {
                         let element = this.history[index]
-                        let host = element.substring(element.indexOf("://") + 3, element.indexOf(":8080"))
+                        let host = element.substring(element.indexOf("://") + 3, element.indexOf(":80"))
                         if (!temp[host]) {
                             this.hostList.push(
                                 {
@@ -237,11 +254,13 @@ module.exports = {
   position: relative;
 }
 .textarea {
+  height: 120px;
   padding-left: 20px;
   padding-right: 20px;
   border-bottom-color: #e2e2e2;
   border-bottom-width: 1px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  lines: 5;
 }
 .history-item {
   flex-direction: row;

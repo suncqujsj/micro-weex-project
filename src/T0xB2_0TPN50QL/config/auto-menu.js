@@ -10,16 +10,84 @@ let data = [
             [
                 {
                     'icon': '',
-                    'text': '清蒸鱼',
+                    'text': '清蒸草鱼香菇',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:13,
+                        range:[5,120,1]
+                    },
+                    temperature:{
+                        set: false,
+                        default:100,
+                        range:null
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x41,
+                        range:null
+                    }
+                },
+                {
+                    'icon': '',
+                    'text': '金针菇蒸粉丝',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:10,
+                        range:[5,120,1]
+                    },
+                    temperature:{
+                        set: false,
+                        default:100,
+                        range:null
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x42,
+                        range:null
+                    }
+                },
+                {
+                    'icon': '',
+                    'text': '鲜虾花蛤蒸蛋羹',
                     'mode': 0xE0,
                     time:{
                         set: true,
                         default:15,
-                        range:[1,90,1]
+                        range:[5,120,1]
                     },
                     temperature:{
                         set: false,
-                        default:100,
+                        default:95,
                         range:null
                     },
                     preheat:{
@@ -38,18 +106,18 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 1,
+                        default: 0x43,
                         range:null
                     }
                 },
                 {
                     'icon': '',
-                    'text': '蒜蓉粉丝蒸虾',
+                    'text': '豆腐狮子头',
                     'mode': 0xE0,
                     time:{
                         set: true,
                         default:12,
-                        range:[1,90,1]
+                        range:[5,120,1]
                     },
                     temperature:{
                         set: false,
@@ -72,75 +140,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 2,
-                        range:null
-                    }
-                },
-                {
-                    'icon': '',
-                    'text': '清蒸大闸蟹',
-                    'mode': 0xE0,
-                    time:{
-                        set: true,
-                        default:16,
-                        range:[1,90,1]
-                    },
-                    temperature:{
-                        set: false,
-                        default:100,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 3,
-                        range:null
-                    }
-                },
-                {
-                    'icon': '',
-                    'text': '蒸排骨',
-                    'mode': 0xE0,
-                    time:{
-                        set: true,
-                        default:19,
-                        range:[1,90,1]
-                    },
-                    temperature:{
-                        set: false,
-                        default:100,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 4,
+                        default: 0x44,
                         range:null
                     }
                 }
@@ -148,12 +148,12 @@ let data = [
             [
                 {
                 'icon': '',
-                'text': '粉蒸肉',
+                'text': '蒜蓉粉丝鲍鱼',
                 'mode': 0xE0,
                 time:{
                     set: true,
-                    default:58,
-                    range:[1,90,1]
+                    default:10,
+                    range:[5,120,1]
                 },
                 temperature:{
                     set: false,
@@ -176,18 +176,18 @@ let data = [
                 },
                 recipeId:{
                     set:false,
-                    default: 5,
+                    default: 0x45,
                     range:null
                 }
             },
                 {
                     'icon': '',
-                    'text': '蒸水蛋',
+                    'text': '小米蒸排骨',
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:12,
-                        range:[1,90,1]
+                        default:25,
+                        range:[5,120,1]
                     },
                     temperature:{
                         set: false,
@@ -210,22 +210,22 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 6,
+                        default: 0x46,
                         range:null
                     }
                 },
                 {
                     'icon': '',
-                    'text': '蒸米饭',
+                    'text': '南瓜泥牛奶蒸蛋',
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:45,
-                        range:[1,90,1]
+                        default:14,
+                        range:[2,120,1]
                     },
                     temperature:{
                         set: false,
-                        default:100,
+                        default:95,
                         range:null
                     },
                     preheat:{
@@ -244,18 +244,18 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 7,
+                        default: 0x47,
                         range:null
                     }
                 },
                 {
                     'icon': '',
-                    'text': '蒸馒头',
+                    'text': '清蒸鲳鱼',
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:20,
-                        range:[1,90,1]
+                        default:18,
+                        range:[5,120,1]
                     },
                     temperature:{
                         set: false,
@@ -278,7 +278,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 8,
+                        default: 0x48,
                         range:null
                     }
                 }
@@ -286,80 +286,12 @@ let data = [
             [
                 {
                     'icon': '',
-                    'text': '蒸包子',
-                    'mode': 0xE0,
-                    time:{
-                        set: true,
-                        default:20,
-                        range:[1,90,1]
-                    },
-                    temperature:{
-                        set: false,
-                        default:100,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 9,
-                        range:null
-                    }
-                },
-                {
-                    'icon': '',
-                    'text': '蒸红薯',
-                    'mode': 0xE0,
-                    time:{
-                        set: true,
-                        default:40,
-                        range:[1,90,1]
-                    },
-                    temperature:{
-                        set: false,
-                        default:100,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 10,
-                        range:null
-                    }
-                },
-                {
-                    'icon': '',
-                    'text': '蒸南瓜',
+                    'text': '粉蒸牛肉',
                     'mode': 0xE0,
                     time:{
                         set: true,
                         default:24,
-                        range:[1,90,1]
+                        range:[5,120,1]
                     },
                     temperature:{
                         set: false,
@@ -382,330 +314,222 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 11,
+                        default: 0x49,
+                        range:null
+                    }
+                },
+                {
+                    'icon': '',
+                    'text': '豉汁蒸鲈鱼',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:10,
+                        range:[5,120,1]
+                    },
+                    temperature:{
+                        set: false,
+                        default:100,
+                        range:null
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x4A,
+                        range:null
+                    }
+                },
+                {
+                    'icon': '',
+                    'text': '枸杞百合蒸鸡',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:16,
+                        range:[5,120,1]
+                    },
+                    temperature:{
+                        set: false,
+                        default:100,
+                        range:null
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x4B,
+                        range:null
+                    }
+                },
+                {
+                    'icon': '',
+                    'text': '牛肉灌汤包',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:16,
+                        range:[5,120,1]
+                    },
+                    temperature:{
+                        set: false,
+                        default:100,
+                        range:null
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x4C,
+                        range:null
+                    }
+                },
+              
+            ],
+            [
+                {
+                    'icon': '',
+                    'text': '柠香鲈鱼',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:13,
+                        range:[5,120,1]
+                    },
+                    temperature:{
+                        set: false,
+                        default:100,
+                        range:null
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x4D,
+                        range:null
+                    }
+                },
+                {
+                    'icon': '',
+                    'text': '蒜蓉干贝蒸丝瓜',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:9,
+                        range:[5,120,1]
+                    },
+                    temperature:{
+                        set: false,
+                        default:100,
+                        range:null
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x4E,
+                        range:null
+                    }
+                },
+                {
+                    'icon': '',
+                    'text': '清蒸香菇鳕鱼',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:13,
+                        range:[5,120,1]
+                    },
+                    temperature:{
+                        set: false,
+                        default:100,
+                        range:null
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x4F,
                         range:null
                     }
                 }
             ]
         ]
     },
-    {
-        title: '非蒸汽菜单',
-        iconButtons: [
-            [
-                {
-                    'icon': '',
-                    'text': '披萨',
-                    'mode': 0xE0,
-                    time:{
-                        set: true,
-                        default:18,
-                        range:[1,90,1]
-                    },
-                    temperature:{
-                        set: false,
-                        default:220,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 12,
-                        range:null
-                    }
-                },
-                {
-                    'icon': '',
-                    'text': '蛋糕',
-                    'mode': 0xE0,
-                    time:{
-                        set: true,
-                        default:50,
-                        range:[1,90,1]
-                    },
-                    temperature:{
-                        set: false,
-                        default:160,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: true
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 13,
-                        range:null
-                    }
-                },
-                {
-                    'icon': '',
-                    'text': '手指饼干',
-                    'mode': 0xE0,
-                    time:{
-                        set: true,
-                        default:11,
-                        range:[1,90,1]
-                    },
-                    temperature:{
-                        set: false,
-                        default:180,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: true
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 14,
-                        range:null
-                    }
-                },
-                {
-                    'icon': '',
-                    'text': '面包片',
-                    'mode': 0xE0,
-                    time:{
-                        set: true,
-                        default:18,
-                        range:[1,90,1]
-                    },
-                    temperature:{
-                        set: false,
-                        default:180,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 15,
-                        range:null
-                    }
-                }
-            ],
-            [
-                {
-                    'icon': '',
-                    'text': '烤鸡翅',
-                    'mode': 0xE0,
-                    time:{
-                        set: true,
-                        default:24,
-                        range:[1,90,1]
-                    },
-                    temperature:{
-                        set: false,
-                        default:200,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 16,
-                        range:null
-                    }
-                },
-                {
-                    'icon': '',
-                    'text': '烤虾',
-                    'mode': 0xE0,
-                    time:{
-                        set: true,
-                        default:17,
-                        range:[1,90,1]
-                    },
-                    temperature:{
-                        set: false,
-                        default:200,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 17,
-                        range:null
-                    }
-                },
-                {
-                    'icon': '',
-                    'text': '烤排骨',
-                    'mode': 0xE0,
-                    time:{
-                        set: true,
-                        default:30,
-                        range:[1,90,1]
-                    },
-                    temperature:{
-                        set: false,
-                        default:200,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 18,
-                        range:null
-                    }
-                },
-                {
-                    'icon': '',
-                    'text': '烤地瓜',
-                    'mode': 0xE0,
-                    time:{
-                        set: true,
-                        default:45,
-                        range:[1,90,1]
-                    },
-                    temperature:{
-                        set: false,
-                        default:230,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 19,
-                        range:null
-                    }
-                }
-            ],
-            [
-                {
-                    'icon': '',
-                    'text': '烤土豆',
-                    'mode': 0xE0,
-                    time:{
-                        set: true,
-                        default:45,
-                        range:[1,90,1]
-                    },
-                    temperature:{
-                        set: false,
-                        default:230,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 12,
-                        range:null
-                    }
-                }
-            ]
-        ]
-    }
+    
+    
 ];
 
 export default data;

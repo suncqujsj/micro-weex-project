@@ -397,18 +397,6 @@
                 this.cancleIcon = 'assets/img/footer/icon_cancle@2x.png';
 
                 this.cmdObj = analysisObj;
-               
-
-                //特殊处理，其他型号要去掉
-                if(analysisObj.temperature.upLowTemperature<100 && analysisObj.mode.value == 0x41){
-                    this.cmdObj.mode.value = 0xD0;
-                    this.cmdObj.mode.text = "保温";
-                }
-                 if((analysisObj.temperature.upLowTemperature == 35) && (analysisObj.mode.value == 0x43)){
-                    this.cmdObj.mode.value = 0xB0;
-                    this.cmdObj.mode.text = "发酵";
-                }
-                
                 
                 
                 //提示
@@ -450,6 +438,9 @@
                     // if(analysisObj.mode.value == 0xE0){//云菜谱没有设置时间温度蒸汽那些
                     //      this.hasSetting = false;
                     // }
+                }
+                if(analysisObj.mode.value == 0xC1){//清洁模式没有设置时间温度蒸汽那些
+                    this.hasSetting = false;
                 }
 
                 if(analysisObj.workingState.value == 4){
@@ -494,7 +485,7 @@
 
                 if(!this.noTimeShow){
                     if(allSeconds>60*60){ //大于1小时，有‘时’显示
-                        this.workSpecialStatusText = (_hour>9?_hour:'0'+_hour)+":"+(_minute>9?_minute:'0'+_minute);
+                        this.workSpecialStatusText = _hour+":"+(_minute>9?_minute:'0'+_minute);
                         this.tag_next = '分';
                         this.hasHour = true;
                     }else if(allSeconds>2*60){//大于2分钟，小于1小时，只显示分
@@ -532,7 +523,11 @@
             // },
             cancle(){
                 var self = this;
-                this.openActionsheet();            
+                if(this.finishStatus){
+                    this.cancleWorking();
+                }else{
+                    this.openActionsheet();            
+                }
             },
             startOrPause(){
                 var self = this;
@@ -629,26 +624,30 @@
             },
             //点击某个item的事件
             actionsheetItemClick: function (event) {
-                var self = this;
+                
                 if(event.index == 0){
-                    var deviceCmd = cmdFun.cmdCancelWork();
-                    nativeService.startCmdProcess(
-                        "control",
-                        deviceCmd,
-                        function(result){
-                        var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
-                            var arr = result_arr.split(",");
-                            var analysisObj = cmdFun.analysisCmd(arr);
-                            this.showBar = false;
-                            self.analysisFun(analysisObj);
-                        },
-                        function(result){
-                            nativeService.toast('控制失败，请检查网络或者设置的参数');
-                            //console.log('fail', result);
-                        }
-                    )
+                   this.cancleWorking();
                 }
                
+            },
+            cancleWorking(){
+                var self = this;
+                var deviceCmd = cmdFun.cmdCancelWork();
+                nativeService.startCmdProcess(
+                    "control",
+                    deviceCmd,
+                    function(result){
+                    var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
+                        var arr = result_arr.split(",");
+                        var analysisObj = cmdFun.analysisCmd(arr);
+                        this.showBar = false;
+                        self.analysisFun(analysisObj);
+                    },
+                    function(result){
+                        nativeService.toast('控制失败，请检查网络或者设置的参数');
+                        //console.log('fail', result);
+                    }
+                )
             },
             //点击取消/确定按钮事件
             actionsheetBtnClick: function () {

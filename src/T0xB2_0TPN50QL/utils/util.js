@@ -53,12 +53,6 @@ export default {
     var set_mode = params.mode;
     var messageBody = message.createMessageBody(22); 
     if(working){//工作中设置类 byte11 发04，其他byte发ff
-      if(params.mode == 0xB0){ //这款设备特殊处理，发酵，下发0x43
-        set_mode = 0x43;
-      }
-      if(params.mode == 0xD0){ //这款设备特殊处理，保温，下发0x41
-        set_mode = 0x41;
-      }
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 4);
       message.setByte(messageBody, 2, 0xff);
@@ -75,12 +69,6 @@ export default {
       message.setByte(messageBody, 15, params.fireAmount);
       message.setByte(messageBody, 16, params.steamAmount);
     }else{
-      if(params.mode == 0xB0){ //这款设备特殊处理，发酵，下发0x43
-        set_mode = 0x43;
-      }
-      if(params.mode == 0xD0){ //这款设备特殊处理，保温，下发0x41
-        set_mode = 0x41;
-      }
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 1);
       message.setByte(messageBody, 2, 0);

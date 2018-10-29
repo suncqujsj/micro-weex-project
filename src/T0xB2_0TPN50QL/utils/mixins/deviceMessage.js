@@ -14,6 +14,20 @@ const deviceMessageMixin = {
         }
     },
     methods: {
+        cmdToEasy(sendCmd){
+            // var arr=[], message=sendCmd.slice(10,this.MSG_LENGTH-1);
+            var arr=[], message=sendCmd;
+            for (var i=10,len=message.length; i < len; i++)
+            {
+                var obj={};
+                //obj.key=i+10;
+                obj.key=i;
+                obj.val=parseInt(message[i]).toString(16);
+                arr.push(obj);
+            }
+            return arr;
+
+        },
         viewdisappear(){
             globalEvent.removeEventListener("receiveMessage");
             globalEvent.removeEventListener("receiveMessageFromApp");
@@ -31,7 +45,10 @@ const deviceMessageMixin = {
                 "query",
                 sendCmd,
                 function (result) {
-                    nativeService.alert(JSON.stringify(result));
+                    var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
+                    var arr = result_arr.split(",");
+                    var easyCmd = self.cmdToEasy(arr)
+                    nativeService.alert(easyCmd);
                 },
                 function (result) {
                     nativeService.toast("查询失败" + JSON.stringify(result));
@@ -91,7 +108,7 @@ const deviceMessageMixin = {
         controlDevice(jsonCmd, working){
             let context = this;
             let deviceCmd = cmdFun.createControlMessage(jsonCmd, working);
-            // nativeService.alert(deviceCmd);
+            //nativeService.alert(deviceCmd);
             // return;
             nativeService.startCmdProcess(
                 "control",
@@ -117,7 +134,7 @@ const deviceMessageMixin = {
 
              //监听设备在线离线状态
              globalEvent.addEventListener("receiveMessageFromApp", (data) => {
-                nativeService.toast(data);
+                //nativeService.toast(data);
                if(data && data.messageType == "deviceOnlineStatus") {
                    if(data.messageBody && data.messageBody.onlineStatus == "online") {
                        // this.onlineStatus = "1";

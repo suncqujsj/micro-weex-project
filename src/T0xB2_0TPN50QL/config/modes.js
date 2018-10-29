@@ -19,7 +19,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:100,
-                    range:[35,100,10]
+                    range:[35,100,1]
                 },
                 preheat:{
                     set:false,
@@ -40,7 +40,7 @@ let modes = [
                 'mode': 0xC1,
                 time:{
                     set: false,
-                    default:20,
+                    default:15,
                     range:null
                 },
                 temperature:{

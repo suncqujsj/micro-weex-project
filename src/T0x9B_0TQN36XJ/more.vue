@@ -51,10 +51,9 @@
                 nativeService.goBack();
             },
             link: function(item){
-                // nativeService.toast(index, 2);
-                navigator.push({
+                nativeService.weexBundleToWeb({
                     url: item.link,
-                    animated: "true"
+                    title: '测试'
                 })
             }
         }

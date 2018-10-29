@@ -15,7 +15,7 @@
                 <midea-button text="选择" :btnStyle="{width: '120px', height: '60px'}" @mideaButtonClicked="isShowModuleList=true">
                 </midea-button>
             </div>
-            <div class="item-group" v-if="module == 'midea-card'">
+            <div class="item-group" v-if="module == 'midea-card' || module==''">
                 <text class="text-label">测试插件:</text>
                 <input class="text-input" type="text" placeholder="请输入插件" v-model="card" @input="cardChange" />
                 <midea-button text="选择" :btnStyle="{width: '120px', height: '60px'}" @mideaButtonClicked="isShowCardList=true">
@@ -23,12 +23,12 @@
             </div>
             <div class="item-group">
                 <text class="text-label">模拟数据:</text>
-                <text>isDummy:{{isDummy}}</text>
+                <text class="text-input" style="flex:1;">isDummy:{{isDummy}}</text>
                 <midea-switch2 :checked="isDummy" @change="onIsDummyChange"></midea-switch2>
             </div>
             <div class="action-bar">
                 <midea-title-bar title="输入远端目标页面地址"></midea-title-bar>
-                <textarea type="text" placeholder="输入远端目标页面地址" class="textarea" v-model="url" rows=4 />
+                <textarea type="text" placeholder="输入远端目标页面地址" class="textarea" v-model="url" rows=5 />
                 <midea-button text="进入远端目标页面" @mideaButtonClicked="mideaButtonClicked"></midea-button>
             </div>
 
@@ -42,9 +42,9 @@
 
         <midea-select :show="isShowHostList" title="选择HOST" :items="hostList" :index="hostIndex" @close="isShowHostList=false" @itemClick="selectHost"></midea-select>
 
-        <midea-select :show="isShowModuleList" title="选择模块" :items="moduleList" :index="moduleIndex" @close="isShowModuleList=false" @itemClick="selectModule"></midea-select>
+        <midea-select :show="isShowModuleList" title="选择模块" :items="moduleList" :index="moduleIndex" @close="isShowModuleList=false" @itemClick="selectModule" valueField="desc"></midea-select>
 
-        <midea-select :show="isShowCardList" title="选择模块" :items="cardList" :index="cardIndex" @close="isShowCardList=false" @itemClick="selectCard"></midea-select>
+        <midea-select :show="isShowCardList" title="选择品类" :items="cardList" :index="cardIndex" @close="isShowCardList=false" @itemClick="selectCard"></midea-select>
     </div>
 </template>
 <script>
@@ -70,11 +70,12 @@ module.exports = {
         isShowModuleList: false,
         moduleIndex: null,
         moduleList: [
-            { key: 0, value: "midea-demo" },
-            { key: 1, value: "customer-service" },
-            { key: 2, value: "midea-rooms" },
-            { key: 3, value: "midea-card" },
-            { key: 3, value: "community" }
+            { key: 0, value: "midea-demo", desc: "美居Demo" },
+            { key: 1, value: "customer-service", desc: "服务模块" },
+            { key: 2, value: "midea-rooms", desc: "场景" },
+            { key: 3, value: "midea-card", desc: "卡片页" },
+            { key: 4, value: "community", desc: "社区模块" },
+            { key: 5, value: "", desc: "插件" }
         ],
         card: 'T0xAC',
         isShowCardList: false,
@@ -206,7 +207,7 @@ module.exports = {
                     let temp = {}
                     for (let index = 0; index < this.history.length; index++) {
                         let element = this.history[index]
-                        let host = element.substring(element.indexOf("://") + 3, element.indexOf(":8080"))
+                        let host = element.substring(element.indexOf("://") + 3, element.indexOf(":80"))
                         if (!temp[host]) {
                             this.hostList.push(
                                 {
@@ -233,11 +234,13 @@ module.exports = {
   position: relative;
 }
 .textarea {
+  height: 120px;
   padding-left: 20px;
   padding-right: 20px;
   border-bottom-color: #e2e2e2;
   border-bottom-width: 1px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  lines: 5;
 }
 .history-item {
   flex-direction: row;

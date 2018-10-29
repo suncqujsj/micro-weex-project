@@ -5,12 +5,8 @@
   "version": "0.1.0",
   "scripts": {
     "build": "webpack",
-    "dev": "webpack --watch",
+    "dev": "webpack --watch --env=midea-demo",
     "dev_demo": "webpack --watch --env=midea-demo",
-    "dev_customer": "webpack --watch --env=customer-service",
-    "dev_helpcenter": "webpack --watch --env=device-helpcenter",
-    "dev_rooms": "webpack --watch --env=midea-rooms",
-    "dev_card": "webpack --watch --env=midea-card",
     "serve": "serve -p 8080",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -3,6 +3,7 @@ const navigator = weex.requireModule('navigator');
 const stream = weex.requireModule('stream')
 const storage = weex.requireModule('storage');
 const bridgeModule = weex.requireModule('bridgeModule');
+const blueToothModule = weex.requireModule('blueToothModule');
 const globalEvent = weex.requireModule("globalEvent");
 
 
@@ -114,7 +115,7 @@ export default {
             if (ip == null || ip.length < 1) {
                 url = "http://localhost:" + port + "/dist/" + root + '/' + targetPath;
             } else {
-                url = "http://" + ip + (port?(":"+port):"") + "/dist/" + root + '/' + targetPath;
+                url = "http://" + ip + (port ? (":" + port) : "") + "/dist/" + root + '/' + targetPath;
             }
             this.runGo(url, options);
         } else {
@@ -1175,6 +1176,90 @@ export default {
             operation: 'uploadImgFile'
         })
         bridgeModule.commandInterface(param, callback, callbackFail)
-    }
+    },
+    uploadImgFileToMas(params, callback, callbackFail) {
+        /* params = {
+            path: string, //值为 图片在手机中的路径
+            url: string, //值为服务器上传图片的url
+            maxWidth: number, //最大宽度，如果不设置，则使用图片宽度
+            maxHeight: number, //最大高度，如果不设置，则使用图片高度
+            compressRage: number, //图片的压缩率，范围为0~100，数值越高保真率越高。默认值：100，不压缩，直接上传图片 ps: 压缩后的图片文件格式，固定为jpg 格式
+            netParam: {
+                xxx: xxx, //weex需要原生填充给服务器的post 表单参数1
+                xxx: xxx, //weex需要原生填充给服务器的post 表单参数2
+            },
+            fileKey: string, //值为原生在post表单中传输图片文件的key值，缺省默认值为“file”
+        } */
+        let param = Object.assign(params, {
+            operation: 'uploadImgFileToMas'
+        })
+        bridgeModule.commandInterface(param, callback, callbackFail)
+    },
     //**********APP业务接口***************END
+
+
+    //**********蓝牙接口***************START
+    blueToothModuleWrapper(apiName, param) {
+        return new Promise((resolve, reject) => {
+            blueToothModule[apiName](JSON.stringify(param),
+                (resData) => {
+                    resolve(this.convertToJson(resData))
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
+    },
+    //获取蓝牙开启状态
+    getBlueStatus(params = {}) {
+        return this.blueToothModuleWrapper("getBlueStatus", params)
+    },
+    //开始扫描蓝牙 
+    /*  param:{duration: number //持续时间, 单位：秒}
+        当扫描到的蓝牙设备（蓝牙信息），app-->插件:
+        receiveMessageFromApp({messageType:"blueScanResult",messageBody:{name:"xxx", deviceKey:"xxxxx"}})
+     */
+    startBlueScan(params = {}) {
+        return this.blueToothModuleWrapper("startBlueScan", params)
+    },
+    //停止蓝牙扫描
+    /* 当扫描结束（停止或超时），app -> 插件:
+    receiveMessageFromApp({ messageType: "blueScanStop", messageBody: {} })
+    */
+    stopBlueScan(params = {}) {
+        return this.blueToothModuleWrapper("stopBlueScan", params)
+    },
+    //保存蓝牙信息
+    /* param:{deviceType:品类码, name:"xxx", deviceKey:"xxxxx"} */
+    addDeviceBlueInfo(params = {}) {
+        return this.blueToothModuleWrapper("addDeviceBlueInfo", params)
+    },
+    //获取之前保存的蓝牙信息
+    /* param:{ deviceType: 品类码 }
+       result:{status：0, //0: 执行成功, 1:执行失败, name:"xxx", deviceKey:"xxxxx"}
+    */
+    getDeviceBlueInfo(params = {}) {
+        return this.blueToothModuleWrapper("getDeviceBlueInfo", params)
+    },
+    //根据蓝牙信息建立蓝牙连接
+    /* param:{name:"xxx", deviceKey:"xxxxx"} */
+    /* 当收到蓝牙数据，app -> 插件: 
+    receiveMessageFromApp({ messageType: "receiveBlueInfo", messageBody: { service: "uuid", charactristic: "uuid", data: "xxx" } }) 
+    */
+    setupBlueConnection(params = {}) {
+        return this.blueToothModuleWrapper("setupBlueConnection", params)
+    },
+    // 向蓝牙设备传输数据
+    /* param:{service:"uuid",charactristic:"uuid", data:"xxx"} */
+    uploadBlueInfo(params = {}) {
+        return this.blueToothModuleWrapper("uploadBlueInfo", params)
+    },
+    //断开当前蓝牙连接
+    /* 若是蓝牙意外断开, app -> 插件: 
+       receiveMessageFromApp({ messageType: "blueConnectionBreak", messageBody: {} }) 
+    */
+    disconnectBlueConnection(params = {}) {
+        return this.blueToothModuleWrapper("disconnectBlueConnection", params)
+    }
+    //**********蓝牙接口***************END
 }

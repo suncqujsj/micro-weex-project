@@ -1211,6 +1211,9 @@ export default {
         })
     },
     //获取蓝牙开启状态
+    /* return:
+        {status:1, //1表示蓝牙已打开，0：蓝牙关闭状态，2:：蓝牙正在重置，3：设备不支持蓝牙，4：蓝牙未授权}
+    */
     getBlueStatus(params = {}) {
         return this.blueToothModuleWrapper("getBlueStatus", params)
     },
@@ -1242,17 +1245,25 @@ export default {
         return this.blueToothModuleWrapper("getDeviceBlueInfo", params)
     },
     //根据蓝牙信息建立蓝牙连接
-    /* param:{name:"xxx", deviceKey:"xxxxx"} */
+    /* param:{name:"xxx", 
+        deviceKey:"xxxxx",
+        service:"uuid", //蓝牙服务特征，使用者根据设备信息传入
+        writeCharacter:"uuid", //蓝牙写入通道特征，使用者根据设备信息传入
+        readCharacter:"uuid" //蓝牙读取通道特征，使用者根据设备信息传入
+    } */
     /* 当收到蓝牙数据，app -> 插件: 
-    receiveMessageFromApp({ messageType: "receiveBlueInfo", messageBody: { service: "uuid", charactristic: "uuid", data: "xxx" } }) 
+    receiveMessageFromApp({ messageType: "receiveBlueInfo", messageBody: { deviceKey:"xxxxx", data: "xxx" } })
     */
     setupBlueConnection(params = {}) {
         return this.blueToothModuleWrapper("setupBlueConnection", params)
     },
     // 向蓝牙设备传输数据
-    /* param:{service:"uuid",charactristic:"uuid", data:"xxx"} */
-    uploadBlueInfo(params = {}) {
-        return this.blueToothModuleWrapper("uploadBlueInfo", params)
+    /* param:{
+        deviceKey:"xxxxx", 
+        data:"xxx" 
+    } */
+    writeBlueInfo(params = {}) {
+        return this.blueToothModuleWrapper("writeBlueInfo", params)
     },
     //断开当前蓝牙连接
     /* 若是蓝牙意外断开, app -> 插件: 

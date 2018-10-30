@@ -1,6 +1,6 @@
 <template>
     <div class="all_section" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear"  @longpress="onlongpress"><!--隐藏长按组件触发03查询，方便调试-->
-        <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack"></midea-header>
+        <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack"></midea-header>
         <div class="progress_content">
             <div class="progress_section" :style="progress_style" > 
                 <wxcProgress :percent="progress" :progressShow="progressShow"
@@ -96,7 +96,6 @@
             ref="actionsheet"
             button="我再想想"
         ></midea-actionsheet>
-
     </div>
 </template>
 

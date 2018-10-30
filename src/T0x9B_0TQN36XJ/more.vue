@@ -1,16 +1,14 @@
 <style lang="less" type="text/less">
     @import "../common/less/common";
-    .bg{
-        //.bg-gray;
-    }
+
 </style>
 
 <template>
-    <div class="bg">
+    <div class="bg-gray" :style="{height: wrapHeight}">
 
-        <midea-header title="更多功能" titleText="black" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back"></midea-header>
+        <midea-header class="bg-white" title="更多功能" titleText="black" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back"></midea-header>
 
-        <list show-scrollbar="true">
+        <list style="margin-top: 24px" show-scrollbar="true">
             <midea-cell :clickActivied="true" v-for="(item,index) in list" :key="index" :title="item.title" :has-arrow="true" @mideaCellClick="link(item)">
             </midea-cell>
         </list>
@@ -22,10 +20,11 @@
     import mideaHeader from '@/midea-component/header.vue'
     import mideaCell from '@/midea-component/item.vue';
     import nativeService from "../common/services/nativeService";
-    let navigator = weex.requireModule('navigator')
+
+    import commonMixin from  "./utils/mixins/common.js"
 
     export default {
-        mixins: [],
+        mixins: [commonMixin],
         data(){
             return {
                 list:[

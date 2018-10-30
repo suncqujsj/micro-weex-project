@@ -238,17 +238,16 @@
 
     import accordionMixin from  "./utils/mixins/accordions"
     import deviceMessageMixin from  "./utils/mixins/deviceMessage"
-    
+    import commonMixin from  "./utils/mixins/common"
+
     import mideaDialog from '@/component/dialog.vue';
 
     var numberRecord = 0; //记录跳页面的次数
 
     export default {
-        mixins: [deviceMessageMixin, accordionMixin],
+        mixins: [commonMixin, deviceMessageMixin, accordionMixin],
         data(){
             return {
-                wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
-                progress:1,
                 tabs:[
                     {
                         name:'自动菜单',

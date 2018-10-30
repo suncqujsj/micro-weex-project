@@ -127,9 +127,9 @@
                     <div class="header-right-image-wrapper" @click="childLock(true)">
                         <image class="header-right-image" :src="'assets/img/header/public_ic_babylock@3x.png'"></image>
                     </div>
-                    <!--<div class="header-right-image-wrapper" @click="test">-->
-                        <!--<image class="header-right-image" :src="'assets/img/header/public_ic_lots@3x.png'"></image>-->
-                    <!--</div>-->
+                    <div class="header-right-image-wrapper" @click="openMorePage">
+                        <image class="header-right-image" :src="'assets/img/header/public_ic_lots@3x.png'"></image>
+                    </div>
                 </div>
             </div>
         </midea-header>
@@ -178,17 +178,17 @@
         <!--<text class="r test" @click="doing">{{progress}}</text>-->
         <!--<wxProgress :percent='progress' :bar_width='650'></wxProgress>-->
         <!--<wxcProgress :percent="progress"-->
-                     <!--:wxc_radius='200'>-->
-            <!--<div class="cen">-->
-                <!--<text class="demo-text">{{progress}}%</text>-->
-            <!--</div>-->
+        <!--:wxc_radius='200'>-->
+        <!--<div class="cen">-->
+        <!--<text class="demo-text">{{progress}}%</text>-->
+        <!--</div>-->
         <!--</wxcProgress>-->
 
         <!--模式参数设置弹窗-->
         <sf-dialog :show="show" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <!--<template v-for="tab in tabs">-->
-                    <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
+                <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
                 <!--</template>-->
                 <text v-if="currentItem" class="content-title">{{currentItem.text}}</text>
                 <template v-for="(item, index) in accordions">
@@ -211,12 +211,12 @@
         </sf-dialog>
 
         <midea-dialog :title="warningDialog.title"
-                        :show="warningDialog.show"
-                        :single="true"
-                        @mideaDialogConfirmBtnClicked="knowClicked"
-                        :content="warningDialog.content"
-                        mainBtnColor="#FFB632"
-                        >
+                      :show="warningDialog.show"
+                      :single="true"
+                      @mideaDialogConfirmBtnClicked="knowClicked"
+                      :content="warningDialog.content"
+                      mainBtnColor="#FFB632"
+        >
         </midea-dialog>
 
     </div>
@@ -238,17 +238,16 @@
 
     import accordionMixin from  "./utils/mixins/accordions"
     import deviceMessageMixin from  "./utils/mixins/deviceMessage"
-    
+    import commonMixin from  "./utils/mixins/common"
+
     import mideaDialog from '@/component/dialog.vue';
 
     var numberRecord = 0; //记录跳页面的次数
 
     export default {
-        mixins: [deviceMessageMixin, accordionMixin],
+        mixins: [commonMixin, deviceMessageMixin, accordionMixin],
         data(){
             return {
-                wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
-                progress:1,
                 tabs:[
                     {
                         name:'自动菜单',
@@ -284,6 +283,9 @@
                     "pageName": "CookbookHome",
                     "data": {}
                 })
+            },
+            openMorePage: function(){
+                nativeService.goTo('more.js', {animated: true});
             },
             onTabClicked: function(index){
                 // debugger;

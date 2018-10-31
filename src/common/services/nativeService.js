@@ -98,7 +98,6 @@ export default {
                 } else {
                     url += '?isDummy=' + isDummy
                 }
-
                 this.runGo(url, options);
             });
         } else {
@@ -131,7 +130,7 @@ export default {
         取得当前weex页面的根路径
     */
     getPath(callBack) {
-        if (this.isDummy != true) {
+        if (this.isDummy != true && !isRemote) {
             bridgeModule.getWeexPath(function (resData) {
                 var jsonData = JSON.parse(resData);
                 var weexPath = jsonData.weexPath;
@@ -949,7 +948,7 @@ export default {
     weexBundleToWeb(params) {
         /* params =  {
             url: "xxxx", //跳转的目标页面
-            titel: "h5标题"
+            title: "h5标题"
         } */
         let param = Object.assign(params, {
             operation: 'weexBundleToWeb',

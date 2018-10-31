@@ -43,27 +43,10 @@
 
     .picker-item-selected {
         color: #000;
+        font-size: 38px;
     }
 
-    .picker-center {
-        width: 750px;
-        height: 72px;
-        border-top-width: 1px;
-        border-top-style: solid;
-        border-top-color: #DCDCDC;
 
-        border-bottom-width: 1px;
-        border-bottom-style: solid;
-        border-bottom-color: #DCDCDC;
-        position: absolute;
-        top: 176px;
-        left: 0;
-        z-index: 100;
-        width: 750px;
-        /*margin-top: -36px;*/
-        justify-content: center;
-        align-items: center;
-    }
 
 </style>
 <script type="text/javascript">

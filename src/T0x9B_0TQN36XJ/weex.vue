@@ -274,6 +274,10 @@
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
             }
+
+            nativeService.getDeviceInfo().then(function(data){
+                nativeService.alert(data);
+            })
         },
         computed:{
         },

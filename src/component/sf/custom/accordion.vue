@@ -44,8 +44,8 @@
         },
         data() {
             return {
-                unfoldIcon: '../img/service_ic_show@3x.png',
-                foldIcon: '../img/service_ic_hide@3x.png',
+                unfoldIcon: './img/service_ic_show@3x.png',
+                foldIcon: './img/service_ic_hide@3x.png',
                 isFoldedStatus: this.isFolded
             }
         },

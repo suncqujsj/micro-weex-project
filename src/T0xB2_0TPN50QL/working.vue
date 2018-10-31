@@ -61,7 +61,8 @@
                     <template v-if="item.type==='picker'">
                         <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                             <div slot="content">
-                                <wx-picker :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                <!--<wx-picker :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>-->
+                                <wx-picker  :list="range(item.key).list" :defaultValue="range(item.key).defaultValue" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                             </div>
                         </sf-accordion>
                     </template>
@@ -234,7 +235,7 @@
     import {wxcProgress, wxProgress} from "@/component/sf/wx-progress";
     import sfAccordion from '@/component/sf/custom/accordion.vue'
     import sfDialog from '@/component/sf/custom/dialog.vue'
-    import WxPicker from '@/component/sf/custom/picker.vue';
+    import WxPicker from '@/component/sf/custom/picker_midea.vue';
     import mideaDialog from '@/component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
     import mideaSwitch2 from '@/midea-component/switch2.vue'

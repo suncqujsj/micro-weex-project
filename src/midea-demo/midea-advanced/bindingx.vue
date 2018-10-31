@@ -1,11 +1,11 @@
 <template>
     <div>
-        <midea-header title="gcanvas" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
+        <midea-header title="bindingx" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <div style="height:100px;">
             <text class="display-text">bindingX演示 (请使用桌面浏览器打开)</text>
             <text class="display-link" @click="openWeb('https://alibaba.github.io/bindingx/demos')">https://alibaba.github.io/bindingx/demos</text>
         </div>
-        <div style="flex:1;">
+        <div style="flex:1;background-color:yellow;">
             <div ref="card" style="background-color:#6A1B9A;width:0;height:0.1;margin-left:-300;margin-top:-300" />
             <div ref="btn" class="card" style="background-color:#00ff00" @click="clickBtn" />
         </div>
@@ -49,7 +49,7 @@ export default {
         openWeb(url) {
             nativeService.weexBundleToWeb({
                 url: url,
-                title: "GCanvas主页"
+                title: "bindingx"
             })
         },
         getEl: function (e) {
@@ -57,7 +57,6 @@ export default {
         },
         clickBtn: function () {
             let card = this.getEl(this.$refs.card);
-
             let duration = 700;
             let radius = 1800;
 

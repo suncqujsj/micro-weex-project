@@ -2,15 +2,15 @@
     <div>
         <midea-header title="gcanvas" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
-        <div ref="test" style="flex:1;background-color: #1ba1e2">
-            <div style="height:100px;">
-                <text class="display-text">GCanvas主页 (请使用桌面浏览器打开)</text>
-                <text class="display-link" @click="openWeb('https://alibaba.github.io/GCanvas/')">https://alibaba.github.io/GCanvas/</text>
-            </div>
-            <gcanvas ref="canvas_holder" style="width:750; height:350; background-color:rgba(0, 0, 0, 0.1)"></gcanvas>
-            <gcanvas @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend" ref="gcanvess" style="width: 650px;height: 600px;background-color: yellow;margin-left: 50px">
-            </gcanvas>
+        <div style="height:100px;">
+            <text class="display-text">GCanvas主页 (请使用桌面浏览器打开)</text>
+            <text class="display-link" @click="openWeb('https://alibaba.github.io/GCanvas/')">https://alibaba.github.io/GCanvas/</text>
         </div>
+        <gcanvas @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend" ref="gcanvess" style="width: 750;height: 600px;background-color: yellow;">
+        </gcanvas>
+        <scroller ref="test" style="flex:1;background-color: #1ba1e2">
+            <gcanvas ref="canvas_holder" style="width:750px; height:600px; background-color:rgba(0, 0, 0, 0.1)"></gcanvas>
+        </scroller>
     </div>
 </template>
 
@@ -65,8 +65,8 @@ export default {
             this.currentX = event.changedTouches[0].pageX;
             this.currentY = event.changedTouches[0].pageY;
             //进行绘制
-            this.context.moveTo(this.startX, this.startY);
-            this.context.lineTo(this.currentX, this.currentY);
+            this.context.moveTo(this.startX, this.startY - 188);
+            this.context.lineTo(this.currentX, this.currentY - 188);
             this.context.stroke();
 
             this.startX = event.changedTouches[0].pageX;
@@ -155,7 +155,7 @@ export default {
             this.context.strokeStyle = gradient;
             this.context.fill();
             this.context.restore();
-            
+
             this.context.save();
             this.context.globalAlpha = 0.1;     //此时  画出的图片的透明度为0.5
             this.context.fillStyle = 'rgb(86,59,235)';
@@ -182,6 +182,8 @@ export default {
         }
     },
     mounted() {
+        this.test1()
+        this.test2()
         this.test3()
     }
 }

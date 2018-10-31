@@ -17,20 +17,8 @@ var isDummy = false;
 const debugLogSeperator = "**************************************\n"
 
 
-var ipParam = weex.config.bundleUrl.match(new RegExp("[\?\&]ip=([^\&]+)", "i"));
-var port = 8080
-if (ipParam && ipParam.length > 1) {
-    ipParam = ipParam[1]
-    var portParam = weex.config.bundleUrl.match(new RegExp(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}[^\d]+(\d+)[^\d]/, "i"));
-    if (portParam && portParam.length > 1) {
-        port = portParam[1]
-        console.log(port)
-    } else {
-        port = ""
-    }
-    // 测试
-    isDummy = util.getParameters(weex.config.bundleUrl, "isDummy") == "true"
-}
+var isDummy = util.getParameters(weex.config.bundleUrl, "isDummy") == "true"
+
 const platform = weex.config.env.platform;
 if (platform == 'Web') {
     isDummy = true
@@ -102,22 +90,17 @@ export default {
             });
         } else if (platform != 'Web') {
             //手机远程weex页面调试跳转
-            let theRequest = this.getParameters()
-            let ip = theRequest['ip']
-            let root = theRequest['root']
-            let isDummy = this.isDummy
-            let targetPath = path
-            if (targetPath.indexOf("?") != -1) {
-                targetPath += '&root=' + root + '&ip=' + ip + '&isDummy=' + isDummy
-            } else {
-                targetPath += '?root=' + root + '&ip=' + ip + '&isDummy=' + isDummy
-            }
-            if (ip == null || ip.length < 1) {
-                url = "http://localhost:" + port + "/dist/" + root + '/' + targetPath;
-            } else {
-                url = "http://" + ip + (port ? (":" + port) : "") + "/dist/" + root + '/' + targetPath;
-            }
-            this.runGo(url, options);
+            this.getPath((weexPath) => {
+                //weexPath为插件包地址，比如：files:///..../MideaHome/T0x99/
+                url = weexPath + path;
+                if (url.indexOf("?") != -1) {
+                    url += '&isDummy=' + isDummy
+                } else {
+                    url += '?isDummy=' + isDummy
+                }
+
+                this.runGo(url, options);
+            });
         } else {
             //PC网页调试跳转
             location.href = location.origin + location.pathname + '?path=' + path.replace('?', '&')
@@ -156,16 +139,8 @@ export default {
             });
         } else if (platform != 'Web') {
             //手机远程weex页面调试
-            let theRequest = this.getParameters()
-            let ip = theRequest['ip']
-            let root = theRequest['root']
-            let weexPath
-            if (ip == null || ip.length < 1) {
-                weexPath = "http://localhost:" + port + "/dist/" + root + '/'
-            } else {
-                weexPath = "http://" + ip + ":" + port + "/dist/" + root + '/'
-            }
-            callBack(weexPath);
+            let rootPath = weex.config.bundleUrl.match(new RegExp("(.*/).*\.js", "i"))
+            callBack(rootPath ? rootPath[1] : weex.config.bundleUrl);
         } else {
             //PC网页调试跳转
             location.href = location.origin + location.pathname + '?path=' + path
@@ -524,7 +499,6 @@ export default {
                 this.callbackFunctions[commandId] = finalCallBack;
                 this.callbackFailFunctions[commandId] = finalCallbackFail;
             }
-            this.alert(JSON.stringify(param))
             bridgeModule.startCmdProcess(JSON.stringify(param), finalCallBack, finalCallbackFail);
         } else {
             callback(this.Mock.getMock(name).messageBody);

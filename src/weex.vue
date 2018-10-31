@@ -202,7 +202,7 @@ module.exports = {
                 module = ""
                 cardPath = this.card
             }
-            return "http://" + this.host + ":" + this.port + "/dist/" + module + cardPath + indexPath + "?root=" + module + cardPath + "&ip=" + this.host + "&isDummy=" + this.isDummy
+            return "http://" + this.host + ":" + this.port + "/dist/" + module + cardPath + indexPath + "?&isDummy=" + this.isDummy
         }
     },
     created() {

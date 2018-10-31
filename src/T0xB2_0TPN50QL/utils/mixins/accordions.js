@@ -34,7 +34,10 @@ const accordionMixin = {
         range: function(key){ // picker属性范围
             let currentItem = this.currentItem;
             // debugger;
-            let list = settingArrData(currentItem[key].range[0],currentItem[key].range[1],currentItem[key].range[2]);
+            let list = [];
+            for(var i=0; 3*i<currentItem[key].range.length; i++){
+                list = list.concat(settingArrData(currentItem[key].range[3*i],currentItem[key].range[3*i+1],currentItem[key].range[3*i+2]));
+            }
             return {
                 list,
                 defaultValue: this.setValue(key),

@@ -13,7 +13,7 @@
                     index==itemIndex   ? 'selected-item':'unselected-item',
                     index==itemIndex+1 ? 'second-last-visible-item':'',
                     index==itemIndex+2 ? 'first-last-visible-item':''
-                ]">{{item.value}}</text>
+                ]">{{item}}</text>
             </div>
         </scroller>
     </div>
@@ -35,9 +35,9 @@ export default {
                 return []
             }
         },
-        itemIndex: {
+        listItem: {
             type: Number,
-            default: 999
+            default: 10
         },
         wrapHeight: {
             type: Number,
@@ -45,7 +45,7 @@ export default {
         },
         wrapWidth: {
             type: Number,
-            default: 750
+            default: 450
         }
     },
     computed: {
@@ -64,14 +64,15 @@ export default {
     },
     data() {
         return {
-            itemHeight: 70
+            itemHeight: 70,
+            itemIndex: 0
         }
     },
     watch: {
         isShow(value) {
             if (value) {
                 this.$nextTick(() => {
-                    // dom.scrollToElement(this.$refs.item[this.itemIndex], {})
+                    //dom.scrollToElement(this.$refs.item[this.itemIndex], {})
                 })
             }
         }
@@ -91,8 +92,16 @@ export default {
         }
     },
     mounted() {
+        const el = this.$refs['item'][0]
+        dom.scrollToElement(el, { offset: this.itemIndex * 70 })
     },
     created() {
+      var _listArray = this.listArray;
+      for(var i=0; i< _listArray.length; i++){
+          if(_listArray[i] == this.listItem){
+              this.itemIndex = i;
+          }
+      }
     }
 }
 </script>

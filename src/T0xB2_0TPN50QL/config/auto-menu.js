@@ -18,9 +18,9 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: false,
+                        set: true,
                         default:100,
-                        range:null
+                        range:[35,70,1,75,100,5]
                     },
                     preheat:{
                         set:false,
@@ -52,9 +52,9 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: false,
+                        set: true,
                         default:100,
-                        range:null
+                        range:[35,70,1,75,100,5]
                     },
                     preheat:{
                         set:false,
@@ -86,9 +86,9 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: false,
+                        set: true,
                         default:95,
-                        range:null
+                        range:[35,70,1,75,100,5]
                     },
                     preheat:{
                         set:false,
@@ -130,9 +130,9 @@ let data = [
                         range:[2,120,1]
                     },
                     temperature:{
-                        set: false,
+                        set: true,
                         default:95,
-                        range:null
+                        range:[35,70,1,75,100,5]
                     },
                     preheat:{
                         set:false,
@@ -164,9 +164,9 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: false,
+                        set: true,
                         default:100,
-                        range:null
+                        range:[35,70,1,75,100,5]
                     },
                     preheat:{
                         set:false,
@@ -198,9 +198,9 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: false,
+                        set: true,
                         default:100,
-                        range:null
+                        range:[35,70,1,75,100,5]
                     },
                     preheat:{
                         set:false,
@@ -232,9 +232,9 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: false,
+                        set: true,
                         default:100,
-                        range:null
+                        range:[35,70,1,75,100,5]
                     },
                     preheat:{
                         set:false,
@@ -269,9 +269,9 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: false,
+                        set: true,
                         default:100,
-                        range:null
+                        range:[35,70,1,75,100,5]
                     },
                     preheat:{
                         set:false,
@@ -303,9 +303,9 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: false,
+                        set: true,
                         default:100,
-                        range:null
+                        range:[35,70,1,75,100,5]
                     },
                     preheat:{
                         set:false,
@@ -345,9 +345,9 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: false,
+                        set: true,
                         default:100,
-                        range:null
+                        range:[35,70,1,75,100,5]
                     },
                     preheat:{
                         set:false,
@@ -379,9 +379,9 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: false,
+                        set: true,
                         default:100,
-                        range:null
+                        range:[35,70,1,75,100,5]
                     },
                     preheat:{
                         set:false,
@@ -413,9 +413,9 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: false,
+                        set: true,
                         default:100,
-                        range:null
+                        range:[35,70,1,75,100,5]
                     },
                     preheat:{
                         set:false,
@@ -454,9 +454,9 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: false,
+                        set: true,
                         default:100,
-                        range:null
+                        range:[35,70,1,75,100,5]
                     },
                     preheat:{
                         set:false,
@@ -488,9 +488,9 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: false,
+                        set: true,
                         default:100,
-                        range:null
+                        range:[35,70,1,75,100,5]
                     },
                     preheat:{
                         set:false,
@@ -522,9 +522,9 @@ let data = [
                             range:[5,120,1]
                         },
                         temperature:{
-                            set: false,
+                            set: true,
                             default:100,
-                            range:null
+                            range:[35,70,1,75,100,5]
                         },
                         preheat:{
                             set:false,

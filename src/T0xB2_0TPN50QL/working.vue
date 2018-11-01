@@ -1,7 +1,7 @@
 <template>
-    <div class="all_section" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear"  @longpress="onlongpress"><!--隐藏长按组件触发03查询，方便调试-->
+    <div class="all_section" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
         <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack"></midea-header>
-        <div class="progress_content">
+        <div class="progress_content"  @longpress="onlongpressQuery"><!--隐藏长按组件触发03查询，方便调试-->
             <div class="progress_section" :style="progress_style" > 
                 <wxcProgress :percent="progress" :progressShow="progressShow"
                     :wxc_radius='progress_radius'>
@@ -314,6 +314,8 @@
                 this.listenerDeviceReiveMessage();
             }
 
+            this.WXApplicationDidBecomeActiveEvent();//从后台转前台时触发
+
             // debugger;
              //this.doing();
 
@@ -361,6 +363,8 @@
                     }
                      if(self.isTimerStop && allSeconds<=0){
                          self.tag_next = '';
+                         self.noTimeShow = false;
+                         self.progressShow = false;
                          clearInterval(this.countDownTimer);
                          return;
                     }

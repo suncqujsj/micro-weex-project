@@ -37,7 +37,7 @@ const deviceMessageMixin = {
         viewappear(){
             this.listenerDeviceReiveMessage();
         },
-        onlongpress(){//隐藏调试，查看设备上报数据
+        onlongpressQuery(){//隐藏调试，查看设备上报数据
             var self = this;
             var sendCmd = cmdFun.createQueryMessage();
             nativeService.toast("下发03查询:"+JSON.stringify(sendCmd),2);
@@ -54,6 +54,12 @@ const deviceMessageMixin = {
                     nativeService.toast("查询失败" + JSON.stringify(result));
                 }
             );
+        },
+        onlongpressGoToMenu(){//隐藏查看云菜谱
+            nativeService.weexBundleToWeb({
+                url: "http://39.108.117.20/dist/build_index.html#/",
+                title: '云菜谱'
+            })
         },
         childLock: function(childLock){
 
@@ -146,6 +152,13 @@ const deviceMessageMixin = {
                }
            });
         },
+        WXApplicationDidBecomeActiveEvent(){
+            let self = this;
+            globalEvent.addEventListener("WXApplicationDidBecomeActiveEvent", (e) => {
+                //从后台转前台时触发
+                self.queryStatus();
+            });
+        }
     }
 };
 

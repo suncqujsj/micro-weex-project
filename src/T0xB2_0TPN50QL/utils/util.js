@@ -176,7 +176,7 @@ export default {
       weight:{name: "重量",value: 0x00},
       steam:{name: "蒸汽量",value: 0x00},
   };
-  // if((parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)) && parseInt(requestCmd[10])==0){
+  if(parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)){
     obj.workingState.value = parseInt(requestCmd[11]);    
     obj.recipeId.value = parseInt(requestCmd[12])*256*256+parseInt(requestCmd[13])*256+parseInt(requestCmd[14]);
     obj.mode.value = parseInt(requestCmd[19]);
@@ -210,4 +210,5 @@ export default {
     obj.steam.value = parseInt(requestCmd[25]);
     return obj;
   }
+}
 };

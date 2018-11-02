@@ -116,26 +116,26 @@
 </style>
 
 <template>
-    <div class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear" @longpress="onlongpress"><!--隐藏长按组件触发03查询，方便调试-->
+    <div class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
 
-        <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" @longpress="longpress" >
+        <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" >
             <div slot="customerContent" class="header-top-wrapper">
                 <div class="header-top-inner-wrapper">
                     <div class="header-right-image-wrapper" @click="openCloudRecipe">
                         <image class="header-right-image" :src="'assets/img/header/public_ic_cloud_recipe@3x.png'"></image>
                     </div>
-                    <div class="header-right-image-wrapper" @click="childLock(true)">
+                    <!--<div class="header-right-image-wrapper" @click="childLock(true)">
                         <image class="header-right-image" :src="'assets/img/header/public_ic_babylock@3x.png'"></image>
-                    </div>
-                    <div class="header-right-image-wrapper" @click="openMorePage">
+                    </div>-->
+                    <!--<div class="header-right-image-wrapper" @click="openMorePage">
                         <image class="header-right-image" :src="'assets/img/header/public_ic_lots@3x.png'"></image>
-                    </div>
+                    </div>-->
                 </div>
             </div>
         </midea-header>
 
         <!--面板切换tabs-->
-        <div class="panel">
+        <div class="panel"  @longpress="onlongpressQuery"> <!--隐藏长按组件触发03查询，方便调试-->
             <text class="panel-state">待机中</text>
             <div v-if="tabs.length>1" class="tabs">
                 <template v-for="(tab, x) in tabs">
@@ -147,7 +147,7 @@
         </div>
 
         <!--模式操作按钮-->
-        <div v-for="(tab, x) in tabs">
+        <div v-for="(tab, x) in tabs"  @longpress="onlongpressGoToMenu"> <!--隐藏长按组件触发查看云菜谱，方便查看云菜谱-->
             <scroller :class="[tab.rows[0].title ?  'tab-content-gray' : 'tab-content-white' ]" v-if="tab.active" :style="{height: wrapHeight - (tabs.length > 1 ? 204*2 : 174*2)}">
                 <div class="bg-white" :class="[tab.rows[0].title && 'auto_menu']" v-for="row in tab.rows">
                     <text v-if="row.title" class="block-title">{{row.title}}</text>

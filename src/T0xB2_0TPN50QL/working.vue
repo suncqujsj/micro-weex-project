@@ -12,7 +12,7 @@
                     <text class="number_prev" v-if="hasHour">时</text>
                     <div class="cen">
                         <!--<text class="number-text">{{progress}} {{timeRemain}}</text>-->
-                        <text :class="['number-text',noTimeShow && 'work_finish']">{{workSpecialStatusText}}</text>
+                        <text :class="['number-text',timeShow && 'work_time']">{{workSpecialStatusText}}</text>
                     </div>
                     <text class="number_next">{{tag_next}}</text>
                 </div>
@@ -146,11 +146,11 @@
         .j-c;
     }
     .number-text{
-        .f(160px);
+        .f(60px);
         .white;
     }
-    .work_finish{
-        .f(60px);
+    .work_time{
+        .f(160px);
         .white;
     }
     .status_tag{
@@ -250,6 +250,7 @@
     var numberRecord = 0; //记录跳页面的次数
     var timerRecord = 0;
     const platform = weex.config.env.platform;//weex没有window对象，调试需要区分下
+    const globalEvent = weex.requireModule("globalEvent");
     export default {
         mixins: [deviceMessageMixin, accordionMixin],
         data(){
@@ -282,7 +283,7 @@
 
                 cmdObj:{},
               
-                noTimeShow: false,
+                timeShow: false,
                 workSpecialStatusText: '',
                 queryTimer: null,
                 countDownTimer: null,
@@ -313,8 +314,16 @@
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
             }
-
-            this.WXApplicationDidBecomeActiveEvent();//从后台转前台时触发
+            
+            //安卓要加上这个方法，否则，工作页面，时间一直停留在一个状态，不会刷新
+            if(!this.isIos){
+                globalEvent.addEventListener("WXApplicationDidBecomeActiveEvent", (e) => {
+                    //从后台转前台时触发
+                    self.queryStatus();
+                    self.queryRunTimer(20);//20秒轮询 
+                });
+            }
+           
 
             // debugger;
              //this.doing();
@@ -363,8 +372,9 @@
                     }
                      if(self.isTimerStop && allSeconds<=0){
                          self.tag_next = '';
-                         self.noTimeShow = false;
+                         self.timeShow = false;
                          self.progressShow = false;
+                         self.workSpecialStatusText = '';
                          clearInterval(this.countDownTimer);
                          return;
                     }
@@ -389,7 +399,6 @@
                 //console.log(1);
                 this.warningDialogShow = false;
                 // this.tag_next = '分';
-                this.noTimeShow = false;
                 this.progressShow = true;
                 this.finishStatus = false;
                 // this.workSpecialStatusText = "";
@@ -406,23 +415,24 @@
                 //提示
                 if(analysisObj.displaySign.isError){
                     this.warningDialogShow = true;
-                    this.warningDialogContent = "设备故障，请联系售后人员";
+                    this.warningDialogContent = "主人，您的设备发生故障了，请联系售后人员";
                 }
                  if(analysisObj.displaySign.lackWater){
                     this.warningDialogShow = true;
-                    this.warningDialogContent = "主人，您的水箱缺水了，要及时添加水哦";
+                    this.warningDialogContent = "主人，您的设备水箱缺水了，要及时添加水哦";
                 }
                 if(analysisObj.displaySign.waterBox){
                     this.warningDialogShow = true;
-                    this.warningDialogContent = "缺水盒";
+                    this.warningDialogContent = "主人，您的设备缺水盒了";
                 }
                 if(analysisObj.displaySign.doorSwitch){
                     this.warningDialogShow = true;
-                    this.warningDialogContent = "炉门开了";
+                    this.warningDialogContent = "主人，您的设备炉门开了";
                 }
 
 
                 if(analysisObj.workingState.value == 3){
+                    this.timeShow = true;
                     this.hasSetting = true;
                     this.btnText = "暂停";
                     this.btnSrc = "assets/img/footer/icon_pause@2x.png";
@@ -433,6 +443,7 @@
                     // }
                 }
                  if(analysisObj.workingState.value == 6){
+                    this.timeShow = true;
                     this.hasSetting = true;
                     this.btnText = "继续";
                     this.btnSrc = "assets/img/footer/icon_start@2x.png";
@@ -448,7 +459,7 @@
                 }
 
                 if(analysisObj.workingState.value == 4){
-                   this.noTimeShow = true;
+                   this.timeShow = false;
                    this.workSpecialStatusText = "烹饪完成";
                    this.isTimerStop = true;
                    this.tag_next = '';
@@ -460,7 +471,7 @@
                   
                 }
                  if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 0){
-                    this.noTimeShow = true;
+                    this.timeShow = false;
                     this.workSpecialStatusText = "预热中";
                     this.tag_next = '';
                     this.statusTag = '';
@@ -469,7 +480,7 @@
                     
                 }
                 if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 1){
-                     this.noTimeShow = true;
+                     this.timeShow = false;
                     this.workSpecialStatusText = "预热完成";
                     this.warningDialogShow = true;
                     this.warningDialogContent = "预热已完成，请放进食物再按'继续'，继续烹饪";
@@ -487,7 +498,7 @@
                 var progress_step = (10*60-allSeconds)/(10*60)*360; //360度倒计时为例
                 //this.chartJson.progressCounter = progress_step;
 
-                if(!this.noTimeShow){
+                if(this.timeShow){
                     if(allSeconds>60*60){ //大于1小时，有‘时’显示
                         this.workSpecialStatusText = _hour+":"+(_minute>9?_minute:'0'+_minute);
                         this.tag_next = '分';

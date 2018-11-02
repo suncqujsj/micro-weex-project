@@ -152,13 +152,6 @@ const deviceMessageMixin = {
                }
            });
         },
-        WXApplicationDidBecomeActiveEvent(){
-            let self = this;
-            globalEvent.addEventListener("WXApplicationDidBecomeActiveEvent", (e) => {
-                //从后台转前台时触发
-                self.queryStatus();
-            });
-        }
     }
 };
 

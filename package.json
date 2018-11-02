@@ -7,6 +7,7 @@
     "build": "webpack",
     "dev": "webpack --watch",
     "sf": "webpack --watch --env=T0x9B_0TQN36XJ",
+    "parker": "webpack --watch --env=T0xB2_0TPN50QL",
     "dev_demo": "webpack --watch --env=midea-demo",
     "serve": "serve -p 8080",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -58,7 +59,7 @@
   },
   "dependencies": {
     "echarts": "^4.1.0",
-    "vue": "^2.1.10",
+    "vue": "^2.4.1",
     "weex-droplet-ui": "^1.0.0-alpha.100",
     "weex-bindingx": "0.0.48",
     "weex-gcanvas": "^0.5.49",

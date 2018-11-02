@@ -211,6 +211,30 @@
             </div>
         </sf-dialog>
 
+        <!--<detail-modal :show="showDetailModal" @close="closeDetailModal">-->
+            <!--<div slot="title">-->
+                <!--<modal-header title="详情页" titleText="black" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>-->
+            <!--</div>-->
+            <!--<div slot="content" style="height: 200px">-->
+                <!--<div class="content-block">-->
+                    <!--<text class="label">食材：</text>-->
+                    <!--<div class="food-material-items">-->
+                        <!--<text class="food-material-item">鲳鱼500克</text>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="content-block">-->
+                    <!--<text class="label">处理：</text>-->
+                    <!--<div class="cooking-steps">-->
+                        <!--<row-wrap-items :list="list">-->
+                            <!--<template slot-scope="props">-->
+                                <!--<text class="bg-gray">{{props.item}}</text>-->
+                            <!--</template>-->
+                        <!--</row-wrap-items>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</detail-modal>-->
+
         <midea-dialog :title="warningDialog.title"
                       :show="warningDialog.show"
                       :single="true"
@@ -225,7 +249,10 @@
 
 <script>
     import MideaHeader from '@/midea-component/header.vue'
+    import modalHeader from '@/component/sf/custom/modal-header.vue'
+    import rowWrapItems from '@/component/sf/custom/row-wrap-items.vue'
     import sfAccordion from '@/component/sf/custom/accordion.vue'
+    import detailModal from '@/component/sf/custom/detail-modal.vue'
     import sfDialog from '@/component/sf/custom/dialog.vue'
     import nativeService from "../common/services/nativeService";
     import query from "../dummy/query";
@@ -239,6 +266,7 @@
 
     import accordionMixin from  "./utils/mixins/accordions"
     import deviceMessageMixin from  "./utils/mixins/deviceMessage"
+    import detailModalMixin from  "./utils/mixins/detailModal"
     import commonMixin from  "./utils/mixins/common"
 
     import mideaDialog from '@/component/dialog.vue';
@@ -246,9 +274,10 @@
     var numberRecord = 0; //记录跳页面的次数
 
     export default {
-        mixins: [commonMixin, deviceMessageMixin, accordionMixin],
+        mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin],
         data(){
             return {
+                list:['123','234','345','456','567'],
                 tabs:[
                     {
                         name:'自动菜单',
@@ -264,7 +293,7 @@
                 warningDialog: this.initWarningDialog()
             }
         },
-        components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2, mideaDialog},
+        components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modalHeader,rowWrapItems},
         created(){
             //模拟设备数据
             nativeService.initMockData({

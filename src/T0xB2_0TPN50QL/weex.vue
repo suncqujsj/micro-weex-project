@@ -226,7 +226,7 @@
                     <!--<text class="label">处理：</text>-->
                     <!--<div class="cooking-steps">-->
                         <!--<row-wrap-items :list="list">-->
-                            <!--<template slot-scope="props">-->
+                            <!--<template slot-scope="{props}">-->
                                 <!--<text class="bg-gray">{{props.item}}</text>-->
                             <!--</template>-->
                         <!--</row-wrap-items>-->

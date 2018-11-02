@@ -17,20 +17,8 @@ var isDummy = false;
 const debugLogSeperator = "**************************************\n"
 
 
-var ipParam = weex.config.bundleUrl.match(new RegExp("[\?\&]ip=([^\&]+)", "i"));
-var port = 8080
-if (ipParam && ipParam.length > 1) {
-    ipParam = ipParam[1]
-    var portParam = weex.config.bundleUrl.match(new RegExp(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}[^\d]+(\d+)[^\d]/, "i"));
-    if (portParam && portParam.length > 1) {
-        port = portParam[1]
-        console.log(port)
-    } else {
-        port = ""
-    }
-    // 测试
-    isDummy = util.getParameters(weex.config.bundleUrl, "isDummy") == "true"
-}
+var isDummy = util.getParameters(weex.config.bundleUrl, "isDummy") == "true"
+
 const platform = weex.config.env.platform;
 if (platform == 'Web') {
     isDummy = true
@@ -103,22 +91,16 @@ export default {
             });
         } else if (platform != 'Web') {
             //手机远程weex页面调试跳转
-            let theRequest = this.getParameters()
-            let ip = theRequest['ip']
-            let root = theRequest['root']
-            let isDummy = this.isDummy
-            let targetPath = path
-            if (targetPath.indexOf("?") != -1) {
-                targetPath += '&root=' + root + '&ip=' + ip + '&isDummy=' + isDummy
-            } else {
-                targetPath += '?root=' + root + '&ip=' + ip + '&isDummy=' + isDummy
-            }
-            if (ip == null || ip.length < 1) {
-                url = "http://localhost:" + port + "/dist/" + root + '/' + targetPath;
-            } else {
-                url = "http://" + ip + (port ? (":" + port) : "") + "/dist/" + root + '/' + targetPath;
-            }
-            this.runGo(url, options);
+            this.getPath((weexPath) => {
+                //weexPath为插件包地址，比如：files:///..../MideaHome/T0x99/
+                url = weexPath + path;
+                if (url.indexOf("?") != -1) {
+                    url += '&isDummy=' + isDummy
+                } else {
+                    url += '?isDummy=' + isDummy
+                }
+                this.runGo(url, options);
+            });
         } else {
             //PC网页调试跳转
             location.href = location.origin + location.pathname + '?path=' + path.replace('?', '&')
@@ -148,7 +130,7 @@ export default {
         取得当前weex页面的根路径
     */
     getPath(callBack) {
-        if (this.isDummy != true) {
+        if (this.isDummy != true && !isRemote) {
             bridgeModule.getWeexPath(function (resData) {
                 var jsonData = JSON.parse(resData);
                 var weexPath = jsonData.weexPath;
@@ -156,16 +138,8 @@ export default {
             });
         } else if (platform != 'Web') {
             //手机远程weex页面调试
-            let theRequest = this.getParameters()
-            let ip = theRequest['ip']
-            let root = theRequest['root']
-            let weexPath
-            if (ip == null || ip.length < 1) {
-                weexPath = "http://localhost:" + port + "/dist/" + root + '/'
-            } else {
-                weexPath = "http://" + ip + ":" + port + "/dist/" + root + '/'
-            }
-            callBack(weexPath);
+            let rootPath = weex.config.bundleUrl.match(new RegExp("(.*/).*\.js", "i"))
+            callBack(rootPath ? rootPath[1] : weex.config.bundleUrl);
         } else {
             //PC网页调试跳转
             location.href = location.origin + location.pathname + '?path=' + path
@@ -984,7 +958,7 @@ export default {
     weexBundleToWeb(params) {
         /* params =  {
             url: "xxxx", //跳转的目标页面
-            titel: "h5标题"
+            title: "h5标题"
         } */
         let param = Object.assign(params, {
             operation: 'weexBundleToWeb',
@@ -1220,6 +1194,9 @@ export default {
         })
     },
     //获取蓝牙开启状态
+    /* return:
+        {status:1, //1表示蓝牙已打开，0：蓝牙关闭状态，2:：蓝牙正在重置，3：设备不支持蓝牙，4：蓝牙未授权}
+    */
     getBlueStatus(params = {}) {
         return this.blueToothModuleWrapper("getBlueStatus", params)
     },
@@ -1251,17 +1228,25 @@ export default {
         return this.blueToothModuleWrapper("getDeviceBlueInfo", params)
     },
     //根据蓝牙信息建立蓝牙连接
-    /* param:{name:"xxx", deviceKey:"xxxxx"} */
+    /* param:{name:"xxx", 
+        deviceKey:"xxxxx",
+        service:"uuid", //蓝牙服务特征，使用者根据设备信息传入
+        writeCharacter:"uuid", //蓝牙写入通道特征，使用者根据设备信息传入
+        readCharacter:"uuid" //蓝牙读取通道特征，使用者根据设备信息传入
+    } */
     /* 当收到蓝牙数据，app -> 插件: 
-    receiveMessageFromApp({ messageType: "receiveBlueInfo", messageBody: { service: "uuid", charactristic: "uuid", data: "xxx" } }) 
+    receiveMessageFromApp({ messageType: "receiveBlueInfo", messageBody: { deviceKey:"xxxxx", data: "xxx" } })
     */
     setupBlueConnection(params = {}) {
         return this.blueToothModuleWrapper("setupBlueConnection", params)
     },
     // 向蓝牙设备传输数据
-    /* param:{service:"uuid",charactristic:"uuid", data:"xxx"} */
-    uploadBlueInfo(params = {}) {
-        return this.blueToothModuleWrapper("uploadBlueInfo", params)
+    /* param:{
+        deviceKey:"xxxxx", 
+        data:"xxx" 
+    } */
+    writeBlueInfo(params = {}) {
+        return this.blueToothModuleWrapper("writeBlueInfo", params)
     },
     //断开当前蓝牙连接
     /* 若是蓝牙意外断开, app -> 插件: 

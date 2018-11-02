@@ -127,7 +127,7 @@ let data = [
                     time:{
                         set: true,
                         default:14,
-                        range:[2,120,1]
+                        range:[5,120,1]
                     },
                     temperature:{
                         set: true,

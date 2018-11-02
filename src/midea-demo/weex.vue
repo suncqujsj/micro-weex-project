@@ -95,6 +95,7 @@ module.exports = {
             { title: 'Swiper', link: "swiper" },
             { title: 'Accordion', link: "accordion" },
             { title: 'confirmBox底部确认弹出框', link: "confirmBox" },
+            { title: 'Web组件', link: "web" },
         ],
         advancedlist: [
             { title: 'Action Sheet', link: "actionSheet" },

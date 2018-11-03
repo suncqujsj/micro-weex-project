@@ -113,6 +113,15 @@
         height: 44px;
         width: 44px;
     }
+
+    .label{
+        .f(12*2px);
+    }
+    .food-material-items{}
+    .food-material-item, .cooking-step{
+        .f(12*2px);
+        .gray;
+    }
 </style>
 
 <template>
@@ -126,8 +135,8 @@
                     </div>
                     <!--<div class="header-right-image-wrapper" @click="childLock(true)">
                         <image class="header-right-image" :src="'assets/img/header/public_ic_babylock@3x.png'"></image>
-                    </div>-->
-                    <!--<div class="header-right-image-wrapper" @click="openMorePage">
+                    </div>
+                    <div class="header-right-image-wrapper" @click="openMorePage">
                         <image class="header-right-image" :src="'assets/img/header/public_ic_lots@3x.png'"></image>
                     </div>-->
                 </div>
@@ -216,20 +225,18 @@
                 <!--<modal-header title="详情页" titleText="black" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>-->
             <!--</div>-->
             <!--<div slot="content" style="height: 200px">-->
-                <!--<div class="content-block">-->
+                <!--<div class="content-block row">-->
                     <!--<text class="label">食材：</text>-->
-                    <!--<div class="food-material-items">-->
-                        <!--<text class="food-material-item">鲳鱼500克</text>-->
+                    <!--<div class="food-material-item-wrap">-->
+                        <!--<div class="food-material-items row" v-for="foodMaterialItem in foodMaterialItems">-->
+                            <!--<text v-for="item in foodMaterialItem.items"  class="food-material-item">{{item}}</text>-->
+                        <!--</div>-->
                     <!--</div>-->
                 <!--</div>-->
-                <!--<div class="content-block">-->
+                <!--<div class="content-block row">-->
                     <!--<text class="label">处理：</text>-->
                     <!--<div class="cooking-steps">-->
-                        <!--<row-wrap-items :list="list">-->
-                            <!--<template slot-scope="{props}">-->
-                                <!--<text class="bg-gray">{{props.item}}</text>-->
-                            <!--</template>-->
-                        <!--</row-wrap-items>-->
+                        <!--<text v-for="item in cookingSteps" class="cooking-step">{{item}}</text>-->
                     <!--</div>-->
                 <!--</div>-->
             <!--</div>-->
@@ -304,10 +311,44 @@
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
             }
+            console.dir(this.foodMaterialItems);
         },
         computed:{
+            foodMaterialItems(){
+                if(this.detailEmpty()) {
+                    return [];
+                }
+
+                let cols = 3;
+                let list = [];
+                let foodMaterial= this.currentItem.detail.foodMaterial;
+                let foodMaterialItems = foodMaterial.split('\n');
+                let itemLen = foodMaterialItems.length;
+                for(let i=0;i<itemLen;i++) {
+                    list.push(foodMaterialItems[i]);
+                }
+                return this.dList(list, cols);
+            },
+            cookingSteps(){
+                if(this.detailEmpty()) {
+                    return [];
+                }
+
+                let list = [];
+                let cookingSteps = this.currentItem.detail.cookingSteps;
+                let steps = cookingSteps.split('\n');
+                let stepLen = steps.length;
+                for(let i=0;i<stepLen;i++) {
+                    let step = steps[i];
+                    list.push(step.split('.')[1]);
+                }
+                return list;
+            }
         },
         methods: {
+            detailEmpty: function(){
+                return !this.currentItem && !this.currentItem.detail;
+            },
             openCloudRecipe: function(){
                 nativeService.jumpNativePage({
                     "pageName": "CookbookHome",

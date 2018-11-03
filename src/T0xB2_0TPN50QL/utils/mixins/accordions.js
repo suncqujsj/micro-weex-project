@@ -25,7 +25,59 @@ const accordionMixin = {
     data () {
             return {
                 accordions: this.initAccordions(),
-                currentItem:null,
+                // currentItem:null,
+                currentItem:{
+                    'icon': '',
+                    'text': '清蒸草鱼香菇',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:13,
+                        range:[5,120,1]
+                    },
+                    temperature:{
+                        set: true,
+                        default:100,
+                        range:[35,70,1,75,100,5]
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x41,
+                        range:null
+                    },
+                    detail: {
+                        foodMaterial:'香菇 34克\n' +
+                        '草鱼 134克\n' +
+                        '香葱 1克\n' +
+                        '姜 1克 \n' +
+                        '汉口白酒(49.6度) 2毫升\n' +
+                        '蒸鱼豉油   7毫升\n' +
+                        '花椒    2克\n' +
+                        '酱油(均值)  2毫升',
+                        cookingSteps:'1.将鱼清洗干净，去内脏后，在鱼体两侧抹匀食用油，再沾少许白酒。\n' +
+                        '2.准备葱丝、姜片。\n' +
+                        '3.香菇切块。\n' +
+                        '4.将葱丝、姜片、香菇块铺在鱼盘上，将鱼入盘后再在鱼身上撒些葱姜丝。\n' +
+                        '5.锅下水，等水开后，将鱼入锅；蒸6-7分钟即关火。\n' +
+                        '6.关火后，别打开锅盖，利用锅内余温“虚蒸”5-8分钟后立即出锅，把多余的水份倒掉。\n' +
+                        '7.铺上葱，淋上酱油。\n' +
+                        '8.在鱼身撒上青蒜末，锅中放油，爆香花椒。编出红油，热油泼在鱼上面即可。'
+                    }
+                },
                 current:this.initCurrentData(),
                 show: false
             }

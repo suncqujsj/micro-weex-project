@@ -48,9 +48,11 @@
     }
     .padding14{
         padding: 14px;
+        font-size: 32px;
     }
     .padding20{
         padding: 20px;
+        font-size: 32px;
     }
     .hd{
         padding: 20px;
@@ -58,7 +60,8 @@
     }
     .scroll-picker-wrap{
         padding-top: 30px;
-        padding-bottom: 30px;
+        padding-bottom: 16px;
+        height: 436px;
         background-color: #fff;
     }
 </style>

@@ -27,7 +27,7 @@
   import mideaCell from './cell.vue';
   const modal = weex.requireModule('modal');
   //to be changed
-  var CHECKED="../img/check/checked.png";
+  var CHECKED="../img/check/public_ic_done@2x.png";
   var UNCHECKED="../img/check/unchecked.png";
   var CHECKED_DISABLED="../img/check/dischecked.png";
   var UNCHECKED_DISABLED="../img/check/disuncheked.png"

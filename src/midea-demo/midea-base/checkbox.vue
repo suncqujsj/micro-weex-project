@@ -13,14 +13,14 @@
 
         <midea-button text="点击弹出底部面板" @mideaButtonClicked="openBottomOverlay">
         </midea-button>
-        <midea-popup :show="isBottomShow" @mideaPopupOverlayClicked="popupOverlayBottomClick" pos="bottom" height="472">
+        <midea-popup :show="isBottomShow" @mideaPopupOverlayClicked="popupOverlayBottomClick" pos="bottom" height="532">
             <scroller class="demo-content">
                 <midea-checkbox-list :list="list" :needShowTopBorder="true" @mideaCheckBoxListChecked="mideaCheckBoxListChecked">
                 </midea-checkbox-list>
             </scroller>
             <div class="btn-grp">
-                <text class="btn-grp-text" @click="cancel"> 取消</text>
-                <text class="btn-grp-text" @click="confirm"> 确定</text>
+                <div class="btn-item btn-cancel"><text class="btn-grp-text cancel-text" @click="cancel">取消</text></div>
+                <div class="btn-item"><text class="btn-grp-text confirm-text" @click="confirm">确定</text></div>
             </div>
         </midea-popup>
     </div>
@@ -30,18 +30,35 @@
   background-color: #f2f2f2;
   position: relative;
 }
+.demo-content {
+    background-color: #f2f2f2;
+    padding-bottom: 16px;
+}
 .btn-grp {
-  padding-left: 24px;
-  padding-right: 24px;
-  height: 72px;
+  height: 96px;
   flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #f2f2f2;
+  background-color: #fff;
+}
+.btn-item {
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.btn-cancel {
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-right-color: #d7dde4;
 }
 .btn-grp-text {
-  color: #267aff;
-  font-size: 28px;
+  line-height: 96px;
+  font-size: 32px;
+}
+.cancel-text {
+    color: #666;
+}
+.confirm-text {
+    color: #000;
 }
 </style>
 <script>

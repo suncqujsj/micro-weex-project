@@ -81,14 +81,14 @@
     created () {
       const { checked, disabled } = this;
       this.innerChecked = checked;
-      this.color = checked && !disabled ? '#00B9EF' : '#3D3D3D';
+      this.color = checked && !disabled ? '#267aff' : '#3D3D3D';
     },
     methods: {
       mideaCellClick () {
         const { disabled, innerChecked, value } = this;
         if (!disabled) {
           this.innerChecked = !innerChecked;
-          this.color = (this.innerChecked ? '#00B9EF' : '#3D3D3D');
+          this.color = (this.innerChecked ? '#267aff' : '#3D3D3D');
           this.$emit('mideaCheckBoxItemChecked', { value, checked: this.innerChecked })
         }
       }

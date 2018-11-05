@@ -14,14 +14,14 @@
         <midea-button text="点击弹出底部面板" @mideaButtonClicked="openBottomOverlay">
         </midea-button>
         <midea-popup :show="isBottomShow" @mideaPopupOverlayClicked="popupOverlayBottomClick" pos="bottom" height="472">
-            <div class="btn-grp">
-                <text class="btn-grp-text" @click="cancel"> 取消</text>
-                <text class="btn-grp-text" @click="confirm"> 确定</text>
-            </div>
             <scroller class="demo-content">
                 <midea-checkbox-list :list="list" :needShowTopBorder="true" @mideaCheckBoxListChecked="mideaCheckBoxListChecked">
                 </midea-checkbox-list>
             </scroller>
+            <div class="btn-grp">
+                <text class="btn-grp-text" @click="cancel"> 取消</text>
+                <text class="btn-grp-text" @click="confirm"> 确定</text>
+            </div>
         </midea-popup>
     </div>
 </template>
@@ -40,7 +40,7 @@
   background-color: #f2f2f2;
 }
 .btn-grp-text {
-  color: #00b9ef;
+  color: #267aff;
   font-size: 28px;
 }
 </style>

@@ -39,10 +39,10 @@
   }
 
   .dialog-content {
-    padding-top: 36px;
-    padding-bottom: 36px;
-    padding-left: 36px;
-    padding-right: 36px;
+    /*padding-top: 36px;*/
+    /*padding-bottom: 36px;*/
+    /*padding-left: 36px;*/
+    /*padding-right: 36px;*/
   }
 
   .content-title {

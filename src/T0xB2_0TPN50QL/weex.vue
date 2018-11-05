@@ -114,13 +114,35 @@
         width: 44px;
     }
 
+    .content-wrap{
+        padding: 0 31*2px;
+    }
+
+    .content-block{
+       border-top-width: 1px;
+    }
+
     .label{
         .f(12*2px);
+        .ma-r(16*2px);
     }
-    .food-material-items{}
-    .food-material-item, .cooking-step{
+    .food-material-items{
+        height: 102*2px;
+        overflow-y: scroll;
+    }
+    .food-material-item-left, .food-material-item-right, .cooking-step{
         .f(12*2px);
         .gray;
+    }
+
+    .cooking-steps{
+        height: 231*2px;
+        width: 180*2px;
+    }
+
+    .cooking-step{
+        line-height: 15*2px;
+        .ma-b(13*2);
     }
 </style>
 
@@ -224,20 +246,21 @@
             <!--<div slot="title">-->
                 <!--<modal-header title="详情页" titleText="black" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>-->
             <!--</div>-->
-            <!--<div slot="content" style="height: 200px">-->
-                <!--<div class="content-block row">-->
-                    <!--<text class="label">食材：</text>-->
-                    <!--<div class="food-material-item-wrap">-->
-                        <!--<div class="food-material-items row" v-for="foodMaterialItem in foodMaterialItems">-->
-                            <!--<text v-for="item in foodMaterialItem.items"  class="food-material-item">{{item}}</text>-->
+            <!--<div slot="content" class="content-wrap" :style="{'height':382*2 + 'px'}">-->
+                <!--<div class="content-block row" :style="{'padding-top':14*2-3+'px'}">-->
+                    <!--<text class="label">食材:</text>-->
+                    <!--<scroller class="food-material-items">-->
+                        <!--<div class="food-material-item row" v-for="item in foodMaterialItems">-->
+                            <!--<text class="food-material-item-left flex">{{item.name}}</text>-->
+                            <!--<text class="food-material-item-right">{{item.weight}}</text>-->
                         <!--</div>-->
-                    <!--</div>-->
+                    <!--</scroller>-->
                 <!--</div>-->
-                <!--<div class="content-block row">-->
-                    <!--<text class="label">处理：</text>-->
-                    <!--<div class="cooking-steps">-->
-                        <!--<text v-for="item in cookingSteps" class="cooking-step">{{item}}</text>-->
-                    <!--</div>-->
+                <!--<div class="content-block row" :style="{'padding-top':20*2-3+'px'}">-->
+                    <!--<text class="label">处理:</text>-->
+                    <!--<scroller class="cooking-steps">-->
+                        <!--<text v-for="(item, index) in cookingSteps" class="cooking-step">{{index+1}}.{{item}}</text>-->
+                    <!--</scroller>-->
                 <!--</div>-->
             <!--</div>-->
         <!--</detail-modal>-->
@@ -319,15 +342,19 @@
                     return [];
                 }
 
-                let cols = 3;
                 let list = [];
                 let foodMaterial= this.currentItem.detail.foodMaterial;
                 let foodMaterialItems = foodMaterial.split('\n');
                 let itemLen = foodMaterialItems.length;
                 for(let i=0;i<itemLen;i++) {
-                    list.push(foodMaterialItems[i]);
+                    let itemArr = foodMaterialItems[i].split(/\s+/);
+                    let item = {
+                        name: itemArr[0],
+                        weight: itemArr[1]
+                    };
+                    list.push(JSON.parse(JSON.stringify(item)));
                 }
-                return this.dList(list, cols);
+                return JSON.parse(JSON.stringify(list));
             },
             cookingSteps(){
                 if(this.detailEmpty()) {

@@ -668,6 +668,17 @@ export default {
             bridgeModule.updateTitle(JSON.stringify(params));
         }
     },
+    getAuthToken() {
+        return new Promise((resolve, reject) => {
+            bridgeModule.getAuthToken({},
+                (resData) => {
+                    resolve(this.convertToJson(resData))
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
+    },
     // 获取套系列表
     getTxList(isShowLoading = true) {
         // if (this.isDummy != true) {
@@ -807,10 +818,10 @@ export default {
         let params = {};
         bridgeModule.reload(params,
             (resData) => {
-                callback(resData)
+                if (callback) callback(resData)
             },
             (error) => {
-                callbackFail(error)
+                if (callbackFail) callbackFail(error)
             });
     },
     /*

@@ -128,7 +128,6 @@
     }
     .food-material-items{
         height: 102*2px;
-        overflow-y: scroll;
     }
     .food-material-item-left, .food-material-item-right, .cooking-step{
         .f(12*2px);
@@ -242,28 +241,28 @@
             </div>
         </sf-dialog>
 
-        <!--<detail-modal :show="showDetailModal" @close="closeDetailModal">-->
-            <!--<div slot="title">-->
-                <!--<modal-header title="详情页" titleText="black" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>-->
-            <!--</div>-->
-            <!--<div slot="content" class="content-wrap" :style="{'height':382*2 + 'px'}">-->
-                <!--<div class="content-block row" :style="{'padding-top':14*2-3+'px'}">-->
-                    <!--<text class="label">食材:</text>-->
-                    <!--<scroller class="food-material-items">-->
-                        <!--<div class="food-material-item row" v-for="item in foodMaterialItems">-->
-                            <!--<text class="food-material-item-left flex">{{item.name}}</text>-->
-                            <!--<text class="food-material-item-right">{{item.weight}}</text>-->
-                        <!--</div>-->
-                    <!--</scroller>-->
-                <!--</div>-->
-                <!--<div class="content-block row" :style="{'padding-top':20*2-3+'px'}">-->
-                    <!--<text class="label">处理:</text>-->
-                    <!--<scroller class="cooking-steps">-->
-                        <!--<text v-for="(item, index) in cookingSteps" class="cooking-step">{{index+1}}.{{item}}</text>-->
-                    <!--</scroller>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</detail-modal>-->
+        <detail-modal :show="showDetailModal" @close="closeDetailModal">
+            <div slot="title">
+                <modal-header title="详情页" titleText="black" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>
+            </div>
+            <div slot="content" class="content-wrap" :style="{'height':382*2 + 'px'}">
+                <div class="content-block row" :style="{'padding-top':14*2-3+'px'}">
+                    <text class="label">食材:</text>
+                    <scroller class="food-material-items">
+                        <div class="food-material-item row" v-for="item in foodMaterialItems">
+                            <text class="food-material-item-left flex">{{item.name}}</text>
+                            <text class="food-material-item-right">{{item.weight}}</text>
+                        </div>
+                    </scroller>
+                </div>
+                <div class="content-block row" :style="{'padding-top':20*2-3+'px'}">
+                    <text class="label">处理:</text>
+                    <scroller class="cooking-steps">
+                        <text v-for="(item, index) in cookingSteps" class="cooking-step">{{index+1}}.{{item}}</text>
+                    </scroller>
+                </div>
+            </div>
+        </detail-modal>
 
         <midea-dialog :title="warningDialog.title"
                       :show="warningDialog.show"
@@ -308,6 +307,7 @@
         data(){
             return {
                 list:['123','234','345','456','567'],
+                test:[{"name":"香菇","weight":"34克"},{"name":"草鱼","weight":"134克"},{"name":"香葱","weight":"1克"},{"name":"姜","weight":"1克"},{"name":"汉口白酒(49.6度)","weight":"2毫升"},{"name":"蒸鱼豉油","weight":"7毫升"},{"name":"花椒","weight":"2克"},{"name":"酱油(均值)","weight":"2毫升"}],
                 tabs:[
                     {
                         name:'自动菜单',
@@ -334,7 +334,7 @@
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
             }
-            console.dir(this.foodMaterialItems);
+            console.dir(JSON.stringify(this.foodMaterialItems));
         },
         computed:{
             foodMaterialItems(){
@@ -343,7 +343,7 @@
                 }
 
                 let list = [];
-                let foodMaterial= this.currentItem.detail.foodMaterial;
+                let foodMaterial= JSON.parse(JSON.stringify(this.currentItem.detail.foodMaterial));
                 let foodMaterialItems = foodMaterial.split('\n');
                 let itemLen = foodMaterialItems.length;
                 for(let i=0;i<itemLen;i++) {
@@ -354,7 +354,7 @@
                     };
                     list.push(JSON.parse(JSON.stringify(item)));
                 }
-                return JSON.parse(JSON.stringify(list));
+                return list;
             },
             cookingSteps(){
                 if(this.detailEmpty()) {

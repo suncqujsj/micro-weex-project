@@ -20,10 +20,9 @@
         position: absolute;
         bottom: 0;
         left: 0;
-        item-color: #ffffff;
-        item-selectedColor: #747474;
+        item-color: rgba(255, 255, 255, .5);
+        item-selectedColor: rgba(255, 255, 255, 1);
         item-size: 20px;
-        opacity: 0.8;
     }
 </style>
 <script>

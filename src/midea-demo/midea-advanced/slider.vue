@@ -105,7 +105,7 @@
 }
 .tip-txt{
 text-align: center;
-color:#5d75f6;
+color:#267aff;
 font-size: 46px;
 }
 .silder-container {
@@ -128,7 +128,7 @@ font-size: 46px;
   height: 6px;
   margin: 30px 3px;
   flex: 1;
-  background-color: #5d75f6;
+  background-color: #267aff;
   border-radius: 2px;
 }
 .dot {
@@ -170,7 +170,8 @@ font-size: 46px;
   height: 40px;
   width: 40px;
   border-radius: 40px;
-  background-color: #5d75f6;
+  background-color: #267aff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, .8);
 }
 </style>
 <script>  

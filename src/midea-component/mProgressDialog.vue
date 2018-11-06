@@ -31,10 +31,10 @@
 
 .dialog-box {
   background-color: #fff;
-  width: 670px;
-  border-radius: 10px;
+  width: 540px;
+  border-radius: 26px;
   position: fixed;
-  left: 40px;
+  left: 105px;
   z-index: 100;
   top: 454px;
 }
@@ -56,7 +56,7 @@
 
 .progress-text {
   color: #0e90ff;
-  font-size: 48px;
+  font-size: 28px;
   text-align: center;
 }
 

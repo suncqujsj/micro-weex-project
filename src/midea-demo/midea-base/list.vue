@@ -3,11 +3,11 @@
         <midea-header title="List" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <list>
             <midea-item v-for="(item,i) in list2" :key="item" :hasTopBorder="i==0?true:false" :title="item.name" :hasArrow="false" :clickActivied="true" @onItemPress="showDel(item)" :cantEdit="true" @onDelete="delItem(item)">
-                <midea-switch2 :checked="mideaChecked" @change="onMideachange" width="70" height="38" slot="value"></midea-switch2>
+                <midea-switch2 :checked="mideaChecked" @change="onMideachange" width="106" height="48" slot="value"></midea-switch2>
             </midea-item>
-            <midea-item v-for="(item,i) in list" :key="item" :hasTopBorder="i==0?true:false" :title="item.name" :hasArrow="true" :clickActivied="true" @onItemPress="showDel(item)" :cantEdit="true" @onDelete="delItem(item)">
+            <midea-item v-for="(item,i) in list" :key="item" :hasTopBorder="false" :title="item.name" :hasArrow="true" :clickActivied="true" @onItemPress="showDel(item)" :cantEdit="true" @onDelete="delItem(item)">
             </midea-item>
-            <midea-item v-for="(item,i) in list1" :key="item" :hasTopBorder="i==0?true:false" :title="item.name" :hasArrow="false" :desc="item.desc" :itemImg="item.itemImg" height="220" :clickActivied="true" @onItemPress="showDel(item)" :cantEdit="true" @onDelete="delItem(item)">
+            <midea-item v-for="(item,i) in list1" :key="item" :hasTopBorder="false" :title="item.name" :hasArrow="false" :desc="item.desc" :itemImg="item.itemImg" height="220" :clickActivied="true" @onItemPress="showDel(item)" :cantEdit="true" @onDelete="delItem(item)">
             </midea-item>
 
         </list>

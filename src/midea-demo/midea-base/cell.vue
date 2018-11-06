@@ -1,11 +1,11 @@
 <template>
   <div class="wrapper">
     <midea-header title="Cell" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
-    <midea-cell title="仅标题且带底部边距" :hasArrow="true" :hasMargin="true" :hasTopBorder="false" :clickActivied="true" style="margin-top:24px" @mideaCellClick="itemClicked">
+    <midea-cell title="仅标题且带底部边距" :hasArrow="true" :hasMargin="true" :hasTopBorder="false" :hasSubBottomBorder="false" :clickActivied="true" style="margin-top:24px" @mideaCellClick="itemClicked">
     </midea-cell>
-    <midea-cell title="标题附带描述" desc="描述" :hasMargin="true" :hasArrow="true" :clickActivied="true" :hasTopBorder="false" @mideaCellClick="itemClicked">
+    <midea-cell title="标题附带描述" desc="描述" :hasMargin="true" :hasArrow="true" :clickActivied="true" :hasTopBorder="false" :hasSubBottomBorder="false" @mideaCellClick="itemClicked">
     </midea-cell>
-    <midea-cell title="带右边文字" rightText="设置" :hasTopBorder="false" :hasMargin="true" @mideaCellClick="itemClicked">
+    <midea-cell title="带右边文字" rightText="设置" :hasTopBorder="false" :hasMargin="true" :hasSubBottomBorder="false" @mideaCellClick="itemClicked">
     </midea-cell>
     <midea-cell title="带右边文字和导航" rightText="设置" :hasTopBorder="false" :hasArrow="true" :clickActivied="true" @mideaCellClick="itemClicked">
     </midea-cell>
@@ -17,7 +17,7 @@
       <text class="link-text" slot="text" v-if="selected==2"> 已关联</text>
     </midea-cell>
 
-    <midea-cell label="动态插入切换按键" @mideaCellClick="itemClicked" :hasArrow="false">
+    <midea-cell label="动态插入切换按键" @mideaCellClick="itemClicked" :hasArrow="false" :hasSubBottomBorder="false">
       <midea-switch2 class="value" slot="value"> </midea-switch2>
     </midea-cell>
 

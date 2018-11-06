@@ -27,7 +27,7 @@
   import mideaCell from './cell.vue';
   const modal = weex.requireModule('modal');
   //to be changed
-  var CHECKED="../img/check/checked.png";
+  var CHECKED="../img/check/public_ic_done@2x.png";
   var UNCHECKED="../img/check/unchecked.png";
   var CHECKED_DISABLED="../img/check/dischecked.png";
   var UNCHECKED_DISABLED="../img/check/disuncheked.png"
@@ -81,14 +81,14 @@
     created () {
       const { checked, disabled } = this;
       this.innerChecked = checked;
-      this.color = checked && !disabled ? '#00B9EF' : '#3D3D3D';
+      this.color = checked && !disabled ? '#267aff' : '#3D3D3D';
     },
     methods: {
       mideaCellClick () {
         const { disabled, innerChecked, value } = this;
         if (!disabled) {
           this.innerChecked = !innerChecked;
-          this.color = (this.innerChecked ? '#00B9EF' : '#3D3D3D');
+          this.color = (this.innerChecked ? '#267aff' : '#3D3D3D');
           this.$emit('mideaCheckBoxItemChecked', { value, checked: this.innerChecked })
         }
       }

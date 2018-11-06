@@ -7,7 +7,7 @@
           <text v-if="title" class="content-title">{{title}}</text>
         </slot>
         <slot name="content">
-          <text v-if="content" class="content-subtext">{{content}}</text>
+          <text v-if="content" class="content-subtext" :style="{fontFamily: title?'PingFangSC-Regular':'PingFangSC-Medium'}">{{content}}</text>
         </slot>
       </div>
       <div class="dialog-footer">
@@ -44,7 +44,7 @@
   .dialog-box {
     background-color: #FFF;
     width: 558px;
-    border-radius:10px;
+    border-radius:26px;
     position:fixed;
     left:96px;
     z-index:100;
@@ -59,6 +59,7 @@
   }
 
   .content-title {
+    font-family: PingFangSC-Medium;
     color: #333333;
     font-size: 36px;
     text-align: center;
@@ -67,6 +68,7 @@
   }
 
   .content-subtext {
+    font-family: PingFangSC-Regular;
     color: #666666;
     font-size: 26px;
     line-height: 36px;
@@ -98,6 +100,7 @@
   }
 
   .btn-text {
+    font-family: PingFangSC-Regular;
     font-size: 36px;
     color: #666666;
   }
@@ -156,11 +159,11 @@
       },
       mainBtnColor: {
         type: String,
-        default: '#267aff'
+        default: '#000'
       },
       secondBtnColor: {
         type: String,
-        default: '#267aff'
+        default: '#666'
       },
       showNoPrompt: {
         type: Boolean,

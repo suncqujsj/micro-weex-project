@@ -30,10 +30,10 @@
 
   .dialog-box {
     background-color: #FFF;
-    width: 558px;
+    width: 686px;
     border-radius:10px;
     position:fixed;
-    left:96px;
+    left:32px;
     z-index:100;
     top:350px;
   }

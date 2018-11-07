@@ -221,7 +221,9 @@
                 <!--<template v-for="tab in tabs">-->
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
                 <!--</template>-->
-                <text v-if="currentItem" class="content-title">{{currentItem.text}}</text>
+                <!--<text v-if="currentItem" class="content-title" @click="showDetailModal">{{currentItem.text}}</text>-->
+                <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty" rightImg="assets/img/header/public_ic_help@3x.png" class="modal-header" :title="currentItem.text" titleText="#666666" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
+
                 <template v-for="(item, index) in accordions">
                     <template v-if="item.type==='picker'">
                         <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
@@ -242,28 +244,28 @@
             </div>
         </sf-dialog>
 
-        <!--<detail-modal :show="showDetailModal" @close="closeDetailModal">-->
-            <!--<div slot="title">-->
-                <!--<modal-header leftImg="assets/img/header/public_ic_gray@3x.png" class="modal-header" title="详情页" titleText="#666666" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>-->
-            <!--</div>-->
-            <!--<div slot="content" class="content-wrap" :style="{'height':338*2 + 'px'}">-->
-                <!--<div class="content-block row" :style="{'padding-top':14*2-3+'px'}">-->
-                    <!--<text class="label">食材:</text>-->
-                    <!--<scroller class="food-material-items flex">-->
-                        <!--<div class="food-material-item row" v-for="item in foodMaterialItems">-->
-                            <!--<text class="food-material-item-left flex">{{item.name}}</text>-->
-                            <!--<text class="food-material-item-right">{{item.weight}}</text>-->
-                        <!--</div>-->
-                    <!--</scroller>-->
-                <!--</div>-->
-                <!--<div class="content-block row" :style="{'padding-top':20*2-3+'px'}">-->
-                    <!--<text class="label">处理:</text>-->
-                    <!--<scroller class="cooking-steps flex">-->
-                        <!--<text v-for="(item, index) in cookingSteps" class="cooking-step">{{index+1}}.{{item}}</text>-->
-                    <!--</scroller>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</detail-modal>-->
+        <detail-modal :show="showDetailVisibility" @close="closeDetailModal">
+            <div slot="title">
+                <modal-header leftImg="assets/img/header/public_ic_gray@3x.png" class="modal-header" title="详情页" titleText="#666666" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>
+            </div>
+            <div slot="content" class="content-wrap" :style="{'height':338*2 + 'px'}">
+                <div class="content-block row" :style="{'padding-top':14*2-3+'px'}">
+                    <text class="label">食材:</text>
+                    <scroller class="food-material-items flex">
+                        <div class="food-material-item row" v-for="item in foodMaterialItems">
+                            <text class="food-material-item-left flex">{{item.name}}</text>
+                            <text class="food-material-item-right">{{item.weight}}</text>
+                        </div>
+                    </scroller>
+                </div>
+                <div class="content-block row" :style="{'padding-top':20*2-3+'px'}">
+                    <text class="label">处理:</text>
+                    <scroller class="cooking-steps flex">
+                        <text v-for="(item, index) in cookingSteps" class="cooking-step">{{index+1}}.{{item}}</text>
+                    </scroller>
+                </div>
+            </div>
+        </detail-modal>
 
         <midea-dialog :title="warningDialog.title"
                       :show="warningDialog.show"
@@ -337,46 +339,7 @@
             }
             console.dir(JSON.stringify(this.foodMaterialItems));
         },
-        computed:{
-            foodMaterialItems(){
-                if(this.detailEmpty()) {
-                    return [];
-                }
-
-                let list = [];
-                let foodMaterial= JSON.parse(JSON.stringify(this.currentItem.detail.foodMaterial));
-                let foodMaterialItems = foodMaterial.split('\n');
-                let itemLen = foodMaterialItems.length;
-                for(let i=0;i<itemLen;i++) {
-                    let itemArr = foodMaterialItems[i].split(/\s+/);
-                    let item = {
-                        name: itemArr[0],
-                        weight: itemArr[1]
-                    };
-                    list.push(JSON.parse(JSON.stringify(item)));
-                }
-                return list;
-            },
-            cookingSteps(){
-                if(this.detailEmpty()) {
-                    return [];
-                }
-
-                let list = [];
-                let cookingSteps = this.currentItem.detail.cookingSteps;
-                let steps = cookingSteps.split('\n');
-                let stepLen = steps.length;
-                for(let i=0;i<stepLen;i++) {
-                    let step = steps[i];
-                    list.push(step.split('.')[1]);
-                }
-                return list;
-            }
-        },
         methods: {
-            detailEmpty: function(){
-                return !this.currentItem && !this.currentItem.detail;
-            },
             openCloudRecipe: function(){
                 nativeService.jumpNativePage({
                     "pageName": "CookbookHome",

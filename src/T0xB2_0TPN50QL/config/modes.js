@@ -36,7 +36,7 @@ let modes = [
             },
             {
                 'icon': 'assets/img/modes/clean@3x.png',
-                'text': '清洁',
+                'text': '除垢',
                 'mode': 0xC1,
                 time:{
                     set: false,

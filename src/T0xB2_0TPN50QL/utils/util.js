@@ -23,7 +23,7 @@ export default {
       {'text': '烧烤', 'mode': 0x40},
       {'text': '热风对流','mode': 0x41},
       {'text': '热风烧烤','mode': 0x43},
-      {'text': '清洁','mode': 0xC1},
+      {'text': '除垢','mode': 0xC1},
       {'text': '保温','mode': 0xD0},
       {'text': '发酵','mode': 0xB0},
       {'text': '自动菜谱','mode': 0xE0},

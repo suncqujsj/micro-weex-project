@@ -120,7 +120,7 @@ export default {
   width: 300px;
   height: 70px;
   font-family: PingFangSC-Regular;
-  font-size: 28px;
+  font-size: 40px;
   color: #000000;
   text-align: center;
   padding: 8px;
@@ -133,24 +133,24 @@ export default {
 }
 .first-visible-item {
   opacity: 0.1;
-  font-size: 30px;
+  font-size: 40px;
 }
 .second-visible-item {
   opacity: 0.3;
-  font-size: 32px;
+  font-size: 40px;
 }
 .second-last-visible-item {
   opacity: 0.3;
-  font-size: 32px;
+  font-size: 40px;
 }
 .first-last-visible-item {
   opacity: 0.1;
-  font-size: 30px;
+  font-size: 40px;
 }
 .selected-item {
   opacity: 1;
   color: #000000;
-  font-size: 34px;
+  font-size: 48px;
 }
 .unselected-item {
   opacity: 0.3;

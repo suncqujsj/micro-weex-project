@@ -15,8 +15,8 @@
 
 <style scoped>
   .radio {
-    width: 24px;
-    height: 16px;
+    width: 32px;
+    height: 32px;
   }
 
   .title-text {
@@ -26,7 +26,7 @@
 
 <script>
   import mideaCell from './cell.vue';
-  var CHECKED="../img/check/choose.png";
+  var CHECKED="../img/check/public_ic_done@2x.png";
   //import { CHECKED, UNCHECKED } from './icon.base64.js'
   export default {
     components: { mideaCell },
@@ -74,7 +74,7 @@
       },
       color () {
         const { disabled, checked } = this;
-        return checked && !disabled ? '#00B9EF' : '#3D3D3D';
+        return checked && !disabled ? '#267aff' : '#3D3D3D';
       }
     },
     methods: {

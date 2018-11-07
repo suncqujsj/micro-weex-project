@@ -13,15 +13,15 @@
         <midea-button text="点击弹出右侧面板" @mideaButtonClicked="openRightOverlay">
         </midea-button>
 
-        <midea-popup :show="isBottomShow" @mideaPopupOverlayClicked="popupOverlayBottomClick" pos="bottom" height="472">
-            <div class="btn-grp">
-                <text class="btn-grp-text" @click="cancel"> 取消</text>
-                <text class="btn-grp-text" @click="confirm"> 确定</text>
-            </div>
+        <midea-popup :show="isBottomShow" @mideaPopupOverlayClicked="popupOverlayBottomClick" pos="bottom" height="532">
             <scroller class="demo-content">
                 <midea-checkbox-list :list="list" :needShowTopBorder="true" @mideaCheckBoxListChecked="mideaCheckBoxListChecked">
                 </midea-checkbox-list>
             </scroller>
+            <div class="btn-grp">
+                <div class="btn-item btn-cancel"><text class="btn-grp-text cancel-text" @click="cancel">取消</text></div>
+                <div class="btn-item"><text class="btn-grp-text confirm-text" @click="confirm">确定</text></div>
+            </div>
         </midea-popup>
         <midea-popup :show="isTopShow" @mideaPopupOverlayClicked="popupOverlayBottomClick" pos="top" height="400">
             <div class="demo-content">
@@ -41,21 +41,38 @@
     </div>
 </template>
 <style scoped>
-.wrapper {
-  background-color: #f2f2f2;
-}
+  .wrapper {
+    background-color: #f2f2f2;
+  }
+  .demo-content {
+    background-color: #f2f2f2;
+    padding-bottom: 16px;
+  }
 .btn-grp {
-  padding-left: 24px;
-  padding-right: 24px;
-  height: 72px;
+  height: 96px;
   flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #f2f2f2;
+  background-color: #fff;
+}
+.btn-item {
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.btn-cancel {
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-right-color: #d7dde4;
 }
 .btn-grp-text {
-  color: #00b9ef;
-  font-size: 28px;
+  line-height: 96px;
+  font-size: 32px;
+}
+.cancel-text {
+  color: #666;
+}
+.confirm-text {
+  color: #000;
 }
 </style>
 <script>  

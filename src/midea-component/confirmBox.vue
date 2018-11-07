@@ -88,21 +88,20 @@ export default {
         width: 750px;
         height: 500px;
         background-color: #f2f2f2;
+        font-size: 28px;
     }
     .row-sb{ flex-direction: row; justify-content: space-between; }
     .confirm-buttons{
         position: fixed;
-        height: 120px;
+        height: 96px;
         bottom: 0;
         left: 0;
         right: 0;
-        padding-top: 24px;
         background-color: #fff;
     }
     .left-button, .right-button {
         width: 375px;
-        height: 80px;
-        padding-top: 24px;
+        line-height: 96px;
         flex:1;
         text-align: center;
     }

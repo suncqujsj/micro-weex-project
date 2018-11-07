@@ -67,7 +67,7 @@
       // 选中状态边框色值
       checkedBorderColor: {
         type: String,
-        default: '#00B9EF'
+        default: '#267aff'
       },
       // 不可选状态边框色值
       disabledBorderColor: {
@@ -77,12 +77,12 @@
       // 正常状态背景色值
       backgroundColor: {
         type: String,
-        default: '#B5B5B5'
+        default: '#c7c7c7'
       },
       // 选中状态背景色值
       checkedBackgroundColor: {
         type: String,
-        default: '#00B9EF'
+        default: '#267aff'
       },
       // 不可选状态背景色值
       disabledBackgroundColor: {

@@ -42,16 +42,17 @@
   text-align: center;
 }
 .tab-txt {
+  font-family: PingFangSC-Medium;
   font-size: 32px;
   line-height: 45px;
-  color: #020f13;
+  color: #666;
 }
 .tab-txt-selected {
-  color: #0e90ff;
+  color: #000;
 }
 .tab-indicator {
   border-top-style: solid;
-  border-top-color: #0e90ff;
+  border-top-color: #000;
   border-top-width: 2px;
   position: relative;
   top: -4px;

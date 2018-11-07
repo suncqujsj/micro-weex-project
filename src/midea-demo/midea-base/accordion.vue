@@ -9,7 +9,7 @@
                             <image v-if="selectedIndex==index" class="check-icon" src="../assets/img/scene_ic_done@3x.png" resize="contain"></image>
                         </div>
                         <div class="label-wrpper">
-                            <text class="accordion-item-label">{{item.title}}</text>
+                            <text class="accordion-item-label" :class="[selectedIndex === index?'accordion-item-label-active':'']">{{item.title}}</text>
                         </div>
                     </div>
                 </div>
@@ -65,9 +65,13 @@
 }
 .accordion-item-label {
   flex: 1;
+  line-height: 40px;
   font-family: PingFangSC-Regular;
   font-size: 28px;
   color: #666666;
+}
+.accordion-item-label-active {
+    color: #267aff;
 }
 </style>
 

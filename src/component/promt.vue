@@ -11,15 +11,15 @@
           <input  @input="onInput" :value="inputName" class="box-input" type="text" :placeholder="placeholder" />
        </div>
        <div class="box-btn-group">
-          <div  @click="onOkClicked" class="box-btn-wrapper">
-            <text  class="box-btn-text">确定</text>
-          </div>
           <div @click="onCancled" class="box-btn-wrapper">
-            <text class="box-btn-text">取消</text>
+            <text class="box-btn-text cancel-text">取消</text>
+          </div>
+          <div  @click="onOkClicked" class="box-btn-wrapper">
+            <text  class="box-btn-text confrim-text">确定</text>
           </div>
        </div>
      </div>
-  </div>
+    </div>
 </template>
 
 <style>
@@ -41,7 +41,7 @@
   .operate-box {
     background-color: #F8F8F8;
     width: 558px;
-    border-radius:10px;
+    border-radius:26px;
     position:fixed;
     left:96px;
   }
@@ -49,7 +49,7 @@
     padding-top:30px;padding-bottom:20px
   }
   .box-title-text{
-   font-size:32px;color:#333;text-align:center
+   font-family: PingFangSC-Medium;font-size:32px;color:#000;text-align:center
   }
   .box-input-wrapper{
     padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:20px;
@@ -64,7 +64,13 @@
   flex-direction:row;height:84px;flex:1;align-items:center;justify-content:center;border-right-style:solid;border-right-width:1px;border-right-color:#e5e5e5;
   }
   .box-btn-text{
-    text-align:center;color:#387EF5;font-size:32px
+    text-align:center;font-family:PingFangSC-Regular;font-size:32px
+  }
+  .cancel-text {
+    color: #666;
+  }
+  .confirm-text {
+    color: #000;
   }
   .wrapper{
     background-color:#F7F7F7;

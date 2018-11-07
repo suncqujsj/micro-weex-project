@@ -36,7 +36,7 @@ export default {
         },
         barHeight: {
             type: Number,
-            default: 20
+            default: 10
         },
         value: {
             type: Number,

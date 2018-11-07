@@ -40,9 +40,10 @@
         line-height: 88px;
         height: 88px;
         text-align: center;
+        font-weight: 600;
         color: #020F13;
         font-size: 36px;
-        background-color: #E7EDEF;
+        background-color: #fff;
     }
 
     .confirm-content-wrapper {
@@ -63,8 +64,8 @@
 
     .confirm-buttons {
         overflow: hidden;
-        line-height: 98px;
-        height: 98px;
+        line-height: 96px;
+        height: 96px;
         position: relative;
         border-top-width: 1px;
         border-top-color: #d7dde4;
@@ -75,7 +76,7 @@
 
     .confirm-button-left, .confirm-button-right {
         width: 375px;
-        line-height: 98px;
+        line-height: 96px;
         text-align: center;
         flex:1;
         align-items: center;
@@ -90,12 +91,12 @@
 
     .left-button {
         font-size: 36px;
-        color: #B4C0CB;
+        color: #666;
     }
 
     .right-button {
         font-size: 36px;
-        color: #0E90FF;
+        color: #000;
     }
 </style>
 

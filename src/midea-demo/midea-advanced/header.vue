@@ -2,20 +2,20 @@
     <div class="wrapper">
         <midea-header title="Header" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <div style="height: 220px; margin-top: 20px;">
-            <midea-header :title="title1" :isImmersion="isipx?false:true"></midea-header>
+            <midea-header :title="title1" :isImmersion="isImmersion"></midea-header>
         </div>
 
         <div style="height: 220px;">
-            <midea-header :title="title2" :isImmersion="isipx?false:true" :showRightImg="true" @leftImgClick="leftImgClick1" @rightImgClick="rightImgClick1"></midea-header>
+            <midea-header :title="title2" :isImmersion="isImmersion" :showRightImg="true" @leftImgClick="leftImgClick1" @rightImgClick="rightImgClick1"></midea-header>
         </div>
 
-        <div style="height: 220px;">
+        <!-- <div style="height: 220px;">
             <midea-header :title="title3" :isImmersion="false"></midea-header>
         </div>
 
         <div style="height: 220px;">
              <midea-header :title="title4" :isImmersion="false" :showRightImg="true" @leftImgClick="leftImgClick2" @rightImgClick="rightImgClick2"></midea-header>
-        </div>
+        </div> -->
     </div>
 </template>
 <style scoped>
@@ -34,8 +34,8 @@ module.exports = {
     mixins: [base],
     data() {
         return {
-            title1: '沉浸式（无右侧图标）',
-            title2: '沉浸式（带右侧图标）',
+            title1: 'APP自适应是否沉浸式（无右侧图标）',
+            title2: 'APP自适应是否沉浸式（带右侧图标）',
             title3: '非沉浸式（无右侧图标）',
             title4: '非沉浸式（带右侧图标）',
         }

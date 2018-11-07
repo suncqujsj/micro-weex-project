@@ -1,21 +1,21 @@
 <template>
     <div class="midea-radiogroup">
         <midea-mask v-if="show" @click="layoutClick"></midea-mask>
-        <div v-if="show" class="midea-radiogroup-box" :style="{'bottom': '-'+height+'px'}" ref="radiogroupBox">
-            <div class="midea-radiogroup-top">
-                <text class="btn-grp-text" @click="cancelClick">取消</text>
-                <text class="midea-radiogroup-title">{{title}}</text>
-            </div>
+        <div v-if="show" class="midea-radiogroup-box" :style="{'bottom': '-'+height+'px'}" ref="radiogroupBox">   
             <scroller class="midea-radiogroup-content" :style="{'height': (height - 28)+'px'}" show-scrollbar="false">
                 <div class="midea-radiogroup-item-wrapper" :style="{'min-height': (height - 28)+'px'}">
                     <div class="midea-radiogroup-item" v-for="(item,i) in items" :key="i" :ref="'item'+i" v-on:click="radiogroupItemClick(item,i,item[keyField])">
                         <div class="icon-wrapper">
-                            <image v-if="index==i" class="item-icon" :src="radioIcon"></image>
+                            <image v-if="index==i && isShowIcon" class="item-icon" :src="radioIcon"></image>
                         </div>
                         <text class="item-text" :style="{color: color(item,i)}">{{display(item)}}</text>
                     </div>
                 </div>
             </scroller>
+            <div class="midea-radiogroup-bottom">
+                <text class="btn-grp-text" @click="cancelClick">取消</text>
+                <text class="midea-radiogroup-title">{{title}}</text>
+            </div>
         </div>
     </div>
 </template>
@@ -66,6 +66,11 @@ export default {
         hideOnMask: {
             type: Boolean,
             default: true
+        },
+        // 新加的参数是否显示图标
+        isShowIcon: {
+            type: Boolean,
+            default: false
         }
     },
     computed: {
@@ -182,19 +187,20 @@ export default {
   overflow: hidden;
 }
 
-.midea-radiogroup-top {
+.midea-radiogroup-bottom {
   flex-direction: row;
   align-items: center;
-  background-color: #ede7ef;
+  background-color: #fff;
   height: 88px;
   overflow: hidden;
   padding-right: 20px;
 }
 .btn-grp-text {
   width: 100px;
-  font-size: 28px;
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
   line-height: 88px;
-  color: #020f13;
+  color: #666;
   text-align: left;
   padding-left: 20px;
 }
@@ -203,19 +209,22 @@ export default {
 }
 .midea-radiogroup-title {
   width: 550px;
-  font-size: 36px;
+  font-family: PingFangSC-Regular;
+  font-size: 32px;
   line-height: 36px;
   color: #020f13;
   text-align: center;
 }
 
 .midea-radiogroup-content {
-  background-color: #fff;
+  background-color: #f2f2f2;
+  padding-bottom: 16px;
 }
 .midea-radiogroup-item-wrapper {
   height: auto;
   padding-top: 30px;
   padding-bottom: 30px;
+  background-color: #fff;
 }
 .midea-radiogroup-item {
   flex-direction: row;

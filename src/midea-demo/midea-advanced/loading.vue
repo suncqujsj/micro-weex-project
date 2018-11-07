@@ -7,7 +7,7 @@
                     <text class="text">{{num}}</text>
                 </div>
             </div>
-            <text class="loading-end" v-if="loadingEnd">———— 到底了 ————</text>
+            <text class="loading-end" v-if="loadingEnd">- 已经到底啦 -</text>
             <loading class="loading" @loading="onloading" :display="showLoading" v-if="!loadingEnd">
                 <text class="indicator-text">加载中...</text>
                 <loading-indicator class="indicator"></loading-indicator>
@@ -58,9 +58,12 @@ export default {
 <style scoped>
 .loading-end {
   width: 750px;
-  padding: 30px 0;
-  background-color: #eef4f7;
-  color: #b4c0cb;
+  line-height: 96px;
+  background-color: #f2f2f2;
+  font-family: PingFangSC-Regular;
+  font-size: 28px;
+  color: #C7C7CC;
+  letter-spacing: 0;
   text-align: center;
 }
 .indicator-loading {

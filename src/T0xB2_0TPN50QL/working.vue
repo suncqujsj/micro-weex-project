@@ -454,7 +454,7 @@
                     //      this.hasSetting = false;
                     // }
                 }
-                if(analysisObj.mode.value == 0xC1){//清洁模式没有设置时间温度蒸汽那些
+                if(analysisObj.mode.value == 0xC1 || analysisObj.mode.value == 0xC6){//清洁模式没有设置时间温度蒸汽那些
                     this.hasSetting = false;
                 }
 

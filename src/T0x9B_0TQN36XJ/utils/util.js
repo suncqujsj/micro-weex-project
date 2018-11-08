@@ -1,6 +1,7 @@
 import message from "../../common/util/smartMessage";
 import  nativeService from '@/common/services/nativeService';
-import {device} from "../config/constant"
+import {device} from "../config/constant";
+import modes from "../config/modes.js";
 
 export default {
   //10进制转换8位2进制的方法
@@ -15,22 +16,46 @@ export default {
     var str_2 = _str + _str_val;
     return str_2;
   },
+  cmdToEasy(sendCmd){ //16进制
+      // var arr=[], message=sendCmd.slice(10,this.MSG_LENGTH-1);
+      var arr=[], message=sendCmd;
+      for (var i=10,len=message.length; i < len; i++)
+      {
+          var obj={};
+          //obj.key=i+10;
+          obj.key=i;
+          obj.val=parseInt(message[i]).toString(16);
+          arr.push(obj);
+      }
+      return arr;
+
+  },
+  cmdTo16Hex(sendCmd){
+    var cmd="";
+    for (var i=0,len=sendCmd.length; i < len; i++)
+    {   var subCmd = parseInt(sendCmd[i]).toString(16).length == 1 ? "0"+parseInt(sendCmd[i]).toString(16):parseInt(sendCmd[i]).toString(16);
+        cmd += subCmd;
+    }
+    return cmd.toUpperCase();
+  },
   modeValueToModeText(modeValue){
-      var text = '';
-      var modeArr =  [
-      {'text': '蒸汽','mode': 0x20},
-      {'text': '蒸汽+热风','mode': 0x31},
-      {'text': '烧烤', 'mode': 0x40},
-      {'text': '热风对流','mode': 0x41},
-      {'text': '热风烧烤','mode': 0x43},
-      {'text': '清洁','mode': 0xC1},
-      {'text': '保温','mode': 0xD0},
-      {'text': '发酵','mode': 0xB0},
-      {'text': '自动菜谱','mode': 0xE0},
-    ];
+    var text = '';
+    var modeArr =  [];
+
+    for(var i=0; i<modes.length; i++){
+      var iconButton = modes[i].iconButtons;
+      for(var k=0; k<iconButton.length; k++){
+        modeArr.push({
+          'text': iconButton[k].text,
+          'mode': iconButton[k].mode,
+        })
+      }
+    }
+    modeArr.push({'text': '自动菜谱','mode': 0xE0});
+
     for(var i=0; i<modeArr.length; i++){
       if(modeValue == modeArr[i].mode){
-         text = modeArr[i].text;
+        text = modeArr[i].text;
       }
     }
     return text;
@@ -50,14 +75,16 @@ export default {
     var minute = time%60;
     var second = 0;
     var set_mode = params.mode;
-    var messageBody = message.createMessageBody(22); 
+    var messageBody = message.createMessageBody(22);
+
+    if(params.mode == 0xB0){ //这款设备特殊处理，发酵，下发0x43
+      set_mode = 0x43;
+    }
+    if(params.mode == 0xD0){ //这款设备特殊处理，保温，下发0x41
+      set_mode = 0x41;
+    } 
+
     if(working){//工作中设置类 byte11 发04，其他byte发ff
-      if(params.mode == 0xB0){ //这款设备特殊处理，发酵，下发0x43
-        set_mode = 0x43;
-      }
-      if(params.mode == 0xD0){ //这款设备特殊处理，保温，下发0x41
-        set_mode = 0x41;
-      }
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 4);
       message.setByte(messageBody, 2, 0xff);
@@ -74,12 +101,6 @@ export default {
       message.setByte(messageBody, 15, params.fireAmount);
       message.setByte(messageBody, 16, params.steamAmount);
     }else{
-      if(params.mode == 0xB0){ //这款设备特殊处理，发酵，下发0x43
-        set_mode = 0x43;
-      }
-      if(params.mode == 0xD0){ //这款设备特殊处理，保温，下发0x41
-        set_mode = 0x41;
-      }
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 1);
       message.setByte(messageBody, 2, 0);
@@ -97,8 +118,9 @@ export default {
       message.setByte(messageBody, 16, params.steamAmount);
     }
     
-  
     var sendcmd = message.createMessage(device.type, 0x02, messageBody);
+    // nativeService.alert(this.cmdTo16Hex(sendcmd));
+
     return sendcmd;
   },
   //取消工作指令
@@ -187,7 +209,7 @@ export default {
       weight:{name: "重量",value: 0x00},
       steam:{name: "蒸汽量",value: 0x00},
   };
-  // if((parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)) && parseInt(requestCmd[10])==0){
+  // if(parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)){
     obj.workingState.value = parseInt(requestCmd[11]);    
     obj.recipeId.value = parseInt(requestCmd[12])*256*256+parseInt(requestCmd[13])*256+parseInt(requestCmd[14]);
     obj.mode.value = parseInt(requestCmd[19]);
@@ -221,4 +243,5 @@ export default {
     obj.steam.value = parseInt(requestCmd[25]);
     return obj;
   }
+
 };

@@ -1,6 +1,7 @@
 import message from "../../common/util/smartMessage";
 import  nativeService from '@/common/services/nativeService';
-import {device} from "../config/constant"
+import {device} from "../config/constant";
+import modes from "../config/modes.js";
 
 export default {
   //10进制转换8位2进制的方法
@@ -15,20 +16,43 @@ export default {
     var str_2 = _str + _str_val;
     return str_2;
   },
+  cmdToEasy(sendCmd){ //16进制
+      // var arr=[], message=sendCmd.slice(10,this.MSG_LENGTH-1);
+      var arr=[], message=sendCmd;
+      for (var i=10,len=message.length; i < len; i++)
+      {
+          var obj={};
+          //obj.key=i+10;
+          obj.key=i;
+          obj.val=parseInt(message[i]).toString(16);
+          arr.push(obj);
+      }
+      return arr;
+
+  },
+  cmdTo16Hex(sendCmd){
+    var cmd="";
+    for (var i=0,len=sendCmd.length; i < len; i++)
+    {   var subCmd = parseInt(sendCmd[i]).toString(16).length == 1 ? "0"+parseInt(sendCmd[i]).toString(16):parseInt(sendCmd[i]).toString(16);
+        cmd += subCmd;
+    }
+    return cmd.toUpperCase();
+  },
   modeValueToModeText(modeValue){
       var text = '';
-      var modeArr =  [
-      {'text': '蒸汽','mode': 0x20},
-      {'text': '蒸汽+热风','mode': 0x31},
-      {'text': '烧烤', 'mode': 0x40},
-      {'text': '热风对流','mode': 0x41},
-      {'text': '热风烧烤','mode': 0x43},
-      {'text': '除垢','mode': 0xC1},
-      {'text': '保温','mode': 0xD0},
-      {'text': '发酵','mode': 0xB0},
-      {'text': '自动菜谱','mode': 0xE0},
-      {'text': '烘干','mode': 0xC4},
-    ];
+      var modeArr =  [];
+
+    for(var i=0; i<modes.length; i++){
+      var iconButton = modes[i].iconButtons;
+      for(var k=0; k<iconButton.length; k++){
+        modeArr.push({
+          'text': iconButton[k].text,
+          'mode': iconButton[k].mode,
+        })
+      }
+    }
+    modeArr.push({'text': '自动菜谱','mode': 0xE0});
+
     for(var i=0; i<modeArr.length; i++){
       if(modeValue == modeArr[i].mode){
          text = modeArr[i].text;
@@ -86,8 +110,9 @@ export default {
       message.setByte(messageBody, 16, params.steamAmount);
     }
     
-  
     var sendcmd = message.createMessage(device.type, 0x02, messageBody);
+    //nativeService.alert(this.cmdToEasy(sendcmd));
+
     return sendcmd;
   },
   //取消工作指令

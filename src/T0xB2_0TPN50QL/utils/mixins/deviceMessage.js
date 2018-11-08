@@ -14,20 +14,6 @@ const deviceMessageMixin = {
         }
     },
     methods: {
-        cmdToEasy(sendCmd){
-            // var arr=[], message=sendCmd.slice(10,this.MSG_LENGTH-1);
-            var arr=[], message=sendCmd;
-            for (var i=10,len=message.length; i < len; i++)
-            {
-                var obj={};
-                //obj.key=i+10;
-                obj.key=i;
-                obj.val=parseInt(message[i]).toString(16);
-                arr.push(obj);
-            }
-            return arr;
-
-        },
         viewdisappear(){
             globalEvent.removeEventListener("receiveMessage");
             globalEvent.removeEventListener("receiveMessageFromApp");
@@ -47,7 +33,7 @@ const deviceMessageMixin = {
                 function (result) {
                     var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
                     var arr = result_arr.split(",");
-                    var easyCmd = self.cmdToEasy(arr)
+                    var easyCmd = cmdFun.cmdToEasy(arr)
                     nativeService.alert(easyCmd);
                 },
                 function (result) {

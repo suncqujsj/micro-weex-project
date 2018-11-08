@@ -3,7 +3,7 @@
         <midea-header title="Switch" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
         <midea-cell title="Midea切换按钮">
-            <midea-switch2 :checked="mideaChecked" @change="onMideachange" :width="70" :height="38" slot="value"></midea-switch2>
+            <midea-switch2 :checked="mideaChecked" @change="onMideachange" :width="106" :height="48" slot="value"></midea-switch2>
         </midea-cell>
     </div>
 </template>

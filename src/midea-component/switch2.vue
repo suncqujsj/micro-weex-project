@@ -1,9 +1,9 @@
 <template>
-    <div class="switch-container" :style="{'width':width,'height':height}" @click="onchange" v-on:swipe="onSwipe($event)">
-        <div class="switch-bar" :style="{'height':height,'left':-(width/2-height/2)}" ref="switchBar">
-            <div class="container selected" :style="{'width':width}"></div>
-            <div class="container unselected" :style="{'width':width}"></div>
-            <image class="switch-icon" :src="icon" resize='contain' :style="{'width':height,'height':height, 'left':width-height/2}"></image>
+    <div class="switch-container" :style="{'width': width+'px', 'height':height+'px'}" @click="onchange" v-on:swipe="onSwipe($event)">
+        <div class="switch-bar" :style="{'width': width+'px', 'height':height+'px'}">
+            <div :class="['container', checked?'selected':'unselected']" :style="{'width':width+'px'}"></div>
+            <!-- <div class="container unselected" :style="{'width':width}"></div> -->
+            <image ref="switchBar" class="switch-icon" :src="icon" resize='contain' :style="{'width':height+'px','height':height+'px', 'left':width-height+2+'px'}"></image>
         </div>
     </div>
 </template>
@@ -73,7 +73,7 @@ export default {
             if (this.checked) {
                 animation.transition(switchBar, {
                     styles: {
-                        transform: 'translateX(' + (this.width - this.height + 2) + 'px)',
+                        transform: 'translateX(' + (-(this.width - this.height + 6)) + 'px)',
                     },
                     duration: durationTime, //ms
                     timingFunction: 'linear',
@@ -83,7 +83,7 @@ export default {
             } else {
                 animation.transition(switchBar, {
                     styles: {
-                        transform: 'translateX(-3px)',
+                        transform: 'translateX(0)',
                     },
                     duration: durationTime, //ms
                     timingFunction: 'linear',
@@ -102,7 +102,6 @@ export default {
 
 <style scoped>
 .switch-container {
-  overflow: hidden;
   flex-direction: row;
   justify-content: center;
   align-items: center;

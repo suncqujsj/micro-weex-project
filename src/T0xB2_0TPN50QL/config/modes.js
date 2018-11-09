@@ -129,7 +129,7 @@ let modes = [
         iconButtons: [
             {
                 'icon': 'assets/img/modes/steam@3x.png',
-                'text': '烫洗',
+                'text': '清洁',
                 'mode': 0xC6,
                 time:{
                     set: false,

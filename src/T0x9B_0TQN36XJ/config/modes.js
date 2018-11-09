@@ -85,9 +85,12 @@ let modes = [
                     default:0
                 },
                 fireAmount:{
-                    set:true,
-                    default:3,
-                    range:[1,3,1]
+                    // set:true,
+                    // default:3,
+                    // range:[1,3,1]
+                    set:false,
+                    default:0,
+                    range:null
                 },
             },
             {

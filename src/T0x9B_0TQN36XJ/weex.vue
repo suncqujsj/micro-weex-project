@@ -149,16 +149,16 @@
 <template>
     <div class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
 
-        <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" >
+        <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽烤箱" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" >
             <div slot="customerContent" class="header-top-wrapper">
                 <div class="header-top-inner-wrapper">
                     <div class="header-right-image-wrapper" @click="openCloudRecipe">
                         <image class="header-right-image" :src="'assets/img/header/public_ic_cloud_recipe@3x.png'"></image>
                     </div>
-                    <!--<div class="header-right-image-wrapper" @click="childLock(true)">
+                    <div class="header-right-image-wrapper" @click="childLock(true)">
                         <image class="header-right-image" :src="'assets/img/header/public_ic_babylock@3x.png'"></image>
                     </div>
-                    <div class="header-right-image-wrapper" @click="openMorePage">
+                    <!--<div class="header-right-image-wrapper" @click="openMorePage">
                         <image class="header-right-image" :src="'assets/img/header/public_ic_lots@3x.png'"></image>
                     </div>-->
                 </div>

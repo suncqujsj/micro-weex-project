@@ -27,7 +27,7 @@
 
        
         <div class="detail_section" v-if="!finishStatus">
-            <text class="detail_text">{{cmdObj.mode.text}}{{cmdObj.temperature.upLowTemperature>0?cmdObj.temperature.upLowTemperature+'°':''}}</text>
+            <text class="detail_text">{{cmdObj.mode.text}} {{cmdObj.temperature.upLowTemperature>0?cmdObj.temperature.upLowTemperature+'°':''}}</text>
         </div>
         <div class="detail_section" v-if="hasSetting">
             <div class="edit_section" @click="setting">

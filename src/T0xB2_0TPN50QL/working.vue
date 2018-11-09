@@ -364,13 +364,18 @@
                 var self = this;
                 var allSeconds = minute*60+second;
                 this.countDownTimer = setInterval(function(){
-                    //nativeService.toast(self.workSpecialStatusText,4);
-                    if(self.isTimerStop && allSeconds<60 && allSeconds>0){
+                    // nativeService.toast(allSeconds,4);
+                    if(allSeconds<60 && allSeconds>0){
                          self.tag_next = '秒';
                          self.workSpecialStatusText = allSeconds;
+                    }else{
+                         self.tag_next = '分';
+                         self.workSpecialStatusText = minute;
+                    }
+                    if(self.isTimerStop ){
                          return;
                     }
-                     if(self.isTimerStop && allSeconds<=0){
+                    if(self.isTimerStop && allSeconds<=0){
                          self.tag_next = '';
                          self.timeShow = false;
                          self.progressShow = false;
@@ -378,12 +383,7 @@
                          clearInterval(this.countDownTimer);
                          return;
                     }
-                     allSeconds--;
-                     if(allSeconds<60 && allSeconds>0){
-                         self.tag_next = '秒';
-                         self.workSpecialStatusText = allSeconds;
-                    }
-                   
+                    allSeconds--;
                 },timeSet*1000);
             },
             analysisFun(analysisObj) {
@@ -454,7 +454,7 @@
                     //      this.hasSetting = false;
                     // }
                 }
-                if(analysisObj.mode.value == 0xC1){//清洁模式没有设置时间温度蒸汽那些
+                if(analysisObj.mode.value == 0xC1 || analysisObj.mode.value == 0xC6){//清洁模式没有设置时间温度蒸汽那些
                     this.hasSetting = false;
                 }
 

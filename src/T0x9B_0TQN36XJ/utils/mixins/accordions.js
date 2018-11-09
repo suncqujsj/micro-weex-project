@@ -25,7 +25,42 @@ const accordionMixin = {
     data () {
             return {
                 accordions: this.initAccordions(),
-                currentItem:null,
+                // currentItem:null,
+                currentItem:{
+                    'icon': '',
+                    'text': '清蒸草鱼香菇',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:13,
+                        range:[5,120,1]
+                    },
+                    temperature:{
+                        set: true,
+                        default:100,
+                        range:[35,70,1,75,100,5]
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x41,
+                        range:null
+                    },
+                    detail: null
+                },
                 current:this.initCurrentData(),
                 show: false
             }
@@ -34,7 +69,10 @@ const accordionMixin = {
         range: function(key){ // picker属性范围
             let currentItem = this.currentItem;
             // debugger;
-            let list = settingArrData(currentItem[key].range[0],currentItem[key].range[1],currentItem[key].range[2]);
+            let list = [];
+            for(var i=0; 3*i<currentItem[key].range.length; i++){
+                list = list.concat(settingArrData(currentItem[key].range[3*i],currentItem[key].range[3*i+1],currentItem[key].range[3*i+2]));
+            }
             return {
                 list,
                 defaultValue: this.setValue(key),

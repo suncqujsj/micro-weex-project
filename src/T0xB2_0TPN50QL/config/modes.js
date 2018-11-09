@@ -99,7 +99,7 @@ let modes = [
                 'mode': 0xC4,
                 time:{
                     set: true,
-                    default:10,
+                    default:5,
                     range:[5,60,1]
                 },
                 temperature:{
@@ -120,6 +120,38 @@ let modes = [
                     set:false,
                     default:0,
                     range:null
+                }
+            },
+        ]
+    },
+    {
+        title: '',
+        iconButtons: [
+            {
+                'icon': 'assets/img/modes/steam@3x.png',
+                'text': '烫洗',
+                'mode': 0xC6,
+                time:{
+                    set: false,
+                    default:5,
+                    range:null
+                },
+                temperature:{
+                    set: false,
+                    default:0,
+                    range:null
+                },
+                preheat:{
+                    set:false,
+                    default: false
+                },
+                steamAmount:{
+                    set:false,
+                    default:0
+                },
+                fireAmount:{
+                    set:false,
+                    default:0
                 }
             },
         ]

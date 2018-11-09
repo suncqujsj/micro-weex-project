@@ -38,7 +38,12 @@ export default {
     },
     computed: {
         isipx: function () {
-            return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6');
+            return weex && (
+                weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6' //iphoneX
+                || weex.config.env.deviceModel === 'iPhone11,8' //iPhone XR
+                || weex.config.env.deviceModel === 'iPhone11,2' //iPhone XS
+                || weex.config.env.deviceModel === 'iPhone11,4' || weex.config.env.deviceModel === 'iPhone11,6' //iPhone XS Max
+                );
         },
         wrapHeight: function(){
             let tmp = ''

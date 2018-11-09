@@ -113,29 +113,60 @@
         height: 44px;
         width: 44px;
     }
+
+    .content-wrap{
+        padding: 0 31*2px;
+    }
+
+    .content-block{
+       border-top-width: 1px;
+        border-top-color: #E5E5E8;
+    }
+
+    .label{
+        .f(12*2px);
+        .ma-r(16*2px);
+    }
+    .food-material-items{
+        height: 179px;
+    }
+    .food-material-item-left, .food-material-item-right, .cooking-step{
+        .f(12*2px);
+        .gray;
+    }
+
+    .cooking-steps{
+        height: 435px;
+        width: 180*2px;
+    }
+
+    .cooking-step{
+        line-height: 15*2px;
+        .ma-b(13*2);
+    }
 </style>
 
 <template>
-    <div class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear" @longpress="onlongpress"><!--隐藏长按组件触发03查询，方便调试-->
+    <div class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
 
-        <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="烤箱" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" @longpress="longpress" >
+        <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" >
             <div slot="customerContent" class="header-top-wrapper">
                 <div class="header-top-inner-wrapper">
                     <div class="header-right-image-wrapper" @click="openCloudRecipe">
                         <image class="header-right-image" :src="'assets/img/header/public_ic_cloud_recipe@3x.png'"></image>
                     </div>
-                    <div class="header-right-image-wrapper" @click="childLock(true)">
+                    <!--<div class="header-right-image-wrapper" @click="childLock(true)">
                         <image class="header-right-image" :src="'assets/img/header/public_ic_babylock@3x.png'"></image>
                     </div>
                     <div class="header-right-image-wrapper" @click="openMorePage">
                         <image class="header-right-image" :src="'assets/img/header/public_ic_lots@3x.png'"></image>
-                    </div>
+                    </div>-->
                 </div>
             </div>
         </midea-header>
 
         <!--面板切换tabs-->
-        <div class="panel">
+        <div class="panel"  @longpress="onlongpressQuery"> <!--隐藏长按组件触发03查询，方便调试-->
             <text class="panel-state">待机中</text>
             <div v-if="tabs.length>1" class="tabs">
                 <template v-for="(tab, x) in tabs">
@@ -147,7 +178,7 @@
         </div>
 
         <!--模式操作按钮-->
-        <div v-for="(tab, x) in tabs">
+        <div v-for="(tab, x) in tabs"> <!--隐藏长按组件触发查看云菜谱，方便查看云菜谱-->
             <scroller :class="[tab.rows[0].title ?  'tab-content-gray' : 'tab-content-white' ]" v-if="tab.active" :style="{height: wrapHeight - (tabs.length > 1 ? 204*2 : 174*2)}">
                 <div class="bg-white" :class="[tab.rows[0].title && 'auto_menu']" v-for="row in tab.rows">
                     <text v-if="row.title" class="block-title">{{row.title}}</text>
@@ -178,24 +209,27 @@
         <!--<text class="r test" @click="doing">{{progress}}</text>-->
         <!--<wxProgress :percent='progress' :bar_width='650'></wxProgress>-->
         <!--<wxcProgress :percent="progress"-->
-                     <!--:wxc_radius='200'>-->
-            <!--<div class="cen">-->
-                <!--<text class="demo-text">{{progress}}%</text>-->
-            <!--</div>-->
+        <!--:wxc_radius='200'>-->
+        <!--<div class="cen">-->
+        <!--<text class="demo-text">{{progress}}%</text>-->
+        <!--</div>-->
         <!--</wxcProgress>-->
 
         <!--模式参数设置弹窗-->
         <sf-dialog :show="show" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <!--<template v-for="tab in tabs">-->
-                    <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
+                <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
                 <!--</template>-->
-                <text v-if="currentItem" class="content-title">{{currentItem.text}}</text>
+                <!--<text v-if="currentItem" class="content-title" @click="showDetailModal">{{currentItem.text}}</text>-->
+                <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="assets/img/header/public_ic_help@3x.png" class="modal-header" :title="currentItem.text" titleText="#666666" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
+
                 <template v-for="(item, index) in accordions">
                     <template v-if="item.type==='picker'">
                         <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                             <div slot="content">
-                                <wx-picker :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                <!--<wx-picker  :list="range(item.key).list" :defaultValue="range(item.key).defaultValue" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>-->
                             </div>
                         </sf-accordion>
                     </template>
@@ -210,13 +244,36 @@
             </div>
         </sf-dialog>
 
+        <detail-modal :show="showDetailVisibility" @close="closeDetailModal">
+            <div slot="title">
+                <modal-header leftImg="assets/img/header/public_ic_gray@3x.png" class="modal-header" title="详情页" titleText="#666666" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>
+            </div>
+            <div slot="content" class="content-wrap" :style="{'height':338*2 + 'px'}">
+                <div class="content-block row" :style="{'padding-top':14*2-3+'px'}">
+                    <text class="label">食材:</text>
+                    <scroller class="food-material-items flex">
+                        <div class="food-material-item row" v-for="item in foodMaterialItems">
+                            <text class="food-material-item-left flex">{{item.name}}</text>
+                            <text class="food-material-item-right">{{item.weight}}</text>
+                        </div>
+                    </scroller>
+                </div>
+                <div class="content-block row" :style="{'padding-top':20*2-3+'px'}">
+                    <text class="label">处理:</text>
+                    <scroller class="cooking-steps flex">
+                        <text v-for="(item, index) in cookingSteps" class="cooking-step">{{index+1}}.{{item}}</text>
+                    </scroller>
+                </div>
+            </div>
+        </detail-modal>
+
         <midea-dialog :title="warningDialog.title"
-                        :show="warningDialog.show"
-                        :single="true"
-                        @mideaDialogConfirmBtnClicked="knowClicked"
-                        :content="warningDialog.content"
-                        mainBtnColor="#FFB632"
-                        >
+                      :show="warningDialog.show"
+                      :single="true"
+                      @mideaDialogConfirmBtnClicked="knowClicked"
+                      :content="warningDialog.content"
+                      mainBtnColor="#FFB632"
+        >
         </midea-dialog>
 
     </div>
@@ -224,7 +281,10 @@
 
 <script>
     import MideaHeader from '@/midea-component/header.vue'
+    import modalHeader from '@/component/sf/custom/modal-header.vue'
+    import rowWrapItems from '@/component/sf/custom/row-wrap-items.vue'
     import sfAccordion from '@/component/sf/custom/accordion.vue'
+    import detailModal from '@/component/sf/custom/detail-modal.vue'
     import sfDialog from '@/component/sf/custom/dialog.vue'
     import nativeService from "../common/services/nativeService";
     import query from "../dummy/query";
@@ -238,6 +298,7 @@
 
     import accordionMixin from  "./utils/mixins/accordions"
     import deviceMessageMixin from  "./utils/mixins/deviceMessage"
+    import detailModalMixin from  "./utils/mixins/detailModal"
     import commonMixin from  "./utils/mixins/common"
 
     import mideaDialog from '@/component/dialog.vue';
@@ -245,25 +306,27 @@
     var numberRecord = 0; //记录跳页面的次数
 
     export default {
-        mixins: [commonMixin, deviceMessageMixin, accordionMixin],
+        mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin],
         data(){
             return {
+                list:['123','234','345','456','567'],
+                test:[{"name":"香菇","weight":"34克"},{"name":"草鱼","weight":"134克"},{"name":"香葱","weight":"1克"},{"name":"姜","weight":"1克"},{"name":"汉口白酒(49.6度)","weight":"2毫升"},{"name":"蒸鱼豉油","weight":"7毫升"},{"name":"花椒","weight":"2克"},{"name":"酱油(均值)","weight":"2毫升"}],
                 tabs:[
-                    {
-                        name:'自动菜单',
-                        active:true,
-                        rows:autoMenu
-                    },
+                    // {
+                    //     name:'自动菜单',
+                    //     active:true,
+                    //     rows:autoMenu
+                    // },
                     {
                         name:'加热模式',
-                        active:false,
+                        active:true,
                         rows:modes
                     }
                 ],
                 warningDialog: this.initWarningDialog()
             }
         },
-        components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2, mideaDialog},
+        components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modalHeader,rowWrapItems},
         created(){
             //模拟设备数据
             nativeService.initMockData({
@@ -274,12 +337,7 @@
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
             }
-
-            nativeService.getDeviceInfo().then(function(data){
-                nativeService.alert(data);
-            })
-        },
-        computed:{
+            console.dir(JSON.stringify(this.foodMaterialItems));
         },
         methods: {
             openCloudRecipe: function(){

@@ -1,7 +1,7 @@
 <template>
-    <div class="all_section" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear"  @longpress="onlongpress"><!--隐藏长按组件触发03查询，方便调试-->
-        <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack"></midea-header>
-        <div class="progress_content">
+    <div class="all_section" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
+        <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack"></midea-header>
+        <div class="progress_content"  @longpress="onlongpressQuery"><!--隐藏长按组件触发03查询，方便调试-->
             <div class="progress_section" :style="progress_style" > 
                 <wxcProgress :percent="progress" :progressShow="progressShow"
                     :wxc_radius='progress_radius'>
@@ -12,7 +12,7 @@
                     <text class="number_prev" v-if="hasHour">时</text>
                     <div class="cen">
                         <!--<text class="number-text">{{progress}} {{timeRemain}}</text>-->
-                        <text :class="['number-text',noTimeShow && 'work_finish']">{{workSpecialStatusText}}</text>
+                        <text :class="['number-text',timeShow && 'work_time']">{{workSpecialStatusText}}</text>
                     </div>
                     <text class="number_next">{{tag_next}}</text>
                 </div>
@@ -62,6 +62,7 @@
                         <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                             <div slot="content">
                                 <wx-picker :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                <!--<wx-picker  :list="range(item.key).list" :defaultValue="range(item.key).defaultValue" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>-->
                             </div>
                         </sf-accordion>
                     </template>
@@ -96,7 +97,6 @@
             ref="actionsheet"
             button="我再想想"
         ></midea-actionsheet>
-
     </div>
 </template>
 
@@ -146,11 +146,11 @@
         .j-c;
     }
     .number-text{
-        .f(160px);
+        .f(60px);
         .white;
     }
-    .work_finish{
-        .f(60px);
+    .work_time{
+        .f(160px);
         .white;
     }
     .status_tag{
@@ -250,6 +250,7 @@
     var numberRecord = 0; //记录跳页面的次数
     var timerRecord = 0;
     const platform = weex.config.env.platform;//weex没有window对象，调试需要区分下
+    const globalEvent = weex.requireModule("globalEvent");
     export default {
         mixins: [deviceMessageMixin, accordionMixin],
         data(){
@@ -282,7 +283,7 @@
 
                 cmdObj:{},
               
-                noTimeShow: false,
+                timeShow: false,
                 workSpecialStatusText: '',
                 queryTimer: null,
                 countDownTimer: null,
@@ -313,6 +314,16 @@
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
             }
+            
+            //安卓要加上这个方法，否则，工作页面，时间一直停留在一个状态，不会刷新
+            if(!this.isIos){
+                globalEvent.addEventListener("WXApplicationDidBecomeActiveEvent", (e) => {
+                    //从后台转前台时触发
+                    self.queryStatus();
+                    self.queryRunTimer(20);//20秒轮询 
+                });
+            }
+           
 
             // debugger;
              //this.doing();
@@ -349,27 +360,30 @@
             //         self.queryStatus();
             //     },timeSet*1000);
             // },
-            countDownRunTimer(minute,second,timeSet){
+             countDownRunTimer(minute,second,timeSet){
                 var self = this;
                 var allSeconds = minute*60+second;
                 this.countDownTimer = setInterval(function(){
-                    //nativeService.toast(self.workSpecialStatusText,4);
-                    if(self.isTimerStop && allSeconds<60 && allSeconds>0){
+                    // nativeService.toast(allSeconds,4);
+                    if(allSeconds<60 && allSeconds>0){
                          self.tag_next = '秒';
                          self.workSpecialStatusText = allSeconds;
+                    }else{
+                         self.tag_next = '分';
+                         self.workSpecialStatusText = minute;
+                    }
+                    if(self.isTimerStop ){
                          return;
                     }
-                     if(self.isTimerStop && allSeconds<=0){
+                    if(self.isTimerStop && allSeconds<=0){
                          self.tag_next = '';
+                         self.timeShow = false;
+                         self.progressShow = false;
+                         self.workSpecialStatusText = '';
                          clearInterval(this.countDownTimer);
                          return;
                     }
-                     allSeconds--;
-                     if(allSeconds<60 && allSeconds>0){
-                         self.tag_next = '秒';
-                         self.workSpecialStatusText = allSeconds;
-                    }
-                   
+                    allSeconds--;
                 },timeSet*1000);
             },
             analysisFun(analysisObj) {
@@ -385,7 +399,6 @@
                 //console.log(1);
                 this.warningDialogShow = false;
                 // this.tag_next = '分';
-                this.noTimeShow = false;
                 this.progressShow = true;
                 this.finishStatus = false;
                 // this.workSpecialStatusText = "";
@@ -397,7 +410,6 @@
                 this.cancleIcon = 'assets/img/footer/icon_cancle@2x.png';
 
                 this.cmdObj = analysisObj;
-               
 
                 //特殊处理，其他型号要去掉
                 if(analysisObj.temperature.upLowTemperature<100 && analysisObj.mode.value == 0x41){
@@ -410,27 +422,27 @@
                 }
                 
                 
-                
                 //提示
                 if(analysisObj.displaySign.isError){
                     this.warningDialogShow = true;
-                    this.warningDialogContent = "设备故障，请联系售后人员";
+                    this.warningDialogContent = "主人，您的设备发生故障了，请联系售后人员";
                 }
                  if(analysisObj.displaySign.lackWater){
                     this.warningDialogShow = true;
-                    this.warningDialogContent = "主人，您的水箱缺水了，要及时添加水哦";
+                    this.warningDialogContent = "主人，您的设备水箱缺水了，要及时添加水哦";
                 }
                 if(analysisObj.displaySign.waterBox){
                     this.warningDialogShow = true;
-                    this.warningDialogContent = "缺水盒";
+                    this.warningDialogContent = "主人，您的设备缺水盒了";
                 }
                 if(analysisObj.displaySign.doorSwitch){
                     this.warningDialogShow = true;
-                    this.warningDialogContent = "炉门开了";
+                    this.warningDialogContent = "主人，您的设备炉门开了";
                 }
 
 
                 if(analysisObj.workingState.value == 3){
+                    this.timeShow = true;
                     this.hasSetting = true;
                     this.btnText = "暂停";
                     this.btnSrc = "assets/img/footer/icon_pause@2x.png";
@@ -441,6 +453,7 @@
                     // }
                 }
                  if(analysisObj.workingState.value == 6){
+                    this.timeShow = true;
                     this.hasSetting = true;
                     this.btnText = "继续";
                     this.btnSrc = "assets/img/footer/icon_start@2x.png";
@@ -451,9 +464,12 @@
                     //      this.hasSetting = false;
                     // }
                 }
+                if(analysisObj.mode.value == 0xC1){//清洁模式没有设置时间温度蒸汽那些
+                    this.hasSetting = false;
+                }
 
                 if(analysisObj.workingState.value == 4){
-                   this.noTimeShow = true;
+                   this.timeShow = false;
                    this.workSpecialStatusText = "烹饪完成";
                    this.isTimerStop = true;
                    this.tag_next = '';
@@ -465,7 +481,7 @@
                   
                 }
                  if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 0){
-                    this.noTimeShow = true;
+                    this.timeShow = false;
                     this.workSpecialStatusText = "预热中";
                     this.tag_next = '';
                     this.statusTag = '';
@@ -474,7 +490,7 @@
                     
                 }
                 if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 1){
-                     this.noTimeShow = true;
+                     this.timeShow = false;
                     this.workSpecialStatusText = "预热完成";
                     this.warningDialogShow = true;
                     this.warningDialogContent = "预热已完成，请放进食物再按'继续'，继续烹饪";
@@ -492,9 +508,9 @@
                 var progress_step = (10*60-allSeconds)/(10*60)*360; //360度倒计时为例
                 //this.chartJson.progressCounter = progress_step;
 
-                if(!this.noTimeShow){
+                if(this.timeShow){
                     if(allSeconds>60*60){ //大于1小时，有‘时’显示
-                        this.workSpecialStatusText = (_hour>9?_hour:'0'+_hour)+":"+(_minute>9?_minute:'0'+_minute);
+                        this.workSpecialStatusText = _hour+":"+(_minute>9?_minute:'0'+_minute);
                         this.tag_next = '分';
                         this.hasHour = true;
                     }else if(allSeconds>2*60){//大于2分钟，小于1小时，只显示分
@@ -532,7 +548,11 @@
             // },
             cancle(){
                 var self = this;
-                this.openActionsheet();            
+                if(this.finishStatus){
+                    this.cancleWorking();
+                }else{
+                    this.openActionsheet();            
+                }
             },
             startOrPause(){
                 var self = this;
@@ -629,26 +649,30 @@
             },
             //点击某个item的事件
             actionsheetItemClick: function (event) {
-                var self = this;
+                
                 if(event.index == 0){
-                    var deviceCmd = cmdFun.cmdCancelWork();
-                    nativeService.startCmdProcess(
-                        "control",
-                        deviceCmd,
-                        function(result){
-                        var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
-                            var arr = result_arr.split(",");
-                            var analysisObj = cmdFun.analysisCmd(arr);
-                            this.showBar = false;
-                            self.analysisFun(analysisObj);
-                        },
-                        function(result){
-                            nativeService.toast('控制失败，请检查网络或者设置的参数');
-                            //console.log('fail', result);
-                        }
-                    )
+                   this.cancleWorking();
                 }
                
+            },
+            cancleWorking(){
+                var self = this;
+                var deviceCmd = cmdFun.cmdCancelWork();
+                nativeService.startCmdProcess(
+                    "control",
+                    deviceCmd,
+                    function(result){
+                    var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
+                        var arr = result_arr.split(",");
+                        var analysisObj = cmdFun.analysisCmd(arr);
+                        this.showBar = false;
+                        self.analysisFun(analysisObj);
+                    },
+                    function(result){
+                        nativeService.toast('控制失败，请检查网络或者设置的参数');
+                        //console.log('fail', result);
+                    }
+                )
             },
             //点击取消/确定按钮事件
             actionsheetBtnClick: function () {

@@ -23,7 +23,7 @@ const deviceMessageMixin = {
         viewappear(){
             this.listenerDeviceReiveMessage();
         },
-        onlongpress(){//隐藏调试，查看设备上报数据
+        onlongpressQuery(){//隐藏调试，查看设备上报数据
             var self = this;
             var sendCmd = cmdFun.createQueryMessage();
             nativeService.toast("下发03查询:"+JSON.stringify(sendCmd),2);
@@ -31,12 +31,21 @@ const deviceMessageMixin = {
                 "query",
                 sendCmd,
                 function (result) {
-                    nativeService.alert(JSON.stringify(result));
+                    var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
+                    var arr = result_arr.split(",");
+                    var easyCmd = cmdFun.cmdToEasy(arr)
+                    nativeService.alert(easyCmd);
                 },
                 function (result) {
                     nativeService.toast("查询失败" + JSON.stringify(result));
                 }
             );
+        },
+        onlongpressGoToMenu(){//隐藏查看云菜谱
+            nativeService.weexBundleToWeb({
+                url: "http://39.108.117.20/dist/build_index.html#/",
+                title: '云菜谱'
+            })
         },
         childLock: function(childLock){
 
@@ -91,7 +100,7 @@ const deviceMessageMixin = {
         controlDevice(jsonCmd, working){
             let context = this;
             let deviceCmd = cmdFun.createControlMessage(jsonCmd, working);
-            // nativeService.alert(deviceCmd);
+            //nativeService.alert(deviceCmd);
             // return;
             nativeService.startCmdProcess(
                 "control",
@@ -117,7 +126,7 @@ const deviceMessageMixin = {
 
              //监听设备在线离线状态
              globalEvent.addEventListener("receiveMessageFromApp", (data) => {
-                nativeService.toast(data);
+                //nativeService.toast(data);
                if(data && data.messageType == "deviceOnlineStatus") {
                    if(data.messageBody && data.messageBody.onlineStatus == "online") {
                        // this.onlineStatus = "1";

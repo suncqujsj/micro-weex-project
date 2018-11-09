@@ -337,7 +337,7 @@
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
             }
-            console.dir(JSON.stringify(this.foodMaterialItems));
+            //console.dir(JSON.stringify(this.foodMaterialItems));
         },
         methods: {
             openCloudRecipe: function(){

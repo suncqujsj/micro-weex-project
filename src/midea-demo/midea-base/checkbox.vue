@@ -13,7 +13,7 @@
 
         <midea-button text="点击弹出底部面板" @mideaButtonClicked="openBottomOverlay">
         </midea-button>
-        <midea-popup :show="isBottomShow" @mideaPopupOverlayClicked="popupOverlayBottomClick" pos="bottom" height="532">
+        <midea-popup :show="isBottomShow" @mideaPopupOverlayClicked="popupOverlayBottomClick" pos="bottom" height="514">
             <scroller class="demo-content">
                 <midea-checkbox-list :list="list" :needShowTopBorder="true" @mideaCheckBoxListChecked="mideaCheckBoxListChecked">
                 </midea-checkbox-list>
@@ -31,8 +31,8 @@
   position: relative;
 }
 .demo-content {
+    height: 418px;
     background-color: #f2f2f2;
-    padding-bottom: 16px;
 }
 .btn-grp {
   height: 96px;

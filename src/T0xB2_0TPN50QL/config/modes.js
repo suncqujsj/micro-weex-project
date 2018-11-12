@@ -128,7 +128,7 @@ let modes = [
         title: '',
         iconButtons: [
             {
-                'icon': 'assets/img/modes/steam@3x.png',
+                'icon': 'assets/img/modes/broil@3x.png',
                 'text': '清洁',
                 'mode': 0xC6,
                 time:{

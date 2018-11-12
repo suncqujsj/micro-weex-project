@@ -652,11 +652,7 @@
                     "control",
                     deviceCmd,
                     function(result){
-                    var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
-                        var arr = result_arr.split(",");
-                        var analysisObj = cmdFun.analysisCmd(arr);
-                        this.showBar = false;
-                        self.analysisFun(analysisObj);
+                      self.queryStatus();
                     },
                     function(result){
                         nativeService.toast('控制失败，请检查网络或者设置的参数');

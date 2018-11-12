@@ -153,10 +153,25 @@
 <template>
     <div class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
 
-        <midea-tab ref="mTab" :tabArray="tabData" @tabClicked="tabClicked">
-        </midea-tab>
-
-
+        <sf-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" >
+            <div slot="headerTitle">
+                <sf-tab ref="mTab" :tabArray="tabData" @tabClicked="tabClicked">
+                </sf-tab>
+            </div>
+            <div slot="customerContent" class="header-top-wrapper">
+                <div class="header-top-inner-wrapper">
+                    <div class="header-right-image-wrapper" @click="openCloudRecipe">
+                        <image class="header-right-image" :src="'assets/img/header/public_ic_cloud_recipe@3x.png'"></image>
+                    </div>
+                    <!--<div class="header-right-image-wrapper" @click="childLock(true)">
+                        <image class="header-right-image" :src="'assets/img/header/public_ic_babylock@3x.png'"></image>
+                    </div>
+                    <div class="header-right-image-wrapper" @click="openMorePage">
+                        <image class="header-right-image" :src="'assets/img/header/public_ic_lots@3x.png'"></image>
+                    </div>-->
+                </div>
+            </div>
+        </sf-header>
 
         <slider :index="index" class="slider" :style="{height: wrapHeight}">
             <div v-for="item in pages" style="width: 750px;">
@@ -277,8 +292,8 @@
 </template>
 
 <script>
-    import mideaTab from '@/midea-component/mTab.vue'
-    import MideaHeader from '@/midea-component/header.vue'
+    import sfTab from '@/component/sf/custom/mTab.vue'
+    import sfHeader from '@/component/sf/custom/header.vue'
     import modalHeader from '@/component/sf/custom/modal-header.vue'
     import rowWrapItems from '@/component/sf/custom/row-wrap-items.vue'
     import sfAccordion from '@/component/sf/custom/accordion.vue'
@@ -328,7 +343,7 @@
                 warningDialog: this.initWarningDialog()
             }
         },
-        components: {mideaTab,MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modalHeader,rowWrapItems},
+        components: {sfTab,sfHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modalHeader,rowWrapItems},
         created(){
             //模拟设备数据
             nativeService.initMockData({

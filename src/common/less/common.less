@@ -177,7 +177,10 @@
 
 //border
 .border(@bw:1px,@bc:@bc){
-  border:@bw solid @bc;
+  border-width: @bw;
+  border-color: @bc;
+  border-style: solid;
+  //border:@bw solid @bc;
 }
 
 .b-b(@bw:1px,@bc:@bc){

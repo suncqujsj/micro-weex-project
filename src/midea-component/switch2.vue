@@ -73,7 +73,7 @@ export default {
             if (this.checked) {
                 animation.transition(switchBar, {
                     styles: {
-                        transform: 'translateX(' + (-(this.width - this.height + 6)) + 'px)',
+                        transform: 'translateX(1.5px)'
                     },
                     duration: durationTime, //ms
                     timingFunction: 'linear',
@@ -83,7 +83,7 @@ export default {
             } else {
                 animation.transition(switchBar, {
                     styles: {
-                        transform: 'translateX(0)',
+                        transform: 'translateX(' + (-(this.width - this.height + 4)) + 'px)'
                     },
                     duration: durationTime, //ms
                     timingFunction: 'linear',

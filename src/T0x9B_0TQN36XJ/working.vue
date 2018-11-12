@@ -319,7 +319,7 @@
             if(!this.isIos){
                 globalEvent.addEventListener("WXApplicationDidBecomeActiveEvent", (e) => {
                     //从后台转前台时触发
-                    self.queryStatus();
+                    // self.queryStatus();
                     self.queryRunTimer(20);//20秒轮询 
                 });
             }
@@ -348,12 +348,6 @@
             //     })
         },
         methods: {
-            queryRunTimer(timeSet){
-                var self = this;
-                this.queryTimer = setInterval(function(){
-                    self.queryStatus();
-                },timeSet*1000);
-            },
             //  countDownRunTimer(timeSet){
             //     var self = this;
             //      this.countDownTimer = setInterval(function(){
@@ -402,6 +396,7 @@
                 this.progressShow = true;
                 this.finishStatus = false;
                 // this.workSpecialStatusText = "";
+                this.hasHour = false;
                 this.hasSetting = false;
                 this.isTimerStop = false;
                 this.statusTag = '剩余时间';
@@ -419,6 +414,10 @@
                  if((analysisObj.temperature.upLowTemperature == 35) && (analysisObj.mode.value == 0x43)){
                     this.cmdObj.mode.value = 0xB0;
                     this.cmdObj.mode.text = "发酵";
+                }
+                if(analysisObj.mode.value == 0x40){//这款型号，烧烤模式要特殊处理，温度是显示档位的
+                    this.cmdObj.mode.text = "烧烤 "+ analysisObj.temperature.upLowTemperature+"档";
+                    this.cmdObj.temperature.upLowTemperature = 0;
                 }
                 
                 
@@ -470,6 +469,7 @@
 
                 if(analysisObj.workingState.value == 4){
                    this.timeShow = false;
+                   this.hasHour = false;
                    this.workSpecialStatusText = "烹饪完成";
                    this.isTimerStop = true;
                    this.tag_next = '';
@@ -481,6 +481,7 @@
                   
                 }
                  if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 0){
+                    this.hasHour = false;
                     this.timeShow = false;
                     this.workSpecialStatusText = "预热中";
                     this.tag_next = '';
@@ -490,7 +491,8 @@
                     
                 }
                 if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 1){
-                     this.timeShow = false;
+                    this.timeShow = false;
+                    this.hasHour = false;
                     this.workSpecialStatusText = "预热完成";
                     this.warningDialogShow = true;
                     this.warningDialogContent = "预热已完成，请放进食物再按'继续'，继续烹饪";
@@ -662,11 +664,7 @@
                     "control",
                     deviceCmd,
                     function(result){
-                    var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
-                        var arr = result_arr.split(",");
-                        var analysisObj = cmdFun.analysisCmd(arr);
-                        this.showBar = false;
-                        self.analysisFun(analysisObj);
+                        self.queryStatus();
                     },
                     function(result){
                         nativeService.toast('控制失败，请检查网络或者设置的参数');

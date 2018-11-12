@@ -333,11 +333,20 @@
                 query: query
             });
             this.queryStatus();
+            this.queryRunTimer(4);//20秒轮询 
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
             }
-            console.dir(JSON.stringify(this.foodMaterialItems));
+            //安卓要加上这个方法，否则，工作页面，时间一直停留在一个状态，不会刷新
+            if(!this.isIos){
+                globalEvent.addEventListener("WXApplicationDidBecomeActiveEvent", (e) => {
+                    //从后台转前台时触发
+                    self.queryStatus();
+                    self.queryRunTimer(4);//20秒轮询 
+                });
+            }
+            //console.dir(JSON.stringify(this.foodMaterialItems));
         },
         methods: {
             openCloudRecipe: function(){
@@ -381,8 +390,9 @@
                 this.warningDialog.callback = callback;
             },
             analysisFun(analysisObj) {
-                // nativeService.alert(JSON.stringify(analysisObj));
-                this.show = false;
+                //nativeService.alert(JSON.stringify(analysisObj));
+                //this.show = false;
+                this.warningDialog.show = false;
                 if(analysisObj.displaySign.isError){
                     this.setWarningDialog("设备故障，请联系售后人员");
                 }

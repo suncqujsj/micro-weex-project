@@ -14,6 +14,12 @@ const deviceMessageMixin = {
         }
     },
     methods: {
+        queryRunTimer(timeSet){
+            var self = this;
+            this.queryTimer = setInterval(function(){
+                self.queryStatus();
+            },timeSet*1000);
+        },
         viewdisappear(){
             globalEvent.removeEventListener("receiveMessage");
             globalEvent.removeEventListener("receiveMessageFromApp");

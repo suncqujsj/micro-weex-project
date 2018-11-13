@@ -1,149 +1,5 @@
 <style lang="less" type="text/less">
-    @import "../common/less/common";
-    .root{
-        height: 100%;
-    }
-    .bg {
-        background-image: linear-gradient(to bottom, #FFD321, #FFB632);
-    }
-    .panel-state{
-        @h:30*2px;
-        .f(@h);
-        .white;
-        .ta;
-        .lh(60px);
-        .ma-t(35*2px);
-        .ma-b(45*2px);
-    }
-    .tabs{
-        .row;
-    }
-    .tab{
-        .flex;
-        .row;
-        justify-content: center;
-        align-items: flex-end;
-        height: (18+16)*2px;
-        .bs(padding-box);
-        padding-bottom: 16*2px;
-
-    }
-    .tab-text{
-        .f(14*2px);
-        color:rgba(255,255,255,.8);
-    }
-    .tab-active{
-        .f(18*2px);
-        .white;
-    }
-    .tab-content-gray{
-        background-color: #F3F3F3;
-    }
-    .tab-content-white{
-        .bg-white;
-    }
-    .block-title{
-        .f(12*2px);
-        .black;
-        .ta;
-        .lh(12*2px);
-        .ma-t(14*2px);
-    }
-    .icon-buttons{
-        .row;
-        padding: 0 3.5*2px;
-        width: 736px;
-        /*overflow-x: scroll;*/
-    }
-    .auto_menu{
-        .ma-b(12px);
-        //.bg-white;
-    }
-    .icon-button{
-        .ma-t(25*2px);
-        .ma-b(14*2px);
-        .a-c;
-        width: 92*2px;
-        height: 78*2px;
-    }
-    .button-icon{
-        .round(112px);
-        .ma-b(10*2px);
-        .bg-gray;
-    }
-    .button-text{
-        .f(12*2px);
-        .lh(12*2px);
-    }
-    .content-title {
-        color: #333333;
-        font-size: 36px;
-        text-align: center;
-        margin-bottom: 24px;
-    }
-
-    .header-top-wrapper {
-        position: absolute;
-        right: 0px;
-        bottom: 0px;
-        height: 88px;
-    }
-    .header-top-inner-wrapper {
-        position: relative;
-        flex-direction: row;
-        justify-content: flex-end;
-        align-items: center;
-        height: 88px;
-    }
-    .header-right{
-        .pos(a);
-        right: 0;
-        top: 0;
-        height: 88px;
-    }
-    .header-right-image-wrapper {
-        width: 88px;
-        height: 88px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        /*padding-right: 32px;*/
-    }
-    .header-right-image {
-        height: 44px;
-        width: 44px;
-    }
-
-    .content-wrap{
-        padding: 0 31*2px;
-    }
-
-    .content-block{
-       border-top-width: 1px;
-        border-top-color: #E5E5E8;
-    }
-
-    .label{
-        .f(12*2px);
-        .ma-r(16*2px);
-    }
-    .food-material-items{
-        height: 179px;
-    }
-    .food-material-item-left, .food-material-item-right, .cooking-step{
-        .f(12*2px);
-        .gray;
-    }
-
-    .cooking-steps{
-        height: 435px;
-        width: 180*2px;
-    }
-
-    .cooking-step{
-        line-height: 15*2px;
-        .ma-b(13*2);
-    }
+    @import "./assets/style/weex.less";
 </style>
 
 <template>
@@ -167,7 +23,7 @@
 
         <!--面板切换tabs-->
         <div class="panel"  @longpress="onlongpressQuery"> <!--隐藏长按组件触发03查询，方便调试-->
-            <text class="panel-state">待机中</text>
+            <text class="panel-state"></text>
             <div v-if="tabs.length>1" class="tabs">
                 <template v-for="(tab, x) in tabs">
                     <div class="tab" @click="onTabClicked(x)">
@@ -180,8 +36,11 @@
         <!--模式操作按钮-->
         <div v-for="(tab, x) in tabs"> <!--隐藏长按组件触发查看云菜谱，方便查看云菜谱-->
             <scroller :class="[tab.rows[0].title ?  'tab-content-gray' : 'tab-content-white' ]" v-if="tab.active" :style="{height: wrapHeight - (tabs.length > 1 ? 204*2 : 174*2)}">
+                <div v-if="tab.rows[0].title" class="bg-white" style="height: 20px"></div>
                 <div class="bg-white" :class="[tab.rows[0].title && 'auto_menu']" v-for="row in tab.rows">
-                    <text v-if="row.title" class="block-title">{{row.title}}</text>
+                    <div v-if="row.title" class="block-title-wrap row j-c a-c">
+                        <text class="block-title">{{row.title}}</text>
+                    </div>
                     <slider v-if="tab.rows[0].title" infinite="false" style="height: 234px">
                         <div class="icon-buttons" v-for="items in row.iconButtons">
                             <div class="icon-button column" v-for="item in items" @click="onIconButtonClicked(item)">

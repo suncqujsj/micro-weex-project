@@ -10,7 +10,7 @@ const globalEvent = weex.requireModule("globalEvent");
 const deviceMessageMixin = {
     data () {
         return {
-            loading: false
+            loading: true
         }
     },
     methods: {

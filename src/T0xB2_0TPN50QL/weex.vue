@@ -337,6 +337,8 @@
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
             }
+            
+
             //console.dir(JSON.stringify(this.foodMaterialItems));
         },
         methods: {
@@ -380,7 +382,7 @@
                 this.warningDialog.content = content;
                 this.warningDialog.callback = callback;
             },
-            analysisFun(analysisObj) {
+            analysisFun(analysisObj) {                
                 // nativeService.alert(JSON.stringify(analysisObj));
                 //this.show = false;
                 if(analysisObj.displaySign.isError){

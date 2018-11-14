@@ -173,7 +173,7 @@
             </div>
         </sf-header>
 
-        <slider :index="index" class="slider" :style="{height: wrapHeight}">
+        <slider :index="index" @change="changeArea" class="slider" :style="{height: wrapHeight}">
             <div v-for="item in pages" style="width: 750px;">
                 <!--面板切换tabs-->
                 <div class="panel"  @longpress="onlongpressQuery"> <!--隐藏长按组件触发03查询，方便调试-->
@@ -441,6 +441,11 @@
                 // nativeService.alert(typeof this.warningDialog.callback);
                 this.warningDialog.callback && this.warningDialog.callback();
                 this.warningDialog = this.initWarningDialog();
+            },
+            changeArea(sliObj) {
+                var sliderIndex = sliObj.index;
+                this.$refs.flowTab.tabClicked(sliderIndex);
+                // modal.toast({ message:'index:'+sliObj.index, duration: 1 })
             }
         }
     }

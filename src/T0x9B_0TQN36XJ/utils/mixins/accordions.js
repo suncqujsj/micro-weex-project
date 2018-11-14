@@ -131,7 +131,7 @@ const accordionMixin = {
         },
         closeDialog(e) {
             this.show = false;
-            if (e.type === 'cancel'){
+            if (e.type === 'cancel' || e.type === 'close'){
                 this.show = false;
                 this.resetState();
                 return;

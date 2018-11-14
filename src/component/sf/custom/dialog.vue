@@ -227,7 +227,9 @@
         this.$emit('mideaDialogNoPromptClicked', { isChecked });
       },
       layoutClick(){
-         this.$emit('close', {});
+         this.$emit('close', {
+             type: 'close'
+         });
       }
       
     }

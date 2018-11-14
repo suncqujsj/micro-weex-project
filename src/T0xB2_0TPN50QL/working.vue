@@ -7,6 +7,9 @@
                     :wxc_radius='progress_radius'>
 
                 </wxcProgress>
+                <!--<div class="animate_section" ref="modeBox" :style="{top:`${-progress_radius-9}px`}">
+                    <image class="animate_circle" src="assets/img/oval_2@2x.png"></image>
+                </div>-->
                 <!--<midea-progresscycle-view class="circleprogress" :data="chartJson"></midea-progresscycle-view>-->
                 <div class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
                   
@@ -27,9 +30,6 @@
                 <div class="cen status_tag_section" :style="{width:`${progress_radius*2}px`}">
                     <text class="status_tag">{{statusTag}}</text>
                 </div>
-                <!--<div class="animate_section" ref="modeBox">
-                    <image class="animate_circle" src="assets/img/oval_2@2x.png"></image>
-                </div>-->
             </div>
         </div>
 
@@ -121,175 +121,7 @@
 </template>
 
 <style lang="less" type="text/less">
-@import "../common/less/common";
-    .root{
-        height: 100%;
-    }
-    .all_section{
-        background-color: #FFCF23;
-        width: 750px;
-    }
-    .bg {
-        background-image: linear-gradient(to bottom, #FFCD00, #FF9217);
-    }
-    .progress_content{
-        .row;
-        .j-c;
-    }
-    .progress_section{
-        .pos(r);
-    }
-    .circleprogress {
-        width: 500px;
-        height: 500px;
-        }
-    .time_section{
-        .pos(a);
-        top: 0px;
-        left: 0px;
-         .flex;
-        .row;
-        .j-c;
-        .a-c;
-    }
-    .cen{
-        .flex;
-        .row;
-        .j-c;
-        .a-c;
-    }
-    .center_section{
-        .flex;
-        .row;
-        .j-c;
-        .a-c;
-    }
-    .status_tag_section{
-        .pos(a);
-         bottom: 150px;
-        .row;
-        .j-c;
-    }
-    .number-text{
-        .f(80px);
-        .white;
-    }
-    .work_time{
-        .f(180px);
-        .white;
-    }
-    .status_tag{
-        .f(32px);
-        .white;
-    }
-    .content_section{
-        margin-left: 18px;
-    }
-    .prev_section{
-        // .flex;
-        .row;
-        .j-c;
-        .pos(r);
-        top: -65px;
-        right: -150px;
-    }
-    .next_section{
-        // .flex;
-        .row;
-        .j-c;
-        .pos(r);
-        top: -65px;
-        left: 10px;
-    }
-    .temp_text{
-       .pos(r);
-       top: 50px;
-       .white;
-        .f(32px);
-    }
-    .number_prev{
-        .white;
-        .f(34px);
-    }
-    .number_next{
-        .white;
-        .f(34px);
-    }
-    .detail_section{
-        .row;
-        .j-c;
-        .pos(r);
-    }
-    .detail_text{
-        .white;
-        .f(36px);
-        margin-top: 60px;
-    }
-    .edit_section{
-        width: 32px;
-        height: 50px;
-        margin-top: 30px;
-    }
-    .setting_icon{
-        .row;
-        .j-c;
-        width: 32px;
-        height: 18px;
-    }
-    .footer_section{
-        .row;
-        .pos(a);
-        .j-c;
-        bottom: 0px;
-        left: 0px;
-        width: 750px;
-        height: 400px;
-    }
-    .btn_content{
-        .row;
-        width: 600px;
-        .j-c;
-    }
-    .btn_section{
-        .flex;
-        .j-c;
-        .a-c;
-        .pos(r);
-    }
-    .icon_image{
-        width: 108px;
-        height: 108px;
-    }
-    .decs_section{
-        margin-top: 24px;
-    }
-    .decs_text{
-       .white; 
-    }
-    .preheatFinishTig{
-        .pos(a);
-        .row;
-        .j-c;
-        width: 300px;
-        left: 0px;
-        top: 0px;
-    }
-    .preheat_tig_section{
-        
-    }
-    .preheat_tig{
-         .white;
-        .f(32px);
-    }
-    .animate_section{
-        .pos(a);
-        top: 0px;
-        right: 250px;
-    }
-    .animate_circle{
-        width: 18px;
-        height: 18px;
-    }
+    @import "./assets/style/working.less";
 </style>
 
 <script>
@@ -317,6 +149,8 @@
 
     const platform = weex.config.env.platform;//weex没有window对象，调试需要区分下
     const globalEvent = weex.requireModule("globalEvent");
+    const animation = weex.requireModule('animation');
+    const modal = weex.requireModule('modal');
     export default {
         mixins: [deviceMessageMixin, accordionMixin, workingData],
         data(){
@@ -347,7 +181,6 @@
                     self.queryRunTimer(20);//20秒轮询 
                 });
             }
-
         },
         computed: {
             progress_style(){
@@ -360,7 +193,7 @@
             }
         },
         mounted() {
-          
+            //this.moveTest();
         },
         methods: {    
             cancle(){
@@ -491,6 +324,31 @@
             actionsheetBtnClick: function () {
                 this.showBar = false;
             },
+            //  moveTest(val = 0) {
+            //     var self = this;
+            //     var testEl = this.$refs.modeBox;
+            //     animation.transition(
+            //         testEl,
+            //         {
+            //             styles: {
+            //                 transform: "rotate(" + val +"deg)",
+            //             },
+            //             duration: 3000, //ms
+            //             timingFunction: "linear",
+            //             delay: 0 //ms
+            //         },
+            //         function() {
+            //            if(self.isTimerStop){
+            //                val = val;
+            //                self.moveTest(val);
+            //            }else{
+            //                 val = val + 360;
+            //                 self.moveTest(val);
+            //            }
+                      
+            //         }
+            //     );
+            // },
         }
     }
 </script>

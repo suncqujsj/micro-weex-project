@@ -83,6 +83,7 @@ export default {
     if(params.mode == 0xD0){ //这款设备特殊处理，保温，下发0x41
       set_mode = 0x41;
     } 
+    //nativeService.alert(params);
 
     if(working){//工作中设置类 byte11 发04，其他byte发ff
       message.setByte(messageBody, 0, 0x22);
@@ -117,9 +118,26 @@ export default {
       message.setByte(messageBody, 15, params.fireAmount);
       message.setByte(messageBody, 16, params.steamAmount);
     }
+    if(set_mode == 0x40){ //特殊处理烧烤模式火力下发在上管温度byte那里
+      message.setByte(messageBody, 0, 0x22);
+      message.setByte(messageBody, 1, 1);
+      message.setByte(messageBody, 2, 0);
+      message.setByte(messageBody, 3, 0);
+      message.setByte(messageBody, 4, params.recipeId);
+      message.setByte(messageBody, 5, 0);
+      message.setByte(messageBody, 6, params.preheat?1:0);
+      message.setByte(messageBody, 7, hour);
+      message.setByte(messageBody, 8, minute);
+      message.setByte(messageBody, 9, second);
+      message.setByte(messageBody, 10, set_mode);
+      message.setByte(messageBody, 12, params.fireAmount);
+      // message.setByte(messageBody, 14, params.temperature);
+      message.setByte(messageBody, 15, 0);
+      message.setByte(messageBody, 16, 0);
+    }
     
     var sendcmd = message.createMessage(device.type, 0x02, messageBody);
-    // nativeService.alert(this.cmdTo16Hex(sendcmd));
+    //nativeService.alert(this.cmdTo16Hex(sendcmd));
 
     return sendcmd;
   },

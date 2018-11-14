@@ -213,7 +213,7 @@
                 query: query
             });
             this.queryStatus();
-            this.queryRunTimer(4);//20秒轮询
+            this.queryRunTimer(4);//4秒轮询,该机型童锁解锁没有主动04上报，特殊处理
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
@@ -223,7 +223,7 @@
                 globalEvent.addEventListener("WXApplicationDidBecomeActiveEvent", (e) => {
                     //从后台转前台时触发
                     self.queryStatus();
-                    self.queryRunTimer(4);//20秒轮询 
+                    self.queryRunTimer(4);//4秒轮询 
                 });
             }
 

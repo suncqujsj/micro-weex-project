@@ -3,8 +3,8 @@
         <midea-header title="Refresh" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <scroller class="scroller">
             <refresh class="refresh" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing ? 'show' : 'hide'">
-                <loading-indicator class="indicator"></loading-indicator>
-                <text class="indicator-text">正在同步状态...</text>
+                <image class="indicator" src="../assets/img/loading.gif"></image>
+                <!-- <text class="indicator-text">正在同步状态...</text> -->
             </refresh>
             <div class="cell" v-for="num in lists" :key="num">
                 <div class="panel">
@@ -23,9 +23,9 @@
   text-align: center;
 }
 .indicator {
-  height: 60;
-  width: 60;
-  color: #00b9ef;
+  height: 40px;
+  width: 40px;
+  color: #666;
   margin-top: 20px;
 }
 .panel {

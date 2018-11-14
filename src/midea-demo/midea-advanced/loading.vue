@@ -9,8 +9,8 @@
             </div>
             <text class="loading-end" v-if="loadingEnd">- 已经到底啦 -</text>
             <loading class="loading" @loading="onloading" :display="showLoading" v-if="!loadingEnd">
-                <text class="indicator-text">加载中...</text>
-                <loading-indicator class="indicator"></loading-indicator>
+                <!-- <text class="indicator-text">加载中...</text> -->
+                <image class="indicator" src="../assets/img/loading.gif"></image>
             </loading>
 
         </scroller>
@@ -105,9 +105,9 @@ export default {
   justify-content: center;
 }
 .indicator {
-  height: 60;
-  width: 60;
-  color: #00b9ef;
+  height: 40px;
+  width: 40px;
+  color: #666;
   margin-top: 20px;
 }
 </style>

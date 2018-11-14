@@ -362,7 +362,7 @@
             },
             changeArea(sliObj) {
                 var sliderIndex = sliObj.index;
-                this.$refs.flowTab.tabClicked(sliderIndex);
+                this.$refs.mTab.tabClicked(sliderIndex);
                 // modal.toast({ message:'index:'+sliObj.index, duration: 1 })
             },
             openCloudRecipe: function(){
@@ -441,11 +441,6 @@
                 // nativeService.alert(typeof this.warningDialog.callback);
                 this.warningDialog.callback && this.warningDialog.callback();
                 this.warningDialog = this.initWarningDialog();
-            },
-            changeArea(sliObj) {
-                var sliderIndex = sliObj.index;
-                this.$refs.flowTab.tabClicked(sliderIndex);
-                // modal.toast({ message:'index:'+sliObj.index, duration: 1 })
             }
         }
     }

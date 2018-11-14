@@ -73,7 +73,7 @@ let modes = [
                 },
                 temperature:{
                     set: false,
-                    default:180,
+                    default:false,
                     range:null
                 },
                 preheat:{
@@ -85,12 +85,12 @@ let modes = [
                     default:0
                 },
                 fireAmount:{
-                    // set:true,
-                    // default:3,
-                    // range:[1,3,1]
-                    set:false,
-                    default:0,
-                    range:null
+                    set:true,
+                    default:3,
+                    range:[1,3,1]
+                    // set:false,
+                    // default:0,
+                    // range:null
                 },
             },
             {

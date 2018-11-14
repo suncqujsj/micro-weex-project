@@ -157,7 +157,6 @@ let workingModalMixin  = {
 
             if(analysisObj.workingState.value == 3){
                 this.timeShow = true;
-                this.hasSetting = true;
                 this.btnText = "暂停";
                 this.btnSrc = "assets/img/footer/icon_pause@2x.png";
                 this.hasStopOrContinueBtn = true;
@@ -178,7 +177,7 @@ let workingModalMixin  = {
                 //      this.hasSetting = false;
                 // }
             }
-            if(analysisObj.mode.value == 0xC1 || analysisObj.mode.value == 0xC6){//清洁模式没有设置时间温度蒸汽那些
+            if(analysisObj.mode.value == 0xC1 || analysisObj.mode.value == 0xC6 || analysisObj.mode.value == 0x40){//清洁模式没有设置时间温度蒸汽那些
                 this.hasSetting = false;
             }
 

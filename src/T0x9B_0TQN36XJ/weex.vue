@@ -205,6 +205,10 @@
                     self.queryRunTimer(4);//20秒轮询 
                 });
             }
+
+            // nativeService.getDeviceInfo().then(function(data){
+            //     nativeService.alert(data);
+            // });
             //console.dir(JSON.stringify(this.foodMaterialItems));
         },
         methods: {

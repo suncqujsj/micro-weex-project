@@ -1,5 +1,6 @@
 <style lang="less" type="text/less">
     @import "./assets/style/weex.less";
+    @import "../common/less/component/childlock.less";
 </style>
 
 <template>
@@ -126,6 +127,24 @@
             </div>
         </detail-modal>
 
+        <!--童锁遮罩-->
+        <modal :show="modalVisibility" @close="closeModal">
+            <div slot="header">
+                <modal-header leftImg="assets/img/header/public_ic_home@3x.png" class="modal-header" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack"></modal-header>
+            </div>
+            <div class="a-c j-c" slot="content" :style="{height: wrapHeight+'px'}">
+                <div class="child-lock">
+                    <image class="child-lock-icon" src="assets/img/large_childlock@3x.png"></image>
+                    <text class="child-lock-text">童锁已开启</text>
+                </div>
+
+                <div class="child-lock-close" @click="childLock(false)">
+                    <image class="child-lock-close-icon" src="assets/img/mode_close@3x.png"></image>
+                    <text class="child-lock-close-text">关闭童锁</text>
+                </div>
+            </div>
+        </modal>
+
         <midea-dialog :title="warningDialog.title"
                       :show="warningDialog.show"
                       :single="true"
@@ -144,6 +163,7 @@
     import rowWrapItems from '@/component/sf/custom/row-wrap-items.vue'
     import sfAccordion from '@/component/sf/custom/accordion.vue'
     import detailModal from '@/component/sf/custom/detail-modal.vue'
+    import modal from '@/component/sf/custom/modal.vue'
     import sfDialog from '@/component/sf/custom/dialog.vue'
     import nativeService from "../common/services/nativeService";
     import query from "../dummy/query";
@@ -158,6 +178,7 @@
     import accordionMixin from  "./utils/mixins/accordions"
     import deviceMessageMixin from  "./utils/mixins/deviceMessage"
     import detailModalMixin from  "./utils/mixins/detailModal"
+    import modalMixin from  "./utils/mixins/modal"
     import commonMixin from  "./utils/mixins/common"
 
     import mideaDialog from '@/component/dialog.vue';
@@ -165,7 +186,7 @@
     var numberRecord = 0; //记录跳页面的次数
 
     export default {
-        mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin],
+        mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin, modalMixin],
         data(){
             return {
                 list:['123','234','345','456','567'],
@@ -185,14 +206,14 @@
                 warningDialog: this.initWarningDialog()
             }
         },
-        components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modalHeader,rowWrapItems},
+        components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modal, modalHeader,rowWrapItems},
         created(){
             //模拟设备数据
             nativeService.initMockData({
                 query: query
             });
             this.queryStatus();
-            this.queryRunTimer(4);//20秒轮询 
+            this.queryRunTimer(4);//20秒轮询
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
@@ -271,10 +292,13 @@
                 }
 
                 if(analysisObj.displaySign.lock){
-                    let context = this;
-                    this.setWarningDialog("你需要关闭童锁吗？", function(){
-                        context.childLock(false);
-                    });
+                    // let context = this;
+                    // this.setWarningDialog("你需要关闭童锁吗？", function(){
+                    //     context.childLock(false);
+                    // });
+                    !this.modalVisibility && this.showModal();
+                } else {
+                    this.modalVisibility && this.closeModal();
                 }
 
                 if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6) {

@@ -15,11 +15,11 @@
                   
                     <div class="center_section">
                         <!--<text class="number-text">{{progress}} {{timeRemain}}</text>-->
-                        <div class="prev_section">
+                        <div :class="['prev_section',hourMore10 && 'prev_section_more']">
                             <text class="number_prev" v-if="hasHour">时</text>
                         </div>
                         <div class="content_section">
-                            <text :class="['number-text',timeShow && 'work_time']">{{workSpecialStatusText}}</text>
+                            <text :class="['number-text',timeShow && 'work_time',hasHour && 'hour_time']">{{workSpecialStatusText}}</text>
                         </div>
                         <div class="next_section">
                             <text class="number_next">{{tag_next}}</text>
@@ -33,8 +33,7 @@
             </div>
         </div>
 
-       
-        <div class="detail_section" v-if="!finishStatus">
+        <div class="detail_section" v-if="!finishStatus" @click="setting">
             <text class="detail_text">{{cmdObj.mode.text}} {{cmdObj.temperature.upLowTemperature>0?cmdObj.temperature.upLowTemperature:''}}</text>
             <text class="temp_text">{{cmdObj.temperature.upLowTemperature>0?"°":''}}</text>
         </div>

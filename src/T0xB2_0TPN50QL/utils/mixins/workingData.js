@@ -45,6 +45,7 @@ let workingModalMixin  = {
             statusTag: "剩余时间", 
             hasSetting: false, //是否有时间温度设置
             hasHour: false, //是否有小时
+            hourMore10: false,//是否大于10小时
             hasStopOrContinueBtn: false,
 
             warningDialogShow: false,
@@ -107,6 +108,7 @@ let workingModalMixin  = {
             //nativeService.toast(analysisObj,5);
             //console.log(1);
             this.hasHour = false;
+            this.hourMore10 = false;
             this.warningDialogShow = false;
             // this.tag_next = '分';
             this.progressShow = true;
@@ -218,6 +220,9 @@ let workingModalMixin  = {
 
             if(this.timeShow){
                 if(allSeconds>60*60){ //大于1小时，有‘时’显示
+                    if(_hour>9){
+                        this.hourMore10 = true;
+                    }
                     this.workSpecialStatusText = _hour+"  "+(_minute>9?_minute:'0'+_minute);
                     this.tag_next = '分';
                     this.hasHour = true;

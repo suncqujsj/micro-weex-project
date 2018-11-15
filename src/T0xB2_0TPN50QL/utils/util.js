@@ -2,6 +2,7 @@ import message from "../../common/util/smartMessage";
 import  nativeService from '@/common/services/nativeService';
 import {device} from "../config/constant";
 import modes from "../config/modes.js";
+import autoMenu from "../config/auto-menu.js";
 
 export default {
   //10进制转换8位2进制的方法
@@ -38,26 +39,50 @@ export default {
     }
     return cmd.toUpperCase();
   },
-  modeValueToModeText(modeValue){
-      var text = '';
-      var modeArr =  [];
+  modeValueToModeText(recipeId,modeValue){
+    var text = '';
+    var modeArr =  [];
+    var isRecipe = false;
+    if(modeValue == 0xE0){ //如果是自动菜谱
+        isRecipe = true;
+    }
 
-    for(var i=0; i<modes.length; i++){
-      var iconButton = modes[i].iconButtons;
-      for(var k=0; k<iconButton.length; k++){
-        modeArr.push({
-          'text': iconButton[k].text,
-          'mode': iconButton[k].mode,
-        })
+    if(isRecipe){
+      var  currentModes = autoMenu;
+       for(var i=0; i<currentModes.length; i++){
+           var iconButtonsArr = currentModes[i].iconButtons; 
+          for(var r=0; r<iconButtonsArr.length; r++){
+              var iconButtons = iconButtonsArr[r];
+               for(var m=0; m<iconButtons.length; m++){
+                  if(recipeId == iconButtons[m].recipeId.default){
+                      modeArr.push({
+                        'text': iconButtons[m].text,
+                        'mode': iconButtons[m].mode,
+                      })
+                  }
+              }
+          }                      
+         
+      }
+    }else{
+      for(var i=0; i<modes.length; i++){
+        var iconButton = modes[i].iconButtons;
+        for(var k=0; k<iconButton.length; k++){
+          modeArr.push({
+            'text': iconButton[k].text,
+            'mode': iconButton[k].mode,
+          })
+        }
       }
     }
-    modeArr.push({'text': '自动菜谱','mode': 0xE0});
+    //modeArr.push({'text': '自动菜谱','mode': 0xE0});
 
     for(var i=0; i<modeArr.length; i++){
       if(modeValue == modeArr[i].mode){
          text = modeArr[i].text;
       }
     }
+    //nativeService.alert(text);
     return text;
   },
   // 查询指令
@@ -202,10 +227,11 @@ export default {
       steam:{name: "蒸汽量",value: 0x00},
   };
   // if(parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)){
-    obj.workingState.value = parseInt(requestCmd[11]);    
-    obj.recipeId.value = parseInt(requestCmd[12])*256*256+parseInt(requestCmd[13])*256+parseInt(requestCmd[14]);
+    obj.workingState.value = parseInt(requestCmd[11]); 
+    var recipeId = parseInt(requestCmd[12])*256*256+parseInt(requestCmd[13])*256+parseInt(requestCmd[14]);
+    obj.recipeId.value = recipeId;
     obj.mode.value = parseInt(requestCmd[19]);
-    obj.mode.text = this.modeValueToModeText(parseInt(requestCmd[19]));        
+    obj.mode.text = this.modeValueToModeText(recipeId,parseInt(requestCmd[19]));        
     obj.displaySign.lock = message.getBit(requestCmd, 26, 0);
     obj.displaySign.doorSwitch = message.getBit(requestCmd, 26, 1);
     obj.displaySign.waterBox = message.getBit(requestCmd, 26, 2);

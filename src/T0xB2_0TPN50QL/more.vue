@@ -9,7 +9,7 @@
         <midea-header class="bg-white" title="更多功能" titleText="black" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back"></midea-header>
 
         <list style="margin-top: 24px" show-scrollbar="true">
-            <midea-cell :clickActivied="true" v-for="(item,index) in list" :key="index" :title="item.title" :has-arrow="true" @mideaCellClick="link(item)">
+            <midea-cell :clickActivied="true" v-for="(item,index) in list" :key="index" :title="item.title" :has-arrow="false" @mideaCellClick="link(item)">
             </midea-cell>
         </list>
 
@@ -29,11 +29,11 @@
             return {
                 list:[
                     {
-                        title: '用户手册',
+                        title: '销售型号：蒸汽炉 TPN50EQL-SSL',
                         link:'https://m.ximalaya.com/wwys/v1/e/1?from=groupmessage&isappinstalled=0'
                     },
                     {
-                        title: '其他',
+                        title: '插件版本号：weex5.0.1',
                         link: 'http://www.baidu.com'
                     }
                 ]
@@ -50,6 +50,7 @@
                 nativeService.goBack();
             },
             link: function(item){
+                return;
                 nativeService.weexBundleToWeb({
                     url: item.link,
                     title: '测试'

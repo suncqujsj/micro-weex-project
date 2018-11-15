@@ -960,15 +960,19 @@ let modes = [
     },
 ];
 
-let page = [
-    {
-        name:'自动菜单',
-        active:true,
-        rows:autoMenu
-    },
-    {
-        name:'加热模式',
-        active:false,
-        rows:modes
-    }
-];
+let page = {
+    tabs: [
+        {
+            name:'自动菜单',
+            active:true,
+            rows:autoMenu
+        },
+        {
+            name:'加热模式',
+            active:false,
+            rows:modes
+        }
+    ]
+};
+
+export default page;

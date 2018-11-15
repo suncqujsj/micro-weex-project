@@ -155,7 +155,7 @@
 
         <sf-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" >
             <div slot="headerTitle">
-                <sf-tab ref="mTab" :tabArray="tabData" @tabClicked="tabClicked">
+                <sf-tab ref="mTab" :tabArray="pages" @tabClicked="tabClicked">
                 </sf-tab>
             </div>
             <div slot="customerContent" class="header-top-wrapper">
@@ -174,13 +174,13 @@
         </sf-header>
 
         <slider :index="index" @change="changeArea" class="slider" :style="{height: wrapHeight}">
-            <div v-for="item in pages" style="width: 750px;">
+            <div v-for="(item,x) in pages" style="width: 750px;">
                 <!--面板切换tabs-->
                 <div class="panel"  @longpress="onlongpressQuery"> <!--隐藏长按组件触发03查询，方便调试-->
-                    <text class="panel-state">待机中{{item}}</text>
-                    <div v-if="tabs.length>1" class="tabs">
-                        <template v-for="(tab, x) in tabs">
-                            <div class="tab" @click="onTabClicked(x)">
+                    <text class="panel-state"></text>
+                    <div v-if="item.tabs.length>1" class="tabs">
+                        <template v-for="(tab, y) in item.tabs">
+                            <div class="tab" @click="onPageTabClicked(x,y)">
                                 <text class="tab-text" :class="[tab.active && 'tab-active' ]">{{tab.name}}</text>
                             </div>
                         </template>
@@ -188,7 +188,7 @@
                 </div>
 
                 <!--模式操作按钮-->
-                <div v-for="(tab, x) in tabs"> <!--隐藏长按组件触发查看云菜谱，方便查看云菜谱-->
+                <div v-for="(tab, x) in item.tabs"> <!--隐藏长按组件触发查看云菜谱，方便查看云菜谱-->
                     <scroller :class="[tab.rows[0].title ?  'tab-content-gray' : 'tab-content-white' ]" v-if="tab.active" :style="{height: wrapHeight - (tabs.length > 1 ? 204*2 : 174*2)}">
                         <div class="bg-white" :class="[tab.rows[0].title && 'auto_menu']" v-for="row in tab.rows">
                             <text v-if="row.title" class="block-title">{{row.title}}</text>
@@ -304,8 +304,10 @@
     import {wxcProgress, wxProgress} from "@/component/sf/wx-progress";
     import mideaSwitch2 from '@/midea-component/switch2.vue'
     import WxPicker from '@/component/sf/custom/picker.vue';
+    import mideaDialog from '@/component/dialog.vue';
 
     // config data
+    import pages from "./config/pages.js";
     import modes from "./config/modes.js";
     import autoMenu from "./config/auto-menu.js";
 
@@ -314,7 +316,6 @@
     import detailModalMixin from  "./utils/mixins/detailModal"
     import commonMixin from  "./utils/mixins/common"
 
-    import mideaDialog from '@/component/dialog.vue';
 
     var numberRecord = 0; //记录跳页面的次数
 
@@ -322,7 +323,7 @@
         mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin],
         data(){
             return {
-                pages:[1,2],
+                pages:pages,
                 index:0,
                 tabData: [
                     { "name": "蒸汽", "selected": true },
@@ -355,8 +356,20 @@
                 this.listenerDeviceReiveMessage();
             }
             console.dir(JSON.stringify(this.foodMaterialItems));
+            this.initialIndex();
+
+        },
+        mounted(){
         },
         methods: {
+            initialIndex(){
+                for(let i=0;i<this.pages.length;i++) {
+                    if(this.pages[i].selected) {
+                        this.index = i;
+                        return;
+                    }
+                }
+            },
             tabClicked(tabIndex) {
                 this.index = tabIndex;
             },
@@ -374,10 +387,10 @@
             openMorePage: function(){
                 nativeService.goTo('more.js', {animated: true});
             },
-            onTabClicked: function(index){
+            onPageTabClicked: function(x,index){
                 // debugger;
                 // let tabs = JSON.parse(JSON.stringify(this.tabs));
-                let tabs = this.tabs;
+                let tabs = this.pages[x].tabs;
                 if(tabs[index].active) return;
                 for(let i=0; i<tabs.length; i++) {
                     if(parseInt(i) === index) {
@@ -386,7 +399,7 @@
                     }
                     tabs[i].active = false;
                 }
-                this.tabs = tabs;
+                this.pages[x].tabs = tabs;
             },
             onIconButtonClicked: function(item){
                 this.currentItem = item;

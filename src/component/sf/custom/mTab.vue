@@ -122,6 +122,7 @@ export default {
     },
     mounted() {
         this.setIndicatorWidth(0)
+        if(this.tabArray[1].selected) this.tabClicked(1);
     }
 
 }

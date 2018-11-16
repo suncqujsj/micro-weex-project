@@ -150,7 +150,6 @@ let workingModalMixin  = {
                 this.btnText = "暂停";
                 this.btnSrc = "assets/img/footer/icon_pause@2x.png";
                 this.hasStopOrContinueBtn = true;
-                 this.hasSetting = true;
                 // if(analysisObj.mode.value == 0xE0){//云菜谱没有设置时间温度蒸汽那些
                 //      this.hasSetting = false;
                 // }

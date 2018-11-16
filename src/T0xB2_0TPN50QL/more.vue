@@ -29,11 +29,11 @@
             return {
                 list:[
                     {
-                        title: '销售型号：蒸汽炉 TPN50EQL-SSL',
+                        title: '产品型号：蒸汽炉 TPN50EQL-SSL',
                         link:'https://m.ximalaya.com/wwys/v1/e/1?from=groupmessage&isappinstalled=0'
                     },
                     {
-                        title: '插件版本号：weex5.0.2',
+                        title: '插件版本号：weex5.0.3',
                         link: 'http://www.baidu.com'
                     }
                 ]

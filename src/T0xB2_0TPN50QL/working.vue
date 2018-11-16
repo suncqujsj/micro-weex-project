@@ -73,14 +73,19 @@
         </div>
 
         <!--模式参数设置弹窗-->
-        <sf-dialog :show="show" :working="true" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
+       <sf-dialog :show="show" :working="true" confirmText="确定" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
-                <text class="content-title">加热模式</text>
+                <!--<template v-for="tab in tabs">-->
+                <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
+                <!--</template>-->
+                <!--<text v-if="currentItem" class="content-title" @click="showDetailModal">{{currentItem.text}}</text>-->
+                <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="assets/img/header/public_ic_help@3x.png" class="modal-header" :title="currentItem.text" titleText="#666666" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
+
                 <template v-for="(item, index) in accordions">
                     <template v-if="item.type==='picker'">
                         <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                             <div slot="content">
-                                <wx-picker :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                                 <!--<wx-picker  :list="range(item.key).list" :defaultValue="range(item.key).defaultValue" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>-->
                             </div>
                         </sf-accordion>
@@ -95,6 +100,7 @@
                 </template>
             </div>
         </sf-dialog>
+
 
         <!--故障提示弹窗-->
         <midea-dialog :title="warningDialogTitle"
@@ -227,6 +233,9 @@
                 )
             },
             setting(){
+                if(!this.hasSetting){
+                    return;
+                }
                 var _isRecipe = false;
                 if(this.cmdObj.mode.value == 0xE0){
                     _isRecipe = true;
@@ -234,6 +243,7 @@
                 var _item = this.getCurrentItem(_isRecipe);
                 
                 this.currentItem = _item;
+                nativeService.alert(this.currentItem);
                 var time = this.cmdObj.timeRemaining.hour*60+this.cmdObj.timeRemaining.minute;
                 if(this.tag_next == '秒'){//倒计时为秒时，都设置1分钟
                     time = 1;

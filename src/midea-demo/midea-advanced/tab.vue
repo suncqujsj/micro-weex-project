@@ -7,9 +7,9 @@
         <midea-tab ref="mTab" :tabArray="tabData" @tabClicked="tabClicked">
         </midea-tab>
         <div style="background-color:#FFF;padding:24px;border-bottom-width:1px;border-bottom-color:#e2e2e2">
-            <text style="font-size:28px">可横向滑动的导航Tab</text>
+            <text style="font-size:28px">定义tab宽度，可横向滑动的导航Tab</text>
         </div>
-        <midea-flow-tab ref="flowTab" :tabArray="flowTabData" @tabClicked="flowTabClicked">
+        <midea-flow-tab ref="flowTab" :tabArray="flowTabData" :fixedWidth="150" @tabClicked="flowTabClicked">
         </midea-flow-tab>
         <slider :value="val" :index="index" @change="changeArea" class="slider" auto-play="false">
             <div class="device-list">

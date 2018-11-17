@@ -197,7 +197,9 @@
                 this.listenerDeviceReiveMessage();
             }
             
-
+            //  nativeService.getDeviceInfo().then(function(data){
+            //     nativeService.alert(data);
+            // });
             //console.dir(JSON.stringify(this.foodMaterialItems));
         },
         methods: {

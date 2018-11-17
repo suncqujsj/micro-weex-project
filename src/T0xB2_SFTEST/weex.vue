@@ -189,7 +189,7 @@
 
                 <!--模式操作按钮-->
                 <div v-for="(tab, x) in item.tabs"> <!--隐藏长按组件触发查看云菜谱，方便查看云菜谱-->
-                    <scroller :class="[tab.rows[0].title ?  'tab-content-gray' : 'tab-content-white' ]" v-if="tab.active" :style="{height: wrapHeight - (tabs.length > 1 ? 204*2 : 174*2)}">
+                    <scroller :class="[tab.rows[0].title ?  'tab-content-gray' : 'tab-content-white' ]" v-if="tab.active" :style="{height: wrapHeight - (item.tabs.length > 1 ? 204*2 : 174*2)}">
                         <div class="bg-white" :class="[tab.rows[0].title && 'auto_menu']" v-for="row in tab.rows">
                             <text v-if="row.title" class="block-title">{{row.title}}</text>
                             <slider v-if="tab.rows[0].title" infinite="false" style="height: 234px">

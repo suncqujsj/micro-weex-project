@@ -145,6 +145,13 @@ export default {
             location.href = location.origin + location.pathname + '?path=' + path
         }
     },
+    getWeexPath() {
+        return new Promise((resolve, reject) => {
+            bridgeModule.getWeexPath((resData) => {
+                resolve(this.convertToJson(resData))
+            })
+        })
+    },
     /*  
     options = {
             animated: 'true',

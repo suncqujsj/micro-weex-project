@@ -13,10 +13,10 @@
                     </div>
                     <!--<div class="header-right-image-wrapper" @click="childLock(true)">
                         <image class="header-right-image" :src="'assets/img/header/public_ic_babylock@3x.png'"></image>
-                    </div>-->
+                    </div>
                     <div class="header-right-image-wrapper" @click="openMorePage">
                         <image class="header-right-image" :src="'assets/img/header/public_ic_lots@3x.png'"></image>
-                    </div>
+                    </div>-->
                 </div>
             </div>
         </midea-header>
@@ -105,7 +105,7 @@
 
         <detail-modal :show="showDetailVisibility" @close="closeDetailModal">
             <div slot="title">
-                <modal-header leftImg="assets/img/header/public_ic_gray@3x.png" class="modal-header" title="详情页" titleText="#666666" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>
+                <modal-header leftImg="assets/img/header/public_ic_gray@3x.png" class="modal-header" :title="modeText" titleText="#666666" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>
             </div>
             <div slot="content" class="content-wrap" :style="{'height':338*2 + 'px'}">
                 <div class="content-block row" :style="{'padding-top':14*2-3+'px'}">
@@ -182,7 +182,8 @@
                         rows:modes
                     }
                 ],
-                warningDialog: this.initWarningDialog()
+                warningDialog: this.initWarningDialog(),
+                modeText:''
             }
         },
         components: {MideaHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modalHeader,rowWrapItems},
@@ -197,9 +198,7 @@
                 this.listenerDeviceReiveMessage();
             }
             
-            //  nativeService.getDeviceInfo().then(function(data){
-            //     nativeService.alert(data);
-            // });
+
             //console.dir(JSON.stringify(this.foodMaterialItems));
         },
         methods: {
@@ -228,6 +227,7 @@
             },
             onIconButtonClicked: function(item){
                 this.currentItem = item;
+                this.modeText = item.text;
                 this.openDialog();
             },
             initWarningDialog(){

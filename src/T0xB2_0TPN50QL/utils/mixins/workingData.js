@@ -47,6 +47,7 @@ let workingModalMixin  = {
             hasHour: false, //是否有小时
             hourMore10: false,//是否大于10小时
             hasStopOrContinueBtn: false,
+            modeText:'',
 
             warningDialogShow: false,
             warningDialogTitle: "温馨提示",
@@ -107,6 +108,7 @@ let workingModalMixin  = {
             }
             //nativeService.toast(analysisObj,5);
             //console.log(1);
+            this.timeShow = false;
             this.hasHour = false;
             this.hourMore10 = false;
             this.warningDialogShow = false;

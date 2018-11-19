@@ -69,11 +69,10 @@
                     </div>
                 </div>
             </div>
-           
         </div>
 
-        <!--模式参数设置弹窗-->
-       <sf-dialog :show="show" confirmText="确定" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
+         <!--模式参数设置弹窗-->
+        <sf-dialog :show="show" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <!--<template v-for="tab in tabs">-->
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
@@ -100,9 +99,10 @@
                 </template>
             </div>
         </sf-dialog>
+
         <detail-modal :show="showDetailVisibility" @close="closeDetailModal">
             <div slot="title">
-                <modal-header leftImg="assets/img/header/public_ic_gray@3x.png" class="modal-header" title="详情页" titleText="#666666" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>
+                <modal-header  leftImg="assets/img/header/public_ic_gray@3x.png" class="modal-header" :title="modeText" titleText="#666666" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>
             </div>
             <div slot="content" class="content-wrap" :style="{'height':338*2 + 'px'}">
                 <div class="content-block row" :style="{'padding-top':14*2-3+'px'}">
@@ -122,7 +122,6 @@
                 </div>
             </div>
         </detail-modal>
-
 
 
         <!--故障提示弹窗-->
@@ -268,6 +267,7 @@
                 }
                 var _item = this.getCurrentItem(_isRecipe);
                 
+                this.modeText = _item.text;
                 this.currentItem = _item;
                 // nativeService.alert(this.currentItem);
                 var time = this.cmdObj.timeRemaining.hour*60+this.cmdObj.timeRemaining.minute;

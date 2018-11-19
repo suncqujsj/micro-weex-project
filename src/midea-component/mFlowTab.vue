@@ -68,6 +68,10 @@ export default {
     props: {
         tabArray: {
             type: Array
+        },
+        fixedWidth: {
+            type: Number,
+            default: 150
         }
     },
     methods: {
@@ -79,7 +83,7 @@ export default {
             Vue.set(this.tabArray[index], "selected", true);
             var xDis = index * (750 / len) + "px";
             if (len > 5) {
-                xDis = index * 150 + "px";
+                xDis = index * this.fixedWidth + "px";
             }
             var ref = this.$refs.indicator;
             animation.transition(ref, {
@@ -107,9 +111,9 @@ export default {
     created() {
         var len = this.tabArray.length;
         this.tabsWidth = "750px";
-        if (len > 5) {
-            this.tabWidth = "150px";
-            this.tabsWidth = 150 * len + "px";
+        if (this.fixedWidth * len > 750) {
+            this.tabWidth = this.fixedWidth + "px";
+            this.tabsWidth = this.fixedWidth * len + "px";
         } else {
             this.tabWidth = (750 / len) + "px";
         }

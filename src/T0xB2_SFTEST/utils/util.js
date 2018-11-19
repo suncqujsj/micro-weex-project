@@ -1,6 +1,8 @@
 import message from "../../common/util/smartMessage";
 import  nativeService from '@/common/services/nativeService';
-import {device} from "../config/constant"
+import {device} from "../config/constant";
+import modes from "../config/modes.js";
+import autoMenu from "../config/auto-menu.js";
 
 export default {
   //10进制转换8位2进制的方法
@@ -15,25 +17,72 @@ export default {
     var str_2 = _str + _str_val;
     return str_2;
   },
-  modeValueToModeText(modeValue){
-      var text = '';
-      var modeArr =  [
-      {'text': '蒸汽','mode': 0x20},
-      {'text': '蒸汽+热风','mode': 0x31},
-      {'text': '烧烤', 'mode': 0x40},
-      {'text': '热风对流','mode': 0x41},
-      {'text': '热风烧烤','mode': 0x43},
-      {'text': '除垢','mode': 0xC1},
-      {'text': '保温','mode': 0xD0},
-      {'text': '发酵','mode': 0xB0},
-      {'text': '自动菜谱','mode': 0xE0},
-      {'text': '烘干','mode': 0xC4},
-    ];
+  cmdToEasy(sendCmd){ //16进制
+      // var arr=[], message=sendCmd.slice(10,this.MSG_LENGTH-1);
+      var arr=[], message=sendCmd;
+      for (var i=10,len=message.length; i < len; i++)
+      {
+          var obj={};
+          //obj.key=i+10;
+          obj.key=i;
+          obj.val=parseInt(message[i]).toString(16);
+          arr.push(obj);
+      }
+      return arr;
+
+  },
+  cmdTo16Hex(sendCmd){
+    var cmd="";
+    for (var i=0,len=sendCmd.length; i < len; i++)
+    {   var subCmd = parseInt(sendCmd[i]).toString(16).length == 1 ? "0"+parseInt(sendCmd[i]).toString(16):parseInt(sendCmd[i]).toString(16);
+        cmd += subCmd;
+    }
+    return cmd.toUpperCase();
+  },
+  modeValueToModeText(recipeId,modeValue){
+    var text = '';
+    var modeArr =  [];
+    var isRecipe = false;
+    if(modeValue == 0xE0){ //如果是自动菜谱
+        isRecipe = true;
+    }
+
+    if(isRecipe){
+      var  currentModes = autoMenu;
+       for(var i=0; i<currentModes.length; i++){
+           var iconButtonsArr = currentModes[i].iconButtons; 
+          for(var r=0; r<iconButtonsArr.length; r++){
+              var iconButtons = iconButtonsArr[r];
+               for(var m=0; m<iconButtons.length; m++){
+                  if(recipeId == iconButtons[m].recipeId.default){
+                      modeArr.push({
+                        'text': iconButtons[m].text,
+                        'mode': iconButtons[m].mode,
+                      })
+                  }
+              }
+          }                      
+         
+      }
+    }else{
+      for(var i=0; i<modes.length; i++){
+        var iconButton = modes[i].iconButtons;
+        for(var k=0; k<iconButton.length; k++){
+          modeArr.push({
+            'text': iconButton[k].text,
+            'mode': iconButton[k].mode,
+          })
+        }
+      }
+    }
+    //modeArr.push({'text': '自动菜谱','mode': 0xE0});
+
     for(var i=0; i<modeArr.length; i++){
       if(modeValue == modeArr[i].mode){
          text = modeArr[i].text;
       }
     }
+    //nativeService.alert(text);
     return text;
   },
   // 查询指令
@@ -86,8 +135,9 @@ export default {
       message.setByte(messageBody, 16, params.steamAmount);
     }
     
-  
     var sendcmd = message.createMessage(device.type, 0x02, messageBody);
+    // nativeService.alert(this.cmdTo16Hex(sendcmd));
+
     return sendcmd;
   },
   //取消工作指令
@@ -177,10 +227,11 @@ export default {
       steam:{name: "蒸汽量",value: 0x00},
   };
   // if(parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)){
-    obj.workingState.value = parseInt(requestCmd[11]);    
-    obj.recipeId.value = parseInt(requestCmd[12])*256*256+parseInt(requestCmd[13])*256+parseInt(requestCmd[14]);
+    obj.workingState.value = parseInt(requestCmd[11]); 
+    var recipeId = parseInt(requestCmd[12])*256*256+parseInt(requestCmd[13])*256+parseInt(requestCmd[14]);
+    obj.recipeId.value = recipeId;
     obj.mode.value = parseInt(requestCmd[19]);
-    obj.mode.text = this.modeValueToModeText(parseInt(requestCmd[19]));        
+    obj.mode.text = this.modeValueToModeText(recipeId,parseInt(requestCmd[19]));        
     obj.displaySign.lock = message.getBit(requestCmd, 26, 0);
     obj.displaySign.doorSwitch = message.getBit(requestCmd, 26, 1);
     obj.displaySign.waterBox = message.getBit(requestCmd, 26, 2);

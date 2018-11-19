@@ -80,7 +80,8 @@ module.exports = {
             { key: 6, value: "T0xE1_000000H3",desc: "T0xE1_000000H3" },
             { key: 7, value: "T0xE1_000000H5",desc: "T0xE1_000000H5" },
             { key: 8, value: "T0x9B_0TQN36XJ",desc: "T0x9B_0TQN36XJ" },
-            { key: 9, value: "T0xB2_0TPN50QL",desc: "T0xB2_0TPN50QL" }
+            { key: 9, value: "T0xB2_0TPN50QL",desc: "T0xB2_0TPN50QL" },
+            { key: 10, value: "T0xB2_SFTEST",desc: "T0xB2_SFTEST" },
         ],
         card: 'T0xB1',
         isShowCardList: false,

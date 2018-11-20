@@ -310,6 +310,8 @@
     import pages from "./config/pages.js";
     import modes from "./config/modes.js";
     import autoMenu from "./config/auto-menu.js";
+    import device from "./config/constant";
+
 
     import accordionMixin from  "./utils/mixins/accordions"
     import deviceMessageMixin from  "./utils/mixins/deviceMessage"
@@ -357,6 +359,9 @@
             }
             console.dir(JSON.stringify(this.foodMaterialItems));
             this.initialIndex();
+            nativeService.getDeviceInfo().then(function(data){
+                nativeService.alert(data);
+            });
 
         },
         mounted(){

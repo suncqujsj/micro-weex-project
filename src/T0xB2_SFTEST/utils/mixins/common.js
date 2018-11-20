@@ -4,6 +4,8 @@
  */
 
 const bridgeModule = weex.requireModule('bridgeModule');
+import device from "../../config/constant";
+const objectAssign = require('object-assign');
 
 let commonMixin = {
     data(){
@@ -40,7 +42,7 @@ let commonMixin = {
             return resultList;
         },
 
-        statisticsUpload: function(){
+        statisticsUpload: function(data={}){
             let param = {
                 widget_name: '0xAC',
                 iot_device_id: 'xxxxxxxx',
@@ -52,6 +54,8 @@ let commonMixin = {
                      },
                 operation: 'burialPoint'
             };
+
+            param = objectAssign(param, device, data);
 
             bridgeModule.commandInterface(JSON.stringify(param), function
                 (resData) {

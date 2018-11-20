@@ -59,9 +59,10 @@
   },
   "dependencies": {
     "echarts": "^4.1.0",
+    "object-assign": "^4.1.1",
     "vue": "^2.4.1",
-    "weex-droplet-ui": "^1.0.0-alpha.100",
     "weex-bindingx": "0.0.48",
+    "weex-droplet-ui": "^1.0.0-alpha.100",
     "weex-gcanvas": "^0.5.49",
     "weex-html5": "^0.4.1",
     "weex-marquee": "^1.1.2",

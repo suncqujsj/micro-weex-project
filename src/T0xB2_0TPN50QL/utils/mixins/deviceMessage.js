@@ -6,6 +6,7 @@
 import cmdFun from "../util.js"; //解析指令
 import nativeService from '@/common/services/nativeService';
 const globalEvent = weex.requireModule("globalEvent");
+const storage = weex.requireModule('storage');
 
 const deviceMessageMixin = {
     data () {
@@ -114,6 +115,35 @@ const deviceMessageMixin = {
                 }
             )
         },
+
+        getStorageItem(key){
+            return new Promise(function(resolve, reject){
+                storage.getItem(key, event => {
+                    resolve(event.data);
+                });
+            });
+        },
+        setStorageItem(key, value){
+            return new Promise(function(resolve, reject){
+                storage.setItem(key, value, event => {
+                    resolve(event.data);
+                });
+            });
+        },
+
+        getDeviceInfo: function(){
+            this.getStorageItem('key').then(function(data){
+                if(data && data.deviceSn) {
+                    return new Promise(function(resolve, reject){
+                        resolve(data.deviceSn);
+                    });
+                }
+                nativeService.getDeviceInfo().then(function(data){
+                    return this.setStorageItem('key', JSON.stringify(data));
+                });
+            });
+        },
+
         listenerDeviceReiveMessage(){
             let context = this;
             globalEvent.addEventListener("receiveMessage", function(e) {

@@ -197,7 +197,7 @@
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
             }
-            
+
 
             //console.dir(JSON.stringify(this.foodMaterialItems));
         },

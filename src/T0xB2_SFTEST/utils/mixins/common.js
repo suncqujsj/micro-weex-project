@@ -4,6 +4,9 @@
  */
 
 const bridgeModule = weex.requireModule('bridgeModule');
+const objectAssign = require('object-assign');
+import nativeService from '@/common/services/nativeService';
+
 
 let commonMixin = {
     data(){
@@ -40,24 +43,29 @@ let commonMixin = {
             return resultList;
         },
 
-        statisticsUpload: function(){
+        statisticsUpload: function(data={}){
+
             let param = {
-                widget_name: '0xAC',
-                iot_device_id: 'xxxxxxxx',
-                widget_version: '1.0.0',
-                pageName: 'airConditionerMainPage',
+                operation: 'burialPoint',
                 actionType: 'plugin',
-                subAction: 'page_view',
+                pageName: 'homePage',
+                subAction: 'pageview',
+                widget_name: 'wzk_T0x9B_SFTEST',
+                widget_version: '1.0.0',
+                iot_device_id: 'SN',
                 extra1: { //浏览页面，如不需设备信息，可不传该字段 ‘key’:’value’,
-                     },
-                operation: 'burialPoint'
+                     }
             };
+
+            param = objectAssign(param, data);
 
             bridgeModule.commandInterface(JSON.stringify(param), function
                 (resData) {
                 //成功的回调
+                nativeService.alert('upload success');
             }, function (error) {
                 //失败的回调
+                nativeService.alert('upload error');
             });
         }
 

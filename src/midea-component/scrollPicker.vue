@@ -93,6 +93,7 @@ export default {
     },
     mounted() {
         const el = this.$refs['item'][0]
+        nativeService.alert(this.itemIndex);
         dom.scrollToElement(el, { offset: this.itemIndex * 70 })
     },
     created() {

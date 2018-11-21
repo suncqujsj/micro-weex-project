@@ -227,57 +227,22 @@
         <!--</div>-->
         <!--</wxcProgress>-->
 
-        <!--模式参数设置弹窗-->
-        <sf-dialog :show="show" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
-            <div slot="content">
-                <!--<template v-for="tab in tabs">-->
-                <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
-                <!--</template>-->
-                <!--<text v-if="currentItem" class="content-title" @click="showDetailModal">{{currentItem.text}}</text>-->
-                <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="assets/img/header/public_ic_help@3x.png" class="modal-header" :title="currentItem.text" titleText="#666666" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
-
-                <template v-for="(item, index) in accordions">
-                    <template v-if="item.type==='picker'">
-                        <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
-                            <div slot="content">
-                                <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
-                                <!--<wx-picker  :list="range(item.key).list" :defaultValue="range(item.key).defaultValue" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>-->
-                            </div>
-                        </sf-accordion>
-                    </template>
-                    <template v-if="item.type==='switch'">
-                        <sf-accordion v-if="currentItem && currentItem[item.key].set" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
-                            <div slot="right">
-                                <midea-switch2 :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
-                            </div>
-                        </sf-accordion>
-                    </template>
-                </template>
-            </div>
-        </sf-dialog>
-
-        <detail-modal :show="showDetailVisibility" @close="closeDetailModal">
-            <div slot="title">
-                <modal-header leftImg="assets/img/header/public_ic_gray@3x.png" class="modal-header" title="详情页" titleText="#666666" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>
-            </div>
-            <div slot="content" class="content-wrap" :style="{'height':338*2 + 'px'}">
-                <div class="content-block row" :style="{'padding-top':14*2-3+'px'}">
-                    <text class="label">食材:</text>
-                    <scroller class="food-material-items flex">
-                        <div class="food-material-item row" v-for="item in foodMaterialItems">
-                            <text class="food-material-item-left flex">{{item.name}}</text>
-                            <text class="food-material-item-right">{{item.weight}}</text>
-                        </div>
-                    </scroller>
-                </div>
-                <div class="content-block row" :style="{'padding-top':20*2-3+'px'}">
-                    <text class="label">处理:</text>
-                    <scroller class="cooking-steps flex">
-                        <text v-for="(item, index) in cookingSteps" class="cooking-step">{{index+1}}.{{item}}</text>
-                    </scroller>
-                </div>
-            </div>
-        </detail-modal>
+        <!--模式参数设置弹窗 isWorkingPage是否为工作页面-->
+        <!--1.show 是否显示组件 2.modeText 组件标题 3.accordions 弹窗参数初始设置 4.currentItem 当前选中的模式初始对象 5.current 当前变化的对象 
+             6.handlePickerChange picker滑动选择的回调 7.foldCallback 是否收起 accordion组件 8.cancelCallback 取消按钮的回调  9.sureCallback 确定按钮的回调
+         -->
+        <setting-dialog 
+            :isWorkingPage="false"
+            :modeText="modeText"
+            :show="showSettingDialog"  
+            :accordions="accordions" 
+            :currentItem="currentItem" 
+            :current="current"
+             @handlePickerChange="_handlePickerChange" 
+             @foldCallback="_foldCallback"
+             @cancelCallback="_cancelCallback"
+            @sureCallback="_sureCallback"
+        ></setting-dialog>
 
         <midea-dialog :title="warningDialog.title"
                       :show="warningDialog.show"
@@ -294,17 +259,12 @@
 <script>
     import sfTab from '@/component/sf/custom/mTab.vue'
     import sfHeader from '@/component/sf/custom/header.vue'
-    import modalHeader from '@/component/sf/custom/modal-header.vue'
     import rowWrapItems from '@/component/sf/custom/row-wrap-items.vue'
-    import sfAccordion from '@/component/sf/custom/accordion.vue'
-    import detailModal from '@/component/sf/custom/detail-modal.vue'
-    import sfDialog from '@/component/sf/custom/dialog.vue'
     import nativeService from "../common/services/nativeService";
     import query from "../dummy/query";
     import {wxcProgress, wxProgress} from "@/component/sf/wx-progress";
-    import mideaSwitch2 from '@/midea-component/switch2.vue'
-    import WxPicker from '@/component/sf/custom/picker.vue';
     import mideaDialog from '@/component/dialog.vue';
+    import settingDialog from '@/component/sf/custom/settingDialog.vue'
 
     // config data
     import pages from "./config/pages.js";
@@ -313,16 +273,15 @@
     import device from "./config/constant";
 
 
-    import accordionMixin from  "./utils/mixins/accordions"
     import deviceMessageMixin from  "./utils/mixins/deviceMessage"
-    import detailModalMixin from  "./utils/mixins/detailModal"
     import commonMixin from  "./utils/mixins/common"
+    import settingDialogMixin from  "./utils/mixins/settingDialogData"
 
 
     var numberRecord = 0; //记录跳页面的次数
 
     export default {
-        mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin],
+        mixins: [commonMixin, deviceMessageMixin, settingDialogMixin],
         data(){
             return {
                 pages:pages,
@@ -346,7 +305,7 @@
                 warningDialog: this.initWarningDialog()
             }
         },
-        components: {sfTab,sfHeader,wxcProgress,wxProgress,sfDialog,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modalHeader,rowWrapItems},
+        components: {sfTab,sfHeader,wxcProgress,wxProgress, mideaDialog,settingDialog,rowWrapItems},
         created(){
             //模拟设备数据
             nativeService.initMockData({
@@ -407,6 +366,7 @@
                 this.pages[x].tabs = tabs;
             },
             onIconButtonClicked: function(item){
+                this.modeText = item.text;
                 this.currentItem = item;
                 this.openDialog();
             },

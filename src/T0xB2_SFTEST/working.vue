@@ -71,57 +71,23 @@
             </div>
         </div>
 
-         <!--模式参数设置弹窗-->
-        <sf-dialog :show="show" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
-            <div slot="content">
-                <!--<template v-for="tab in tabs">-->
-                <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
-                <!--</template>-->
-                <!--<text v-if="currentItem" class="content-title" @click="showDetailModal">{{currentItem.text}}</text>-->
-                <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="assets/img/header/public_ic_help@3x.png" class="modal-header" :title="currentItem.text" titleText="#666666" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
+         <!--模式参数设置弹窗 isWorkingPage是否为工作页面-->
+         <!--1.show 是否显示组件 2.modeText 组件标题 3.accordions 弹窗参数初始设置 4.currentItem 当前选中的模式初始对象 5.current 当前变化的对象 
+             6.handlePickerChange picker滑动选择的回调 7.foldCallback 是否收起 accordion组件 8.cancelCallback 取消按钮的回调  9.sureCallback 确定按钮的回调
+         -->
+        <setting-dialog 
+            :isWorkingPage="true"
+            :modeText="modeText"
+            :show="showSettingDialog"  
+            :accordions="accordions" 
+            :currentItem="currentItem" 
+            :current="current"
+             @handlePickerChange="_handlePickerChange" 
+             @foldCallback="_foldCallback"
+             @cancelCallback="_cancelCallback"
+            @sureCallback="_sureCallback"
+        ></setting-dialog>
 
-                <template v-for="(item, index) in accordions">
-                    <template v-if="item.type==='picker'">
-                        <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
-                            <div slot="content">
-                                <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
-                                <!--<wx-picker  :list="range(item.key).list" :defaultValue="range(item.key).defaultValue" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>-->
-                            </div>
-                        </sf-accordion>
-                    </template>
-                    <template v-if="item.type==='switch'">
-                        <sf-accordion v-if="currentItem && currentItem[item.key].set" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
-                            <div slot="right">
-                                <midea-switch2 :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
-                            </div>
-                        </sf-accordion>
-                    </template>
-                </template>
-            </div>
-        </sf-dialog>
-
-        <detail-modal :show="showDetailVisibility" @close="closeDetailModal">
-            <div slot="title">
-                <modal-header  leftImg="assets/img/header/public_ic_gray@3x.png" class="modal-header" :title="modeText" titleText="#666666" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>
-            </div>
-            <div slot="content" class="content-wrap" :style="{'height':338*2 + 'px'}">
-                <div class="content-block row" :style="{'padding-top':14*2-3+'px'}">
-                    <text class="label">食材:</text>
-                    <scroller class="food-material-items flex">
-                        <div class="food-material-item row" v-for="item in foodMaterialItems">
-                            <text class="food-material-item-left flex">{{item.name}}</text>
-                            <text class="food-material-item-right">{{item.weight}}</text>
-                        </div>
-                    </scroller>
-                </div>
-                <div class="content-block row" :style="{'padding-top':20*2-3+'px'}">
-                    <text class="label">处理:</text>
-                    <scroller class="cooking-steps flex">
-                        <text v-for="(item, index) in cookingSteps" class="cooking-step">{{index+1}}.{{item}}</text>
-                    </scroller>
-                </div>
-            </div>
-        </detail-modal>
 
 
         <!--故障提示弹窗-->
@@ -154,42 +120,38 @@
 <script>
     const storage = weex.requireModule('storage')
     import MideaHeader from '@/midea-component/header.vue'
-    import modalHeader from '@/component/sf/custom/modal-header.vue'
+   
     // import mideaItem from '@/midea-component/item.vue'
     import nativeService from "../common/services/nativeService";
     import cmdFun from "./utils/util.js"; //解析指令
     import query from "../dummy/query";
     import {wxcProgress, wxProgress} from "@/component/sf/wx-progress";
-    import sfAccordion from '@/component/sf/custom/accordion.vue'
-    import sfDialog from '@/component/sf/custom/dialog.vue'
-    import detailModal from '@/component/sf/custom/detail-modal.vue'
-    import WxPicker from '@/component/sf/custom/picker.vue';
+   
+    import settingDialog from '@/component/sf/custom/settingDialog.vue'
     import mideaDialog from '@/component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
-    import mideaSwitch2 from '@/midea-component/switch2.vue'
 
-        // config data
+    // config data
     import modes from "./config/modes.js";
     import autoMenu from "./config/auto-menu.js";
 
-    import accordionMixin from  "./utils/mixins/accordions"
     import deviceMessageMixin from  "./utils/mixins/deviceMessage"
     import workingData from  "./utils/mixins/workingData"
-    import detailModalMixin from  "./utils/mixins/detailModal"
+    import settingDialogMixin from  "./utils/mixins/settingDialogData"
+    // import detailModalMixin from  "./utils/mixins/detailModal"
 
     const platform = weex.config.env.platform;//weex没有window对象，调试需要区分下
     const globalEvent = weex.requireModule("globalEvent");
     const animation = weex.requireModule('animation');
     const modal = weex.requireModule('modal');
     export default {
-        mixins: [deviceMessageMixin, accordionMixin, workingData,detailModalMixin],
+        mixins: [deviceMessageMixin, workingData,settingDialogMixin],
         data(){
             return {
-              
-               
+            
             }
         },
-        components: {MideaHeader,wxcProgress,wxProgress, mideaDialog, mideaActionsheet,sfDialog,WxPicker,modalHeader,detailModal,sfAccordion,mideaSwitch2},
+        components: {MideaHeader,wxcProgress,wxProgress, mideaDialog,settingDialog, mideaActionsheet},
         created(){
             var self = this;
            // 模拟设备数据,正式上线，可不注销
@@ -280,7 +242,8 @@
                 this.current.fireAmount = this.cmdObj.fire.value;
                 this.current.steamAmount = this.cmdObj.steam.value;
                 //nativeService.toast(this.current,3);
-                
+                // this.accordions = accordions;
+               // nativeService.alert(this.currentItem);
                 this.openDialog();
             },
             getCurrentItem(isRecipe){
@@ -318,6 +281,9 @@
                
                 return _item;
             },
+
+      
+
             knowClicked(){
                 this.warningDialogShow = false;
             },
@@ -334,7 +300,7 @@
             },
             //点击某个item的事件
             actionsheetItemClick: function (event) {
-                
+                //nativeService.alert(event);
                 if(event.index == 0){
                    this.cancleWorking();
                 }
@@ -359,31 +325,6 @@
             actionsheetBtnClick: function () {
                 this.showBar = false;
             },
-            //  moveTest(val = 0) {
-            //     var self = this;
-            //     var testEl = this.$refs.modeBox;
-            //     animation.transition(
-            //         testEl,
-            //         {
-            //             styles: {
-            //                 transform: "rotate(" + val +"deg)",
-            //             },
-            //             duration: 3000, //ms
-            //             timingFunction: "linear",
-            //             delay: 0 //ms
-            //         },
-            //         function() {
-            //            if(self.isTimerStop){
-            //                val = val;
-            //                self.moveTest(val);
-            //            }else{
-            //                 val = val + 360;
-            //                 self.moveTest(val);
-            //            }
-                      
-            //         }
-            //     );
-            // },
         }
     }
 </script>

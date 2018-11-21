@@ -45,6 +45,8 @@ let commonMixin = {
 
         statisticsUpload: function(data={}){
 
+            // nativeService.alert(data);
+            // return;
             let param = {
                 operation: 'burialPoint',
                 actionType: 'plugin',
@@ -57,7 +59,10 @@ let commonMixin = {
                      }
             };
 
-            param = objectAssign(param, data);
+            // param = objectAssign(param, data);
+            // nativeService.alert(param)
+            //
+            // return;
 
             bridgeModule.commandInterface(JSON.stringify(param), function
                 (resData) {

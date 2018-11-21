@@ -117,30 +117,47 @@ const deviceMessageMixin = {
         },
 
         getStorageItem(key){
+            // nativeService.alert('get:' + key);
             return new Promise(function(resolve, reject){
                 storage.getItem(key, event => {
+                    // nativeService.alert('get:' + event.data);
                     resolve(event.data);
                 });
             });
         },
         setStorageItem(key, value){
+            // nativeService.alert('set:' + key);
             return new Promise(function(resolve, reject){
-                storage.setItem(key, value, event => {
+                storage.setItem(key, JSON.stringify(value), event => {
+                    nativeService.alert('get:' + event.data);
                     resolve(event.data);
                 });
             });
         },
 
-        getDeviceInfo: function(){
-            this.getStorageItem('key').then(function(data){
-                if(data && data.deviceSn) {
-                    return new Promise(function(resolve, reject){
-                        resolve(data.deviceSn);
+        getDeviceInfo: function(key){
+            // nativeService.alert(key);
+            let context = this;
+            return this.getStorageItem(key).then(function(data){
+                // nativeService.alert(typeof data);
+                // return;
+                if(data === 'undefined') {
+                    // nativeService.toast('comein', 3000);
+                    return nativeService.getDeviceInfo().then(function(data){
+                        // nativeService.alert(data);
+                        return context.setStorageItem(key, data);
                     });
                 }
-                nativeService.getDeviceInfo().then(function(data){
-                    return this.setStorageItem('key', JSON.stringify(data));
-                });
+
+                // nativeService.alert(data);
+                let dataJson = JSON.parse(data);
+                if(dataJson && dataJson.result.deviceSn) {
+                    let deviceSn = dataJson.result.deviceSn;
+                    // nativeService.alert(deviceSn);
+                    return new Promise(function(resolve, reject){
+                        resolve(deviceSn);
+                    });
+                }
             });
         },
 

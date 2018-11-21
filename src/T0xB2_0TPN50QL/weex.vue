@@ -158,7 +158,10 @@
     import accordionMixin from  "./utils/mixins/accordions"
     import deviceMessageMixin from  "./utils/mixins/deviceMessage"
     import detailModalMixin from  "./utils/mixins/detailModal"
-    import commonMixin from  "./utils/mixins/common"
+    import commonMixin from  "@/common/util/mixins/common";
+
+    import constant from "./config/constant";
+
 
     import mideaDialog from '@/component/dialog.vue';
 
@@ -198,6 +201,15 @@
                 this.listenerDeviceReiveMessage();
             }
 
+            // nativeService.getDeviceInfo().then(function(data){
+            //     nativeService.alert(data);
+            // });
+
+            let context = this;
+            // this.getDeviceInfo(constant.device.widget_name).then(function(dataSn){
+            //     // nativeService.alert(typeof context.statisticsUpload);
+            //     return context.statisticsUpload({...constant.device, iot_device_id:dataSn});
+            // });
 
             //console.dir(JSON.stringify(this.foodMaterialItems));
         },

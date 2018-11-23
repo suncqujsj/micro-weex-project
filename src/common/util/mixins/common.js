@@ -72,7 +72,45 @@ let commonMixin = {
                 //失败的回调
                 nativeService.alert('upload error');
             });
-        }
+        },
+
+        voiceAuth(key, callback) {
+            let name = ''
+            // 1./mj/user/auth/device: 用户授权给指定设备
+            // 2./mj/user/cancel/auth/device: 用户取消设备授权
+            // 3./mj/user/check/device/auth: 检查设备是否已经授权
+            switch (key) {
+                case 1:
+                    name = '/mj/user/auth/device'
+                    break;
+                case 2:
+                    name = '/mj/user/cancel/auth/device'
+                    break;
+                case 3:
+                    name = '/mj/user/check/device/auth'
+                    break;
+                default:
+                    name = ''
+                    break;
+            }
+            if(name == '') {
+                return false
+            }
+            var timestamp = Date.parse(new Date())
+            let params = {
+                data: {
+                    timestamp: timestamp,
+                    data: {
+                        deviceId: this.userInfo.applianceId // 设备id
+                    }
+                }
+            }
+            nativeService.sendCentralCloundRequest(name, params).then(rst => { // 美居demo中nativeService提供的调用发送中台网络请求的方法
+                callback(rst)
+            }).catch(err => {
+                console.error(err)
+            })
+        },
 
     }
 };

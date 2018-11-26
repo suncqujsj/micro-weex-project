@@ -49,19 +49,18 @@ let commonMixin = {
             // return;
             let param = {
                 operation: 'burialPoint',
-                actionType: 'plugin',
-                pageName: 'homePage',
-                subAction: 'pageview',
-                widget_name: 'wzk_T0x9B_xxxxxxxx', // constant
+                action_type: 'plugin',
+                page_name: 'homePage',
+                sub_action: 'pageview',
+                widget_name: 'MSO_T0x9B_xxxxxxxx', // constant
                 widget_version: '1.0.0', // constant
-                iot_device_id: 'SN',
                 extra1: { //浏览页面，如不需设备信息，可不传该字段 ‘key’:’value’,
                      }
             };
 
-            // param = objectAssign(param, data);
+            param = objectAssign(param, data);
+
             // nativeService.alert(param)
-            //
             // return;
 
             bridgeModule.commandInterface(JSON.stringify(param), function

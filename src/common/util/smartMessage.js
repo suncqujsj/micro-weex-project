@@ -160,6 +160,11 @@ export default {
 		this.initBytes(_bytesMessage, 0x00);
 		return _bytesMessage;
 	},
+	createMessageBodyFF:function(pLen){
+		var _bytesMessage = new Array(pLen);
+		this.initBytes(_bytesMessage, 0x01);
+		return _bytesMessage;
+	},
 	createMessageBodyFA:function(pLen){
 		var _bytesMessage = new Array(pLen);
 		this.initBytes(_bytesMessage, 0x00);

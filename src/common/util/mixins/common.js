@@ -66,10 +66,10 @@ let commonMixin = {
             bridgeModule.commandInterface(JSON.stringify(param), function
                 (resData) {
                 //成功的回调
-                nativeService.alert(resData);
+                // nativeService.alert(resData);
             }, function (error) {
                 //失败的回调
-                nativeService.alert('upload error');
+                // nativeService.alert('upload error');
             });
         },
 

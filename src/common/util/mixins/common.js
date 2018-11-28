@@ -51,8 +51,8 @@ let commonMixin = {
                 operation: 'burialPoint',
                 action_type: 'plugin',
                 page_name: 'homePage',
-                sub_action: 'pageview',
-                widget_name: 'MSO_T0x9B_xxxxxxxx', // constant
+                sub_action: 'page_view',
+                widget_name: 'MSO_T0xB2_xxxxxxxx', // constant
                 widget_version: '1.0.0', // constant
                 extra1: { //浏览页面，如不需设备信息，可不传该字段 ‘key’:’value’,
                      }
@@ -66,10 +66,10 @@ let commonMixin = {
             bridgeModule.commandInterface(JSON.stringify(param), function
                 (resData) {
                 //成功的回调
-                nativeService.alert('upload success');
+                // nativeService.alert(resData);
             }, function (error) {
                 //失败的回调
-                nativeService.alert('upload error');
+                // nativeService.alert('upload error');
             });
         },
 

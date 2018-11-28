@@ -1,0 +1,153 @@
+@import "../../../common/less/common";
+.root{
+  height: 100%;
+}
+.bg {
+  background-image: linear-gradient(to bottom, #FFD321, #FFB632);
+}
+.panel-state{
+  @h:30*2px;
+  .f(@h);
+  .white;
+  .ta;
+  .lh(60px);
+  .ma-t(35*2px);
+  .ma-b(45*2px);
+}
+.tabs{
+  .row;
+}
+.tab{
+  .flex;
+  .row;
+  justify-content: center;
+  align-items: flex-end;
+  height: (18+16)*2px;
+  .bs(padding-box);
+  padding-bottom: 16*2px;
+
+}
+.tab-text{
+  .f(14*2px);
+  color:rgba(255,255,255,.8);
+}
+.tab-active{
+  .f(18*2px);
+  .white;
+}
+.tab-content-gray{
+  background-color: #F3F3F3;
+}
+.tab-content-white{
+  .bg-white;
+}
+.block-title-wrap{
+  height:19*2px;
+  .bs;
+  padding: 0 11*2px;
+  .b-t(4*2px, #F2F2F2);
+  .ma-b(-4*2*2px);
+}
+.block-title{
+  width: 71*2px;
+  .f(10*2px);
+  .black;
+  .ta;
+  background-color: #FFBF00;
+  .ma-t(-4*2*2px);
+}
+.icon-buttons{
+  .row;
+  padding: 0 3.5*2px;
+  width: 736px;
+  /*overflow-x: scroll;*/
+}
+.auto_menu{
+  //.ma-b(12px);
+  //.bg-white;
+}
+.icon-button{
+  .ma-t(20*2px);
+  .ma-b(14*2px);
+  .a-c;
+  width: 92*2px;
+  height: 78*2px;
+}
+.button-icon{
+  .round(112px);
+  .ma-b(10*2px);
+  .bg-gray;
+}
+.button-text{
+  .f(12*2px);
+  .lh(12*2px);
+}
+.content-title {
+  color: #333333;
+  font-size: 36px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.header-top-wrapper {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  height: 88px;
+}
+.header-top-inner-wrapper {
+  position: relative;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  height: 88px;
+}
+.header-right{
+  .pos(a);
+  right: 0;
+  top: 0;
+  height: 88px;
+}
+.header-right-image-wrapper {
+  width: 88px;
+  height: 88px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /*padding-right: 32px;*/
+}
+.header-right-image {
+  height: 44px;
+  width: 44px;
+}
+
+.content-wrap{
+  padding: 0 31*2px;
+}
+
+.content-block{
+  border-top-width: 1px;
+  border-top-color: #E5E5E8;
+}
+
+.label{
+  .f(12*2px);
+  .ma-r(16*2px);
+}
+.food-material-items{
+  height: 179px;
+}
+.food-material-item-left, .food-material-item-right, .cooking-step{
+  .f(12*2px);
+  .gray;
+}
+
+.cooking-steps{
+  height: 435px;
+  width: 180*2px;
+}
+
+.cooking-step{
+  line-height: 15*2px;
+  .ma-b(13*2);
+}

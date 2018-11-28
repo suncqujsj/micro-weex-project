@@ -82,6 +82,7 @@ module.exports = {
             { key: 8, value: "T0x9B_0TQN36XJ",desc: "T0x9B_0TQN36XJ" },
             { key: 9, value: "T0xB2_0TPN50QL",desc: "T0xB2_0TPN50QL" },
             { key: 10, value: "T0x9B_0D50S3AT",desc: "双腔体" },
+            { key: 10, value: "T0x9B_0ET470QL",desc: "E70辅助蒸汽" },
         ],
         card: 'T0xB1',
         isShowCardList: false,

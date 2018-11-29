@@ -126,8 +126,11 @@ export default {
 		pBytes[pIndex] =this._setBits(pBytes[pIndex],pBitStartIndex,pBitEndIndex,pValue);
 		return pBytes;
 	},
-	createMessage:function(pApplianceType,pMessageType,pMessageBody,pApplianceProtocolVersion){
+	createMessage:function(pApplianceType,pMessageType,pMessageBody,platformVersion,pApplianceProtocolVersion){
 		var _applianceId = [0x00,0x00,0x00,0x00,0x00,0x00];
+		if(platformVersion != undefined){
+			_applianceId[4] = platformVersion & 0xFF;
+		}
 		if(pApplianceProtocolVersion != undefined){
 			_applianceId[5] = pApplianceProtocolVersion & 0xFF;
 		}
@@ -160,7 +163,7 @@ export default {
 		this.initBytes(_bytesMessage, 0x00);
 		return _bytesMessage;
 	},
-	createMessageBodyFF:function(pLen){
+	createMessageFFBody:function(pLen){
 		var _bytesMessage = new Array(pLen);
 		this.initBytes(_bytesMessage, 0x01);
 		return _bytesMessage;

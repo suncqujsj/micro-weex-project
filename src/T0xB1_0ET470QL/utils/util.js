@@ -87,9 +87,9 @@ export default {
   },
   // 查询指令
   createQueryMessage() {
-    var messageBody = message.createMessageBody(1);//createMessageBody默认从10开始，1表示11，2表示12....
+    var messageBody = message.createMessageFFBody(1);//创建消息体数组，默认数组值为ff,参数表示传入的数值长度
     message.setByte(messageBody, 0, 0x31);
-    var sendMessage = message.createMessage(device.type, 0x03, messageBody);
+    var sendMessage = message.createMessage(device.type, 0x03, messageBody,3,1); //创建通讯协议，3表示美居平台对应协议byte7, 1表示家电协议版本对应byte8
     return sendMessage;
   },
  

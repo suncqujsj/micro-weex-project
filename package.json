@@ -9,7 +9,7 @@
     "sf": "webpack --watch --env=T0x9B_0TQN36XJ",
     "parker": "webpack --watch --env=T0xB2_0TPN50QL",
     "dev_demo": "webpack --watch --env=midea-demo",
-    "serve": "serve -p 8080",
+    "serve": "serve -p 8088",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "main": "src/entry.js",

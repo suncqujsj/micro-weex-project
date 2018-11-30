@@ -70,9 +70,14 @@ const accordionMixin = {
             let currentItem = this.currentItem;
             // debugger;
             let list = [];
-            for(var i=0; 3*i<currentItem[key].range.length; i++){
-                list = list.concat(settingArrData(currentItem[key].range[3*i],currentItem[key].range[3*i+1],currentItem[key].range[3*i+2]));
+            var rangeList = currentItem[key].range;
+            if(rangeList[rangeList.length-1] == "取消"){
+                list = list.concat('取消');
             }
+            for(var i=0; 3*i<rangeList.length; i++){
+                list = list.concat(settingArrData(rangeList[3*i],rangeList[3*i+1],rangeList[3*i+2]));
+            }
+           
             return {
                 list,
                 defaultValue: this.setValue(key),
@@ -146,6 +151,9 @@ const accordionMixin = {
                 fireAmount: this.setValue('fireAmount'),
                 recipeId:this.setValue('recipeId')
             };
+            if(jsonCmd.steamAmount=="取消"){
+                jsonCmd.steamAmount = 0;
+            }
 
             // if(jsonCmd.mode === 0xE0) { // 自动菜单
             //     jsonCmd.recipeId =  this.setValue('recipeId');

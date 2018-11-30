@@ -8,33 +8,6 @@ let modes = [
         title: '',
         iconButtons: [
             {
-                'icon': 'assets/img/modes/steam@3x.png',
-                'text': '蒸汽',
-                'mode': 0x20,
-                time:{
-                    set: true,
-                    default:10,
-                    range:[1,300,1]
-                },
-                temperature:{
-                    set: true,
-                    default:100,
-                    range:[35,70,1,75,100,5]
-                },
-                preheat:{
-                    set:false,
-                    default: false
-                },
-                steamAmount:{
-                    set:false,
-                    default:0
-                },
-                fireAmount:{
-                    set:false,
-                    default:0
-                }
-            },
-            {
                 'icon': 'assets/img/modes/up_down_pipe.png',
                 'text': '上下管',
                 'mode': 0x4C,
@@ -53,9 +26,9 @@ let modes = [
                     default: 1
                 },
                 steamAmount:{
-                    set:false,
-                    default:0,
-                    range:null
+                    set:true,
+                    default:2,
+                    range:[1,3,1,"取消"]
                 },
                 fireAmount:{
                     set:false,
@@ -83,9 +56,9 @@ let modes = [
                     default: false
                 },
                 steamAmount:{
-                    set:false,
-                    default:0,
-                    range:null
+                    set:true,
+                    default:2,
+                    range:[1,3,1,40,40,1,"取消"]
                 },
                 fireAmount:{
                     set:false,
@@ -112,9 +85,9 @@ let modes = [
                     default: 1
                 },
                 steamAmount:{
-                    set:false,
-                    default:0,
-                    range:null
+                    set:true,
+                    default:2,
+                    range:[1,3,1,"取消"]
                 },
                 fireAmount:{
                     set:false,
@@ -122,11 +95,6 @@ let modes = [
                     range:null
                 }
             },
-        ]
-    },
-    {
-        title: '',
-        iconButtons: [
             {
                 'icon': 'assets/img/modes/up_down_and_wind.png',
                 'text': '上下管+风扇',
@@ -154,6 +122,12 @@ let modes = [
                     default:0
                 }
             },
+        ]
+    },
+    {
+        title: '',
+        iconButtons: [
+          
             {
                 'icon': 'assets/img/modes/Infra-red.png',
                 'text': '红外管',
@@ -227,8 +201,9 @@ let modes = [
                     default: 1
                 },
                 steamAmount:{
-                    set:false,
-                    default:0
+                    set:true,
+                    default:2,
+                    range:[1,3,1,"取消"]
                 },
                 fireAmount:{
                     set:false,

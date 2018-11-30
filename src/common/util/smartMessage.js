@@ -165,7 +165,7 @@ export default {
 	},
 	createMessageFFBody:function(pLen){
 		var _bytesMessage = new Array(pLen);
-		this.initBytes(_bytesMessage, 0x01);
+		this.initBytes(_bytesMessage, 0xff);
 		return _bytesMessage;
 	},
 	createMessageBodyFA:function(pLen){

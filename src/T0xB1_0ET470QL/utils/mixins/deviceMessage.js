@@ -50,7 +50,7 @@ const deviceMessageMixin = {
         },
         childLock: function(childLock){
 
-            if(this.loading) return;
+            // if(this.loading) return;
 
             this.loading=true;
 
@@ -101,7 +101,7 @@ const deviceMessageMixin = {
         controlDevice(jsonCmd, working){
             let context = this;
             let deviceCmd = cmdFun.createControlMessage(jsonCmd, working);
-            //nativeService.alert(deviceCmd);
+            nativeService.alert(deviceCmd);
             // return;
             nativeService.startCmdProcess(
                 "control",

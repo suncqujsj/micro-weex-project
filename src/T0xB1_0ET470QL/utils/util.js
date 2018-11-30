@@ -100,14 +100,14 @@ export default {
     var minute = time%60;
     var second = 0;
     var set_mode = params.mode;
-    var messageBody = message.createMessageBody(22); 
+    var messageBody = message.createMessageFFBody(19); 
     if(working){//工作中设置类 byte11 发04，其他byte发ff
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 4);
-      message.setByte(messageBody, 2, 0xff);
-      message.setByte(messageBody, 3, 0xff);
-      message.setByte(messageBody, 4, 0xff);
-      message.setByte(messageBody, 5, 0xff);
+      // message.setByte(messageBody, 2, 0xff);
+      // message.setByte(messageBody, 3, 0xff);
+      // message.setByte(messageBody, 4, 0xff);
+      // message.setByte(messageBody, 5, 0xff);
       message.setByte(messageBody, 6, params.preheat?1:0);
       message.setByte(messageBody, 7, hour);
       message.setByte(messageBody, 8, minute);
@@ -142,40 +142,40 @@ export default {
   },
   //取消工作指令
   cmdCancelWork(){
-    var messageBody = message.createMessageBody(7); 
+    var messageBody = message.createMessageFFBody(7); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02); 
     message.setByte(messageBody, 2,0x02);
-    message.setByte(messageBody, 3,0xff);
-    message.setByte(messageBody, 4,0xff);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,0xff);
+    // message.setByte(messageBody, 3,0xff);
+    // message.setByte(messageBody, 4,0xff);
+    // message.setByte(messageBody, 5,0xff);
+    // message.setByte(messageBody, 6,0xff);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
   //暂停or继续指令
   cmdStartOrPause(record){
-    var messageBody = message.createMessageBody(7); 
+    var messageBody = message.createMessageFFBody(7); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
     message.setByte(messageBody, 2,record);
-    message.setByte(messageBody, 3,0xff);
-    message.setByte(messageBody, 4,0xff);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,0xff);
+    // message.setByte(messageBody, 3,0xff);
+    // message.setByte(messageBody, 4,0xff);
+    // message.setByte(messageBody, 5,0xff);
+    // message.setByte(messageBody, 6,0xff);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
    //上锁
    cmdLock(params){
-    var messageBody = message.createMessageBody(7); 
+    var messageBody = message.createMessageFFBody(7); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
-    message.setByte(messageBody, 2,0xff);
+    // message.setByte(messageBody, 2,0xff);
     message.setByte(messageBody, 3,params.childLock?1:0);
-    message.setByte(messageBody, 4,0xff);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,0xff);
+    // message.setByte(messageBody, 4,0xff);
+    // message.setByte(messageBody, 5,0xff);
+    // message.setByte(messageBody, 6,0xff);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },

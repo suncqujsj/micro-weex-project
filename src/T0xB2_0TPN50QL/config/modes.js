@@ -35,7 +35,7 @@ let modes = [
                 }
             },
             {
-                'icon': 'assets/img/modes/clean@3x.png',
+                'icon': 'assets/img/modes/descaling_cg@3x.png',
                 'text': '除垢',
                 'mode': 0xC1,
                 time:{
@@ -94,7 +94,7 @@ let modes = [
                 }
             },
             {
-                'icon': 'assets/img/modes/clean@3x.png',
+                'icon': 'assets/img/modes/dry_hg@3x.png',
                 'text': '烘干',
                 'mode': 0xC4,
                 time:{
@@ -128,7 +128,7 @@ let modes = [
         title: '',
         iconButtons: [
             {
-                'icon': 'assets/img/modes/broil@3x.png',
+                'icon': 'assets/img/modes/clean@3x.png',
                 'text': '清洁',
                 'mode': 0xC6,
                 time:{

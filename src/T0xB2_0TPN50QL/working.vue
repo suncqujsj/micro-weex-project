@@ -274,6 +274,11 @@
                 if(this.tag_next == '秒'){//倒计时为秒时，都设置1分钟
                     time = 1;
                 }
+                if(this.cmdObj.mode.value != 0x20){//因为除了蒸汽模式，时间范围1到300，其他模式都是最低值为5，所以最低值为5的模式，工作中设置时间，要强行最小值置为5
+                    if(time<5){
+                        time = 5;
+                    }
+                }
                 this.current.time = time;
                 this.current.temperature = this.cmdObj.temperature.upLowTemperature;
                 this.currentItem.preheat.default = this.cmdObj.displaySign.preheat?true:false;

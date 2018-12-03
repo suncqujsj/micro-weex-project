@@ -216,7 +216,7 @@
                 })
             },
             openMorePage: function(){
-                nativeService.goTo('more.js', {animated: true});
+                nativeService.goTo('voice.js', {animated: true});
             },
             onTabClicked: function(index){
                 // debugger;

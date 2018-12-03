@@ -27,9 +27,10 @@
 
     import nativeService from "../common/services/nativeService";
     import commonMixin from  "./utils/mixins/common.js"
+    import voiceMixin from  "@/common/util/mixins/voice.js"
 
     export default {
-        mixins: [commonMixin],
+        mixins: [commonMixin, voiceMixin],
         data(){
             return {
                 list:[
@@ -53,6 +54,20 @@
         },
         components: {mideaHeader, mideaCell, MideaSwitch2},
         created(){
+            nativeService.alert(data);
+            let context = this;
+            nativeService.getDeviceInfo().then(function(data){
+                nativeService.alert(data);
+                context.aa(data.result.deviceId, 1);
+                // nativeService.getUserInfo().then((resp) => {
+                //     nativeService.alert(data.result.deviceId + '' + resp.uid);
+                //      context.aa(data.result.deviceId, resp.uid);
+                //
+                // }).catch((error) => {
+                //     nativeService.alert(JSON.stringify(error));
+                // });
+            });
+
 
         },
         computed:{

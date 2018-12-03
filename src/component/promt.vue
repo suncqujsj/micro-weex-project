@@ -11,11 +11,11 @@
           <input  @input="onInput" :value="inputName" class="box-input" type="text" :placeholder="placeholder" />
        </div>
        <div class="box-btn-group">
-          <div @click="onCancled" class="box-btn-wrapper">
-            <text class="box-btn-text cancel-text">取消</text>
+          <div @click="onCancled" class="box-btn-wrapper btn-border-r">
+            <text class="box-btn-text" :style="{color: cancelColor}">取消</text>
           </div>
           <div  @click="onOkClicked" class="box-btn-wrapper">
-            <text  class="box-btn-text confrim-text">确定</text>
+            <text  class="box-btn-text" :style="{color: cancelColor}">确定</text>
           </div>
        </div>
      </div>
@@ -39,11 +39,11 @@
     z-index:1000;
   }
   .operate-box {
-    background-color: #F8F8F8;
-    width: 558px;
+    background-color: rgba(255, 255, 255, 0.9);
+    width: 540px;
     border-radius:26px;
     position:fixed;
-    left:96px;
+    left:105px;
   }
   .box-title-wrapper{
     padding-top:30px;padding-bottom:20px
@@ -52,16 +52,25 @@
    font-family: PingFangSC-Medium;font-size:32px;color:#000;text-align:center
   }
   .box-input-wrapper{
-    padding-left:20px;padding-right:20px;padding-top:10px;padding-bottom:20px;
+    padding-left:32px;padding-right:32px;padding-top:10px;padding-bottom:24px;
   }
   .box-input{
-    color:#333;background-color:#FFF;height:80px;font-size:24px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #9F9F9F;
+    color:#333;
+    background-color:#FFF;
+    height: 48px;
+    font-size:24px;
   }
   .box-btn-group{
-    flex-direction:row;border-top-style:solid;border-top-width:1px;border-top-color:#e5e5e5;height:84px;
+    flex-direction:row;border-top-style:solid;border-top-width:1px;border-top-color:#e5e5e5;height:84px;overflow-x: hidden; overflow-y: hidden;
   }
   .box-btn-wrapper{
-  flex-direction:row;height:84px;flex:1;align-items:center;justify-content:center;border-right-style:solid;border-right-width:1px;border-right-color:#e5e5e5;
+  flex-direction:row;height:84px;flex:1;align-items:center;justify-content:center;
+  }
+  .btn-border-r {
+    border-right-style:solid;border-right-width:1px;border-right-color:#e5e5e5;
   }
   .box-btn-text{
     text-align:center;font-family:PingFangSC-Regular;font-size:32px
@@ -96,6 +105,14 @@ const modal = weex.requireModule('modal');
         },
         title:{
           type: String
+        },
+        cancelColor: {
+          type: String,
+          default: '#267aff'
+        },
+        confirmColor: {
+          type: String,
+          default: '#267aff'
         }
     },
     watch:{

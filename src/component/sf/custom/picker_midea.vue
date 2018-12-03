@@ -1,6 +1,6 @@
 <template>
     <div>
-        <midea-scroll-picker :listArray="list" :listItem="defaultValue"   @onChange="changeValue"></midea-scroll-picker>
+        <midea-scroll-picker :listArray="listArray" :listItem="listItem" :target="target"   @onChange="changeValue"></midea-scroll-picker>
     </div>
 </template>
  
@@ -18,22 +18,23 @@ module.exports = {
             type: String,
             default: ''
         },
-        list: {
-           type: Array,
+        data: {
+           type: Object,
             default: function(){
-                return []
+                return {}
             }
         },
-        defaultValue: {
-            type: Number,
-            default: 10
-        }
     },
     components: {  mideaScrollPicker },
     data() {
         return {
-           
+            listArray:[],
+            listItem: 10
         }
+    },
+    created(){
+        this.listArray = this.data.list;
+        this.listItem = this.data.defaultValue;
     },
     methods: {
         changeValue(e){
@@ -42,7 +43,5 @@ module.exports = {
             //e的格式为 {index:x，value:x}
         }
     },
-    created() {
-    }
 };
 </script>

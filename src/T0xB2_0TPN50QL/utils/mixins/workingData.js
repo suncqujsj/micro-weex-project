@@ -132,7 +132,7 @@ let workingModalMixin  = {
                 this.warningDialogShow = true;
                 this.warningDialogContent = "主人，您的设备发生故障了，请联系售后人员";
             }
-             if(analysisObj.displaySign.lackWater){
+             if(analysisObj.displaySign.lackWater && analysisObj.mode.value!=0xC4){
                 this.warningDialogShow = true;
                 this.warningDialogContent = "主人，您的设备水箱缺水了，要及时添加水哦";
             }

@@ -3,8 +3,18 @@
         <midea-header title="Custom loading" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
         <scroller class="scroller-wrapper">
-            <midea-title-bar title="默认样式" bgColor="#EEF4F7"></midea-title-bar>
-            <midea-custom-loading></midea-custom-loading>
+            <midea-button text="默认样式白色" type="primary" @mideaButtonClicked="mideaButtonClicked1">
+            </midea-button>
+
+            <midea-button text="灰色样式" type="primary" @mideaButtonClicked="mideaButtonClicked2">
+            </midea-button>
+
+            <div class="btn-box">
+              <midea-button text="透明背景" type="primary" @mideaButtonClicked="mideaButtonClicked3">
+              </midea-button>
+            </div>
+
+            <midea-custom-loading :isMask="isMask" :display="display1" :bgColor="bgColor" :loadingColor="loadingColor" :opacity="opacity"></midea-custom-loading>
         </scroller>
     </div>
 </template>
@@ -13,6 +23,7 @@
 import base from '../base'
 
 import mideaTitleBar from '@/midea-component/title-bar.vue'
+import mideaButton from '@/midea-component/button.vue'
 import mideaCustomLoading from '@/midea-component/customLoading.vue'
 
 import nativeService from '@/common/services/nativeService'
@@ -20,14 +31,40 @@ import nativeService from '@/common/services/nativeService'
 export default {
   components: { 
     mideaTitleBar,
+    mideaButton,
     mideaCustomLoading
   },
   mixins: [base],
   data() {
     return {
+      display1: false,
+      isMask: false,
+      bgColor: 'transparent',
+      loadingColor: '#fff',
+      opacity: 1
     }
   },
   methods: {
+    mideaButtonClicked1() {
+      this.display1 = true;
+      this.bgColor = 'transparent';
+      this.loadingColor = '#fff';
+      this.opacity = 1;
+    },
+
+    mideaButtonClicked2() {
+      this.display1 = true;
+      this.bgColor = 'transparent';
+      this.loadingColor = '#8a8a8f';
+      this.opacity = 0.8;
+    },
+
+    mideaButtonClicked3() {
+      this.display1 = true;
+      this.bgColor = 'rgba(0, 0, 0, 0.5)';
+      this.loadingColor = '#fff';
+      this.opacity = 1;
+    }
   },
   mounted() {}
 }
@@ -40,5 +77,8 @@ export default {
   }
   .scroller-wrapper {
     padding-bottom: 50px;
+  }
+  .btn-box {
+    padding-top: 140px;
   }
 </style>

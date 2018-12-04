@@ -54,28 +54,43 @@
         },
         components: {mideaHeader, mideaCell, MideaSwitch2},
         created(){
-            nativeService.alert(data);
-            let context = this;
-            nativeService.getDeviceInfo().then(function(data){
-                nativeService.alert(data);
-                context.aa(data.result.deviceId, 1);
-                // nativeService.getUserInfo().then((resp) => {
-                //     nativeService.alert(data.result.deviceId + '' + resp.uid);
-                //      context.aa(data.result.deviceId, resp.uid);
-                //
-                // }).catch((error) => {
-                //     nativeService.alert(JSON.stringify(error));
-                // });
-            });
+            // let context = this;
+            // nativeService.getDeviceInfo().then(function(data){
+            //     nativeService.getUserInfo().then((resp) => {
+            //         context.aa(data.result.deviceId, resp.uid).catch((a)=>{
+            //             nativeService.alert(a);
+            //         });
+            //
+            //     }).catch((error) => {
+            //         nativeService.alert(JSON.stringify(error));
+            //     });
+            //
+            // });
+            this.aa(1,2);
+            // try {
+            //     this.aa(1,2);
+            // } catch (e) {
+            //     nativeService.alert(e);
+            // }
+
+
 
 
         },
         computed:{
         },
         methods: {
+            async test() {
+                console.log(1)
+                const a = await new Promise(function(resolve, reject){
+                    resolve(3)
+                })
+                console.log(a)
+
+            },
             back: function(){
                 nativeService.goBack();
-            },
+        },
             test: function(){},
             link: function(item){
                 nativeService.weexBundleToWeb({

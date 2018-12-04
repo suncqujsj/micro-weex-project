@@ -54,22 +54,28 @@ let commonMixin = {
         },
 
         async aa(deviceId, uid) {
-            nativeService.alert('in');
-            //查询是否需要进入授权
-            let url = 'appliance/authorize/check';
-            let params = {
-                uid,
-                applianceCode: deviceId,
-                reqId: 1
-            }
-            nativeService.alert(params);
-            return;
+
             try {
-                let result = await nativeService.sendMCloudRequest(url, params)
-                nativeService.alert(result);
-            } catch (error) {
-                nativeService.alert(JSON.stringify(result));
+                nativeService.alert('in');
+                //查询是否需要进入授权
+                let url = 'appliance/authorize/check';
+                let params = {
+                    uid,
+                    applianceCode: deviceId,
+                    reqId: 1
+                }
+                nativeService.alert(params);
+                return;
+
+            }catch (e) {
+                nativeService.alert(JSON.stringify(e));
             }
+            // try {
+            //     let result = await nativeService.sendMCloudRequest(url, params)
+            //     nativeService.alert(result);
+            // } catch (error) {
+            //     nativeService.alert(JSON.stringify(error));
+            // }
         },
 
         async voiceAuthCheck() {

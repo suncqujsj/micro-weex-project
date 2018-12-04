@@ -107,7 +107,6 @@ export default {
         },
         duration: 250,
         timingFunction: 'linear',
-        needLayout: false,
         delay: 0
       });
       animation.transition(dotEl1, {
@@ -116,7 +115,6 @@ export default {
         },
         duration: 250,
         timingFunction: 'linear',
-        needLayout: false,
         delay: 250
       });
       animation.transition(dotEl2, {
@@ -125,7 +123,6 @@ export default {
         },
         duration: 250,
         timingFunction: 'linear',
-        needLayout: false,
         delay: 250
       });
       animation.transition(dotEl2, {
@@ -134,7 +131,6 @@ export default {
         },
         duration: 250,
         timingFunction: 'linear',
-        needLayout: false,
         delay: 500
       });
       animation.transition(dotEl3, {
@@ -143,7 +139,6 @@ export default {
         },
         duration: 250,
         timingFunction: 'linear',
-        needLayout: false,
         delay: 500
       });
       animation.transition(dotEl3, {
@@ -152,13 +147,9 @@ export default {
         },
         duration: 250,
         timingFunction: 'linear',
-        needLayout: false,
         delay: 750
       });
     }
-  },
-  created() {
-    clearInterval(this.timer);
   },
   mounted() {
     this.loadingAnimate();
@@ -205,8 +196,6 @@ export default {
     width: 10px;
     height: 10px;
     border-radius: 10px;
-    -webkit-transform: scale(1);
-    transform: scale(1);
     overflow-x: hidden;
     overflow-y: hidden;
   }

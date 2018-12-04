@@ -50,6 +50,7 @@ export default {
       this.bgColor = 'transparent';
       this.loadingColor = '#fff';
       this.opacity = 1;
+      this.isMask = false;
     },
 
     mideaButtonClicked2() {
@@ -57,6 +58,7 @@ export default {
       this.bgColor = 'transparent';
       this.loadingColor = '#8a8a8f';
       this.opacity = 0.8;
+      this.isMask = false;
     },
 
     mideaButtonClicked3() {
@@ -64,6 +66,7 @@ export default {
       this.bgColor = 'rgba(0, 0, 0, 0.5)';
       this.loadingColor = '#fff';
       this.opacity = 1;
+      this.isMask = false;
     }
   },
   mounted() {}

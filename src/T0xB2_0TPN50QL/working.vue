@@ -163,7 +163,7 @@
     import sfAccordion from '@/component/sf/custom/accordion.vue'
     import sfDialog from '@/component/sf/custom/dialog.vue'
     import detailModal from '@/component/sf/custom/detail-modal.vue'
-    import WxPicker from '@/component/sf/custom/picker.vue';
+    import WxPicker from '@/component/sf/custom/picker_amui.vue';
     import mideaDialog from '@/component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
     import mideaSwitch2 from '@/midea-component/switch2.vue'

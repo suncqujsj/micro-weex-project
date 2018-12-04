@@ -6,6 +6,11 @@
                 "libraryName": "weex-droplet-ui",
                 "libDir": "packages",
                 "style": false
+            },
+            {
+            "libraryName": "weex-amui",
+            "libDir": "packages",
+            "style": false
             }
         ]]
 }

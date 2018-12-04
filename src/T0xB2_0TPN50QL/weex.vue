@@ -148,8 +148,8 @@
     import query from "../dummy/query";
     import {wxcProgress, wxProgress} from "@/component/sf/wx-progress";
     import mideaSwitch2 from '@/midea-component/switch2.vue'
-    import WxPicker from '@/component/sf/custom/picker.vue';
-    // import WxPicker from '@/component/sf/custom/picker_midea.vue';
+    // import WxPicker from '@/component/sf/custom/picker.vue';
+    import WxPicker from '@/component/sf/custom/picker_amui.vue';
 
     // config data
     import modes from "./config/modes.js";

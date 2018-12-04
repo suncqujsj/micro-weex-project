@@ -103,6 +103,7 @@ export default {
       let dotEl3 = this.$refs['dot3'];
       animation.transition(dotEl1, {
         styles: {
+          opacity: this.opacity,
           transform: 'scale(2.8)'
         },
         duration: 250,
@@ -111,6 +112,7 @@ export default {
       });
       animation.transition(dotEl1, {
         styles: {
+          opacity: this.opacity,
           transform: 'scale(1)'
         },
         duration: 250,
@@ -119,6 +121,7 @@ export default {
       });
       animation.transition(dotEl2, {
         styles: {
+          opacity: this.opacity,
           transform: 'scale(2.8)'
         },
         duration: 250,
@@ -127,6 +130,7 @@ export default {
       });
       animation.transition(dotEl2, {
         styles: {
+          opacity: this.opacity,
           transform: 'scale(1)'
         },
         duration: 250,
@@ -135,6 +139,7 @@ export default {
       });
       animation.transition(dotEl3, {
         styles: {
+          opacity: this.opacity,
           transform: 'scale(2.8)'
         },
         duration: 250,
@@ -143,6 +148,7 @@ export default {
       });
       animation.transition(dotEl3, {
         styles: {
+          opacity: this.opacity,
           transform: 'scale(1)'
         },
         duration: 250,

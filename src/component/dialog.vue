@@ -2,7 +2,7 @@
   <div ref="container" v-if="show" class="container">
     <midea-mask @click="layoutClick"></midea-mask>
     <div ref="dialog" class="dialog-box" :style="{top:dialogTop+'px'}">
-      <div class="dialog-content">
+      <div :class="['dialog-content',noFooter && 'dialog-content-no-footer']">
         <slot name="title">
           <text v-if="title" class="content-title">{{title}}</text>
         </slot>
@@ -10,7 +10,7 @@
           <text v-if="content" class="content-subtext">{{content}}</text>
         </slot>
       </div>
-      <div class="dialog-footer">
+      <div class="dialog-footer" v-if="!noFooter">
         <div class="footer-btn cancel"
              v-if="!single"
              @click="secondaryClicked">
@@ -56,6 +56,9 @@
     padding-bottom: 36px;
     padding-left: 36px;
     padding-right: 36px;
+  }
+  .dialog-content-no-footer{
+     padding-bottom: 56px;
   }
 
   .content-title {
@@ -144,6 +147,10 @@
       content: {
         type: String,
         default: ''
+      },
+      noFooter: {
+        type: Boolean,
+        default: false
       },
       cancelText: {
         type: String,

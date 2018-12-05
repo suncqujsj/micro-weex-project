@@ -9,7 +9,7 @@
     "sf": "webpack --watch --env=T0x9B_0TQN36XJ",
     "parker": "webpack --watch --env=T0xB2_0TPN50QL",
     "dev_demo": "webpack --watch --env=midea-demo",
-    "serve": "serve -p 8088",
+    "serve": "serve -p 8080",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "main": "src/entry.js",
@@ -61,6 +61,7 @@
     "echarts": "^4.1.0",
     "object-assign": "^4.1.1",
     "vue": "^2.4.1",
+    "weex-amui": "^0.1.2",
     "weex-bindingx": "0.0.48",
     "weex-droplet-ui": "^1.0.0-alpha.100",
     "weex-gcanvas": "^0.5.49",

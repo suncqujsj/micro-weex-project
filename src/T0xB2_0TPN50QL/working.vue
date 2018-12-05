@@ -85,7 +85,6 @@
                         <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                             <div slot="content">
                                 <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
-                                <!--<wx-picker  :list="range(item.key).list" :defaultValue="range(item.key).defaultValue" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>-->
                             </div>
                         </sf-accordion>
                     </template>
@@ -128,6 +127,7 @@
         <midea-dialog :title="warningDialogTitle"
                         :show="warningDialogShow"
                         :single="true"
+                        noFooter="true"
                         @mideaDialogConfirmBtnClicked="knowClicked"
                         :content="warningDialogContent"
                         mainBtnColor="#FFB632"
@@ -163,7 +163,7 @@
     import sfAccordion from '@/component/sf/custom/accordion.vue'
     import sfDialog from '@/component/sf/custom/dialog.vue'
     import detailModal from '@/component/sf/custom/detail-modal.vue'
-    import WxPicker from '@/component/sf/custom/picker.vue';
+    import WxPicker from '@/component/sf/custom/picker_amui.vue';
     import mideaDialog from '@/component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
     import mideaSwitch2 from '@/midea-component/switch2.vue'
@@ -245,10 +245,12 @@
                 }
                 
                 var deviceCmd = cmdFun.cmdStartOrPause(record);
+                nativeService.showLoading();
                 nativeService.startCmdProcess(
                     "control",
                     deviceCmd,
                     function(result){
+                        nativeService.hideLoading();
                         self.queryStatus();
                     },
                     function(result){
@@ -273,6 +275,11 @@
                 var time = this.cmdObj.timeRemaining.hour*60+this.cmdObj.timeRemaining.minute;
                 if(this.tag_next == '秒'){//倒计时为秒时，都设置1分钟
                     time = 1;
+                }
+                if(this.cmdObj.mode.value != 0x20){//因为除了蒸汽模式，时间范围1到300，其他模式都是最低值为5，所以最低值为5的模式，工作中设置时间，要强行最小值置为5
+                    if(time<5){
+                        time = 5;
+                    }
                 }
                 this.current.time = time;
                 this.current.temperature = this.cmdObj.temperature.upLowTemperature;
@@ -343,10 +350,12 @@
             cancleWorking(){
                 var self = this;
                 var deviceCmd = cmdFun.cmdCancelWork();
+                nativeService.showLoading();
                 nativeService.startCmdProcess(
                     "control",
                     deviceCmd,
                     function(result){
+                      nativeService.hideLoading();
                       self.queryStatus();
                     },
                     function(result){

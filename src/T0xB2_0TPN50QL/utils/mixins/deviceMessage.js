@@ -101,15 +101,18 @@ const deviceMessageMixin = {
         controlDevice(jsonCmd, working){
             let context = this;
             let deviceCmd = cmdFun.createControlMessage(jsonCmd, working);
+            nativeService.showLoading();
             //nativeService.alert(deviceCmd);
             // return;
             nativeService.startCmdProcess(
                 "control",
                 deviceCmd,
                 function(result){
+                    nativeService.hideLoading();
                     context.queryStatus();
                 },
                 function(result){
+                    nativeService.hideLoading();
                     nativeService.toast('控制失败，请检查网络或者设置的参数');
                     //console.log('fail', result);
                 }
@@ -173,12 +176,12 @@ const deviceMessageMixin = {
 
              //监听设备在线离线状态
              globalEvent.addEventListener("receiveMessageFromApp", (data) => {
-                //nativeService.toast(data);
                if(data && data.messageType == "deviceOnlineStatus") {
                    if(data.messageBody && data.messageBody.onlineStatus == "online") {
                        // this.onlineStatus = "1";
                    } else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
                        // this.onlineStatus = "0";
+                       nativeService.backToNative()
                    } else {
                        // this.onlineStatus = "0";
                    }

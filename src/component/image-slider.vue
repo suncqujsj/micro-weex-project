@@ -22,7 +22,7 @@
         left: 0;
         item-color: rgba(255, 255, 255, .5);
         item-selectedColor: rgba(255, 255, 255, 1);
-        item-size: 20px;
+        item-size: 12px;
     }
 </style>
 <script>

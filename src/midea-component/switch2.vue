@@ -114,7 +114,7 @@ export default {
 }
 .container {
   border-radius: 20px;
-  height: 6px;
+  height: 10px;
 }
 .selected {
   background-color: #267aff;

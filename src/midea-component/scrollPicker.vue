@@ -39,6 +39,10 @@ export default {
             type: Number,
             default: 10
         },
+        target: {
+            type: String,
+            default: ''
+        },
         wrapHeight: {
             type: Number,
             default: 350
@@ -75,7 +79,7 @@ export default {
                     //dom.scrollToElement(this.$refs.item[this.itemIndex], {})
                 })
             }
-        }
+        },
     },
     methods: {
         scroll(event) {
@@ -92,17 +96,24 @@ export default {
         }
     },
     mounted() {
+        nativeService.alert(this.listItem);
         const el = this.$refs['item'][0]
-        nativeService.alert(this.itemIndex);
+        
+        var _listArray = this.listArray;
+        for(var i=0; i< _listArray.length; i++){
+            if(_listArray[i] == this.listItem){
+                this.itemIndex = i;
+            }
+        }
         dom.scrollToElement(el, { offset: this.itemIndex * 70 })
     },
     created() {
-      var _listArray = this.listArray;
-      for(var i=0; i< _listArray.length; i++){
-          if(_listArray[i] == this.listItem){
-              this.itemIndex = i;
-          }
-      }
+    //   var _listArray = this.listArray;
+    //   for(var i=0; i< _listArray.length; i++){
+    //       if(_listArray[i] == this.listItem){
+    //           this.itemIndex = i;
+    //       }
+    //   }
     }
 }
 </script>

@@ -33,7 +33,7 @@
                         link:'https://m.ximalaya.com/wwys/v1/e/1?from=groupmessage&isappinstalled=0'
                     },
                     {
-                        title: '插件版本号：weex5.0.6',
+                        title: '插件版本号：weex5.0.7',
                         link: 'http://www.baidu.com'
                     }
                 ]

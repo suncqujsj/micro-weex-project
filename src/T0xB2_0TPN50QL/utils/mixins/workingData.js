@@ -1,8 +1,7 @@
 /**
- * Created by sf
+ * Created by parker
  * 2018/11/1
  */
-// import nativeService from "@/common/services/nativeService";
 var numberRecord = 0; //记录跳页面的次数
 var timerRecord = 0;
 let workingModalMixin  = {
@@ -34,6 +33,7 @@ let workingModalMixin  = {
             progressShow: true, //是否显示圆圈
             finishStatus: false, //完成状态
             preheatFinishTig: false, //预热完成指引
+            isFooterShow: false,
 
             cmdObj:{
                 workingState:{
@@ -153,6 +153,7 @@ let workingModalMixin  = {
             }
             //nativeService.toast(analysisObj,5);
             //console.log(1);
+            this.isFooterShow = true;
             this.timeShow = false;
             this.hasHour = false;
             this.hourMore10 = false;

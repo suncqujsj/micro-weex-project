@@ -3,14 +3,17 @@
         <midea-header title="Custom loading" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
         <scroller class="scroller-wrapper">
-            <midea-button text="默认样式白色" type="primary" @mideaButtonClicked="mideaButtonClicked1">
+            <midea-button text="默认样式" type="primary" @mideaButtonClicked="mideaButtonClicked1">
             </midea-button>
 
-            <midea-button text="灰色样式" type="primary" @mideaButtonClicked="mideaButtonClicked2">
+            <midea-button text="白色样式" type="primary" @mideaButtonClicked="mideaButtonClicked2">
             </midea-button>
 
             <div class="btn-box">
               <midea-button text="透明背景" type="primary" @mideaButtonClicked="mideaButtonClicked3">
+              </midea-button>
+
+              <midea-button text="带遮罩层" type="primary" @mideaButtonClicked="mideaButtonClicked4">
               </midea-button>
             </div>
 
@@ -48,16 +51,16 @@ export default {
     mideaButtonClicked1() {
       this.display1 = true;
       this.bgColor = 'transparent';
-      this.loadingColor = '#fff';
-      this.opacity = 1;
+      this.loadingColor = '#8a8a8f';
+      this.opacity = 0.8;
       this.isMask = false;
     },
 
     mideaButtonClicked2() {
       this.display1 = true;
       this.bgColor = 'transparent';
-      this.loadingColor = '#8a8a8f';
-      this.opacity = 0.8;
+      this.loadingColor = '#fff';
+      this.opacity = 1;
       this.isMask = false;
     },
 
@@ -67,9 +70,16 @@ export default {
       this.loadingColor = '#fff';
       this.opacity = 1;
       this.isMask = false;
+    },
+
+    mideaButtonClicked4() {
+      this.display1 = true;
+      this.bgColor = 'transparent';
+      this.loadingColor = '#fff';
+      this.opacity = 1;
+      this.isMask = true;
     }
-  },
-  mounted() {}
+  }
 }
 </script>
 

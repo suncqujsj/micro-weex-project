@@ -27,11 +27,11 @@ export default {
     },
     loadingColor: {
       type: String,
-      default: '#fff'
+      default: '#8a8a8f'
     },
     opacity: {
       type: String | Number,
-      default: 1
+      default: 0.8
     }
   },
   data() {
@@ -61,11 +61,6 @@ export default {
     display(nVal) {
       if (!nVal) {
         clearInterval(this.timer);
-      } else {
-        this.loadingAnimate();
-        this.timer = setInterval(() => {
-          this.loadingAnimate();
-        }, 2000);
       }
     },
     isMask(nVal) {
@@ -101,63 +96,64 @@ export default {
       let dotEl1 = this.$refs['dot1'];
       let dotEl2 = this.$refs['dot2'];
       let dotEl3 = this.$refs['dot3'];
+      let _this = this;
       animation.transition(dotEl1, {
         styles: {
-          opacity: this.opacity,
+          opacity: _this.opacity,
           transform: 'scale(2.8)'
         },
         duration: 250,
-        timingFunction: 'linear',
-        delay: 0
-      });
-      animation.transition(dotEl1, {
-        styles: {
-          opacity: this.opacity,
-          transform: 'scale(1)'
-        },
-        duration: 250,
-        timingFunction: 'linear',
-        delay: 250
-      });
-      animation.transition(dotEl2, {
-        styles: {
-          opacity: this.opacity,
-          transform: 'scale(2.8)'
-        },
-        duration: 250,
-        timingFunction: 'linear',
-        delay: 250
-      });
-      animation.transition(dotEl2, {
-        styles: {
-          opacity: this.opacity,
-          transform: 'scale(1)'
-        },
-        duration: 250,
-        timingFunction: 'linear',
-        delay: 500
-      });
-      animation.transition(dotEl3, {
-        styles: {
-          opacity: this.opacity,
-          transform: 'scale(2.8)'
-        },
-        duration: 250,
-        timingFunction: 'linear',
-        delay: 500
-      });
-      animation.transition(dotEl3, {
-        styles: {
-          opacity: this.opacity,
-          transform: 'scale(1)'
-        },
-        duration: 250,
-        timingFunction: 'linear',
-        delay: 750
+        timingFunction: 'linear'
+      }, function() {
+        animation.transition(dotEl1, {
+          styles: {
+            opacity: _this.opacity,
+            transform: 'scale(1)'
+          },
+          duration: 250,
+          timingFunction: 'linear'
+        });
+
+        animation.transition(dotEl2, {
+          styles: {
+            opacity: _this.opacity,
+            transform: 'scale(2.8)'
+          },
+          duration: 250,
+          timingFunction: 'linear'
+        }, function() {
+          animation.transition(dotEl2, {
+            styles: {
+              opacity: _this.opacity,
+              transform: 'scale(1)'
+            },
+            duration: 250,
+            timingFunction: 'linear'
+          });
+
+          animation.transition(dotEl3, {
+            styles: {
+              opacity: _this.opacity,
+              transform: 'scale(2.8)'
+            },
+            duration: 250,
+            timingFunction: 'linear'
+          }, function() {
+            animation.transition(dotEl3, {
+              styles: {
+                opacity: _this.opacity,
+                transform: 'scale(1)'
+              },
+              duration: 250,
+              timingFunction: 'linear'
+            });
+          });
+        });
       });
     }
   },
   mounted() {
+    clearInterval(this.timer);
     this.loadingAnimate();
     this.timer = setInterval(() => {
       this.loadingAnimate();

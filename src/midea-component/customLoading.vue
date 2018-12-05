@@ -64,11 +64,9 @@ export default {
       }
     },
     isMask(nVal) {
-      if (nVal) {
-        this.$nextTick(() => {
-          this.maskFade(nVal);
-        });
-      }
+      this.$nextTick(() => {
+        this.maskFade(nVal);
+      });
     }
   },
   methods: {
@@ -99,7 +97,6 @@ export default {
       let _this = this;
       animation.transition(dotEl1, {
         styles: {
-          opacity: _this.opacity,
           transform: 'scale(2.8)'
         },
         duration: 250,
@@ -107,16 +104,14 @@ export default {
       }, function() {
         animation.transition(dotEl1, {
           styles: {
-            opacity: _this.opacity,
             transform: 'scale(1)'
           },
-          duration: 250,
+          duration: 100,
           timingFunction: 'linear'
         });
 
         animation.transition(dotEl2, {
           styles: {
-            opacity: _this.opacity,
             transform: 'scale(2.8)'
           },
           duration: 250,
@@ -124,7 +119,6 @@ export default {
         }, function() {
           animation.transition(dotEl2, {
             styles: {
-              opacity: _this.opacity,
               transform: 'scale(1)'
             },
             duration: 250,
@@ -133,7 +127,6 @@ export default {
 
           animation.transition(dotEl3, {
             styles: {
-              opacity: _this.opacity,
               transform: 'scale(2.8)'
             },
             duration: 250,
@@ -141,7 +134,6 @@ export default {
           }, function() {
             animation.transition(dotEl3, {
               styles: {
-                opacity: _this.opacity,
                 transform: 'scale(1)'
               },
               duration: 250,
@@ -157,7 +149,7 @@ export default {
     this.loadingAnimate();
     this.timer = setInterval(() => {
       this.loadingAnimate();
-    }, 2000);
+    }, 1500);
   },
   destroyed() {
     clearInterval(this.timer);
@@ -175,7 +167,7 @@ export default {
     width: 750px;
     opacity: 1;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 2000;
+    z-index: 1000;
   }
   .loading-list {
     position: fixed;
@@ -197,9 +189,7 @@ export default {
   .loading-item {
     width: 10px;
     height: 10px;
-    border-radius: 10px;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    border-radius: 50px;
   }
   .item-second {
     margin-left: 24px;

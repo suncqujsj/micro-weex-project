@@ -1,5 +1,5 @@
 <template>
-    <div class="all_section" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
+    <div class="all_section"  @viewappear="viewappear" @viewdisappear="viewdisappear">
         <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack"></midea-header>
         <div class="progress_content"  @longpress="onlongpressQuery"><!--隐藏长按组件触发03查询，方便调试-->
             <div class="progress_section" :style="progress_style" > 
@@ -42,7 +42,7 @@
                 <image class="setting_icon" src="assets/img/edit_icon@2x.png" ></image>
             </div>
         </div>
-        <div class="footer_section">
+        <div class="footer_section" v-if="isFooterShow">
             <div class="btn_content">
                 <div class="btn_section">
                     <div class="image_section" @click="cancle">

@@ -54,24 +54,17 @@
         },
         components: {mideaHeader, mideaCell, MideaSwitch2},
         created(){
-            // let context = this;
-            // nativeService.getDeviceInfo().then(function(data){
-            //     nativeService.getUserInfo().then((resp) => {
-            //         context.aa(data.result.deviceId, resp.uid).catch((a)=>{
-            //             nativeService.alert(a);
-            //         });
-            //
-            //     }).catch((error) => {
-            //         nativeService.alert(JSON.stringify(error));
-            //     });
-            //
-            // });
-            this.aa(1,2);
-            // try {
-            //     this.aa(1,2);
-            // } catch (e) {
-            //     nativeService.alert(e);
-            // }
+            let context = this;
+            nativeService.getDeviceInfo().then(function(data){
+                nativeService.getUserInfo().then((resp) => {
+                    context.aa(data.result.deviceId, resp.uid);
+
+                }).catch((error) => {
+                    nativeService.alert(JSON.stringify(error));
+                });
+
+            });
+
 
 
 

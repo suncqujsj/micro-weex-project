@@ -61,6 +61,11 @@ export default {
     display(nVal) {
       if (!nVal) {
         clearInterval(this.timer);
+      } else {
+        this.loadingAnimate();
+        this.timer = setInterval(() => {
+          this.loadingAnimate();
+        }, 1500);
       }
     },
     isMask(nVal) {
@@ -146,10 +151,6 @@ export default {
   },
   mounted() {
     clearInterval(this.timer);
-    this.loadingAnimate();
-    this.timer = setInterval(() => {
-      this.loadingAnimate();
-    }, 1500);
   },
   destroyed() {
     clearInterval(this.timer);

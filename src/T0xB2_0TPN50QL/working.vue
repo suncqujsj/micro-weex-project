@@ -243,7 +243,6 @@
                  if(this.btnText == "继续" || this.btnText == "开始"){
                     record = 3;
                 }
-                
                 var deviceCmd = cmdFun.cmdStartOrPause(record);
                 nativeService.showLoading();
                 nativeService.startCmdProcess(

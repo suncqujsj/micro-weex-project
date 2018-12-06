@@ -240,8 +240,7 @@
             initWarningDialog(){
                 return {
                     show: false,
-                    title: "温馨提示",
-                    content: "主人，您的水箱缺水了，要及时添加水哦",
+                    content: "的水箱缺水了，要及时添加水哦",
                     callback: null
                 };
             },

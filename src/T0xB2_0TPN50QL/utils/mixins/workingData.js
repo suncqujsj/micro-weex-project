@@ -34,6 +34,7 @@ let workingModalMixin  = {
             finishStatus: false, //完成状态
             preheatFinishTig: false, //预热完成指引
             isFooterShow: false,
+            isWorking: false,
 
             cmdObj:{
                 workingState:{
@@ -153,6 +154,7 @@ let workingModalMixin  = {
             }
             //nativeService.toast(analysisObj,5);
             //console.log(1);
+            this.isWorking = false;
             this.isFooterShow = true;
             this.timeShow = false;
             this.hasHour = false;
@@ -182,7 +184,7 @@ let workingModalMixin  = {
                 this.warningDialogShow = true;
                 this.warningDialogContent = "主人，您的设备水箱缺水了，要及时添加水哦";
             }
-            if(analysisObj.displaySign.waterBox){
+            if(analysisObj.displaySign.waterBox && analysisObj.mode.value!=0xC4){
                 this.warningDialogShow = true;
                 this.warningDialogContent = "主人，您的设备缺水盒了";
             }
@@ -193,6 +195,7 @@ let workingModalMixin  = {
 
 
             if(analysisObj.workingState.value == 3){
+                this.isWorking = true;
                 this.timeShow = true;
                 this.hasSetting = true;
                 this.btnText = "暂停";
@@ -232,6 +235,7 @@ let workingModalMixin  = {
               
             }
              if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 0){
+                this.isWorking = true;
                 this.timeShow = false;
                 this.hasHour = false;
                 this.workSpecialStatusText = "预热中";

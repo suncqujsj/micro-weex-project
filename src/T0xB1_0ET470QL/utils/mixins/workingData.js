@@ -34,8 +34,52 @@ let workingModalMixin  = {
             progressShow: true, //是否显示圆圈
             finishStatus: false, //完成状态
             preheatFinishTig: false, //预热完成指引
+            isWorking: false,
 
-            cmdObj:{}, //指令解析对象
+            cmdObj:{workingState:{
+                name:"工作状态",value:0x00,view:{1:"省电",2:"待机",3:"工作中",4:"烹饪完成",5:"预约中",6:"暂停",7:"云菜谱段间等待",8:"爱心3秒"}
+            },
+            mode:{
+                name:"烹饪模式",text: '',value:0x00
+            },
+            recipeId:{
+              name:"菜谱id",text: '',value:0x00
+            },
+            displaySign:{
+                name:"显示标志",
+                lock:{name:"童锁",value:0x00,view:{0:"未锁",1:"已锁"}},
+                doorSwitch:{name:"门状态",value:0x00,view:{0:"门关",1:"门开"}},
+                waterBox:{name:"水箱位",value:0x00,view:{0:"有水箱",1:"缺水箱"}},
+                lackWater:{name:"缺水位",value:0x00,view:{0:"不缺水",1:"缺水"}},
+                changeWater:{name:"换水位",value:0x00,view:{0:"不需要换水",1:"要换水"}},
+                preheat:{name:"是否预热",value:0x00,view:{0:"非预热中",1:"预热中"}},
+                preheatTemperature:{name:"预热温度位",value:0x00,view:{0:"预热温度未到",1:"预热温度已到"}},
+                isError:{name:"是否故障",value:0x00,view:{0:"无故障",1:"有故障"}},
+                },
+                timeRemaining:{
+                    name:"程序剩余时间",
+                    hour: {name:"小时",value: 0x00},
+                    minute: {name:"分钟",value: 0x00},
+                    second: {name:"秒",value: 0x00},
+                },
+                temperature:{
+                name:"发热管设置的温度",
+                upHighTemperature: {name:"上管设置温度：高",value: 0x00},
+                upLowTemperature: {name:"上管设置温度：低",value: 0x00},
+                downHighTemperature: {name:"下管设置温度：高",value: 0x00},
+                downLowTemperature: {name:"下管设置温度：低",value: 0x00},
+                },
+                realTemperature:{
+                name:"发热管实际的温度",
+                upHighTemperature: {name:"上管实际温度：高",value: 0x00},
+                upLowTemperature: {name:"上管实际温度：低",value: 0x00},
+                downHighTemperature: {name:"下管实际温度：高",value: 0x00},
+                downLowTemperature: {name:"下管实际温度：低",value: 0x00},
+                },
+                fire:{name: "火力",value: 0x00},
+                weight:{name: "重量",value: 0x00},
+                steam:{name: "蒸汽量",value: 0x00}
+            }, //指令解析对象
           
             timeShow: false, //是否显示时间
             workSpecialStatusText: '',  //显示当前状态
@@ -108,6 +152,7 @@ let workingModalMixin  = {
             }
             //nativeService.toast(analysisObj,5);
             //console.log(1);
+            this.isWorking = false;
             this.timeShow = false;
             this.hasHour = false;
             this.hourMore10 = false;
@@ -149,6 +194,7 @@ let workingModalMixin  = {
             if(analysisObj.workingState.value == 3){
                 this.timeShow = true;
                 this.hasSetting = true;
+                this.isWorking = true;
                 this.btnText = "暂停";
                 this.btnSrc = "assets/img/footer/icon_pause@2x.png";
                 this.hasStopOrContinueBtn = true;
@@ -186,6 +232,7 @@ let workingModalMixin  = {
               
             }
              if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 0){
+                this.isWorking = true;
                 this.timeShow = false;
                 this.hasHour = false;
                 this.workSpecialStatusText = "预热中";

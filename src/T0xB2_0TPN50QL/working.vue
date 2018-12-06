@@ -7,9 +7,9 @@
                     :wxc_radius='progress_radius'>
 
                 </wxcProgress>
-                <!--<div class="animate_section" ref="modeBox" :style="{top:`${-progress_radius-9}px`}">
-                    <image class="animate_circle" src="assets/img/oval_2@2x.png"></image>
-                </div>-->
+               <div class="animate_section" v-if="isWorking" :style="{left:`${progress_radius-50}px`}">
+                    <image class="animate_circle" src="assets/img/ellipsis_px_2.gif"></image>
+                </div>
                 <!--<midea-progresscycle-view class="circleprogress" :data="chartJson"></midea-progresscycle-view>-->
                 <div class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
                   

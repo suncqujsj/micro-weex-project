@@ -151,7 +151,7 @@
 </style>
 
 <template>
-    <div class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
+    <div class="bg"  @viewappear="viewappear" @viewdisappear="viewdisappear">
 
         <sf-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" >
             <div slot="headerTitle">

@@ -65,15 +65,6 @@
             </scroller>
         </div>
 
-        <!--<text class="r test" @click="doing">{{progress}}</text>-->
-        <!--<wxProgress :percent='progress' :bar_width='650'></wxProgress>-->
-        <!--<wxcProgress :percent="progress"-->
-        <!--:wxc_radius='200'>-->
-        <!--<div class="cen">-->
-        <!--<text class="demo-text">{{progress}}%</text>-->
-        <!--</div>-->
-        <!--</wxcProgress>-->
-
         <!--模式参数设置弹窗-->
         <sf-dialog :show="show" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">

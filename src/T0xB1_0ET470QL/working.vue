@@ -1,5 +1,5 @@
 <template>
-    <div class="all_section" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
+    <div class="all_section"  @viewappear="viewappear" @viewdisappear="viewdisappear">
         <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack"></midea-header>
         <div class="progress_content"  @longpress="onlongpressQuery"><!--隐藏长按组件触发03查询，方便调试-->
             <div class="progress_section" :style="progress_style" > 
@@ -7,9 +7,9 @@
                     :wxc_radius='progress_radius'>
 
                 </wxcProgress>
-                <!--<div class="animate_section" ref="modeBox" :style="{top:`${-progress_radius-9}px`}">
-                    <image class="animate_circle" src="assets/img/oval_2@2x.png"></image>
-                </div>-->
+                <div class="animate_section" v-if="isWorking" :style="{left:`${progress_radius-50}px`}">
+                    <image class="animate_circle" src="assets/img/ellipsis_px_2.gif"></image>
+                </div>
                 <!--<midea-progresscycle-view class="circleprogress" :data="chartJson"></midea-progresscycle-view>-->
                 <div class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
                   

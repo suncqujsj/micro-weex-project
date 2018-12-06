@@ -3,7 +3,7 @@
 </style>
 
 <template>
-    <div class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
+    <div class="bg"  @viewappear="viewappear" @viewdisappear="viewdisappear">
 
         <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="烤箱" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" >
             <div slot="customerContent" class="header-top-wrapper">

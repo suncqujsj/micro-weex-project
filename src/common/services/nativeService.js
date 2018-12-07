@@ -986,11 +986,11 @@ export default {
         return this.commandInterfaceWrapper(params)
     },
     //二维码/条形码扫码功能，用于读取二维码/条形码的内容
-    scanCode(status) {
-        let params = {
+    scanCode(params={}) {
+        let param = Object.assign(params, {
             operation: 'scanCode'
-        }
-        return this.commandInterfaceWrapper(params)
+        })
+        return this.commandInterfaceWrapper(param)
     },
     //开启麦克风录音，可以保存录音文件或者把声音转换成文字
     startRecordAudio(params) {

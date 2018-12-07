@@ -114,6 +114,7 @@ module.exports = {
             { title: 'Nav List', link: "navList" },
             { title: 'Picker', link: "picker" },
             { title: 'Progress进度条', link: "progress" },
+            { title: 'Progresscycle环形进度条', link: "progresscycle" },
             { title: 'Refresh下拉刷新', link: "refresh" },
             { title: 'Refresh下拉刷新（非满屏可以下拉）', link: "refreshList" },
             { title: 'Share打开分享弹窗', link: "share" },
@@ -165,6 +166,7 @@ module.exports = {
             { title: 'BroadcastChannel示例', link: "broadcastChannelA" },
             { title: 'storage数据', link: "storage" },
             { title: 'weex环境变量', link: "weexEnv" },
+            { title: 'remotePage测试页面', link: "remotePage" },
         ],
         containerHeight: 1200
     }),

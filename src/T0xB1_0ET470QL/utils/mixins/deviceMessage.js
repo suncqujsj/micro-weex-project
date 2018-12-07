@@ -101,8 +101,8 @@ const deviceMessageMixin = {
         controlDevice(jsonCmd, working){
             let context = this;
             let deviceCmd = cmdFun.createControlMessage(jsonCmd, working);
-            nativeService.alert(deviceCmd);
-            // return;
+            nativeService.alert(cmdFun.cmdToEasy(deviceCmd));
+            return;
             nativeService.startCmdProcess(
                 "control",
                 deviceCmd,

@@ -12,14 +12,14 @@ let data = [
                     'text': '翻热',
                     'mode': 0xE0,
                     time:{
-                        set: true,
-                        default:13,
-                        range:[5,120,1]
+                        set: false,
+                        default:20,
+                        range: null
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
-                        range:[35,70,1,75,100,5]
+                        range:null
                     },
                     preheat:{
                         set:false,
@@ -27,7 +27,7 @@ let data = [
                     },
                     steamAmount:{
                         set:false,
-                        default:0,
+                        default:2,
                         range:null
                     },
                     fireAmount:{
@@ -47,22 +47,22 @@ let data = [
                     'text': '全麦核桃包',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:10,
-                        range:[5,120,1]
+                        range:null
                     },
                     temperature:{
-                        set: true,
-                        default:100,
-                        range:[35,70,1,75,100,5]
+                        set: false,
+                        default:175,
+                        range:null
                     },
                     preheat:{
                         set:false,
-                        default: false
+                        default: true
                     },
                     steamAmount:{
                         set:false,
-                        default:0,
+                        default:4,
                         range:null
                     },
                     fireAmount:{
@@ -82,14 +82,14 @@ let data = [
                     'text': '菌菇烤鸡胸肉',
                     'mode': 0xE0,
                     time:{
-                        set: true,
-                        default:15,
-                        range:[5,120,1]
+                        set: false,
+                        default:40,
+                        range:null
                     },
                     temperature:{
-                        set: true,
-                        default:95,
-                        range:[35,70,1,75,100,5]
+                        set: false,
+                        default:175,
+                        range:null
                     },
                     preheat:{
                         set:false,
@@ -97,7 +97,7 @@ let data = [
                     },
                     steamAmount:{
                         set:false,
-                        default:0,
+                        default:1,
                         range:null
                     },
                     fireAmount:{
@@ -117,22 +117,22 @@ let data = [
                     'text': '牛角面包',
                     'mode': 0xE0,
                     time:{
-                        set: true,
-                        default:15,
-                        range:[5,120,1]
+                        set: false,
+                        default:10,
+                        range:null
                     },
                     temperature:{
-                        set: true,
-                        default:95,
-                        range:[35,70,1,75,100,5]
+                        set: false,
+                        default:165,
+                        range:null
                     },
                     preheat:{
                         set:false,
-                        default: false
+                        default: true
                     },
                     steamAmount:{
                         set:false,
-                        default:0,
+                        default:1,
                         range:null
                     },
                     fireAmount:{
@@ -159,14 +159,14 @@ let data = [
                     'text': '香烤啤酒鸡',
                     'mode': 0xE0,
                     time:{
-                        set: true,
-                        default:15,
-                        range:[5,120,1]
+                        set: false,
+                        default:72,
+                        range:null
                     },
                     temperature:{
-                        set: true,
-                        default:95,
-                        range:[35,70,1,75,100,5]
+                        set: false,
+                        default:185,
+                        range:null
                     },
                     preheat:{
                         set:false,
@@ -174,7 +174,7 @@ let data = [
                     },
                     steamAmount:{
                         set:false,
-                        default:0,
+                        default:1,
                         range:null
                     },
                     fireAmount:{
@@ -194,14 +194,14 @@ let data = [
                     'text': '草莓纸杯蛋糕',
                     'mode': 0xE0,
                     time:{
-                        set: true,
-                        default:15,
-                        range:[5,120,1]
+                        set: false,
+                        default:41,
+                        range:null
                     },
                     temperature:{
-                        set: true,
-                        default:95,
-                        range:[35,70,1,75,100,5]
+                        set: false,
+                        default:150,
+                        range:null
                     },
                     preheat:{
                         set:false,
@@ -209,7 +209,7 @@ let data = [
                     },
                     steamAmount:{
                         set:false,
-                        default:0,
+                        default:1,
                         range:null
                     },
                     fireAmount:{
@@ -229,22 +229,22 @@ let data = [
                     'text': '牛肉披萨',
                     'mode': 0xE0,
                     time:{
-                        set: true,
-                        default:15,
-                        range:[5,120,1]
+                        set: false,
+                        default:10,
+                        range:null
                     },
                     temperature:{
-                        set: true,
-                        default:95,
-                        range:[35,70,1,75,100,5]
+                        set: false,
+                        default:210,
+                        range:null
                     },
                     preheat:{
                         set:false,
-                        default: false
+                        default: true
                     },
                     steamAmount:{
                         set:false,
-                        default:0,
+                        default:1,
                         range:null
                     },
                     fireAmount:{
@@ -264,14 +264,14 @@ let data = [
                     'text': '地中海柠檬烤鱼',
                     'mode': 0xE0,
                     time:{
-                        set: true,
-                        default:15,
-                        range:[5,120,1]
+                        set: false,
+                        default:30,
+                        range:null
                     },
                     temperature:{
-                        set: true,
-                        default:95,
-                        range:[35,70,1,75,100,5]
+                        set: false,
+                        default:170,
+                        range:null
                     },
                     preheat:{
                         set:false,
@@ -279,7 +279,7 @@ let data = [
                     },
                     steamAmount:{
                         set:false,
-                        default:0,
+                        default:3,
                         range:null
                     },
                     fireAmount:{
@@ -307,14 +307,14 @@ let data = [
                     'text': '苹果烤猪排',
                     'mode': 0xE0,
                     time:{
-                        set: true,
-                        default:15,
-                        range:[5,120,1]
+                        set: false,
+                        default:40,
+                        range:null
                     },
                     temperature:{
-                        set: true,
-                        default:95,
-                        range:[35,70,1,75,100,5]
+                        set: false,
+                        default:160,
+                        range:null
                     },
                     preheat:{
                         set:false,
@@ -322,7 +322,7 @@ let data = [
                     },
                     steamAmount:{
                         set:false,
-                        default:0,
+                        default:2,
                         range:null
                     },
                     fireAmount:{
@@ -342,14 +342,14 @@ let data = [
                     'text': '脆皮烤羊腿',
                     'mode': 0xE0,
                     time:{
-                        set: true,
-                        default:15,
-                        range:[5,120,1]
+                        set: false,
+                        default:120,
+                        range:null
                     },
                     temperature:{
-                        set: true,
-                        default:95,
-                        range:[35,70,1,75,100,5]
+                        set: false,
+                        default:170,
+                        range:null
                     },
                     preheat:{
                         set:false,
@@ -357,7 +357,7 @@ let data = [
                     },
                     steamAmount:{
                         set:false,
-                        default:0,
+                        default:2,
                         range:null
                     },
                     fireAmount:{

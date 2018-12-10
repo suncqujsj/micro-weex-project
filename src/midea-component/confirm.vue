@@ -64,11 +64,9 @@
 
     .confirm-buttons {
         overflow: hidden;
-        line-height: 96px;
-        height: 96px;
         position: relative;
-        border-top-width: 1px;
-        border-top-color: #d7dde4;
+        padding-top: 16px;
+        background-color: #f2f2f2;
         text-align: center;
         font-size: 36px;
         flex-direction:row;
@@ -76,12 +74,12 @@
 
     .confirm-button-left, .confirm-button-right {
         width: 375px;
-        line-height: 96px;
         text-align: center;
         flex:1;
         align-items: center;
         justify-content: center;
         text-align: center;
+        background-color: #fff;
     }
 
     .confirm-button-left {
@@ -90,11 +88,13 @@
     }
 
     .left-button {
+        line-height: 96px;
         font-size: 36px;
         color: #666;
     }
 
     .right-button {
+        line-height: 96px;
         font-size: 36px;
         color: #000;
     }

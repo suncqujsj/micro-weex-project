@@ -46,16 +46,25 @@
     .padding5{
         padding: 5px;
     }
+    .bd {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
     .padding14{
-        padding: 14px;
+        padding-top: 14px;
+        padding-bottom: 14px;
         font-size: 32px;
     }
     .padding20{
-        padding: 20px;
+        padding-top: 20px;
+        padding-left: 32px;
+        padding-right: 32px;
         font-size: 32px;
     }
     .hd{
-        padding: 20px;
+        padding-top: 20px;
+        padding-left: 32px;
+        padding-right: 32px;
         font-size: 40px;
     }
     .scroll-picker-wrap{

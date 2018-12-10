@@ -84,7 +84,7 @@ export default {
         background-color: rgba(0,0,0, 0.6)
     }
     .wrap{
-        background-color: #f2f2f2;
+        background-color: #fff;
         width:750px;
         position: fixed;
         bottom: 0;
@@ -92,23 +92,24 @@ export default {
     .slot-floor{
         width: 750px;
         height: 500px;
-        background-color: #f2f2f2;
+        background-color: #fff;
         font-size: 28px;
     }
     .row-sb{ flex-direction: row; justify-content: space-between; }
     .confirm-buttons{
         position: fixed;
-        height: 96px;
         bottom: 0;
         left: 0;
         right: 0;
-        background-color: #fff;
+        padding-top: 16px;
+        background-color: #f2f2f2;
     }
     .left-button, .right-button {
         width: 375px;
         line-height: 96px;
         flex:1;
         text-align: center;
+        background-color: #fff;
     }
     .left-button {
         font-size: 32px;

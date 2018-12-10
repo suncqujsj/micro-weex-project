@@ -3,14 +3,16 @@
         <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="烤箱" titleText="white" bgColor="" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack"></midea-header>
         <div class="progress_content"  @longpress="onlongpressQuery"><!--隐藏长按组件触发03查询，方便调试-->
             <div class="progress_section" :style="progress_style" > 
-                <wxcProgress :percent="progress" :progressShow="progressShow"
+                <!--<wxcProgress :percent="progress" :progressShow="progressShow"
                     :wxc_radius='progress_radius'>
 
-                </wxcProgress>
-                <div class="animate_section" v-if="isWorking" :style="{left:`${progress_radius-50}px`}">
+                </wxcProgress>-->
+                <!--<div class="animate_section" v-if="isWorking" :style="{left:`${progress_radius-50}px`}">
                     <image class="animate_circle" src="assets/img/ellipsis_px_2.gif"></image>
+                </div>-->
+                <div  v-if="isWorking">
+                 <midea-progresscycle-view class="circleprogress" :data="chartJson"></midea-progresscycle-view>
                 </div>
-                <!--<midea-progresscycle-view class="circleprogress" :data="chartJson"></midea-progresscycle-view>-->
                 <div class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
                   
                     <div class="center_section">
@@ -163,7 +165,7 @@
     import sfAccordion from '@/component/sf/custom/accordion.vue'
     import sfDialog from '@/component/sf/custom/dialog.vue'
     import detailModal from '@/component/sf/custom/detail-modal.vue'
-    import WxPicker from '@/component/sf/custom/picker.vue';
+    import WxPicker from '@/component/sf/custom/picker_amui.vue';
     import mideaDialog from '@/component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
     import mideaSwitch2 from '@/midea-component/switch2.vue'

@@ -21,6 +21,9 @@
             </div>
         </midea-header>
 
+        <!--测试查看指令-->
+        <!--<div><text @click="setContent">下发指令:{{testCmd}}</text></div>-->
+
         <!--面板切换tabs-->
         <div class="panel"  @longpress="onlongpressQuery"> <!--隐藏长按组件触发03查询，方便调试-->
             <text class="panel-state"></text>
@@ -149,7 +152,7 @@
     import query from "../dummy/query";
     import {wxcProgress, wxProgress} from "@/component/sf/wx-progress";
     import mideaSwitch2 from '@/midea-component/switch2.vue'
-    import WxPicker from '@/component/sf/custom/picker.vue';
+    import WxPicker from '@/component/sf/custom/picker_amui.vue';
 
     // config data
     import modes from "./config/modes.js";
@@ -158,7 +161,8 @@
     import accordionMixin from  "./utils/mixins/accordions"
     import deviceMessageMixin from  "./utils/mixins/deviceMessage"
     import detailModalMixin from  "./utils/mixins/detailModal"
-    import commonMixin from  "@/common/util/mixins/common";
+    import commonMixin from  "@/common/util/mixins/common"
+    import copyMixin from  "./utils/mixins/copy"
 
     import constant from "./config/constant";
 
@@ -168,7 +172,7 @@
     var numberRecord = 0; //记录跳页面的次数
 
     export default {
-        mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin],
+        mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin,copyMixin],
         data(){
             return {
                 list:['123','234','345','456','567'],

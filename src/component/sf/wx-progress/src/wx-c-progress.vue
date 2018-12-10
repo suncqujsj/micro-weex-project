@@ -77,7 +77,8 @@ export default {
         return {
             height: `${(wxc_radius - wxc_stokenWidth) * 2}px`,
             width: `${(wxc_radius - wxc_stokenWidth) * 2}px`,
-            backgroundColor: '#FFCD00',
+            // backgroundColor: '#FFCD00',
+            backgroundImage: 'linear-gradient(to bottom, #FFCD00, #FFCD00)',
             borderRadius: `${wxc_radius - wxc_stokenWidth}px`,
             top: `${wxc_stokenWidth}`,
             left: `${wxc_stokenWidth}`,

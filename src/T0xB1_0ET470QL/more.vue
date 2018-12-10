@@ -22,6 +22,7 @@
     import nativeService from "../common/services/nativeService";
 
     import commonMixin from  "./utils/mixins/common.js"
+    import constant from "./config/constant";
 
     export default {
         mixins: [commonMixin],
@@ -29,11 +30,11 @@
             return {
                 list:[
                     {
-                        title: '产品型号：辅助蒸汽烤箱 ',
+                        title: '产品型号：蒸汽炉 TPN50EQL-SSL',
                         link:'https://m.ximalaya.com/wwys/v1/e/1?from=groupmessage&isappinstalled=0'
                     },
                     {
-                        title: '插件版本号：weex5.0.0',
+                        title: '插件版本号：weex' + constant.device.widget_version,
                         link: 'http://www.baidu.com'
                     }
                 ]

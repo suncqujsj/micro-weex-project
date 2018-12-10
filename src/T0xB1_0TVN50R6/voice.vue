@@ -11,8 +11,8 @@
         <list style="margin-top: 24px" show-scrollbar="true">
             <template v-for="item in list">
                 <midea-cell v-if="item.type === 'link'" :title="item.title" :hasArrow="true" :hasMargin="true" :hasTopBorder="false" :clickActivied="true" @mideaCellClick="test"></midea-cell>
-                <midea-cell v-if="item.type === 'switch'" :title="item.title" @mideaCellClick="test" :hasArrow="false">
-                    <midea-switch2 class="value" slot="value"> </midea-switch2>
+                <midea-cell v-if="item.type === 'switch' && !item.hide" :title="item.title" :hasArrow="false">
+                    <midea-switch2 :checked="item.value" @change="onchange" slot="value"> </midea-switch2>
                 </midea-cell>
             </template>
         </list>
@@ -23,7 +23,7 @@
 <script>
     import mideaHeader from '@/midea-component/header.vue'
     import mideaCell from '@/midea-component/item.vue';
-    import MideaSwitch2 from '@/midea-component/switch2.vue'
+    import mideaSwitch2 from '@/midea-component/switch2.vue'
 
     import nativeService from "../common/services/nativeService";
     import commonMixin from  "./utils/mixins/common.js"
@@ -33,11 +33,13 @@
         mixins: [commonMixin, voiceMixin],
         data(){
             return {
+                index:0,
                 list:[
                     {
                         title: '语音功能',
                         type: 'switch',
-                        value: false
+                        value: false,
+                        hide: true
                     },
                     {
                         title: '语音控制授权',
@@ -52,44 +54,13 @@
                 ]
             }
         },
-        components: {mideaHeader, mideaCell, MideaSwitch2},
-        created(){
-            let context = this;
-            nativeService.getDeviceInfo().then(function(data){
-                nativeService.getUserInfo().then((resp) => {
-                    context.aa(data.result.deviceId, resp.uid);
-
-                }).catch((error) => {
-                    nativeService.alert(JSON.stringify(error));
-                });
-
-            });
-
-
-
-
-
-        },
+        components: {mideaHeader, mideaCell, mideaSwitch2},
+        created(){},
         computed:{
         },
         methods: {
-            async test() {
-                console.log(1)
-                const a = await new Promise(function(resolve, reject){
-                    resolve(3)
-                })
-                console.log(a)
-
-            },
             back: function(){
                 nativeService.goBack();
-        },
-            test: function(){},
-            link: function(item){
-                nativeService.weexBundleToWeb({
-                    url: item.link,
-                    title: '测试'
-                })
             }
         }
     }

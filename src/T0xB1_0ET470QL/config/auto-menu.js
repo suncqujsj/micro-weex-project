@@ -12,14 +12,14 @@ let data = [
                     'text': '翻热',
                     'mode': 0xE0,
                     time:{
-                        set: true,
-                        default:13,
-                        range:[5,120,1]
+                        set: false,
+                        default:20,
+                        range:null
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
-                        range:[35,70,1,75,100,5]
+                        range:null
                     },
                     preheat:{
                         set:false,
@@ -27,7 +27,7 @@ let data = [
                     },
                     steamAmount:{
                         set:false,
-                        default:0,
+                        default:2,
                         range:null
                     },
                     fireAmount:{
@@ -47,14 +47,14 @@ let data = [
                     'text': '全麦核桃包',
                     'mode': 0xE0,
                     time:{
-                        set: true,
-                        default:10,
-                        range:[5,120,1]
+                        set: false,
+                        default:32,
+                        range:null
                     },
                     temperature:{
-                        set: true,
-                        default:100,
-                        range:[35,70,1,75,100,5]
+                        set: false,
+                        default:185,
+                        range:null
                     },
                     preheat:{
                         set:false,

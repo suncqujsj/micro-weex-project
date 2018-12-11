@@ -101,7 +101,7 @@ export default {
             var image = new Image();
             image.onload = function () {
                 ctx.drawImage(image, 100, 330);
-                ctx.drawImage(image, 100 + 300, 330, 225, 75);
+                ctx.drawImage(image, 100, 330, 225, 75);
             }
             image.src = 'https://www.khronos.org/assets/uploads/ceimg/made/assets/uploads/apis/OpenGL-ES_100px_May16_225_75.png';
         },

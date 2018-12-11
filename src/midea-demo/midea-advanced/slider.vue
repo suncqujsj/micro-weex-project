@@ -7,7 +7,7 @@
             <div><text class="tip-txt">{{fixTemp1}}℃</text></div>
             <div class="slider-sample-fix">
                 <text class="slider-sample-range">{{min}}℃ </text>
-                <midea-seek-bar class="slider-fix-area" @slideEnd="slideEnd" @slideChange="slideChange1" :max="max" :min="min" :value="value" :step="step" :axisH="axisH" :pointH="pointH" :axisColor="axisColor" :axisBgColor="axisBgColor" :pointColor="pointColor" showTip=false></midea-seek-bar>
+                <midea-seek-bar class="slider-fix-area" @slideEnd="slideEnd" @slideChange="slideChange1" :max="max" :min="min" :value="value" :step="step" :axisH="axisH" :pointH="pointH" :axisColor="axisColor" :axisBgColor="axisBgColor" :pointColor="pointColor" showTip=false :sliderImage="sliderImageBase64"></midea-seek-bar>
                 <text class="slider-sample-range slider-sample-range-right">{{max}}℃</text>
             </div>
             <!-- <midea-title-bar title="测试" bgColor="#EEF4F7"></midea-title-bar>
@@ -21,7 +21,7 @@
             <div><text class="tip-txt">{{fixTemp2}}℃</text></div>
             <div class="slider-sample-fix">
                 <text class="slider-sample-range">{{min}}℃ </text>
-                <midea-seek-bar class="slider-fix-area" @slideEnd="slideEnd" @slideChange="slideChange2" :max="max" :min="min" :value="value" :step="step" :axisH="axisH" :pointH="pointH" :axisColor="axisColor" :axisBgColor="axisBgColor" :pointColor="pointColor" showTip=false :disable="true"></midea-seek-bar>
+                <midea-seek-bar class="slider-fix-area" @slideEnd="slideEnd" @slideChange="slideChange2" :max="max" :min="min" :value="value" :step="step" :axisH="axisH" :pointH="pointH" :axisColor="axisColor" :axisBgColor="axisBgColor" :pointColor="pointColor" showTip=false :sliderImage="sliderImageBase64" :disable="true"></midea-seek-bar>
                 <text class="slider-sample-range slider-sample-range-right">{{max}}℃</text>
             </div>
 

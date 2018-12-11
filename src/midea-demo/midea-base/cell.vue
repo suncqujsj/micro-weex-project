@@ -9,15 +9,15 @@
     </midea-cell>
     <midea-cell title="带右边文字和导航" rightText="设置" :hasTopBorder="false" :hasBottomBorder="false" :hasArrow="true" :clickActivied="true" @mideaCellClick="itemClicked">
     </midea-cell>
-    <midea-cell title="带图标且自动设置高度" desc="描述" rightText="设置" :hasArrow="true" :hasBottomBorder="false" :clickActivied="true" itemImg="../img/check/checked.png" @mideaCellClick="itemClicked">
+    <midea-cell title="带图标且自动设置高度" desc="描述" rightText="设置" :hasArrow="true" :hasBottomBorder="false" :hasTopBorder="false" :clickActivied="true" itemImg="../img/check/checked.png" @mideaCellClick="itemClicked">
     </midea-cell>
 
-    <midea-cell label="动态插入文本" @mideaCellClick="itemClicked" :hasBottomBorder="false" :hasArrow="false">
+    <midea-cell label="动态插入文本" @mideaCellClick="itemClicked" :hasTopBorder="false" :hasBottomBorder="false" :hasArrow="false">
       <text class="link-text" slot="text" v-if="selected==1"> 不可关联</text>
       <text class="link-text" slot="text" v-if="selected==2"> 已关联</text>
     </midea-cell>
 
-    <midea-cell label="动态插入切换按键" @mideaCellClick="itemClicked" :hasArrow="false" :hasBottomBorder="false" :hasSubBottomBorder="false">
+    <midea-cell label="动态插入切换按键" @mideaCellClick="itemClicked" :hasArrow="false" :hasTopBorder="false" :hasBottomBorder="false" :hasSubBottomBorder="false">
       <midea-switch2 class="value" slot="value"> </midea-switch2>
     </midea-cell>
 

@@ -92,7 +92,20 @@ export default {
             //手机远程weex页面调试跳转
             this.getPath((weexPath) => {
                 //weexPath为插件包地址，比如：files:///..../MideaHome/T0x99/
-                url = weexPath + path;
+                let weexPathArray = weexPath.split('/')
+                let pathArray = path.split('/')
+                if (weexPathArray[weexPathArray.length - 2] == pathArray[0]) {
+                    pathArray.shift()
+                    if (weexPathArray[weexPathArray.length - 3] == pathArray[0]) {
+                        pathArray.shift()
+                        if (weexPathArray[weexPathArray.length - 4] == pathArray[0]) {
+                            pathArray.shift()
+                        }
+                    }
+                    url = weexPathArray.join('/') + pathArray.join('/')
+                } else {
+                    url = weexPath + path;
+                }
                 if (url.indexOf("?") != -1) {
                     url += '&isDummy=' + isDummy
                 } else {

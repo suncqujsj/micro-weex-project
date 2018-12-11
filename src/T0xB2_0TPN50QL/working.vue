@@ -10,7 +10,7 @@
                <div class="animate_section" v-if="isWorking" :style="{left:`${progress_radius-50}px`}">
                     <image class="animate_circle" src="assets/img/ellipsis_px_2.gif"></image>
                 </div>-->
-                <div  v-if="isWorking">
+                <div>
                     <midea-progresscycle-view class="circleprogress" :data="chartJson"></midea-progresscycle-view>
                 </div>
                 <div class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
@@ -74,7 +74,7 @@
         </div>
 
          <!--模式参数设置弹窗-->
-        <sf-dialog :show="show" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
+        <sf-dialog :show="show" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <!--<template v-for="tab in tabs">-->
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->

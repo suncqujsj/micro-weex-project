@@ -101,6 +101,7 @@ export default {
     var second = 0;
     var set_mode = params.mode;
     var messageBody = message.createMessageFFBody(19); 
+    nativeService.alert(working);
     if(working){//工作中设置类 byte11 发04，其他byte发ff
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 4);

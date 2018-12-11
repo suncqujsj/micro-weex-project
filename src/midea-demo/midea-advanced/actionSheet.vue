@@ -4,7 +4,7 @@
         <midea-button text="操作面板" @mideaButtonClicked="openActionsheet">
         </midea-button>
 
-        <midea-actionsheet :items="actionsheetItems" :show="showBar" @close="closeActionsheet" @itemClick="actionsheetItemClick" @btnClick="actionsheetBtnClick" ref="actionsheet"></midea-actionsheet>
+        <midea-actionsheet :items="actionsheetItems" :index="selectedIndex" :show="showBar" @close="closeActionsheet" @itemClick="actionsheetItemClick" @btnClick="actionsheetBtnClick" ref="actionsheet"></midea-actionsheet>
     </div>
 </template>
 <style scoped>
@@ -24,7 +24,8 @@ export default {
     data() {
         return {
             showBar: false,
-            actionsheetItems: ['风速调节', '模式控制']
+            actionsheetItems: ['风速调节', '模式控制'],
+            selectedIndex: null
         }
     },
     methods: {
@@ -42,6 +43,7 @@ export default {
         //点击某个item的事件
         "actionsheetItemClick": function (event) {
             nativeService.toast(event.item)
+            this.selectedIndex = event.index
             this.showBar = false;
         },
         //点击取消/确定按钮事件

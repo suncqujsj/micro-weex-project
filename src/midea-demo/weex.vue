@@ -113,6 +113,7 @@ module.exports = {
             { title: 'mapPointPick地图选点', link: "mapPointPick" },
             { title: 'Nav List', link: "navList" },
             { title: 'Picker', link: "picker" },
+            { title: 'ppVideo', link: "ppvideo" },
             { title: 'Progress进度条', link: "progress" },
             { title: 'Progresscycle环形进度条', link: "progresscycle" },
             { title: 'Refresh下拉刷新', link: "refresh" },

@@ -10,7 +10,7 @@
                             <div class="midea-actionsheet-textWrapper">
                                 <div v-if="selectedIndex==index" class="check-icon"></div>
                                 <text class="midea-actionsheet-text">{{item}}</text>
-                                <image v-if="selectedIndex==index" class="check-icon" src="../assets/img/public_ic_done@3x.png" resize="contain"></image>
+                                <image v-if="selectedIndex==index" class="check-icon" src="../img/check/public_ic_done@3x.png" resize="contain"></image>
                             </div>
                         </slot>
                     </div>

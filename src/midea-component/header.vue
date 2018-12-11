@@ -147,9 +147,9 @@ export default {
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
-  border-bottom-width:1px;
+  /* border-bottom-width:1px;
   border-bottom-color:#e2e2e2;
-  background-color: #e2e2e2;
+  background-color: #e2e2e2; */
 }
 .immersion {
   padding-top: 40px;

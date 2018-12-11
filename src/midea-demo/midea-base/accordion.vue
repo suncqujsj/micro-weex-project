@@ -34,7 +34,7 @@
 
 <style>
 .accordion-content {
-  background-color: #f2f2f2;
+  background-color: #f6f6f6;
 }
 .accordion-item {
   align-items: center;

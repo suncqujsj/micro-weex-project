@@ -2,7 +2,7 @@
   <div>
     <midea-radio v-for="(item,i) in updateList"
                v-bind="item"
-               :hasTopBorder="(i==0&&needShowTopBorder)?true:false"
+               :hasTopBorder="(i===0&&needShowTopBorder)?true:false"
                :hasBottomBorder="(i!=updateList.length-1||needShowLastBottomBorder)?true:false"
                v-on:mideaRadioItemChecked="mideaRadioItemChecked(i,$event)"
                :key="i"></midea-radio>
@@ -28,7 +28,7 @@
       },
       needShowLastBottomBorder:{
         type: Boolean,
-        default: true
+        default: false
       }
     },
     data: () => ({

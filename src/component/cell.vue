@@ -74,8 +74,9 @@
   }
 
   .cell-bottom-border {
-    border-bottom-color: #e2e2e2;
     border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: #e2e2e2;
   }
 
   .cell-label-text {

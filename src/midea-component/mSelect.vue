@@ -13,8 +13,9 @@
                 </div>
             </scroller>
             <div class="midea-radiogroup-bottom">
-                <text class="btn-grp-text" @click="cancelClick">取消</text>
-                <text class="midea-radiogroup-title">{{title}}</text>
+                <text class="btn-grp-text btn-cancel" @click="cancelClick">取消</text>
+                <!-- <text class="midea-radiogroup-title">{{title}}</text> -->
+                <text class="btn-grp-text btn-confirm" @click="confirmClick">确定</text>
             </div>
         </div>
     </div>
@@ -101,7 +102,7 @@ export default {
     },
     methods: {
         color(item, i) {
-            return item.disabled ? '#b4b6cb' : (this.index == i ? '#0e90ff' : '#020f13')
+            return item.disabled ? '#b4b6cb' : (this.index == i ? '#267aff' : '#020f13')
         },
         display(item) {
             let result = ""
@@ -161,6 +162,21 @@ export default {
                 _this.$emit("close");
             });
         },
+
+        // 确定选择
+        confirmClick() {
+            const {items, index, keyField} = this;
+            if (items[index].disabled) return
+
+            var _this = this;
+            var el = this.$refs.radiogroupBox;
+            var translate = "translate(0px, " + _this.height + "px, 0px)";
+            _this.animationFn(el, translate, "ease-in", function () {
+                _this.show = false;
+                _this.$emit("itemClick", { item: items[index], index, keyField });
+                _this.$emit("close");
+            });
+        },
         //菜单项点击事件
         radiogroupItemClick: function (item, index, key) {
             if (item.disabled) return
@@ -191,21 +207,26 @@ export default {
   flex-direction: row;
   align-items: center;
   background-color: #fff;
-  height: 88px;
   overflow: hidden;
-  padding-right: 20px;
 }
 .btn-grp-text {
-  width: 100px;
+  flex: 1;
   font-family: PingFangSC-Regular;
   font-size: 32px;
-  line-height: 88px;
-  color: #666;
-  text-align: left;
-  padding-left: 20px;
+  line-height: 96px;
+  text-align: center;
 }
 .btn-grp-text:active {
   background-color: #9fa0a0;
+}
+.btn-cancel {
+  border-right-width: 1px;
+  border-right-style: solid;
+  border-right-color: #d7dde4;
+  color: #666;
+}
+.btn-confirm {
+  color: #000;
 }
 .midea-radiogroup-title {
   width: 550px;

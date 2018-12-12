@@ -30,7 +30,7 @@ export default {
         },
         bgColor: {
             type: String,
-            default: 'transparent'
+            default: '#ffffff'
         },
         fontSize: {
             type: String,

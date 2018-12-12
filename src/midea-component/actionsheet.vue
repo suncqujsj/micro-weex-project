@@ -7,13 +7,18 @@
                 <div class="midea-actionsheet-content">
                     <div v-bind:class="[index==0?'midea-actionsheet-list-first':'midea-actionsheet-list']" v-for="(item,index) in items" :key="index" @click="actionsheetItemClick(item,index)">
                         <slot :name="'item-'+index">
-                            <text class="midea-actionsheet-text">{{item}}</text>
+                            <div class="midea-actionsheet-textWrapper">
+                                <div v-if="selectedIndex==index" class="check-icon"></div>
+                                <text class="midea-actionsheet-text">{{item}}</text>
+                                <image v-if="selectedIndex==index" class="check-icon" src="../img/check/public_ic_done@3x.png" resize="contain"></image>
+                            </div>
                         </slot>
                     </div>
                 </div>
             </div>
             <div class="midea-actionsheet-bottom">
                 <text class="midea-actionsheet-btn" @click="actionsheetBtnClick">{{button}}</text>
+                <div :style="{height:isipx?'68px':'0px','background-color': '#ffffff'}"></div>
             </div>
         </div>
     </div>
@@ -30,6 +35,7 @@ export default {
             type: String,
             default: ""
         },
+        index: null,
         items: {
             type: Array
         },
@@ -43,13 +49,33 @@ export default {
         }
     },
     computed: {
+        isipx: function () {
+            return weex && (
+                weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6' //iphoneX
+                || weex.config.env.deviceModel === 'iPhone11,8' //iPhone XR
+                || weex.config.env.deviceModel === 'iPhone11,2' //iPhone XS
+                || weex.config.env.deviceModel === 'iPhone11,4' || weex.config.env.deviceModel === 'iPhone11,6' //iPhone XS Max
+                );
+        },
         "bottom": function () {
             //根据下拉菜单内容计算bottom距离
             var length = this.items.length;
             var len = (length + 1) * 100 + 80;
             console.log(len);
             return len;
-        }
+        },
+        selectedIndex: function () {
+            let result
+            if (this.index != null) {
+                result = this.index
+            } else {
+                let index = this.items.findIndex((item)=>{item.chekced == true})
+                if (index >= -1){
+                    result = index
+                }
+            }
+            return result
+        },
     },
     methods: {
         animationFn: function (el, translate, timing, fn) {
@@ -148,9 +174,14 @@ export default {
 .midea-actionsheet-list:active {
   background-color: #f5f5f5;
 }
+.midea-actionsheet-textWrapper{
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
 .midea-actionsheet-text {
   font-family: PingFangSC-Regular;
-  padding: 30px;
+  padding: 30px 16px;
   text-align: center;
   font-size: 32px;
   color: #000000;
@@ -165,5 +196,9 @@ export default {
 }
 .midea-actionsheet-btn:active {
   background-color: #f5f5f5;
+}
+.check-icon {
+  height: 40px;
+  width: 40px;
 }
 </style>

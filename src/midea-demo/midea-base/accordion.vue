@@ -6,7 +6,7 @@
                 <div slot="content" class="accordion-content">
                     <div v-for="(item, index) in list" class="accordion-item" :key="index" @click="selectItem(item, index)">
                         <div class="icon-wrpper">
-                            <image v-if="selectedIndex==index" class="check-icon" src="../assets/img/scene_ic_done@3x.png" resize="contain"></image>
+                            <image v-if="selectedIndex==index" class="check-icon" src="../assets/img/public_ic_done@3x.png" resize="contain"></image>
                         </div>
                         <div class="label-wrpper">
                             <text class="accordion-item-label" :class="[selectedIndex === index?'accordion-item-label-active':'']">{{item.title}}</text>

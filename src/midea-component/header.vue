@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" style="width:750px;">
-        <div  class="box" :class="[isImmersion?(isipx? 'immersion-ipx': 'immersion'):'']">
+        <div :style="headerStyleObj" class="box" :class="[isImmersion?(isipx? 'immersion-ipx': 'immersion'):'']">
             <div class="header-left-image-wrapper" @click="leftImgClick">
                 <image v-if="showLeftImg" class="header-left-image" :src="leftImg"></image>
             </div>
@@ -71,6 +71,10 @@ export default {
         rightColor: {
             type: String,
             default: '#666666'
+        },
+        custStyleObj: {
+            type: Object,
+            default: () => ({})
         }
     },
     computed: {
@@ -81,6 +85,27 @@ export default {
                 || weex.config.env.deviceModel === 'iPhone11,2' //iPhone XS
                 || weex.config.env.deviceModel === 'iPhone11,4' || weex.config.env.deviceModel === 'iPhone11,6' //iPhone XS Max
                 );
+        },
+        statusBarHeight: function () {
+            let result = '20'
+            if (weex.config.env.statusBarHeight){
+                if (weex.config.env.platform == 'iOS') {
+                    //iOS使用pt为单位
+                    result = weex.config.env.statusBarHeight
+                } else {
+                    //安卓使用px为单位
+                    result = weex.config.env.statusBarHeight / weex.config.env.scale
+                }
+            }
+            return result
+        },
+        headerStyleObj: function () {
+            return {
+                backgroundColor: this.bgColor, 
+                paddingTop: this.statusBarHeight + 'wx', 
+                height: (+this.statusBarHeight + 44) + 'wx',
+                ...this.custStyleObj
+            }
         }
     },
     data() {
@@ -122,6 +147,9 @@ export default {
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
+  /* border-bottom-width:1px;
+  border-bottom-color:#e2e2e2;
+  background-color: #e2e2e2; */
 }
 .immersion {
   padding-top: 40px;

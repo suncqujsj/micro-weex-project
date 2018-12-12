@@ -76,16 +76,9 @@ module.exports = {
             { key: 2, value: "midea-card", desc: "midea-card卡片页" },
             { key: 3, value: "community", desc: "community 社区模块" },
             { key: 4, value: "midea-rooms", desc: "midea-rooms场景" },
-            { key: 5, value: "customer-service", desc: "customer-service 服务模块" },
-            { key: 6, value: "T0x9B_0TQN36XJ",desc: "T0x9B_0TQN36XJ" },
-            { key: 7, value: "T0xB2_0TPN50QL",desc: "T0xB2_0TPN50QL" },
-            { key: 7, value: "T0xB1_0TVN50R6",desc: "830大烤箱" },
-            { key: 8, value: "T0x9B_0D50S3AT",desc: "双腔体" },
-            { key: 9, value: "T0xB1_0ET470QL",desc: "G55辅助蒸汽" },
-            { key: 10, value: "T0xE1_000000H3",desc: "T0xE1_000000H3" },
-            { key: 11, value: "T0xE1_000000H5",desc: "T0xE1_000000H5" },
+            { key: 5, value: "customer-service", desc: "customer-service 服务模块" }
         ],
-        card: 'T0xB1',
+        card: 'T0xAC',
         isShowCardList: false,
         cardIndex: null,
         cardList: [

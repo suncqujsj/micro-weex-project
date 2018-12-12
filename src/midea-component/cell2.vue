@@ -68,8 +68,9 @@
 }
 
 .cell-bottom-border {
-  border-bottom-color: #e5e5e8;
   border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #e5e5e8;
 }
 
 .midea-sub-cell {
@@ -89,8 +90,9 @@
   border-top-width: 1px;
 }
 .cell-sub-bottom-border {
-  border-bottom-color: #e5e5e8;
   border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #e5e5e8;
 }
 
 .cell-label-text {
@@ -132,7 +134,7 @@
   color: #999999;
   font-size: 28px;
   line-height: 30px;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 .item-img {
   width: 80px;

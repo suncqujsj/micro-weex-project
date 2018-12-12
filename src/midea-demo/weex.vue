@@ -100,6 +100,7 @@ module.exports = {
         advancedlist: [
             { title: 'Action Sheet', link: "actionSheet" },
             { title: 'BindingX动效(^5.2.0)', link: "bindingx" },
+            { title: 'BindingX拖拽(^5.2.0)', link: "bindingx_Pan" },
             { title: 'Barchart柱状图', link: "barchart" },
             { title: 'GCanvas画布(^5.2.0)', link: "gcanvas" },
             { title: 'Grid Select', link: "gridSelect" },
@@ -113,7 +114,9 @@ module.exports = {
             { title: 'mapPointPick地图选点', link: "mapPointPick" },
             { title: 'Nav List', link: "navList" },
             { title: 'Picker', link: "picker" },
+            { title: 'ppVideo', link: "ppvideo" },
             { title: 'Progress进度条', link: "progress" },
+            { title: 'Progresscycle环形进度条', link: "progresscycle" },
             { title: 'Refresh下拉刷新', link: "refresh" },
             { title: 'Refresh下拉刷新（非满屏可以下拉）', link: "refreshList" },
             { title: 'Share打开分享弹窗', link: "share" },
@@ -166,6 +169,7 @@ module.exports = {
             { title: 'BroadcastChannel示例', link: "broadcastChannelA" },
             { title: 'storage数据', link: "storage" },
             { title: 'weex环境变量', link: "weexEnv" },
+            { title: 'remotePage测试页面', link: "remotePage" },
         ],
         containerHeight: 1200
     }),

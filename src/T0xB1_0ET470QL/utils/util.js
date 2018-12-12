@@ -101,7 +101,6 @@ export default {
     var second = 0;
     var set_mode = params.mode;
     var messageBody = message.createMessageFFBody(19); 
-    nativeService.alert(working);
     if(working){//工作中设置类 byte11 发04，其他byte发ff
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 4);
@@ -119,21 +118,21 @@ export default {
       message.setByte(messageBody, 15, params.fireAmount);
       message.setByte(messageBody, 16, params.steamAmount);
     }else{
-      message.setByte(messageBody, 0, 0x22);
-      message.setByte(messageBody, 1, 1);
-      message.setByte(messageBody, 2, 0);
-      message.setByte(messageBody, 3, 0);
-      message.setByte(messageBody, 4, params.recipeId);
-      message.setByte(messageBody, 5, 0);
-      message.setByte(messageBody, 6, params.preheat?1:0);
-      message.setByte(messageBody, 7, hour);
-      message.setByte(messageBody, 8, minute);
-      message.setByte(messageBody, 9, second);
-      message.setByte(messageBody, 10, set_mode);
-      message.setByte(messageBody, 12, params.temperature);
-      // message.setByte(messageBody, 14, params.temperature);
-      message.setByte(messageBody, 15, params.fireAmount);
-      message.setByte(messageBody, 16, params.steamAmount);
+        message.setByte(messageBody, 0, 0x22);
+        message.setByte(messageBody, 1, 1);
+        message.setByte(messageBody, 2, 0);
+        message.setByte(messageBody, 3, 0);
+        message.setByte(messageBody, 4, params.recipeId);
+        message.setByte(messageBody, 5, 0);
+        message.setByte(messageBody, 6, params.preheat?1:0);
+        message.setByte(messageBody, 7, hour);
+        message.setByte(messageBody, 8, minute);
+        message.setByte(messageBody, 9, second);
+        message.setByte(messageBody, 10, set_mode);
+        message.setByte(messageBody, 12, params.temperature);
+        // message.setByte(messageBody, 14, params.temperature);
+        message.setByte(messageBody, 15, params.fireAmount);
+        message.setByte(messageBody, 16, params.steamAmount); 
     }
     
     var sendcmd = message.createMessage(device.type, 0x02, messageBody);

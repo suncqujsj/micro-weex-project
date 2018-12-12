@@ -262,7 +262,7 @@
                 this.warningDialog.callback = callback;
             },
             analysisFun(analysisObj) {                
-                // nativeService.alert(JSON.stringify(analysisObj));
+                //nativeService.alert(JSON.stringify(analysisObj));
                 //this.show = false;
                 if(analysisObj.displaySign.isError){
                     this.setWarningDialog("设备故障，请联系售后人员");

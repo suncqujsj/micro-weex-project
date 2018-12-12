@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" style="width:750px;">
-        <div :style="headerStyleObj" class="box" :class="[isImmersion?(isipx? 'immersion-ipx': 'immersion'):'']">
+        <div :style="headerStyleObj" class="box">
             <div class="header-left-image-wrapper" @click="leftImgClick">
                 <image v-if="showLeftImg" class="header-left-image" :src="leftImg"></image>
             </div>
@@ -30,7 +30,7 @@ export default {
         },
         bgColor: {
             type: String,
-            default: '#ffffff'
+            default: 'transparent'
         },
         fontSize: {
             type: String,

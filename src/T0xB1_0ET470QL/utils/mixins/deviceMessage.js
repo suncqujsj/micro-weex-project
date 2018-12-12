@@ -79,6 +79,7 @@ const deviceMessageMixin = {
         queryStatus() {
             var self = this;
             var sendCmd = cmdFun.createQueryMessage();
+            //this.testCmdFun(cmdFun.cmdTo16Hex(sendCmd));
             //nativeService.showLoading();
             // debugger;
             nativeService.startCmdProcess(
@@ -86,7 +87,7 @@ const deviceMessageMixin = {
                 sendCmd,
                 function (result) {
                     //nativeService.hideLoading();
-                    //nativeService.alert(JSON.stringify(result));
+                    // nativeService.alert(JSON.stringify(result));
                     var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
                     var arr = result_arr.split(",");
                     var analysisObj = cmdFun.analysisCmd(arr);
@@ -101,7 +102,7 @@ const deviceMessageMixin = {
         controlDevice(jsonCmd, working){
             let context = this;
             let deviceCmd = cmdFun.createControlMessage(jsonCmd, working);
-            // this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
+            //this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
             // return;
             nativeService.startCmdProcess(
                 "control",

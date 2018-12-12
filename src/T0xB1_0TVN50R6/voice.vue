@@ -39,7 +39,7 @@
                         title: '语音功能',
                         type: 'switch',
                         value: false,
-                        hide: true
+                        hide: false
                     },
                     {
                         title: '语音控制授权',

@@ -39,7 +39,9 @@
                 <div v-if="tab.rows[0].title" class="bg-white" style="height: 20px"></div>
                 <div class="bg-white" :class="[tab.rows[0].title && 'auto_menu']" v-for="row in tab.rows">
                     <div v-if="row.title" class="block-title-wrap row j-c a-c">
-                        <text class="block-title">{{row.title}}</text>
+                        <div class="block-title row j-c a-c">
+                            <text class="block-title-text">{{row.title}}</text>
+                        </div>
                     </div>
                     <slider v-if="tab.rows[0].title" infinite="false" style="height: 234px">
                         <div class="icon-buttons" v-for="items in row.iconButtons">
@@ -202,7 +204,7 @@
             //     return context.statisticsUpload({...constant.device, iot_device_id:dataSn});
             // });
 
-            this.statisticsUpload({...constant.device});
+            // this.statisticsUpload({...constant.device});
 
             //console.dir(JSON.stringify(this.foodMaterialItems));
         },

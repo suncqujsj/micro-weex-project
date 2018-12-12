@@ -44,7 +44,7 @@
   .dialog-box {
     background-color: #FFF;
     width: 558px;
-    border-radius:10px;
+    border-radius:20px;
     position:fixed;
     left:96px;
     z-index:100;

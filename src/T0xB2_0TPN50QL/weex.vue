@@ -202,7 +202,7 @@
             //     return context.statisticsUpload({...constant.device, iot_device_id:dataSn});
             // });
 
-            // this.statisticsUpload({...constant.device});
+            this.statisticsUpload({...constant.device});
 
             //console.dir(JSON.stringify(this.foodMaterialItems));
         },

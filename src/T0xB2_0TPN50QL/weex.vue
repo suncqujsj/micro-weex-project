@@ -35,7 +35,7 @@
 
         <!--模式操作按钮-->
         <div v-for="(tab, x) in tabs"> <!--隐藏长按组件触发查看云菜谱，方便查看云菜谱-->
-            <scroller :class="[tab.rows[0].title ?  'tab-content-gray' : 'tab-content-white' ]" v-if="tab.active" :style="{height: wrapHeight - (tabs.length > 1 ? 204*2 : 174*2)}">
+            <scroller :class="[tab.rows[0].title ?  'tab-content-gray' : 'tab-content-white' ]" v-if="tab.active" style="padding-bottom: 80px" :style="{height: wrapHeight - (tabs.length > 1 ? 204*2 : 174*2)}">
                 <div v-if="tab.rows[0].title" class="bg-white" style="height: 20px"></div>
                 <div class="bg-white" :class="[tab.rows[0].title && 'auto_menu']" v-for="row in tab.rows">
                     <div v-if="row.title" class="block-title-wrap row j-c a-c">

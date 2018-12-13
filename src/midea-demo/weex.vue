@@ -123,7 +123,7 @@ module.exports = {
             { title: 'Slider拉动条', link: "slider" },
             { title: 'Swipe手势', link: "swipe" },
             { title: 'Tab', link: "tab" },
-            { title: 'TimeCycle时间转盘', link: "timeCycle" },
+            // { title: 'TimeCycle时间转盘', link: "timeCycle" },
             { title: 'Video视频', link: "video" },
             { title: 'scrollPicker滚动选择器', link: "scrollPicker" },
             { title: 'customLoading自定义加载', link: 'customLoading'}

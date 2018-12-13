@@ -5,7 +5,7 @@
 <template>
     <div class="bg" :style="{height: wrapHeight}"  @viewappear="viewappear" @viewdisappear="viewdisappear">
 
-        <midea-header leftImg="assets/img/header/public_ic_back@3x.png" title="烤箱" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" >
+        <midea-header bgColor="transparent" leftImg="assets/img/header/public_ic_back@3x.png" title="烤箱" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" >
             <div slot="customerContent" class="header-top-wrapper">
                 <div class="header-top-inner-wrapper">
                     <div class="header-right-image-wrapper" @click="openCloudRecipe">
@@ -171,8 +171,6 @@
         mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin],
         data(){
             return {
-                list:['123','234','345','456','567'],
-                test:[{"name":"香菇","weight":"34克"},{"name":"草鱼","weight":"134克"},{"name":"香葱","weight":"1克"},{"name":"姜","weight":"1克"},{"name":"汉口白酒(49.6度)","weight":"2毫升"},{"name":"蒸鱼豉油","weight":"7毫升"},{"name":"花椒","weight":"2克"},{"name":"酱油(均值)","weight":"2毫升"}],
                 tabs:[
                     {
                         name:'自动菜单',
@@ -216,7 +214,7 @@
                 })
             },
             openMorePage: function(){
-                nativeService.goTo('test.js', {animated: true});
+                nativeService.goTo('voice.js', {animated: true});
             },
             onTabClicked: function(index){
                 // debugger;

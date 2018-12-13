@@ -22,18 +22,66 @@ let commonMixin = {
             context.deviceId = data.result.deviceId;
             nativeService.getUserInfo().then((resp) => {
                 context.uid = resp.uid;
-                context.voiceInitial(data.result.deviceId, resp.uid, context.index);
+                context.voiceInitial(data.result.deviceId, resp.uid, context.authIndex);
 
             }).catch((error) => {
-                // nativeService.alert(JSON.stringify(error));
+                nativeService.toast(JSON.stringify(error));
             });
 
         });
     },
     methods:{
 
-        onchange(event) {
-            nativeService.alert(event.value);
+        /**
+         * 语音开关点击事件
+         */
+        onControlSwitchChange(event){
+
+        },
+
+        /**
+         * 查询设备麦克风打开状态
+         */
+
+        getMicrophoneState(){
+            let params = {
+                type: '0xAI',
+                queryStrings: {
+                    'serviceUrl': "/v1/device/media/status"
+                },
+                transmitData: {
+                    deviceId: this.deviceId
+                }
+            };
+            // nativeService.alert(params);
+            // return;
+            return nativeService.requestDataTransmit(params)
+        },
+
+        /**
+         * 禁麦或打开麦克风
+         * */
+        microphoneSetting(state){
+            let params = {
+                type: '0xAI',
+                queryStrings: {
+                    'serviceUrl': "/v1/device/mic"
+                },
+                transmitData: {
+                    deviceId: this.deviceId,
+                    mic: state ? "1": "0"
+                }
+            };
+            // nativeService.alert(params);
+            // return;
+            return nativeService.requestDataTransmit(params)
+        },
+
+        /**
+         * 语音授权开关点击事件
+         */
+        onAuthSwitchChange(event) {
+            nativeService.alert(this.authIndex);
             // if(event.value) {
             //     this.voiceAuth().then((data)=>{
             //         nativeService.alert(data);
@@ -46,7 +94,12 @@ let commonMixin = {
 
         },
 
-        async voiceInitial(deviceId, uid, index=0) {
+        /**
+         * 语音授权状态初始化
+         * 1.查询是否需要进入授权
+         * 2.查询设备语音授权状态
+         */
+        async voiceInitial(deviceId, uid, authIndex=0) {
 
             //查询是否需要进入授权
             let url = 'appliance/authorize/check';
@@ -68,9 +121,9 @@ let commonMixin = {
                     // nativeService.alert(voiceAuthStateResult);
                     let data = JSON.parse(voiceAuthStateResult.returnData).data;
                     if(data) {
-                        data.status == 1 ? this.list[index].value = false : this.list[index].value = true;
+                        data.status == 1 ? this.list[authIndex].value = false : this.list[authIndex].value = true;
                     }
-                    this.list[index].hide = false;
+                    this.list[authIndex].hide = false;
                 }
             } catch (error) {
                 nativeService.alert(error);
@@ -111,6 +164,10 @@ let commonMixin = {
                 console.log(error);
             }
         },
+
+        /**
+         * 查询设备语音授权状态
+         * */
         getVoiceAuth(deviceId, userId) {
             /*
             返回示例
@@ -137,6 +194,10 @@ let commonMixin = {
             // return;
             return nativeService.requestDataTransmit(params)
         },
+
+        /**
+         * 用户授权给指定设备
+         */
         voiceAuth() {
             let url = '/mj/user/auth/device';
 
@@ -157,6 +218,9 @@ let commonMixin = {
             return nativeService.sendCentralCloundRequest(url, params)
         },
 
+        /**
+         * 取消授权
+         */
         voiceAuthCancel(){
             let params = {
                 type: '0xAI', //
@@ -170,50 +234,7 @@ let commonMixin = {
             // nativeService.alert(params);
             // return;
             return nativeService.requestDataTransmit(params)
-        },
-
-        _voiceAuth(key, url) {
-            let name = ''
-            // 1./mj/user/auth/device: 用户授权给指定设备
-            // 2./mj/user/cancel/auth/device: 用户取消设备授权
-            // 3./mj/user/check/device/auth: 检查设备是否已经授权
-            switch (key) {
-                case 1:
-                    name = '/mj/user/auth/device'
-                    break;
-                case 2:
-                    name = '/mj/user/cancel/auth/device'
-                    break;
-                case 3:
-                    name = '/mj/user/check/device/auth'
-                    break;
-                default:
-                    name = ''
-                    break;
-            }
-
-
-            if(name == '') {
-                return false
-            }
-
-
-            var timestamp = Date.parse(new Date())
-
-
-            let params = {
-                data: {
-                    timestamp: timestamp,
-                    data: {
-                        deviceId: this.userInfo.applianceId, // 设备id
-                        aiUpdateTokenUrl: url || null
-                    }
-                }
-            }
-
-
-            return nativeService.sendCentralCloundRequest(name, params)
-        },
+        }
 
     }
 };

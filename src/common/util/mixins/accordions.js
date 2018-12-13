@@ -150,7 +150,7 @@ const accordionMixin = {
             // if(jsonCmd.mode === 0xE0) { // 自动菜单
             //     jsonCmd.recipeId =  this.setValue('recipeId');
             // }
-            this.controlDevice(jsonCmd, e.working);
+            this.controlDevice(jsonCmd, e);
         },
     }
 };

@@ -140,6 +140,10 @@
         type: Boolean,
         default: false
       },
+      device: {
+        type: String,
+        default: ''
+      },
       title: {
         type: String,
         default: ''
@@ -218,7 +222,8 @@
       primaryClicked (e) {
         this.$emit('mideaDialogConfirmBtnClicked', {
           type: 'confirm',
-          working: this.working
+          working: this.working,
+          device:this.device
         });
       },
       noPromptClicked (e) {

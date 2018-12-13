@@ -1,8 +1,8 @@
 import message from "@/common/util/smartMessage";
 import  nativeService from '@/common/services/nativeService';
-import {device} from "../config/constant";
-import modes from "../config/modes.js";
-import autoMenu from "../config/auto-menu.js";
+// import {device} from "../config/constant";
+// import modes from "../config/modes.js";
+// import autoMenu from "../config/auto-menu.js";
 
 export default {
   //10进制转换8位2进制的方法
@@ -39,7 +39,7 @@ export default {
     }
     return cmd.toUpperCase();
   },
-  modeValueToModeText(recipeId,modeValue){
+  modeValueToModeText(recipeId,modeValue,tabs){
     var text = '';
     var modeArr =  [];
     var isRecipe = false;
@@ -48,7 +48,8 @@ export default {
     }
 
     if(isRecipe){
-      var  currentModes = autoMenu;
+      let autoMenu = tabs[0].rows;
+      let  currentModes = autoMenu;
        for(var i=0; i<currentModes.length; i++){
            var iconButtonsArr = currentModes[i].iconButtons; 
           for(var r=0; r<iconButtonsArr.length; r++){
@@ -65,6 +66,7 @@ export default {
          
       }
     }else{
+      let modes = tabs[1].rows;
       for(var i=0; i<modes.length; i++){
         var iconButton = modes[i].iconButtons;
         for(var k=0; k<iconButton.length; k++){
@@ -86,7 +88,7 @@ export default {
     return text;
   },
   // 查询指令
-  createQueryMessage() {
+  createQueryMessage(device) {
     var messageBody = message.createMessageBody(1);//createMessageBody默认从10开始，1表示11，2表示12....
     message.setByte(messageBody, 0, 0x31);
     var sendMessage = message.createMessage(device.type, 0x03, messageBody);
@@ -94,14 +96,14 @@ export default {
   },
  
   //控制启动指令
-  createControlMessage(params,working) {
+  createControlMessage(params,callbackData) {
     var time = params.minute;
     var hour = time/60;
     var minute = time%60;
     var second = 0;
     var set_mode = params.mode;
     var messageBody = message.createMessageBody(22); 
-    if(working){//工作中设置类 byte11 发04，其他byte发ff
+    if(callbackData.working){//工作中设置类 byte11 发04，其他byte发ff
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 4);
       message.setByte(messageBody, 2, 0xff);
@@ -135,13 +137,13 @@ export default {
       message.setByte(messageBody, 16, params.steamAmount);
     }
     
-    var sendcmd = message.createMessage(device.type, 0x02, messageBody);
+    var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
     // nativeService.alert(this.cmdTo16Hex(sendcmd));
 
     return sendcmd;
   },
   //取消工作指令
-  cmdCancelWork(){
+  cmdCancelWork(device){
     var messageBody = message.createMessageBody(7); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02); 
@@ -154,7 +156,7 @@ export default {
     return sendMessage;
   },
   //暂停or继续指令
-  cmdStartOrPause(record){
+  cmdStartOrPause(record,device){
     var messageBody = message.createMessageBody(7); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
@@ -167,7 +169,7 @@ export default {
     return sendMessage;
   },
    //上锁
-   cmdLock(params){
+   cmdLock(params,device){
     var messageBody = message.createMessageBody(7); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
@@ -179,7 +181,7 @@ export default {
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
-  analysisCmd: function(requestCmd) {
+  analysisCmd: function(requestCmd,tabs) {
     // nativeService.toast(requestCmd,6);
     var obj = {
       workingState:{
@@ -231,7 +233,7 @@ export default {
     var recipeId = parseInt(requestCmd[12])*256*256+parseInt(requestCmd[13])*256+parseInt(requestCmd[14]);
     obj.recipeId.value = recipeId;
     obj.mode.value = parseInt(requestCmd[19]);
-    obj.mode.text = this.modeValueToModeText(recipeId,parseInt(requestCmd[19]));        
+    obj.mode.text = this.modeValueToModeText(recipeId,parseInt(requestCmd[19]),tabs);        
     obj.displaySign.lock = message.getBit(requestCmd, 26, 0);
     obj.displaySign.doorSwitch = message.getBit(requestCmd, 26, 1);
     obj.displaySign.waterBox = message.getBit(requestCmd, 26, 2);

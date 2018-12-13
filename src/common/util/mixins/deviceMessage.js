@@ -21,12 +21,12 @@ const deviceMessageMixin = {
             clearInterval(this.queryTimer);
             clearInterval(this.countDownTimer);
         },
-        viewappear(){
-            this.listenerDeviceReiveMessage();
+        viewappear(tabs){
+            this.listenerDeviceReiveMessage(tabs);
         },
-        onlongpressQuery(){//隐藏调试，查看设备上报数据
+        onlongpressQuery(device){//隐藏调试，查看设备上报数据
             var self = this;
-            var sendCmd = cmdFun.createQueryMessage();
+            var sendCmd = cmdFun.createQueryMessage(device);
             nativeService.toast("下发03查询:"+JSON.stringify(sendCmd),2);
             nativeService.startCmdProcess(
                 "query",
@@ -76,9 +76,9 @@ const deviceMessageMixin = {
             let path = url + '.js'
             nativeService.goTo(path, {animated: false, replace: true})
         },
-        queryStatus() {
+        queryStatus(tabs,device) {//传入模式配置数据tabs
             var self = this;
-            var sendCmd = cmdFun.createQueryMessage();
+            var sendCmd = cmdFun.createQueryMessage(device);
             //nativeService.showLoading();
             // debugger;
             nativeService.startCmdProcess(
@@ -89,7 +89,7 @@ const deviceMessageMixin = {
                     //nativeService.alert(JSON.stringify(result));
                     var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
                     var arr = result_arr.split(",");
-                    var analysisObj = cmdFun.analysisCmd(arr);
+                    var analysisObj = cmdFun.analysisCmd(arr,tabs);
                     self.analysisFun(analysisObj);
                 },
                 function (result) {
@@ -98,9 +98,9 @@ const deviceMessageMixin = {
                 }
             );
         },
-        controlDevice(jsonCmd, working){
+        controlDevice(jsonCmd, callbackData){
             let context = this;
-            let deviceCmd = cmdFun.createControlMessage(jsonCmd, working);
+            let deviceCmd = cmdFun.createControlMessage(jsonCmd, callbackData);
             nativeService.showLoading();
             //nativeService.alert(deviceCmd);
             // return;
@@ -113,6 +113,48 @@ const deviceMessageMixin = {
                 },
                 function(result){
                     nativeService.hideLoading();
+                    nativeService.toast('控制失败，请检查网络或者设置的参数');
+                    //console.log('fail', result);
+                }
+            )
+        },
+        
+        startOrPause(device){
+            var self = this;
+            var record = 3;
+            if(this.btnText == "暂停"){
+                record = 6;
+            }
+             if(this.btnText == "继续" || this.btnText == "开始"){
+                record = 3;
+            }
+            var deviceCmd = cmdFun.cmdStartOrPause(record,device);
+            nativeService.showLoading();
+            nativeService.startCmdProcess(
+                "control",
+                deviceCmd,
+                function(result){
+                    nativeService.hideLoading();
+                    self.queryStatus();
+                },
+                function(result){
+                     nativeService.toast('控制失败，请检查网络或者设置的参数');
+                    //console.log('fail', result);
+                }
+            )
+        },
+         cancleWorking(device){
+            var self = this;
+            var deviceCmd = cmdFun.cmdCancelWork(device);
+            nativeService.showLoading();
+            nativeService.startCmdProcess(
+                "control",
+                deviceCmd,
+                function(result){
+                  nativeService.hideLoading();
+                  self.queryStatus();
+                },
+                function(result){
                     nativeService.toast('控制失败，请检查网络或者设置的参数');
                     //console.log('fail', result);
                 }
@@ -164,13 +206,13 @@ const deviceMessageMixin = {
             });
         },
 
-        listenerDeviceReiveMessage(){
+        listenerDeviceReiveMessage(tabs){//传入模式配置数据
             let context = this;
             globalEvent.addEventListener("receiveMessage", function(e) {
                 var str = e.data;
                 // nativeService.alert(str);
                 var arr = str.split(",");
-                var analysisObj = cmdFun.analysisCmd(arr); //解析04上行指令
+                var analysisObj = cmdFun.analysisCmd(arr,tabs); //解析04上行指令
                 context.analysisFun(analysisObj);
             });
 

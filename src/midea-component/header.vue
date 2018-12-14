@@ -42,7 +42,7 @@ export default {
         },
         isImmersion: {
             type: Boolean,
-            default: false
+            default: null
         },
         leftImg: {
             type: String,
@@ -100,12 +100,30 @@ export default {
             return result
         },
         headerStyleObj: function () {
-            return {
-                backgroundColor: this.bgColor, 
-                paddingTop: this.statusBarHeight + 'wx', 
-                height: (+this.statusBarHeight + 44) + 'wx',
-                ...this.custStyleObj
+            let result, isImmersion
+            if (this.isImmersion != null){
+                isImmersion = this.isImmersion
+            } else {
+                isImmersion = weex.config.env.isImmersion=="false"?false:true
             }
+            if (isImmersion) {
+                //全屏显示，weex自行处理状态栏高度
+                result = {
+                    backgroundColor: this.bgColor, 
+                    paddingTop: this.statusBarHeight + 'wx', 
+                    height: (+this.statusBarHeight + 44) + 'wx',
+                    ...this.custStyleObj
+                }
+            } else {
+                //非全屏显示，APP已经处理状态栏高度
+                result = {
+                    backgroundColor: this.bgColor, 
+                    height: '44wx',
+                    ...this.custStyleObj
+                }
+            }
+
+            return result
         }
     },
     data() {

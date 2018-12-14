@@ -1223,6 +1223,10 @@ export default {
         })
         bridgeModule.commandInterface(param, callback, callbackFail)
     },
+    //LottieView接口
+    showLottieView() {
+        
+    },
     //**********APP业务接口***************END
 
 

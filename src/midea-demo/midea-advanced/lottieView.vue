@@ -53,7 +53,7 @@ import mideaButton from '@/midea-component/button.vue'
 import nativeService from '@/common/services/nativeService'
 
 import demo1 from '../assets/lottie/play_button.json'
-import demo2 from '../assets/lottie/animated_laptop_.json'
+import demo2 from '../assets/lottie/refresh.json'
 import demo3 from '../assets/lottie/WeAcceptInlineImage.json'
 import demo4 from '../assets/lottie/lottiefiles.com - Nudge.json'
 

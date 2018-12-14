@@ -5,6 +5,8 @@
             <text class="display-text">bindingX演示 (请使用桌面浏览器打开)</text>
             <text class="display-link" @click="openWeb('https://alibaba.github.io/bindingx/demos')">https://alibaba.github.io/bindingx/demos</text>
         </div>
+        <midea-button text="抖动远球" type="primary" @mideaButtonClicked="bindTime">
+        </midea-button>
         <div style="flex:1;background-color:yellow;">
             <div ref="card" style="background-color:#6A1B9A;width:0;height:0.1;margin-left:-300;margin-top:-300" />
             <div ref="btn" class="card" style="background-color:#00ff00" @click="clickBtn" />
@@ -37,9 +39,13 @@
 import base from '../base'
 import mideaHeader from '@/midea-component/header.vue'
 import nativeService from '@/common/services/nativeService'
+import mideaButton from '@/midea-component/button.vue'
 
 import Binding from 'weex-bindingx';
 export default {
+    components: {
+        mideaButton
+    },
     mixins: [base],
     data() {
         return {
@@ -104,6 +110,26 @@ export default {
 
             });
 
+        },
+        bindTime(){
+            let btn = this.getEl(this.$refs.btn);
+            let duration = 400;
+
+            Binding.bind({
+                eventType: 'timing',
+                exitExpression: {
+                    origin: `t>${duration}`
+                },
+                props: [{
+                    element: btn,
+                    property: 'transform.scale',
+                    expression: {
+                        origin: `easeOutBounce(t,0,0.2-1.2,${duration})`
+                    }
+                }
+                ]
+
+            });
         }
     },
     mounted() {

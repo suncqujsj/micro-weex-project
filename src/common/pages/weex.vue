@@ -21,6 +21,9 @@
             </div>
         </midea-header>
 
+         <!--测试查看指令-->
+         <!--<div><text @click="setContent">下发指令:{{testCmd}}</text></div>-->
+
         <!--面板切换tabs-->
         <div class="panel"  @longpress="onlongpressQuery(constant.device)"> <!--隐藏长按组件触发03查询，方便调试-->
             <text class="panel-state">待机中</text>
@@ -262,7 +265,7 @@
                 this.warningDialog.content = content;
                 this.warningDialog.callback = callback;
             },
-            analysisFun(analysisObj) {                
+            analysisFun(analysisObj,tabs) {                
                 // nativeService.alert(JSON.stringify(analysisObj));
                 //this.show = false;
                 if(analysisObj.displaySign.isError){

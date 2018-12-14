@@ -39,6 +39,42 @@ export default {
     }
     return cmd.toUpperCase();
   },
+  getCurrentModeItem(tabs,recipeId,modeId,isRecipe){ 
+      var  _item = {};
+      if(isRecipe){
+          var autoMenu = tabs[0].rows;
+          var  currentModes = autoMenu;
+          for(var i=0; i<currentModes.length; i++){
+              var iconButtonsArr = currentModes[i].iconButtons; 
+              for(var r=0; r<iconButtonsArr.length; r++){
+                  var iconButtons = iconButtonsArr[r];
+                  for(var m=0; m<iconButtons.length; m++){
+                      if(recipeId == iconButtons[m].recipeId.default){
+                          _item = iconButtons[m];
+                          break;
+                      }
+                  }
+              }                      
+            
+          }
+      }else{
+          var modes = tabs[1].rows;
+          var  currentModes = modes;
+          for(var i=0; i<currentModes.length; i++){
+              var iconButtons = currentModes[i].iconButtons;
+              for(var m=0; m<iconButtons.length; m++){
+                
+                  if(modeId == currentModes[i].iconButtons[m].mode){
+                      _item = currentModes[i].iconButtons[m];
+                      break;
+                  }
+              
+              }
+          }
+      }
+    
+      return _item;
+  },
   modeValueToModeText(recipeId,modeValue,tabs){
     var text = '';
     var modeArr =  [];

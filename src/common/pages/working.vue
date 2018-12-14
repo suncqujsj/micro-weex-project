@@ -58,7 +58,7 @@
                     </div>
                 </div>
                 <div class="btn_section" v-if="hasStopOrContinueBtn" >
-                    <div class="image_section" @click="startOrPause(constant.device)">
+                    <div class="image_section" @click="startOrPause(tabs,constant.device)">
                         <image class="icon_image" :src="btnSrc"></image>
                     </div>
                     <div class="decs_section" >
@@ -166,6 +166,7 @@
     import mideaDialog from '@/component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
     import mideaSwitch2 from '@/midea-component/switch2.vue'
+    import cmdFun from "../util/command/util.js"; //解析指令
 
     // config data
     // import modes from "./config/modes.js";
@@ -244,7 +245,7 @@
             cancle(){
                 var self = this;
                 if(this.finishStatus){
-                    this.cancleWorking(this.constant.device);
+                    this.cancleWorking(this.tabs,this.constant.device);
                 }else{
                     this.openActionsheet();            
                 }
@@ -254,11 +255,12 @@
                     return;
                 }
                 var _isRecipe = false;
+                let {constant,tabs} = this;
                 
                 if(this.cmdObj.mode.value == 0xE0){
                     _isRecipe = true;
                 }
-                var _item = this.getCurrentItem(_isRecipe);
+                var _item = cmdFun.getCurrentModeItem(tabs,this.cmdObj.recipeId.value,this.cmdObj.mode.value,_isRecipe);
                 
                 this.modeText = _item.text;
                 this.currentItem = _item;
@@ -267,11 +269,11 @@
                 if(this.tag_next == '秒'){//倒计时为秒时，都设置1分钟
                     time = 1;
                 }
-                if(this.cmdObj.mode.value != 0x20){//因为除了蒸汽模式，时间范围1到300，其他模式都是最低值为5，所以最低值为5的模式，工作中设置时间，要强行最小值置为5
-                    if(time<5){
-                        time = 5;
-                    }
-                }
+                // if(this.cmdObj.mode.value != 0x20){//因为除了蒸汽模式，时间范围1到300，其他模式都是最低值为5，所以最低值为5的模式，工作中设置时间，要强行最小值置为5
+                //     if(time<5){
+                //         time = 5;
+                //     }
+                // }
                 this.current.time = time;
                 this.current.temperature = this.cmdObj.temperature.upLowTemperature;
                 this.currentItem.preheat.default = this.cmdObj.displaySign.preheat?true:false;
@@ -280,43 +282,6 @@
                 //nativeService.toast(this.current,3);
                 
                 this.openDialog();
-            },
-            getCurrentItem(isRecipe){
-                let {constant,tabs} = this;
-                var  _item = {};
-                if(isRecipe){
-                    var autoMenu = tabs[0].rows;
-                    var  currentModes = autoMenu;
-                     for(var i=0; i<currentModes.length; i++){
-                         var iconButtonsArr = currentModes[i].iconButtons; 
-                        for(var r=0; r<iconButtonsArr.length; r++){
-                            var iconButtons = iconButtonsArr[r];
-                             for(var m=0; m<iconButtons.length; m++){
-                                if(this.cmdObj.recipeId.value == iconButtons[m].recipeId.default){
-                                    _item = iconButtons[m];
-                                    break;
-                                }
-                            }
-                        }                      
-                       
-                    }
-                }else{
-                    var modes = tabs[1].rows;
-                     var  currentModes = modes;
-                     for(var i=0; i<currentModes.length; i++){
-                        var iconButtons = currentModes[i].iconButtons;
-                        for(var m=0; m<iconButtons.length; m++){
-                           
-                            if(this.cmdObj.mode.value == currentModes[i].iconButtons[m].mode){
-                                _item = currentModes[i].iconButtons[m];
-                                 break;
-                            }
-                        
-                        }
-                    }
-                }
-               
-                return _item;
             },
             knowClicked(){
                 this.warningDialogShow = false;
@@ -336,7 +301,7 @@
             actionsheetItemClick: function (event) {
                 
                 if(event.index == 0){
-                   this.cancleWorking(this.constant.device);
+                   this.cancleWorking(this.tabs,this.constant.device);
                 }
                
             },

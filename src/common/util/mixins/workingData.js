@@ -4,6 +4,8 @@
  */
 var numberRecord = 0; //记录跳页面的次数
 var timerRecord = 0;
+import cmdFun from "../command/util.js"; //解析指令
+import nativeService  from '@/common/services/nativeService';
 let workingModalMixin  = {
     data(){
         return {
@@ -141,7 +143,7 @@ let workingModalMixin  = {
                 allSeconds--;
             },timeSet*1000);
         },
-        analysisFun(analysisObj) {
+        analysisFun(analysisObj,tabs) {
             
             var self = this , timer = null;
             clearInterval(this.countDownTimer);
@@ -217,7 +219,14 @@ let workingModalMixin  = {
                 //      this.hasSetting = false;
                 // }
             }
-            if(analysisObj.mode.value == 0xC1 || analysisObj.mode.value == 0xC6){//清洁模式没有设置时间温度蒸汽那些
+            
+            // var _isRecipe = false;
+            // if(this.cmdObj.mode.value == 0xE0){
+            //     _isRecipe = true;
+            // }
+            //var _item = cmdFun.getCurrentModeItem(tabs,analysisObj.recipeId.value,analysisObj.mode.value,_isRecipe);
+            // nativeService.alert(_item);
+            if(analysisObj.mode.value == 0xC1 || analysisObj.mode.value == 0xC6){//清洁模式没有设置时间温度
                 this.hasSetting = false;
             }
 

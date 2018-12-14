@@ -40,7 +40,7 @@ let data = [
                         default: 0x51,
                         range:null
                     },
-                    detail: null
+                    detail: null,
                 },
                 {
                     'icon': '',

@@ -28,7 +28,7 @@ let modes = [
                 steamAmount:{
                     set:true,
                     default:2,
-                    range:[1,3,1,"取消"]
+                    range:[1,4,1,"取消"]
                 },
                 fireAmount:{
                     set:false,
@@ -58,7 +58,7 @@ let modes = [
                 steamAmount:{
                     set:true,
                     default:2,
-                    range:[1,3,1,40,40,1,"取消"]
+                    range:[40,40,1,"取消"]
                 },
                 fireAmount:{
                     set:false,
@@ -87,7 +87,7 @@ let modes = [
                 steamAmount:{
                     set:true,
                     default:2,
-                    range:[1,3,1,"取消"]
+                    range:[1,4,1,"取消"]
                 },
                 fireAmount:{
                     set:false,
@@ -203,7 +203,7 @@ let modes = [
                 steamAmount:{
                     set:true,
                     default:2,
-                    range:[1,3,1,"取消"]
+                    range:[1,4,1,"取消"]
                 },
                 fireAmount:{
                     set:false,

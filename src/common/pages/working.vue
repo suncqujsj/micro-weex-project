@@ -278,7 +278,6 @@
                 this.current.fireAmount = this.cmdObj.fire.value;
                 this.current.steamAmount = this.cmdObj.steam.value;
                 //nativeService.toast(this.current,3);
-                nativeService.alert(this.current);
                 
                 this.openDialog();
             },

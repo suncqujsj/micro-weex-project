@@ -366,6 +366,7 @@ let data = [
                     'icon': '',
                     'text': '豉汁蒸鲈鱼',
                     'mode': 0xE0,
+                    hide:true,
                     time:{
                         set: true,
                         default:10,

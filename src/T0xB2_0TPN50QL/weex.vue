@@ -45,7 +45,7 @@
                     </div>
                     <slider v-if="tab.rows[0].title" infinite="false" style="height: 234px">
                         <div class="icon-buttons" v-for="items in row.iconButtons">
-                            <div class="icon-button column" v-for="item in items" @click="onIconButtonClicked(item)">
+                            <div class="icon-button column" v-if="!item.hide" v-for="item in items" @click="onIconButtonClicked(item)">
                                 <image v-if="item.icon" class="button-icon" :src="item.icon"></image>
                                 <div v-else class="button-icon row a-c j-c">
                                     <text>{{item.time.default}}'</text>
@@ -206,7 +206,7 @@
             //     return context.statisticsUpload({...constant.device, iot_device_id:dataSn});
             // });
 
-            this.statisticsUpload({...constant.device});
+            // this.statisticsUpload({...constant.device});
 
             //console.dir(JSON.stringify(this.foodMaterialItems));
         },

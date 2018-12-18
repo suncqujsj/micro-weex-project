@@ -28,7 +28,7 @@
     import mideaSwitch2 from '@/midea-component/switch2.vue'
 
     import nativeService from "../common/services/nativeService";
-    import commonMixin from  "./utils/mixins/common.js"
+    import commonMixin from  "@/common/util/mixins/common"
     import voiceMixin from  "@/common/util/mixins/voice.js"
 
     export default {

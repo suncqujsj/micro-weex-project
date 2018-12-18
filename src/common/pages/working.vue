@@ -94,7 +94,7 @@
                         </sf-accordion>
                     </template>
                     <template v-if="item.type==='switch'">
-                        <sf-accordion v-if="currentItem && currentItem[item.key].set" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
+                        <sf-accordion v-if="currentItem && currentItem[item.key].set && !currentItem[item.key].workingPreheatHide" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
                             <div slot="right">
                                 <midea-switch2 :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
                             </div>

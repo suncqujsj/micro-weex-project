@@ -366,10 +366,10 @@ let data = [
                     'icon': '',
                     'text': '豉汁蒸鲈鱼',
                     'mode': 0xE0,
-                    hide:true,
+                    hide:false,
                     time:{
                         set: true,
-                        default:10,
+                        default:12,
                         range:[5,120,1]
                     },
                     temperature:{

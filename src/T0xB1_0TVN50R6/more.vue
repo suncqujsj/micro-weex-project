@@ -21,7 +21,7 @@
     import mideaCell from '@/midea-component/item.vue';
     import nativeService from "../common/services/nativeService";
 
-    import commonMixin from  "./utils/mixins/common.js"
+    import commonMixin from  "@/common/util/mixins/common"
 
     export default {
         mixins: [commonMixin],

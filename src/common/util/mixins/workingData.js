@@ -220,13 +220,16 @@ let workingModalMixin  = {
                 // }
             }
             
-            // var _isRecipe = false;
-            // if(this.cmdObj.mode.value == 0xE0){
-            //     _isRecipe = true;
-            // }
-            //var _item = cmdFun.getCurrentModeItem(tabs,analysisObj.recipeId.value,analysisObj.mode.value,_isRecipe);
+            var _isRecipe = false;
+            if(this.cmdObj.mode.value == 0xE0){
+                _isRecipe = true;
+            }
+            var _item = cmdFun.getCurrentModeItem(tabs,analysisObj.recipeId.value,analysisObj.mode.value,_isRecipe);
             // nativeService.alert(_item);
             if(analysisObj.mode.value == 0xC1 || analysisObj.mode.value == 0xC6){//清洁模式没有设置时间温度
+                this.hasSetting = false;
+            }
+            if(_item.settingHide){
                 this.hasSetting = false;
             }
 
@@ -251,8 +254,11 @@ let workingModalMixin  = {
                 this.cmdObj.mode.text = analysisObj.mode.text+"预热到";
                 this.tag_next = '';
                 this.statusTag = '';
-                this.hasSetting = false;
+                this.hasSetting = true;
                 this.hasStopOrContinueBtn = true;
+                if(_item.settingHide){
+                    this.hasSetting = false;
+                }
                 
             }
             if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 1){

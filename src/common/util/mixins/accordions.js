@@ -70,6 +70,10 @@ const accordionMixin = {
             let currentItem = this.currentItem;
             // debugger;
             let list = [];
+            var rangeList = currentItem[key].range;
+            if(rangeList[rangeList.length-1] == "取消"){
+                list = list.concat('取消');
+            }
             for(var i=0; 3*i<currentItem[key].range.length; i++){
                 list = list.concat(settingArrData(currentItem[key].range[3*i],currentItem[key].range[3*i+1],currentItem[key].range[3*i+2]));
             }

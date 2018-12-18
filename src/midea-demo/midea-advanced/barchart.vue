@@ -9,9 +9,13 @@
         </div>
         <midea-button text="刷新数据" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
-        <text class="display-text">
-            {{JSON.stringify(chartData)}}
-        </text>
+        <midea-button text="扫描导入数据" @mideaButtonClicked="mideaImportButtonClicked">
+        </midea-button>
+        <scroller>
+	        <text class="display-text">
+	            {{JSON.stringify(chartData)}}
+	        </text>
+        </scroller>
     </div>
 </template>
 
@@ -63,7 +67,7 @@ export default {
     data() {
         return {
             xCount: 7,
-            xValueCount: 1,
+            xValueCount: 2,
             chartData: {
                 "x": {
                     "value": [1, 2, 3, 4, 5, 6, 7],
@@ -71,27 +75,35 @@ export default {
                 },
                 "y": [
                     {
-                        "value": [1, 6, 2, 1, 2, 3, 7,],
-                        "title": "冷藏室",
+                        "value": [2, 1, 3, 4, 5, 6, 3,],
+                         "label": ["1次", "6次", "2次", "1次", "2次", "3次", "7次"],
+                        "title": "冷冻室",
                         "color": "#1B81FB", //柱子颜色
                         "background": "#ffffff"
+                    },
+                    {
+                        "value": [1, 6, 2, 1, 2, 3, 7,],
+                        "label": ["1次", "6次", "2次", "1次", "2次", "3次", "7次"],
+                        "title": "冷藏室",
+                        "color": "#BB81FB", //柱子颜色
+                        "background": "#bfffff"
                     }
                 ],
                 "xAxisColor": "#000000", //x轴线的颜色，如果不设置，则默认是白色线
-                "xAxisLabelColor": "#000000", //x label的字体颜色，如果不设置，则默认是白色线 
+                "xAxisLabelColor": "#a00000", //x label的字体颜色，如果不设置，则默认是白色线 
                 "yAxisColor": "#000000", //y轴线的颜色，如果不设置，则默认是白色线
-                "yAxisLabelColor": "#000000", // label的字体颜色，如果不设置，则默认是白色线 
+                "yAxisLabelColor": "#b00000", // label的字体颜色，如果不设置，则默认是白色线 
                 // "background": "#ffffff", //不传，则默认使用透明背景
                 "borderRadius": "0",//柱子顶部的圆角，默认为0px
                 "description": "图标描叙",
                 "legend": {
                     "position": "TOP_RIGHT", //"TOP_LEFT"/"TOP_RIGHT"
                     "orientation": "BOTTOM_RIGHT", //"HORIZONTAL"/"BOTTOM_RIGHT"
-                    "show": false //是否显示标识
+                    "show": true //是否显示标识
                 },
                 "unit": {
-                    "x": "",
-                    "y": ""
+                    "x": "x坐标",
+                    "y": "y坐标"
                 }
             }
         }
@@ -124,6 +136,25 @@ export default {
             }
 
             this.chartData = JSON.parse(JSON.stringify(tempObj))
+        },
+        mideaImportButtonClicked() {
+        	let self = this;
+        	let result = "";
+        	 nativeService.scanCode().then(
+                (resp) => {
+                	result = resp.data;
+			        if (typeof result == 'string') {
+			            try {
+			                result = JSON.parse(result)
+			            } catch (error) {
+			            	nativeService.alert("JSON数据格式有误");
+			            }
+			        }
+			        self.chartData = result;
+                }
+            ).catch((error) => {
+                result = "error: " + JSON.stringify(error || {})
+            })
         }
     },
 }

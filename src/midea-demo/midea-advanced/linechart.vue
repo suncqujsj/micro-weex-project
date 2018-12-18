@@ -4,6 +4,8 @@
         <midea-linechart-view class="linechart" :data="chartData"></midea-linechart-view>
         <midea-button text="刷新数据" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
+        <midea-button text="扫码导入数据" @mideaButtonClicked="mideaImportButtonClicked">
+        </midea-button>
         <scroller class="scroller">
             <text class="display-text">
                 {{JSON.stringify(chartData, null, 2)}}
@@ -108,6 +110,25 @@ export default {
             }
 
             this.chartData = JSON.parse(JSON.stringify(tempObj))
+        },
+        mideaImportButtonClicked() {
+        	let self = this;
+        	let result = "";
+        	 nativeService.scanCode().then(
+                (resp) => {
+                	result = resp.data;
+			        if (typeof result == 'string') {
+			            try {
+			                result = JSON.parse(result)
+			            } catch (error) {
+			            	nativeService.alert("JSON数据格式有误");
+			            }
+			        }
+			        self.chartData = result;
+                }
+            ).catch((error) => {
+                result = "error: " + JSON.stringify(error || {})
+            })
         }
     },
 }

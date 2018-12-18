@@ -123,9 +123,9 @@
     }
     .midea-actionsheet-top{
       border-radius: 10px;
-      //border-bottom-left-radius:10px;
+      /* border-bottom-left-radius:10px; */
       overflow: hidden;
-      background-color: #fff;
+      background-color: #ffffff;
     }
     .midea-actionsheet-bottom{
       margin-top: 15px;

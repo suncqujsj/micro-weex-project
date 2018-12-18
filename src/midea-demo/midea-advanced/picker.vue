@@ -62,9 +62,9 @@ export default {
                 'title': '选择城市', //取消和确定中间那标题
                 'cancelTxt': '取消', //取消按钮文字
                 'confirmTxt': '确定', //确定按钮文字,
-                'cancelTxtColor': '#666', //取消颜色
-                'confirmTxtColor': '#000', //标题颜色
-                'titleColor': '#000', //标题颜色
+                'cancelTxtColor': '#666666', //取消颜色
+                'confirmTxtColor': '#000000', //标题颜色
+                'titleColor': '#000000', //标题颜色
                 'titleBgColor': '#E7EDEF' //标题栏颜色
             }, event => {
                 nativeService.toast(event.result)
@@ -95,9 +95,9 @@ export default {
                 'title': '选择地址', //取消和确定中间那标题
                 'cancelTxt': '取消', //取消按钮文字
                 'confirmTxt': '确定', //确定按钮文字,
-                'cancelTxtColor': '#666', //取消颜色
-                'confirmTxtColor': '#000', //标题颜色
-                'titleColor': '#000', //标题颜色
+                'cancelTxtColor': '#666666', //取消颜色
+                'confirmTxtColor': '#000000', //标题颜色
+                'titleColor': '#000000', //标题颜色
                 'titleBgColor': '#E7EDEF' //标题栏颜色
             }, event => {
                 nativeService.toast(event.result)
@@ -161,9 +161,9 @@ export default {
                 'title': '选择地址', //取消和确定中间那标题
                 'cancelTxt': '取消', //取消按钮文字
                 'confirmTxt': '确定', //确定按钮文字,
-                'cancelTxtColor': '#666', //取消颜色
-                'confirmTxtColor': '#000', //标题颜色
-                'titleColor': '#000', //标题颜色
+                'cancelTxtColor': '#666666', //取消颜色
+                'confirmTxtColor': '#000000', //标题颜色
+                'titleColor': '#000000', //标题颜色
                 'titleBgColor': '#E7EDEF' //标题栏颜色
             }, event => {
                 nativeService.toast(event.result)

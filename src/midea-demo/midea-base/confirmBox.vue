@@ -71,7 +71,7 @@
         padding-top: 30px;
         padding-bottom: 16px;
         height: 458px;
-        background-color: #fff;
+        background-color: #ffffff;
     }
 </style>
 <script>  

@@ -33,7 +33,7 @@
     width: 750px;
     height: 1344px;
     align-items: center;
-    background-color:#333;
+    background-color:#333333;
     opacity:0.3;
     position:fixed;
     z-index:1000;
@@ -49,7 +49,7 @@
     padding-top:30px;padding-bottom:20px
   }
   .box-title-text{
-   font-family: PingFangSC-Medium;font-size:32px;color:#000;text-align:center
+   font-family: PingFangSC-Medium;font-size:32px;color:#000000;text-align:center
   }
   .box-input-wrapper{
     padding-left:32px;padding-right:32px;padding-top:10px;padding-bottom:24px;
@@ -58,8 +58,8 @@
     border-width: 1px;
     border-style: solid;
     border-color: #9F9F9F;
-    color:#333;
-    background-color:#FFF;
+    color:#333333;
+    background-color:#FFFFFF;
     height: 48px;
     font-size:24px;
     padding-left: 16px;
@@ -77,10 +77,10 @@
     text-align:center;font-family:PingFangSC-Regular;font-size:32px
   }
   .cancel-text {
-    color: #666;
+    color: #666666;
   }
   .confirm-text {
-    color: #000;
+    color: #000000;
   }
   .wrapper{
     background-color:#F7F7F7;

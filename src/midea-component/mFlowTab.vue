@@ -16,7 +16,7 @@
 
 <style>
 .wrapper {
-  background-color: #fff;
+  background-color: #ffffff;
   padding: 0px;
   margin: 0px;
 }
@@ -45,14 +45,14 @@
   font-family: PingFangSC-Medium;
   font-size: 32px;
   line-height: 45px;
-  color: #666;
+  color: #666666;
 }
 .tab-txt-selected {
-  color: #000;
+  color: #000000;
 }
 .tab-indicator {
   border-top-style: solid;
-  border-top-color: #000;
+  border-top-color: #000000;
   border-top-width: 2px;
   position: relative;
   top: -4px;

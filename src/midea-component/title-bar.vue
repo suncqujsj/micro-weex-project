@@ -11,7 +11,7 @@
     background-color:#F7F7F7;
   }
   .title-text{
-    color:#333;
+    color:#333333;
     font-size:24px;
   }
   .cell-top-border {

@@ -27,7 +27,7 @@
     height:88px;width:88px;
   }
   .share-txt{
-    padding-top:8px;line-height:32px;font-size:24px;color:#333;text-align:center;
+    padding-top:8px;line-height:32px;font-size:24px;color:#333333;text-align:center;
   } 
 </style>
 

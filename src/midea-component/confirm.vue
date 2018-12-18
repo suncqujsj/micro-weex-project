@@ -43,7 +43,7 @@
         font-weight: 600;
         color: #020F13;
         font-size: 36px;
-        background-color: #fff;
+        background-color: #ffffff;
     }
 
     .confirm-content-wrapper {
@@ -90,13 +90,13 @@
     .left-button {
         line-height: 96px;
         font-size: 36px;
-        color: #666;
+        color: #666666;
     }
 
     .right-button {
         line-height: 96px;
         font-size: 36px;
-        color: #000;
+        color: #000000;
     }
 </style>
 

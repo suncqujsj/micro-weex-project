@@ -25,7 +25,7 @@
 .indicator {
   height: 40px;
   width: 40px;
-  color: #666;
+  color: #666666;
   margin-top: 20px;
 }
 .panel {

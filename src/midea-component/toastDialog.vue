@@ -46,7 +46,7 @@
             },
             contentBg: {
                 type: String,
-                default: '#fff'
+                default: '#ffffff'
             },
             contentRadius: {
                 type: String,

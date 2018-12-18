@@ -206,7 +206,7 @@ export default {
 .midea-radiogroup-bottom {
   flex-direction: row;
   align-items: center;
-  background-color: #fff;
+  background-color: #ffffff;
   overflow: hidden;
 }
 .btn-grp-text {
@@ -223,10 +223,10 @@ export default {
   border-right-width: 1px;
   border-right-style: solid;
   border-right-color: #d7dde4;
-  color: #666;
+  color: #666666;
 }
 .btn-confirm {
-  color: #000;
+  color: #000000;
 }
 .midea-radiogroup-title {
   width: 550px;
@@ -245,7 +245,7 @@ export default {
   height: auto;
   padding-top: 30px;
   padding-bottom: 30px;
-  background-color: #fff;
+  background-color: #ffffff;
 }
 .midea-radiogroup-item {
   flex-direction: row;

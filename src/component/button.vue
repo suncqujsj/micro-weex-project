@@ -87,7 +87,7 @@
     background-color:#9FA0A0;
  }
  .gray:active {
-    background-color:#eee;
+    background-color:#eeeeee;
  }
  .disabled:active{
     background-color:rgba(0, 0, 0, 0.1);

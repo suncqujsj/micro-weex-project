@@ -12,7 +12,7 @@
   background-color: #f2f2f2;
 }
 .link-text {
-  color: #333;
+  color: #333333;
   font-size: 24px;
 }
 </style>

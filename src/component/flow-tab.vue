@@ -16,7 +16,7 @@
 
 <style>
 .wrapper {
-   background-color:#FFF;
+   background-color:#FFFFFF;
    padding:0px;
    margin:0px;
 }
@@ -37,7 +37,7 @@
    background-color:#F7F7F7;
 }
 .tab-item{
-   color:#333;
+   color:#333333;
    align-items: center;
    justify-content: center;
    text-align: center;

@@ -99,14 +99,14 @@
     flex-direction: row;
     border-top-width: 2px;
     border-top-style: solid;
-    border-top-color: #ccc;
+    border-top-color: #cccccc;
 }
 .btn{
     flex: 1;
     text-align: center;
     border-right-width: 2px;
     border-right-style: solid;
-    border-right-color: #ccc;
+    border-right-color: #cccccc;
     padding-top: 20px;
     padding-bottom: 20px;
 }
@@ -114,7 +114,7 @@
     position: fixed;
 }
 .info-box{
-    background-color: #fff;
+    background-color: #ffffff;
     border-radius: 10px;
 }
 .info-img{
@@ -129,6 +129,6 @@
 }
 .cancel{
     border-bottom-right-radius: 10px;
-    border-right-color: #fff;
+    border-right-color: #ffffff;
 }
 </style>

@@ -89,7 +89,7 @@
 
   .right-text{
       font-size: 24px;
-      color: #999;
+      color: #999999;
   }
 
   .cell-arrow-icon {

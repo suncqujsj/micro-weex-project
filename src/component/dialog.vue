@@ -42,7 +42,7 @@
   }
 
   .dialog-box {
-    background-color: #FFF;
+    background-color: #FFFFFF;
     width: 558px;
     border-radius:10px;
     position:fixed;

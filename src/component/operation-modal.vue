@@ -27,7 +27,7 @@
      text-align:center;
   }
   .operate-box-item-text{
-     color:#333;
+     color:#333333;
      font-size:36px;
   }
 </style>

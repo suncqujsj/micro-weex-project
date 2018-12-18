@@ -43,7 +43,7 @@ export default {
       display1: false,
       isMask: false,
       bgColor: 'transparent',
-      loadingColor: '#fff',
+      loadingColor: '#ffffff',
       opacity: 1
     }
   },
@@ -59,7 +59,7 @@ export default {
     mideaButtonClicked2() {
       this.display1 = true;
       this.bgColor = 'transparent';
-      this.loadingColor = '#fff';
+      this.loadingColor = '#ffffff';
       this.opacity = 1;
       this.isMask = false;
     },
@@ -67,7 +67,7 @@ export default {
     mideaButtonClicked3() {
       this.display1 = true;
       this.bgColor = 'rgba(0, 0, 0, 0.5)';
-      this.loadingColor = '#fff';
+      this.loadingColor = '#ffffff';
       this.opacity = 1;
       this.isMask = false;
     },
@@ -75,7 +75,7 @@ export default {
     mideaButtonClicked4() {
       this.display1 = true;
       this.bgColor = 'transparent';
-      this.loadingColor = '#fff';
+      this.loadingColor = '#ffffff';
       this.opacity = 1;
       this.isMask = true;
     }

@@ -142,7 +142,7 @@
   height: 6px;
   width: 6px;
   margin: 30px 0;
-  background-color: #fff;
+  background-color: #ffffff;
   flex: 0.1;
 }
 .custome-wrapper {

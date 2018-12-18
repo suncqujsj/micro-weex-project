@@ -25,14 +25,14 @@
     top: 0;
     width: 750px;
     height: 1344px;
-    background-color:#333;
+    background-color:#333333;
     opacity:0.3;
     position:fixed;
     z-index:10;
   }
 
   .dialog-box {
-    background-color: #FFF;
+    background-color: #FFFFFF;
     width: 558px;
     border-radius:10px;
     position:fixed;

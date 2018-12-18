@@ -38,12 +38,12 @@
   background-color: #f2f2f2;
 }
 .container {
-  background-color: #fff;
+  background-color: #ffffff;
 }
 .container-h {
   padding-left: 24px;
   padding-right: 24px;
-  background-color: #fff;
+  background-color: #ffffff;
 }
 </style>
 <script>  

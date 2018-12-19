@@ -51,7 +51,7 @@
 .btn-grp {
   height: 96px;
   flex-direction: row;
-  background-color: #fff;
+  background-color: #ffffff;
 }
 .btn-item {
     flex: 1;
@@ -69,10 +69,10 @@
   font-size: 32px;
 }
 .cancel-text {
-  color: #666;
+  color: #666666;
 }
 .confirm-text {
-  color: #000;
+  color: #000000;
 }
 </style>
 <script>  

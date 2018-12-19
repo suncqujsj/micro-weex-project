@@ -26,7 +26,7 @@
 }
 .text-indicator {
   width: 750;
-  color: #999;
+  color: #999999;
   font-size: 28px;
   text-align: center;
 }

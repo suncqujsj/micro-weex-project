@@ -92,7 +92,7 @@
 
     .device-tip-container {
         align-self: flex-end;
-        color: #fff;
+        color: #ffffff;
         height: 38px;
         padding-left: 18px;
         padding-right: 18px;
@@ -107,7 +107,7 @@
 
     .device-tip {
         font-size: 20px;
-        color: #fff;
+        color: #ffffff;
         padding-right: 17px;
     }
 

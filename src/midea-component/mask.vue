@@ -27,7 +27,7 @@
       right: 0px;
       top: 0px;
       bottom: 0px;
-      background-color: #000;
+      background-color: #000000;
       opacity: 0.6;
       align-items: center;
     }

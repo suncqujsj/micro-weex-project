@@ -41,6 +41,7 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true
                 },
                 {
                     'icon': '',
@@ -75,7 +76,8 @@ let data = [
                         default: 0x52,
                         range:null
                     },
-                    detail: null
+                    detail: null,
+                    settingHide:true
                 },
                 {
                     'icon': '',
@@ -110,7 +112,8 @@ let data = [
                         default: 0x53,
                         range:null
                     },
-                    detail: null
+                    detail: null,
+                    settingHide:true
                 },
                 {
                     'icon': '',
@@ -145,7 +148,8 @@ let data = [
                         default: 0x54,
                         range:null
                     },
-                    detail: null
+                    detail: null,
+                    settingHide:true
                 },
             ],
         ]
@@ -187,7 +191,8 @@ let data = [
                         default: 0x55,
                         range:null
                     },
-                    detail: null
+                    detail: null,
+                    settingHide:true
                 }, 
                 {
                     'icon': '',
@@ -222,7 +227,8 @@ let data = [
                         default: 0x56,
                         range:null
                     },
-                    detail: null
+                    detail: null,
+                    settingHide:true
                 }, 
                 {
                     'icon': '',
@@ -257,7 +263,8 @@ let data = [
                         default: 0x57,
                         range:null
                     },
-                    detail: null
+                    detail: null,
+                    settingHide:true
                 }, 
                 {
                     'icon': '',
@@ -292,7 +299,8 @@ let data = [
                         default: 0x58,
                         range:null
                     },
-                    detail: null
+                    detail: null,
+                    settingHide:true
                 }, 
             ],
 
@@ -335,7 +343,8 @@ let data = [
                         default: 0x59,
                         range:null
                     },
-                    detail: null
+                    detail: null,
+                    settingHide:true
                 }, 
                 {
                     'icon': '',
@@ -370,7 +379,8 @@ let data = [
                         default: 0x5A,
                         range:null
                     },
-                    detail:null
+                    detail: null,
+                    settingHide:true
                 }, 
             ]
 

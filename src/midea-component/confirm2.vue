@@ -41,7 +41,7 @@
         flex-direction:row;
         padding-top: 12px;
         padding-bottom: 12px;
-        background-color: #fff;
+        background-color: #ffffff;
     }
 
     .confirm-button-left, .confirm-button-right {
@@ -62,12 +62,12 @@
 
     .left-button {
         font-size: 32px;
-        color: #666;
+        color: #666666;
     }
 
     .right-button {
         font-size: 32px;
-        color: #000;
+        color: #000000;
     }
 </style>
 

@@ -25,7 +25,7 @@
 </template>
 <style scoped>
 .link-text {
-  color: #333;
+  color: #333333;
   font-size: 28px;
 }
 .value {

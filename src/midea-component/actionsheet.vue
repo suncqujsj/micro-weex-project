@@ -146,7 +146,7 @@ export default {
 .midea-actionsheet-top {
   border-radius: 0px;
   overflow: hidden;
-  background-color: #fff;
+  background-color: #ffffff;
 }
 .midea-actionsheet-bottom {
   margin-top: 16px;

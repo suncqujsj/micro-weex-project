@@ -84,7 +84,7 @@ export default {
         background-color: rgba(0,0,0, 0.6)
     }
     .wrap{
-        background-color: #fff;
+        background-color: #ffffff;
         width:750px;
         position: fixed;
         bottom: 0;
@@ -92,7 +92,7 @@ export default {
     .slot-floor{
         width: 750px;
         height: 500px;
-        background-color: #fff;
+        background-color: #ffffff;
         font-size: 28px;
     }
     .row-sb{ flex-direction: row; justify-content: space-between; }
@@ -109,17 +109,17 @@ export default {
         line-height: 96px;
         flex:1;
         text-align: center;
-        background-color: #fff;
+        background-color: #ffffff;
     }
     .left-button {
         font-size: 32px;
-        color: #666;
+        color: #666666;
         border-right-width: 1px;
         border-right-color: #e5e5e5;
     }
     .right-button {
         font-size: 32px;
-        color: #000;
+        color: #000000;
     }
     .bottom-offset{
         height: 154px;

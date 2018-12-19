@@ -23,7 +23,8 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: 1
+                    default: 1,
+                    workingPreheatHide: true,
                 },
                 steamAmount:{
                     set:true,
@@ -53,11 +54,12 @@ let modes = [
                 },
                 preheat:{
                     set:false,
-                    default: false
+                    default: false,
+                    workingPreheatHide: true,
                 },
                 steamAmount:{
                     set:true,
-                    default:2,
+                    default:40,
                     range:[40,40,1,"取消"]
                 },
                 fireAmount:{
@@ -82,7 +84,8 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: 1
+                    default: 1,
+                    workingPreheatHide: true,
                 },
                 steamAmount:{
                     set:true,
@@ -111,7 +114,8 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: 0
+                    default: 0,
+                    workingPreheatHide: true,
                 },
                 steamAmount:{
                     set:false,
@@ -144,7 +148,8 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: 0
+                    default: 0,
+                    workingPreheatHide: true,
                 },
                 steamAmount:{
                     set:false,
@@ -171,7 +176,8 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: 0
+                    default: 0,
+                    workingPreheatHide: true,
                 },
                 steamAmount:{
                     set:false,
@@ -183,7 +189,7 @@ let modes = [
                 }
             },
             {
-                'icon': 'assets/img/modes/down_pipe.png',
+                'icon': 'assets/img/modes/up_hot_wind@3x.png',
                 'text': '上管+红外+风扇',
                 'mode': 0x51,
                 time:{
@@ -198,7 +204,8 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: 1
+                    default: 1,
+                    workingPreheatHide: true,
                 },
                 steamAmount:{
                     set:true,
@@ -210,6 +217,36 @@ let modes = [
                     default:0
                 }
             },
+            {
+                'icon': 'assets/img/modes/descaling_cg.png',
+                'text': '除垢',
+                'mode': 0xC1,
+                time:{
+                    set: false,
+                    default:15,
+                    range:null
+                },
+                temperature:{
+                    set: false,
+                    default:null,
+                    range:null
+                },
+                preheat:{
+                    set:false,
+                    default: false,
+                    workingPreheatHide: true,
+                },
+                steamAmount:{
+                    set:false,
+                    default:null,
+                    range:null
+                },
+                fireAmount:{
+                    set:false,
+                    default:0,
+                    range:null
+                },
+            }, 
         ]
     },
 ];

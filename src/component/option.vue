@@ -47,12 +47,12 @@
       // 正常状态文字色值
       color: {
         type: String,
-        default: '#FFF'
+        default: '#FFFFFF'
       },
       // 选中状态文字色值
       checkedColor: {
         type: String,
-        default: '#FFF'
+        default: '#FFFFFF'
       },
       // 不可选状态文字色值
       disabledColor: {

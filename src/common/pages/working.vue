@@ -94,7 +94,7 @@
                         </sf-accordion>
                     </template>
                     <template v-if="item.type==='switch'">
-                        <sf-accordion v-if="currentItem && currentItem[item.key].set && !currentItem[item.key].workingPreheatHide" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
+                        <sf-accordion v-if="currentItem && currentItem[item.key].set && !currentItem[item.key].hide" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
                             <div slot="right">
                                 <midea-switch2 :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
                             </div>
@@ -279,7 +279,7 @@
                 this.currentItem.preheat.default = this.cmdObj.displaySign.preheat?true:false;
                 this.current.fireAmount = this.cmdObj.fire.value;
                 this.current.steamAmount = this.cmdObj.steam.value;
-                //nativeService.toast(this.current,3);
+                // nativeService.toast(this.current,3);
                 
                 this.openDialog();
             },

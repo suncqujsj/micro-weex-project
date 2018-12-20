@@ -41,7 +41,7 @@ let data = [
                         range:null
                     },
                     detail: null,
-                    settingHide:true
+                    settingHide:true, //工作页面，隐藏设置参数
                 },
                 {
                     'icon': '',

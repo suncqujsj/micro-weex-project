@@ -86,6 +86,9 @@ const accordionMixin = {
             };
         },
         setValue: function(key){
+            // if(this.current[key]==0){
+            //     return this.current[key];
+            // }
             return this.current[key] || (this.currentItem[key] ? this.currentItem[key].default : null);
         },
         updateAccordionFoldingStatus: function(key, value){

@@ -50,7 +50,7 @@ module.exports = {
         this.listArray = singleList;
         selectList.push(_listItem);
         this.listItem = selectList;
-        // nativeService.alert(this.listArray);
+        // nativeService.alert(this.listItem);
     },
     methods: {
         onChange(e){

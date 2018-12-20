@@ -53,6 +53,8 @@
                                 <div v-else class="button-icon row a-c j-c">
                                     <text>{{item.time.default}}'</text>
                                 </div>
+                                <!-- 不支持肉类探针的模式遮罩层 -->
+                                <div v-if="!item.probe && cmdObj.isProbe.value" class="button-icon a-c j-c probeClass"></div>
                                 <text class="button-text">{{item.text}}</text>
                             </div>
                         </div>
@@ -63,6 +65,8 @@
                             <div v-else class="button-icon row a-c j-c">
                                 <text>{{item.time.default}}'</text>
                             </div>
+                            <!-- 不支持肉类探针的模式遮罩层 -->
+                            <div v-if="!item.probe && cmdObj.isProbe.value" class='button-icon a-c j-c probeClass'></div>
                             <text class="button-text">{{item.text}}</text>
                         </div>
                     </div>
@@ -79,22 +83,32 @@
                 <!--<text v-if="currentItem" class="content-title" @click="showDetailModal">{{currentItem.text}}</text>-->
                 <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="assets/img/header/public_ic_help@3x.png" class="modal-header" :title="currentItem.text" titleText="#666666" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
 
-                <template v-for="(item, index) in accordions">
-                    <template v-if="item.type==='picker'">
-                        <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
-                            <div slot="content">
-                                <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
-                            </div>
-                        </sf-accordion>
-                    </template>
-                    <template v-if="item.type==='switch'">
-                        <sf-accordion v-if="currentItem && currentItem[item.key].set" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
-                            <div slot="right">
-                                <midea-switch2 :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
-                            </div>
-                        </sf-accordion>
-                    </template>
-                </template>
+                <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value">
+                    <sf-accordion :value="setValue('probeTemperature')" unit="°C" title="设置温度" isFolded="true"  @callback="updateAccordionFoldingStatus">
+                        <div slot="content">
+                            <wx-picker :data="range('probeTemperature')" target="probeTemperature" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                        </div>
+                    </sf-accordion>
+                </div>
+                <div v-else>
+                    <div v-for="(item, index) in accordions">
+                        <div v-if="item.type==='picker'">
+                            <sf-accordion v-if="currentItem && currentItem[item.key].set && !currentItem[item.key].isProbeThenThisHide" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                                <div slot="content">
+                                    <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                </div>
+                            </sf-accordion>
+                        </div>
+                        <div v-if="item.type==='switch'">
+                            <sf-accordion v-if="currentItem && currentItem[item.key].set && !currentItem[item.key].isProbeThenThisHide" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
+                                <div slot="right">
+                                    <midea-switch2 :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
+                                </div>
+                            </sf-accordion>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </sf-dialog>
 
@@ -156,30 +170,15 @@
     import detailModalMixin from  "@/common/util/mixins/detailModal"
     import commonMixin from  "@/common/util/mixins/common"
     import copyMixin from  "@/common/util/mixins/copy"
+    import weexData from  "@/common/util/mixins/weexData"
 
     // import constant from "./config/constant";
 
-    var numberRecord = 0; //记录跳页面的次数
-
     export default {
-        mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin,copyMixin],
+        mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin,copyMixin,weexData],
         data(){
             return {
-                // tabs:[
-                //     {
-                //         name:'自动菜单',
-                //         active:true,
-                //         rows:autoMenu
-                //     },
-                //     {
-                //         name:'加热模式',
-                //         active:false,
-                //         rows:modes
-                //     }
-                // ],
-                warningDialog: this.initWarningDialog(),
-                modeText:'',
-                srcollPaddingBottom:''
+               
             }
         },
         props: {
@@ -264,37 +263,6 @@
                 this.warningDialog.show = show;
                 this.warningDialog.content = content;
                 this.warningDialog.callback = callback;
-            },
-            analysisFun(analysisObj,tabs) {                
-                // nativeService.alert(JSON.stringify(analysisObj));
-                //this.show = false;
-                if(analysisObj.displaySign.isError){
-                    this.setWarningDialog("设备故障，请联系售后人员");
-                }
-                if(analysisObj.displaySign.lackWater){
-                    this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
-                }
-                if(analysisObj.displaySign.waterBox){
-                    this.setWarningDialog("缺水盒");
-
-                }
-                if(analysisObj.displaySign.doorSwitch){
-                    this.setWarningDialog("炉门开了");
-                }
-
-                if(analysisObj.displaySign.lock){
-                    let context = this;
-                    this.setWarningDialog("你需要关闭童锁吗？", function(){
-                        context.childLock(false);
-                    });
-                }
-
-                if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6) {
-                    numberRecord++;
-                    if(numberRecord==1){ //防止多次获取设备状态，多次跳转
-                        this.goTo("working");
-                    }
-                }
             },
             knowClicked(){
                 this.show = false;

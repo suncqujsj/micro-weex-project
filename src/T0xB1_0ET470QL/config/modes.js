@@ -14,28 +14,40 @@ let modes = [
                 time:{
                     set: true,
                     default:60,
-                    range:[1,540,1]
+                    range:[1,540,1],
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 temperature:{
                     set: true,
                     default:180,
-                    range:[30,250,1]
+                    range:[30,250,1],
                 },
                 preheat:{
                     set:true,
                     default: 1,
-                    workingPreheatHide: true,
+                    hide: true, //工作中，隐藏预热选择
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 steamAmount:{
                     set:true,
                     default:2,
-                    range:[1,4,1,"取消"]
+                    range:[0,4,1],
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 fireAmount:{
                     set:false,
                     default:0,
-                    range:null
-                }
+                    range:null,
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
+                },
+               
+                probeTemperature:{
+                    set: true,
+                    default:60,
+                    range:[50,100,1],
+                },
+                probe: true,
+               
             },
            
             {
@@ -55,12 +67,12 @@ let modes = [
                 preheat:{
                     set:false,
                     default: false,
-                    workingPreheatHide: true,
+                    hide: true,
                 },
                 steamAmount:{
                     set:true,
                     default:40,
-                    range:[40,40,1,"取消"]
+                    range:[0,0,1,40,40,1]
                 },
                 fireAmount:{
                     set:false,
@@ -75,28 +87,39 @@ let modes = [
                 time:{
                     set: true,
                     default:30,
-                    range:[1,540,1]
+                    range:[1,540,1],
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 temperature:{
                     set: true,
                     default:160,
-                    range:[50,250,1]
+                    range:[50,250,1],
+                    probeChoice: true
                 },
                 preheat:{
                     set:true,
                     default: 1,
-                    workingPreheatHide: true,
+                    hide: true,
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 steamAmount:{
                     set:true,
                     default:2,
-                    range:[1,4,1,"取消"]
+                    range:[0,4,1],
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 fireAmount:{
                     set:false,
                     default:0,
-                    range:null
-                }
+                    range:null,
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
+                },
+                probeTemperature:{
+                    set: true,
+                    default:60,
+                    range:[50,100,1],
+                },
+                probe: true,
             },
             {
                 'icon': 'assets/img/modes/up_down_and_wind.png',
@@ -115,7 +138,7 @@ let modes = [
                 preheat:{
                     set:true,
                     default: 0,
-                    workingPreheatHide: true,
+                    hide: true,
                 },
                 steamAmount:{
                     set:false,
@@ -124,7 +147,7 @@ let modes = [
                 fireAmount:{
                     set:false,
                     default:0
-                }
+                },
             },
         ]
     },
@@ -149,7 +172,7 @@ let modes = [
                 preheat:{
                     set:true,
                     default: 0,
-                    workingPreheatHide: true,
+                    hide: true,
                 },
                 steamAmount:{
                     set:false,
@@ -177,7 +200,7 @@ let modes = [
                 preheat:{
                     set:true,
                     default: 0,
-                    workingPreheatHide: true,
+                    hide: true,
                 },
                 steamAmount:{
                     set:false,
@@ -195,27 +218,38 @@ let modes = [
                 time:{
                     set: true,
                     default:20,
-                    range:[1,540,1]
+                    range:[1,540,1],
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 temperature:{
                     set: true,
                     default:180,
-                    range:[50,250,1]
+                    range:[50,250,1],
+                    probeChoice: true
                 },
                 preheat:{
                     set:true,
                     default: 1,
-                    workingPreheatHide: true,
+                    hide: true,
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 steamAmount:{
                     set:true,
                     default:2,
-                    range:[1,4,1,"取消"]
+                    range:[0,4,1],
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 fireAmount:{
                     set:false,
-                    default:0
-                }
+                    default:0,
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
+                },
+                probeTemperature:{
+                    set: true,
+                    default:60,
+                    range:[50,100,1],
+                },
+                probe: true,
             },
             {
                 'icon': 'assets/img/modes/descaling_cg.png',
@@ -234,7 +268,7 @@ let modes = [
                 preheat:{
                     set:false,
                     default: false,
-                    workingPreheatHide: true,
+                    hide: true,
                 },
                 steamAmount:{
                     set:false,

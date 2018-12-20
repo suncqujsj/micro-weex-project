@@ -46,7 +46,7 @@ let modes = [
                     default:60,
                     range:[50,100,1],
                 },
-                probe: true,
+                probe: true,//支持肉类探针
                
             },
            
@@ -94,7 +94,6 @@ let modes = [
                     set: true,
                     default:160,
                     range:[50,250,1],
-                    probeChoice: true
                 },
                 preheat:{
                     set:true,
@@ -119,7 +118,7 @@ let modes = [
                     default:60,
                     range:[50,100,1],
                 },
-                probe: true,
+                probe:true //支持肉类探针
             },
             {
                 'icon': 'assets/img/modes/up_down_and_wind.png',
@@ -225,7 +224,6 @@ let modes = [
                     set: true,
                     default:180,
                     range:[50,250,1],
-                    probeChoice: true
                 },
                 preheat:{
                     set:true,

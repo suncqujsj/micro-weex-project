@@ -5,7 +5,7 @@
 <template>
     <div class="bg" @viewappear="viewappear(tabs)" @viewdisappear="viewdisappear">
 
-        <midea-header bgColor="transparent" leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" >
+        <midea-header bgColor="transparent" leftImg="assets/img/header/public_ic_back@3x.png" :title="constant.device.title_name" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" >
             <div slot="customerContent" class="header-top-wrapper">
                 <div class="header-top-inner-wrapper">
                     <div class="header-right-image-wrapper" @click="openCloudRecipe">
@@ -75,7 +75,7 @@
         </div>
 
         <!--模式参数设置弹窗-->
-        <sf-dialog :show="show" :device="constant.device" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
+        <sf-dialog :show="show" :device="constant.device" :isProbe="cmdObj.isProbe.value" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <!--<template v-for="tab in tabs">-->
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
@@ -84,7 +84,7 @@
                 <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="assets/img/header/public_ic_help@3x.png" class="modal-header" :title="currentItem.text" titleText="#666666" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
 
                 <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value">
-                    <sf-accordion :value="setValue('probeTemperature')" unit="°C" title="设置温度" isFolded="true"  @callback="updateAccordionFoldingStatus">
+                    <sf-accordion :value="setValue('probeTemperature')" unit="°C" title="设置探针温度" isFolded="true"  @callback="updateAccordionFoldingStatus">
                         <div slot="content">
                             <wx-picker :data="range('probeTemperature')" target="probeTemperature" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                         </div>
@@ -93,14 +93,14 @@
                 <div v-else>
                     <div v-for="(item, index) in accordions">
                         <div v-if="item.type==='picker'">
-                            <sf-accordion v-if="currentItem && currentItem[item.key].set && !currentItem[item.key].isProbeThenThisHide" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                            <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                                 <div slot="content">
                                     <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                                 </div>
                             </sf-accordion>
                         </div>
                         <div v-if="item.type==='switch'">
-                            <sf-accordion v-if="currentItem && currentItem[item.key].set && !currentItem[item.key].isProbeThenThisHide" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
+                            <sf-accordion v-if="currentItem && currentItem[item.key].set" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
                                 <div slot="right">
                                     <midea-switch2 :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
                                 </div>
@@ -247,6 +247,10 @@
                 this.tabs = tabs;
             },
             onIconButtonClicked: function(item){
+                if(!item.probe && this.cmdObj.isProbe.value){
+                    nativeService.toast("该模式不支持肉类探针");
+                    return;
+                }
                 this.currentItem = item;
                 this.modeText = item.text;
                 this.openDialog();

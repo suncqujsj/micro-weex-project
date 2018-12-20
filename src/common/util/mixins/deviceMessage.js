@@ -103,7 +103,7 @@ const deviceMessageMixin = {
             let deviceCmd = cmdFun.createControlMessage(jsonCmd, callbackData);
             //this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
             nativeService.showLoading();
-            //nativeService.alert(cmdFun.cmdToEasy(deviceCmd));
+            // nativeService.alert(cmdFun.cmdToEasy(deviceCmd));
             // return;
             nativeService.startCmdProcess(
                 "control",
@@ -212,7 +212,7 @@ const deviceMessageMixin = {
             // nativeService.toast(tabs);
             globalEvent.addEventListener("receiveMessage", function(e) {
                 var str = e.data;
-                nativeService.alert(str);
+                // nativeService.alert(str);
                 var arr = str.split(",");
                 var analysisObj = cmdFun.analysisCmd(arr,tabs); //解析04上行指令
                 context.analysisFun(analysisObj,tabs);

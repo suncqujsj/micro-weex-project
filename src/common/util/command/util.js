@@ -198,24 +198,16 @@ export default {
     var minute = time%60;
     var second = 0;
     var set_mode = params.mode;
-    var messageBody = message.createMessageBody(22); 
-    if(callbackData.working){//工作中设置类 byte11 发04，其他byte发ff
-      message.setByte(messageBody, 0, 0x22);
-      message.setByte(messageBody, 1, 4);
-      message.setByte(messageBody, 2, 0xff);
-      message.setByte(messageBody, 3, 0xff);
-      message.setByte(messageBody, 4, 0xff);
-      message.setByte(messageBody, 5, 0xff);
-      message.setByte(messageBody, 6, params.preheat?1:0);
-      message.setByte(messageBody, 7, hour);
-      message.setByte(messageBody, 8, minute);
-      message.setByte(messageBody, 9, second);
-      message.setByte(messageBody, 10, set_mode);
-      message.setByte(messageBody, 12, params.temperature);
-      // message.setByte(messageBody, 14, params.temperature);
-      message.setByte(messageBody, 15, params.fireAmount);
-      message.setByte(messageBody, 16, params.steamAmount);
-    }else{
+    var messageBody = message.createMessageFFBody(22); 
+    var controltype = 0;//待机类
+    if(callbackData.working){
+      controltype = 1 //工作类
+    }
+    if(params.probe && callbackData.isProbe){//假如当前插上探针，并且 该模式支持探针，则，do
+      controltype = 2 //探针类
+    }
+    // nativeService.alert(controltype);
+    if(controltype==0){
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 1);
       message.setByte(messageBody, 2, 0);
@@ -231,6 +223,30 @@ export default {
       // message.setByte(messageBody, 14, params.temperature);
       message.setByte(messageBody, 15, params.fireAmount);
       message.setByte(messageBody, 16, params.steamAmount);
+    }
+    if(controltype == 1){//工作中设置类 byte11 发04，其他byte发ff
+      message.setByte(messageBody, 0, 0x22);
+      message.setByte(messageBody, 1, 4);
+      message.setByte(messageBody, 2, 0xff);
+      message.setByte(messageBody, 3, 0xff);
+      message.setByte(messageBody, 4, 0xff);
+      message.setByte(messageBody, 5, 0xff);
+      message.setByte(messageBody, 6, params.preheat?1:0);
+      message.setByte(messageBody, 7, hour);
+      message.setByte(messageBody, 8, minute);
+      message.setByte(messageBody, 9, second);
+      message.setByte(messageBody, 10, set_mode);
+      message.setByte(messageBody, 12, params.temperature);
+      // message.setByte(messageBody, 14, params.temperature);
+      message.setByte(messageBody, 15, params.fireAmount);
+      message.setByte(messageBody, 16, params.steamAmount);
+    }
+    if(controltype == 2){//探针类下发
+      message.setByte(messageBody, 0, 0x22);
+      message.setByte(messageBody, 1, 1);
+      message.setByte(messageBody, 10, set_mode);
+      message.setByte(messageBody, 12, 200);
+      message.setByte(messageBody, 18, params.probeTemperature);
     }
     
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);

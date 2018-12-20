@@ -117,7 +117,9 @@ const accordionMixin = {
                 preheat:false,
                 steamAmount:0,
                 fireAmount:0,
-                recipeId:null
+                recipeId:null,
+                probeTemperature: null,
+                probe: false
             }
         },
         resetState: function(){
@@ -127,6 +129,7 @@ const accordionMixin = {
         },
         handlePickerChange(data, key){
             this.current[key] = data;
+            // nativeService.alert(this.current);
         },
         onPreheatChange(event) {
             this.current.preheat = event.value;
@@ -152,6 +155,8 @@ const accordionMixin = {
                 steamAmount: this.setValue('steamAmount'),
                 fireAmount: this.setValue('fireAmount'),
                 recipeId:this.setValue('recipeId'),
+                probeTemperature: this.setValue('probeTemperature'),
+                probe:  this.currentItem.probe,
             };
 
             // if(jsonCmd.mode === 0xE0) { // 自动菜单

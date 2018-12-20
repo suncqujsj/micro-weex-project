@@ -169,7 +169,13 @@ export default {
                 nativeService.toast(event.result)
                 if (event.result == 'success') {
                     this.cascadedItem = JSON.parse(event.data)
-                    this.cascadedDesc = this.cascadedItem[0].name + "," + this.cascadedItem[1].name + "," + this.cascadedItem[2].name
+                    let tempStr = "";
+                    for(let i=0;i<this.cascadedItem.length;i++) {
+                    	tempStr += this.cascadedItem[i].name + ","
+                    }
+                    this.cascadedDesc = tempStr.substring(0,tempStr.length-1);
+                    
+//                  this.cascadedDesc = this.cascadedItem[0].name + "," + this.cascadedItem[1].name + "," + this.cascadedItem[2].name
                 }
             });
         },

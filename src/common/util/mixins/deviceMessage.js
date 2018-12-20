@@ -103,7 +103,7 @@ const deviceMessageMixin = {
             let deviceCmd = cmdFun.createControlMessage(jsonCmd, callbackData);
             //this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
             nativeService.showLoading();
-            // nativeService.alert(cmdFun.cmdToEasy(deviceCmd));
+            //nativeService.alert(cmdFun.cmdToEasy(deviceCmd));
             // return;
             nativeService.startCmdProcess(
                 "control",

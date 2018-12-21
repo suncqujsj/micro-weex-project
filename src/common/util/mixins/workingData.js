@@ -51,6 +51,7 @@ let workingModalMixin  = {
             hourMore10: false,//是否大于10小时
             hasStopOrContinueBtn: false,
             modeText:'',
+            probeProgress: null, //探针工作倒计时
 
             warningDialogShow: false,
             warningDialogTitle: "温馨提示",
@@ -110,7 +111,7 @@ let workingModalMixin  = {
                     this.goTo("weex");
                 }
             }
-            //nativeService.toast(analysisObj,5);
+            // nativeService.alert(analysisObj);
             //console.log(1);
             this.isWorking = false;
             this.isFooterShow = true;
@@ -131,6 +132,7 @@ let workingModalMixin  = {
             this.cancleIcon = 'assets/img/footer/icon_cancle@2x.png';
 
             this.cmdObj = analysisObj;
+            this.probeProgress = parseInt(analysisObj.probeRealTemperature.value/analysisObj.probeSetttingTemperature.value*100) + '%';
             
             
             //提示
@@ -142,7 +144,7 @@ let workingModalMixin  = {
                 this.warningDialogShow = true;
                 this.warningDialogContent = "主人，您的设备水箱缺水了，要及时添加水哦";
             }
-            if(analysisObj.displaySign.waterBox && analysisObj.mode.value!=0xC4){
+            if(analysisObj.displaySign.waterBox && analysisObj.mode.value!=0xC4){ //烘干不能提示缺水
                 this.warningDialogShow = true;
                 this.warningDialogContent = "主人，您的设备缺水盒了";
             }
@@ -181,6 +183,7 @@ let workingModalMixin  = {
                 _isRecipe = true;
             }
             var _item = cmdFun.getCurrentModeItem(tabs,analysisObj.recipeId.value,analysisObj.mode.value,_isRecipe);
+            //this.currentItem = _item;
             // nativeService.alert(_item);
             if(analysisObj.mode.value == 0xC1 || analysisObj.mode.value == 0xC6){//清洁模式没有设置时间温度
                 this.hasSetting = false;

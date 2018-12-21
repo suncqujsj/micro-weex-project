@@ -342,8 +342,12 @@ export default {
     obj.temperature.downHighTemperature = parseInt(requestCmd[30]);
     obj.temperature.downLowTemperature = parseInt(requestCmd[31]);
 
+    //探针温度
     obj.probeRealTemperature.value = parseInt(requestCmd[32]);
     obj.probeSetttingTemperature.value = parseInt(requestCmd[33]);
+    if(obj.isProbe.value){ //如果是探针，则为探针设定温度
+      obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
+    }
 
     obj.fire.value = parseInt(requestCmd[24]);
     obj.weight.value = parseInt(requestCmd[25]);

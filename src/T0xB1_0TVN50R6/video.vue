@@ -43,7 +43,7 @@
                 ppvideo_initdata: {
                     user: "13760621174", // userId auth
                     password: "",
-                    serverAdd: "120.55.73.80:7781",
+                    serverAdd: "120.55.73.80:7781", // server url
                     relayAddr: "",
                     iP2PTryTime: 1,
                     sInitParam: "(Debug){1}",
@@ -59,7 +59,7 @@
                     this.$refs.ppvideo,
                     {
                         api: "startLive",
-                        params: { captureId: "1234" } // sn
+                        params: { captureId: "1234" } // device sn
                     },
                     () => {
                         nativeService.toast("start 成功");

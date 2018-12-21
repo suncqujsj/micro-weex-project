@@ -13,13 +13,13 @@
                <div class="animate_section" v-if="isWorking" :style="{left:`${progress_radius-50}px`}">
                     <image class="animate_circle" src="assets/img/ellipsis_px_2.gif"></image>
                 </div>-->
-                <div>
+                <div v-if="progressShow">
                     <midea-progresscycle-view class="circleprogress" :data="chartJson"></midea-progresscycle-view>
                 </div>
 
                 <div v-if="cmdObj.isProbe.value" class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
-                    <div class="center_section">
-                        <text class="number-text work_time">{{probeProgress}}</text>
+                    <div class="content_section">
+                        <text :class="['number-text',timeShow && 'work_time',hasHour && 'hour_time']">{{probeProgress}}</text>
                     </div>
                 </div>
                
@@ -37,7 +37,7 @@
                         </div>
                     </div>
                 </div>
-                <div v-if="!cmdObj.isProbe.value" class="cen status_tag_section" :style="{width:`${progress_radius*2}px`}">
+                <div class="cen status_tag_section" :style="{width:`${progress_radius*2}px`}">
                     <text class="status_tag">{{statusTag}}</text>
                 </div>
                
@@ -229,7 +229,7 @@
                 query: query
             });
             this.queryStatus(tabs,constant.device);
-            this.queryRunTimer(20);//20秒轮询 
+            this.queryRunTimer(20,tabs,constant.device);//20秒轮询 
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             if (this.isIos){
                 this.listenerDeviceReiveMessage(tabs);
@@ -240,7 +240,7 @@
                 globalEvent.addEventListener("WXApplicationDidBecomeActiveEvent", (e) => {
                     //从后台转前台时触发
                     self.queryStatus(tabs,constant.device);
-                    self.queryRunTimer(20);//20秒轮询 
+                     this.queryRunTimer(20,tabs,constant.device);//20秒轮询 
                 });
             }
         },

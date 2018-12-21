@@ -281,6 +281,39 @@ let modes = [
             }, 
         ]
     },
+    {
+        title: '',
+        iconButtons: [   
+            {
+                'icon': 'assets/img/modes/quik_preheat@3x.png',
+                'text': '快速预热',
+                'mode': 0x4B,
+                time:{
+                    set: false,
+                    default:null,
+                    range:null
+                },
+                temperature:{
+                    set: true,
+                    default:180,
+                    range:[100,230,1]
+                },
+                preheat:{
+                    set:false,
+                    default: null,
+                    hide: true,
+                },
+                steamAmount:{
+                    set:false,
+                    default:0
+                },
+                fireAmount:{
+                    set:false,
+                    default:0
+                }
+            },
+        ]
+    },
 ];
 
 export default modes;

@@ -3,7 +3,7 @@ import  nativeService from '@/common/services/nativeService';
 // import {device} from "../config/constant";
 // import modes from "../config/modes.js";
 // import autoMenu from "../config/auto-menu.js";
-
+var latesFrameRecord = 0;
 export default {
   //10进制转换8位2进制的方法
   initAnalysisObj(){
@@ -307,7 +307,15 @@ export default {
     return sendMessage;
   },
   analysisCmd: function(requestCmd,tabs) {
-    // nativeService.toast(requestCmd,6);
+    // var receiveFrame = parseInt(requestCmd[3]);
+
+    // if(latesFrameRecord > receiveFrame){
+    //   // latesFrameRecord = newFrame;
+    //   return;
+    // }
+    // latesFrameRecord = receiveFrame;
+    // nativeService.toast(latesFrameRecord,6);
+    
     var obj = this.initAnalysisObj();
   // if(parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)){
     obj.workingState.value = parseInt(requestCmd[11]); 

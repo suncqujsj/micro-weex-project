@@ -76,6 +76,12 @@ const deviceMessageMixin = {
             let path = url + '.js'
             nativeService.goTo(path, {animated: false, replace: true})
         },
+        queryRunTimer(timeSet,tabs,device){
+            var self = this;
+            this.queryTimer = setInterval(function(){
+                self.queryStatus(tabs,device);                
+            },timeSet*1000);
+        },
         queryStatus(tabs,device) {//传入模式配置数据tabs
             var self = this;
             var sendCmd = cmdFun.createQueryMessage(device);

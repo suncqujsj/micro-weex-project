@@ -62,12 +62,6 @@ let workingModalMixin  = {
         };
     },
     methods: {
-        queryRunTimer(timeSet){
-            var self = this;
-            this.queryTimer = setInterval(function(){
-                self.queryStatus();                
-            },timeSet*1000);
-        },
         //  countDownRunTimer(timeSet){
         //     var self = this;
         //      this.countDownTimer = setInterval(function(){
@@ -132,6 +126,9 @@ let workingModalMixin  = {
             this.cancleIcon = 'assets/img/footer/icon_cancle@2x.png';
 
             this.cmdObj = analysisObj;
+            if(analysisObj.probeRealTemperature.value>analysisObj.probeSetttingTemperature.value){
+                analysisObj.probeRealTemperature.value = analysisObj.probeSetttingTemperature.value;
+            }
             this.probeProgress = parseInt(analysisObj.probeRealTemperature.value/analysisObj.probeSetttingTemperature.value*100) + '%';
             
             
@@ -201,6 +198,7 @@ let workingModalMixin  = {
                this.statusTag = '取出时小心烫手';
                this.progressShow = false;
                this.finishStatus = true;
+               this.probeProgress = '烹饪完成';
                this.cancleBtnText = '完成';
                this.cancleIcon = 'assets/img/finish_icon@2x.png';
               

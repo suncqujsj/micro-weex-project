@@ -204,6 +204,7 @@
                 query: query
             });
             this.queryStatus(tabs,constant.device);
+            //this.queryRunTimer(20,tabs,constant.device);//20秒轮询 
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             if (this.isIos){
                 this.listenerDeviceReiveMessage(tabs);

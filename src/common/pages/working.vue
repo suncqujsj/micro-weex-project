@@ -13,11 +13,17 @@
                <div class="animate_section" v-if="isWorking" :style="{left:`${progress_radius-50}px`}">
                     <image class="animate_circle" src="assets/img/ellipsis_px_2.gif"></image>
                 </div>-->
-                <div>
+                <div v-if="progressShow">
                     <midea-progresscycle-view class="circleprogress" :data="chartJson"></midea-progresscycle-view>
                 </div>
-                <div class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
-                  
+
+                <div v-if="cmdObj.isProbe.value" class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
+                    <div class="content_section">
+                        <text :class="['number-text',timeShow && 'work_time',hasHour && 'hour_time']">{{probeProgress}}</text>
+                    </div>
+                </div>
+               
+                <div v-if="!cmdObj.isProbe.value" class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
                     <div class="center_section">
                         <!--<text class="number-text">{{progress}} {{timeRemain}}</text>-->
                         <div :class="['prev_section',hourMore10 && 'prev_section_more']">
@@ -30,11 +36,11 @@
                             <text class="number_next">{{tag_next}}</text>
                         </div>
                     </div>
-                   
                 </div>
                 <div class="cen status_tag_section" :style="{width:`${progress_radius*2}px`}">
                     <text class="status_tag">{{statusTag}}</text>
                 </div>
+               
             </div>
         </div>
 
@@ -77,7 +83,7 @@
         </div>
 
          <!--模式参数设置弹窗-->
-        <sf-dialog :show="show" :device="constant.device" :working="true" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
+        <sf-dialog :show="show" :device="constant.device" :working="true"  :isProbe="cmdObj.isProbe.value" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <!--<template v-for="tab in tabs">-->
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
@@ -85,22 +91,32 @@
                 <!--<text v-if="currentItem" class="content-title" @click="showDetailModal">{{currentItem.text}}</text>-->
                 <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="assets/img/header/public_ic_help@3x.png" class="modal-header" :title="currentItem.text" titleText="#666666" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
 
-                <template v-for="(item, index) in accordions">
-                    <template v-if="item.type==='picker'">
-                        <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
-                            <div slot="content">
-                                <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
-                            </div>
-                        </sf-accordion>
-                    </template>
-                    <template v-if="item.type==='switch'">
-                        <sf-accordion v-if="currentItem && currentItem[item.key].set && !currentItem[item.key].hide" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
-                            <div slot="right">
-                                <midea-switch2 :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
-                            </div>
-                        </sf-accordion>
-                    </template>
-                </template>
+                <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value">
+                    <sf-accordion :value="setValue('probeTemperature')" unit="°C" title="设置探针温度" isFolded="true"  @callback="updateAccordionFoldingStatus">
+                        <div slot="content">
+                            <wx-picker :data="range('probeTemperature')" target="probeTemperature" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                        </div>
+                    </sf-accordion>
+                </div>
+                <div v-else>
+                    <div v-for="(item, index) in accordions">
+                        <div v-if="item.type==='picker'">
+                            <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                                <div slot="content">
+                                    <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                </div>
+                            </sf-accordion>
+                        </div>
+                        <div v-if="item.type==='switch'">
+                            <sf-accordion v-if="currentItem && currentItem[item.key].set" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
+                                <div slot="right">
+                                    <midea-switch2 :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
+                                </div>
+                            </sf-accordion>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </sf-dialog>
 
@@ -213,7 +229,7 @@
                 query: query
             });
             this.queryStatus(tabs,constant.device);
-            this.queryRunTimer(20);//20秒轮询 
+            this.queryRunTimer(20,tabs,constant.device);//20秒轮询 
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             if (this.isIos){
                 this.listenerDeviceReiveMessage(tabs);
@@ -224,7 +240,7 @@
                 globalEvent.addEventListener("WXApplicationDidBecomeActiveEvent", (e) => {
                     //从后台转前台时触发
                     self.queryStatus(tabs,constant.device);
-                    self.queryRunTimer(20);//20秒轮询 
+                     this.queryRunTimer(20,tabs,constant.device);//20秒轮询 
                 });
             }
         },
@@ -279,6 +295,7 @@
                 this.currentItem.preheat.default = this.cmdObj.displaySign.preheat?true:false;
                 this.current.fireAmount = this.cmdObj.fire.value;
                 this.current.steamAmount = this.cmdObj.steam.value;
+                this.current.probeTemperature = this.cmdObj.probeSetttingTemperature.value;
                 // nativeService.toast(this.current,3);
                 
                 this.openDialog();

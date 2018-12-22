@@ -21,6 +21,9 @@ let detailModalMixin  = {
             let list = [];
             let foodMaterial= JSON.parse(JSON.stringify(this.currentItem.detail.foodMaterial));
             let foodMaterialItems = foodMaterial.split('\n');
+            if(foodMaterial.indexOf("end") != -1){
+                foodMaterialItems = foodMaterial.split('end');
+            }
             let itemLen = foodMaterialItems.length;
             for(let i=0;i<itemLen;i++) {
                 let itemArr = foodMaterialItems[i].split(/\s+/);
@@ -40,6 +43,9 @@ let detailModalMixin  = {
             let list = [];
             let cookingSteps = this.currentItem.detail.cookingSteps;
             let steps = cookingSteps.split('\n');
+            if(cookingSteps.indexOf("end") != -1){
+                steps = cookingSteps.split('end');
+            }
             let stepLen = steps.length;
             for(let i=0;i<stepLen;i++) {
                 let step = steps[i];

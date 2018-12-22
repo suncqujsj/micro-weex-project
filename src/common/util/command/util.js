@@ -353,7 +353,7 @@ export default {
     //探针温度
     obj.probeRealTemperature.value = parseInt(requestCmd[32]);
     obj.probeSetttingTemperature.value = parseInt(requestCmd[33]);
-    if(obj.isProbe.value){ //如果是探针，则为探针设定温度
+    if(obj.isProbe.value){ //如果是探针，则为显示为探针设定温度
       obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
     }
 

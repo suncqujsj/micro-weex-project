@@ -204,8 +204,10 @@ export default {
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
-   //上锁
-   cmdLock(params,device){
+
+
+    // 上锁
+  cmdLock(params,device){
     var messageBody = message.createMessageBody(7); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);

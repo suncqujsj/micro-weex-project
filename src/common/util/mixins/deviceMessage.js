@@ -76,6 +76,12 @@ const deviceMessageMixin = {
             let path = url + '.js'
             nativeService.goTo(path, {animated: false, replace: true})
         },
+        queryRunTimer(timeSet,tabs,device){
+            var self = this;
+            this.queryTimer = setInterval(function(){
+                self.queryStatus(tabs,device);                
+            },timeSet*1000);
+        },
         queryStatus(tabs,device) {//传入模式配置数据tabs
             var self = this;
             var sendCmd = cmdFun.createQueryMessage(device);
@@ -212,7 +218,7 @@ const deviceMessageMixin = {
             // nativeService.toast(tabs);
             globalEvent.addEventListener("receiveMessage", function(e) {
                 var str = e.data;
-                nativeService.alert(str);
+                // nativeService.alert(str);
                 var arr = str.split(",");
                 var analysisObj = cmdFun.analysisCmd(arr,tabs); //解析04上行指令
                 context.analysisFun(analysisObj,tabs);

@@ -30,7 +30,7 @@
             return {
                 list:[
                     {
-                        title: '产品型号：'+constant.device.sales_model,
+                        title: '产品型号：蒸汽炉 TPN50EQL-SSL',
                         link:'https://m.ximalaya.com/wwys/v1/e/1?from=groupmessage&isappinstalled=0'
                     },
                     {

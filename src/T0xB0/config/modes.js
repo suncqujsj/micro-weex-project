@@ -9,44 +9,44 @@ let modes = [
         iconButtons: [
             {
                 'icon': 'assets/img/modes/up_down_pipe.png',
-                'text': '上下管',
-                'mode': 0x4C,
+                'text': '微波加热',
+                'mode': 0x01,
                 time:{
                     set: true,
-                    default:60,
+                    default:10,
                     range:[1,540,1],
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 temperature:{
-                    set: true,
-                    default:180,
+                    set: false,
+                    default:null,
                     range:[30,250,1],
                 },
                 preheat:{
-                    set:true,
-                    default: 1,
+                    set:false,
+                    default: null,
                     hide: true, //工作中，隐藏预热选择
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 steamAmount:{
-                    set:true,
-                    default:2,
+                    set:false,
+                    default:null,
                     range:[0,4,1],
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null,
+                    set:true,
+                    default:10,
+                    range:[1,10,1],
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                
                 probeTemperature:{
-                    set: true,
+                    set: false,
                     default:60,
                     range:[50,100,1],
                 },
-                probe: true,//支持肉类探针
+                probe: false,//支持肉类探针
                
             },
            
@@ -279,39 +279,6 @@ let modes = [
                     range:null
                 },
             }, 
-        ]
-    },
-    {
-        title: '',
-        iconButtons: [   
-            {
-                'icon': 'assets/img/modes/quik_preheat@3x.png',
-                'text': '快速预热',
-                'mode': 0x4B,
-                time:{
-                    set: false,
-                    default:null,
-                    range:null
-                },
-                temperature:{
-                    set: true,
-                    default:180,
-                    range:[100,230,1]
-                },
-                preheat:{
-                    set:false,
-                    default: null,
-                    hide: true,
-                },
-                steamAmount:{
-                    set:false,
-                    default:0
-                },
-                fireAmount:{
-                    set:false,
-                    default:0
-                }
-            },
         ]
     },
 ];

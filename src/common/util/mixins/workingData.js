@@ -29,9 +29,9 @@ let workingModalMixin  = {
             progress_radius: 280,
             tag_next: '',
             btnText: "暂停",
-            btnSrc: "assets/img/footer/icon_pause@2x.png",
+            btnSrc: "img/footer/icon_pause@2x.png",
             cancleBtnText: '关闭',
-            cancleIcon: 'assets/img/footer/icon_cancle@2x.png',
+            cancleIcon: 'img/footer/icon_cancle@2x.png',
             progressShow: true, //是否显示圆圈
             finishStatus: false, //完成状态
             preheatFinishTig: false, //预热完成指引
@@ -123,7 +123,7 @@ let workingModalMixin  = {
             this.statusTag = '剩余时间';
             this.hasStopOrContinueBtn = false;
             this.cancleBtnText = '关闭';
-            this.cancleIcon = 'assets/img/footer/icon_cancle@2x.png';
+            this.cancleIcon = 'img/footer/icon_cancle@2x.png';
 
             this.cmdObj = analysisObj;
             if(analysisObj.probeRealTemperature.value>analysisObj.probeSetttingTemperature.value){
@@ -156,7 +156,7 @@ let workingModalMixin  = {
                 this.timeShow = true;
                 this.hasSetting = true;
                 this.btnText = "暂停";
-                this.btnSrc = "assets/img/footer/icon_pause@2x.png";
+                this.btnSrc = "img/footer/icon_pause@2x.png";
                 this.hasStopOrContinueBtn = true;
                 // if(analysisObj.mode.value == 0xE0){//云菜谱没有设置时间温度蒸汽那些
                 //      this.hasSetting = false;
@@ -166,7 +166,7 @@ let workingModalMixin  = {
                 this.timeShow = true;
                 this.hasSetting = true;
                 this.btnText = "继续";
-                this.btnSrc = "assets/img/footer/icon_start@2x.png";
+                this.btnSrc = "img/footer/icon_start@2x.png";
                 this.isTimerStop = true;
                 this.statusTag = '暂停中';
                 this.hasStopOrContinueBtn = true;
@@ -200,7 +200,7 @@ let workingModalMixin  = {
                this.finishStatus = true;
                this.probeProgress = '烹饪完成';
                this.cancleBtnText = '完成';
-               this.cancleIcon = 'assets/img/finish_icon@2x.png';
+               this.cancleIcon = 'img/finish_icon@2x.png';
               
             }
              if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 0){
@@ -232,7 +232,7 @@ let workingModalMixin  = {
                 this.hasStopOrContinueBtn = true;
                 this.hasSetting = false;
                 this.btnText = "开始";
-                this.btnSrc = "assets/img/footer/icon_start@2x.png";
+                this.btnSrc = "img/footer/icon_start@2x.png";
                
             }
                   //倒计时按照设计来

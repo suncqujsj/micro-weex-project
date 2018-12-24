@@ -8,7 +8,7 @@ let modes = [
         title: '',
         iconButtons: [
             {
-                'icon': 'assets/img/modes/up_down_pipe.png',
+                'icon': 'img/modes/up_down_pipe.png',
                 'text': '微波加热',
                 'mode': 0x01,
                 time:{
@@ -51,7 +51,7 @@ let modes = [
             },
            
             {
-                'icon': 'assets/img/modes/fermentation@3x.png',
+                'icon': 'img/modes/fermentation@3x.png',
                 'text': '发酵',
                 'mode': 0xB0,
                 time:{
@@ -81,7 +81,7 @@ let modes = [
                 }
             },
             {
-                'icon': 'assets/img/modes/hot_wind@3x.png',
+                'icon': 'img/modes/hot_wind@3x.png',
                 'text': '热风对流',
                 'mode': 0x41,
                 time:{
@@ -121,7 +121,7 @@ let modes = [
                 probe:true //支持肉类探针
             },
             {
-                'icon': 'assets/img/modes/up_down_and_wind.png',
+                'icon': 'img/modes/up_down_and_wind.png',
                 'text': '上下管+风扇',
                 'mode': 0x52,
                 time:{
@@ -155,7 +155,7 @@ let modes = [
         iconButtons: [
           
             {
-                'icon': 'assets/img/modes/Infra-red.png',
+                'icon': 'img/modes/Infra-red.png',
                 'text': '红外管',
                 'mode': 0x47,
                 time:{
@@ -183,7 +183,7 @@ let modes = [
                 }
             },
             {
-                'icon': 'assets/img/modes/down_pipe.png',
+                'icon': 'img/modes/down_pipe.png',
                 'text': '下管',
                 'mode': 0x49,
                 time:{
@@ -211,7 +211,7 @@ let modes = [
                 }
             },
             {
-                'icon': 'assets/img/modes/up_hot_wind@3x.png',
+                'icon': 'img/modes/up_hot_wind@3x.png',
                 'text': '上管+红外+风扇',
                 'mode': 0x51,
                 time:{
@@ -250,7 +250,7 @@ let modes = [
                 probe: true,
             },
             {
-                'icon': 'assets/img/modes/descaling_cg.png',
+                'icon': 'img/modes/descaling_cg.png',
                 'text': '除垢',
                 'mode': 0xC1,
                 time:{

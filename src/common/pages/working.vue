@@ -3,7 +3,7 @@
 </style>
 <template>
     <div  class="all_section"  @viewappear="viewappear(tabs)" @viewdisappear="viewdisappear">
-        <midea-header bgColor="transparent" leftImg="assets/img/header/public_ic_back@3x.png" :title="constant.device.title_name" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack"></midea-header>
+        <midea-header bgColor="transparent" leftImg="img/header/public_ic_back@3x.png" :title="constant.device.title_name" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack"></midea-header>
         <div class="progress_content"  @longpress="onlongpressQuery(constant.device)"><!--隐藏长按组件触发03查询，方便调试-->
             <div class="progress_section" :style="progress_style" > 
                 <!--<wxcProgress :percent="progress" :progressShow="progressShow"
@@ -11,7 +11,7 @@
 
                 </wxcProgress>
                <div class="animate_section" v-if="isWorking" :style="{left:`${progress_radius-50}px`}">
-                    <image class="animate_circle" src="assets/img/ellipsis_px_2.gif"></image>
+                    <image class="animate_circle" src="img/ellipsis_px_2.gif"></image>
                 </div>-->
                 <div v-if="progressShow">
                     <midea-progresscycle-view class="circleprogress" :data="chartJson"></midea-progresscycle-view>
@@ -50,7 +50,7 @@
         </div>
         <div class="detail_section" v-if="hasSetting">
             <div class="edit_section" @click="setting">
-                <image class="setting_icon" src="assets/img/edit_icon@2x.png" ></image>
+                <image class="setting_icon" src="img/edit_icon@2x.png" ></image>
             </div>
         </div>
         <div class="footer_section" v-if="isFooterShow">
@@ -89,7 +89,7 @@
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
                 <!--</template>-->
                 <!--<text v-if="currentItem" class="content-title" @click="showDetailModal">{{currentItem.text}}</text>-->
-                <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="assets/img/header/public_ic_help@3x.png" class="modal-header" :title="currentItem.text" titleText="#666666" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
+                <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header" :title="currentItem.text" titleText="#666666" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
 
                 <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value">
                     <sf-accordion :value="setValue('probeTemperature')" unit="°C" title="设置探针温度" isFolded="true"  @callback="updateAccordionFoldingStatus">
@@ -122,7 +122,7 @@
 
         <detail-modal :show="showDetailVisibility" @close="closeDetailModal">
             <div slot="title">
-                <modal-header  leftImg="assets/img/header/public_ic_gray@3x.png" class="modal-header" :title="modeText" titleText="#666666" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>
+                <modal-header  leftImg="img/header/public_ic_gray@3x.png" class="modal-header" :title="modeText" titleText="#666666" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>
             </div>
             <div slot="content" class="content-wrap" :style="{'height':338*2 + 'px'}">
                 <div class="content-block row" :style="{'padding-top':14*2-3+'px'}">

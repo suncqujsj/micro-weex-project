@@ -26,9 +26,7 @@
         },
         components:{commonWeex},
         created(){
-            let context = this;
-            nativeService.setItem("modeData",context.tabs);
-            nativeService.setItem("constantData",context.constant);
+          
         },
         methods: {
            

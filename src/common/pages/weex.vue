@@ -5,17 +5,17 @@
 <template>
     <div class="bg" @viewappear="viewappear(tabs)" @viewdisappear="viewdisappear">
 
-        <midea-header bgColor="transparent" leftImg="assets/img/header/public_ic_back@3x.png" :title="constant.device.title_name" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" >
+        <midea-header bgColor="transparent" leftImg="img/header/public_ic_back@3x.png" :title="constant.device.title_name" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack" >
             <div slot="customerContent" class="header-top-wrapper">
                 <div class="header-top-inner-wrapper">
                     <div class="header-right-image-wrapper" @click="openCloudRecipe">
-                        <image class="header-right-image" :src="'assets/img/header/public_ic_cloud_recipe@3x.png'"></image>
+                        <image class="header-right-image" :src="'img/header/public_ic_cloud_recipe@3x.png'"></image>
                     </div>
                     <!--<div class="header-right-image-wrapper" @click="childLock(true)">
-                        <image class="header-right-image" :src="'assets/img/header/public_ic_babylock@3x.png'"></image>
+                        <image class="header-right-image" :src="'img/header/public_ic_babylock@3x.png'"></image>
                     </div>-->
                     <div class="header-right-image-wrapper" @click="openMorePage">
-                        <image class="header-right-image" :src="'assets/img/header/public_ic_lots@3x.png'"></image>
+                        <image class="header-right-image" :src="'img/header/public_ic_lots@3x.png'"></image>
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
                 <!--</template>-->
                 <!--<text v-if="currentItem" class="content-title" @click="showDetailModal">{{currentItem.text}}</text>-->
-                <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="assets/img/header/public_ic_help@3x.png" class="modal-header" :title="currentItem.text" titleText="#666666" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
+                <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header" :title="currentItem.text" titleText="#666666" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
 
                 <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value">
                     <sf-accordion :value="setValue('probeTemperature')" unit="°C" title="设置探针温度" isFolded="true"  @callback="updateAccordionFoldingStatus">
@@ -114,7 +114,7 @@
 
         <detail-modal :show="showDetailVisibility" @close="closeDetailModal">
             <div slot="title">
-                <modal-header leftImg="assets/img/header/public_ic_gray@3x.png" class="modal-header" :title="modeText" titleText="#666666" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>
+                <modal-header leftImg="img/header/public_ic_gray@3x.png" class="modal-header" :title="modeText" titleText="#666666" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>
             </div>
             <div slot="content" class="content-wrap" :style="{'height':338*2 + 'px'}">
                 <div class="content-block row" :style="{'padding-top':14*2-3+'px'}">

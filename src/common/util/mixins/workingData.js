@@ -38,51 +38,7 @@ let workingModalMixin  = {
             isFooterShow: false,
             isWorking: false,
 
-            cmdObj:{
-                workingState:{
-                    name:"工作状态",value:0x00,view:{1:"省电",2:"待机",3:"工作中",4:"烹饪完成",5:"预约中",6:"暂停",7:"云菜谱段间等待",8:"爱心3秒"}
-                },
-                mode:{
-                    name:"烹饪模式",text: '',value:0x00
-                },
-                recipeId:{
-                  name:"菜谱id",text: '',value:0x00
-                },
-                displaySign:{
-                    name:"显示标志",
-                    lock:{name:"童锁",value:0x00,view:{0:"未锁",1:"已锁"}},
-                    doorSwitch:{name:"门状态",value:0x00,view:{0:"门关",1:"门开"}},
-                    waterBox:{name:"水箱位",value:0x00,view:{0:"有水箱",1:"缺水箱"}},
-                    lackWater:{name:"缺水位",value:0x00,view:{0:"不缺水",1:"缺水"}},
-                    changeWater:{name:"换水位",value:0x00,view:{0:"不需要换水",1:"要换水"}},
-                    preheat:{name:"是否预热",value:0x00,view:{0:"非预热中",1:"预热中"}},
-                    preheatTemperature:{name:"预热温度位",value:0x00,view:{0:"预热温度未到",1:"预热温度已到"}},
-                    isError:{name:"是否故障",value:0x00,view:{0:"无故障",1:"有故障"}},
-                },
-                timeRemaining:{
-                    name:"程序剩余时间",
-                    hour: {name:"小时",value: 0x00},
-                    minute: {name:"分钟",value: 0x00},
-                    second: {name:"秒",value: 0x00},
-                },
-                temperature:{
-                  name:"发热管设置的温度",
-                  upHighTemperature: {name:"上管设置温度：高",value: 0x00},
-                  upLowTemperature: {name:"上管设置温度：低",value: 0x00},
-                  downHighTemperature: {name:"下管设置温度：高",value: 0x00},
-                  downLowTemperature: {name:"下管设置温度：低",value: 0x00},
-                },
-                realTemperature:{
-                  name:"发热管实际的温度",
-                  upHighTemperature: {name:"上管实际温度：高",value: 0x00},
-                  upLowTemperature: {name:"上管实际温度：低",value: 0x00},
-                  downHighTemperature: {name:"下管实际温度：高",value: 0x00},
-                  downLowTemperature: {name:"下管实际温度：低",value: 0x00},
-                },
-                fire:{name: "火力",value: 0x00},
-                weight:{name: "重量",value: 0x00},
-                steam:{name: "蒸汽量",value: 0x00},
-            }, //指令解析对象
+            cmdObj:cmdFun.initAnalysisObj(), //指令解析对象
           
             timeShow: false, //是否显示时间
             workSpecialStatusText: '',  //显示当前状态
@@ -95,6 +51,7 @@ let workingModalMixin  = {
             hourMore10: false,//是否大于10小时
             hasStopOrContinueBtn: false,
             modeText:'',
+            probeProgress: null, //探针工作倒计时
 
             warningDialogShow: false,
             warningDialogTitle: "温馨提示",
@@ -105,12 +62,6 @@ let workingModalMixin  = {
         };
     },
     methods: {
-        queryRunTimer(timeSet){
-            var self = this;
-            this.queryTimer = setInterval(function(){
-                self.queryStatus();                
-            },timeSet*1000);
-        },
         //  countDownRunTimer(timeSet){
         //     var self = this;
         //      this.countDownTimer = setInterval(function(){
@@ -154,7 +105,7 @@ let workingModalMixin  = {
                     this.goTo("weex");
                 }
             }
-            //nativeService.toast(analysisObj,5);
+            // nativeService.alert(analysisObj);
             //console.log(1);
             this.isWorking = false;
             this.isFooterShow = true;
@@ -175,6 +126,10 @@ let workingModalMixin  = {
             this.cancleIcon = 'assets/img/footer/icon_cancle@2x.png';
 
             this.cmdObj = analysisObj;
+            if(analysisObj.probeRealTemperature.value>analysisObj.probeSetttingTemperature.value){
+                analysisObj.probeRealTemperature.value = analysisObj.probeSetttingTemperature.value;
+            }
+            this.probeProgress = parseInt(analysisObj.probeRealTemperature.value/analysisObj.probeSetttingTemperature.value*100) + '%';
             
             
             //提示
@@ -186,7 +141,7 @@ let workingModalMixin  = {
                 this.warningDialogShow = true;
                 this.warningDialogContent = "主人，您的设备水箱缺水了，要及时添加水哦";
             }
-            if(analysisObj.displaySign.waterBox && analysisObj.mode.value!=0xC4){
+            if(analysisObj.displaySign.waterBox && analysisObj.mode.value!=0xC4){ //烘干不能提示缺水
                 this.warningDialogShow = true;
                 this.warningDialogContent = "主人，您的设备缺水盒了";
             }
@@ -225,6 +180,7 @@ let workingModalMixin  = {
                 _isRecipe = true;
             }
             var _item = cmdFun.getCurrentModeItem(tabs,analysisObj.recipeId.value,analysisObj.mode.value,_isRecipe);
+            //this.currentItem = _item;
             // nativeService.alert(_item);
             if(analysisObj.mode.value == 0xC1 || analysisObj.mode.value == 0xC6){//清洁模式没有设置时间温度
                 this.hasSetting = false;
@@ -242,6 +198,7 @@ let workingModalMixin  = {
                this.statusTag = '取出时小心烫手';
                this.progressShow = false;
                this.finishStatus = true;
+               this.probeProgress = '烹饪完成';
                this.cancleBtnText = '完成';
                this.cancleIcon = 'assets/img/finish_icon@2x.png';
               

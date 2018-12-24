@@ -150,6 +150,10 @@
         type: String,
         default: ''
       },
+      isProbe:{
+        type: Number,
+        default: 0
+      },
       title: {
         type: String,
         default: ''
@@ -230,7 +234,8 @@
           type: 'confirm',
           working: this.working,
           device:this.device,
-          tabs:this.tabs
+          tabs:this.tabs,
+          isProbe: this.isProbe
         });
       },
       noPromptClicked (e) {

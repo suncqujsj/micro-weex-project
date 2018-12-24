@@ -1,22 +1,28 @@
 <template>
     <div class="wrapper" :style="{paddingTop:isIos?'0px':'0px'}">
         <midea-header title="lottieView动效视图" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
-        <div style="height: 350px;">
-            <midea-lottie-view v-if="lottieData" class="lottie" :data="lottieData" :loop="true"></midea-lottie-view>
-        </div>
-        <div class="botton-group">
-            <midea-button class="botton" text="加载demo1" @mideaButtonClicked="mideaButtonClicked(0)">
-            </midea-button>
-            <midea-button class="botton" text="加载demo2" @mideaButtonClicked="mideaButtonClicked(1)">
-            </midea-button>
-            <midea-button class="botton" text="加载demo3" @mideaButtonClicked="mideaButtonClicked(2)">
-            </midea-button>
-            <midea-button class="botton" text="加载demo4" @mideaButtonClicked="mideaButtonClicked(3)">
-            </midea-button>
-        </div>
-        <textarea class="display-text" v-model="newData" rows="10"></textarea>
-        <midea-button text="加载自定义" @mideaButtonClicked="mideaButtonClicked1()">
-        </midea-button>
+        <scroller>
+	        <div style="height: 350px;">
+	            <midea-lottie-view v-if="lottieData" ref="lottieView" class="lottie" :dataUrl="url" :data="lottieData" :loop="true"></midea-lottie-view>
+	        </div>
+	        <div class="botton-group">
+	            <midea-button class="botton" text="加载demo1" @mideaButtonClicked="mideaButtonClicked(0)">
+	            </midea-button>
+	            <midea-button class="botton" text="加载demo2" @mideaButtonClicked="mideaButtonClicked(1)">
+	            </midea-button>
+	            <midea-button class="botton" text="加载demo3" @mideaButtonClicked="mideaButtonClicked(2)">
+	            </midea-button>
+	            <midea-button class="botton" text="加载demo4" @mideaButtonClicked="mideaButtonClicked(3)">
+	            </midea-button>
+	        </div>
+	        
+	        <midea-button text="加载自定义" @mideaButtonClicked="mideaButtonClicked1()"></midea-button>
+	        <midea-button text="play" @mideaButtonClicked="mideaButtonControl('play')"></midea-button>
+	        <midea-button text="pause" @mideaButtonClicked="mideaButtonControl('pause')"></midea-button>
+	        <midea-button text="resume" @mideaButtonClicked="mideaButtonControl('resume')"></midea-button>
+	        <midea-button text="stop" @mideaButtonClicked="mideaButtonControl('stop')"></midea-button>
+	        <textarea class="display-text" v-model="newData" rows="10"></textarea>
+        </scroller>
     </div>
 </template>
 
@@ -56,6 +62,7 @@ import demo1 from '../assets/lottie/play_button.json'
 import demo2 from '../assets/lottie/refresh.json'
 import demo3 from '../assets/lottie/WeAcceptInlineImage.json'
 import demo4 from '../assets/lottie/lottiefiles.com - Nudge.json'
+const lottieModule = weex.requireModule('lottieModule');
 
 export default {
     components: { mideaHeader, mideaButton },
@@ -69,7 +76,8 @@ export default {
                 demo3,
                 demo4
             ],
-            lottieData: ""
+            lottieData: "",
+            url: "http://10.73.12.140:8080/dist/midea-demo/assets/lottie/animated_laptop_.json"
         }
     },
     methods: {
@@ -78,6 +86,19 @@ export default {
         },
         mideaButtonClicked1(index) {
             this.lottieData = this.newData
+        },
+        mideaButtonControl(api) {
+        	let lottieRef = this.$refs.lottieView;
+        	let param = {
+        		api: api,
+        		params:{}
+        	};
+        	lottieModule.lottieInterface(lottieRef,
+        	param,function(success){
+        		nativeService.toast("successful");
+        	},function(error) {
+        		nativeService.toast("error");
+        	})
         }
     },
     mounted() {

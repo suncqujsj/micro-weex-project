@@ -9,47 +9,17 @@ let modes = [
         iconButtons: [
             {
                 'icon': 'assets/img/modes/up_down_pipe.png',
-                'text': '上管',
-                'mode': 0x4C,
-                time:{
-                    set: true,
-                    default:60,
-                    range:[1,120,1]
-                },
-                temperature:{
-                    set: true,
-                    default:180,
-                    range:[60,230,1]
-                },
-                preheat:{
-                    set:true,
-                    default: 1,
-                    workingPreheatHide: true,
-                },
-                steamAmount:{
-                    set:false,
-                    default:2,
-                    range:[1,4,1,"取消"]
-                },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
-                }
-            },
-            {
-                'icon': 'assets/img/modes/up_down_pipe.png',
                 'text': '上下管',
                 'mode': 0x4C,
                 time:{
                     set: true,
                     default:60,
-                    range:[1,120,1]
+                    range:[1,540,1]
                 },
                 temperature:{
                     set: true,
                     default:180,
-                    range:[60,230,1]
+                    range:[30,250,1]
                 },
                 preheat:{
                     set:true,
@@ -57,7 +27,7 @@ let modes = [
                     workingPreheatHide: true,
                 },
                 steamAmount:{
-                    set:false,
+                    set:true,
                     default:2,
                     range:[1,4,1,"取消"]
                 },
@@ -75,12 +45,12 @@ let modes = [
                 time:{
                     set: true,
                     default:40,
-                    range:[1, 240,1]
+                    range:[5,540,1]
                 },
                 temperature:{
                     set: true,
                     default:40,
-                    range:[35,40,1]
+                    range:[30,50,1]
                 },
                 preheat:{
                     set:false,
@@ -88,9 +58,39 @@ let modes = [
                     workingPreheatHide: true,
                 },
                 steamAmount:{
-                    set:false,
+                    set:true,
                     default:40,
                     range:[40,40,1,"取消"]
+                },
+                fireAmount:{
+                    set:false,
+                    default:0,
+                    range:null
+                }
+            },
+            {
+                'icon': 'assets/img/modes/hot_wind@3x.png',
+                'text': '热风对流',
+                'mode': 0x41,
+                time:{
+                    set: true,
+                    default:30,
+                    range:[1,540,1]
+                },
+                temperature:{
+                    set: true,
+                    default:160,
+                    range:[50,250,1]
+                },
+                preheat:{
+                    set:true,
+                    default: 1,
+                    workingPreheatHide: true,
+                },
+                steamAmount:{
+                    set:true,
+                    default:2,
+                    range:[1,4,1,"取消"]
                 },
                 fireAmount:{
                     set:false,

@@ -282,8 +282,13 @@ export default {
   },
 
 
+<<<<<<< HEAD
     // 炉灯
     cmdLight(params,device){
+=======
+   //炉灯
+   cmdLight(params,device){
+>>>>>>> develop
     var messageBody = message.createMessageBody(7); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
@@ -297,7 +302,10 @@ export default {
   },
    //上锁
    cmdLock(params,device){
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
     var messageBody = message.createMessageBody(7); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);

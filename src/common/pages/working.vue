@@ -3,7 +3,7 @@
 </style>
 <template>
     <div  class="all_section"  @viewappear="viewappear(tabs)" @viewdisappear="viewdisappear">
-        <midea-header bgColor="transparent" leftImg="img/header/public_ic_back@3x.png" :title="constant.device.title_name" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack"></midea-header>
+        <midea-header bgColor="transparent" leftImg="img/header/public_ic_white.png" :title="constant.device.title_name" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="goBack"></midea-header>
         <div class="progress_content"  @longpress="onlongpressQuery(constant.device)"><!--隐藏长按组件触发03查询，方便调试-->
             <div class="progress_section" :style="progress_style" > 
                 <!--<wxcProgress :percent="progress" :progressShow="progressShow"

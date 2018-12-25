@@ -9,7 +9,7 @@ module.exports = {
         title_name: "辅助蒸汽烤箱",
         sales_model: "辅助蒸汽烤箱G55",
         widget_name: 'MSO_T0xB1',
-        widget_version: '5.0.5',
+        widget_version: '5.0.6',
         extra1: {
             sn8: '0ET470QL'
         }

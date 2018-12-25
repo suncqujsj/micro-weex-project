@@ -6,14 +6,18 @@
 	            <midea-lottie-view v-if="lottieData" ref="lottieView" class="lottie" :dataUrl="url" :data="lottieData" :loop="true"></midea-lottie-view>
 	        </div>
 	        <div class="botton-group">
-	            <midea-button class="botton" text="加载demo1" @mideaButtonClicked="mideaButtonClicked(0)">
-	            </midea-button>
-	            <midea-button class="botton" text="加载demo2" @mideaButtonClicked="mideaButtonClicked(1)">
-	            </midea-button>
-	            <midea-button class="botton" text="加载demo3" @mideaButtonClicked="mideaButtonClicked(2)">
-	            </midea-button>
-	            <midea-button class="botton" text="加载demo4" @mideaButtonClicked="mideaButtonClicked(3)">
-	            </midea-button>
+	        	<div class="button-group-sub">
+		            <midea-button class="botton" :btnStyle="{'width': '250px'}" text="加载demo1" @mideaButtonClicked="mideaButtonClicked(0)">
+		            </midea-button>
+		            <midea-button class="botton" :btnStyle="{'width': '250px'}" text="加载demo2" @mideaButtonClicked="mideaButtonClicked(1)">
+		            </midea-button>
+	            </div>
+	            <div class="button-group-sub">
+		            <midea-button class="botton" :btnStyle="{'width': '250px'}" text="加载demo3" @mideaButtonClicked="mideaButtonClicked(2)">
+		            </midea-button>
+		            <midea-button class="botton" :btnStyle="{'width': '250px'}" text="加载demo4" @mideaButtonClicked="mideaButtonClicked(3)">
+		            </midea-button>
+	            </div>
 	        </div>
 	        
 	        <midea-button text="加载自定义" @mideaButtonClicked="mideaButtonClicked1()"></midea-button>
@@ -36,6 +40,13 @@
   height: 350px;
 }
 .botton-group{
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 10px;
+  margin-right: 10px;
+  flex-wrap: wrap;
+}
+.button-group-sub {
   flex-direction: row;
   justify-content: center;
   margin-left: 10px;

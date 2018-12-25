@@ -28,7 +28,6 @@ let workingModalMixin  = {
     },
     methods: {
         analysisFun(analysisObj,tabs) {                
-            // nativeService.alert(JSON.stringify(analysisObj));
             //this.show = false;
             this.cmdObj = analysisObj;
             if(analysisObj.displaySign.isError){

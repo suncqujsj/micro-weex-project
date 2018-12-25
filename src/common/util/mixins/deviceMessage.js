@@ -92,7 +92,6 @@ const deviceMessageMixin = {
                 sendCmd,
                 function (result) {
                     //nativeService.hideLoading();
-                    //nativeService.alert(JSON.stringify(result));
                     var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
                     var arr = result_arr.split(",");
                     var analysisObj = cmdFun.analysisCmd(arr,tabs);
@@ -218,7 +217,7 @@ const deviceMessageMixin = {
             // nativeService.toast(tabs);
             globalEvent.addEventListener("receiveMessage", function(e) {
                 var str = e.data;
-                // nativeService.alert(str);
+                nativeService.alert(str);
                 var arr = str.split(",");
                 var analysisObj = cmdFun.analysisCmd(arr,tabs); //解析04上行指令
                 context.analysisFun(analysisObj,tabs);

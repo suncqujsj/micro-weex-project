@@ -145,26 +145,8 @@ export default {
         isRecipe = true;
     }
 
-    if(isRecipe){
-      let autoMenu = tabs[0].rows;
-      let  currentModes = autoMenu;
-       for(var i=0; i<currentModes.length; i++){
-           var iconButtonsArr = currentModes[i].iconButtons; 
-          for(var r=0; r<iconButtonsArr.length; r++){
-              var iconButtons = iconButtonsArr[r];
-               for(var m=0; m<iconButtons.length; m++){
-                  if(recipeId == iconButtons[m].recipeId.default){
-                      modeArr.push({
-                        'text': iconButtons[m].text,
-                        'mode': iconButtons[m].mode,
-                      })
-                  }
-              }
-          }                      
-         
-      }
-    }else{
-      let modes = tabs[1].rows;
+    if(tabs.length<=1){
+      let modes = tabs[0].rows;
       for(var i=0; i<modes.length; i++){
         var iconButton = modes[i].iconButtons;
         for(var k=0; k<iconButton.length; k++){
@@ -172,6 +154,37 @@ export default {
             'text': iconButton[k].text,
             'mode': iconButton[k].mode,
           })
+        }
+      }
+    }else{
+      if(isRecipe){
+        let autoMenu = tabs[0].rows;
+        let  currentModes = autoMenu;
+         for(var i=0; i<currentModes.length; i++){
+             var iconButtonsArr = currentModes[i].iconButtons; 
+            for(var r=0; r<iconButtonsArr.length; r++){
+                var iconButtons = iconButtonsArr[r];
+                 for(var m=0; m<iconButtons.length; m++){
+                    if(recipeId == iconButtons[m].recipeId.default){
+                        modeArr.push({
+                          'text': iconButtons[m].text,
+                          'mode': iconButtons[m].mode,
+                        })
+                    }
+                }
+            }                      
+           
+        }
+      }else{
+        let modes = tabs[1].rows;
+        for(var i=0; i<modes.length; i++){
+          var iconButton = modes[i].iconButtons;
+          for(var k=0; k<iconButton.length; k++){
+            modeArr.push({
+              'text': iconButton[k].text,
+              'mode': iconButton[k].mode,
+            })
+          }
         }
       }
     }
@@ -322,6 +335,7 @@ export default {
     // nativeService.toast(latesFrameRecord,6);
     
     var obj = this.initAnalysisObj();
+    
   // if(parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)){
     obj.workingState.value = parseInt(requestCmd[11]); 
     var recipeId = parseInt(requestCmd[12])*256*256+parseInt(requestCmd[13])*256+parseInt(requestCmd[14]);
@@ -330,6 +344,7 @@ export default {
     obj.timeRemaining.minute = parseInt(requestCmd[17]);
     obj.timeRemaining.second = parseInt(requestCmd[18]);
     obj.mode.value = parseInt(requestCmd[19]);
+    
     obj.mode.text = this.modeValueToModeText(recipeId,parseInt(requestCmd[19]),tabs);     
     
      //实际温度
@@ -347,6 +362,7 @@ export default {
      obj.displaySign.preheatTemperature = message.getBit(requestCmd, 26, 6);
      obj.displaySign.isError = message.getBit(requestCmd, 26, 7);
 
+    
      obj.isProbe.value = message.getBit(requestCmd, 27, 6);
 
     //设置温度
@@ -365,6 +381,7 @@ export default {
     obj.fire.value = parseInt(requestCmd[24]);
     obj.weight.value = parseInt(requestCmd[25]);
     obj.steam.value = parseInt(requestCmd[25]);
+    
     return obj;
   }
 

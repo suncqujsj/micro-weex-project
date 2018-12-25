@@ -75,7 +75,7 @@
         </div>
 
         <!--模式参数设置弹窗-->
-        <sf-dialog :show="show" :device="constant.device" :isProbe="cmdObj.isProbe.value" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
+        <sf-dialog :show="show" :tabs="tabs" :device="constant.device" :isProbe="cmdObj.isProbe.value" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <!--<template v-for="tab in tabs">-->
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->

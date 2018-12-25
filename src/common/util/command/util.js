@@ -198,7 +198,7 @@ export default {
     var minute = time%60;
     var second = 0;
     var set_mode = params.mode;
-    var messageBody = message.createMessageFFBody(22); 
+    var messageBody = message.createMessageBody(22); 
     var controltype = 0;//待机类
     if(callbackData.working){
       controltype = 1 //工作类

@@ -208,7 +208,11 @@ let workingModalMixin  = {
                 this.timeShow = false;
                 this.hasHour = false;
                 this.workSpecialStatusText = "预热中";
-                this.cmdObj.mode.text = analysisObj.mode.text+"预热到";
+                let mode_text = analysisObj.mode.text;
+                if(analysisObj.mode.value == 0x4B){ //如果是快速预热，文案就变为快速
+                    mode_text = "快速";
+                }
+                this.cmdObj.mode.text = mode_text+"预热到";
                 this.tag_next = '';
                 this.statusTag = '';
                 this.hasSetting = true;

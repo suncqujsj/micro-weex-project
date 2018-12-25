@@ -1,6 +1,7 @@
 /**
  * Created by parker
  * 2018/11/1
+ * 用于解析工作页面
  */
 var numberRecord = 0; //记录跳页面的次数
 var timerRecord = 0;

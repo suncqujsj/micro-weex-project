@@ -95,6 +95,7 @@ const deviceMessageMixin = {
                     var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
                     var arr = result_arr.split(",");
                     var analysisObj = cmdFun.analysisCmd(arr,tabs);
+                    // nativeService.alert(analysisObj);
                     self.analysisFun(analysisObj,tabs);
                 },
                 function (result) {

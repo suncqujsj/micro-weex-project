@@ -17,20 +17,50 @@ let commonMixin = {
         };
     },
     created(){
-        let context = this;
-        nativeService.getDeviceInfo().then(function(data){
-            context.deviceId = data.result.deviceId;
-            nativeService.getUserInfo().then((resp) => {
-                context.uid = resp.uid;
-                context.voiceInitial(data.result.deviceId, resp.uid, context.authIndex);
-
-            }).catch((error) => {
-                nativeService.toast(JSON.stringify(error));
-            });
-
-        });
+        // let context = this;
+        // nativeService.getDeviceInfo().then(function(data){
+        //     context.deviceId = data.result.deviceId;
+        //     nativeService.getUserInfo().then((resp) => {
+        //         context.uid = resp.uid;
+        //         context.initVoiceAuth(data.result.deviceId, resp.uid, context.authIndex);
+        //
+        //     }).catch((error) => {
+        //         nativeService.toast(JSON.stringify(error));
+        //     });
+        //
+        // });
+        this.initVoice();
     },
     methods:{
+
+        /**
+         * 语音开关、授初始状态
+         * */
+        async initVoice(){
+            let deviceInfo = await nativeService.getUserInfo();
+            if(deviceInfo.result && deviceInfo.result.deviceId ) {
+                this.deviceId = data.result.deviceId;
+            }
+
+            let userInfo = nativeService.getUserInfo();
+            if(userInfo.uid) {
+                this.uid = userInfo.uid;
+            }
+
+            // this.initVoiceAuth(this.deviceId, this.uid, this.authIndex);
+            this.initVoiceSwitch();
+
+        },
+
+        /**
+         * 语音开关初始化
+         */
+        async initVoiceSwitch(){
+            let microphoneState = await this.getMicrophoneState();
+            // nativeService.alert(microphoneState);
+            let data = JSON.parse(microphoneState.returnData).data;
+            this.list[this.controlIndex].value = data.micStatus === 'on';
+        },
 
         /**
          * 语音开关点击事件
@@ -99,7 +129,7 @@ let commonMixin = {
          * 1.查询是否需要进入授权
          * 2.查询设备语音授权状态
          */
-        async voiceInitial(deviceId, uid, authIndex=0) {
+        async initVoiceAuth(deviceId, uid, authIndex=0) {
 
             //查询是否需要进入授权
             let url = 'appliance/authorize/check';

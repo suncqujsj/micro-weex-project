@@ -50,7 +50,7 @@
                         type: 'switch',
                         value: true,
                         hide: false,
-                        onchange: this.onAuthSwitchChange
+                        onchange: this.onControlSwitchChange
                     },
                     {
                         title: '软件更新',

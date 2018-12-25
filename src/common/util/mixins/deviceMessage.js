@@ -116,6 +116,7 @@ const deviceMessageMixin = {
                 deviceCmd,
                 function(result){
                     nativeService.hideLoading();
+                    // nativeService.alert(callbackData);
                     context.queryStatus(callbackData.tabs,callbackData.device);
                 },
                 function(result){
@@ -217,10 +218,12 @@ const deviceMessageMixin = {
             let context = this;
             // nativeService.toast(tabs);
             globalEvent.addEventListener("receiveMessage", function(e) {
+                nativeService.toast(123);
                 var str = e.data;
                 nativeService.alert(str);
                 var arr = str.split(",");
                 var analysisObj = cmdFun.analysisCmd(arr,tabs); //解析04上行指令
+                nativeService.alert(analysisObj);
                 context.analysisFun(analysisObj,tabs);
             });
 

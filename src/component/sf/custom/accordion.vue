@@ -2,7 +2,7 @@
     <div class="accordion-wrapper">
         <div class="accordion-item" @click="makeSwitch">
             <text class="accordion-title">{{title}}</text>
-            <text v-if="value" class="accordion-value">{{value}}{{unit}}</text>
+            <text v-if="value || value===0" class="accordion-value">{{value}}{{unit}}</text>
             <image v-if="!hideArrow" class="accordion-icon" :src="isFoldedStatus?foldIcon:unfoldIcon"></image>
             <slot v-if="hideArrow" name="right"></slot>
         </div>

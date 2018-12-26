@@ -223,7 +223,7 @@ const deviceMessageMixin = {
                 nativeService.alert(str);
                 var arr = str.split(",");
                 var analysisObj = cmdFun.analysisCmd(arr,tabs); //解析04上行指令
-                nativeService.alert(analysisObj);
+                // nativeService.alert(analysisObj);
                 context.analysisFun(analysisObj,tabs);
             });
 

@@ -83,8 +83,8 @@
                 <!--<text v-if="currentItem" class="content-title" @click="showDetailModal">{{currentItem.text}}</text>-->
                 <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header" :title="currentItem.text" titleText="#666666" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
 
-                <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value">
-                    <sf-accordion :value="setValue('probeTemperature')" unit="°C" title="设置探针温度" isFolded="true"  @callback="updateAccordionFoldingStatus">
+                <div v-if="currentItem && currentItem['probe'] && cmdObj.isProbe.value">
+                    <sf-accordion :type="item.type" :value="setValue('probeTemperature')" unit="°C" title="设置探针温度" isFolded="true"  @callback="updateAccordionFoldingStatus">
                         <div slot="content">
                             <wx-picker :data="range('probeTemperature')" target="probeTemperature" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                         </div>
@@ -93,14 +93,14 @@
                 <div v-else>
                     <div v-for="(item, index) in accordions">
                         <div v-if="item.type==='picker'">
-                            <sf-accordion v-if="currentItem && currentItem[item.key] && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                            <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set && !currentItem[item.key].isProbeThenThisHide" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                                 <div slot="content">
                                     <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                                 </div>
                             </sf-accordion>
                         </div>
                         <div v-if="item.type==='switch'">
-                            <sf-accordion v-if="currentItem && currentItem[item.key] && currentItem[item.key].set" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
+                            <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set && !currentItem[item.key].isProbeThenThisHide" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
                                 <div slot="right">
                                     <midea-switch2 :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
                                 </div>
@@ -258,6 +258,7 @@
                     nativeService.toast("该模式不支持肉类探针");
                     return;
                 }
+                nativeService.alert(item);
                 this.currentItem = item;
                 this.modeText = item.text;
                 this.openDialog();

@@ -46,7 +46,7 @@ export default {
         },
         leftImg: {
             type: String,
-            default: './img/header/public_ic_back@3x.png'
+            default: './img/header/public_ic_gray@3x.png'
         },
         rightImg: {
             type: String,

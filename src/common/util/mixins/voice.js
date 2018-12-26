@@ -50,7 +50,7 @@ let commonMixin = {
             // nativeService.alert(this.uid);
 
             this.initVoiceAuth();
-            // this.initVoiceSwitch();
+            this.initVoiceSwitch();
 
         },
 

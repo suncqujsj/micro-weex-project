@@ -41,9 +41,9 @@
         data() {
             return {
                 ppvideo_initdata: {
-                    user: "13760621174", // userId auth
+                    user: "13760621174", // userId auth，必填3项字段之一
                     password: "",
-                    serverAdd: "120.55.73.80:7781", // server url
+                    serverAdd: "120.55.73.80:7781", // userId auth，必填3项字段之一
                     relayAddr: "",
                     iP2PTryTime: 1,
                     sInitParam: "(Debug){1}",
@@ -59,7 +59,7 @@
                     this.$refs.ppvideo,
                     {
                         api: "startLive",
-                        params: { captureId: "1234" } // device sn
+                        params: { captureId: "1234" } // device sn，必填3项字段之一
                     },
                     () => {
                         nativeService.toast("start 成功");

@@ -18,11 +18,11 @@
     "vue",
     "demo"
   ],
-  "author": "Hanks <zhanghan.me@gmail.com>",
+  "author": "chenjq20@midea.com",
   "contributors": [],
   "repository": {
     "type": "git",
-    "url": "git@github.com/Hanks10100/weex-vue-examples.git"
+    "url": "http://10.16.28.73/IT-MobileDivision/midea-weex-template.git"
   },
   "license": "MIT",
   "devDependencies": {

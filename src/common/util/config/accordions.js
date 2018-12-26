@@ -48,6 +48,23 @@ let accordions =  [
         unit:'',
         hideArrow:true
     },
+    {
+        key:'weight',
+        type:'picker',
+        isFolded: true,
+        subtitle:'设置解冻重量',
+        unit:'g',
+        hideArrow:false
+    },
 ];
 
 export default accordions;
+
+/**
+ * 
+ * 每加一个key
+ 1.mixins/accordions.js里面添加
+ 2.currentItem.key,current.key
+ 3.在加热模式或者自动菜单配置文件里面，添加需要加的key的对象
+ * 
+*/

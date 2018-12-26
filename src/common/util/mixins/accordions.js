@@ -54,6 +54,11 @@ const accordionMixin = {
                         default:0,
                         range:null
                     },
+                    weight:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
                     recipeId:{
                         set:false,
                         default: 0x41,
@@ -117,6 +122,7 @@ const accordionMixin = {
                 preheat:false,
                 steamAmount:0,
                 fireAmount:0,
+                weight:null,
                 recipeId:null,
                 probeTemperature: null,
                 probe: false

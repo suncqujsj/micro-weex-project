@@ -42,7 +42,7 @@
                         title: '语音控制授权',
                         type: 'switch',
                         value: false,
-                        hide: false,
+                        hide: true,
                         onchange: this.onAuthSwitchChange
                     },
                     {

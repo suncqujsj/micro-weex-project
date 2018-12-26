@@ -38,10 +38,10 @@
 
         <!--模式操作按钮-->
         <div v-for="(tab, x) in tabs"> <!--隐藏长按组件触发查看云菜谱，方便查看云菜谱-->
-            <scroller :class="[tab.rows[0].title ?  'tab-content-gray' : 'tab-content-white' ]" v-if="tab.active" :style="{height: (wrapHeight - (tabs.length > 1 ? 204*2 : 174*2)),paddingBottom:srcollPaddingBottom}">
-                <div v-if="tab.rows[0].title" class="bg-white" style="height: 20px"></div>
+            <scroller :class="[isAutoMenuStyle(tab) ?  'tab-content-gray' : 'tab-content-white' ]" v-if="tab.active" :style="{height: (wrapHeight - (tabs.length > 1 ? 204*2 : 174*2)),paddingBottom:srcollPaddingBottom}">
+                <div v-if="isAutoMenuStyle(tab)" class="bg-white" style="height: 20px"></div>
                 <div class="bg-white" :class="[tab.rows[0].title && 'auto_menu']" v-for="row in tab.rows">
-                    <div v-if="row.title" class="block-title-wrap row j-c a-c">
+                    <div v-if="isAutoMenuStyle(tab)" class="block-title-wrap row j-c a-c">
                         <div class="block-title row j-c a-c">
                             <text class="block-title-text">{{row.title}}</text>
                         </div>
@@ -181,6 +181,9 @@
                
             }
         },
+        computed:{
+
+        },
         props: {
             tabs:{
                 type: Array,
@@ -224,6 +227,9 @@
             //console.dir(JSON.stringify(this.foodMaterialItems));
         },
         methods: {
+            isAutoMenuStyle: function(tab){
+                return tab.rows[0].title && tab.rows[0].title !== 'mode'
+            },
             openCloudRecipe: function(){
                 nativeService.jumpNativePage({
                     "pageName": "CookbookHome",

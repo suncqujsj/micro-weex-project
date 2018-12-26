@@ -64,6 +64,12 @@ const accordionMixin = {
                         default: 0x41,
                         range:null
                     },
+                    probeTemperature:{
+                        set: false,
+                        default:0,
+                        range:null,
+                    },
+                    probe: null,//肉类探针
                     detail: null
                 },
                 current:this.initCurrentData(),

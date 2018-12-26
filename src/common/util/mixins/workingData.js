@@ -52,6 +52,7 @@ let workingModalMixin  = {
             hasStopOrContinueBtn: false,
             modeText:'',
             probeProgress: null, //探针工作倒计时
+            probeTempText: "°C",
 
             warningDialogShow: false,
             warningDialogTitle: "温馨提示",
@@ -129,7 +130,7 @@ let workingModalMixin  = {
             if(analysisObj.probeRealTemperature.value>analysisObj.probeSetttingTemperature.value){
                 analysisObj.probeRealTemperature.value = analysisObj.probeSetttingTemperature.value;
             }
-            this.probeProgress = parseInt(analysisObj.probeRealTemperature.value/analysisObj.probeSetttingTemperature.value*100) + '%';
+            this.probeProgress =analysisObj.probeRealTemperature.value;
             
             
             //提示
@@ -173,6 +174,9 @@ let workingModalMixin  = {
                 // if(analysisObj.mode.value == 0xE0){//云菜谱没有设置时间温度蒸汽那些
                 //      this.hasSetting = false;
                 // }
+            }
+            if(analysisObj.isProbe.value){
+                this.statusTag = '当前实时温度';
             }
             
             var _isRecipe = false;

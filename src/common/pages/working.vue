@@ -21,6 +21,9 @@
                     <div class="content_section">
                         <text :class="['number-text',timeShow && 'work_time',hasHour && 'hour_time']">{{probeProgress}}</text>
                     </div>
+                    <div class="next_section">
+                        <text class="number_next">{{probeTempText}}</text>
+                    </div>
                 </div>
                
                 <div v-if="!cmdObj.isProbe.value" class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">

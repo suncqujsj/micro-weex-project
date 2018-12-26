@@ -111,16 +111,16 @@ const deviceMessageMixin = {
         controlDevice(jsonCmd, callbackData){
             let context = this;
             let deviceCmd = cmdFun.createControlMessage(jsonCmd, callbackData);
-            //this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
-            nativeService.showLoading();
-            nativeService.alert(cmdFun.cmdToEasy(deviceCmd));
+            // this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
             // return;
+            nativeService.showLoading();
+            // nativeService.alert(cmdFun.cmdToEasy(deviceCmd));
             nativeService.startCmdProcess(
                 "control",
                 deviceCmd,
                 function(result){
                     nativeService.hideLoading();
-                    // nativeService.alert(callbackData);
+                    // nativeService.alert(result);
                     context.queryStatus(callbackData.tabs,callbackData.device);
                 },
                 function(result){

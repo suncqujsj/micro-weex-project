@@ -37,18 +37,20 @@ let commonMixin = {
          * 语音开关、授初始状态
          * */
         async initVoice(){
-            let deviceInfo = await nativeService.getUserInfo();
+            let deviceInfo = await nativeService.getDeviceInfo();
             if(deviceInfo.result && deviceInfo.result.deviceId ) {
-                this.deviceId = data.result.deviceId;
+                this.deviceId = deviceInfo.result.deviceId;
             }
 
-            let userInfo = nativeService.getUserInfo();
+            let userInfo = await nativeService.getUserInfo();
+            // nativeService.alert(userInfo);
             if(userInfo.uid) {
                 this.uid = userInfo.uid;
             }
+            // nativeService.alert(this.uid);
 
-            // this.initVoiceAuth(this.deviceId, this.uid, this.authIndex);
-            this.initVoiceSwitch();
+            this.initVoiceAuth(this.deviceId, this.uid, this.authIndex);
+            // this.initVoiceSwitch();
 
         },
 
@@ -111,16 +113,15 @@ let commonMixin = {
          * 语音授权开关点击事件
          */
         onAuthSwitchChange(event) {
-            nativeService.alert(this.authIndex);
-            // if(event.value) {
-            //     this.voiceAuth().then((data)=>{
-            //         nativeService.alert(data);
-            //     });
-            // } else {
-            //     this.voiceAuthCancel().then((data)=>{
-            //         nativeService.alert(data);
-            //     });
-            // }
+            if(event.value) {
+                this.voiceAuth().then((data)=>{
+                    nativeService.alert(data);
+                });
+            } else {
+                this.voiceAuthCancel().then((data)=>{
+                    nativeService.alert(data);
+                });
+            }
 
         },
 
@@ -148,8 +149,8 @@ let commonMixin = {
                 if (result.data && result.data.authorize == 1) {
                     this.url = result.data.url;
                     let voiceAuthStateResult = await  this.getVoiceAuth(deviceId, uid);
-                    // nativeService.alert(voiceAuthStateResult);
                     let data = JSON.parse(voiceAuthStateResult.returnData).data;
+                    nativeService.toast('授权状态status：' + data.status);
                     if(data) {
                         data.status == 1 ? this.list[authIndex].value = false : this.list[authIndex].value = true;
                     }

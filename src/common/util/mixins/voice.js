@@ -69,10 +69,12 @@ let commonMixin = {
         onControlSwitchChange(event){
             let index = this.controlIndex;
             let value = this.getSwitchValue(index);
+            nativeService.showLoading();
             this.microphoneSetting(!value).then((resp)=>{
                 // nativeService.alert(resp);
                 if(parseInt(JSON.parse(resp.returnData).code) === 0) {
                     this.setSwitchValue(index, !value);
+                    nativeService.hideLoading();
                 }
             });
 
@@ -138,10 +140,12 @@ let commonMixin = {
             let value = this.getSwitchValue(index);
             // nativeService.toast(value);
             if(value) {
+                nativeService.showLoading();
                 this.voiceAuthCancel().then((resp)=>{
                     // nativeService.alert(resp);
                     if(parseInt(JSON.parse(resp.returnData).code) === 0) {
                         this.setSwitchValue(index, !value);
+                        nativeService.hideLoading();
                     }
 
                 });

@@ -25,7 +25,7 @@
 <script>
     import mideaHeader from '@/midea-component/header.vue'
     import mideaCell from '@/midea-component/item.vue';
-    import mideaSwitch2 from '@/midea-component/switch2.vue'
+    import mideaSwitch2 from '@/component/sf/custom/switch.vue'
 
     import nativeService from "../common/services/nativeService";
     import commonMixin from  "@/common/util/mixins/common"
@@ -48,7 +48,7 @@
                     {
                         title: '语音开关',
                         type: 'switch',
-                        value: true,
+                        value: false,
                         hide: false,
                         onchange: this.onControlSwitchChange
                     },

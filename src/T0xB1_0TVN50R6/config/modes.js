@@ -135,8 +135,8 @@ let modes = [
         iconButtons: [
 
             {
-                'icon': 'assets/img/modes/fermentation@3x.png',
-                'text': '双上管+风扇',
+                'icon': modeIcons[5].dir,
+                'text': modeIcons[5].cn,
                 'mode': 0x51,
                 time:{
                     set: true,
@@ -165,8 +165,8 @@ let modes = [
             },
 
             {
-                'icon': 'assets/img/modes/fermentation@3x.png',
-                'text': '双上管烧烤',
+                'icon': modeIcons[6].dir,
+                'text': modeIcons[6].cn,
                 'mode': 0x46,
                 time:{
                     set: true,

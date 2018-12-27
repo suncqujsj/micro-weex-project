@@ -11,7 +11,7 @@ import nativeService from '@/common/services/nativeService';
 let commonMixin = {
     data(){
         return {
-            wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
+            wrapHeight: weex.config.env.deviceHeight,
         };
     },
     methods:{

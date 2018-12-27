@@ -73,9 +73,6 @@ const deviceMessageMixin = {
                 }
             )
         },
-        goBack(){
-            nativeService.backToNative()
-        },
         goTo(url){
             let path = url + '.js'
             nativeService.goTo(path, {animated: false, replace: true})

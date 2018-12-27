@@ -15,6 +15,12 @@ let commonMixin = {
         };
     },
     methods:{
+        back: function(){
+            nativeService.goBack();
+        },
+        back2Native(){
+            nativeService.backToNative()
+        },
         isipx: function () {
             return weex && (
                 weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6' //iphoneX

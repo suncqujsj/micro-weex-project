@@ -53,7 +53,7 @@
                         onchange: this.onControlSwitchChange
                     },
                     {
-                        title: '软件更新',
+                        title: '软件更新(开发中)',
                         type: 'link',
                         value: ''
                     }
@@ -63,11 +63,6 @@
         components: {mideaHeader, mideaCell, mideaSwitch2},
         created(){},
         computed:{
-        },
-        methods: {
-            back: function(){
-                nativeService.goBack();
-            }
         }
     }
 </script>

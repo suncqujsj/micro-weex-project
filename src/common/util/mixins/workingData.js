@@ -207,7 +207,8 @@ let workingModalMixin  = {
                this.cancleIcon = 'img/finish_icon@2x.png';
               
             }
-             if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 0){
+            // 预热中状态
+             if(analysisObj.workingState.value != 4 && analysisObj.displaySign.preheat == 1){
                 this.isWorking = true;
                 this.timeShow = false;
                 this.hasHour = false;
@@ -226,7 +227,9 @@ let workingModalMixin  = {
                 }
                 
             }
-            if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 1){
+
+            // 预热完成状态
+            if(analysisObj.workingState.value != 4 &&  analysisObj.displaySign.preheatTemperature == 1){
                 this.timeShow = false;
                 this.hasHour = false;
                 this.workSpecialStatusText = "预热完成";

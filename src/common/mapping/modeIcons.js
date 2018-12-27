@@ -23,5 +23,7 @@ icons[3] = getIcon('下管烧烤', 'bottom_heat@3x');
 icons[4] = getIcon('红外烧烤', 'radiant_heat@3x');
 icons[5] = getIcon('双上管+风扇', 'double_grill_and_fan@3x');
 icons[6] = getIcon('双上管烧烤', 'double_grill@3x');
+icons[7] = getIcon('发酵', 'fermentation@3x');
+icons[8] = getIcon('下管+热风对流', 'bottom_heat_and_hot_wind@3x');
 
 export default icons;

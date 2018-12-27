@@ -402,6 +402,7 @@ export default {
               break;
           case 8: // 预热工作
               result = 3;
+              break;
       }
       return result;
     }

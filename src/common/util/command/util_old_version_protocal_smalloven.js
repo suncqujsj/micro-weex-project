@@ -328,30 +328,30 @@ export default {
     var obj = this.initAnalysisObj();
   // if(parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)){
     obj.workingState.value = this.getStatusCode(parseInt(requestCmd[10]));
-    var recipeId = parseInt(requestCmd[21])*256*256+parseInt(requestCmd[22])*256+parseInt(requestCmd[23]);
+    var recipeId = parseInt(requestCmd[24])*256*256+parseInt(requestCmd[25])*256+parseInt(requestCmd[26]);
     obj.recipeId.value = recipeId;
     obj.timeRemaining.hour = parseInt(requestCmd[12])%60;
-    obj.timeRemaining.minute = parseInt(requestCmd[12]);
-    obj.timeRemaining.second = parseInt(requestCmd[13]);
+    obj.timeRemaining.minute = parseInt(requestCmd[13]);
+    obj.timeRemaining.second = parseInt(requestCmd[22]);
     obj.mode.value = parseInt(requestCmd[11]);
     obj.mode.text = this.modeValueToModeText(recipeId,parseInt(requestCmd[19]),tabs);  // giggs stub
     
      //实际温度
-     obj.realTemperature.upHighTemperature = parseInt(requestCmd[24]);
-     obj.realTemperature.upLowTemperature = parseInt(requestCmd[24]);
-     obj.realTemperature.downHighTemperature = parseInt(requestCmd[24]);
-     obj.realTemperature.downLowTemperature = parseInt(requestCmd[24]);
+     obj.realTemperature.upHighTemperature = 0;
+     obj.realTemperature.upLowTemperature = parseInt(requestCmd[14]);
+     obj.realTemperature.downHighTemperature = 0;
+     obj.realTemperature.downLowTemperature = parseInt(requestCmd[14]);
    
      obj.displaySign.lock = parseInt(requestCmd[10]) === 5 ? 1:0; // 状态位 0x05是童锁
-     obj.displaySign.doorSwitch = message.getBit(requestCmd, 10, 7); // B10状态位 第7个Bit标识门开关
-     obj.displaySign.waterBox = message.getBit(requestCmd, 26, 2);  // 貌似没有水盒检测
-     obj.displaySign.lackWater =  parseInt(requestCmd[16]) === 2 ? 1:0;  // B16 =2 标识 缺水
-     obj.displaySign.changeWater = parseInt(requestCmd[16]) === 6 ? 1:0; // B16 =6 清洁换水
+     obj.displaySign.doorSwitch = 0;// 无此状态检测
+     obj.displaySign.waterBox = 0;// 无此状态检测
+     obj.displaySign.lackWater =  0;// 无此状态检测
+     obj.displaySign.changeWater = 0;// 无此状态检测
      obj.displaySign.preheat = parseInt(requestCmd[10]) === 8 ? 1:0;  // B10状态位 ，不预热工作0x02，预热工作0x08
-     obj.displaySign.preheatTemperature = parseInt(requestCmd[24])*5;
+     obj.displaySign.preheatTemperature = parseInt(requestCmd[14]);
      obj.displaySign.isError = parseInt(requestCmd[15]) != 0 ? 1:0;
 
-     obj.isProbe.value = 0; // 微波炉没有探针，直接填0就好
+     obj.isProbe.value = 0;// 无此状态检测
 
     //设置温度
     obj.temperature.upHighTemperature = 0;// 没有这个字段，直接填0就好
@@ -366,8 +366,8 @@ export default {
       obj.temperature.upLowTemperature = 0;// 没有这个字段，直接填0就好
     }
 
-    obj.fire.value = parseInt(requestCmd[24]);
-    obj.weight.value = parseInt(requestCmd[24]);
+    obj.fire.value =  0;// 没有这个字段，直接填0就好
+    obj.weight.value =  0;// 没有这个字段，直接填0就好
     obj.steam.value = 0;// 没有这个字段，直接填0就好
     return obj;
   },
@@ -382,13 +382,16 @@ export default {
           case 1: // 待机
               result = 2;
               break;
-          case 2: // 不预热工作
+          case 2: // 工作中
+              result = 3;
+              break;
+          case 8: // 预热中
               result = 3;
               break;
           case 4: // 烹饪完成
               result = 4;
               break;
-          case 6: // 预约中
+          case 6: // 预热中
               result = 5;
               break;
           case 3: // 暂停
@@ -397,11 +400,6 @@ export default {
           case 102: // 云菜段结束
               result = 7;
               break;
-          case 9: // 爱心3秒
-              result = 8;
-              break;
-          case 8: // 预热工作
-              result = 3;
       }
       return result;
     }

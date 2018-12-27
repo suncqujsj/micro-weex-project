@@ -140,9 +140,28 @@
             </div>
         </detail-modal>
 
+        <!--童锁遮罩-->
+        <modal :show="modalVisibility" @close="closeModal">
+            <div slot="header">
+                <modal-header leftImg="img/header/public_ic_home@3x.png" class="modal-header" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native"></modal-header>
+            </div>
+            <div class="a-c j-c" slot="content" :style="{height: wrapHeight+'px'}">
+                <div class="child-lock">
+                    <image class="child-lock-icon" src="img/childlock/large_childlock@3x.png"></image>
+                    <text class="child-lock-text">童锁已开启</text>
+                </div>
+
+                <div class="child-lock-close" @click="childLock(constant.device)">
+                    <image class="child-lock-close-icon" src="img/childlock/mode_close@3x.png"></image>
+                    <text class="child-lock-close-text">关闭童锁</text>
+                </div>
+            </div>
+        </modal>
+
         <midea-dialog :title="warningDialog.title"
                       :show="warningDialog.show"
                       :single="true"
+                     
                       @mideaDialogConfirmBtnClicked="knowClicked"
                       :content="warningDialog.content"
                       mainBtnColor="#FFB632"
@@ -158,6 +177,7 @@
     import rowWrapItems from '@/component/sf/custom/row-wrap-items.vue'
     import sfAccordion from '@/component/sf/custom/accordion.vue'
     import detailModal from '@/component/sf/custom/detail-modal.vue'
+    import modal from '@/component/sf/custom/modal.vue'
     import sfDialog from '@/component/sf/custom/dialog.vue'
     import nativeService from "@/common/services/nativeService";
     import query from "../../dummy/query";
@@ -175,12 +195,13 @@
     import detailModalMixin from  "@/common/util/mixins/detailModal"
     import commonMixin from  "@/common/util/mixins/common"
     import copyMixin from  "@/common/util/mixins/copy"
+    import modalMixin from  "@/common/util/mixins/modal"
     import weexData from  "@/common/util/mixins/weexData"
 
     // import constant from "./config/constant";
 
     export default {
-        mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin,copyMixin,weexData],
+        mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin,copyMixin,weexData,modalMixin],
         data(){
             return {
                
@@ -201,7 +222,7 @@
                 default: () => ({})
             },
         },
-        components: {MideaHeader,sfDialog,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modalHeader,rowWrapItems},
+        components: {MideaHeader,sfDialog,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modal,modalHeader,rowWrapItems},
         created(){
             let {constant,tabs} = this;
             if(this.isipx()){

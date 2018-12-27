@@ -11,7 +11,7 @@ const storage = weex.requireModule('storage');
 const deviceMessageMixin = {
     data () {
         return {
-            loading: true
+            loading: false
         }
     },
     methods: {
@@ -52,14 +52,15 @@ const deviceMessageMixin = {
                 title: '云菜谱'
             })
         },
-        childLock: function(childLock){
-
+        childLock: function(device){
+            nativeService.alert(device); return;
+            
             if(this.loading) return;
 
             this.loading=true;
 
             let context = this;
-            let deviceCmd = cmdFun.cmdLock({childLock});
+            let deviceCmd = cmdFun.cmdLock({childLock},device);
             nativeService.startCmdProcess(
                 "control",
                 deviceCmd,
@@ -241,9 +242,10 @@ const deviceMessageMixin = {
             // nativeService.toast(tabs);
             globalEvent.addEventListener("receiveMessage", function(e) {
                 var str = e.data;
-                // nativeService.alert(str);
+              
                 var arr = str.split(",");
                 var analysisObj = cmdFun.analysisCmd(arr,tabs); //解析04上行指令
+                // nativeService.alert(cmdFun.cmdToEasy(arr));
                 context.analysisFun(analysisObj,tabs);
             });
 

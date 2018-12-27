@@ -155,6 +155,24 @@
             </div>
         </detail-modal>
 
+        <!--童锁遮罩-->
+        <modal :show="modalVisibility" @close="closeModal">
+            <div slot="header">
+                <modal-header leftImg="img/header/public_ic_home@3x.png" class="modal-header" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native"></modal-header>
+            </div>
+            <div class="a-c j-c" slot="content" :style="{height: wrapHeight+'px'}">
+                <div class="child-lock">
+                    <image class="child-lock-icon" src="img/childlock/large_childlock@3x.png"></image>
+                    <text class="child-lock-text">童锁已开启</text>
+                </div>
+
+                <div class="child-lock-close" @click="childLock(false)">
+                    <image class="child-lock-close-icon" src="img/childlock/mode_close@3x.png"></image>
+                    <text class="child-lock-close-text">关闭童锁</text>
+                </div>
+            </div>
+        </modal>
+
 
         <!--故障提示弹窗-->
         <midea-dialog :title="warningDialogTitle"
@@ -192,6 +210,7 @@
     import sfAccordion from '@/component/sf/custom/accordion.vue'
     import sfDialog from '@/component/sf/custom/dialog.vue'
     import detailModal from '@/component/sf/custom/detail-modal.vue'
+    import modal from '@/component/sf/custom/modal.vue'
     import WxPicker from '@/component/sf/custom/picker_amui.vue';
     import mideaDialog from '@/component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
@@ -208,14 +227,15 @@
     import commonMixin from  "@/common/util/mixins/common"
     import workingData from  "@/common/util/mixins/workingData"
     import copyMixin from  "@/common/util/mixins/copy"
+    import modalMixin from  "@/common/util/mixins/modal"
 
     const storage = weex.requireModule('storage')
     const platform = weex.config.env.platform;//weex没有window对象，调试需要区分下
     const globalEvent = weex.requireModule("globalEvent");
     const animation = weex.requireModule('animation');
-    const modal = weex.requireModule('modal');
+    // const modal = weex.requireModule('modal');
     export default {
-        mixins: [deviceMessageMixin, accordionMixin, workingData,detailModalMixin,copyMixin],
+        mixins: [deviceMessageMixin, accordionMixin, workingData,detailModalMixin,copyMixin,modalMixin],
         data(){
             return {
               
@@ -234,7 +254,7 @@
                 default: () => ({})
             },
         },
-        components: {MideaHeader, mideaDialog, mideaActionsheet,sfDialog,WxPicker,modalHeader,detailModal,sfAccordion,mideaSwitch2},
+        components: {MideaHeader, mideaDialog, mideaActionsheet,sfDialog,WxPicker,modalHeader,detailModal,modal,sfAccordion,mideaSwitch2},
         created(){
             var self = this;
             let {constant,tabs} = this;

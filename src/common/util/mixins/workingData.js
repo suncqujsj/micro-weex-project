@@ -158,6 +158,16 @@ let workingModalMixin  = {
                 this.warningDialogShow = true;
                 this.warningDialogContent = "主人，您的设备炉门开了";
             }
+            
+            if(analysisObj.displaySign.lock){
+                // let context = this;
+                // this.setWarningDialog("你需要关闭童锁吗？", function(){
+                //     context.childLock(false);
+                // });
+                !this.modalVisibility && this.showModal();
+            } else {
+                this.modalVisibility && this.closeModal();
+            }
 
 
             if(analysisObj.workingState.value == 3){

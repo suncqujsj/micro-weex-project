@@ -46,10 +46,13 @@ let workingModalMixin  = {
             }
 
             if(analysisObj.displaySign.lock){
-                let context = this;
-                this.setWarningDialog("你需要关闭童锁吗？", function(){
-                    context.childLock(false);
-                });
+                // let context = this;
+                // this.setWarningDialog("你需要关闭童锁吗？", function(){
+                //     context.childLock(false);
+                // });
+                !this.modalVisibility && this.showModal();
+            } else {
+                this.modalVisibility && this.closeModal();
             }
 
             if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6) {

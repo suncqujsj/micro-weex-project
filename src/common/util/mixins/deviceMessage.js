@@ -52,9 +52,7 @@ const deviceMessageMixin = {
                 title: '云菜谱'
             })
         },
-        childLock: function(device){
-            nativeService.alert(device); return;
-            
+        childLock: function(childLock,device){
             if(this.loading) return;
 
             this.loading=true;

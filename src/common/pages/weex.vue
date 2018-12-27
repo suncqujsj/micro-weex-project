@@ -11,9 +11,9 @@
                     <div class="header-right-image-wrapper" @click="openCloudRecipe">
                         <image class="header-right-image" :src="'img/header/public_ic_cloud_recipe@3x.png'"></image>
                     </div>
-                    <!--<div class="header-right-image-wrapper" @click="childLock(true)">
+                    <div class="header-right-image-wrapper" @click="childLock(true,constant.device)">
                         <image class="header-right-image" :src="'img/header/public_ic_babylock@3x.png'"></image>
-                    </div>-->
+                    </div>
                     <div class="header-right-image-wrapper" @click="openMorePage">
                         <image class="header-right-image" :src="'img/header/public_ic_lots@3x.png'"></image>
                     </div>
@@ -151,7 +151,7 @@
                     <text class="child-lock-text">童锁已开启</text>
                 </div>
 
-                <div class="child-lock-close" @click="childLock(constant.device)">
+                <div class="child-lock-close" @click="childLock(false,constant.device)">
                     <image class="child-lock-close-icon" src="img/childlock/mode_close@3x.png"></image>
                     <text class="child-lock-close-text">关闭童锁</text>
                 </div>

@@ -338,7 +338,7 @@ export default {
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
     message.setByte(messageBody, 2,0xff);
-    message.setByte(messageBody, 3,params.childLock?0:1);
+    message.setByte(messageBody, 3,params.childLock?1:0);
     message.setByte(messageBody, 4,0xff);
     message.setByte(messageBody, 5,0xff);
     message.setByte(messageBody, 6,0xff);

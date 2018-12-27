@@ -3,13 +3,15 @@
  * 2018/12/15
  */
 
+import modeIcons from "../../common/mapping/modeIcons";
+
 let modes = [
     {
         title: '',
         iconButtons: [
             {
-                'icon': 'assets/img/modes/up_down_pipe.png',
-                'text': '上下管',
+                'icon': modeIcons[0].dir,
+                'text': modeIcons[0].cn,
                 'mode': 0x4C,
                 time:{
                     set: true,
@@ -38,8 +40,8 @@ let modes = [
             },
 
             {
-                'icon': 'assets/img/modes/hot_wind@3x.png',
-                'text': '热风对流',
+                'icon': modeIcons[1].dir,
+                'text': modeIcons[1].cn,
                 'mode': 0x41,
                 time:{
                     set: true,
@@ -68,8 +70,8 @@ let modes = [
             },
 
             {
-                'icon': 'assets/img/modes/fermentation@3x.png',
-                'text': '上下烧烤+风扇',
+                'icon': modeIcons[2].dir,
+                'text': modeIcons[2].cn,
                 'mode': 0x52,
                 time:{
                     set: true,
@@ -98,8 +100,8 @@ let modes = [
             },
 
             {
-                'icon': 'assets/img/modes/fermentation@3x.png',
-                'text': '下管烧烤',
+                'icon': modeIcons[3].dir,
+                'text': modeIcons[3].cn,
                 'mode': 0x49,
                 time:{
                     set: true,
@@ -193,8 +195,8 @@ let modes = [
             },
 
             {
-                'icon': 'assets/img/modes/fermentation@3x.png',
-                'text': '红外烧烤',
+                'icon': modeIcons[4].dir,
+                'text': modeIcons[4].cn,
                 'mode': 0x47,
                 time:{
                     set: true,

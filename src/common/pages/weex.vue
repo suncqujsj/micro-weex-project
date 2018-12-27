@@ -5,7 +5,7 @@
 <template>
     <div class="bg" @viewappear="viewappear(tabs)" @viewdisappear="viewdisappear">
 
-        <midea-header bgColor="transparent" leftImg="img/header/public_ic_white.png" :title="constant.device.title_name" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native" >
+        <midea-header bgColor="transparent" leftImg="img/header/public_ic_white.png" :title="constant.device.page_title" titleText="white" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2Native" >
             <div slot="customerContent" class="header-top-wrapper">
                 <div class="header-top-inner-wrapper">
                     <div class="header-right-image-wrapper" @click="openCloudRecipe">

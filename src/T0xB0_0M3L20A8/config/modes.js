@@ -8,7 +8,7 @@ let modes = [
         title: '',
         iconButtons: [
             {
-                'icon': 'img/modes/up_down_pipe.png',
+                'icon': 'img/modes/up_down_tube@3x.png',
                 'text': '微波加热',
                 'mode': 0x01,
                 time:{

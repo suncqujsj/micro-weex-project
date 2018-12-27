@@ -8,7 +8,7 @@ let modes = [
         title: '',
         iconButtons: [
             {
-                'icon': 'img/modes/up_down_pipe.png',
+                'icon': 'img/modes/up_down_tube@3x.png',
                 'text': '上下管',
                 'mode': 0x4C,
                 time:{
@@ -121,7 +121,7 @@ let modes = [
                 probe:true //支持肉类探针
             },
             {
-                'icon': 'img/modes/up_down_and_wind.png',
+                'icon': 'img/modes/up_down_and_fan@3x.png',
                 'text': '上下管+风扇',
                 'mode': 0x52,
                 time:{

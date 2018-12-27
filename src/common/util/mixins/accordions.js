@@ -54,11 +54,22 @@ const accordionMixin = {
                         default:0,
                         range:null
                     },
+                    weight:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
                     recipeId:{
                         set:false,
                         default: 0x41,
                         range:null
                     },
+                    probeTemperature:{
+                        set: false,
+                        default:0,
+                        range:null,
+                    },
+                    probe: null,//肉类探针
                     detail: null
                 },
                 current:this.initCurrentData(),
@@ -86,9 +97,6 @@ const accordionMixin = {
             };
         },
         setValue: function(key){
-            // if(this.current[key]==0){
-            //     return this.current[key];
-            // }
             return this.current[key] || (this.currentItem[key] ? this.currentItem[key].default : null);
         },
         updateAccordionFoldingStatus: function(key, value){
@@ -115,8 +123,9 @@ const accordionMixin = {
                 time: null,
                 temperature: null,
                 preheat:false,
-                steamAmount:0,
+                steamAmount:null,
                 fireAmount:0,
+                weight:0,
                 recipeId:null,
                 probeTemperature: null,
                 probe: false
@@ -153,12 +162,13 @@ const accordionMixin = {
                 temperature: this.setValue('temperature'),
                 preheat: this.current.preheat,
                 steamAmount: this.setValue('steamAmount'),
+                weight: this.setValue('weight'),
                 fireAmount: this.setValue('fireAmount'),
                 recipeId:this.setValue('recipeId'),
                 probeTemperature: this.setValue('probeTemperature'),
                 probe:  this.currentItem.probe,
             };
-
+            
             // if(jsonCmd.mode === 0xE0) { // 自动菜单
             //     jsonCmd.recipeId =  this.setValue('recipeId');
             // }

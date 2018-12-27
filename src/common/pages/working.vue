@@ -21,6 +21,9 @@
                     <div class="content_section">
                         <text :class="['number-text',timeShow && 'work_time',hasHour && 'hour_time']">{{probeProgress}}</text>
                     </div>
+                    <div class="next_section">
+                        <text class="number_next">{{probeTempText}}</text>
+                    </div>
                 </div>
                
                 <div v-if="!cmdObj.isProbe.value" class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
@@ -101,14 +104,14 @@
                 <div v-else>
                     <div v-for="(item, index) in accordions">
                         <div v-if="item.type==='picker'">
-                            <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                            <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                                 <div slot="content">
                                     <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                                 </div>
                             </sf-accordion>
                         </div>
-                        <div v-if="item.type==='switch'">
-                            <sf-accordion v-if="currentItem && currentItem[item.key].set" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
+                        <div v-if="item.type==='switch' && (currentItem && currentItem[item.key] && !currentItem[item.key].hide)">
+                            <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
                                 <div slot="right">
                                     <midea-switch2 :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
                                 </div>
@@ -285,6 +288,9 @@
                 if(this.tag_next == '秒'){//倒计时为秒时，都设置1分钟
                     time = 1;
                 }
+                 if(time<1){
+                    time = 1;
+                }
                 // if(this.cmdObj.mode.value != 0x20){//因为除了蒸汽模式，时间范围1到300，其他模式都是最低值为5，所以最低值为5的模式，工作中设置时间，要强行最小值置为5
                 //     if(time<5){
                 //         time = 5;
@@ -295,6 +301,7 @@
                 this.currentItem.preheat.default = this.cmdObj.displaySign.preheat?true:false;
                 this.current.fireAmount = this.cmdObj.fire.value;
                 this.current.steamAmount = this.cmdObj.steam.value;
+                this.current.weight = this.cmdObj.weight.value;
                 this.current.probeTemperature = this.cmdObj.probeSetttingTemperature.value;
                 // nativeService.toast(this.current,3);
                 

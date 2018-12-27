@@ -4,7 +4,7 @@
  */
 let data = [
     {
-        title: '所有人群',
+        title: 'mode',
         iconButtons: [
             [
                 {
@@ -49,12 +49,12 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:10,
+                        default:39,
                         range:null
                     },
                     temperature:{
                         set: false,
-                        default:175,
+                        default:185,
                         range:null
                     },
                     preheat:{
@@ -162,12 +162,12 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:10,
+                        default:29,
                         range:null
                     },
                     temperature:{
                         set: false,
-                        default:165,
+                        default:175,
                         range:null
                     },
                     preheat:{

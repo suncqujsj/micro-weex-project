@@ -14,7 +14,7 @@ let modes = [
                 time:{
                     set: true,
                     default:60,
-                    range:[1,540,1],
+                    range:[1,300,1],
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 temperature:{
@@ -24,13 +24,13 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: 1,
+                    default: true,
                     hide: true, //工作中，隐藏预热选择
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 steamAmount:{
                     set:true,
-                    default:2,
+                    default:0,
                     range:[0,4,1],
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
@@ -57,7 +57,7 @@ let modes = [
                 time:{
                     set: true,
                     default:40,
-                    range:[5,540,1]
+                    range:[5,720,1]
                 },
                 temperature:{
                     set: true,
@@ -71,7 +71,7 @@ let modes = [
                 },
                 steamAmount:{
                     set:true,
-                    default:40,
+                    default:0,
                     range:[0,0,1,40,40,1]
                 },
                 fireAmount:{
@@ -87,7 +87,7 @@ let modes = [
                 time:{
                     set: true,
                     default:30,
-                    range:[1,540,1],
+                    range:[1,300,1],
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 temperature:{
@@ -97,13 +97,13 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: 1,
+                    default: true,
                     hide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 steamAmount:{
                     set:true,
-                    default:2,
+                    default:0,
                     range:[0,4,1],
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
@@ -127,7 +127,7 @@ let modes = [
                 time:{
                     set: true,
                     default:60,
-                    range:[1,540,1]
+                    range:[1,300,1]
                 },
                 temperature:{
                     set: true,
@@ -136,7 +136,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: 0,
+                    default: true,
                     hide: true,
                 },
                 steamAmount:{
@@ -161,7 +161,7 @@ let modes = [
                 time:{
                     set: true,
                     default:10,
-                    range:[1,540,1]
+                    range:[1,300,1]
                 },
                 temperature:{
                     set: true,
@@ -170,7 +170,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: 0,
+                    default: true,
                     hide: true,
                 },
                 steamAmount:{
@@ -189,7 +189,7 @@ let modes = [
                 time:{
                     set: true,
                     default:15,
-                    range:[1,540,1]
+                    range:[1,300,1]
                 },
                 temperature:{
                     set: true,
@@ -198,7 +198,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: 0,
+                    default: true,
                     hide: true,
                 },
                 steamAmount:{
@@ -217,7 +217,7 @@ let modes = [
                 time:{
                     set: true,
                     default:20,
-                    range:[1,540,1],
+                    range:[1,300,1],
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 temperature:{
@@ -227,13 +227,13 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: 1,
+                    default: true,
                     hide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 steamAmount:{
                     set:true,
-                    default:2,
+                    default:0,
                     range:[0,4,1],
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },

@@ -38,10 +38,10 @@
 
         <!--模式操作按钮-->
         <div v-for="(tab, x) in tabs"> <!--隐藏长按组件触发查看云菜谱，方便查看云菜谱-->
-            <scroller :class="[tab.rows[0].title ?  'tab-content-gray' : 'tab-content-white' ]" v-if="tab.active" :style="{height: (wrapHeight - (tabs.length > 1 ? 204*2 : 174*2)),paddingBottom:srcollPaddingBottom}">
-                <div v-if="tab.rows[0].title" class="bg-white" style="height: 20px"></div>
+            <scroller :class="[isAutoMenuStyle(tab) ?  'tab-content-gray' : 'tab-content-white' ]" v-if="tab.active" :style="{height: (wrapHeight - (tabs.length > 1 ? 204*2 : 174*2)),paddingBottom:srcollPaddingBottom}">
+                <div v-if="isAutoMenuStyle(tab)" class="bg-white" style="height: 20px"></div>
                 <div class="bg-white" :class="[tab.rows[0].title && 'auto_menu']" v-for="row in tab.rows">
-                    <div v-if="row.title" class="block-title-wrap row j-c a-c">
+                    <div v-if="isAutoMenuStyle(tab)" class="block-title-wrap row j-c a-c">
                         <div class="block-title row j-c a-c">
                             <text class="block-title-text">{{row.title}}</text>
                         </div>
@@ -75,7 +75,7 @@
         </div>
 
         <!--模式参数设置弹窗-->
-        <sf-dialog :show="show" :device="constant.device" :isProbe="cmdObj.isProbe.value" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
+        <sf-dialog :show="show" :tabs="tabs" :device="constant.device" :isProbe="cmdObj.isProbe.value" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <!--<template v-for="tab in tabs">-->
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
@@ -84,7 +84,7 @@
                 <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header" :title="currentItem.text" titleText="#666666" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
 
                 <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value">
-                    <sf-accordion :value="setValue('probeTemperature')" unit="°C" title="设置探针温度" isFolded="true"  @callback="updateAccordionFoldingStatus">
+                    <sf-accordion type="picker" :value="setValue('probeTemperature')" unit="°C" title="设置探针温度" isFolded="true"  @callback="updateAccordionFoldingStatus">
                         <div slot="content">
                             <wx-picker :data="range('probeTemperature')" target="probeTemperature" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                         </div>
@@ -93,14 +93,14 @@
                 <div v-else>
                     <div v-for="(item, index) in accordions">
                         <div v-if="item.type==='picker'">
-                            <sf-accordion v-if="currentItem && currentItem[item.key].set" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                            <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                                 <div slot="content">
                                     <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                                 </div>
                             </sf-accordion>
                         </div>
                         <div v-if="item.type==='switch'">
-                            <sf-accordion v-if="currentItem && currentItem[item.key].set" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
+                            <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
                                 <div slot="right">
                                     <midea-switch2 :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
                                 </div>
@@ -181,6 +181,9 @@
                
             }
         },
+        computed:{
+
+        },
         props: {
             tabs:{
                 type: Array,
@@ -224,6 +227,9 @@
             //console.dir(JSON.stringify(this.foodMaterialItems));
         },
         methods: {
+            isAutoMenuStyle: function(tab){
+                return tab.rows[0].title && tab.rows[0].title !== 'mode'
+            },
             openCloudRecipe: function(){
                 nativeService.jumpNativePage({
                     "pageName": "CookbookHome",
@@ -253,6 +259,7 @@
                     return;
                 }
                 this.currentItem = item;
+                // nativeService.alert(this.currentItem);
                 this.modeText = item.text;
                 this.openDialog();
             },

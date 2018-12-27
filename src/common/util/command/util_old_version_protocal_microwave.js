@@ -247,6 +247,7 @@ export default {
     if(controltype == 2){//探针类下发
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 1);
+      message.setByte(messageBody, 6, 2);
       message.setByte(messageBody, 10, set_mode);
       message.setByte(messageBody, 12, 200);
       message.setByte(messageBody, 18, params.probeTemperature);

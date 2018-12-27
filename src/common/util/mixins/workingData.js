@@ -52,6 +52,7 @@ let workingModalMixin  = {
             hasStopOrContinueBtn: false,
             modeText:'',
             probeProgress: null, //探针工作倒计时
+            probeTempText: "°C",
 
             warningDialogShow: false,
             warningDialogTitle: "温馨提示",
@@ -129,7 +130,7 @@ let workingModalMixin  = {
             if(analysisObj.probeRealTemperature.value>analysisObj.probeSetttingTemperature.value){
                 analysisObj.probeRealTemperature.value = analysisObj.probeSetttingTemperature.value;
             }
-            this.probeProgress = parseInt(analysisObj.probeRealTemperature.value/analysisObj.probeSetttingTemperature.value*100) + '%';
+            this.probeProgress =analysisObj.probeRealTemperature.value;
             
             
             //提示
@@ -174,6 +175,9 @@ let workingModalMixin  = {
                 //      this.hasSetting = false;
                 // }
             }
+            if(analysisObj.isProbe.value){
+                this.statusTag = '当前实时温度';
+            }
             
             var _isRecipe = false;
             if(this.cmdObj.mode.value == 0xE0){
@@ -203,7 +207,8 @@ let workingModalMixin  = {
                this.cancleIcon = 'img/finish_icon@2x.png';
               
             }
-             if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 0){
+            // 预热中状态
+             if(analysisObj.workingState.value != 4 && analysisObj.displaySign.preheat == 1){
                 this.isWorking = true;
                 this.timeShow = false;
                 this.hasHour = false;
@@ -222,7 +227,9 @@ let workingModalMixin  = {
                 }
                 
             }
-            if(analysisObj.displaySign.preheat == 1 && analysisObj.displaySign.preheatTemperature == 1){
+
+            // 预热完成状态
+            if(analysisObj.workingState.value != 4 &&  analysisObj.displaySign.preheatTemperature == 1){
                 this.timeShow = false;
                 this.hasHour = false;
                 this.workSpecialStatusText = "预热完成";

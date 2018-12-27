@@ -25,6 +25,10 @@ const deviceMessageMixin = {
             this.listenerDeviceReiveMessage(tabs);
         },
         onlongpressQuery(device){//隐藏调试，查看设备上报数据
+             nativeService.getDeviceInfo().then(function(data){
+                nativeService.alert(data);
+            });
+
             var self = this;
             var sendCmd = cmdFun.createQueryMessage(device);
             nativeService.toast("下发03查询:"+JSON.stringify(sendCmd),2);
@@ -107,16 +111,16 @@ const deviceMessageMixin = {
         controlDevice(jsonCmd, callbackData){
             let context = this;
             let deviceCmd = cmdFun.createControlMessage(jsonCmd, callbackData);
-            //this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
+            // this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
+            // return;
             nativeService.showLoading();
             // nativeService.alert(cmdFun.cmdToEasy(deviceCmd));
-            // return;
             nativeService.startCmdProcess(
                 "control",
                 deviceCmd,
                 function(result){
                     nativeService.hideLoading();
-                    // nativeService.alert(callbackData);
+                    // nativeService.alert(result);
                     context.queryStatus(callbackData.tabs,callbackData.device);
                 },
                 function(result){
@@ -218,7 +222,6 @@ const deviceMessageMixin = {
             let context = this;
             // nativeService.toast(tabs);
             globalEvent.addEventListener("receiveMessage", function(e) {
-                nativeService.toast(123);
                 var str = e.data;
                 // nativeService.alert(str);
                 var arr = str.split(",");

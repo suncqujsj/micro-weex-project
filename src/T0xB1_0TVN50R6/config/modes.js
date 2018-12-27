@@ -25,7 +25,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: 1
+                    default: false
                 },
                 steamAmount:{
                     set:false,
@@ -55,7 +55,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: 1
+                    default: false
                 },
                 steamAmount:{
                     set:false,
@@ -85,7 +85,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: false
+                    default: true
                 },
                 steamAmount:{
                     set:false,
@@ -223,6 +223,73 @@ let modes = [
                     range:null
                 }
             },
+
+            {
+                'icon': modeIcons[7].dir,
+                'text': modeIcons[7].cn,
+                'mode': 0xB0,
+                time:{
+                    set: true,
+                    default:30,
+                    range:[2,720,1]
+                },
+                temperature:{
+                    set: true,
+                    default:35,
+                    range:[35,45,1]
+                },
+                preheat:{
+                    set:false,
+                    default: false
+                },
+                steamAmount:{
+                    set:false,
+                    default:2,
+                    range:[40,40,1,"取消"]
+                },
+                fireAmount:{
+                    set:false,
+                    default:0,
+                    range:null
+                }
+            }
+
+        ]
+    },
+
+    {
+        title: '',
+        iconButtons: [
+
+            {
+                'icon': modeIcons[8].dir,
+                'text': modeIcons[8].cn,
+                'mode': 0x42,
+                time:{
+                    set: true,
+                    default:30,
+                    range:[2,540,1]
+                },
+                temperature:{
+                    set: true,
+                    default:180,
+                    range:[50,250,5]
+                },
+                preheat:{
+                    set:true,
+                    default: false
+                },
+                steamAmount:{
+                    set:false,
+                    default:2,
+                    range:[40,40,1,"取消"]
+                },
+                fireAmount:{
+                    set:false,
+                    default:0,
+                    range:null
+                }
+            }
 
         ]
     },

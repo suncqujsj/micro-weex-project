@@ -1,6 +1,7 @@
 /**
  * Created by parker
  * 2018/11/1
+ * 用于解析待机页面
  */
 var numberRecord = 0; //记录跳页面的次数
 import cmdFun from "../command/util.js"; //解析指令

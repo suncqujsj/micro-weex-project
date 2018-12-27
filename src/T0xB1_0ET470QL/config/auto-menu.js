@@ -41,7 +41,7 @@ let data = [
                         range:null
                     },
                     detail: null,
-                    settingHide:true, //工作页面，隐藏设置参数
+                    settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 },
                 {
                     'icon': '',
@@ -76,7 +76,7 @@ let data = [
                         default: 0x52,
                         range:null
                     },
-                    settingHide:true,
+                    settingHide:true,// 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
                         foodMaterial:'面包粉 175克 \n' +
                         '全麦粉 75克 \n' +

@@ -1,4 +1,4 @@
-// 本解析js专门针对 新协议，支持微蒸烤所有产品
+// 本解析js专门针对 新协议，支持微蒸烤所有产品  Giggs
 
 import message from "@/common/util/smartMessage";
 import  nativeService from '@/common/services/nativeService';

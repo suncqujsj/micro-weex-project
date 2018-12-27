@@ -59,6 +59,10 @@ const accordionMixin = {
                         default:0,
                         range:null
                     },
+                    steamSwitch:{
+                        set:false,
+                        default: false
+                    },
                     recipeId:{
                         set:false,
                         default: 0x41,
@@ -126,6 +130,7 @@ const accordionMixin = {
                 steamAmount:null,
                 fireAmount:0,
                 weight:0,
+                steamSwitch:false,
                 recipeId:null,
                 probeTemperature: null,
                 probe: false
@@ -141,12 +146,13 @@ const accordionMixin = {
             // nativeService.alert(this.current);
         },
         onPreheatChange(event) {
-            this.current.preheat = event.value;
-            console.log('currentPreheat', this.current.preheat);
+            this.current[event.itemKey] = event.value;
+            // console.log('currentPreheat', this.current.preheat);
         },
         openDialog(){
             this.show = true;
             this.current.preheat = this.currentItem['preheat'].default;
+            this.current.steamSwitch = this.currentItem['steamSwitch'].default;
         },
         closeDialog(e) {
             this.show = false;
@@ -163,6 +169,7 @@ const accordionMixin = {
                 preheat: this.current.preheat,
                 steamAmount: this.setValue('steamAmount'),
                 weight: this.setValue('weight'),
+                steamSwitch: this.current.steamSwitch,
                 fireAmount: this.setValue('fireAmount'),
                 recipeId:this.setValue('recipeId'),
                 probeTemperature: this.setValue('probeTemperature'),

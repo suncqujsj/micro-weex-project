@@ -56,6 +56,14 @@ let accordions =  [
         unit:'g',
         hideArrow:false
     },
+    {
+        key:'steamSwitch',
+        type:'switch',
+        isFolded: true,
+        subtitle:'蒸汽开关',
+        unit:'',
+        hideArrow:true
+    },
 ];
 
 export default accordions;

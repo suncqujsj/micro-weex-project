@@ -108,6 +108,27 @@ const deviceMessageMixin = {
                 }
             );
         },
+        sendLightCmd(lightValue,tabs,device){
+            let context = this;
+            let deviceCmd = cmdFun.cmdLight(lightValue, device);
+            // this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
+            // return;
+            nativeService.showLoading();
+            nativeService.startCmdProcess(
+                "control",
+                deviceCmd,
+                function(result){
+                    nativeService.hideLoading();
+                    // nativeService.alert(result);
+                    context.queryStatus(tabs,device);
+                },
+                function(result){
+                    nativeService.hideLoading();
+                    nativeService.toast('控制失败，请检查网络或者设置的参数');
+                    //console.log('fail', result);
+                }
+            )
+        },
         controlDevice(jsonCmd, callbackData){
             let context = this;
             let deviceCmd = cmdFun.createControlMessage(jsonCmd, callbackData);

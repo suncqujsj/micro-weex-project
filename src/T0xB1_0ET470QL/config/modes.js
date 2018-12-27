@@ -32,7 +32,7 @@ let modes = [
                     set:true,
                     default:0,
                     range:[0,4,1],
-                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
+                    // isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 fireAmount:{
                     set:false,
@@ -72,13 +72,18 @@ let modes = [
                 steamAmount:{
                     set:true,
                     default:0,
-                    range:[0,0,1,40,40,1]
+                    range:[0,1,1]
                 },
                 fireAmount:{
                     set:false,
                     default:0,
                     range:null
-                }
+                },
+                // steamSwitch:{
+                //     set:true,
+                //     default: false,
+                //     hide: true,
+                // }
             },
             {
                 'icon': 'img/modes/hot_wind@3x.png',
@@ -105,7 +110,7 @@ let modes = [
                     set:true,
                     default:0,
                     range:[0,4,1],
-                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
+                    // isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 fireAmount:{
                     set:false,
@@ -235,7 +240,7 @@ let modes = [
                     set:true,
                     default:0,
                     range:[0,4,1],
-                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
+                    // isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 fireAmount:{
                     set:false,

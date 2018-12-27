@@ -85,6 +85,10 @@
             </div>
         </div>
 
+        <!-- 炉灯 -->
+        <image :class="['light_icon',cmdObj.light.value && 'light_on']" :src="lightImg"  @click="sendLightCmd(cmdObj.light.value,tabs,constant.device)"></image>
+        
+
          <!--模式参数设置弹窗-->
         <sf-dialog :show="show" :device="constant.device" :working="true"  :isProbe="cmdObj.isProbe.value" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
@@ -100,6 +104,11 @@
                             <wx-picker :data="range('probeTemperature')" target="probeTemperature" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                         </div>
                     </sf-accordion>
+                      <sf-accordion type="picker" :value="setValue('steamAmount')" unit="档" title="设置蒸汽量" isFolded="true"  @callback="updateAccordionFoldingStatus">
+                        <div slot="content">
+                            <wx-picker :data="range('steamAmount')" target="steamAmount" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                        </div>
+                    </sf-accordion>
                 </div>
                 <div v-else>
                     <div v-for="(item, index) in accordions">
@@ -113,7 +122,7 @@
                         <div v-if="item.type==='switch' && (currentItem && currentItem[item.key] && !currentItem[item.key].hide)">
                             <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set" :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
                                 <div slot="right">
-                                    <midea-switch2 :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
+                                    <midea-switch2 :itemKey="item.key" :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
                                 </div>
                             </sf-accordion>
                         </div>
@@ -168,6 +177,8 @@
             ref="actionsheet"
             button="我再想想"
         ></midea-actionsheet>
+
+        
     </div>
 </template>
 
@@ -291,16 +302,17 @@
                  if(time<1){
                     time = 1;
                 }
-                // if(this.cmdObj.mode.value != 0x20){//因为除了蒸汽模式，时间范围1到300，其他模式都是最低值为5，所以最低值为5的模式，工作中设置时间，要强行最小值置为5
-                //     if(time<5){
-                //         time = 5;
-                //     }
-                // }
+                if(this.cmdObj.mode.value == 0xB0){//因为发酵模式，最低值为5，所以最低值为5的模式，工作中设置时间，要强行最小值置为5
+                    if(time<5){
+                        time = 5;
+                    }
+                }
                 this.current.time = time;
                 this.current.temperature = this.cmdObj.temperature.upLowTemperature;
                 this.currentItem.preheat.default = this.cmdObj.displaySign.preheat?true:false;
                 this.current.fireAmount = this.cmdObj.fire.value;
                 this.current.steamAmount = this.cmdObj.steam.value;
+                // this.currentItem.steamSwitch.default = this.cmdObj.steam.value?true:false;
                 this.current.weight = this.cmdObj.weight.value;
                 this.current.probeTemperature = this.cmdObj.probeSetttingTemperature.value;
                 // nativeService.toast(this.current,3);

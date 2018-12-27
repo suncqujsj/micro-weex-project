@@ -89,6 +89,11 @@
                             <wx-picker :data="range('probeTemperature')" target="probeTemperature" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                         </div>
                     </sf-accordion>
+                      <sf-accordion type="picker" :value="setValue('steamAmount')" unit="档" title="设置蒸汽量" isFolded="true"  @callback="updateAccordionFoldingStatus">
+                        <div slot="content">
+                            <wx-picker :data="range('steamAmount')" target="steamAmount" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                        </div>
+                    </sf-accordion>
                 </div>
                 <div v-else>
                     <div v-for="(item, index) in accordions">
@@ -102,7 +107,7 @@
                         <div v-if="item.type==='switch'">
                             <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
                                 <div slot="right">
-                                    <midea-switch2 :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
+                                    <midea-switch2 :itemKey="item.key" :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
                                 </div>
                             </sf-accordion>
                         </div>

@@ -60,7 +60,8 @@ let workingModalMixin  = {
             warningDialogContent: "主人，您的水箱缺水了，要及时添加水哦",
 
             showBar:false,
-            actionsheetItems:['确定关闭']
+            actionsheetItems:['确定关闭'],
+            lightImg:"img/light_off@3x.png"
         };
     },
     methods: {
@@ -132,6 +133,12 @@ let workingModalMixin  = {
                 analysisObj.probeRealTemperature.value = analysisObj.probeSetttingTemperature.value;
             }
             this.probeProgress =analysisObj.probeRealTemperature.value;
+
+            if(analysisObj.light.value){
+                this.lightImg = "img/light_on@3x.png";
+            }else{
+                this.lightImg = "img/light_off@3x.png";
+            }
             
             
             //提示
@@ -208,7 +215,7 @@ let workingModalMixin  = {
                this.cancleIcon = 'img/finish_icon@2x.png';
               
             }
-            // 预热中状态
+            // 不是烹饪完成 ，并且处于预热中状态
              if(analysisObj.workingState.value != 4 && analysisObj.displaySign.preheat == 1){
                 this.isWorking = true;
                 this.timeShow = false;
@@ -229,7 +236,7 @@ let workingModalMixin  = {
                 
             }
 
-            // 预热完成状态
+            // 不是烹饪完成 ，并且处于预热温度到达
             if(analysisObj.workingState.value != 4 &&  analysisObj.displaySign.preheatTemperature == 1){
                 this.timeShow = false;
                 this.hasHour = false;

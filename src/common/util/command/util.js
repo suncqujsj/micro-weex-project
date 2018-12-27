@@ -50,6 +50,10 @@ export default {
           downHighTemperature: {name:"下管实际温度：高",value: 0x00},
           downLowTemperature: {name:"下管实际温度：低",value: 0x00},
         },
+        light:{
+          name:"炉灯",
+          value: 0
+        },
         isProbe:{
           name:"肉类探针模式",
           value: 0
@@ -221,7 +225,15 @@ export default {
     if(params.probe && callbackData.isProbe){//假如当前插上探针，并且 该模式支持探针，则，do
       controltype = 2 //探针类
     }
-    // nativeService.alert(controltype);
+    if(callbackData.working && params.probe && callbackData.isProbe){//假如当前插上探针，并且 该模式支持探针，则，工作设置类
+      controltype = 3 //探针工作设置类
+    }
+    // nativeService.alert(callbackData);
+    // if(params.steamSwitch){
+    //   params.steamAmount = 40;
+    // }else{
+    //   params.steamAmount = 0;
+    // }
     if(controltype==0){
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 1);
@@ -262,11 +274,21 @@ export default {
       message.setByte(messageBody, 6, 2);
       message.setByte(messageBody, 10, set_mode);
       message.setByte(messageBody, 12, 200);
+      message.setByte(messageBody, 16, params.steamAmount);
+      message.setByte(messageBody, 18, params.probeTemperature);
+    }
+    if(controltype == 3){//探针工作类下发
+      message.setByte(messageBody, 0, 0x22);
+      message.setByte(messageBody, 1, 4);
+      message.setByte(messageBody, 6, 2);
+      message.setByte(messageBody, 10, set_mode);
+      message.setByte(messageBody, 12, 200);
+      message.setByte(messageBody, 16, params.steamAmount);
       message.setByte(messageBody, 18, params.probeTemperature);
     }
     
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
-    // nativeService.alert(this.cmdTo16Hex(sendcmd));
+    nativeService.alert(this.cmdToEasy(sendcmd));
 
     return sendcmd;
   },
@@ -297,16 +319,14 @@ export default {
     return sendMessage;
   },
 
-
-
    //炉灯
-   cmdLight(params,device){
+   cmdLight(lightValue,device){
     var messageBody = message.createMessageBody(7); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
     message.setByte(messageBody, 2,0xff);
-    message.setByte(messageBody, 3,params.light?1:0);
-    message.setByte(messageBody, 4,0xff);
+    message.setByte(messageBody, 3,0xff);
+    message.setByte(messageBody, 4,lightValue?0:1);
     message.setByte(messageBody, 5,0xff);
     message.setByte(messageBody, 6,0xff);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
@@ -318,7 +338,7 @@ export default {
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
     message.setByte(messageBody, 2,0xff);
-    message.setByte(messageBody, 3,params.childLock?1:0);
+    message.setByte(messageBody, 3,params.childLock?0:1);
     message.setByte(messageBody, 4,0xff);
     message.setByte(messageBody, 5,0xff);
     message.setByte(messageBody, 6,0xff);
@@ -363,7 +383,7 @@ export default {
      obj.displaySign.preheatTemperature = message.getBit(requestCmd, 26, 6);
      obj.displaySign.isError = message.getBit(requestCmd, 26, 7);
 
-    
+     obj.light.value = message.getBit(requestCmd, 27, 2);
      obj.isProbe.value = message.getBit(requestCmd, 27, 6);
 
     //设置温度

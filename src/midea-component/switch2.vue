@@ -34,6 +34,10 @@ export default {
             type: String,
             default: '48',
         },
+        itemKey: {
+            type: String,
+            default: 'preheat',
+        },
         checked: {
             type: Boolean,
             default: false
@@ -66,7 +70,7 @@ export default {
             this.checked = !this.checked
             this.updateIcon()
 
-            this.$emit('change', { value: this.checked })
+            this.$emit('change', { value: this.checked,itemKey: this.itemKey })
         },
         updateIcon(durationTime = 100) {
             var switchBar = this.$refs.switchBar;

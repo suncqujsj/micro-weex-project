@@ -8,7 +8,7 @@ let modes = [
         title: '',
         iconButtons: [
             {
-                'icon': 'assets/img/modes/up_down_pipe.png',
+                'icon': 'assets/img/modes/up_down_tube@3x.png',
                 'text': '上下管',
                 'mode': 0x4C,
                 time:{
@@ -99,7 +99,7 @@ let modes = [
                 }
             },
             {
-                'icon': 'assets/img/modes/up_down_and_wind.png',
+                'icon': 'assets/img/modes/up_down_and_fan@3x.png',
                 'text': '上下管+风扇',
                 'mode': 0x52,
                 time:{

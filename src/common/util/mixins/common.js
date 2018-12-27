@@ -11,10 +11,16 @@ import nativeService from '@/common/services/nativeService';
 let commonMixin = {
     data(){
         return {
-            wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
+            wrapHeight: weex.config.env.deviceHeight,
         };
     },
     methods:{
+        back: function(){
+            nativeService.goBack();
+        },
+        back2Native(){
+            nativeService.backToNative()
+        },
         isipx: function () {
             return weex && (
                 weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6' //iphoneX

@@ -187,7 +187,7 @@ let commonMixin = {
                     this.url = result.data.url;
                     let voiceAuthStateResult = await  this.getVoiceAuth(deviceId, uid);
                     let data = JSON.parse(voiceAuthStateResult.returnData).data;
-                    nativeService.toast('授权状态status：' + data.status);
+                    // nativeService.toast('授权状态status：' + data.status);
                     if(data) {
                         // nativeService.alert(data);
                         this.setSwitchValue(this.authIndex, data.status === '0');

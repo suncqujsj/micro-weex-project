@@ -160,7 +160,7 @@
             <div slot="header">
                 <modal-header leftImg="img/header/public_ic_home@3x.png" class="modal-header" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native"></modal-header>
             </div>
-            <div class="a-c j-c" slot="content" :style="{height: WrapHeight+'px'}">
+            <div class="a-c j-c" slot="content" :style="{height: wrapHeight+'px'}">
                 <div class="child-lock">
                     <image class="child-lock-icon" src="img/childlock/large_childlock@3x.png"></image>
                     <text class="child-lock-text">童锁已开启</text>

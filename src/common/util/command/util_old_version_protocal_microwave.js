@@ -163,7 +163,8 @@ export default {
           }                      
          
       }
-    }else{
+    }
+    else{
       let modes = tabs[1].rows;
       for(var i=0; i<modes.length; i++){
         var iconButton = modes[i].iconButtons;
@@ -311,6 +312,9 @@ export default {
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
+
+
+    // 设备上报状态解析
   analysisCmd: function(requestCmd,tabs) {
     // var receiveFrame = parseInt(requestCmd[3]);
 
@@ -323,50 +327,86 @@ export default {
     
     var obj = this.initAnalysisObj();
   // if(parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)){
-    obj.workingState.value = parseInt(requestCmd[11]); 
-    var recipeId = parseInt(requestCmd[12])*256*256+parseInt(requestCmd[13])*256+parseInt(requestCmd[14]);
+    obj.workingState.value = this.getStatusCode(parseInt(requestCmd[10]));
+    var recipeId = parseInt(requestCmd[21])*256*256+parseInt(requestCmd[22])*256+parseInt(requestCmd[23]);
     obj.recipeId.value = recipeId;
-    obj.timeRemaining.hour = parseInt(requestCmd[16]);
-    obj.timeRemaining.minute = parseInt(requestCmd[17]);
-    obj.timeRemaining.second = parseInt(requestCmd[18]);
-    obj.mode.value = parseInt(requestCmd[19]);
-    obj.mode.text = this.modeValueToModeText(recipeId,parseInt(requestCmd[19]),tabs);     
+    obj.timeRemaining.hour = parseInt(requestCmd[12])%60;
+    obj.timeRemaining.minute = parseInt(requestCmd[12]);
+    obj.timeRemaining.second = parseInt(requestCmd[13]);
+    obj.mode.value = parseInt(requestCmd[11]);
+    obj.mode.text = this.modeValueToModeText(recipeId,parseInt(requestCmd[19]),tabs);  // giggs stub
     
      //实际温度
-     obj.realTemperature.upHighTemperature = parseInt(requestCmd[20]);
-     obj.realTemperature.upLowTemperature = parseInt(requestCmd[21]);
-     obj.realTemperature.downHighTemperature = parseInt(requestCmd[22]);
-     obj.realTemperature.downLowTemperature = parseInt(requestCmd[23]);
+     obj.realTemperature.upHighTemperature = parseInt(requestCmd[24]);
+     obj.realTemperature.upLowTemperature = parseInt(requestCmd[24]);
+     obj.realTemperature.downHighTemperature = parseInt(requestCmd[24]);
+     obj.realTemperature.downLowTemperature = parseInt(requestCmd[24]);
    
-     obj.displaySign.lock = message.getBit(requestCmd, 26, 0);
-     obj.displaySign.doorSwitch = message.getBit(requestCmd, 26, 1);
-     obj.displaySign.waterBox = message.getBit(requestCmd, 26, 2);
-     obj.displaySign.lackWater = message.getBit(requestCmd, 26, 3);
-     obj.displaySign.changeWater = message.getBit(requestCmd, 26, 4);
-     obj.displaySign.preheat = message.getBit(requestCmd, 26, 5);
-     obj.displaySign.preheatTemperature = message.getBit(requestCmd, 26, 6);
-     obj.displaySign.isError = message.getBit(requestCmd, 26, 7);
+     obj.displaySign.lock = parseInt(requestCmd[10]) === 5 ? 1:0; // 状态位 0x05是童锁
+     obj.displaySign.doorSwitch = message.getBit(requestCmd, 10, 7); // B10状态位 第7个Bit标识门开关
+     obj.displaySign.waterBox = message.getBit(requestCmd, 26, 2);  // 貌似没有水盒检测
+     obj.displaySign.lackWater =  parseInt(requestCmd[16]) === 2 ? 1:0;  // B16 =2 标识 缺水
+     obj.displaySign.changeWater = parseInt(requestCmd[16]) === 6 ? 1:0; // B16 =6 清洁换水
+     obj.displaySign.preheat = parseInt(requestCmd[10]) === 8 ? 1:0;  // B10状态位 ，不预热工作0x02，预热工作0x08
+     obj.displaySign.preheatTemperature = parseInt(requestCmd[24])*5;
+     obj.displaySign.isError = parseInt(requestCmd[15]) != 0 ? 1:0;
 
-     obj.isProbe.value = message.getBit(requestCmd, 27, 6);
+     obj.isProbe.value = 0; // 微波炉没有探针，直接填0就好
 
     //设置温度
-    obj.temperature.upHighTemperature = parseInt(requestCmd[28]);
-    obj.temperature.upLowTemperature = parseInt(requestCmd[29]);
-    obj.temperature.downHighTemperature = parseInt(requestCmd[30]);
-    obj.temperature.downLowTemperature = parseInt(requestCmd[31]);
+    obj.temperature.upHighTemperature = 0;// 没有这个字段，直接填0就好
+    obj.temperature.upLowTemperature = 0;// 没有这个字段，直接填0就好
+    obj.temperature.downHighTemperature = 0;// 没有这个字段，直接填0就好
+    obj.temperature.downLowTemperature = 0;// 没有这个字段，直接填0就好
 
     //探针温度
-    obj.probeRealTemperature.value = parseInt(requestCmd[32]);
-    obj.probeSetttingTemperature.value = parseInt(requestCmd[33]);
+    obj.probeRealTemperature.value = 0;// 没有这个字段，直接填0就好
+    obj.probeSetttingTemperature.value = 0;// 没有这个字段，直接填0就好
     if(obj.isProbe.value){ //如果是探针，则为显示为探针设定温度
-      obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
+      obj.temperature.upLowTemperature = 0;// 没有这个字段，直接填0就好
     }
 
     obj.fire.value = parseInt(requestCmd[24]);
-    obj.weight.value = parseInt(requestCmd[25]);
-    obj.steam.value = parseInt(requestCmd[25]);
+    obj.weight.value = parseInt(requestCmd[24]);
+    obj.steam.value = 0;// 没有这个字段，直接填0就好
     return obj;
-  }
+  },
+
+  // 解析老版本协议的设备状态码，并转换映射成现有新协议的编号：1:"省电",2:"待机",3:"工作中",4:"烹饪完成",5:"预约中",6:"暂停",7:"云菜谱段间等待",8:"爱心3秒"
+    getStatusCode(status_code){
+      var result = 2;  // 默认状态人为定义为待机
+      switch (status_code) {
+          case 7: // 省电
+              result = 1;
+              break;
+          case 1: // 待机
+              result = 2;
+              break;
+          case 2: // 不预热工作
+              result = 3;
+              break;
+          case 4: // 烹饪完成
+              result = 4;
+              break;
+          case 6: // 预约中
+              result = 5;
+              break;
+          case 3: // 暂停
+              result = 6;
+              break;
+          case 102: // 云菜段结束
+              result = 7;
+              break;
+          case 9: // 爱心3秒
+              result = 8;
+              break;
+          case 8: // 预热工作
+              result = 3;
+              break;
+      }
+      return result;
+    }
+
 
 };
 

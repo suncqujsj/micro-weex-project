@@ -1,4 +1,4 @@
-// 本解析js专门针对 新协议，支持微蒸烤所有产品  Giggs
+// 本解析js专门针对 新协议，支持微蒸烤所有产品
 
 import message from "@/common/util/smartMessage";
 import  nativeService from '@/common/services/nativeService';
@@ -145,8 +145,27 @@ export default {
         isRecipe = true;
     }
 
-    if(tabs.length<=1){
-      let modes = tabs[0].rows;
+    if(isRecipe){
+      let autoMenu = tabs[0].rows;
+      let  currentModes = autoMenu;
+       for(var i=0; i<currentModes.length; i++){
+           var iconButtonsArr = currentModes[i].iconButtons; 
+          for(var r=0; r<iconButtonsArr.length; r++){
+              var iconButtons = iconButtonsArr[r];
+               for(var m=0; m<iconButtons.length; m++){
+                  if(recipeId == iconButtons[m].recipeId.default){
+                      modeArr.push({
+                        'text': iconButtons[m].text,
+                        'mode': iconButtons[m].mode,
+                      })
+                  }
+              }
+          }                      
+         
+      }
+    }
+    else{
+      let modes = tabs[1].rows;
       for(var i=0; i<modes.length; i++){
         var iconButton = modes[i].iconButtons;
         for(var k=0; k<iconButton.length; k++){
@@ -154,37 +173,6 @@ export default {
             'text': iconButton[k].text,
             'mode': iconButton[k].mode,
           })
-        }
-      }
-    }else{
-      if(isRecipe){
-        let autoMenu = tabs[0].rows;
-        let  currentModes = autoMenu;
-         for(var i=0; i<currentModes.length; i++){
-             var iconButtonsArr = currentModes[i].iconButtons; 
-            for(var r=0; r<iconButtonsArr.length; r++){
-                var iconButtons = iconButtonsArr[r];
-                 for(var m=0; m<iconButtons.length; m++){
-                    if(recipeId == iconButtons[m].recipeId.default){
-                        modeArr.push({
-                          'text': iconButtons[m].text,
-                          'mode': iconButtons[m].mode,
-                        })
-                    }
-                }
-            }                      
-           
-        }
-      }else{
-        let modes = tabs[1].rows;
-        for(var i=0; i<modes.length; i++){
-          var iconButton = modes[i].iconButtons;
-          for(var k=0; k<iconButton.length; k++){
-            modeArr.push({
-              'text': iconButton[k].text,
-              'mode': iconButton[k].mode,
-            })
-          }
         }
       }
     }
@@ -213,7 +201,7 @@ export default {
     var minute = time%60;
     var second = 0;
     var set_mode = params.mode;
-    var messageBody = message.createMessageBody(22); 
+    var messageBody = message.createMessageFFBody(22); 
     var controltype = 0;//待机类
     if(callbackData.working){
       controltype = 1 //工作类
@@ -324,6 +312,9 @@ export default {
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
+
+
+    // 设备上报状态解析
   analysisCmd: function(requestCmd,tabs) {
     // var receiveFrame = parseInt(requestCmd[3]);
 
@@ -335,55 +326,84 @@ export default {
     // nativeService.toast(latesFrameRecord,6);
     
     var obj = this.initAnalysisObj();
-    
   // if(parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)){
-    obj.workingState.value = parseInt(requestCmd[11]); 
-    var recipeId = parseInt(requestCmd[12])*256*256+parseInt(requestCmd[13])*256+parseInt(requestCmd[14]);
+    obj.workingState.value = this.getStatusCode(parseInt(requestCmd[10]));
+    var recipeId = parseInt(requestCmd[24])*256*256+parseInt(requestCmd[25])*256+parseInt(requestCmd[26]);
     obj.recipeId.value = recipeId;
-    obj.timeRemaining.hour = parseInt(requestCmd[16]);
-    obj.timeRemaining.minute = parseInt(requestCmd[17]);
-    obj.timeRemaining.second = parseInt(requestCmd[18]);
-    obj.mode.value = parseInt(requestCmd[19]);
-    
-    obj.mode.text = this.modeValueToModeText(recipeId,parseInt(requestCmd[19]),tabs);     
+    obj.timeRemaining.hour = parseInt(requestCmd[12])%60;
+    obj.timeRemaining.minute = parseInt(requestCmd[13]);
+    obj.timeRemaining.second = parseInt(requestCmd[22]);
+    obj.mode.value = parseInt(requestCmd[11]);
+    obj.mode.text = this.modeValueToModeText(recipeId,parseInt(requestCmd[19]),tabs);  // giggs stub
     
      //实际温度
-     obj.realTemperature.upHighTemperature = parseInt(requestCmd[20]);
-     obj.realTemperature.upLowTemperature = parseInt(requestCmd[21]);
-     obj.realTemperature.downHighTemperature = parseInt(requestCmd[22]);
-     obj.realTemperature.downLowTemperature = parseInt(requestCmd[23]);
+     obj.realTemperature.upHighTemperature = 0;
+     obj.realTemperature.upLowTemperature = parseInt(requestCmd[14]);
+     obj.realTemperature.downHighTemperature = 0;
+     obj.realTemperature.downLowTemperature = parseInt(requestCmd[14]);
    
-     obj.displaySign.lock = message.getBit(requestCmd, 26, 0);
-     obj.displaySign.doorSwitch = message.getBit(requestCmd, 26, 1);
-     obj.displaySign.waterBox = message.getBit(requestCmd, 26, 2);
-     obj.displaySign.lackWater = message.getBit(requestCmd, 26, 3);
-     obj.displaySign.changeWater = message.getBit(requestCmd, 26, 4);
-     obj.displaySign.preheat = message.getBit(requestCmd, 26, 5);
-     obj.displaySign.preheatTemperature = message.getBit(requestCmd, 26, 6);
-     obj.displaySign.isError = message.getBit(requestCmd, 26, 7);
+     obj.displaySign.lock = parseInt(requestCmd[10]) === 5 ? 1:0; // 状态位 0x05是童锁
+     obj.displaySign.doorSwitch = 0;// 无此状态检测
+     obj.displaySign.waterBox = 0;// 无此状态检测
+     obj.displaySign.lackWater =  0;// 无此状态检测
+     obj.displaySign.changeWater = 0;// 无此状态检测
+     obj.displaySign.preheat = parseInt(requestCmd[10]) === 8 ? 1:0;  // B10状态位 ，不预热工作0x02，预热工作0x08
+     obj.displaySign.preheatTemperature = parseInt(requestCmd[14]);
+     obj.displaySign.isError = parseInt(requestCmd[15]) != 0 ? 1:0;
 
-    
-     obj.isProbe.value = message.getBit(requestCmd, 27, 6);
+     obj.isProbe.value = 0;// 无此状态检测
 
     //设置温度
-    obj.temperature.upHighTemperature = parseInt(requestCmd[28]);
-    obj.temperature.upLowTemperature = parseInt(requestCmd[29]);
-    obj.temperature.downHighTemperature = parseInt(requestCmd[30]);
-    obj.temperature.downLowTemperature = parseInt(requestCmd[31]);
+    obj.temperature.upHighTemperature = 0;// 没有这个字段，直接填0就好
+    obj.temperature.upLowTemperature = 0;// 没有这个字段，直接填0就好
+    obj.temperature.downHighTemperature = 0;// 没有这个字段，直接填0就好
+    obj.temperature.downLowTemperature = 0;// 没有这个字段，直接填0就好
 
     //探针温度
-    obj.probeRealTemperature.value = parseInt(requestCmd[32]);
-    obj.probeSetttingTemperature.value = parseInt(requestCmd[33]);
+    obj.probeRealTemperature.value = 0;// 没有这个字段，直接填0就好
+    obj.probeSetttingTemperature.value = 0;// 没有这个字段，直接填0就好
     if(obj.isProbe.value){ //如果是探针，则为显示为探针设定温度
-      obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
+      obj.temperature.upLowTemperature = 0;// 没有这个字段，直接填0就好
     }
 
-    obj.fire.value = parseInt(requestCmd[24]);
-    obj.weight.value = parseInt(requestCmd[25]);
-    obj.steam.value = parseInt(requestCmd[25]);
-    
+    obj.fire.value =  0;// 没有这个字段，直接填0就好
+    obj.weight.value =  0;// 没有这个字段，直接填0就好
+    obj.steam.value = 0;// 没有这个字段，直接填0就好
     return obj;
-  }
+  },
+
+  // 解析老版本协议的设备状态码，并转换映射成现有新协议的编号：1:"省电",2:"待机",3:"工作中",4:"烹饪完成",5:"预约中",6:"暂停",7:"云菜谱段间等待",8:"爱心3秒"
+    getStatusCode(status_code){
+      var result = 2;  // 默认状态人为定义为待机
+      switch (status_code) {
+          case 7: // 省电
+              result = 1;
+              break;
+          case 1: // 待机
+              result = 2;
+              break;
+          case 2: // 工作中
+              result = 3;
+              break;
+          case 8: // 预热中
+              result = 3;
+              break;
+          case 4: // 烹饪完成
+              result = 4;
+              break;
+          case 6: // 预热中
+              result = 5;
+              break;
+          case 3: // 暂停
+              result = 6;
+              break;
+          case 102: // 云菜段结束
+              result = 7;
+              break;
+      }
+      return result;
+    }
+
 
 };
 

@@ -2,14 +2,14 @@
  * Created by sf
  * 2018/10/20
  */
-
+import modeIcons from "../../common/mapping/modeIcons";
 let modes = [
     {
         title: '',
         iconButtons: [
             {
-                'icon': 'img/modes/up_down_tube@3x.png',
-                'text': '上下管',
+                'icon': modeIcons[0].dir,
+                'text': modeIcons[0].cn,
                 'mode': 0x4C,
                 time:{
                     set: true,
@@ -51,8 +51,8 @@ let modes = [
             },
            
             {
-                'icon': 'img/modes/fermentation@3x.png',
-                'text': '发酵',
+                'icon': modeIcons[7].dir,
+                'text': modeIcons[7].cn,
                 'mode': 0xB0,
                 time:{
                     set: true,
@@ -86,8 +86,8 @@ let modes = [
                 // }
             },
             {
-                'icon': 'img/modes/hot_wind@3x.png',
-                'text': '热风对流',
+                'icon': modeIcons[1].dir,
+                'text': modeIcons[1].cn,
                 'mode': 0x41,
                 time:{
                     set: true,
@@ -126,8 +126,8 @@ let modes = [
                 probe:true //支持肉类探针
             },
             {
-                'icon': 'img/modes/up_down_and_fan@3x.png',
-                'text': '上下管+风扇',
+                'icon': modeIcons[2].dir,
+                'text': modeIcons[2].cn,
                 'mode': 0x52,
                 time:{
                     set: true,
@@ -160,8 +160,8 @@ let modes = [
         iconButtons: [
           
             {
-                'icon': 'img/modes/Infra-red.png',
-                'text': '红外管',
+                'icon': modeIcons[4].dir,
+                'text': modeIcons[4].cn,
                 'mode': 0x47,
                 time:{
                     set: true,
@@ -188,8 +188,8 @@ let modes = [
                 }
             },
             {
-                'icon': 'img/modes/down_pipe.png',
-                'text': '下管',
+                'icon': modeIcons[3].dir,
+                'text': modeIcons[3].cn,
                 'mode': 0x49,
                 time:{
                     set: true,
@@ -216,8 +216,8 @@ let modes = [
                 }
             },
             {
-                'icon': 'img/modes/up_hot_wind@3x.png',
-                'text': '上管+红外+风扇',
+                'icon': modeIcons[9].dir,
+                'text': modeIcons[9].cn,
                 'mode': 0x51,
                 time:{
                     set: true,
@@ -255,8 +255,8 @@ let modes = [
                 probe: true,
             },
             {
-                'icon': 'img/modes/descaling_cg.png',
-                'text': '除垢',
+                'icon': modeIcons[10].dir,
+                'text': modeIcons[10].cn,
                 'mode': 0xC1,
                 time:{
                     set: false,
@@ -290,8 +290,8 @@ let modes = [
         title: '',
         iconButtons: [   
             {
-                'icon': 'img/modes/quik_preheat@3x.png',
-                'text': '快速预热',
+                'icon': modeIcons[11].dir,
+                'text': modeIcons[11].cn,
                 'mode': 0x4B,
                 time:{
                     set: false,

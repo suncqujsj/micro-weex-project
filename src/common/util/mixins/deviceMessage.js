@@ -240,10 +240,12 @@ const deviceMessageMixin = {
             // nativeService.toast(tabs);
             globalEvent.addEventListener("receiveMessage", function(e) {
                 var str = e.data;
-              
                 var arr = str.split(",");
+                if(parseInt(arr[9])==0x0A){
+                    return;
+                }
+                // nativeService.alert(arr);
                 var analysisObj = cmdFun.analysisCmd(arr,tabs); //解析04上行指令
-                // nativeService.alert(cmdFun.cmdToEasy(arr));
                 context.analysisFun(analysisObj,tabs);
             });
 

@@ -196,9 +196,9 @@
                 this.listenerDeviceReiveMessage();
             }
 
-            // nativeService.getDeviceInfo().then(function(data){
-            //     nativeService.alert(data);
-            // });
+            nativeService.getDeviceInfo().then(function(data){
+                nativeService.alert(data);
+            });
 
             let context = this;
             // this.getDeviceInfo(constant.device.widget_name).then(function(dataSn){

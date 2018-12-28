@@ -14,7 +14,7 @@ let workingModalMixin  = {
                 "completedColor":"#FFFFFF", //环形进度条未完成后的颜色默认#267AFF
                 "incompletedColor":"#f5d5d5eb", //环形进度条未完成后的颜色，默认透明
                 "thickness":2, //环形进度条宽度，默认4
-                "cornerRadius" : weex.config.env.platform == "iOS" ? 140 :280,  //环形的半径，默认是width/2
+                "cornerRadius" : 280,  //环形的半径，默认是width/2
                 "totalCounter" : 360, //环形进度条的最大值，默认是360
                 "progressCounter" : 0, //设置进度值，默认是从0-360, 默认为0
                 "autoProgress" : false, //设置是否需要自动执行环形进度，默认false, 如果设置为true，则每秒进度值+1操作

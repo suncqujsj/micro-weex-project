@@ -2,9 +2,11 @@
     <div>
         <midea-header title="gcanvas" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
-        <div style="height:100px;">
-            <text class="display-text">GCanvas主页 (请使用桌面浏览器打开)</text>
-            <text class="display-link" @click="openWeb('https://alibaba.github.io/GCanvas/')">https://alibaba.github.io/GCanvas/</text>
+        <div style="height:200px;">
+            <text class="display-text">GCanvas主页和接口支持 (请使用桌面浏览器打开)</text>
+            <text class="display-link" @click="openWeb('https://alibaba.github.io/GCanvas/')">主页：https://alibaba.github.io/GCanvas/</text>
+            <text class="display-link" @click="openWeb('https://alibaba.github.io/GCanvas/docs/Graphics%202D.html')">2D接口:https://alibaba.github.io/GCanvas/docs/Graphics%202D.html</text>
+            <text class="display-link" @click="openWeb('https://alibaba.github.io/GCanvas/docs/WebGL.html')">WebGL接口：https://alibaba.github.io/GCanvas/docs/WebGL.html  {{positionY}}</text>
         </div>
         <gcanvas @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend" ref="gcanvess" style="width: 750;height: 600px;background-color: yellow;">
         </gcanvas>
@@ -21,9 +23,10 @@
   margin-right: 10px;
 }
 .display-link {
-  font-size: 30px;
+  font-size: 24px;
   margin-left: 10px;
   margin-right: 10px;
+  margin-bottom: 10px;
   color: blue;
   text-decoration: blue;
 }
@@ -33,6 +36,7 @@ import base from '../base'
 import mideaHeader from '@/midea-component/header.vue'
 import nativeService from '@/common/services/nativeService'
 
+const dom = weex.requireModule("dom");
 var GCanvas = require('weex-gcanvas')
 var Image = require('weex-gcanvas/gcanvasimage');
 var modal = weex.requireModule("modal");
@@ -40,6 +44,8 @@ export default {
     mixins: [base],
     data() {
         return {
+            positionX: 0,
+            positionY: 0,
             startX: 0,
             startY: 0,
             currentX: 0,
@@ -65,8 +71,8 @@ export default {
             this.currentX = event.changedTouches[0].pageX;
             this.currentY = event.changedTouches[0].pageY;
             //进行绘制
-            this.context.moveTo(this.startX, this.startY - 188);
-            this.context.lineTo(this.currentX, this.currentY - 188);
+            this.context.moveTo(this.startX, this.startY - this.positionY);
+            this.context.lineTo(this.currentX, this.currentY - this.positionY);
             this.context.stroke();
 
             this.startX = event.changedTouches[0].pageX;
@@ -157,7 +163,7 @@ export default {
             this.context.restore();
 
             this.context.save();
-            this.context.globalAlpha = 0.1;     //此时  画出的图片的透明度为0.5
+            this.context.globalAlpha = 0.6;     //此时  画出的图片的透明度为0.5
             this.context.fillStyle = 'rgb(86,59,235)';
             this.context.fillRect(0, 0, 100, 100);
             this.context.restore();
@@ -165,7 +171,7 @@ export default {
             this.context.fillStyle = 'rgb(86,59,235)';
             this.context.fillRect(150, 0, 100, 100);
 
-            this.context.fillStyle = 'rgba(86,59,235,0.2)';
+            this.context.fillStyle = 'rgba(86,59,235,0.3)';
             this.context.fillRect(300, 0, 100, 100);
 
             this.context.beginPath()
@@ -175,7 +181,7 @@ export default {
             this.context.lineTo(0, 500)
             this.context.closePath()
             let gradient1 = this.context.createLinearGradient(0, 500, 400, 500);
-            gradient1.addColorStop(0, 'rgba(0,0,0,0.2)');
+            gradient1.addColorStop(0, 'rgba(0,0,0,0.8)');
             gradient1.addColorStop(1, 'rgba(86,59,235,0.2)');
             this.context.strokeStyle = gradient1;
             this.context.fill();
@@ -183,8 +189,28 @@ export default {
     },
     mounted() {
         this.test1()
-        this.test2()
+        // this.test2()
         this.test3()
+
+        if (weex.config.env.platform == 'iOS') {
+            // 处理iOS手势中pageY从页面算起的问题
+            var elName = "gcanvess"
+            var el = this.$refs[elName];
+            if (el) {
+                let sid = setInterval(() => next(), 100)
+                let next = () => {
+                    dom.getComponentRect(el, (options) => {
+                        if (options.result && options.size.bottom) {
+                            this.positionX = options.size.left
+                            this.positionY = options.size.top
+                        } else {
+                            setTimeout(() => next(), 100)
+                        }
+                    })
+                    clearInterval(sid)
+                }
+            }
+        }
     }
 }
 </script>

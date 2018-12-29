@@ -89,13 +89,14 @@ const deviceMessageMixin = {
             this.device = device;
         },
         queryStatus(tabs=this.tabs,device=this.device) {//传入模式配置数据tabs
-            var self = this;
-            if(!this.device){
-                this.initData(tabs,device);
+            if(device) {
+                this.initData(tabs, device);
             }
+            var self = this;
+            nativeService.alert(this.device);
             var sendCmd = cmdFun.createQueryMessage(this.device);
             // nativeService.alert(this.device);
-            
+
             //nativeService.showLoading();
             // debugger;
             nativeService.startCmdProcess(

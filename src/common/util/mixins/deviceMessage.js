@@ -93,7 +93,7 @@ const deviceMessageMixin = {
                 this.initData(tabs, device);
             }
             var self = this;
-            nativeService.alert(this.device);
+            // nativeService.alert(this.device);
             var sendCmd = cmdFun.createQueryMessage(this.device);
             // nativeService.alert(this.device);
 

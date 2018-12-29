@@ -86,8 +86,8 @@
         </div>
 
         <!-- 炉灯 -->
-        <image :class="['light_icon',cmdObj.light.value && 'light_on']" :src="lightImg"  @click="sendLightCmd(cmdObj.light.value)"></image>
-        
+        <!--<image :class="['light_icon',cmdObj.light.value && 'light_on']" :src="lightImg"  @click="sendLightCmd(cmdObj.light.value,tabs,constant.device)"></image>-->
+        <light :lightValue="cmdObj.light.value" :event="sendLightCmd"></light>
 
          <!--模式参数设置弹窗-->
         <sf-dialog :show="show" :device="constant.device" :working="true"  :isProbe="cmdObj.isProbe.value" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
@@ -215,6 +215,7 @@
     import mideaDialog from '@/component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
     import mideaSwitch2 from '@/midea-component/switch2.vue'
+    import light from "@/component/sf/common/light.vue";
     import cmdFun from "../util/command/util.js"; //解析指令
 
     // config data
@@ -254,7 +255,7 @@
                 default: () => ({})
             },
         },
-        components: {MideaHeader, mideaDialog, mideaActionsheet,sfDialog,WxPicker,modalHeader,detailModal,lockModal,sfAccordion,mideaSwitch2},
+        components: {MideaHeader, mideaDialog, mideaActionsheet,sfDialog,WxPicker,modalHeader,detailModal,lockModal,sfAccordion,mideaSwitch2,light},
         created(){
             var self = this;
             let {constant,tabs} = this;

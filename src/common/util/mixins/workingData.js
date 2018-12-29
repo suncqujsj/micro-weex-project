@@ -203,9 +203,6 @@ let workingModalMixin  = {
             var _item = cmdFun.getCurrentModeItem(tabs,analysisObj.recipeId.value,analysisObj.mode.value,_isRecipe);
             //this.currentItem = _item;
             // nativeService.alert(_item);
-            if(analysisObj.mode.value == 0xC1 || analysisObj.mode.value == 0xC6){//清洁模式没有设置时间温度
-                this.hasSetting = false;
-            }
             if(_item.settingHide){
                 this.hasSetting = false;
             }

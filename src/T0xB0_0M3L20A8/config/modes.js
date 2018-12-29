@@ -35,6 +35,7 @@ let modes = [
                     set:true,
                     default:10,
                     range:[10,50,20,80,100,20],
+                    hide: true
                 },
                
             },
@@ -92,6 +93,7 @@ let modes = [
                     set:true,
                     default:100,
                     range:[100,2000,100],
+                    hide: true
                 },
                 steamAmount:{
                     set:false,
@@ -103,6 +105,7 @@ let modes = [
                     default:0,
                     range:null,
                 },
+                settingHide:true
 
             },
         ]

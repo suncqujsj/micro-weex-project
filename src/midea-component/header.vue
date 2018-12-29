@@ -207,8 +207,8 @@ export default {
   padding-right: 32px;
 }
 .header-right-image {
-  height: 44px;
-  width: 44px;
+  height: 58px;
+  width: 58px;
 }
 .header-right {
   position: absolute;

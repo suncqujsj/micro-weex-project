@@ -283,6 +283,7 @@ let modes = [
                     default:0,
                     range:null
                 },
+                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
             }, 
         ]
     },

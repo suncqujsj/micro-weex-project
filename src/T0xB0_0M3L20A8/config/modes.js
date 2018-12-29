@@ -19,7 +19,7 @@ let modes = [
                 temperature:{
                     set: false,
                     default:null,
-                    range:[30,250,1],
+                    range:null,
                 },
                 preheat:{
                     set:false,
@@ -29,7 +29,7 @@ let modes = [
                 steamAmount:{
                     set:false,
                     default:null,
-                    range:[0,4,1],
+                    range:null,
                 },
                 fireAmount:{
                     set:true,

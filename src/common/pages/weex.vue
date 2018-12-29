@@ -3,7 +3,7 @@
 </style>
 
 <template>
-    <div class="bg" @viewappear="viewappear(tabs)" @viewdisappear="viewdisappear">
+    <div class="bg" @viewappear="viewappear()" @viewdisappear="viewdisappear">
 
         <midea-header bgColor="transparent" leftImg="img/header/public_ic_white.png" :title="constant.device.page_title" titleText="white" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2Native" >
             <div slot="customerContent" class="header-top-wrapper">
@@ -11,7 +11,7 @@
                     <div class="header-right-image-wrapper" @click="openCloudRecipe">
                         <image class="header-right-image" :src="'img/header/public_ic_cloud_recipe@3x.png'"></image>
                     </div>
-                    <div class="header-right-image-wrapper" @click="childLock(true,constant.device)">
+                    <div class="header-right-image-wrapper" @click="childLock(true)">
                         <image class="header-right-image" :src="'img/header/public_ic_babylock@3x.png'"></image>
                     </div>
                     <div class="header-right-image-wrapper" @click="openMorePage">
@@ -25,7 +25,7 @@
          <!--<div><text @click="setContent">下发指令:{{testCmd}}</text></div>-->
 
         <!--面板切换tabs-->
-        <div class="panel"  @longpress="onlongpressQuery(constant.device)"> <!--隐藏长按组件触发03查询，方便调试-->
+        <div class="panel"  @longpress="onlongpressQuery()"> <!--隐藏长按组件触发03查询，方便调试-->
             <text class="panel-state">待机中</text>
             <div v-if="tabs.length>1" class="tabs">
                 <template v-for="(tab, x) in tabs">
@@ -151,7 +151,7 @@
                     <text class="child-lock-text">童锁已开启</text>
                 </div>
 
-                <div class="child-lock-close" @click="childLock(false,constant.device)">
+                <div class="child-lock-close" @click="childLock(false)">
                     <image class="child-lock-close-icon" src="img/childlock/mode_close@3x.png"></image>
                     <text class="child-lock-close-text">关闭童锁</text>
                 </div>
@@ -236,7 +236,7 @@
             //this.queryRunTimer(20,tabs,constant.device);//20秒轮询 
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             if (this.isIos){
-                this.listenerDeviceReiveMessage(tabs);
+                this.listenerDeviceReiveMessage();
             }
 
             // nativeService.getDeviceInfo().then(function(data){

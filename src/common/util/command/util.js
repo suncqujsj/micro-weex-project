@@ -248,7 +248,7 @@ export default {
       message.setByte(messageBody, 10, set_mode);
       message.setByte(messageBody, 12, params.temperature);
       // message.setByte(messageBody, 14, params.temperature);
-      message.setByte(messageBody, 15, params.fireAmount);
+      message.setByte(messageBody, 15, params.fireAmount/10);
       message.setByte(messageBody, 16, params.steamAmount || params.weight/10);
     }
     if(controltype == 1){//工作中设置类 byte11 发04，其他byte发ff
@@ -265,7 +265,7 @@ export default {
       message.setByte(messageBody, 10, set_mode);
       message.setByte(messageBody, 12, params.temperature);
       // message.setByte(messageBody, 14, params.temperature);
-      message.setByte(messageBody, 15, params.fireAmount);
+      message.setByte(messageBody, 15, params.fireAmount/10);
       message.setByte(messageBody, 16, params.steamAmount || params.weight/10);
     }
     if(controltype == 2){//探针类下发
@@ -399,7 +399,7 @@ export default {
       obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
     }
 
-    obj.fire.value = parseInt(requestCmd[24]);
+    obj.fire.value = parseInt(requestCmd[24])*10;
     obj.weight.value = parseInt(requestCmd[25])*10;
     obj.steam.value = parseInt(requestCmd[25]);
     

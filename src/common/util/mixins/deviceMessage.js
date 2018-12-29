@@ -11,7 +11,9 @@ const storage = weex.requireModule('storage');
 const deviceMessageMixin = {
     data () {
         return {
-            loading: false
+            loading: false,
+            device: null,
+            tabs: null
         }
     },
     methods: {
@@ -21,16 +23,16 @@ const deviceMessageMixin = {
             clearInterval(this.queryTimer);
             clearInterval(this.countDownTimer);
         },
-        viewappear(tabs){
-            this.listenerDeviceReiveMessage(tabs);
+        viewappear(){
+            this.listenerDeviceReiveMessage();
         },
-        onlongpressQuery(device){//隐藏调试，查看设备上报数据
+        onlongpressQuery(){//隐藏调试，查看设备上报数据
              nativeService.getDeviceInfo().then(function(data){
                 nativeService.alert(data);
             });
 
             var self = this;
-            var sendCmd = cmdFun.createQueryMessage(device);
+            var sendCmd = cmdFun.createQueryMessage(this.device);
             nativeService.toast("下发03查询:"+JSON.stringify(sendCmd),2);
             nativeService.startCmdProcess(
                 "query",
@@ -52,13 +54,13 @@ const deviceMessageMixin = {
                 title: '云菜谱'
             })
         },
-        childLock: function(childLock,device){
+        childLock: function(childLock){
             if(this.loading) return;
 
             this.loading=true;
 
             let context = this;
-            let deviceCmd = cmdFun.cmdLock({childLock},device);
+            let deviceCmd = cmdFun.cmdLock({childLock},this.device);
             nativeService.startCmdProcess(
                 "control",
                 deviceCmd,
@@ -76,15 +78,24 @@ const deviceMessageMixin = {
             let path = url + '.js'
             nativeService.goTo(path, {animated: false, replace: true})
         },
-        queryRunTimer(timeSet,tabs,device){
+        queryRunTimer(timeSet){
             var self = this;
             this.queryTimer = setInterval(function(){
-                self.queryStatus(tabs,device);                
+                self.queryStatus();                
             },timeSet*1000);
         },
-        queryStatus(tabs,device) {//传入模式配置数据tabs
+        initData(tabs,device){
+            this.tabs = tabs;
+            this.device = device;
+        },
+        queryStatus(tabs=this.tabs,device=this.device) {//传入模式配置数据tabs
             var self = this;
-            var sendCmd = cmdFun.createQueryMessage(device);
+            if(!this.device){
+                this.initData(tabs,device);
+            }
+            var sendCmd = cmdFun.createQueryMessage(this.device);
+            // nativeService.alert(this.device);
+            
             //nativeService.showLoading();
             // debugger;
             nativeService.startCmdProcess(
@@ -94,9 +105,8 @@ const deviceMessageMixin = {
                     //nativeService.hideLoading();
                     var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
                     var arr = result_arr.split(",");
-                    var analysisObj = cmdFun.analysisCmd(arr,tabs);
-                    // nativeService.alert(analysisObj);
-                    self.analysisFun(analysisObj,tabs);
+                    var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
+                    self.analysisFun(analysisObj,self.tabs);
                 },
                 function (result) {
                     //nativeService.hideLoading();
@@ -104,9 +114,9 @@ const deviceMessageMixin = {
                 }
             );
         },
-        sendLightCmd(lightValue,tabs,device){
+        sendLightCmd(lightValue){
             let context = this;
-            let deviceCmd = cmdFun.cmdLight(lightValue, device);
+            let deviceCmd = cmdFun.cmdLight(lightValue, this.device);
             // this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
             // return;
             nativeService.showLoading();
@@ -116,7 +126,7 @@ const deviceMessageMixin = {
                 function(result){
                     nativeService.hideLoading();
                     // nativeService.alert(result);
-                    context.queryStatus(tabs,device);
+                    context.queryStatus();
                 },
                 function(result){
                     nativeService.hideLoading();
@@ -138,7 +148,7 @@ const deviceMessageMixin = {
                 function(result){
                     nativeService.hideLoading();
                     // nativeService.alert(result);
-                    context.queryStatus(callbackData.tabs,callbackData.device);
+                    context.queryStatus();
                 },
                 function(result){
                     nativeService.hideLoading();
@@ -148,7 +158,7 @@ const deviceMessageMixin = {
             )
         },
         
-        startOrPause(tabs,device){
+        startOrPause(){
             var self = this;
             var record = 3;
             if(this.btnText == "暂停"){
@@ -157,14 +167,14 @@ const deviceMessageMixin = {
              if(this.btnText == "继续" || this.btnText == "开始"){
                 record = 3;
             }
-            var deviceCmd = cmdFun.cmdStartOrPause(record,device);
+            var deviceCmd = cmdFun.cmdStartOrPause(record,this.device);
             nativeService.showLoading();
             nativeService.startCmdProcess(
                 "control",
                 deviceCmd,
                 function(result){
                     nativeService.hideLoading();
-                    self.queryStatus(tabs,device);
+                    self.queryStatus();
                 },
                 function(result){
                      nativeService.toast('控制失败，请检查网络或者设置的参数');
@@ -172,16 +182,16 @@ const deviceMessageMixin = {
                 }
             )
         },
-         cancleWorking(tabs,device){
+         cancleWorking(){
             var self = this;
-            var deviceCmd = cmdFun.cmdCancelWork(device);
+            var deviceCmd = cmdFun.cmdCancelWork(this.device);
             nativeService.showLoading();
             nativeService.startCmdProcess(
                 "control",
                 deviceCmd,
                 function(result){
                   nativeService.hideLoading();
-                  self.queryStatus(tabs,device);
+                  self.queryStatus();
                 },
                 function(result){
                     nativeService.toast('控制失败，请检查网络或者设置的参数');
@@ -235,9 +245,9 @@ const deviceMessageMixin = {
             });
         },
 
-        listenerDeviceReiveMessage(tabs){//传入模式配置数据
+        listenerDeviceReiveMessage(){//传入模式配置数据
             let context = this;
-            // nativeService.toast(tabs);
+            // nativeService.toast(this.tabs);
             globalEvent.addEventListener("receiveMessage", function(e) {
                 var str = e.data;
                 var arr = str.split(",");
@@ -245,8 +255,8 @@ const deviceMessageMixin = {
                     return;
                 }
                 // nativeService.alert(arr);
-                var analysisObj = cmdFun.analysisCmd(arr,tabs); //解析04上行指令
-                context.analysisFun(analysisObj,tabs);
+                var analysisObj = cmdFun.analysisCmd(arr,context.tabs); //解析04上行指令
+                context.analysisFun(analysisObj,context.tabs);
             });
 
              //监听设备在线离线状态

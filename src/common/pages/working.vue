@@ -2,9 +2,9 @@
     @import "../less/working.less";
 </style>
 <template>
-    <div  class="all_section" @viewappear="viewappear(tabs)" @viewdisappear="viewdisappear">
+    <div  class="all_section" @viewappear="viewappear()" @viewdisappear="viewdisappear">
         <midea-header bgColor="transparent" leftImg="img/header/public_ic_white.png" :title="constant.device.page_title" titleText="white" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2Native"></midea-header>
-        <div class="progress_content"  @longpress="onlongpressQuery(constant.device)"><!--隐藏长按组件触发03查询，方便调试-->
+        <div class="progress_content"  @longpress="onlongpressQuery()"><!--隐藏长按组件触发03查询，方便调试-->
             <div class="progress_section" :style="progress_style" > 
                 <!--<wxcProgress :percent="progress" :progressShow="progressShow"
                     :wxc_radius='progress_radius'>
@@ -67,7 +67,7 @@
                     </div>
                 </div>
                 <div class="btn_section" v-if="hasStopOrContinueBtn" >
-                    <div class="image_section" @click="startOrPause(tabs,constant.device)">
+                    <div class="image_section" @click="startOrPause()">
                         <image class="icon_image" :src="btnSrc"></image>
                     </div>
                     <div class="decs_section" >
@@ -86,7 +86,7 @@
         </div>
 
         <!-- 炉灯 -->
-        <image :class="['light_icon',cmdObj.light.value && 'light_on']" :src="lightImg"  @click="sendLightCmd(cmdObj.light.value,tabs,constant.device)"></image>
+        <image :class="['light_icon',cmdObj.light.value && 'light_on']" :src="lightImg"  @click="sendLightCmd(cmdObj.light.value)"></image>
         
 
          <!--模式参数设置弹窗-->
@@ -166,7 +166,7 @@
                     <text class="child-lock-text">童锁已开启</text>
                 </div>
 
-                <div class="child-lock-close" @click="childLock(false,constant.device)">
+                <div class="child-lock-close" @click="childLock(false)">
                     <image class="child-lock-close-icon" src="img/childlock/mode_close@3x.png"></image>
                     <text class="child-lock-close-text">关闭童锁</text>
                 </div>
@@ -263,18 +263,18 @@
                 query: query
             });
             this.queryStatus(tabs,constant.device);
-            this.queryRunTimer(20,tabs,constant.device);//20秒轮询 
+            this.queryRunTimer(20);//20秒轮询 
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             if (this.isIos){
-                this.listenerDeviceReiveMessage(tabs);
+                this.listenerDeviceReiveMessage();
             }
             
             //安卓要加上这个方法，否则，工作页面，时间一直停留在一个状态，不会刷新
             if(!this.isIos){
                 globalEvent.addEventListener("WXApplicationDidBecomeActiveEvent", (e) => {
                     //从后台转前台时触发
-                    self.queryStatus(tabs,constant.device);
-                     this.queryRunTimer(20,tabs,constant.device);//20秒轮询 
+                    self.queryStatus(tabs);
+                     this.queryRunTimer(20);//20秒轮询 
                 });
             }
         },
@@ -295,7 +295,7 @@
             cancle(){
                 var self = this;
                 if(this.finishStatus){
-                    this.cancleWorking(this.tabs,this.constant.device);
+                    this.cancleWorking();
                 }else{
                     this.openActionsheet();            
                 }
@@ -316,17 +316,13 @@
                 this.currentItem = _item;
                 // nativeService.alert(this.currentItem);
                 var time = this.cmdObj.timeRemaining.hour*60+this.cmdObj.timeRemaining.minute;
-                if(this.tag_next == '秒'){//倒计时为秒时，都设置1分钟
-                    time = 1;
-                }
-                 if(time<1){
-                    time = 1;
-                }
-                if(this.cmdObj.mode.value == 0xB0){//因为发酵模式，最低值为5，所以最低值为5的模式，工作中设置时间，要强行最小值置为5
-                    if(time<5){
-                        time = 5;
+                if(_item.time.range.length>0){
+                    let leastTime = _item.time.range[0];
+                    if(time<leastTime){
+                        time = leastTime;
                     }
                 }
+                // nativeService.alert(time);
                 this.current.time = time;
                 this.current.temperature = this.cmdObj.temperature.upLowTemperature;
                 this.currentItem.preheat.default = this.cmdObj.displaySign.preheat?true:false;
@@ -357,7 +353,7 @@
             actionsheetItemClick: function (event) {
                 
                 if(event.index == 0){
-                   this.cancleWorking(this.tabs,this.constant.device);
+                   this.cancleWorking();
                 }
                
             },

@@ -157,6 +157,7 @@
                 </div>
             </div>
         </modal>
+        <!--<child-lock :modalVisibility="modalVisibility" :childLock="childLock" :closeModal="closeModal"></child-lock>-->
 
         <midea-dialog :title="warningDialog.title"
                       :show="warningDialog.show"

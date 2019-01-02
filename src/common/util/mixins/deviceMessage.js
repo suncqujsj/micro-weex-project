@@ -136,6 +136,40 @@ const deviceMessageMixin = {
                 }
             )
         },
+        setting(){
+            if(!this.hasSetting){
+                return;
+            }
+            var _isRecipe = false;
+            let {constant,tabs} = this;
+            
+            if(this.cmdObj.mode.value == 0xE0){
+                _isRecipe = true;
+            }
+            var _item = cmdFun.getCurrentModeItem(tabs,this.cmdObj.recipeId.value,this.cmdObj.mode.value,_isRecipe);
+            
+            this.modeText = _item.text;
+            this.currentItem = _item;
+            // nativeService.alert(_item.time);
+            var time = this.cmdObj.timeRemaining.hour*60+this.cmdObj.timeRemaining.minute;
+            if(_item.time.range && _item.time.range.length>0){
+                let leastTime = _item.time.range[0];
+                if(time<leastTime){
+                    time = leastTime;
+                }
+            }
+            this.current.time = time;
+            this.current.temperature = this.cmdObj.temperature.upLowTemperature;
+            this.currentItem.preheat.default = this.cmdObj.displaySign.preheat?true:false;
+            this.current.fireAmount = this.cmdObj.fire.value;
+            this.current.steamAmount = this.cmdObj.steam.value;
+            // this.currentItem.steamSwitch.default = this.cmdObj.steam.value?true:false;
+            this.current.weight = this.cmdObj.weight.value;
+            this.current.probeTemperature = this.cmdObj.probeSetttingTemperature.value;
+            // nativeService.toast(this.current,3);
+            
+            this.openDialog();
+        },
         controlDevice(jsonCmd, callbackData){
             let context = this;
             let deviceCmd = cmdFun.createControlMessage(jsonCmd, callbackData);

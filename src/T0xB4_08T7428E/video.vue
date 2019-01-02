@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header title="ppVideoView" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
+        <midea-header title="烤箱实时监控" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
         <midea-ppvideo-view ref="ppvideo" class="video" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
         <scroller class="scroller">
@@ -41,7 +41,7 @@
         data() {
             return {
                 ppvideo_initdata: {
-                    user: "13760621174", // userId auth，必填3项字段之一
+                    user: this.uid, // userId auth，必填3项字段之一
                     password: "",
                     serverAdd: "120.55.73.80:7781", // userId auth，必填3项字段之一
                     relayAddr: "",
@@ -49,17 +49,34 @@
                     sInitParam: "(Debug){1}",
                     sVideoParam: "(MaxStream){0}",
                     sAudioParam: ""
-                }
+                },
+                deviceId: null,
+                uid: null
             };
         },
+        created(){
+            // this.init();
+        },
         methods: {
+
+            init(){
+                nativeService.getUserInfo().then((data)=>{
+                    data.uid && (this.uid = data.uid);
+                    return nativeService.getDeviceInfo();
+                }).then(()=>{
+                    if(data.result && data.result.deviceId) {
+                        this.deviceId = data.result.deviceId;
+                    }
+                });
+            },
+
             start() {
 
                 ppvideoModule.ppvideoInterface(
                     this.$refs.ppvideo,
                     {
                         api: "startLive",
-                        params: { captureId: "1234" } // device sn，必填3项字段之一
+                        params: { captureId: this.deviceId } // device sn，必填3项字段之一
                     },
                     () => {
                         nativeService.toast("start 成功");

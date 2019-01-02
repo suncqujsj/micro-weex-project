@@ -28,5 +28,6 @@ icons[8] = getIcon('下管+热风对流', 'bottom_heat_and_hot_wind@3x');
 icons[9] = getIcon('上管+红外+风扇', 'up_hot_wind@3x');
 icons[10] = getIcon('除垢', 'descaling_cg@3x');
 icons[11] = getIcon('快速预热', 'quik_preheat@3x');
+icons[12] = getIcon('上管', 'up_pipe@3x');
 
 export default icons;

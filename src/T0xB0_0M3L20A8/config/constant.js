@@ -11,6 +11,6 @@ module.exports = {
         widget_version: '5.0.8',
         extra1: {
             sn8: '0M3L20A8'
-        }
+        },
     }
 };

@@ -23,7 +23,7 @@
 </style>
 
 <template>
-    <image :class="['light_icon',lightValue && 'light_on']" :src="lightIcon"
+    <image v-if="hasLight" :class="['light_icon',lightValue && 'light_on']" :src="lightIcon"
     @click="event(lightValue)"></image>
 </template>
 
@@ -33,6 +33,7 @@
     export default {
         mixins:[deviceMessageMixin],
         props:{
+            hasLight: false,
             lightValue: {
                 type: Number,
                 default: 0

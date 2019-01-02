@@ -87,7 +87,7 @@
 
         <!-- 炉灯 -->
         <!--<image :class="['light_icon',cmdObj.light.value && 'light_on']" :src="lightImg"  @click="sendLightCmd(cmdObj.light.value,tabs,constant.device)"></image>-->
-        <light :lightValue="cmdObj.light.value" :event="sendLightCmd"></light>
+        <light :hasLight="constant.device.hasLight" :lightValue="cmdObj.light.value" :event="sendLightCmd"></light>
 
          <!--模式参数设置弹窗-->
         <sf-dialog :show="show" :device="constant.device" :working="true"  :isProbe="cmdObj.isProbe.value" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">

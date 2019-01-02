@@ -1,12 +1,12 @@
 <template>
     <div class="wrapper">
+        <div class="indicator-wrapper" ref="indicator" :style="{width:indicatorWrapperWidth}">
+            <div class="tab-indicator" :style="{width:indicatorWidth}">
+            </div>
+        </div>
         <div class="tab-wrapper" ref="tabItem">
             <div v-for="(item,index) in tabArray" :key="index" class="tab-item" @click="tabClicked(index)">
                 <text class="tab-txt" :class="[item.selected?'tab-txt-selected':'']">{{item.name}}</text>
-            </div>
-        </div>
-        <div class="indicator-wrapper" ref="indicator" :style="{width:indicatorWrapperWidth}">
-            <div class="tab-indicator" :style="{width:indicatorWidth}">
             </div>
         </div>
     </div>

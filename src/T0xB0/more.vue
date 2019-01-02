@@ -9,7 +9,7 @@
         <midea-header class="bg-white" title="更多功能" titleText="black" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back"></midea-header>
 
         <list style="margin-top: 24px" show-scrollbar="true">
-            <midea-cell :clickActivied="true" v-for="(item,index) in list" :key="index" :title="item.title" :has-arrow="true" @mideaCellClick="link(item)">
+            <midea-cell :clickActivied="true" v-for="(item,index) in list" :key="index" :title="item.title" :has-arrow="false" @mideaCellClick="link(item)">
             </midea-cell>
         </list>
 
@@ -19,9 +19,10 @@
 <script>
     import mideaHeader from '@/midea-component/header.vue'
     import mideaCell from '@/midea-component/item.vue';
-    import nativeService from "../common/services/nativeService";
+    import nativeService from "@/common/services/nativeService";
 
-    import commonMixin from  "./utils/mixins/common.js"
+    import commonMixin from  "@/common/util/mixins/common.js"
+    import constant from "./config/constant";
 
     export default {
         mixins: [commonMixin],
@@ -29,11 +30,11 @@
             return {
                 list:[
                     {
-                        title: '用户手册',
+                        title: '产品型号：年轻化20升微波炉',
                         link:'https://m.ximalaya.com/wwys/v1/e/1?from=groupmessage&isappinstalled=0'
                     },
                     {
-                        title: '其他',
+                        title: '插件版本号：weex' + constant.device.widget_version,
                         link: 'http://www.baidu.com'
                     }
                 ]
@@ -50,6 +51,7 @@
                 nativeService.goBack();
             },
             link: function(item){
+                return;
                 nativeService.weexBundleToWeb({
                     url: item.link,
                     title: '测试'

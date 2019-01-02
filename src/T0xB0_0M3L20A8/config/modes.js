@@ -2,14 +2,14 @@
  * Created by sf
  * 2018/10/20
  */
-
+import modeIcons from "../../common/mapping/modeIcons";
 let modes = [
     {
         title: '',
         iconButtons: [
             {
-                'icon': 'img/modes/up_down_tube@3x.png',
-                'text': '微波加热',
+                'icon': modeIcons[12].dir,
+                'text': modeIcons[12].cn,
                 'mode': 0x01,
                 time:{
                     set: true,
@@ -41,8 +41,8 @@ let modes = [
             },
            
             {
-                'icon': 'img/modes/fermentation@3x.png',
-                'text': '烧烤',
+                'icon': modeIcons[13].dir,
+                'text': modeIcons[13].cn,
                 'mode': 0x40,
                 time:{
                     set: true,
@@ -71,8 +71,8 @@ let modes = [
                 }
             },
             {
-                'icon': 'img/modes/hot_wind@3x.png',
-                'text': '解冻',
+                'icon': modeIcons[14].dir,
+                'text': modeIcons[14].cn,
                 'mode': 0xA0,
                 time:{
                     set: false,

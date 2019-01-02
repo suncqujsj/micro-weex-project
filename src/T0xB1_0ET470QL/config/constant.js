@@ -12,6 +12,7 @@ module.exports = {
         widget_version: '5.1.2',
         extra1: {
             sn8: '0ET470QL'
-        }
+        },
+        hasLight: true , //是否有炉灯        
     }
 };

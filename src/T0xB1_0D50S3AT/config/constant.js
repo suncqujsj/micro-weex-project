@@ -2,14 +2,16 @@
  * Created by sf
  * 2018/10/26
  */
-
+var myDate = new Date();//获取系统当前时间
+var month = myDate.getMonth();
+var date = myDate.getDate();
 module.exports = {
     device: {
-        type: 0xB1,
+        type: 0x9B,
         page_title: "烤箱",
-        sales_model: "辅助蒸汽烤箱G55",
+        sales_model: "双子星",
         widget_name: 'MSO_T0xB1',
-        widget_version: '5.1.2',
+        widget_version: '5.'+month+'.'+date,
         extra1: {
             sn8: '0ET470QL'
         },

@@ -9,12 +9,14 @@ import page2 from "./page2";
 let pages = [
     {
         name: '蒸汽',
-        selected: false,
+        double: true,
+        selected: true,
         tabs: page1.tabs
     },
     {
         name: '烤箱',
-        selected: true,
+        double: true,
+        selected: false,
         tabs: page2.tabs
     }
 ];

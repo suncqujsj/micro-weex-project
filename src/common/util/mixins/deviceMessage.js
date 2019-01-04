@@ -106,7 +106,16 @@ const deviceMessageMixin = {
                     //nativeService.hideLoading();
                     var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
                     var arr = result_arr.split(",");
-                    var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
+                    // nativeService.alert(arr);
+                    var analysisObj = cmdFun.analysisCmd(arr,self.tabs) ,whichCavity = 1;
+                    if(parseInt(arr[1])>42){ //双腔体
+                        if(parseInt(arr[41])==3 || parseInt(arr[41])==4 || parseInt(arr[41])==6){
+                            analysisObj = null;
+                            whichCavity = 0;
+                            analysisObj = cmdFun.analysisCmdDouble(arr,self.tabs,whichCavity);
+                        }
+                    }
+                    
                     self.analysisFun(analysisObj,self.tabs);
                 },
                 function (result) {
@@ -290,7 +299,14 @@ const deviceMessageMixin = {
                     return;
                 }
                 // nativeService.alert(arr);
-                var analysisObj = cmdFun.analysisCmd(arr,context.tabs); //解析04上行指令
+                var analysisObj = cmdFun.analysisCmd(arr,self.tabs) ,whichCavity = 1;
+                if(parseInt(arr[1])>42){ //双腔体
+                    if(parseInt(arr[41])==3 || parseInt(arr[41])==4 || parseInt(arr[41])==6){
+                        analysisObj = null;
+                        whichCavity = 0;
+                        analysisObj = cmdFun.analysisCmdDouble(arr,self.tabs,whichCavity);
+                    }
+                }
                 context.analysisFun(analysisObj,context.tabs);
             });
 

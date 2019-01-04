@@ -3,24 +3,24 @@
  * 2018/11/14
  */
 
-let autoMenu =  [
+let autoMenu = [
     {
-        title: 'mode',
+        title: '三高',
         iconButtons: [
             [
                 {
                     'icon': '',
-                    'text': '翻热',
+                    'text': '清蒸草鱼香菇',
                     'mode': 0xE0,
                     time:{
-                        set: false,
-                        default:20,
-                        range: null
+                        set: true,
+                        default:13,
+                        range:[5,120,1]
                     },
                     temperature:{
-                        set: false,
+                        set: true,
                         default:100,
-                        range:null
+                        range:[35,70,1,75,100,5]
                     },
                     preheat:{
                         set:false,
@@ -28,7 +28,7 @@ let autoMenu =  [
                     },
                     steamAmount:{
                         set:false,
-                        default:2,
+                        default:0,
                         range:null
                     },
                     fireAmount:{
@@ -38,33 +38,49 @@ let autoMenu =  [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x51,
+                        default: 0x41,
                         range:null
                     },
-                    detail: null,
-                    settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                    detail: {
+                        foodMaterial:'香菇 34克\n' +
+                        '草鱼 134克\n' +
+                        '香葱 1克\n' +
+                        '姜 1克 \n' +
+                        '汉口白酒(49.6度) 2毫升\n' +
+                        '蒸鱼豉油   7毫升\n' +
+                        '花椒    2克\n' +
+                        '酱油(均值)  2毫升',
+                        cookingSteps:'1.将鱼清洗干净，去内脏后，在鱼体两侧抹匀食用油，再沾少许白酒。\n' +
+                        '2.准备葱丝、姜片。\n' +
+                        '3.香菇切块。\n' +
+                        '4.将葱丝、姜片、香菇块铺在鱼盘上，将鱼入盘后再在鱼身上撒些葱姜丝。\n' +
+                        '5.锅下水，等水开后，将鱼入锅；蒸6-7分钟即关火。\n' +
+                        '6.关火后，别打开锅盖，利用锅内余温“虚蒸”5-8分钟后立即出锅，把多余的水份倒掉。\n' +
+                        '7.铺上葱，淋上酱油。\n' +
+                        '8.在鱼身撒上青蒜末，锅中放油，爆香花椒。编出红油，热油泼在鱼上面即可。'
+                    }
                 },
                 {
                     'icon': '',
-                    'text': '全麦核桃包',
+                    'text': '金针菇蒸粉丝',
                     'mode': 0xE0,
                     time:{
-                        set: false,
-                        default:39,
-                        range:null
+                        set: true,
+                        default:10,
+                        range:[5,120,1]
                     },
                     temperature:{
-                        set: false,
-                        default:185,
-                        range:null
+                        set: true,
+                        default:100,
+                        range:[35,70,1,75,100,5]
                     },
                     preheat:{
                         set:false,
-                        default: true
+                        default: false
                     },
                     steamAmount:{
                         set:false,
-                        default:4,
+                        default:0,
                         range:null
                     },
                     fireAmount:{
@@ -74,47 +90,48 @@ let autoMenu =  [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x52,
+                        default: 0x42,
                         range:null
                     },
-                    settingHide:true,// 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
-                        foodMaterial:'高筋面粉 500g \n' +
-                        '干酵母 7克 \n' +
-                        '糖 20克 \n' +
-                        '盐   4.5g\n' +
-                        '温水 235ml\n' +
-                        '橄榄油  24克\n'+
-                        '葡萄干 50克 \n' +
-                        '蔓越莓干 50克 \n' +
-                        '核桃仁 50克 \n' +
-                        '鸡蛋 1个 \n' ,
-                        cookingSteps:'1.准备好食材，室温软化黄油 \n'+
-                        '2.将高筋面粉、全麦粉、酵母、糖、盐一起搅拌均匀后备用 \n'+
-                        '3.将全蛋、水倒入面粉中搅拌至面团光滑 \n'+
-                        '4.将软化好的黄油放入面团中搅拌均匀后，加入核桃碎拌匀 \n'+
-                        '5.将面团放入搅拌机中打发至面筋完全扩展，手撑起时如纸般薄片透明 \n'+
-                        '6.取出面团放于案板上，搓成圆团后盖上保鲜膜松弛30分钟 \n'+
-                        '7.将松弛好的面团分割成每个200g揉圆后松弛15分钟'+
-                        '8.将松弛好的面团整形成自己想要的形状，用烤箱发酵模式进行发酵60分钟 \n'+
-                        '9.将烤箱预热至175度 \n'+
-                        '10.将发酵好的面包置于烤炉中烘焙约39分钟 \n'+
-                        '11.烘焙完成，取出即可'
-                    },
+                        foodMaterial:'金针菇 200克\n' +
+                        '水发粉丝 250克\n' +
+                        '葱花 10克\n' +
+                        '剁椒 30克\n' +
+                        '花椒 5克\n' +
+                        '鸡粉 2克\n' +
+                        '姜丝 25克\n' +
+                        '生抽 5毫升\n' +
+                        '食用油 10克\n' +
+                        '蒜末 30克\n' +
+                        '盐 2克',
+                        cookingSteps:'1.将发好的粉丝切成段备用。\n' +
+                        '2.洗净的金针菇切去老茎。\n' +
+                        '3.取一个盘子，将粉丝铺在盘中，放上金针菇。\n' +
+                        '4.撒上少许姜丝、蒜末。\n' +
+                        '5.再放上少许剁椒。\n' +
+                        '6.撒上适量盐、鸡粉。\n' +
+                        '7.再浇上少许生抽。\n' +
+                        '8.把加工处理好的金针菇和粉丝放入烧开的蒸锅中。\n' +
+                        '9.加盖，用中火蒸10分钟至熟。\n' +
+                        '10.揭盖，将蒸好的金针菇粉丝取出。\n' +
+                        '11.用油起锅，放入花椒，爆香。\n' +
+                        '12.撒上葱花，浇上锅中热油和花椒即可。'
+                    }
                 },
                 {
                     'icon': '',
-                    'text': '菌菇烤鸡胸肉',
+                    'text': '鲜虾花蛤蒸蛋羹',
                     'mode': 0xE0,
                     time:{
-                        set: false,
-                        default:40,
-                        range:null
+                        set: true,
+                        default:15,
+                        range:[5,120,1]
                     },
                     temperature:{
-                        set: false,
-                        default:175,
-                        range:null
+                        set: true,
+                        default:95,
+                        range:[35,70,1,75,100,5]
                     },
                     preheat:{
                         set:false,
@@ -122,7 +139,7 @@ let autoMenu =  [
                     },
                     steamAmount:{
                         set:false,
-                        default:1,
+                        default:0,
                         range:null
                     },
                     fireAmount:{
@@ -132,345 +149,414 @@ let autoMenu =  [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x53,
+                        default: 0x43,
                         range:null
                     },
-                    settingHide:true,
                     detail: {
-                        foodMaterial:'鸡胸肉 250克 \n' +
-                        '口蘑 100克 \n' +
-                        '香菇 100克 \n' +
-                        '洋葱 125克 \n' +
-                        '黄油 20克 \n' +
-                        '牛奶   125g\n' +
-                        '面粉    10克\n' +
-                        '淡奶油  50克\n',
-                        cookingSteps:'1.鸡胸肉抹上黑胡椒和盐腌制一下，放烤盘中备用 \n'+
-                        '2.蘑菇切片，洋葱切丝 \n'+
-                        '3.热锅下油，把洋葱炒至金黄再下蘑菇，炒香 \n'+
-                        '4.菜挪开一边，下黄油，热了之后炒面粉，然后倒入牛奶和奶油搅拌 \n'+
-                        '5.材料都搅拌均匀，加入盐和黑胡椒调味 \n'+
-                        '6.铺在鸡胸肉上面 \n'+
-                        '7.烤箱175度烤40分钟 '
-                    },
+                        foodMaterial:'花蛤肉 65克\n' +
+                        '鸡蛋 120克\n' +
+                        '虾仁 40克\n' +
+                        '葱花 15克\n' +
+                        '鸡粉 2克\n' +
+                        '料酒 4毫升\n' +
+                        '盐 2克',
+                        cookingSteps:'1.洗净的虾仁由背部切开，去除虾线，切小段。\n' +
+                        '2.把虾仁装入碗中，放入洗净的花蛤肉。\n' +
+                        '3.淋入少许料酒，加盐、鸡粉，拌匀，腌渍约10分钟。\n' +
+                        '4.鸡蛋打入蒸碗中，加少许鸡粉、盐，打散调匀。\n' +
+                        '5.倒入少许温开水，快速搅拌匀。\n' +
+                        '6.放入腌好的虾仁、花蛤肉，拌匀，备用。\n' +
+                        '7.蒸锅上火烧开，放入蒸碗。\n' +
+                        '8.盖上盖，用中火蒸约10分钟，至食材熟透。\n' +
+                        '9.揭盖，取出蒸碗。\n' +
+                        '10.撒上葱花即可。'
+                    }
                 },
-                {
-                    'icon': '',
-                    'text': '牛角面包',
-                    'mode': 0xE0,
-                    time:{
-                        set: false,
-                        default:29,
-                        range:null
-                    },
-                    temperature:{
-                        set: false,
-                        default:175,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: true
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:1,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 0x54,
-                        range:null
-                    },
-                    settingHide:true,
-                    detail: {
-                        foodMaterial:'高筋面粉 300g \n' +
-                        '低筋面粉 50g \n' +
-                        '纯净水 150ML \n' +
-                        '奶粉 15克 \n' +
-                        '无盐黄油 15克 \n' +
-                        '干酵母 4-5g\n' +
-                        '糖 40克\n',
-                        cookingSteps:'1.准备好所有材料。end'+
-                        '2.将所有材料除黄油外倒入面包机内筒，搅拌和面程序。end'+
-                        '3.揉成比较光滑的面团，把黄油放入，继续揉面至扩展阶段。end'+
-                        '4.第一次发酵到原来的2-2.5倍大，约45分钟。end'+
-                        '5.用手轻轻将面团挤压，排除气泡。将面团分割两份，取其一块，擀成薄厚均匀的面片，切去边角，分成等腰三角形面片。end'+
-                        '6.由三角形面片底边往尖头部分，卷起呈牛角状。面包生坯整理好，排入垫了油纸的烤盘，在35度、湿度85%的空间，进行第2次发酵至2倍左右，约40分钟。end'+
-                        '7.发酵完成后，在表面刷上一层鸡蛋液。end'+
-                        '8.上下烘烤模式，烤箱165度预热好后，把面包放入中层。end'+
-                        '9.29分钟烘烤至上色即可。',
-                    },
-                },
-            ],
-        ]
-    },
-    {
-        title: '所有人群',
-        iconButtons: [
-            [
-                {
-                    'icon': '',
-                    'text': '香烤啤酒鸡',
-                    'mode': 0xE0,
-                    time:{
-                        set: false,
-                        default:72,
-                        range:null
-                    },
-                    temperature:{
-                        set: false,
-                        default:185,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:1,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 0x55,
-                        range:null
-                    },
-                    settingHide:true,
-                    detail: {
-                        foodMaterial:'鸡 1000克 \n' +
-                        '啤酒 1罐 \n' +
-                        '香葱 1克 \n' +
-                        '西葫芦 1根 \n' +
-                        '灯笼椒 1个 \n' +
-                        '柠檬 1个\n' +
-                        '洋葱 1个\n' +
-                        '蒜 2瓣\n'+
-                        '大葱 1根 \n' +
-                        '香菜 2根 \n' +
-                        '松子 30克 \n' +
-                        '辣椒粉 2茶匙 \n'+
-                        '迷迭香 2支\n' +
-                        '橄榄油 20毫升\n'+
-                        '盐 适量 \n' +
-                        '胡椒碎 适量\n' ,
-                        cookingSteps:'1.主要材料备齐；end'+
-                        '2.整鸡去除颈部头部及鸡脚后，整鸡刷上橄榄油、辣椒粉，均匀撒上盐和胡椒碎；end'+
-                        '3.接着洋葱切块，西葫芦和灯笼椒切块备用；end'+
-                        '4.打开啤酒罐，倒出半罐啤酒，接着在啤酒罐中加入迷迭香和2个拍碎的蒜瓣；end'+
-                        '5.接着将啤酒罐从鸡尾部插入鸡胸腔，向上放入烤盘中，接着填入洋葱块、西葫芦块、红椒块；end'+
-                        '6.蔬菜上淋上橄榄油、盐和胡椒粉调味；end'+
-                        '7.将烤盘放入烤箱，以185度烤72分钟。期间观察烘烤的情况，如喜欢口感清爽的蔬菜，可将蔬菜与鸡分开烘烤，蔬菜用较短的时间完成也可；end'+
-                        '8.将葱、香菜与松子放入烤好的蔬菜，柠檬切角，淋上柠檬汁、盐、胡椒粉充分混合；end'+
-                        '9.烤好的鸡静置5-10分钟后，将鸡按需切块摆盘后就可以享用了。',
-                    },
-                }, 
-                {
-                    'icon': '',
-                    'text': '草莓纸杯蛋糕',
-                    'mode': 0xE0,
-                    time:{
-                        set: false,
-                        default:41,
-                        range:null
-                    },
-                    temperature:{
-                        set: false,
-                        default:150,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:1,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 0x56,
-                        range:null
-                    },
-                    settingHide:true,
-                    detail: {
-                        foodMaterial:'黄油 60克 \n' +
-                        '白油 90克 \n' +
-                        '糖粉 150克 \n' +
-                        '高筋面粉 150克 \n' +
-                        '泡打粉 1克 \n' +
-                        '盐 3克 \n' +
-                        '全蛋 150克 \n' +
-                        '牛奶 15克 \n' ,
-                        cookingSteps:'1.将所有的食材准备好，室温软化黄油end'+
-                        '2.将糖粉、盐加入软化好的黄油中搅拌均匀打发至乳白色end'+
-                        '3.将打散鸡蛋分三次依次加入打发好的黄油中搅拌均匀end'+
-                        '4.将高筋面粉过筛加入拌匀的食材中再进搅拌均匀end'+
-                        '5.将牛奶分两次加入拌匀的面糊中end'+
-                        '6.将拌好的面糊倒入纸杯中，7-8分满备用end'+
-                        '7.将装好的纸杯放入烤盘，烘焙约41分钟end'+
-                        '8.烘焙完成，取出即可',
-                    },
-                }, 
-                {
-                    'icon': '',
-                    'text': '芝心虾仁培根披萨',
-                    'mode': 0xE0,
-                    time:{
-                        set: false,
-                        default:30,
-                        range:null
-                    },
-                    temperature:{
-                        set: false,
-                        default:210,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: true
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:1,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 0x57,
-                        range:null
-                    },
-                    settingHide:true,
-                    detail: {
-                        foodMaterial:'高筋面粉  200克 \n' +
-                        '虾仁          18只 \n' +
-                        '培根               3-5片 \n' +
-                        '青椒               3个 \n' +
-                        '洋葱               1/2个 \n' +
-                        '帕玛森干酪番茄酱   150毫升 \n' +
-                        '芝士条               6根\n' +
-                        '酵母粉                5克 \n' +
-                        '水                  110克 \n' +
-                        '糖                   15克 \n' +
-                        '盐                    3克\n' +
-                        '橄榄油               15克 \n' +
-                        '马苏里拉奶酪丝       30克 \n' +
-                        '大蒜粉               适量 \n' +
-                        '胡椒粉              1茶匙\n' +
-                        '帕玛森芝士粉        2茶匙 \n' ,
-                        cookingSteps:'1.主要材料备齐；end'+
-                        '2.先准备饼皮，将筛过的200克高筋面粉混入酵母、盐、糖、水和均匀，再倒入橄榄油拌匀；end'+
-                        '3.揉成光滑的面团后，放入一个较大的玻璃碗中，用毛巾盖好，放在温暖的地方发酵45-60分钟至面团两倍大；end'+
-                        '4.挤出面团里的空气揉匀，盆中撒少许面粉，再将面团放入盆中静置15-20分钟二次发酵；end'+
-                        '5.面团发酵期间，虾仁洗净沥干，洋葱青椒略切，培根切小片备用；end'+
-                        '6.接着用150毫升帕玛森干酪番茄酱加适量大蒜粉调成蒜味番茄酱备用；end'+
-                        '7.将发酵好的面团擀开，用手将面团压平，从中间向外推擀成圆形，外围一圈擀薄一点，贴着边铺上芝士条；end'+
-                        '8.卷起饼皮的边缘包住芝士条压紧；end'+
-                        '9.取适量蒜味番茄酱涂满饼皮的中间；end'+
-                        '10.接着撒上洋葱、培根、虾仁、青椒，最后撒上适量马苏里拉奶酪丝，饼皮边缘撒上少许帕玛森芝士粉；end'+
-                        '11.烤箱预热至210℃之后，放入中层，上下管210℃烤制30分钟即可。'
-                    },
-                }, 
-                {
-                    'icon': '',
-                    'text': '地中海柠檬烤鱼',
-                    'mode': 0xE0,
-                    time:{
-                        set: false,
-                        default:30,
-                        range:null
-                    },
-                    temperature:{
-                        set: false,
-                        default:170,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:3,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 0x58,
-                        range:null
-                    },
-                    settingHide:true,
-                    detail: {
-                        foodMaterial:'鲈鱼 1条约650g \n' +
-                        '大蒜 1头 \n' +
-                        '海盐 1小匙 \n' +
-                        '黑胡椒碎粒 少许  \n' +
-                        '白葡萄酒 3大匙 \n' +
-                        '橄榄油 适量 \n' +
-                        '柠檬 1个 \n' +
-                        '迷迭香 1枝 \n'+ 
-                        '百里香 1枝 \n' ,
-                        cookingSteps:'1.准备材料。鲈鱼洗净擦干，备用。end'+
-                        '2.鱼身各划2刀。end'+
-                        '3.里里外外抹上盐和黑胡椒碎粒(包含肚子)。end'+
-                        '4.鱼肚子放入迷迭香和百里香，包上保鲜膜放入冰箱冷藏室腌渍1小时左右，使之入味均匀。end'+
-                        '5.蒜拦腰对半切开，不需要去除外皮。end'+
-                        '6.油锅烧热，放入蒜，切面朝下，煎至金黄，熄火。end'+
-                        '7.柠檬外皮用盐揉一下，清水冲洗干净，1/2个柠檬切成片。end'+
-                        '8.烤盘上铺锡纸，先刷一层橄榄油，垫2〜3片柠檬片，放上腌渍好的鲈鱼，在鲈鱼身上铺上2〜3片柠檬片，淋上橄榄油，煎好的蒜也放在鱼身周围。end'+
-                        '9.将锡纸两端提起，往中间捏紧，捏成锡纸包鱼。end'+
-                        '11.烘烤30分钟。end'+
-                        '12.烘烤结束后取出烤盘，打开捏紧的锡纸， 食用前挤适量柠檬汁为鱼提鲜。'
-                    },
-                }, 
             ],
 
         ]
     },
     {
-        title: '所有人群',
+        title: '1-7岁儿童',
+        iconButtons: [
+            [
+
+
+                {
+                    'icon': '',
+                    'text': '南瓜泥牛奶蒸蛋',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:14,
+                        range:[5,120,1]
+                    },
+                    temperature:{
+                        set: true,
+                        default:95,
+                        range:[35,70,1,75,100,5]
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x47,
+                        range:null
+                    },
+                    detail: {
+                        foodMaterial:'南瓜 25克\n' +
+                        '牛奶 100克\n' +
+                        '鸡蛋 60克\n' +
+                        '白糖 3克\n' +
+                        '盐 1克',
+                        cookingSteps:'1.南瓜去皮切小块，放入蒸箱中，手机上点击“开启自动烹饪”，蒸汽温度100℃蒸10分钟。\n' +
+                        '2.蒸熟的南瓜趁热用勺子压成南瓜泥，鸡蛋打散备用。\n' +
+                        '3.将南瓜泥、牛奶加入鸡蛋中一起打匀，加入盐、糖调味。\n' +
+                        '4.放入蒸箱中，点击“开启自动烹饪”，蒸汽温度100℃蒸10分钟。'
+                    }
+                },
+                {
+                    'icon': '',
+                    'text': '清蒸鲳鱼',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:18,
+                        range:[5,120,1]
+                    },
+                    temperature:{
+                        set: true,
+                        default:100,
+                        range:[35,70,1,75,100,5]
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x48,
+                        range:null
+                    },
+                    detail: {
+                        foodMaterial:'鲳鱼 500克\n'+
+                        '白糖 10克\n'+
+                        '豉油 50.0毫升\n'+
+                        '葱白 10克\n'+
+                        '葱叶 10克\n'+
+                        '红椒 20克\n'+
+                        '胡椒粉 3克\n'+
+                        '鸡粉 5克\n'+
+                        '生姜 40克\n'+
+                        '食用油 10克\n'+
+                        '盐 3克\n'+
+                        '芝麻油 10克',
+                        cookingSteps:'1.去皮洗净的生姜切薄片，取部分切成丝。\n'+
+                        '2.切少许姜片备用。\n'+
+                        '3.洗净的葱叶切成丝。\n'+
+                        '4.洗净的红椒切开，去籽，切成丝。\n'+
+                        '5.葱白垫于盘底，放上宰杀处理干净的鲳鱼，放上姜片。\n'+
+                        '6.撒上适量盐。\n'+
+                        '7.把鲳鱼放入蒸锅。\n'+
+                        '8.加盖，大火蒸7分钟至熟。\n'+
+                        '9.揭盖，将蒸熟的鲳鱼取出。\n'+
+                        '10.夹去姜片和葱白。\n'+
+                        '11.将切好的姜丝、葱丝和红椒丝放入碗中，拌匀。\n'+
+                        '12.将其放在鱼身上。\n'+
+                        '13.撒上胡椒粉。\n'+
+                        '14.锅中倒入食用油，烧至八成热。\n'+
+                        '15.将热油淋在鱼身上。\n'+
+                        '16.锅底留油，加少许清水。\n'+
+                        '17.加入豉油，拌匀。\n'+
+                        '18.再加白糖、鸡粉和少许芝麻油。\n'+
+                        '19.煮沸，制成味汁。\n'+
+                        '20.将味汁浇入盘底即可。'
+                    }
+                },
+                {
+                    'icon': '',
+                    'text': '粉蒸牛肉',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:24,
+                        range:[5,120,1]
+                    },
+                    temperature:{
+                        set: true,
+                        default:100,
+                        range:[35,70,1,75,100,5]
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x49,
+                        range:null
+                    },
+                    detail: {
+                        foodMaterial:'牛肉 300克\n' +
+                        '蒸肉米粉 100克\n' +
+                        '葱花 5克\n' +
+                        '蚝油 4克\n' +
+                        '红椒 5克\n' +
+                        '鸡粉 2克\n' +
+                        '料酒 5毫升\n' +
+                        '生抽 4毫升\n' +
+                        '食用油 8克\n' +
+                        '水淀粉 5毫升\n' +
+                        '大蒜 10克\n' +
+                        '盐 2克',
+                        cookingSteps:'1.处理好的牛肉切成片，待用。\n' +
+                        '2.取一个碗，倒入牛肉，加入盐、鸡粉，放入少许料酒、生抽、蚝油、水淀粉，搅拌匀。\n' +
+                        '3.加入适量的蒸肉米粉，搅拌片刻。\n' +
+                        '4.取一个蒸盘，将拌好的牛肉装入盘中。\n' +
+                        '5.蒸锅上火烧开，放入牛肉。\n' +
+                        '6.盖上锅盖，大火蒸20分钟至熟透。\n' +
+                        '7.掀开锅盖，将牛肉取出。\n' +
+                        '8.将蒸好的牛肉装入另一盘中。\n' +
+                        '9.放上蒜苗、红椒、葱花。\n' +
+                        '10.锅中注入食用油，烧至六成热。\n' +
+                        '11.将烧好的热油浇在牛肉上即可。'
+                    }
+                },
+                
+            ],
+           
+        ]
+    },
+    {
+        title: '7-14岁儿童',
+        iconButtons:[
+            [
+                {
+                    'icon': '',
+                    'text': '豉汁蒸鲈鱼',
+                    'mode': 0xE0,
+                    hide:false,
+                    time:{
+                        set: true,
+                        default:12,
+                        range:[5,120,1]
+                    },
+                    temperature:{
+                        set: true,
+                        default:100,
+                        range:[35,70,1,75,100,5]
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x4A,
+                        range:null
+                    },
+                    detail: {
+                        foodMaterial:'鲈鱼 100克\n' +
+                        '葱 4克\n' +
+                        '红辣椒 2克\n' +
+                        '姜 2克\n' +
+                        '干香菇 4克\n' +
+                        '豆豉 6克\n' +
+                        '花生油 4毫升\n' +
+                        '料酒 2毫升\n' +
+                        '盐 1克',
+                        cookingSteps:'1.鱼洗净，切掉头尾，在鱼身的背部切1厘米左右宽的块，鱼肚子处不要切断。\n' +
+                        '2.加入盐、葱、姜、料酒、生抽腌制20分钟。\n' +
+                        '3.香菇洗净、泡软后捞出备用。\n' +
+                        '4.盘子放入香菇，把鱼身子在盘子中摆成花形，放上头尾，再撒上豆豉。\n' +
+                        '5.放入蒸箱中，点击“开启自动烹饪”，蒸汽温度100℃蒸10分钟。\n' +
+                        '6.鱼蒸好后取出，放上小葱、红甜椒圈。油烧热，淋在鱼上即可。'
+                    }
+                },
+                {
+                    'icon': '',
+                    'text': '枸杞百合蒸鸡',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:16,
+                        range:[5,120,1]
+                    },
+                    temperature:{
+                        set: true,
+                        default:100,
+                        range:[35,70,1,75,100,5]
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x4B,
+                        range:null
+                    },
+                    detail: {
+                        foodMaterial:'鸡肉 400克\n' +
+                        '葱花 10克\n' +
+                        '干百合 20克\n' +
+                        '枸杞 15克\n' +
+                        '红枣 20克\n' +
+                        '鸡粉 2克\n' +
+                        '姜 17克\n' +
+                        '料酒 6毫升\n' +
+                        '生抽 8毫升\n' +
+                        '生粉 8克\n' +
+                        '食用油 10克\n' +
+                        '盐 3克\n' +
+                        '淀粉 4克',
+                        cookingSteps:'1.把洗净的红枣切开，去除核，再把枣肉切碎。\n' +
+                        '2.洗净的鸡肉切开，再斩成小块。\n' +
+                        '3.将鸡块装入碗中，撒上备好的枣肉。\n' +
+                        '4.放入洗净的百合，撒上洗好的枸杞、姜片。\n' +
+                        '5.加入少许盐、鸡粉，淋入适量料酒、生抽，搅拌匀。\n' +
+                        '6.倒上少许生粉，拌匀上浆。\n' +
+                        '7.再注入少许食用油，腌渍约10分钟。\n' +
+                        '8.取一干净的盘子，摆放上腌渍好的食材。\n' +
+                        '9.蒸锅上火烧开，放入装有鸡肉的盘子。\n' +
+                        '10.盖上盖子，用大火蒸约15分钟，至食材熟透。\n' +
+                        '11.关火后揭开盖，取出蒸好的菜肴。\n' +
+                        '12.趁热撒上葱花即成。'
+                    }
+                },
+                {
+                    'icon': '',
+                    'text': '牛肉灌汤包',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:16,
+                        range:[5,120,1]
+                    },
+                    temperature:{
+                        set: true,
+                        default:100,
+                        range:[35,70,1,75,100,5]
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x4C,
+                        range:null
+                    },
+                    detail: {
+                        foodMaterial:'低筋面粉 90克\n' +
+                        '高筋面粉 200克\n' +
+                        '牛肉 150克\n' +
+                        '葱花 30克\n' +
+                        '黄奶油 50克\n' +
+                        '鸡蛋 60克\n' +
+                        '鸡粉 2克\n' +
+                        '姜末 10克\n' +
+                        '生抽 3毫升\n' +
+                        '生粉 70克\n' +
+                        '盐 2克\n' +
+                        '芝麻油 2毫升',
+                        cookingSteps:'1.将洗净的牛肉切成小块，再剁碎，盛碗待用。\n' +
+                        '2.在装有牛肉的碗中，放入芝麻油、姜末、鸡粉、生抽、葱花、盐，搅拌均匀。\n' +
+                        '3.注入适量清水，同方向搅拌均匀，制成馅料。\n' +
+                        '4.备好的碗中放入高筋面粉、低筋面粉，打入鸡蛋，同方向搅拌均匀。\n' +
+                        '5.备好的碗中装少许清水，放入生粉，拌匀，加入适量开水，搅成糊状，加入适量清水，冷却。\n' +
+                        '6.把生粉团放入鸡蛋面团中，放入黄奶油，搅拌均匀。\n' +
+                        '7.将面团倒在案板上，撒上少量生粉，揉压成光滑面团。\n' +
+                        '8.取适量面团搓成长条状，用刀切数个大小均等的剂子。\n' +
+                        '9.使用擀面杖把剂子压扁，擀成包子皮。取适量馅料放在包子皮上，捏紧制成生坯。\n' +
+                        '10.将包好的生坯放在锡纸上，放在蒸笼上。\n' +
+                        '11.将蒸笼放入烧开的蒸锅里，加盖，大火蒸8分钟。\n' +
+                        '12.时间到，揭开盖子，取出蒸笼即可。'
+                    }
+                },
+
+            ],
+        ]
+    },
+    {
+        title: '减肥塑身',
         iconButtons: [
             [
                 {
                     'icon': '',
-                    'text': '苹果烤猪排',
+                    'text': '柠香鲈鱼',
                     'mode': 0xE0,
                     time:{
-                        set: false,
-                        default:30,
-                        range:null
+                        set: true,
+                        default:13,
+                        range:[5,120,1]
                     },
                     temperature:{
-                        set: false,
-                        default:200,
-                        range:null
+                        set: true,
+                        default:100,
+                        range:[35,70,1,75,100,5]
                     },
                     preheat:{
                         set:false,
@@ -478,7 +564,7 @@ let autoMenu =  [
                     },
                     steamAmount:{
                         set:false,
-                        default:2,
+                        default:0,
                         range:null
                     },
                     fireAmount:{
@@ -488,43 +574,41 @@ let autoMenu =  [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x59,
+                        default: 0x4D,
                         range:null
                     },
-                    settingHide:true,
                     detail: {
-                        foodMaterial:'猪排 300g \n' +
-                        '烧烤酱 50克 \n' +
-                        '黑胡椒碎粒 1克 \n' +
-                        '蒜瓣 3个 \n' +
-                        '苹果 1个 \n' +
-                        '红薯 1个 \n' +
-                        '红糖 10克 \n' +
-                        '柠檬 3-4片    \n' +
-                        '油 少许  \n' ,
-                        cookingSteps:'1.猪扒放入大碗中，加入烧烤酱、黑胡椒碎粒和拍碎的蒜瓣，拌匀，腌制2小时以上 end'+
-                        '2.红薯和苹果切小块 end'+
-                        '3.热锅放油先放入红薯翻炒至微软 end'+
-                        '4.加入苹果一起翻炒变软后，再加入红糖，翻炒均匀即可 end'+
-                        '5.在烤盘底部放入红薯和苹果 end'+
-                        '6.铺上腌制好的猪排（蒜瓣一起放入，不喜欢可不放） end'+
-                        '7.放上柠檬片 end'+
-                        '8.烘烤30分钟左右 '
-                    },
-                }, 
+                        foodMaterial:'鲈鱼 350克\n' +
+                        '彩椒 20克\n' +
+                        '葱条 20克\n' +
+                        '姜 45克\n' +
+                        '柠檬 45克\n' +
+                        '盐 3克',
+                        cookingSteps:'1.把柠檬切开，将柠檬汁挤入碗中，待用。\n' +
+                        '2.取部分洗净的葱切成细丝。\n' +
+                        '3.洗好的彩椒切开，去籽，切成薄片，再切丝。\n' +
+                        '4.处理干净的鲈鱼切上花刀，备用。\n' +
+                        '5.将鲈鱼放入蒸盘中，撒上少许盐，抹匀。\n' +
+                        '6.将姜片、葱条塞入鱼腹中，淋上少许柠檬汁，腌渍10分钟，至其入味，备用。\n' +
+                        '7.蒸锅上火烧开，放入蒸盘。\n' +
+                        '8.盖上锅盖，用中火蒸约15分钟至熟。\n' +
+                        '9.揭开锅盖，取出蒸盘，取出鱼腹中的姜片和葱条。\n' +
+                        '10.点缀上葱丝、彩椒丝即可。'
+                    }
+                },
                 {
                     'icon': '',
-                    'text': '脆皮烤羊腿',
+                    'text': '蒜蓉干贝蒸丝瓜',
                     'mode': 0xE0,
                     time:{
-                        set: false,
-                        default:120,
-                        range:null
+                        set: true,
+                        default:9,
+                        range:[5,120,1]
                     },
                     temperature:{
-                        set: false,
-                        default:170,
-                        range:null
+                        set: true,
+                        default:100,
+                        range:[35,70,1,75,100,5]
                     },
                     preheat:{
                         set:false,
@@ -532,7 +616,7 @@ let autoMenu =  [
                     },
                     steamAmount:{
                         set:false,
-                        default:2,
+                        default:0,
                         range:null
                     },
                     fireAmount:{
@@ -542,36 +626,251 @@ let autoMenu =  [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x5A,
+                        default: 0x4E,
                         range:null
                     },
-                    settingHide:true,
                     detail: {
-                        foodMaterial:'羊腿 1000克 \n' +
-                        '胡萝卜 1根\n' +
-                        '土豆 1个 \n' +
-                        '姜 2片 \n' +
-                        '小洋葱 3个\n' +
-                        '孜然 20克 \n' +
-                        '黑胡椒粉 2克 \n' +
-                        '盐 4克 \n' +
-                        '植物油 10毫升 \n' +
-                        '迷迭香 2克  \n' ,
-                        cookingSteps:'1.羊腿清洗干净，然后用松肉针在肉质较厚的地方戳洞； end'+
-                        '2.盐和黑胡椒粉撒到羊腿上，揉搓至盐化开； end'+
-                        '3.羊腿肉厚的地方斜切几刀，然后大蒜和一小头的洋葱捣碎成泥状，涂抹整个羊腿，空隙里也要抹上； end'+
-                        '4.撒上孜然粉和迷迭香碎； end'+
-                        '5.放好腌料的羊腿要充分揉搓一会儿，使腌料味道更好的进入肉的纤维里； end'+
-                        '6.用保鲜膜包裹羊腿，放冰箱腌制12小时以上(或更久，24小时之内)； end'+
-                        '7.腌制好的羊腿掀掉保鲜膜，然后用锡纸包裹； end'+
-                        '8.胡萝卜、土豆、洋葱切成滚刀块状，用植物油、盐、孜然翻粉拌一下，放烤盘里 end'+
-                        '9.170度烤120分钟即可。'
+                        foodMaterial:'干贝 30克\n' +
+                        '丝瓜 200克\n' +
+                        '葱花 10克\n' +
+                        '鸡粉 3克\n' +
+                        '生抽 4克\n' +
+                        '食用油 10克\n' +
+                        '蒜蓉 40克\n' +
+                        '盐 3克',
+                        cookingSteps:'1.将洗净的干贝拍碎。\n' +
+                        '2.已去皮洗净的丝瓜切棋子形，摆盘。\n' +
+                        '3.起油锅，倒入干贝煸香。\n' +
+                        '4.加蒜蓉炒香。\n' +
+                        '5.放入适量盐、鸡粉、生抽。\n' +
+                        '6.快速炒匀调味。\n' +
+                        '7.将炒香的料浇在丝瓜上。\n' +
+                        '8.丝瓜转到蒸锅。\n' +
+                        '9.加盖，蒸3分钟至熟透。\n' +
+                        '10.揭盖，取出蒸好的丝瓜。\n' +
+                        '11.撒上备好的葱花。\n' +
+                        '12.浇上熟油即成。'
+                    }
+                },
+                {
+                    'icon': '',
+                    'text': '清蒸香菇鳕鱼',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:13,
+                        range:[5,120,1]
                     },
-                }, 
+                    temperature:{
+                        set: true,
+                        default:100,
+                        range:[35,70,1,75,100,5]
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x4F,
+                        range:null
+                    },
+                    detail: {
+                        foodMaterial:'水发香菇 55克\n' +
+                        '鳕鱼肉 150克\n' +
+                        '彩椒 10克\n' +
+                        '葱丝 10克\n' +
+                        '鸡粉 2克\n' +
+                        '姜 20克\n' +
+                        '料酒 4毫升\n' +
+                        '盐 2克',
+                        cookingSteps:'1.将洗净的香菇用斜刀切片。\n' +
+                        '2.洗好的彩椒切丝，改切成粒。\n' +
+                        '3.把香菇片装入盘中，加入少许盐、鸡粉、料酒。\n' +
+                        '4.放入姜丝，搅拌匀，再倒入彩椒粒，拌匀，调成酱菜，待用。\n' +
+                        '5.取一个蒸盘，放入洗净的鳕鱼肉，再倒入酱菜，堆放好。\n' +
+                        '6.蒸锅上火烧开，放入蒸盘。\n' +
+                        '7.盖上盖，用中火蒸约10分钟，至食材熟软。\n' +
+                        '8.关火后揭盖，取出蒸好的菜肴。\n' +
+                        '9.趁热撒上葱丝，待稍凉后即可食用。'
+                    }
+                }
             ]
-
         ]
     },
+    {
+        title: '孕妇',
+        iconButtons: [
+            [
+                {
+                    'icon': '',
+                    'text': '豆腐狮子头',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:12,
+                        range:[5,120,1]
+                    },
+                    temperature:{
+                        set: true,
+                        default:100,
+                        range:[35,70,1,75,100,5]
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x44,
+                        range:null
+                    },
+                    detail: {
+                        foodMaterial:'豆腐 125克\n' +
+                        '五花肉 15克\n' +
+                        '鸡蛋 15克\n' +
+                        '生粉 5克\n' +
+                        '蒜 5克\n' +
+                        '细香葱 5克\n' +
+                        '香菇 5克\n' +
+                        '生抽 2毫升\n' +
+                        '蚝油 1毫升\n' +
+                        '盐 1克',
+                        cookingSteps:'1.猪肉洗净剁成肉泥；香菇切碎；香葱均切成末。\n' +
+                        '2.豆腐放在洗净的容器中揉碎，依次加入肉泥、香菇、生姜、鸡蛋、香葱、盐、酱油、生粉，用手搅拌均匀。\n' +
+                        '3.手心涂抹少量食用油，再取适量豆腐泥，用手团成团放在盘子中。\n' +
+                        '4.放入蒸汽炉中，大火蒸10-12分钟，即可。'
+                    }
+                },
+                {
+                    'icon': '',
+                    'text': '蒜蓉粉丝鲍鱼',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:10,
+                        range:[5,120,1]
+                    },
+                    temperature:{
+                        set: true,
+                        default:100,
+                        range:[35,70,1,75,100,5]
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x45,
+                        range:null
+                    },
+                    detail: {
+                        foodMaterial:'龙口粉丝 10克\n' +
+                        '鲍鱼 150克\n' +
+                        '蒜 4克\n' +
+                        '细香葱 4克\n' +
+                        '生抽 2毫升\n' +
+                        '蚝油 2毫升\n' +
+                        '料酒 2毫升\n' +
+                        '盐 1克',
+                        cookingSteps:'1.粉丝用水泡软，蒜，葱切碎，取一小碗，加入蒜末，油、生抽、盐、料酒、耗油等爆香拌匀备用。\n' +
+                        '2.将鲍鱼洗干净，沥干水份，每个鲍鱼用刀横竖开刀花，在盘底部放入泡软的粉丝，再放上鲍鱼，淋上爆香的蒜末，放入蒸汽炉，大火蒸8分钟左右，撒上葱花，称热食用。'
+                    }
+                },
+                    {
+                        'icon': '',
+                        'text': '小米蒸排骨',
+                        'mode': 0xE0,
+                        time:{
+                            set: true,
+                            default:25,
+                            range:[5,120,1]
+                        },
+                        temperature:{
+                            set: true,
+                            default:100,
+                            range:[35,70,1,75,100,5]
+                        },
+                        preheat:{
+                            set:false,
+                            default: false
+                        },
+                        steamAmount:{
+                            set:false,
+                            default:0,
+                            range:null
+                        },
+                        fireAmount:{
+                            set:false,
+                            default:0,
+                            range:null
+                        },
+                        recipeId:{
+                            set:false,
+                            default: 0x46,
+                            range:null
+                        },
+                        detail: {
+                            foodMaterial:'排骨段 400克\n' +
+                            '水发小米 90克\n' +
+                            '葱花 10克\n' +
+                            '鸡粉 2克\n' +
+                            '姜 15克\n' +
+                            '料酒 3毫升\n' +
+                            '生抽 3毫升\n' +
+                            '生粉 5克\n' +
+                            '食用油 10克\n' +
+                            '大蒜 8克\n' +
+                            '盐 2克\n' +
+                            '芝麻油 3毫升\n' +
+                            '淀粉 4克',
+                            cookingSteps:'1.将洗净的排骨段装入碗中，放入备好的姜片、蒜末。\n' +
+                            '2.再加入盐、鸡粉，淋入少许生抽、料酒，拌匀至入味。\n' +
+                            '3.把沥干水的小米倒入碗中，与排骨段充分拌匀。\n' +
+                            '4.撒上少许生粉，搅拌匀。\n' +
+                            '5.淋入少许芝麻油，拌匀，腌渍一会。\n' +
+                            '6.取一个干净的盘子，倒入腌渍好的排骨，叠放整齐，待用。\n' +
+                            '7.蒸锅上火烧开，放入码好排骨的盘子。\n' +
+                            '8.盖上锅盖，用中火蒸20分钟至食材熟透。\n' +
+                            '9.揭下锅盖，取出蒸好的排骨。\n' +
+                            '10.趁热撒上葱花，浇入少许热油即可。'
+                        }
+                    },
+            ]
+        ]
+    },
+
 ];
 
 import modeIcons from "../../common/mapping/modeIcons";
@@ -580,45 +879,42 @@ let modes = [
         title: '',
         iconButtons: [
             {
-                'icon': modeIcons[0].dir,
-                'text': modeIcons[0].cn,
-                'mode': 0x4C,
+                'icon': modeIcons[16].dir,
+                'text': modeIcons[16].cn,
+                'mode': 0x20,
                 time:{
                     set: true,
-                    default:60,
+                    default:20,
                     range:[1,300,1],
-                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 temperature:{
                     set: true,
-                    default:180,
-                    range:[30,250,1],
+                    default:100,
+                    range:[30,100,1],
                 },
                 preheat:{
-                    set:true,
-                    default: true,
-                    hide: true, //工作中，隐藏预热选择
-                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
+                    set:false,
+                    default: false,
+                    hide: false, //工作中，隐藏预热选择
                 },
                 steamAmount:{
-                    set:true,
+                    set:false,
                     default:0,
-                    range:[0,4,1],
+                    range:null,
                     // isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 fireAmount:{
                     set:false,
                     default:0,
                     range:null,
-                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                
-                probeTemperature:{
-                    set: true,
-                    default:60,
-                    range:[50,100,1],
-                },
-                probe: true,//支持肉类探针
+                // probeTemperature:{
+                //     set: true,
+                //     default:60,
+                //     range:[50,100,1],
+                // },
+                // probe: true,//支持肉类探针
                
             },
            
@@ -628,23 +924,23 @@ let modes = [
                 'mode': 0xB0,
                 time:{
                     set: true,
-                    default:40,
-                    range:[5,720,1]
+                    default:50,
+                    range:[5,540,1]
                 },
                 temperature:{
                     set: true,
-                    default:40,
-                    range:[30,50,1]
+                    default:37,
+                    range:[35,45,1]
                 },
                 preheat:{
                     set:false,
                     default: false,
-                    hide: true,
+                    hide: false,
                 },
                 steamAmount:{
-                    set:true,
+                    set:false,
                     default:0,
-                    range:[0,1,1]
+                    range:null
                 },
                 fireAmount:{
                     set:false,
@@ -658,228 +954,60 @@ let modes = [
                 // }
             },
             {
-                'icon': modeIcons[1].dir,
-                'text': modeIcons[1].cn,
-                'mode': 0x41,
+                'icon': modeIcons[17].dir,
+                'text': modeIcons[17].cn,
+                'mode': 0xC4,
                 time:{
                     set: true,
-                    default:30,
-                    range:[1,300,1],
-                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
+                    default:10,
+                    range:[1,60,1],
                 },
                 temperature:{
-                    set: true,
+                    set: false,
                     default:160,
-                    range:[50,250,1],
+                    range:null,
                 },
                 preheat:{
-                    set:true,
-                    default: true,
-                    hide: true,
-                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
+                    set:false,
+                    default: false,
+                    hide: false,
                 },
                 steamAmount:{
-                    set:true,
+                    set:false,
                     default:0,
-                    range:[0,4,1],
+                    range:null,
                     // isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 fireAmount:{
                     set:false,
                     default:0,
                     range:null,
-                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
-                probeTemperature:{
-                    set: true,
-                    default:60,
-                    range:[50,100,1],
-                },
-                probe:true //支持肉类探针
-            },
-            {
-                'icon': modeIcons[2].dir,
-                'text': modeIcons[2].cn,
-                'mode': 0x52,
-                time:{
-                    set: true,
-                    default:60,
-                    range:[1,300,1]
-                },
-                temperature:{
-                    set: true,
-                    default:160,
-                    range:[50,250,1]
-                },
-                preheat:{
-                    set:true,
-                    default: true,
-                    hide: true,
-                },
-                steamAmount:{
-                    set:false,
-                    default:0
-                },
-                fireAmount:{
-                    set:false,
-                    default:0
-                },
-            },
-        ]
-    },
-    {
-        title: '',
-        iconButtons: [
-          
-            {
-                'icon': modeIcons[4].dir,
-                'text': modeIcons[4].cn,
-                'mode': 0x47,
-                time:{
-                    set: true,
-                    default:10,
-                    range:[1,300,1]
-                },
-                temperature:{
-                    set: true,
-                    default:180,
-                    range:[150,250,1]
-                },
-                preheat:{
-                    set:true,
-                    default: true,
-                    hide: true,
-                },
-                steamAmount:{
-                    set:false,
-                    default:0
-                },
-                fireAmount:{
-                    set:false,
-                    default:0
-                }
-            },
-            {
-                'icon': modeIcons[3].dir,
-                'text': modeIcons[3].cn,
-                'mode': 0x49,
-                time:{
-                    set: true,
-                    default:15,
-                    range:[1,300,1]
-                },
-                temperature:{
-                    set: true,
-                    default:170,
-                    range:[30,220,1]
-                },
-                preheat:{
-                    set:true,
-                    default: true,
-                    hide: true,
-                },
-                steamAmount:{
-                    set:false,
-                    default:0
-                },
-                fireAmount:{
-                    set:false,
-                    default:0
-                }
-            },
-            {
-                'icon': modeIcons[9].dir,
-                'text': modeIcons[9].cn,
-                'mode': 0x51,
-                time:{
-                    set: true,
-                    default:20,
-                    range:[1,300,1],
-                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
-                },
-                temperature:{
-                    set: true,
-                    default:180,
-                    range:[50,250,1],
-                },
-                preheat:{
-                    set:true,
-                    default: true,
-                    hide: true,
-                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
-                },
-                steamAmount:{
-                    set:true,
-                    default:0,
-                    range:[0,4,1],
-                    // isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
-                },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
-                },
-                probeTemperature:{
-                    set: true,
-                    default:60,
-                    range:[50,100,1],
-                },
-                probe: true,
+                // probeTemperature:{
+                //     set: true,
+                //     default:60,
+                //     range:[50,100,1],
+                // },
+                // probe:true //支持肉类探针
             },
             {
                 'icon': modeIcons[10].dir,
                 'text': modeIcons[10].cn,
                 'mode': 0xC1,
                 time:{
-                    set: false,
-                    default:15,
-                    range:null
+                    set: true,
+                    default:10,
+                    range:[1,60,1]
                 },
                 temperature:{
                     set: false,
-                    default:null,
+                    default:100,
                     range:null
                 },
                 preheat:{
                     set:false,
                     default: false,
-                    hide: true,
-                },
-                steamAmount:{
-                    set:false,
-                    default:null,
-                    range:null
-                },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
-                },
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
-            }, 
-        ]
-    },
-    {
-        title: '',
-        iconButtons: [   
-            {
-                'icon': modeIcons[11].dir,
-                'text': modeIcons[11].cn,
-                'mode': 0x4B,
-                time:{
-                    set: false,
-                    default:null,
-                    range:null
-                },
-                temperature:{
-                    set: true,
-                    default:180,
-                    range:[100,230,1]
-                },
-                preheat:{
-                    set:false,
-                    default: null,
-                    hide: true,
+                    hide: false,
                 },
                 steamAmount:{
                     set:false,
@@ -888,7 +1016,7 @@ let modes = [
                 fireAmount:{
                     set:false,
                     default:0
-                }
+                },
             },
         ]
     },

@@ -35,7 +35,7 @@
                 <div class="panel"  @longpress="onlongpressQuery()"> <!--隐藏长按组件触发03查询，方便调试-->
                     <text class="panel-state">待机中</text>
                     <div v-if="item.tabs.length>1" class="tabs">
-                        <template v-for="(tab, x) in item.tabs">
+                        <template v-for="(tab, y) in item.tabs">
                             <div class="tab" @click="onPageTabClicked(x,y)">
                                 <text class="tab-text" :class="[tab.active && 'tab-active' ]">{{tab.name}}</text>
                             </div>
@@ -84,7 +84,7 @@
         </slider>
 
         <!--模式参数设置弹窗-->
-        <sf-dialog :show="show" :tabs="tabs" :device="constant.device" :isProbe="cmdObj.isProbe.value" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
+        <sf-dialog :whichCavity="index" :show="show" :tabs="tabs" :device="constant.device" :isProbe="cmdObj.isProbe.value" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <!--<template v-for="tab in tabs">-->
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
@@ -216,6 +216,7 @@
         data(){
             return {
                 index:0,
+                whichCavity: 0,
             }
         },
         computed:{
@@ -243,6 +244,7 @@
             nativeService.initMockData({
                 query: query
             });
+            this.initialIndex();
             let tabs = pages[this.index].tabs;
             this.queryStatus(tabs,constant.device);
             //this.queryRunTimer(20,tabs,constant.device);//20秒轮询 
@@ -250,7 +252,6 @@
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
             }
-
             // nativeService.getDeviceInfo().then(function(data){
             //     nativeService.alert(data);
             // });
@@ -286,7 +287,10 @@
                 }
             },
             tabClicked(tabIndex) {
+                let {constant,pages} = this;
                 this.index = tabIndex;
+                // let tabs = pages[tabIndex].tabs;
+                // this.queryStatus(tabs,constant.device);
             },
             changeArea(sliObj) {
                 var sliderIndex = sliObj.index;

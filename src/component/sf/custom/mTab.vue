@@ -66,7 +66,7 @@
 </style>
 
 <script>
-const wrapperWidth = 104*2;
+const wrapperWidth = 103*2;
 
 const modal = weex.requireModule('modal');
 const animation = weex.requireModule('animation');
@@ -106,13 +106,13 @@ export default {
             let tabItem = this.$refs.tabItem;
             dom.getComponentRect(tabItem.children[index].children[0], (result) => {
                 let size = result.size || {};
-                this.indicatorWidth = size.width + "px";
+                this.indicatorWidth = size.width +44+"px";
             });
         }
     },
     data: function () {
         return {
-            indicatorWrapperWidth: 0,
+            indicatorWrapperWidthindicatorWrapperWidth: 0,
             indicatorWidth: 0,
         }
     },

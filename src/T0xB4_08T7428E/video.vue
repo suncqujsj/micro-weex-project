@@ -41,7 +41,7 @@
         data() {
             return {
                 ppvideo_initdata: {
-                    user: this.uid, // userId auth，必填3项字段之一
+                    user: '13631449763', // userId auth，必填3项字段之一
                     password: "",
                     serverAdd: "120.55.73.80:7781", // userId auth，必填3项字段之一
                     relayAddr: "",
@@ -55,28 +55,31 @@
             };
         },
         created(){
-            // this.init();
+            this.init();
         },
         methods: {
 
             init(){
                 nativeService.getUserInfo().then((data)=>{
-                    data.uid && (this.uid = data.uid);
+                    data.uid && (this.uid = data.mobile);
+                    // nativeService.alert(data);
                     return nativeService.getDeviceInfo();
-                }).then(()=>{
+                }).then((data)=>{
+                    nativeService.alert(data);
                     if(data.result && data.result.deviceId) {
-                        this.deviceId = data.result.deviceId;
+                        this.deviceId = data.result.deviceSn;
                     }
                 });
             },
 
             start() {
-
+                // nativeService.alert(JSON.stringify(ppvideoModule) == '{}');
+                // return;
                 ppvideoModule.ppvideoInterface(
                     this.$refs.ppvideo,
                     {
                         api: "startLive",
-                        params: { captureId: this.deviceId } // device sn，必填3项字段之一
+                        params: { captureId: 25288767567528 } // device sn，必填3项字段之一
                     },
                     () => {
                         nativeService.toast("start 成功");

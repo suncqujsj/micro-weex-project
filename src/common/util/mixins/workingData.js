@@ -202,7 +202,6 @@ let workingModalMixin  = {
             }
             var _item = cmdFun.getCurrentModeItem(tabs,analysisObj.recipeId.value,analysisObj.mode.value,_isRecipe);
             //this.currentItem = _item;
-            // nativeService.alert(_item);
             if(_item.settingHide){
                 this.hasSetting = false;
             }

@@ -15,6 +15,6 @@ module.exports = {
         extra1: {
             sn8: '0ET470QL'
         },
-        hasLight: true , //是否有炉灯        
+        hasLight: false , //是否有炉灯        
     }
 };

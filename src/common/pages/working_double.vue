@@ -262,7 +262,7 @@
             nativeService.initMockData({
                 query: query
             });
-            this.queryStatus(pages[0].tabs,constant.device);
+            this.queryStatus(pages,constant.device);
             this.queryRunTimer(20);//20秒轮询 
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             if (this.isIos){
@@ -273,7 +273,7 @@
             if(!this.isIos){
                 globalEvent.addEventListener("WXApplicationDidBecomeActiveEvent", (e) => {
                     //从后台转前台时触发
-                    self.queryStatus(pages[0].tabs,constant.device);
+                    self.queryStatus(pages,constant.device);
                      this.queryRunTimer(20);//20秒轮询 
                 });
             }

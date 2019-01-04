@@ -106,52 +106,64 @@ export default {
     }
     return cmd.toUpperCase();
   },
-  getCurrentModeItem(tabs,recipeId,modeId,isRecipe){ 
-    // let tabs = _tabs;
-    // if(this.whichCavity==0){
-    //   tabs = _tabs[this.whichCavity].tabs;
-    // }
-      var  _item = {};
-      if(isRecipe){
-          var autoMenu = tabs[0].rows;
-          var  currentModes = autoMenu;
-          for(var i=0; i<currentModes.length; i++){
-              var iconButtonsArr = currentModes[i].iconButtons; 
-              for(var r=0; r<iconButtonsArr.length; r++){
-                  var iconButtons = iconButtonsArr[r];
-                  for(var m=0; m<iconButtons.length; m++){
-                      if(recipeId == iconButtons[m].recipeId.default){
-                          _item = iconButtons[m];
-                          break;
-                      }
-                  }
-              }                      
-            
-          }
-      }else{
-          var modes = tabs[1].rows;
-          var  currentModes = modes;
-          for(var i=0; i<currentModes.length; i++){
-              var iconButtons = currentModes[i].iconButtons;
-              for(var m=0; m<iconButtons.length; m++){
-                
-                  if(modeId == currentModes[i].iconButtons[m].mode){
-                      _item = currentModes[i].iconButtons[m];
-                      break;
-                  }
-              
-              }
-          }
+  getCurrentModeItem(_tabs,recipeId,modeId,isRecipe){ 
+      let tabs = _tabs;
+      if(_tabs[0].double){
+        tabs = _tabs[this.whichCavity].tabs;
       }
-    
+      var  _item = {};
+      if(tabs.length<=1){
+        let modes = tabs[0].rows;
+        for(var i=0; i<modes.length; i++){
+          var iconButton = modes[i].iconButtons;
+          for(var k=0; k<iconButton.length; k++){
+            if(modeId ==iconButton[k].mode){
+                _item = iconButton[k];
+                break;
+            }
+          }
+        }
+      }else{
+        if(isRecipe){
+            var autoMenu = tabs[0].rows;
+            var  currentModes = autoMenu;
+            for(var i=0; i<currentModes.length; i++){
+                var iconButtonsArr = currentModes[i].iconButtons; 
+                for(var r=0; r<iconButtonsArr.length; r++){
+                    var iconButtons = iconButtonsArr[r];
+                    for(var m=0; m<iconButtons.length; m++){
+                        if(recipeId == iconButtons[m].recipeId.default){
+                            _item = iconButtons[m];
+                            break;
+                        }
+                    }
+                }                      
+              
+            }
+        }else{
+            var modes = tabs[1].rows;
+            var  currentModes = modes;
+            for(var i=0; i<currentModes.length; i++){
+                var iconButtons = currentModes[i].iconButtons;
+                for(var m=0; m<iconButtons.length; m++){
+                  
+                    if(modeId == currentModes[i].iconButtons[m].mode){
+                        _item = currentModes[i].iconButtons[m];
+                        break;
+                    }
+                
+                }
+            }
+        }
+      }
       return _item;
   },
-  modeValueToModeText(recipeId,modeValue,tabs){
+  modeValueToModeText(recipeId,modeValue,_tabs){
     // nativeService.alert(_tabs);
-    // let tabs = _tabs;
-    // if(this.whichCavity==0){
-    //   tabs = _tabs[this.whichCavity].tabs;
-    // }
+    let tabs = _tabs;
+    if(_tabs[0].double){
+      tabs = _tabs[this.whichCavity].tabs;
+    }
     var text = '';
     var modeArr =  [];
     var isRecipe = false;
@@ -245,7 +257,7 @@ export default {
       message.setByte(messageBody, 2, 0);
       message.setByte(messageBody, 3, 0);
       message.setByte(messageBody, 4, params.recipeId);
-      message.setByte(messageBody, 5, 0x11);
+      message.setByte(messageBody, 5, 0);
       message.setByte(messageBody, 6, params.preheat?1:0);
       message.setByte(messageBody, 7, hour);
       message.setByte(messageBody, 8, minute);
@@ -361,9 +373,9 @@ export default {
     return sendMessage;
   },
    //上锁解锁
-   cmdLock(params,device){
+   cmdLock(params,device,_whichCavity){
     let byte16 = 0xff;
-    if(this.whichCavity==0){
+    if(_whichCavity==0){
       byte16 = 0x80;
     } 
     var messageBody = message.createMessageBody(7); 
@@ -375,6 +387,7 @@ export default {
     message.setByte(messageBody, 5,0xff);
     message.setByte(messageBody, 6,byte16);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
+    nativeService.alert(this.cmdToEasy(sendMessage));
     return sendMessage;
   },
   analysisCmd: function(requestCmd,tabs) {
@@ -441,6 +454,10 @@ export default {
   // 双腔体
   analysisCmdDouble: function(requestCmd,tabs,whichCavity) {
     this.whichCavity = whichCavity;
+    // nativeService.alert(this.whichCavity);
+    // if(this.whichCavity==1){
+    //   this.analysisCmd(requestCmd,tabs);
+    // }
     var obj = this.initAnalysisObj();
     let length = 30;
   // if(parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)){

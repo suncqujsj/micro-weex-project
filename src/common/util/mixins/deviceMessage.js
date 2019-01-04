@@ -13,7 +13,8 @@ const deviceMessageMixin = {
         return {
             loading: false,
             device: null,
-            tabs: null
+            tabs: null,
+            index: 1
         }
     },
     methods: {
@@ -54,13 +55,13 @@ const deviceMessageMixin = {
                 title: '云菜谱'
             })
         },
-        childLock: function(childLock){
+        childLock: function(childLock,whichCavity=this.index){
             if(this.loading) return;
 
             this.loading=true;
 
             let context = this;
-            let deviceCmd = cmdFun.cmdLock({childLock},this.device);
+            let deviceCmd = cmdFun.cmdLock({childLock},this.device,whichCavity);
             nativeService.startCmdProcess(
                 "control",
                 deviceCmd,
@@ -109,11 +110,11 @@ const deviceMessageMixin = {
                     // nativeService.alert(arr);
                     var analysisObj = cmdFun.analysisCmd(arr,self.tabs) ,whichCavity = 1;
                     if(parseInt(arr[1])>42){ //双腔体
-                        if(parseInt(arr[41])==3 || parseInt(arr[41])==4 || parseInt(arr[41])==6){
+                        // if(parseInt(arr[41])==3 || parseInt(arr[41])==4 || parseInt(arr[41])==6){
                             analysisObj = null;
                             whichCavity = 0;
                             analysisObj = cmdFun.analysisCmdDouble(arr,self.tabs,whichCavity);
-                        }
+                        // }
                     }
                     
                     self.analysisFun(analysisObj,self.tabs);
@@ -159,7 +160,7 @@ const deviceMessageMixin = {
             
             this.modeText = _item.text;
             this.currentItem = _item;
-            // nativeService.alert(_item.time);
+            // nativeService.alert(_item);
             var time = this.cmdObj.timeRemaining.hour*60+this.cmdObj.timeRemaining.minute;
             if(_item.time.range && _item.time.range.length>0){
                 let leastTime = _item.time.range[0];
@@ -301,11 +302,11 @@ const deviceMessageMixin = {
                 // nativeService.alert(arr);
                 var analysisObj = cmdFun.analysisCmd(arr,self.tabs) ,whichCavity = 1;
                 if(parseInt(arr[1])>42){ //双腔体
-                    if(parseInt(arr[41])==3 || parseInt(arr[41])==4 || parseInt(arr[41])==6){
+                    // if(parseInt(arr[41])==3 || parseInt(arr[41])==4 || parseInt(arr[41])==6){
                         analysisObj = null;
                         whichCavity = 0;
                         analysisObj = cmdFun.analysisCmdDouble(arr,self.tabs,whichCavity);
-                    }
+                    // }
                 }
                 context.analysisFun(analysisObj,context.tabs);
             });

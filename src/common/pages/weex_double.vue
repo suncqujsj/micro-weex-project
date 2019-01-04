@@ -15,7 +15,7 @@
                     <div class="header-right-image-wrapper" @click="openCloudRecipe">
                         <image class="header-right-image" :src="'assets/img/header/public_ic_cloud_recipe@3x.png'"></image>
                     </div>
-                    <div class="header-right-image-wrapper" @click="childLock(true)">
+                    <div class="header-right-image-wrapper" @click="childLock(true,index)">
                         <image class="header-right-image" :src="'img/header/public_ic_babylock@3x.png'"></image>
                     </div>
                     <div class="header-right-image-wrapper" @click="openMorePage">
@@ -84,7 +84,7 @@
         </slider>
 
         <!--模式参数设置弹窗-->
-        <sf-dialog :whichCavity="index" :show="show" :tabs="tabs" :device="constant.device" :isProbe="cmdObj.isProbe.value" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
+        <sf-dialog :whichCavity="index" :show="show" :tabs="pages" :device="constant.device" :isProbe="cmdObj.isProbe.value" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <!--<template v-for="tab in tabs">-->
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->

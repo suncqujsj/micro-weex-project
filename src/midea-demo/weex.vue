@@ -135,6 +135,7 @@ module.exports = {
             { title: 'downloadImageWithCookie', link: "downloadImageWithCookie" },
             { title: 'getAuthToken获取智慧云的token', link: "getAuthToken" },
             { title: 'getCurrentHomeInfo获取当前家庭信息', link: "getCurrentHomeInfo" },
+            { title: 'getUserInfo获取当前用户信息', link: "getUserInfo" },
             { title: 'getDeviceInfo获取当前设备信息', link: "getDeviceInfo" },
             { title: 'getGPSInfo获取GPS定位信息', link: "getGPSInfo" },
             { title: 'getLoginInfo获取登录态', link: "getLoginInfo" },

@@ -3,7 +3,7 @@
  * 2018/10/22
  */
 
-import cmdFun from "../command/util.js"; //解析指令
+import cmdFun from "../../command/multiCavity/util.js"; //解析指令
 import nativeService from '@/common/services/nativeService';
 const globalEvent = weex.requireModule("globalEvent");
 const storage = weex.requireModule('storage');
@@ -13,7 +13,8 @@ const deviceMessageMixin = {
         return {
             loading: false,
             device: null,
-            tabs: null
+            tabs: null,
+            index: 1
         }
     },
     methods: {
@@ -60,7 +61,7 @@ const deviceMessageMixin = {
             this.loading=true;
 
             let context = this;
-            let deviceCmd = cmdFun.cmdLock({childLock},this.device);
+            let deviceCmd = cmdFun.cmdLock({childLock},this.device,this.index);
             nativeService.startCmdProcess(
                 "control",
                 deviceCmd,
@@ -84,18 +85,18 @@ const deviceMessageMixin = {
                 self.queryStatus();                
             },timeSet*1000);
         },
-        initData(tabs,device){
+        initData(tabs,device,index){
             this.tabs = tabs;
             this.device = device;
+            this.index = index;
         },
-        queryStatus(tabs=this.tabs,device=this.device) {//传入模式配置数据tabs
+        queryStatus(tabs=this.tabs,device=this.device,index=this.index) {//传入模式配置数据tabs
             if(device) {
-                this.initData(tabs, device);
+                this.initData(tabs, device,index);
             }
             var self = this;
-            // nativeService.alert(this.device);
             var sendCmd = cmdFun.createQueryMessage(this.device);
-            // nativeService.alert(this.device);
+            // nativeService.alert(sendCmd);
 
             //nativeService.showLoading();
             // debugger;
@@ -108,7 +109,8 @@ const deviceMessageMixin = {
                     var arr = result_arr.split(",");
                     // nativeService.alert(arr);
                     var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
-                    self.analysisFun(analysisObj,self.tabs);
+                    // nativeService.alert(analysisObj);
+                    self.analysisFun(analysisObj);
                 },
                 function (result) {
                     //nativeService.hideLoading();
@@ -118,7 +120,7 @@ const deviceMessageMixin = {
         },
         sendLightCmd(lightValue){
             let context = this;
-            let deviceCmd = cmdFun.cmdLight(lightValue, this.device);
+            let deviceCmd = cmdFun.cmdLight(lightValue, this.device,this.index);
             // this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
             // return;
             nativeService.showLoading();
@@ -137,17 +139,18 @@ const deviceMessageMixin = {
                 }
             )
         },
-        setting(){
+        setting(_analysisObj){
             if(!this.hasSetting){
                 return;
             }
             var _isRecipe = false;
-            let {constant,tabs} = this;
-            
-            if(this.cmdObj.mode.value == 0xE0){
+            let {constant,tabs,index} = this;
+            let mode = null, recipeId = null;
+            if(_analysisObj.mode.value == 0xE0){
                 _isRecipe = true;
             }
-            var _item = cmdFun.getCurrentModeItem(tabs,this.cmdObj.recipeId.value,this.cmdObj.mode.value,_isRecipe);
+
+            var _item = cmdFun.getCurrentModeItem(tabs[index].tabs,_analysisObj.recipeId.value,_analysisObj.mode.value,_isRecipe);
             
             this.modeText = _item.text;
             this.currentItem = _item;
@@ -173,7 +176,7 @@ const deviceMessageMixin = {
         },
         controlDevice(jsonCmd, callbackData){
             let context = this;
-            let deviceCmd = cmdFun.createControlMessage(jsonCmd, callbackData);
+            let deviceCmd = cmdFun.createControlMessage(jsonCmd, callbackData,this.index);
             // this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
             // return;
             nativeService.showLoading();
@@ -203,7 +206,7 @@ const deviceMessageMixin = {
              if(this.btnText == "继续" || this.btnText == "开始"){
                 record = 3;
             }
-            var deviceCmd = cmdFun.cmdStartOrPause(record,this.device);
+            var deviceCmd = cmdFun.cmdStartOrPause(record,this.device,this.index);
             nativeService.showLoading();
             nativeService.startCmdProcess(
                 "control",
@@ -220,7 +223,7 @@ const deviceMessageMixin = {
         },
          cancleWorking(){
             var self = this;
-            var deviceCmd = cmdFun.cmdCancelWork(this.device);
+            var deviceCmd = cmdFun.cmdCancelWork(this.device,this.index);
             nativeService.showLoading();
             nativeService.startCmdProcess(
                 "control",
@@ -292,7 +295,7 @@ const deviceMessageMixin = {
                 }
                 // nativeService.alert(arr);
                 var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
-                context.analysisFun(analysisObj,context.tabs);
+                context.analysisFun(analysisObj);
             });
 
              //监听设备在线离线状态

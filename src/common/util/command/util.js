@@ -8,7 +8,6 @@ import  nativeService from '@/common/services/nativeService';
  var latesFrameRecord = 0;
 export default {
   //10进制转换8位2进制的方法
-  whichCavity:1,
   initAnalysisObj(){
     var obj = {
         workingState:{
@@ -107,10 +106,6 @@ export default {
     return cmd.toUpperCase();
   },
   getCurrentModeItem(_tabs,recipeId,modeId,isRecipe){ 
-      let tabs = _tabs;
-      if(_tabs[0].double){
-        tabs = _tabs[this.whichCavity].tabs;
-      }
       var  _item = {};
       if(tabs.length<=1){
         let modes = tabs[0].rows;
@@ -159,11 +154,6 @@ export default {
       return _item;
   },
   modeValueToModeText(recipeId,modeValue,_tabs){
-    // nativeService.alert(_tabs);
-    let tabs = _tabs;
-    if(_tabs[0].double){
-      tabs = _tabs[this.whichCavity].tabs;
-    }
     var text = '';
     var modeArr =  [];
     var isRecipe = false;
@@ -303,29 +293,12 @@ export default {
       message.setByte(messageBody, 16, params.steamAmount);
       message.setByte(messageBody, 18, params.probeTemperature);
     }
-    if(callbackData.whichCavity==0 || this.whichCavity==0){//如果上腔体，则byte16 bit7发1
-      // sendcmd = message.setByte(messageBody,7,3);
-      // sendcmd = message.setByte(messageBody,8,1); 
-      this.whichCavity = 0;
-      messageBody = message.setBit(messageBody, 6, 7,1);
-      // sendcmd = message.setByte(messageBody,15,0xff);
-      // sendcmd = message.setByte(messageBody,16,0xff);
-      // sendcmd = message.setByte(messageBody,17,0xff);
-   }
-
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
-  
-   
     nativeService.alert(this.cmdToEasy(sendcmd));
-
     return sendcmd;
   },
   //取消工作指令
   cmdCancelWork(device){
-    let byte16 = 0xff;
-    if(this.whichCavity==0){
-      byte16 = 0x80;
-    } 
     var messageBody = message.createMessageBody(7); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02); 
@@ -333,16 +306,12 @@ export default {
     message.setByte(messageBody, 3,0xff);
     message.setByte(messageBody, 4,0xff);
     message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,byte16);
+    message.setByte(messageBody, 6,0xff);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
   //暂停or继续指令
   cmdStartOrPause(record,device){
-    let byte16 = 0xff;
-    if(this.whichCavity==0){
-      byte16 = 0x80;
-    } 
     var messageBody = message.createMessageBody(7); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
@@ -350,17 +319,13 @@ export default {
     message.setByte(messageBody, 3,0xff);
     message.setByte(messageBody, 4,0xff);
     message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,byte16);
+    message.setByte(messageBody, 6,0xff);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
 
    //炉灯
    cmdLight(lightValue,device){
-    let byte16 = 0xff;
-    if(this.whichCavity==0){
-      byte16 = 0x80;
-    } 
     var messageBody = message.createMessageBody(7); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
@@ -368,16 +333,12 @@ export default {
     message.setByte(messageBody, 3,0xff);
     message.setByte(messageBody, 4,lightValue?0:1);
     message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,byte16);
+    message.setByte(messageBody, 6,0xff);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
    //上锁解锁
-   cmdLock(params,device,_whichCavity){
-    let byte16 = 0xff;
-    if(_whichCavity==0){
-      byte16 = 0x80;
-    } 
+   cmdLock(params,device){
     var messageBody = message.createMessageBody(7); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
@@ -385,7 +346,7 @@ export default {
     message.setByte(messageBody, 3,params.childLock?1:0);
     message.setByte(messageBody, 4,0xff);
     message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,byte16);
+    message.setByte(messageBody, 6,0xff);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     nativeService.alert(this.cmdToEasy(sendMessage));
     return sendMessage;
@@ -450,65 +411,6 @@ export default {
     
     return obj;
   },
-
-  // 双腔体
-  analysisCmdDouble: function(requestCmd,tabs,whichCavity) {
-    this.whichCavity = whichCavity;
-    // nativeService.alert(this.whichCavity);
-    // if(this.whichCavity==1){
-    //   this.analysisCmd(requestCmd,tabs);
-    // }
-    var obj = this.initAnalysisObj();
-    let length = 30;
-  // if(parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)){
-    obj.workingState.value = parseInt(requestCmd[11+length]); 
-    var recipeId = parseInt(requestCmd[12+length])*256*256+parseInt(requestCmd[13+length])*256+parseInt(requestCmd[14+length]);
-    obj.recipeId.value = recipeId;
-    obj.timeRemaining.hour = parseInt(requestCmd[16+length]);
-    obj.timeRemaining.minute = parseInt(requestCmd[17+length]);
-    obj.timeRemaining.second = parseInt(requestCmd[18+length]);
-    obj.mode.value = parseInt(requestCmd[19+length]);
-    
-    obj.mode.text = this.modeValueToModeText(recipeId,parseInt(requestCmd[19+length]),tabs);     
-    
-     //实际温度
-     obj.realTemperature.upHighTemperature = parseInt(requestCmd[20+length]);
-     obj.realTemperature.upLowTemperature = parseInt(requestCmd[21+length]);
-     obj.realTemperature.downHighTemperature = parseInt(requestCmd[22+length]);
-     obj.realTemperature.downLowTemperature = parseInt(requestCmd[23+length]);
-   
-     obj.displaySign.lock = message.getBit(requestCmd, 26+length, 0);
-     obj.displaySign.doorSwitch = message.getBit(requestCmd, 26+length, 1);
-     obj.displaySign.waterBox = message.getBit(requestCmd, 26+length, 2);
-     obj.displaySign.lackWater = message.getBit(requestCmd, 26+length, 3);
-     obj.displaySign.changeWater = message.getBit(requestCmd, 26+length, 4);
-     obj.displaySign.preheat = message.getBit(requestCmd, 26+length, 5);
-     obj.displaySign.preheatTemperature = message.getBit(requestCmd, 26+length, 6);
-     obj.displaySign.isError = message.getBit(requestCmd, 26+length, 7);
-
-     obj.light.value = message.getBit(requestCmd, 27+length, 2);
-     obj.isProbe.value = message.getBit(requestCmd, 27+length, 6);
-
-    //设置温度
-    obj.temperature.upHighTemperature = parseInt(requestCmd[28+length]);
-    obj.temperature.upLowTemperature = parseInt(requestCmd[29+length]);
-    obj.temperature.downHighTemperature = parseInt(requestCmd[30+length]);
-    obj.temperature.downLowTemperature = parseInt(requestCmd[31+length]);
-
-    //探针温度
-    obj.probeRealTemperature.value = parseInt(requestCmd[32+length]);
-    obj.probeSetttingTemperature.value = parseInt(requestCmd[33+length]);
-    if(obj.isProbe.value){ //如果是探针，则为显示为探针设定温度
-      obj.temperature.upLowTemperature = parseInt(requestCmd[33+length]);
-    }
-
-    obj.fire.value = parseInt(requestCmd[24+length])*10;
-    obj.weight.value = parseInt(requestCmd[25+length])*10;
-    obj.steam.value = parseInt(requestCmd[25+length]);
-    
-    return obj;
-  }
-
 };
 
 

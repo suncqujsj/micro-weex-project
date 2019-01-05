@@ -6,7 +6,7 @@
     // config data
     import constant from "./config/constant";
     import pages from "./config/pages.js";
-    import commonWeex from "@/common/pages/weex_double.vue";
+    import commonWeex from "@/common/pages/multiCavity/weex.vue";
     import nativeService from "@/common/services/nativeService";
 
     var numberRecord = 0; //记录跳页面的次数

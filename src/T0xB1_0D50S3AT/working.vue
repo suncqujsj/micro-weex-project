@@ -6,7 +6,7 @@
     // config data
     import constant from "./config/constant";
      import pages from "./config/pages.js";
-    import commonWorking from "@/common/pages/working_double.vue";
+    import commonWorking from "@/common/pages/multiCavity/working.vue";
     export default {
         data(){
             return {

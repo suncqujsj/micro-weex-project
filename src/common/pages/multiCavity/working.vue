@@ -1,5 +1,5 @@
 <style lang="less" type="text/less">
-    @import "../less/working.less";
+    @import "../../less/working.less";
 </style>
 <template>
     <div  class="all_section" @viewappear="viewappear()" @viewdisappear="viewdisappear">
@@ -205,7 +205,7 @@
     import modalHeader from '@/component/sf/custom/modal-header.vue'
     // import mideaItem from '@/midea-component/item.vue'
     import nativeService from "@/common/services/nativeService";
-    import query from "../../dummy/query";
+    import query from "../../../dummy/query";
     import sfAccordion from '@/component/sf/custom/accordion.vue'
     import sfDialog from '@/component/sf/custom/dialog.vue'
     import detailModal from '@/component/sf/custom/detail-modal.vue'
@@ -326,31 +326,7 @@
             actionsheetBtnClick: function () {
                 this.showBar = false;
             },
-            //  moveTest(val = 0) {
-            //     var self = this;
-            //     var testEl = this.$refs.modeBox;
-            //     animation.transition(
-            //         testEl,
-            //         {
-            //             styles: {
-            //                 transform: "rotate(" + val +"deg)",
-            //             },
-            //             duration: 3000, //ms
-            //             timingFunction: "linear",
-            //             delay: 0 //ms
-            //         },
-            //         function() {
-            //            if(self.isTimerStop){
-            //                val = val;
-            //                self.moveTest(val);
-            //            }else{
-            //                 val = val + 360;
-            //                 self.moveTest(val);
-            //            }
-                      
-            //         }
-            //     );
-            // },
+    
         }
     }
 </script>

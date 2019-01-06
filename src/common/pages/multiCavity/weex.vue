@@ -1,7 +1,5 @@
 <style lang="less" type="text/less">
-    // @import "../../less/weex.less";
     @import "../../less/working.less";
-
 </style>
 
 <template>
@@ -179,9 +177,27 @@
         >
         </midea-dialog>
 
-        <!-- 烤箱工作页面 -->
-        <div class="working_section all_section" v-if="isDownCavityWorking" :style="{height: wrapHeight}">
-            <midea-header bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png" :title="constant.device.page_title" titleText="white" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2Native"></midea-header>
+        <!-- 工作页面 -->
+        <div class="working_section all_section" v-if="isCavityWorking" :style="{height: wrapHeight}">
+             <sf-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native" >
+                <div slot="headerTitle">
+                    <sf-tab ref="mTab" :tabArray="pages" @tabClicked="tabClicked">
+                    </sf-tab>
+                </div>
+                <div slot="customerContent" class="header-top-wrapper">
+                    <div class="header-top-inner-wrapper">
+                        <div class="header-right-image-wrapper" @click="openCloudRecipe">
+                            <image class="header-right-image" :src="'assets/img/header/public_ic_cloud_recipe@3x.png'"></image>
+                        </div>
+                        <div class="header-right-image-wrapper" @click="childLock(true,index)">
+                            <image class="header-right-image" :src="'img/header/public_ic_babylock@3x.png'"></image>
+                        </div>
+                        <div class="header-right-image-wrapper" @click="openMorePage">
+                            <image class="header-right-image" :src="'img/header/public_ic_lots@3x.png'"></image>
+                        </div>
+                    </div>
+                </div>
+            </sf-header>
             <div class="progress_content"  @longpress="onlongpressQuery()"><!--隐藏长按组件触发03查询，方便调试-->
                 <div class="progress_section" :style="progress_style" > 
                     <!--<wxcProgress :percent="progress" :progressShow="progressShow"
@@ -195,7 +211,7 @@
                         <midea-progresscycle-view class="circleprogress" :data="chartJson"></midea-progresscycle-view>
                     </div>
 
-                    <div v-if="cmdObj.down_cavity.isProbe.value" class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
+                    <div v-if="workingAnalysisObj.isProbe.value" class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
                         <div class="content_section">
                             <text :class="['number-text',timeShow && 'work_time',hasHour && 'hour_time']">{{probeProgress}}</text>
                         </div>
@@ -204,7 +220,7 @@
                         </div>
                     </div>
                 
-                    <div v-if="!cmdObj.down_cavity.isProbe.value" class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
+                    <div v-if="!workingAnalysisObj.isProbe.value" class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
                         <div class="center_section">
                             <!--<text class="number-text">{{progress}} {{timeRemain}}</text>-->
                             <div :class="['prev_section',hourMore10 && 'prev_section_more']">
@@ -225,12 +241,12 @@
                 </div>
             </div>
 
-            <div class="detail_section" v-if="!finishStatus" @click="setting(cmdObj.down_cavity)">
-                <text class="detail_text">{{cmdObj.down_cavity.mode.text}} {{cmdObj.down_cavity.temperature.upLowTemperature>0?cmdObj.down_cavity.temperature.upLowTemperature:''}}</text>
-                <text class="temp_text">{{cmdObj.down_cavity.temperature.upLowTemperature>0?"°":''}}</text>
+            <div class="detail_section" v-if="!finishStatus" @click="setting(workingAnalysisObj)">
+                <text class="detail_text">{{workingAnalysisObj.mode.text}} {{workingAnalysisObj.temperature.upLowTemperature>0?workingAnalysisObj.temperature.upLowTemperature:''}}</text>
+                <text class="temp_text">{{workingAnalysisObj.temperature.upLowTemperature>0?"°":''}}</text>
             </div>
             <div class="detail_section" v-if="hasSetting">
-                <div class="edit_section" @click="setting(cmdObj.down_cavity)">
+                <div class="edit_section" @click="setting(workingAnalysisObj)">
                     <image class="setting_icon" src="img/edit_icon@2x.png" ></image>
                 </div>
             </div>
@@ -263,90 +279,7 @@
                 </div>
             </div>
         </div>
-        <!-- 蒸汽炉工作页面 -->
-        <div class="working_section all_section" v-if="isUpCavityWorking" :style="{height: wrapHeight}">
-            <midea-header bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png" :title="constant.device.page_title" titleText="white" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2Native"></midea-header>
-            <div class="progress_content"  @longpress="onlongpressQuery()"><!--隐藏长按组件触发03查询，方便调试-->
-                <div class="progress_section" :style="progress_style" > 
-                    <!--<wxcProgress :percent="progress" :progressShow="progressShow"
-                        :wxc_radius='progress_radius'>
-
-                    </wxcProgress>
-                <div class="animate_section" v-if="isWorking" :style="{left:`${progress_radius-50}px`}">
-                        <image class="animate_circle" src="img/ellipsis_px_2.gif"></image>
-                    </div>-->
-                    <div v-if="progressShow">
-                        <midea-progresscycle-view class="circleprogress" :data="chartJson"></midea-progresscycle-view>
-                    </div>
-
-                    <div v-if="cmdObj.up_cavity.isProbe.value" class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
-                        <div class="content_section">
-                            <text :class="['number-text',timeShow && 'work_time',hasHour && 'hour_time']">{{probeProgress}}</text>
-                        </div>
-                        <div class="next_section">
-                            <text class="number_next">{{probeTempText}}</text>
-                        </div>
-                    </div>
-                
-                    <div v-if="!cmdObj.up_cavity.isProbe.value" class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
-                        <div class="center_section">
-                            <!--<text class="number-text">{{progress}} {{timeRemain}}</text>-->
-                            <div :class="['prev_section',hourMore10 && 'prev_section_more']">
-                                <text class="number_prev" v-if="hasHour">时</text>
-                            </div>
-                            <div class="content_section">
-                                <text :class="['number-text',timeShow && 'work_time',hasHour && 'hour_time']">{{workSpecialStatusText}}</text>
-                            </div>
-                            <div class="next_section">
-                                <text class="number_next">{{tag_next}}</text>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="cen status_tag_section" :style="{width:`${progress_radius*2}px`}">
-                        <text class="status_tag">{{statusTag}}</text>
-                    </div>
-                
-                </div>
-            </div>
-
-            <div class="detail_section" v-if="!finishStatus" @click="setting(cmdObj.up_cavity)">
-                <text class="detail_text">{{cmdObj.up_cavity.mode.text}} {{cmdObj.up_cavity.temperature.upLowTemperature>0?cmdObj.up_cavity.temperature.upLowTemperature:''}}</text>
-                <text class="temp_text">{{cmdObj.up_cavity.temperature.upLowTemperature>0?"°":''}}</text>
-            </div>
-            <div class="detail_section" v-if="hasSetting">
-                <div class="edit_section" @click="setting(cmdObj.up_cavity)">
-                    <image class="setting_icon" src="img/edit_icon@2x.png" ></image>
-                </div>
-            </div>
-            <div class="footer_section" v-if="isFooterShow">
-                <div class="btn_content">
-                    <div class="btn_section">
-                        <div class="image_section" @click="cancle">
-                            <image class="icon_image" :src="cancleIcon"></image>
-                        </div>
-                        <div class="decs_section">
-                            <text class="decs_text">{{cancleBtnText}}</text>
-                        </div>
-                    </div>
-                    <div class="btn_section" v-if="hasStopOrContinueBtn" >
-                        <div class="image_section" @click="startOrPause()">
-                            <image class="icon_image" :src="btnSrc"></image>
-                        </div>
-                        <div class="decs_section" >
-                            <text class="decs_text">{{btnText}}</text>
-                        </div>
-
-                        <!--预热完成引导-->
-                        <div class="preheatFinishTig" v-if="preheatFinishTig">
-                            <div class="preheat_tig_section">
-                                <div><text class="preheat_tig">放入食物</text></div>
-                                <div><text class="preheat_tig" style="marginTop:10px">点击开始</text></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!--<working-component :analysisObj="cmdObj.up_cavity" :isCavityWorking="isUpCavityWorking" :pages="pages"></working-component>-->
 
 
         <!-- 炉灯 -->
@@ -380,7 +313,7 @@
 </template>
 
 <script>
-    import sfTab from '@/component/sf/custom/mTab.vue'
+    import sfTab from '@/component/sf/custom/headerTab.vue'
     import sfHeader from '@/component/sf/custom/header.vue'
     import MideaHeader from '@/midea-component/header.vue'
     import modalHeader from '@/component/sf/custom/modal-header.vue'
@@ -397,6 +330,7 @@
     import mideaDialog from '@/component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
     import light from "@/component/sf/common/light.vue";
+    // import workingComponent from './working.vue';
 
     // config data
     // import modes from "./config/modes.js";
@@ -409,17 +343,16 @@
     import copyMixin from  "@/common/util/mixins/copy"
     import modalMixin from  "@/common/util/mixins/modal"
     import weexData from  "@/common/util/mixins/multiCavity/weexData"
-    import workingData from  "@/common/util/mixins/multiCavity/workingData"
+    // import workingData from  "@/common/util/mixins/multiCavity/workingData"
     import cmdFun from "@/common/util/command/multiCavity/util"; //解析指令
     var numberRecord = 0; //记录跳页面的次数
     // import constant from "./config/constant";
 
     export default {
-        mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin,copyMixin,modalMixin,weexData,workingData],
+        mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin,copyMixin,modalMixin,weexData],
         data(){
             return {
-                index:0,
-                whichCavity: 0,
+               
             }
         },
         computed:{
@@ -510,8 +443,22 @@
             tabClicked(tabIndex) {
                 let {constant,pages} = this;
                 this.index = tabIndex;
-                // let tabs = pages[tabIndex].tabs;
-                // this.queryStatus(tabs,constant.device);
+                let downCavityStatus = this.cmdObj.down_cavity.workingState.value;
+                let upCavityStatus = this.cmdObj.up_cavity.workingState.value;
+                if(this.index==0 && (upCavityStatus==3||upCavityStatus==4||upCavityStatus==6)){
+                    this.isCavityWorking = true;
+                    this.analysisWorkingFun(this.cmdObj.up_cavity,this.pages[0].tabs);
+                }
+                if(this.index==1 && (downCavityStatus==3||downCavityStatus==4||downCavityStatus==6)){
+                    this.isCavityWorking = true;
+                    this.analysisWorkingFun(this.cmdObj.down_cavity,this.pages[1].tabs);
+                }
+                if(this.index==1 && (downCavityStatus==2||downCavityStatus==1||downCavityStatus==0)){
+                    this.isCavityWorking = false;
+                }
+                 if(this.index==0 && (upCavityStatus==2||upCavityStatus==1||upCavityStatus==0)){
+                    this.isCavityWorking = false;
+                }
             },
             changeArea(sliObj) {
                 var sliderIndex = sliObj.index;

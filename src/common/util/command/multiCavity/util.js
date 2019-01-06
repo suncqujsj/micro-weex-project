@@ -321,7 +321,7 @@ export default {
   },
   //取消工作指令
   cmdCancelWork(device,whichCavity){
-    let byte16 = 0xff;
+    let byte16 = 0;
     if(whichCavity==0){
       byte16 = 0x80;
     } 
@@ -338,7 +338,7 @@ export default {
   },
   //暂停or继续指令
   cmdStartOrPause(record,device,whichCavity){
-    let byte16 = 0xff;
+    let byte16 = 0;
     if(whichCavity==0){
       byte16 = 0x80;
     } 
@@ -356,7 +356,7 @@ export default {
 
    //炉灯
    cmdLight(lightValue,device,whichCavity){
-    let byte16 = 0xff;
+    let byte16 = 0;
     if(whichCavity==0){
       byte16 = 0x80;
     } 
@@ -373,7 +373,7 @@ export default {
   },
    //上锁解锁
    cmdLock(params,device,whichCavity){
-    let byte16 = 0xff;
+    let byte16 = 0;
     if(whichCavity==0){
       byte16 = 0x80;
     } 

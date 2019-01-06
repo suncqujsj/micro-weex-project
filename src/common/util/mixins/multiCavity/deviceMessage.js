@@ -155,7 +155,7 @@ const deviceMessageMixin = {
             this.modeText = _item.text;
             this.currentItem = _item;
             // nativeService.alert(_item);
-            var time = this.cmdObj.timeRemaining.hour*60+this.cmdObj.timeRemaining.minute;
+            var time = _analysisObj.timeRemaining.hour*60+_analysisObj.timeRemaining.minute;
             if(_item.time.range && _item.time.range.length>0){
                 let leastTime = _item.time.range[0];
                 if(time<leastTime){
@@ -163,13 +163,13 @@ const deviceMessageMixin = {
                 }
             }
             this.current.time = time;
-            this.current.temperature = this.cmdObj.temperature.upLowTemperature;
-            this.currentItem.preheat.default = this.cmdObj.displaySign.preheat?true:false;
-            this.current.fireAmount = this.cmdObj.fire.value;
-            this.current.steamAmount = this.cmdObj.steam.value;
-            // this.currentItem.steamSwitch.default = this.cmdObj.steam.value?true:false;
-            this.current.weight = this.cmdObj.weight.value;
-            this.current.probeTemperature = this.cmdObj.probeSetttingTemperature.value;
+            this.current.temperature = _analysisObj.temperature.upLowTemperature;
+            this.currentItem.preheat.default = _analysisObj.displaySign.preheat?true:false;
+            this.current.fireAmount = _analysisObj.fire.value;
+            this.current.steamAmount = _analysisObj.steam.value;
+            // this.currentItem.steamSwitch.default = _analysisObj.steam.value?true:false;
+            this.current.weight = _analysisObj.weight.value;
+            this.current.probeTemperature = _analysisObj.probeSetttingTemperature.value;
             // nativeService.toast(this.current,3);
             
             this.openDialog();

@@ -78,32 +78,59 @@ let workingModalMixin  = {
             this.cmdObj = analysisObj;
            // nativeService.alert(analysisObj);
             this.setWarningDialog("",null,false);
-            // this.modalVisibility = false;
+            this.modalVisibility = false;
+            // this.closeModal();
             // this.show=false;
-            // if(analysisObj.down_cavity.displaySign.isError|| analysisObj.up_cavity.displaySign.isError){
-            //     this.setWarningDialog("设备故障，请联系售后人员");
-            // }
-            // if(analysisObj.down_cavity.displaySign.lackWater||analysisObj.up_cavity.displaySign.lackWater){
-            //     this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
-            // }
-            // if(analysisObj.down_cavity.displaySign.waterBox||analysisObj.up_cavity.displaySign.waterBox){
-            //     this.setWarningDialog("缺水盒");
-
-            // }
-            // if(analysisObj.down_cavity.displaySign.doorSwitch||analysisObj.up_cavity.displaySign.doorSwitch){
-            //     this.setWarningDialog("炉门开了");
-            // }
-
-            // if(analysisObj.down_cavity.displaySign.lock||analysisObj.up_cavity.displaySign.lock){
-            //     // let context = this;
-            //     // this.setWarningDialog("你需要关闭童锁吗？", function(){
-            //     //     context.childLock(false);
-            //     // });
-            //     !this.modalVisibility && this.showModal();
-            // } else {
-            //     this.modalVisibility && this.closeModal();
-            // }
-
+            if(this.index==0){
+                if(analysisObj.up_cavity.displaySign.isError){
+                    this.setWarningDialog("设备故障，请联系售后人员");
+                }
+                if(analysisObj.up_cavity.displaySign.lackWater){
+                    this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
+                }
+                if(analysisObj.up_cavity.displaySign.waterBox){
+                    this.setWarningDialog("缺水盒");
+    
+                }
+                if(analysisObj.up_cavity.displaySign.doorSwitch){
+                    this.setWarningDialog("炉门开了");
+                }
+    
+                if(analysisObj.up_cavity.displaySign.lock){
+                    // let context = this;
+                    // this.setWarningDialog("你需要关闭童锁吗？", function(){
+                    //     context.childLock(false);
+                    // });
+                    !this.modalVisibility && this.showModal();
+                }    
+            }
+            if(this.index==1){
+                this.setWarningDialog("",null,false);
+                this.modalVisibility = false;
+                if(analysisObj.down_cavity.displaySign.isError){
+                    this.setWarningDialog("设备故障，请联系售后人员");
+                }
+                if(analysisObj.down_cavity.displaySign.lackWater){
+                    this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
+                }
+                if(analysisObj.down_cavity.displaySign.waterBox){
+                    this.setWarningDialog("缺水盒");
+    
+                }
+                if(analysisObj.down_cavity.displaySign.doorSwitch){
+                    this.setWarningDialog("炉门开了");
+                }
+    
+                if(analysisObj.down_cavity.displaySign.lock){
+                    // let context = this;
+                    // this.setWarningDialog("你需要关闭童锁吗？", function(){
+                    //     context.childLock(false);
+                    // });
+                    !this.modalVisibility && this.showModal();
+                }
+    
+            }
+           
             this.isCavityWorking = false;
             let downCavityStatus = analysisObj.down_cavity.workingState.value;
             let upCavityStatus = analysisObj.up_cavity.workingState.value;
@@ -189,36 +216,6 @@ let workingModalMixin  = {
                 this.lightImg = "img/light_off@3x.png";
             }
             
-            
-            //提示
-            if(analysisObj.displaySign.isError){
-                this.warningDialogShow = true;
-                this.warningDialogContent = "主人，您的设备发生故障了，请联系售后人员";
-            }
-             if(analysisObj.displaySign.lackWater && analysisObj.mode.value!=0xC4){
-                this.warningDialogShow = true;
-                this.warningDialogContent = "主人，您的设备水箱缺水了，要及时添加水哦";
-            }
-            if(analysisObj.displaySign.waterBox && analysisObj.mode.value!=0xC4){ //烘干不能提示缺水
-                this.warningDialogShow = true;
-                this.warningDialogContent = "主人，您的设备缺水盒了";
-            }
-            if(analysisObj.displaySign.doorSwitch){
-                this.warningDialogShow = true;
-                this.warningDialogContent = "主人，您的设备炉门开了";
-            }
-            
-            if(analysisObj.displaySign.lock){
-                // let context = this;
-                // this.setWarningDialog("你需要关闭童锁吗？", function(){
-                //     context.childLock(false);
-                // });
-                !this.modalVisibility && this.showModal();
-            } else {
-                this.modalVisibility && this.closeModal();
-            }
-
-
             if(analysisObj.workingState.value == 3){
                 this.isWorking = true;
                 this.timeShow = true;

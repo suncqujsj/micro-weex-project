@@ -41,7 +41,7 @@
 .tab-txt {
   font-family: PingFangSC-Medium;
   font-size: 14*2px;
-  line-height: 45px;
+  line-height: 48px;
   .white;
   display: block;
   width: 103px;

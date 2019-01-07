@@ -152,7 +152,23 @@
         <!--童锁遮罩-->
         <modal :show="modalVisibility" @close="closeModal">
             <div slot="header">
-                <modal-header leftImg="img/header/public_ic_home@3x.png" class="modal-header" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native"></modal-header>
+                 <sf-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native" >
+                    <div slot="headerTitle">
+                        <sf-tab ref="mTab" :tabArray="pages" @tabClicked="tabClicked">
+                        </sf-tab>
+                    </div>
+                    <div slot="customerContent" class="header-top-wrapper">
+                        <div class="header-top-inner-wrapper">
+                            <div class="header-right-image-wrapper" @click="openCloudRecipe">
+                                <image class="header-right-image" :src="'assets/img/header/public_ic_cloud_recipe@3x.png'"></image>
+                            </div>
+        
+                            <div class="header-right-image-wrapper" @click="openMorePage">
+                                <image class="header-right-image" :src="'img/header/public_ic_lots@3x.png'"></image>
+                            </div>
+                        </div>
+                    </div>
+                </sf-header>
             </div>
             <div class="a-c j-c" slot="content" :style="{height: wrapHeight+'px'}">
                 <div class="child-lock">
@@ -176,6 +192,32 @@
                       mainBtnColor="#FFB632"
         >
         </midea-dialog>
+
+        <!-- 炉灯 -->
+        <!--<image :class="['light_icon',cmdObj.light.value && 'light_on']" :src="lightImg"  @click="sendLightCmd(cmdObj.light.value,tabs,constant.device)"></image>-->
+        <light :hasLight="constant.device.hasLight" :lightValue="cmdObj.up_cavity.light.value" :event="sendLightCmd"></light>
+
+        <!--故障提示弹窗-->
+        <midea-dialog :title="warningDialogTitle"
+                        :show="warningDialogShow"
+                        :single="true"
+                        noFooter="true"
+                        @mideaDialogConfirmBtnClicked="knowClicked"
+                        :content="warningDialogContent"
+                        mainBtnColor="#FFB632"
+                        >
+        </midea-dialog>
+
+        <!--确定/取消弹窗-->
+        <midea-actionsheet
+            :items="actionsheetItems"
+            :show="showBar"
+            @close="closeActionsheet"
+            @itemClick="actionsheetItemClick"
+            @btnClick="actionsheetBtnClick"
+            ref="actionsheet"
+            button="我再想想"
+        ></midea-actionsheet>
 
         <!-- 工作页面 -->
         <div class="working_section all_section" v-if="isCavityWorking" :style="{height: wrapHeight}">
@@ -280,34 +322,6 @@
             </div>
         </div>
         <!--<working-component :analysisObj="cmdObj.up_cavity" :isCavityWorking="isUpCavityWorking" :pages="pages"></working-component>-->
-
-
-        <!-- 炉灯 -->
-        <!--<image :class="['light_icon',cmdObj.light.value && 'light_on']" :src="lightImg"  @click="sendLightCmd(cmdObj.light.value,tabs,constant.device)"></image>-->
-        <light :hasLight="constant.device.hasLight" :lightValue="cmdObj.up_cavity.light.value" :event="sendLightCmd"></light>
-
-        <!--故障提示弹窗-->
-        <midea-dialog :title="warningDialogTitle"
-                        :show="warningDialogShow"
-                        :single="true"
-                        noFooter="true"
-                        @mideaDialogConfirmBtnClicked="knowClicked"
-                        :content="warningDialogContent"
-                        mainBtnColor="#FFB632"
-                        >
-        </midea-dialog>
-
-        <!--确定/取消弹窗-->
-        <midea-actionsheet
-            :items="actionsheetItems"
-            :show="showBar"
-            @close="closeActionsheet"
-            @itemClick="actionsheetItemClick"
-            @btnClick="actionsheetBtnClick"
-            ref="actionsheet"
-            button="我再想想"
-        ></midea-actionsheet>
-
 
     </div>
 </template>
@@ -441,23 +455,76 @@
                 }
             },
             tabClicked(tabIndex) {
-                let {constant,pages} = this;
+                let {constant,pages,cmdObj} = this;
                 this.index = tabIndex;
-                let downCavityStatus = this.cmdObj.down_cavity.workingState.value;
-                let upCavityStatus = this.cmdObj.up_cavity.workingState.value;
+                let downCavityStatus = cmdObj.down_cavity.workingState.value;
+                let upCavityStatus = cmdObj.up_cavity.workingState.value;
                 if(this.index==0 && (upCavityStatus==3||upCavityStatus==4||upCavityStatus==6)){
                     this.isCavityWorking = true;
-                    this.analysisWorkingFun(this.cmdObj.up_cavity,this.pages[0].tabs);
+                    this.analysisWorkingFun(cmdObj.up_cavity,pages[0].tabs);
                 }
                 if(this.index==1 && (downCavityStatus==3||downCavityStatus==4||downCavityStatus==6)){
                     this.isCavityWorking = true;
-                    this.analysisWorkingFun(this.cmdObj.down_cavity,this.pages[1].tabs);
+                    this.analysisWorkingFun(cmdObj.down_cavity,pages[1].tabs);
                 }
                 if(this.index==1 && (downCavityStatus==2||downCavityStatus==1||downCavityStatus==0)){
                     this.isCavityWorking = false;
                 }
                  if(this.index==0 && (upCavityStatus==2||upCavityStatus==1||upCavityStatus==0)){
                     this.isCavityWorking = false;
+                }
+                if(this.index==0){
+                    this.setWarningDialog("",null,false);
+                    this.modalVisibility = false;
+                    if(cmdObj.up_cavity.displaySign.isError){
+                        this.setWarningDialog("设备故障，请联系售后人员");
+                    }
+                    if(cmdObj.up_cavity.displaySign.lackWater){
+                        this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
+                    }
+                    if(cmdObj.up_cavity.displaySign.waterBox){
+                        this.setWarningDialog("缺水盒");
+        
+                    }
+                    if(cmdObj.up_cavity.displaySign.doorSwitch){
+                        this.setWarningDialog("炉门开了");
+                    }
+        
+                    if(cmdObj.up_cavity.displaySign.lock){
+                        // let context = this;
+                        // this.setWarningDialog("你需要关闭童锁吗？", function(){
+                        //     context.childLock(false);
+                        // });
+                        this.modalVisibility = true;
+                        this.showModal();
+                    }    
+                }
+                if(this.index==1){
+                    this.setWarningDialog("",null,false);
+                    this.modalVisibility = false;
+                    if(cmdObj.down_cavity.displaySign.isError){
+                        this.setWarningDialog("设备故障，请联系售后人员");
+                    }
+                    if(cmdObj.down_cavity.displaySign.lackWater){
+                        this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
+                    }
+                    if(cmdObj.down_cavity.displaySign.waterBox){
+                        this.setWarningDialog("缺水盒");
+        
+                    }
+                    if(cmdObj.down_cavity.displaySign.doorSwitch){
+                        this.setWarningDialog("炉门开了");
+                    }
+        
+                    if(cmdObj.down_cavity.displaySign.lock){
+                        // let context = this;
+                        // this.setWarningDialog("你需要关闭童锁吗？", function(){
+                        //     context.childLock(false);
+                        // });
+                        this.modalVisibility = true;
+                        this.showModal();
+                    }
+        
                 }
             },
             changeArea(sliObj) {

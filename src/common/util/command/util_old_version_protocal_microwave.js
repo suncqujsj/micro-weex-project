@@ -8,6 +8,7 @@ import  nativeService from '@/common/services/nativeService';
 var latesFrameRecord = 0;
 export default {
   //10进制转换8位2进制的方法
+  test:'test',
   initAnalysisObj(){
     var obj = {
         workingState:{

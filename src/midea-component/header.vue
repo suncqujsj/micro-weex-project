@@ -159,7 +159,7 @@ export default {
 <style scoped>
 .box {
   width: 750px;
-  height: 88px;
+  height: '44wx';
   display: inline-flex;
   flex-direction: row;
   flex-wrap: nowrap;

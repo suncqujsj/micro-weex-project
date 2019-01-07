@@ -31,6 +31,7 @@ let workingModalMixin  = {
         analysisFun(analysisObj,tabs) {                
             //this.show = false;
             this.cmdObj = analysisObj;
+            // nativeService.alert(analysisObj);
             this.setWarningDialog("",null,false);
             if(analysisObj.displaySign.isError){
                 this.setWarningDialog("设备故障，请联系售后人员");

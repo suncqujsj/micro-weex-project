@@ -205,7 +205,6 @@
     import modalHeader from '@/component/sf/custom/modal-header.vue'
     // import mideaItem from '@/midea-component/item.vue'
     import nativeService from "@/common/services/nativeService";
-    // import cmdFun from "./utils/util.js"; //解析指令
     import query from "../../dummy/query";
     import sfAccordion from '@/component/sf/custom/accordion.vue'
     import sfDialog from '@/component/sf/custom/dialog.vue'
@@ -216,7 +215,7 @@
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
     import mideaSwitch2 from '@/midea-component/switch2.vue'
     import light from "@/component/sf/common/light.vue";
-    import cmdFun from "../util/command/util.js"; //解析指令
+    // import cmdFun from "../util/command/util.js"; //解析指令
 
     // config data
     // import modes from "./config/modes.js";
@@ -274,7 +273,7 @@
             if(!this.isIos){
                 globalEvent.addEventListener("WXApplicationDidBecomeActiveEvent", (e) => {
                     //从后台转前台时触发
-                    self.queryStatus(tabs);
+                    self.queryStatus(tabs,constant.device);
                      this.queryRunTimer(20);//20秒轮询 
                 });
             }
@@ -300,40 +299,6 @@
                 }else{
                     this.openActionsheet();            
                 }
-            },
-            setting(){
-                if(!this.hasSetting){
-                    return;
-                }
-                var _isRecipe = false;
-                let {constant,tabs} = this;
-                
-                if(this.cmdObj.mode.value == 0xE0){
-                    _isRecipe = true;
-                }
-                var _item = cmdFun.getCurrentModeItem(tabs,this.cmdObj.recipeId.value,this.cmdObj.mode.value,_isRecipe);
-                
-                this.modeText = _item.text;
-                this.currentItem = _item;
-                // nativeService.alert(_item.time);
-                var time = this.cmdObj.timeRemaining.hour*60+this.cmdObj.timeRemaining.minute;
-                if(_item.time.range && _item.time.range.length>0){
-                    let leastTime = _item.time.range[0];
-                    if(time<leastTime){
-                        time = leastTime;
-                    }
-                }
-                this.current.time = time;
-                this.current.temperature = this.cmdObj.temperature.upLowTemperature;
-                this.currentItem.preheat.default = this.cmdObj.displaySign.preheat?true:false;
-                this.current.fireAmount = this.cmdObj.fire.value;
-                this.current.steamAmount = this.cmdObj.steam.value;
-                // this.currentItem.steamSwitch.default = this.cmdObj.steam.value?true:false;
-                this.current.weight = this.cmdObj.weight.value;
-                this.current.probeTemperature = this.cmdObj.probeSetttingTemperature.value;
-                // nativeService.toast(this.current,3);
-                
-                this.openDialog();
             },
             knowClicked(){
                 this.warningDialogShow = false;

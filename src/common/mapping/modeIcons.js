@@ -31,5 +31,10 @@ icons[11] = getIcon('快速预热', 'quik_preheat@3x');
 icons[12] = getIcon('微波加热', 'microwave@3x');
 icons[13] = getIcon('烧烤', 'broil@3x');
 icons[14] = getIcon('解冻', 'thaw@3x');
+icons[15] = getIcon('上管烧烤', 'up_pipe@3x');
+icons[16] = getIcon('蒸汽', 'steam@3x');
+icons[17] = getIcon('烘干', 'dry_hg@3x');
+icons[18] = getIcon('湿烤', 'dry_hg@3x');
+icons[19] = getIcon('ECO', 'ECO@3x');
 
 export default icons;

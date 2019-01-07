@@ -1,12 +1,14 @@
 <template>
     <div class="wrapper">
-        <div class="indicator-wrapper" ref="indicator" :style="{width:indicatorWrapperWidth}">
+        <!--<div class="indicator-wrapper" ref="indicator" :style="{width:indicatorWrapperWidth}">
             <div class="tab-indicator" :style="{width:indicatorWidth}">
             </div>
-        </div>
-        <div class="tab-wrapper" ref="tabItem">
+        </div>-->
+        <div class="tab-wrapper">
             <div v-for="(item,index) in tabArray" :key="index" class="tab-item" @click="tabClicked(index)">
-                <text class="tab-txt" :class="[item.selected?'tab-txt-selected':'']">{{item.name}}</text>
+                <div>
+                    <text class="tab-txt" :class="[item.selected?'tab-txt-selected':'']">{{item.name}}</text>
+                </div>
             </div>
         </div>
     </div>
@@ -20,11 +22,11 @@
 .wrapper {
   padding: 0px;
   margin: 0px;
-  display: flex;
     width: @tabsWidth;
     background-color: transparent;
 }
 .tab-wrapper {
+  display: flex;
   flex-direction: row;
   height: @tabHeight;
     .radius(3*2px);
@@ -41,9 +43,13 @@
   font-size: 14*2px;
   line-height: 45px;
   .white;
+  display: block;
+  width: 103px;
+  text-align: center;
 }
 .tab-txt-selected {
   color: #FFBD00;
+  background-color: white;
 }
 .tab-indicator {
   /*border-top-style: solid;*/
@@ -66,11 +72,6 @@
 </style>
 
 <script>
-const wrapperWidth = 103*2;
-
-const modal = weex.requireModule('modal');
-const animation = weex.requireModule('animation');
-const dom = weex.requireModule('dom');
 export default {
     name: 'mideaTab',
     props: {
@@ -84,44 +85,19 @@ export default {
             for (var i = 0; i < this.tabArray.length; i++) {
                 this.tabArray[i].selected = false;
             }
-            Vue.set(this.tabArray[index], "selected", true);
-            var strLen = this.tabArray[index].name.length;
-            this.setIndicatorWidth(index)
-            var xDis = index * (wrapperWidth / len) + "px";
-            var ref = this.$refs.indicator;
-            animation.transition(ref, {
-                styles: {
-                    transform: 'translate(' + xDis + ',0px)',
-                    transformOrigin: 'center center'
-                },
-                duration: 250, //ms
-                timingFunction: 'ease',
-                delay: 0 //ms
-            }, function () {
-
-            });
-            this.$emit('tabClicked', index)
-        },
-        setIndicatorWidth(index) {
-            let tabItem = this.$refs.tabItem;
-            dom.getComponentRect(tabItem.children[index].children[0], (result) => {
-                let size = result.size || {};
-                this.indicatorWidth = size.width +44+"px";
-            });
+            this.tabArray[index].selected = true;
+            this.$emit('tabClicked', index);
         }
     },
     data: function () {
         return {
-            indicatorWrapperWidthindicatorWrapperWidth: 0,
-            indicatorWidth: 0,
+          
         }
     },
     created() {
-        var len = this.tabArray.length;
-        this.indicatorWrapperWidth = (wrapperWidth / len) + "px";
+       
     },
     mounted() {
-        this.setIndicatorWidth(0)
         if(this.tabArray[1].selected) this.tabClicked(1);
     }
 

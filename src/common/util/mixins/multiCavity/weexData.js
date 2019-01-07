@@ -1,15 +1,24 @@
 /**
  * Created by parker
  * 2018/11/1
- * 用于解析工作页面
+ * 用于解析待机页面
  */
 var numberRecord = 0; //记录跳页面的次数
-var timerRecord = 0;
-import cmdFun from "../command/util.js"; //解析指令
+import cmdFun from "../../command/multiCavity/util.js"; //解析指令
 import nativeService  from '@/common/services/nativeService';
 let workingModalMixin  = {
     data(){
         return {
+            index:0,
+            whichCavity: 0,
+            workingAnalysisObj:cmdFun.initAnalysisObj(),
+            warningDialog: this.initWarningDialog(),
+            modeText:'',
+            srcollPaddingBottom:'',
+            cmdObj: {'down_cavity':cmdFun.initAnalysisObj(),'up_cavity':cmdFun.initAnalysisObj()},
+            isCavityWorking:false,//烤箱
+            isUpCavityWorking:false,//蒸汽炉
+
             chartJson: {
                 "completedColor":"#FFFFFF", //环形进度条未完成后的颜色默认#267AFF
                 "incompletedColor":"#f5d5d5eb", //环形进度条未完成后的颜色，默认透明
@@ -38,7 +47,7 @@ let workingModalMixin  = {
             isFooterShow: false,
             isWorking: false,
 
-            cmdObj:cmdFun.initAnalysisObj(), //指令解析对象
+            // cmdObj:cmdFun.initAnalysisObj(), //指令解析对象
           
             timeShow: false, //是否显示时间
             workSpecialStatusText: '',  //显示当前状态
@@ -64,6 +73,49 @@ let workingModalMixin  = {
         };
     },
     methods: {
+        analysisFun(analysisObj) {                
+            //this.show = false;
+            this.cmdObj = analysisObj;
+           // nativeService.alert(analysisObj);
+            this.setWarningDialog("",null,false);
+            // this.modalVisibility = false;
+            // this.show=false;
+            // if(analysisObj.down_cavity.displaySign.isError|| analysisObj.up_cavity.displaySign.isError){
+            //     this.setWarningDialog("设备故障，请联系售后人员");
+            // }
+            // if(analysisObj.down_cavity.displaySign.lackWater||analysisObj.up_cavity.displaySign.lackWater){
+            //     this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
+            // }
+            // if(analysisObj.down_cavity.displaySign.waterBox||analysisObj.up_cavity.displaySign.waterBox){
+            //     this.setWarningDialog("缺水盒");
+
+            // }
+            // if(analysisObj.down_cavity.displaySign.doorSwitch||analysisObj.up_cavity.displaySign.doorSwitch){
+            //     this.setWarningDialog("炉门开了");
+            // }
+
+            // if(analysisObj.down_cavity.displaySign.lock||analysisObj.up_cavity.displaySign.lock){
+            //     // let context = this;
+            //     // this.setWarningDialog("你需要关闭童锁吗？", function(){
+            //     //     context.childLock(false);
+            //     // });
+            //     !this.modalVisibility && this.showModal();
+            // } else {
+            //     this.modalVisibility && this.closeModal();
+            // }
+
+            this.isCavityWorking = false;
+            let downCavityStatus = analysisObj.down_cavity.workingState.value;
+            let upCavityStatus = analysisObj.up_cavity.workingState.value;
+            if(this.index==0 && (upCavityStatus==3||upCavityStatus==4||upCavityStatus==6)){
+                this.isCavityWorking = true;
+                this.analysisWorkingFun(analysisObj.up_cavity,this.pages[0].tabs);
+            }
+             if(this.index==1 && (downCavityStatus==3||downCavityStatus==4||downCavityStatus==6)){
+                this.isCavityWorking = true;
+                this.analysisWorkingFun(analysisObj.down_cavity,this.pages[1].tabs);
+            }
+        },
         //  countDownRunTimer(timeSet){
         //     var self = this;
         //      this.countDownTimer = setInterval(function(){
@@ -96,19 +148,17 @@ let workingModalMixin  = {
                 allSeconds--;
             },timeSet*1000);
         },
-        analysisFun(analysisObj,tabs) {
-            
+        analysisWorkingFun(analysisObj,tabs) {
+            this.workingAnalysisObj = analysisObj;
             var self = this , timer = null;
             clearInterval(this.countDownTimer);
-            if (analysisObj.workingState.value == 2) {
-                numberRecord++;
-                if(numberRecord==1){ //防止多次获取设备状态，多次跳转
-                    // nativeService.alert(numberRecord);
-                    this.goTo("weex");
-                }
-            }
-            // nativeService.alert(analysisObj);
-            //console.log(1);
+            // if (analysisObj.workingState.value == 2) {
+            //     numberRecord++;
+            //     if(numberRecord==1){ //防止多次获取设备状态，多次跳转
+            //         // nativeService.alert(numberRecord);
+            //         this.goTo("weex");
+            //     }
+            // }
             this.isWorking = false;
             this.isFooterShow = true;
             this.timeShow = false;
@@ -127,7 +177,7 @@ let workingModalMixin  = {
             this.cancleBtnText = '关闭';
             this.cancleIcon = 'img/footer/icon_cancle@2x.png';
 
-            this.cmdObj = analysisObj;
+            //this.cmdObj = analysisObj;
             if(analysisObj.probeRealTemperature.value>analysisObj.probeSetttingTemperature.value){
                 analysisObj.probeRealTemperature.value = analysisObj.probeSetttingTemperature.value;
             }
@@ -180,6 +230,7 @@ let workingModalMixin  = {
                 //      this.hasSetting = false;
                 // }
             }
+
              if(analysisObj.workingState.value == 6){
                 this.timeShow = true;
                 this.hasSetting = true;
@@ -197,11 +248,12 @@ let workingModalMixin  = {
             }
             
             var _isRecipe = false;
-            if(this.cmdObj.mode.value == 0xE0){
+            if(analysisObj.mode.value == 0xE0){
                 _isRecipe = true;
             }
             var _item = cmdFun.getCurrentModeItem(tabs,analysisObj.recipeId.value,analysisObj.mode.value,_isRecipe);
             //this.currentItem = _item;
+            //nativeService.alert(_item);
             if(_item.settingHide){
                 this.hasSetting = false;
             }
@@ -230,7 +282,7 @@ let workingModalMixin  = {
                 if(analysisObj.mode.value == 0x4B){ //如果是快速预热，文案就变为快速
                     mode_text = "快速";
                 }
-                this.cmdObj.mode.text = mode_text+"预热到";
+                analysisObj.mode.text = mode_text+"预热到";
                 this.tag_next = '';
                 this.statusTag = '';
                 this.hasSetting = true;
@@ -259,7 +311,8 @@ let workingModalMixin  = {
                 this.btnSrc = "img/footer/icon_start@2x.png";
                
             }
-                  //倒计时按照设计来
+
+            //倒计时按照设计来
             var _hour = analysisObj.timeRemaining.hour, _minute = analysisObj.timeRemaining.minute, _second = analysisObj.timeRemaining.second;
             var allSeconds = _hour*60*60+_minute*60+_second;
             var progress_step = (10*60-allSeconds)/(10*60)*360; //360度倒计时为例
@@ -287,6 +340,39 @@ let workingModalMixin  = {
                 }
             }
 
+        },
+        cancle(){
+            if(this.finishStatus){
+                this.cancleWorking();
+            }else{
+                this.openActionsheet();            
+            }
+        },
+        knowClicked(){
+            this.warningDialogShow = false;
+        },
+         //打开上拉菜单
+        openActionsheet: function () {
+            this.showBar = true;
+            this.$nextTick(e=>{
+                this.$refs.actionsheet.open();
+            });
+        },
+        //关闭事件
+        closeActionsheet: function () {
+            this.showBar = false;
+        },
+        //点击某个item的事件
+        actionsheetItemClick: function (event) {
+            this.showBar = false;
+            if(event.index == 0){
+               this.cancleWorking();
+            }
+           
+        },
+        //点击取消/确定按钮事件
+        actionsheetBtnClick: function () {
+            this.showBar = false;
         },
     }
 };

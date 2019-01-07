@@ -154,6 +154,10 @@
         type: Number,
         default: 0
       },
+      whichCavity:{ //哪个腔体
+        type: Number,
+        default: 1 //默认下腔体 byte16发0
+      },
       title: {
         type: String,
         default: ''
@@ -235,7 +239,8 @@
           working: this.working,
           device:this.device,
           tabs:this.tabs,
-          isProbe: this.isProbe
+          isProbe: this.isProbe,
+          whichCavity: this.whichCavity
         });
       },
       noPromptClicked (e) {

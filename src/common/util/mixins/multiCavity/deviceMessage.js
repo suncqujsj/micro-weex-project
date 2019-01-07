@@ -179,7 +179,7 @@ const deviceMessageMixin = {
             let deviceCmd = cmdFun.createControlMessage(jsonCmd, callbackData,this.index);
             // this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
             // return;
-            nativeService.showLoading();
+            // nativeService.showLoading();
             // nativeService.alert(cmdFun.cmdToEasy(deviceCmd));
             nativeService.startCmdProcess(
                 "control",
@@ -207,7 +207,7 @@ const deviceMessageMixin = {
                 record = 3;
             }
             var deviceCmd = cmdFun.cmdStartOrPause(record,this.device,this.index);
-            nativeService.showLoading();
+            // nativeService.showLoading();
             nativeService.startCmdProcess(
                 "control",
                 deviceCmd,
@@ -224,7 +224,7 @@ const deviceMessageMixin = {
          cancleWorking(){
             var self = this;
             var deviceCmd = cmdFun.cmdCancelWork(this.device,this.index);
-            nativeService.showLoading();
+            // nativeService.showLoading();
             nativeService.startCmdProcess(
                 "control",
                 deviceCmd,
@@ -290,11 +290,11 @@ const deviceMessageMixin = {
             globalEvent.addEventListener("receiveMessage", function(e) {
                 var str = e.data;
                 var arr = str.split(",");
+                // nativeService.alert(arr);
                 if(parseInt(arr[9])==0x0A){
                     return;
                 }
-                // nativeService.alert(arr);
-                var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
+                var analysisObj = cmdFun.analysisCmd(arr,context.tabs);
                 context.analysisFun(analysisObj);
             });
 

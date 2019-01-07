@@ -314,8 +314,7 @@ export default {
 
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
   
-   
-    nativeService.alert(this.cmdToEasy(sendcmd));
+    // nativeService.alert(this.cmdToEasy(sendcmd));
 
     return sendcmd;
   },

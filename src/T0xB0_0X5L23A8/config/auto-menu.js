@@ -9,11 +9,11 @@ let data = [
             [
                 {
                     'icon': '',
-                    'text': '西班牙海鲜饭',
+                    'text': '黄油软化',
                     'mode': 0xE0,
                     time:{
-                        set: false,
-                        default:9,
+                        set: true,
+                        default:3,
                         range: null
                     },
                     temperature:{

@@ -97,7 +97,7 @@
                 </div>
                 <div v-else>
                     <div v-for="(item, index) in accordions">
-                        <div v-if="item.type==='picker'">
+                        <div v-if="item.type==='picker'" >
                             <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                                 <div slot="content">
                                     <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
@@ -167,6 +167,16 @@
                       :content="warningDialog.content"
                       mainBtnColor="#FFB632"
         >
+        </midea-dialog>
+         <!--故障提示弹窗-->
+        <midea-dialog :title="warningDialogTitle"
+                        :show="warningDialogShow"
+                        :single="true"
+                        noFooter="true"
+                        @mideaDialogConfirmBtnClicked="knowClicked"
+                        :content="warningDialogContent"
+                        mainBtnColor="#FFB632"
+                        >
         </midea-dialog>
         
         <!--确定/取消弹窗-->
@@ -337,7 +347,7 @@
                 query: query
             });
             this.queryStatus(tabs,constant.device);
-            //this.queryRunTimer(20,tabs,constant.device);//20秒轮询 
+            // this.queryRunTimer(20);//20秒轮询 
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
@@ -346,7 +356,7 @@
             if(!this.isIos){
                 globalEvent.addEventListener("WXApplicationDidBecomeActiveEvent", (e) => {
                     //从后台转前台时触发
-                    self.queryStatus(pages,constant.device,index);
+                    self.queryStatus(tabs,constant.device);
                     //  this.queryRunTimer(20);//20秒轮询 
                 });
             } 

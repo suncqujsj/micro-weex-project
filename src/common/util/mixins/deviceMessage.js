@@ -283,7 +283,6 @@ const deviceMessageMixin = {
 
         listenerDeviceReiveMessage(){//传入模式配置数据
             let context = this;
-            // nativeService.toast(666);
             globalEvent.addEventListener("receiveMessage", function(e) {
                 var str = e.data;
                 var arr = str.split(",");
@@ -291,7 +290,7 @@ const deviceMessageMixin = {
                 if(parseInt(arr[9])==0x0A){
                     return;
                 }
-                var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
+                var analysisObj = cmdFun.analysisCmd(arr,context.tabs);
                 context.analysisFun(analysisObj,context.tabs);
             });
 

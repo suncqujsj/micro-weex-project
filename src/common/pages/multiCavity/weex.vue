@@ -84,7 +84,7 @@
         </div>
 
         <!--模式参数设置弹窗-->
-        <sf-dialog :whichCavity="index" :show="show" :tabs="pages" :device="constant.device" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
+        <sf-dialog :whichCavity="index" :show="show" :tabs="pages" :device="constant.device" :working="isCavityWorking" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <!--<template v-for="tab in tabs">-->
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
@@ -358,8 +358,8 @@
     import modalMixin from  "@/common/util/mixins/modal"
     import weexData from  "@/common/util/mixins/multiCavity/weexData"
     // import workingData from  "@/common/util/mixins/multiCavity/workingData"
-    import cmdFun from "@/common/util/command/multiCavity/util"; //解析指令
-    var numberRecord = 0; //记录跳页面的次数
+    // import cmdFun from "@/common/util/command/multiCavity/util"; //解析指令
+    // var numberRecord = 0; //记录跳页面的次数
     // import constant from "./config/constant";
 
     export default {

@@ -3,10 +3,17 @@
  * 2018/11/1
  * 用于解析待机页面
  */
-var timerRecord = 0;
-var numberRecord = 0; //记录跳页面的次数
+// var timerRecord = 0;
+// var numberRecord = 0; //记录跳页面的次数
 import cmdFun from "../../command/multiCavity/util.js"; //解析指令
 import nativeService  from '@/common/services/nativeService';
+//ios5.4.0以下版本判断做兼容倒计时组件
+let isIosLess5_4 = false;
+let appVersion = weex.config.env.appVersion, platform = weex.config.env.platform;
+let appVersionArr = appVersion.split('.');
+if(platform=='iOS' && (parseInt(appVersionArr[0])==5 && parseInt(appVersionArr[1])<4)){
+    isIosLess5_4 = true;
+}
 let workingModalMixin  = {
     data(){
         return {
@@ -17,14 +24,13 @@ let workingModalMixin  = {
             modeText:'',
             srcollPaddingBottom:'',
             cmdObj: {'down_cavity':cmdFun.initAnalysisObj(),'up_cavity':cmdFun.initAnalysisObj()},
-            isCavityWorking:false,//烤箱
-            isUpCavityWorking:false,//蒸汽炉
+            isCavityWorking:false,
 
             chartJson: {
                 "completedColor":"#FFFFFF", //环形进度条未完成后的颜色默认#267AFF
                 "incompletedColor":"#f5d5d5eb", //环形进度条未完成后的颜色，默认透明
                 "thickness":2, //环形进度条宽度，默认4
-                "cornerRadius" : 280,  //环形的半径，默认是width/2
+                "cornerRadius" : isIosLess5_4?140:280,  //环形的半径，默认是width/2
                 "totalCounter" : 360, //环形进度条的最大值，默认是360
                 "progressCounter" : 0, //设置进度值，默认是从0-360, 默认为0
                 "autoProgress" : false, //设置是否需要自动执行环形进度，默认false, 如果设置为true，则每秒进度值+1操作
@@ -317,9 +323,12 @@ let workingModalMixin  = {
                         this.workSpecialStatusText = 1;
                         this.tag_next = '分';
                     }else{
+                        if(allSeconds==60){
+                            allSeconds = allSeconds-1;
+                        }
                         this.workSpecialStatusText = allSeconds;
                         this.tag_next = '秒';
-                         this.countDownRunTimer(_minute,_second,1);
+                        this.countDownRunTimer(_minute,_second,1);
                     
                     }
                     //this.countDownRunTimer(1);//1秒03轮询

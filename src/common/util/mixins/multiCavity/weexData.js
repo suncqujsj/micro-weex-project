@@ -3,9 +3,17 @@
  * 2018/11/1
  * 用于解析待机页面
  */
-var numberRecord = 0; //记录跳页面的次数
+// var timerRecord = 0;
+// var numberRecord = 0; //记录跳页面的次数
 import cmdFun from "../../command/multiCavity/util.js"; //解析指令
 import nativeService  from '@/common/services/nativeService';
+//ios5.4.0以下版本判断做兼容倒计时组件
+let isIosLess5_4 = false;
+let appVersion = weex.config.env.appVersion, platform = weex.config.env.platform;
+let appVersionArr = appVersion.split('.');
+if(platform=='iOS' && (parseInt(appVersionArr[0])==5 && parseInt(appVersionArr[1])<4)){
+    isIosLess5_4 = true;
+}
 let workingModalMixin  = {
     data(){
         return {
@@ -16,14 +24,13 @@ let workingModalMixin  = {
             modeText:'',
             srcollPaddingBottom:'',
             cmdObj: {'down_cavity':cmdFun.initAnalysisObj(),'up_cavity':cmdFun.initAnalysisObj()},
-            isCavityWorking:false,//烤箱
-            isUpCavityWorking:false,//蒸汽炉
+            isCavityWorking:false,
 
             chartJson: {
                 "completedColor":"#FFFFFF", //环形进度条未完成后的颜色默认#267AFF
                 "incompletedColor":"#f5d5d5eb", //环形进度条未完成后的颜色，默认透明
                 "thickness":2, //环形进度条宽度，默认4
-                "cornerRadius" : 280,  //环形的半径，默认是width/2
+                "cornerRadius" : isIosLess5_4?140:280,  //环形的半径，默认是width/2
                 "totalCounter" : 360, //环形进度条的最大值，默认是360
                 "progressCounter" : 0, //设置进度值，默认是从0-360, 默认为0
                 "autoProgress" : false, //设置是否需要自动执行环形进度，默认false, 如果设置为true，则每秒进度值+1操作
@@ -73,15 +80,10 @@ let workingModalMixin  = {
         };
     },
     methods: {
-        analysisFun(analysisObj) {                
-            //this.show = false;
-            this.cmdObj = analysisObj;
-           // nativeService.alert(analysisObj);
-            this.setWarningDialog("",null,false);
-            this.modalVisibility = false;
-            // this.closeModal();
-            // this.show=false;
+        dialogSetting(analysisObj){
             if(this.index==0){
+                this.setWarningDialog("",null,false);
+                this.modalVisibility = false;
                 if(analysisObj.up_cavity.displaySign.isError){
                     this.setWarningDialog("设备故障，请联系售后人员");
                 }
@@ -130,6 +132,12 @@ let workingModalMixin  = {
                 }
     
             }
+        },
+        analysisFun(analysisObj) {                
+            this.cmdObj = analysisObj;
+        //    nativeService.alert(analysisObj);
+
+            this.dialogSetting(analysisObj);
            
             this.isCavityWorking = false;
             let downCavityStatus = analysisObj.down_cavity.workingState.value;
@@ -152,40 +160,22 @@ let workingModalMixin  = {
         countDownRunTimer(minute,second,timeSet){
             var self = this;
             var allSeconds = minute*60+second;
-            this.countDownTimer = setInterval(function(){
-                // nativeService.toast(allSeconds,4);
-                if(allSeconds<60 && allSeconds>0){
+            var countDownTimer = setInterval(function(){
+                if(self.isTimerStop||allSeconds<=0){
+                    clearInterval(countDownTimer);
+                    return;
+                }
+                if(allSeconds<=60 && allSeconds>0){
+                     allSeconds--;   
                      self.tag_next = '秒';
                      self.workSpecialStatusText = allSeconds;
-                }else{
-                     self.tag_next = '分';
-                     self.workSpecialStatusText = minute;
                 }
-                if(self.isTimerStop ){
-                     return;
-                }
-                if(self.isTimerStop && allSeconds<=0){
-                     self.tag_next = '';
-                     self.timeShow = false;
-                     self.progressShow = false;
-                     self.workSpecialStatusText = '';
-                     clearInterval(this.countDownTimer);
-                     return;
-                }
-                allSeconds--;
             },timeSet*1000);
         },
         analysisWorkingFun(analysisObj,tabs) {
             this.workingAnalysisObj = analysisObj;
+            // nativeService.alert(this.workingAnalysisObj);
             var self = this , timer = null;
-            clearInterval(this.countDownTimer);
-            // if (analysisObj.workingState.value == 2) {
-            //     numberRecord++;
-            //     if(numberRecord==1){ //防止多次获取设备状态，多次跳转
-            //         // nativeService.alert(numberRecord);
-            //         this.goTo("weex");
-            //     }
-            // }
             this.isWorking = false;
             this.isFooterShow = true;
             this.timeShow = false;
@@ -203,6 +193,12 @@ let workingModalMixin  = {
             this.hasStopOrContinueBtn = false;
             this.cancleBtnText = '关闭';
             this.cancleIcon = 'img/footer/icon_cancle@2x.png';
+
+            var _hour = analysisObj.timeRemaining.hour, _minute = analysisObj.timeRemaining.minute, _second = analysisObj.timeRemaining.second;
+            var allSeconds = _hour*60*60+_minute*60+_second;
+            var progress_step = (10*60-allSeconds)/(10*60)*360; //360度倒计时为例
+            //this.chartJson.progressCounter = progress_step;
+
 
             //this.cmdObj = analysisObj;
             if(analysisObj.probeRealTemperature.value>analysisObj.probeSetttingTemperature.value){
@@ -223,9 +219,6 @@ let workingModalMixin  = {
                 this.btnText = "暂停";
                 this.btnSrc = "img/footer/icon_pause@2x.png";
                 this.hasStopOrContinueBtn = true;
-                // if(analysisObj.mode.value == 0xE0){//云菜谱没有设置时间温度蒸汽那些
-                //      this.hasSetting = false;
-                // }
             }
 
              if(analysisObj.workingState.value == 6){
@@ -236,9 +229,6 @@ let workingModalMixin  = {
                 this.isTimerStop = true;
                 this.statusTag = '暂停中';
                 this.hasStopOrContinueBtn = true;
-                // if(analysisObj.mode.value == 0xE0){//云菜谱没有设置时间温度蒸汽那些
-                //      this.hasSetting = false;
-                // }
             }
             if(analysisObj.isProbe.value){
                 this.statusTag = '当前实时温度';
@@ -267,6 +257,7 @@ let workingModalMixin  = {
                this.probeProgress = '烹饪完成';
                this.cancleBtnText = '完成';
                this.cancleIcon = 'img/finish_icon@2x.png';
+               this.countDownRunTimer(0,0,1);
               
             }
             // 不是烹饪完成 ，并且处于预热中状态
@@ -306,16 +297,10 @@ let workingModalMixin  = {
                 this.hasSetting = false;
                 this.btnText = "开始";
                 this.btnSrc = "img/footer/icon_start@2x.png";
-               
             }
 
             //倒计时按照设计来
-            var _hour = analysisObj.timeRemaining.hour, _minute = analysisObj.timeRemaining.minute, _second = analysisObj.timeRemaining.second;
-            var allSeconds = _hour*60*60+_minute*60+_second;
-            var progress_step = (10*60-allSeconds)/(10*60)*360; //360度倒计时为例
-            //this.chartJson.progressCounter = progress_step;
-
-            if(this.timeShow){
+            if(this.timeShow&&allSeconds>0){
                 if(allSeconds>60*60){ //大于1小时，有‘时’显示
                     if(_hour>9){
                         this.hourMore10 = true;
@@ -327,13 +312,27 @@ let workingModalMixin  = {
                     this.workSpecialStatusText = _minute;
                     this.tag_next = '分';
                     this.hasHour = false;
-                }else{ //小于2分钟开始倒计时
+                }
+                else{ //小于2分钟开始倒计时
                     this.hasHour = false;
-                    timerRecord++;
-                    if(timerRecord){
-                            this.countDownRunTimer(_minute,_second,1);
-                            //this.countDownRunTimer(1);//1秒03轮询
+                    // if(allSeconds<=60){
+                    //     this.workSpecialStatusText = 1;
+                    //     this.tag_next = '分';
+                    // }
+                    if(allSeconds>60){
+                        this.workSpecialStatusText = 1;
+                        this.tag_next = '分';
+                    }else{
+                        if(allSeconds==60){
+                            allSeconds = allSeconds-1;
+                        }
+                        this.workSpecialStatusText = allSeconds;
+                        this.tag_next = '秒';
+                        this.countDownRunTimer(_minute,_second,1);
+                    
                     }
+                    //this.countDownRunTimer(1);//1秒03轮询
+                    
                 }
             }
 

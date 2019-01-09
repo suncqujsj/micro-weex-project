@@ -137,22 +137,22 @@ const deviceMessageMixin = {
                 }
             )
         },
-        setting(){
+        setting(cmdObj){
             if(!this.hasSetting){
                 return;
             }
             var _isRecipe = false;
             let {constant,tabs} = this;
             
-            if(this.cmdObj.mode.value == 0xE0){
+            if(cmdObj.mode.value == 0xE0){
                 _isRecipe = true;
             }
-            var _item = cmdFun.getCurrentModeItem(tabs,this.cmdObj.recipeId.value,this.cmdObj.mode.value,_isRecipe);
+            var _item = cmdFun.getCurrentModeItem(tabs,cmdObj.recipeId.value,cmdObj.mode.value,_isRecipe);
             
             this.modeText = _item.text;
             this.currentItem = _item;
             // nativeService.alert(_item);
-            var time = this.cmdObj.timeRemaining.hour*60+this.cmdObj.timeRemaining.minute;
+            var time = cmdObj.timeRemaining.hour*60+cmdObj.timeRemaining.minute;
             if(_item.time.range && _item.time.range.length>0){
                 let leastTime = _item.time.range[0];
                 if(time<leastTime){
@@ -160,13 +160,13 @@ const deviceMessageMixin = {
                 }
             }
             this.current.time = time;
-            this.current.temperature = this.cmdObj.temperature.upLowTemperature;
-            this.currentItem.preheat.default = this.cmdObj.displaySign.preheat?true:false;
-            this.current.fireAmount = this.cmdObj.fire.value;
-            this.current.steamAmount = this.cmdObj.steam.value;
-            // this.currentItem.steamSwitch.default = this.cmdObj.steam.value?true:false;
-            this.current.weight = this.cmdObj.weight.value;
-            this.current.probeTemperature = this.cmdObj.probeSetttingTemperature.value;
+            this.current.temperature = cmdObj.temperature.upLowTemperature;
+            this.currentItem.preheat.default = cmdObj.displaySign.preheat?true:false;
+            this.current.fireAmount = cmdObj.fire.value;
+            this.current.steamAmount = cmdObj.steam.value;
+            // this.currentItem.steamSwitch.default = cmdObj.steam.value?true:false;
+            this.current.weight = cmdObj.weight.value;
+            this.current.probeTemperature = cmdObj.probeSetttingTemperature.value;
             // nativeService.toast(this.current,3);
             
             this.openDialog();
@@ -283,15 +283,14 @@ const deviceMessageMixin = {
 
         listenerDeviceReiveMessage(){//传入模式配置数据
             let context = this;
-            // nativeService.toast(this.tabs);
             globalEvent.addEventListener("receiveMessage", function(e) {
                 var str = e.data;
                 var arr = str.split(",");
+                // nativeService.alert(arr);
                 if(parseInt(arr[9])==0x0A){
                     return;
                 }
-                // nativeService.alert(arr);
-                var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
+                var analysisObj = cmdFun.analysisCmd(arr,context.tabs);
                 context.analysisFun(analysisObj,context.tabs);
             });
 

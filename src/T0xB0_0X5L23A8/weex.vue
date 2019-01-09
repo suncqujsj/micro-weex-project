@@ -1,5 +1,5 @@
 <template>
-    <common-working :tabs="tabs" :constant="constant"></common-working>
+    <common-weex :tabs="tabs" :constant="constant"></common-weex>
 </template>
 
 <script>
@@ -7,31 +7,34 @@
     import constant from "./config/constant";
     import modes from "./config/modes.js";
     import autoMenu from "./config/auto-menu.js";
-    import commonWorking from "@/common/pages/working.vue";
+    import commonWeex from "@/common/pages/weex.vue";
+    import nativeService from "@/common/services/nativeService";
+
+    var numberRecord = 0; //记录跳页面的次数
     export default {
         data(){
             return {
                 tabs:[
                     {
                         name:'自动菜单',
-                        active:true,
+                        active:false,
                         rows:autoMenu
                     },
                     {
                         name:'加热模式',
-                        active:false,
+                        active:true,
                         rows:modes
                     }
                 ],
                 constant:constant
             }
         },
-        components: {commonWorking},
+        components:{commonWeex},
         created(){
-         
+          
         },
-        methods: {    
-       
+        methods: {
+           
         }
     }
 </script>

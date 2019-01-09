@@ -105,7 +105,7 @@ export default {
     }
     return cmd.toUpperCase();
   },
-  getCurrentModeItem(_tabs,recipeId,modeId,isRecipe){ 
+  getCurrentModeItem(tabs,recipeId,modeId,isRecipe){ 
       var  _item = {};
       if(tabs.length<=1){
         let modes = tabs[0].rows;
@@ -153,7 +153,7 @@ export default {
       }
       return _item;
   },
-  modeValueToModeText(recipeId,modeValue,_tabs){
+  modeValueToModeText(recipeId,modeValue,tabs){
     var text = '';
     var modeArr =  [];
     var isRecipe = false;
@@ -294,7 +294,7 @@ export default {
       message.setByte(messageBody, 18, params.probeTemperature);
     }
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
-    nativeService.alert(this.cmdToEasy(sendcmd));
+    // nativeService.alert(this.cmdToEasy(sendcmd));
     return sendcmd;
   },
   //取消工作指令
@@ -348,7 +348,7 @@ export default {
     message.setByte(messageBody, 5,0xff);
     message.setByte(messageBody, 6,0xff);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
-    nativeService.alert(this.cmdToEasy(sendMessage));
+    // nativeService.alert(this.cmdToEasy(sendMessage));
     return sendMessage;
   },
   analysisCmd: function(requestCmd,tabs) {
@@ -360,7 +360,6 @@ export default {
     // }
     // latesFrameRecord = receiveFrame;
     // nativeService.toast(latesFrameRecord,6);
-    
     var obj = this.initAnalysisObj();
     
   // if(parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)){

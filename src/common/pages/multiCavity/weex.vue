@@ -3,7 +3,7 @@
 </style>
 
 <template>
-    <div @viewappear="viewappear()" @viewdisappear="viewdisappear">
+    <div @viewappear="viewappear" @viewdisappear="viewdisappear">
         <div class="bg">
             <sf-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native" >
                 <div slot="headerTitle">
@@ -84,7 +84,7 @@
         </div>
 
         <!--模式参数设置弹窗-->
-        <sf-dialog :whichCavity="index" :show="show" :tabs="pages" :device="constant.device" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
+        <sf-dialog :whichCavity="index" :show="show" :tabs="pages" :device="constant.device" :working="isCavityWorking" mainBtnColor="#267AFF" secondBtnColor="#267AFF" confirmText="开始" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <!--<template v-for="tab in tabs">-->
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
@@ -358,8 +358,8 @@
     import modalMixin from  "@/common/util/mixins/modal"
     import weexData from  "@/common/util/mixins/multiCavity/weexData"
     // import workingData from  "@/common/util/mixins/multiCavity/workingData"
-    import cmdFun from "@/common/util/command/multiCavity/util"; //解析指令
-    var numberRecord = 0; //记录跳页面的次数
+    // import cmdFun from "@/common/util/command/multiCavity/util"; //解析指令
+    // var numberRecord = 0; //记录跳页面的次数
     // import constant from "./config/constant";
 
     export default {
@@ -397,7 +397,7 @@
             });
             this.initialIndex();
             this.queryStatus(pages,constant.device,index);
-            //this.queryRunTimer(20,tabs,constant.device);//20秒轮询 
+            //this.queryRunTimer(20);//20秒轮询 
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
@@ -457,8 +457,12 @@
             tabClicked(tabIndex) {
                 let {constant,pages,cmdObj} = this;
                 this.index = tabIndex;
+                this.countDownTime = null;
+                this.dialogSetting(cmdObj);
+                // this.queryStatus(pages,constant.device,this.index);
                 let downCavityStatus = cmdObj.down_cavity.workingState.value;
                 let upCavityStatus = cmdObj.up_cavity.workingState.value;
+                this.isCavityWorking = false;
                 if(this.index==0 && (upCavityStatus==3||upCavityStatus==4||upCavityStatus==6)){
                     this.isCavityWorking = true;
                     this.analysisWorkingFun(cmdObj.up_cavity,pages[0].tabs);
@@ -466,65 +470,6 @@
                 if(this.index==1 && (downCavityStatus==3||downCavityStatus==4||downCavityStatus==6)){
                     this.isCavityWorking = true;
                     this.analysisWorkingFun(cmdObj.down_cavity,pages[1].tabs);
-                }
-                if(this.index==1 && (downCavityStatus==2||downCavityStatus==1||downCavityStatus==0)){
-                    this.isCavityWorking = false;
-                }
-                 if(this.index==0 && (upCavityStatus==2||upCavityStatus==1||upCavityStatus==0)){
-                    this.isCavityWorking = false;
-                }
-                if(this.index==0){
-                    this.setWarningDialog("",null,false);
-                    this.modalVisibility = false;
-                    if(cmdObj.up_cavity.displaySign.isError){
-                        this.setWarningDialog("设备故障，请联系售后人员");
-                    }
-                    if(cmdObj.up_cavity.displaySign.lackWater){
-                        this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
-                    }
-                    if(cmdObj.up_cavity.displaySign.waterBox){
-                        this.setWarningDialog("缺水盒");
-        
-                    }
-                    if(cmdObj.up_cavity.displaySign.doorSwitch){
-                        this.setWarningDialog("炉门开了");
-                    }
-        
-                    if(cmdObj.up_cavity.displaySign.lock){
-                        // let context = this;
-                        // this.setWarningDialog("你需要关闭童锁吗？", function(){
-                        //     context.childLock(false);
-                        // });
-                        this.modalVisibility = true;
-                        this.showModal();
-                    }    
-                }
-                if(this.index==1){
-                    this.setWarningDialog("",null,false);
-                    this.modalVisibility = false;
-                    if(cmdObj.down_cavity.displaySign.isError){
-                        this.setWarningDialog("设备故障，请联系售后人员");
-                    }
-                    if(cmdObj.down_cavity.displaySign.lackWater){
-                        this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
-                    }
-                    if(cmdObj.down_cavity.displaySign.waterBox){
-                        this.setWarningDialog("缺水盒");
-        
-                    }
-                    if(cmdObj.down_cavity.displaySign.doorSwitch){
-                        this.setWarningDialog("炉门开了");
-                    }
-        
-                    if(cmdObj.down_cavity.displaySign.lock){
-                        // let context = this;
-                        // this.setWarningDialog("你需要关闭童锁吗？", function(){
-                        //     context.childLock(false);
-                        // });
-                        this.modalVisibility = true;
-                        this.showModal();
-                    }
-        
                 }
             },
             changeArea(sliObj) {

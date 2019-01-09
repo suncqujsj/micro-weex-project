@@ -290,11 +290,11 @@ const deviceMessageMixin = {
             globalEvent.addEventListener("receiveMessage", function(e) {
                 var str = e.data;
                 var arr = str.split(",");
+                // nativeService.alert(arr);
                 if(parseInt(arr[9])==0x0A){
                     return;
                 }
-                // nativeService.alert(arr);
-                var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
+                var analysisObj = cmdFun.analysisCmd(arr,context.tabs);
                 context.analysisFun(analysisObj);
             });
 

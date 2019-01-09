@@ -96,20 +96,42 @@
                     </sf-accordion>
                 </div>
                 <div v-else>
-                    <div v-for="(item, index) in accordions">
-                        <div v-if="item.type==='picker'" >
-                            <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
-                                <div slot="content">
-                                    <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
-                                </div>
-                            </sf-accordion>
+                    <!--工作状态，弹出框设置-->
+                    <div v-if="isWorkingPage">
+                        <div v-for="(item, index) in accordions">
+                            <div v-if="item.type==='picker' && (currentItem && currentItem[item.key] && !currentItem[item.key].hide)" >
+                                <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                                    <div slot="content">
+                                        <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                    </div>
+                                </sf-accordion>
+                            </div>
+                            <div v-if="item.type==='switch' && (currentItem && currentItem[item.key] && !currentItem[item.key].hide)">
+                                <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
+                                    <div slot="right">
+                                        <midea-switch2 :itemKey="item.key" :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
+                                    </div>
+                                </sf-accordion>
+                            </div>
                         </div>
-                        <div v-if="item.type==='switch'">
-                            <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
-                                <div slot="right">
-                                    <midea-switch2 :itemKey="item.key" :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
-                                </div>
-                            </sf-accordion>
+                    </div>
+                     <!--待机状态，弹出框设置-->
+                     <div v-else>
+                        <div v-for="(item, index) in accordions">
+                            <div v-if="item.type==='picker'" >
+                                <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                                    <div slot="content">
+                                        <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                    </div>
+                                </sf-accordion>
+                            </div>
+                            <div v-if="item.type==='switch'">
+                                <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
+                                    <div slot="right">
+                                        <midea-switch2 :itemKey="item.key" :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
+                                    </div>
+                                </sf-accordion>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -194,6 +216,8 @@
          <!-- 工作页面 -->
         <div class="working_section all_section" v-if="isWorkingPage" :style="{height: wrapHeight}">
             <midea-header bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png" :title="constant.device.page_title" titleText="white" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2Native"></midea-header>
+             <!--测试copy指令-->
+            <!--<div><text @click="setContent">下发指令:{{testCmd}}</text></div>-->
             <div class="progress_content"  @longpress="onlongpressQuery()"><!--隐藏长按组件触发03查询，方便调试-->
                 <div class="progress_section" :style="progress_style" > 
                     <!--<wxcProgress :percent="progress" :progressShow="progressShow"
@@ -347,7 +371,7 @@
                 query: query
             });
             this.queryStatus(tabs,constant.device);
-            // this.queryRunTimer(20);//20秒轮询 
+            // this.queryRunTimer(10);//20秒轮询 已放在解析指令那里处理
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             if (this.isIos){
                 this.listenerDeviceReiveMessage();

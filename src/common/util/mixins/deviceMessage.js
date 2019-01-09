@@ -160,13 +160,14 @@ const deviceMessageMixin = {
                 }
             }
             this.current.time = time;
+            this.current.second = cmdObj.timeRemaining.second;
             this.current.temperature = cmdObj.temperature.upLowTemperature;
             this.currentItem.preheat.default = cmdObj.displaySign.preheat?true:false;
             this.current.fireAmount = cmdObj.fire.value;
             this.current.steamAmount = cmdObj.steam.value;
-            // this.currentItem.steamSwitch.default = cmdObj.steam.value?true:false;
             this.current.weight = cmdObj.weight.value;
             this.current.probeTemperature = cmdObj.probeSetttingTemperature.value;
+            // this.currentItem.steamSwitch.default = cmdObj.steam.value?true:false;
             // nativeService.toast(this.current,3);
             
             this.openDialog();

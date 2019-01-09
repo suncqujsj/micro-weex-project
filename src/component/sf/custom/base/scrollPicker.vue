@@ -3,7 +3,7 @@
     <!-- <div v-if="isShow" class="wrap" :style="wrapStyle"> -->
         <div class="select-area"></div>
         <scroller class="scroller" :style="scrollerStyle" :show-scrollbar="false" @scroll="scroll" @scrollend="scrollEnd">
-            <div v-for="(item, index) in listArray" :key="index" ref="item">
+            <div v-for="(item, index) in listArray" :key="index" :ref="ref">
                 <text v-bind:class="[
                     'list-item',
                     index==0?'first-item':'',
@@ -13,7 +13,7 @@
                     index==itemIndex   ? 'selected-item':'unselected-item',
                     index==itemIndex+1 ? 'second-last-visible-item':'',
                     index==itemIndex+2 ? 'first-last-visible-item':''
-                ]">{{item.value}}</text>
+                ]">{{item}}</text>
             </div>
         </scroller>
     </div>
@@ -28,6 +28,10 @@ export default {
         isShow: {
             type: Boolean,
             default: false
+        },
+        pickerIndex: {
+            type: Number,
+            default: 0
         },
         listArray: {
             type: Array,
@@ -53,6 +57,9 @@ export default {
         }
     },
     computed: {
+        ref(){
+            return `item${this.pickerIndex}`
+        },
         wrapStyle(){
             return {
                 width: this.wrapWidth,
@@ -90,15 +97,14 @@ export default {
             }
         },
         scrollEnd(event) {
-            const el = this.$refs['item'][0]
+            const el = this.$refs[this.ref][0]
             dom.scrollToElement(el, { offset: this.itemIndex * 70 })
-            this.$emit('onChange', this.listArray[this.itemIndex])
+            this.$emit('onChange', {index: this.pickerIndex, value: this.listArray[this.itemIndex], ref: this.ref})
         }
     },
     mounted() {
-        nativeService.alert(this.listItem);
-        const el = this.$refs['item'][0]
-        
+        const el = this.$refs[this.ref][0]
+
         var _listArray = this.listArray;
         for(var i=0; i< _listArray.length; i++){
             if(_listArray[i] == this.listItem){

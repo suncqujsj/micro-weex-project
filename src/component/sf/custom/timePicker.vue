@@ -17,9 +17,9 @@
         </midea-confirm-box>
         <midea-confirm-box :show="show[2]" @leftBtnClick="cancel(2)" @rightBtnClick="confirm(2)" @mideaPopupOverlayClicked="close(2)">
             <div class="scroll-picker-wrap row-sb">
-                <midea-scroll-picker :wrapWidth="250" :listArray="list" @onChange="changeValue"></midea-scroll-picker>
-                <midea-scroll-picker :wrapWidth="250" :listArray="list" @onChange="changeValue"></midea-scroll-picker>
-                <midea-scroll-picker :wrapWidth="250" :listArray="list" @onChange="changeValue"></midea-scroll-picker>
+                <template v-for="(item, index) in time">
+                    <midea-scroll-picker v-if="(index === 0 && max[index]) || (index > 0)" :pickerIndex="index" :wrapWidth="perPickerWidth" :listArray="item" :listItem="value[index]" @onChange="changeValue"></midea-scroll-picker>
+                </template>
             </div>
         </midea-confirm-box>
     </div>
@@ -38,15 +38,25 @@
 </style>
 <script>
 
-    import base from '../base'
+    import base from '@/midea-demo/base'
     import mideaButton from '@/midea-component/button.vue'
     import mideaConfirmBox from '@/midea-component/confirmBox.vue'
-    import mideaScrollPicker from '@/midea-component/scrollPicker.vue'
+    import mideaScrollPicker from '@/component/sf/custom/base/scrollPicker.vue'
     import nativeService from '@/common/services/nativeService'
 
     module.exports = {
         components: { mideaConfirmBox, mideaScrollPicker, mideaButton },
         mixins: [base],
+        props:{
+            value: {
+                type: Array,
+                default: [0,0,0]
+            },
+            max: {
+                type: Array,
+                default: [1,1,1]
+            }
+        },
         data() {
             return {
                 show: {
@@ -65,10 +75,37 @@
                     {index:7, value:7},
                     {index:8, value:8},
                     {index:9, value:9},
-                ]
+                ],
+                time:this.initTime(),
+                count:0,
             }
         },
+        computed: {
+            perPickerWidth(){
+                return this.max[0] ? 250 : 375;
+            }
+        },
+        created(){
+            this.initTime();
+        },
         methods: {
+            /**
+             * 步长为1，起始为0的连续数组
+             * */
+            range(end){
+                if(end<0) return [];
+                let arr = new Array(end-1);
+                for(let i=0; i<end;i++) {
+                    arr[i] = i;
+                }
+                return arr;
+            },
+            initTime(){
+                let hArr = this.range(12);
+                let msArr = this.range(60);
+                return [hArr, msArr,msArr];
+
+            },
             showBox(index){
                 this.show[index] = true
             },
@@ -84,10 +121,10 @@
                 this.show[index] = false
             },
             changeValue(e){
-                nativeService.toast('您选择了：'+e.value)
+                let time = this.value;
+                time[e.index] = e.value;
+                this.$emit('change', {value: time});
             }
-        },
-        created() {
         }
     };
 </script>

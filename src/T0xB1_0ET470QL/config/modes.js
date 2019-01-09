@@ -318,6 +318,34 @@ let modes = [
                     default:0
                 }
             },
+            {
+                'icon': modeIcons[17].dir,
+                'text': modeIcons[17].cn,
+                'mode': 0xC4,
+                time:{
+                    set: true,
+                    default:5,
+                    range:[5,60,1]
+                },
+                temperature:{
+                    set: false,
+                    default:120,
+                    range:null
+                },
+                preheat:{
+                    set:false,
+                    default: null,
+                    hide: true,
+                },
+                steamAmount:{
+                    set:false,
+                    default:0
+                },
+                fireAmount:{
+                    set:false,
+                    default:0
+                }
+            },
         ]
     },
 ];

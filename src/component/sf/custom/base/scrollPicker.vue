@@ -98,6 +98,7 @@ export default {
         },
         scrollEnd(event) {
             const el = this.$refs[this.ref][0]
+            nativeService.alert(this.ref);
             dom.scrollToElement(el, { offset: this.itemIndex * 70 })
             this.$emit('onChange', {index: this.pickerIndex, value: this.listArray[this.itemIndex], ref: this.ref})
         }

@@ -15,7 +15,7 @@
         data(){
             return {
                 value: [1,1,0],
-                max:[0,1,0]
+                max:[1,1,0]
             }
         },
         created(){
@@ -23,7 +23,7 @@
         components:{timePicker},
         methods: {
             onChange(e){
-                nativeService.alert(e.value);
+                // nativeService.alert(e.value);
             }
         }
     }

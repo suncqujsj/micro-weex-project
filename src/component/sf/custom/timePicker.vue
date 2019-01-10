@@ -7,8 +7,13 @@
             <!--<midea-scroll-picker :listArray="list"  @onChange="changeValue"></midea-scroll-picker>-->
             <!--<text class="sub-hd padding14">2.弹窗中使用scrollPicker</text>-->
             <!--<midea-button text="单个scrollPicker" @mideaButtonClicked="showBox(1)"></midea-button>-->
-            <text class="sub-hd padding14">3.弹窗中使用多个scrollPicker</text>
-            <midea-button text="多个scrollPicker" @mideaButtonClicked="showBox(2)"></midea-button>
+            <!--<div class="scroll-picker-wrap row-sb">-->
+                <!--<template v-for="(item, index) in time">-->
+                    <!--<midea-scroll-picker v-if="hms[index]" :pickerIndex="index" :unit="units[index]" :wrapWidth="perPickerWidth" :listArray="item" :listItem="value[index]" @onChange="changeValue"></midea-scroll-picker>-->
+                <!--</template>-->
+            <!--</div>-->
+            <!--<text class="sub-hd padding14">3.弹窗中使用多个scrollPicker</text>-->
+            <!--<midea-button text="多个scrollPicker" @mideaButtonClicked="showBox(2)"></midea-button>-->
         </scroller>
         <!--<midea-confirm-box :show="show[1]" @leftBtnClick="cancel(1)" @rightBtnClick="confirm(1)" @mideaPopupOverlayClicked="close(1)">-->
             <!--<div class="scroll-picker-wrap">-->
@@ -18,7 +23,7 @@
         <midea-confirm-box :show="show[2]" @leftBtnClick="cancel(2)" @rightBtnClick="confirm(2)" @mideaPopupOverlayClicked="close(2)">
             <div class="scroll-picker-wrap row-sb">
                 <template v-for="(item, index) in time">
-                    <midea-scroll-picker v-if="(index === 0 && max[index]) || (index > 0)" :pickerIndex="index" :unit="units[index]" :wrapWidth="perPickerWidth" :listArray="item" :listItem="value[index]" @onChange="changeValue"></midea-scroll-picker>
+                    <midea-scroll-picker v-if="hms[index]" :pickerIndex="index" :unit="units[index]" :wrapWidth="perPickerWidth" :listArray="item" :listItem="value[index]" @onChange="changeValue"></midea-scroll-picker>
                 </template>
             </div>
         </midea-confirm-box>
@@ -53,7 +58,7 @@
                 type: Array,
                 default: [0,0,0]
             },
-            max: {
+            hms: {
                 type: Array,
                 default: [1,1,1]
             }
@@ -84,7 +89,7 @@
         },
         computed: {
             perPickerWidth(){
-                return this.max[0] ? 250 : 375;
+                return this.hms[0] ? 250 : 375;
             }
         },
         created(){

@@ -137,13 +137,14 @@ export default {
   background-color: #ffffff;
 }
 .scroller {
-  flex: 2;
+  flex: 3;
   align-content: center;
   align-items: center;
 }
 .unit{
     font-size: 40px;
     flex:1;
+    margin-left: -100px;
 }
 .list-item {
   width: 300px;

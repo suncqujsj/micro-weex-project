@@ -3,7 +3,7 @@
 </style>
 
 <template>
-    <time-picker :value="value" :max="max" @change="onChange"></time-picker>
+    <time-picker :value="value" :hms="hms" @change="onChange"></time-picker>
 </template>
 
 <script>
@@ -15,10 +15,11 @@
         data(){
             return {
                 value: [1,1,0],
-                max:[1,1,0]
+                hms:[1,0,0]
             }
         },
         created(){
+            nativeService.showLoadingWithMsg('更新中')
         },
         components:{timePicker},
         methods: {

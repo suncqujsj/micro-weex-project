@@ -53,6 +53,8 @@ let workingModalMixin  = {
             preheatFinishTig: false, //预热完成指引
             isFooterShow: false,
             isWorking: false,
+            allSeconds_up: null,
+            allSeconds_down: null,
 
             // cmdObj:cmdFun.initAnalysisObj(), //指令解析对象
           
@@ -133,7 +135,8 @@ let workingModalMixin  = {
     
             }
         },
-        analysisFun(analysisObj) {                
+        analysisFun(analysisObj) { 
+            clearInterval(this.queryTimer);    
             this.cmdObj = analysisObj;
         //    nativeService.alert(analysisObj);
 
@@ -150,6 +153,12 @@ let workingModalMixin  = {
                 this.isCavityWorking = true;
                 this.analysisWorkingFun(analysisObj.down_cavity,this.pages[1].tabs);
             }
+            if(this.index==0 && upCavityStatus==3){
+                this.queryRunTimer(6);//6秒轮询 
+            }
+            if(this.index==1 && downCavityStatus==3){
+                this.queryRunTimer(6);//6秒轮询 
+            }
         },
         //  countDownRunTimer(timeSet){
         //     var self = this;
@@ -157,17 +166,34 @@ let workingModalMixin  = {
         //         self.queryStatus();
         //     },timeSet*1000);
         // },
-        countDownRunTimer(minute,second,timeSet){
+        countDownRunTimerUp(allSeconds,timeSet){
             var self = this;
-            var allSeconds = minute*60+second;
             var countDownTimer = setInterval(function(){
                 if(self.isTimerStop||allSeconds<=0){
+                    self.allSeconds_up = null;
                     clearInterval(countDownTimer);
                     return;
                 }
                 if(allSeconds<=60 && allSeconds>0){
                      allSeconds--;   
                      self.tag_next = '秒';
+                     self.allSeconds_up = allSeconds;
+                     self.workSpecialStatusText = allSeconds;
+                }
+            },timeSet*1000);
+        },
+        countDownRunTimerDown(allSeconds,timeSet){
+            var self = this;
+            var countDownTimerDown = setInterval(function(){
+                if(self.isTimerStop||allSeconds<=0){
+                    self.allSeconds_down = null;
+                    clearInterval(countDownTimerDown);
+                    return;
+                }
+                if(allSeconds<=60 && allSeconds>0){
+                     allSeconds--;   
+                     self.tag_next = '秒';
+                     self.allSeconds_down = allSeconds;
                      self.workSpecialStatusText = allSeconds;
                 }
             },timeSet*1000);
@@ -257,8 +283,13 @@ let workingModalMixin  = {
                this.probeProgress = '烹饪完成';
                this.cancleBtnText = '完成';
                this.cancleIcon = 'img/finish_icon@2x.png';
-               this.countDownRunTimer(0,0,1);
-              
+               if(this.index==0){
+                    this.countDownRunTimerUp(0,0,1);
+               }
+               if(this.index==1){
+                    this.countDownRunTimerDown(0,0,1);
+                }
+                    
             }
             // 不是烹饪完成 ，并且处于预热中状态
              if(analysisObj.workingState.value != 4 && analysisObj.displaySign.preheat == 1){
@@ -301,7 +332,7 @@ let workingModalMixin  = {
 
             //倒计时按照设计来
             if(this.timeShow&&allSeconds>0){
-                if(allSeconds>60*60){ //大于1小时，有‘时’显示
+                if(allSeconds>=60*60){ //大于1小时，有‘时’显示
                     if(_hour>9){
                         this.hourMore10 = true;
                     }
@@ -328,8 +359,21 @@ let workingModalMixin  = {
                         }
                         this.workSpecialStatusText = allSeconds;
                         this.tag_next = '秒';
-                        this.countDownRunTimer(_minute,_second,1);
-                    
+                        if(this.index==0){
+                            if(this.allSeconds_up){
+                                this.countDownRunTimerUp(this.allSeconds_up,1);
+                            } else{
+                                this.countDownRunTimerUp(allSeconds,1);
+                            }
+                        }
+                        if(this.index==1){
+                            if(this.allSeconds_down){
+                                this.countDownRunTimerDown(this.allSeconds_down,1);
+                            } else{
+                                this.countDownRunTimerDown(allSeconds,1);
+                            }
+                        }
+                      
                     }
                     //this.countDownRunTimer(1);//1秒03轮询
                     

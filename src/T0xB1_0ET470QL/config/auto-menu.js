@@ -330,7 +330,7 @@ let data = [
                 }, 
                 {
                     'icon': '',
-                    'text': '芝心虾仁培根披萨',
+                    'text': '芝心培根虾仁披萨',
                     'mode': 0xE0,
                     time:{
                         set: false,

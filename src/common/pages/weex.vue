@@ -181,24 +181,15 @@
         </modal>
         <!--<child-lock :modalVisibility="modalVisibility" :childLock="childLock" :closeModal="closeModal"></child-lock>-->
 
+        <!--提示弹窗-->
         <midea-dialog :title="warningDialog.title"
                       :show="warningDialog.show"
                       :single="true"
-                     
+                      noFooter="true"
                       @mideaDialogConfirmBtnClicked="knowClicked"
                       :content="warningDialog.content"
                       mainBtnColor="#FFB632"
         >
-        </midea-dialog>
-         <!--故障提示弹窗-->
-        <midea-dialog :title="warningDialogTitle"
-                        :show="warningDialogShow"
-                        :single="true"
-                        noFooter="true"
-                        @mideaDialogConfirmBtnClicked="knowClicked"
-                        :content="warningDialogContent"
-                        mainBtnColor="#FFB632"
-                        >
         </midea-dialog>
         
         <!--确定/取消弹窗-->
@@ -262,14 +253,17 @@
             </div>
 
             <div class="detail_section" v-if="!finishStatus" @click="setting(cmdObj)">
-                <text class="detail_text">{{cmdObj.mode.text}} {{cmdObj.temperature.upLowTemperature>0?cmdObj.temperature.upLowTemperature:''}}</text>
-                <text class="temp_text">{{cmdObj.temperature.upLowTemperature>0?"°":''}}</text>
-            </div>
-            <div class="detail_section" v-if="hasSetting">
-                <div class="edit_section" @click="setting(cmdObj)">
-                    <image class="setting_icon" src="img/edit_icon@2x.png" ></image>
+                <div class="detail_item">
+                    <text class="detail_text">{{cmdObj.mode.text}} {{cmdObj.temperature.upLowTemperature>0?cmdObj.temperature.upLowTemperature:''}}</text>
+                    <text class="temp_text">{{cmdObj.temperature.upLowTemperature>0?"°":''}}</text>
+                </div>
+                <div class="detail_item" v-if="hasSetting">
+                    <div class="edit_section">
+                        <image class="setting_icon" src="img/edit_icon@2x.png" ></image>
+                    </div>
                 </div>
             </div>
+          
             <div class="footer_section" v-if="isFooterShow">
                 <div class="btn_content">
                     <div class="btn_section">
@@ -419,7 +413,7 @@
                 })
             },
             openMorePage: function(){
-                nativeService.goTo('test1.js', {animated: true});
+                nativeService.goTo('more.js', {animated: true});
             },
             onTabClicked: function(index){
                 // debugger;

@@ -284,6 +284,17 @@
             </div>
 
             <div class="detail_section" v-if="!finishStatus" @click="setting(workingAnalysisObj)">
+                <div class="detail_item">
+                    <text class="detail_text">{{workingAnalysisObj.mode.text}} {{workingAnalysisObj.temperature.upLowTemperature>0?workingAnalysisObj.temperature.upLowTemperature:''}}</text>
+                    <text class="temp_text">{{workingAnalysisObj.temperature.upLowTemperature>0?"°":''}}</text>
+                </div>
+                <div class="detail_item" v-if="hasSetting">
+                    <div class="edit_section">
+                        <image class="setting_icon" src="img/edit_icon@2x.png" ></image>
+                    </div>
+                </div>
+            </div>
+           <!-- <div class="detail_section" v-if="!finishStatus" @click="setting(workingAnalysisObj)">
                 <text class="detail_text">{{workingAnalysisObj.mode.text}} {{workingAnalysisObj.temperature.upLowTemperature>0?workingAnalysisObj.temperature.upLowTemperature:''}}</text>
                 <text class="temp_text">{{workingAnalysisObj.temperature.upLowTemperature>0?"°":''}}</text>
             </div>
@@ -291,7 +302,7 @@
                 <div class="edit_section" @click="setting(workingAnalysisObj)">
                     <image class="setting_icon" src="img/edit_icon@2x.png" ></image>
                 </div>
-            </div>
+            </div>-->
             <div class="footer_section" v-if="isFooterShow">
                 <div class="btn_content">
                     <div class="btn_section">
@@ -457,7 +468,6 @@
             tabClicked(tabIndex) {
                 let {constant,pages,cmdObj} = this;
                 this.index = tabIndex;
-                this.countDownTime = null;
                 this.dialogSetting(cmdObj);
                 // this.queryStatus(pages,constant.device,this.index);
                 let downCavityStatus = cmdObj.down_cavity.workingState.value;

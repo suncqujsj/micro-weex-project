@@ -278,6 +278,7 @@ export default {
       // message.setByte(messageBody, 14, params.temperature);
       message.setByte(messageBody, 15, params.isFireAmountChange?params.fireAmount/10:0xff);
       message.setByte(messageBody, 16, params.isSteamAmountChange?(params.steamAmount || params.weight/10):0xff);
+      message.setByte(messageBody, 18,  0xff);
     }
     if(controltype == 2){//探针类下发
       message.setByte(messageBody, 0, 0x22);
@@ -298,7 +299,7 @@ export default {
       message.setByte(messageBody, 18, params.probeTemperature);
     }
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
-    // nativeService.alert(this.cmdToEasy(sendcmd));
+    // nativeService.alert(this.cmdTo16Hex(sendcmd));
     return sendcmd;
   },
   //取消工作指令

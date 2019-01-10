@@ -162,7 +162,7 @@ const deviceMessageMixin = {
             this.current.time = time;
             this.current.second = cmdObj.timeRemaining.second;
             this.current.temperature = cmdObj.temperature.upLowTemperature;
-            this.currentItem.preheat.default = cmdObj.displaySign.preheat?true:false;
+            this.current.preheat = cmdObj.displaySign.preheat?true:false;
             this.current.fireAmount = cmdObj.fire.value;
             this.current.steamAmount = cmdObj.steam.value;
             this.current.weight = cmdObj.weight.value;
@@ -175,7 +175,7 @@ const deviceMessageMixin = {
         controlDevice(jsonCmd, callbackData){
             let context = this;
             let deviceCmd = cmdFun.createControlMessage(jsonCmd, callbackData);
-            // this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
+            this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
             // return;
             nativeService.showLoading();
             // nativeService.alert(cmdFun.cmdToEasy(deviceCmd));

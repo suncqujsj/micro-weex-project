@@ -419,7 +419,7 @@
                 })
             },
             openMorePage: function(){
-                nativeService.goTo('more.js', {animated: true});
+                nativeService.goTo('test1.js', {animated: true});
             },
             onTabClicked: function(index){
                 // debugger;

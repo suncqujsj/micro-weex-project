@@ -16,6 +16,7 @@
                 ]">{{item}}</text>
             </div>
         </scroller>
+        <text class="unit">{{unit}}</text>
     </div>
 </template>
 <script>
@@ -42,6 +43,10 @@ export default {
         listItem: {
             type: Number,
             default: 10
+        },
+        unit: {
+            type: String,
+            default: ''
         },
         target: {
             type: String,
@@ -98,7 +103,6 @@ export default {
         },
         scrollEnd(event) {
             const el = this.$refs[this.ref][0]
-            nativeService.alert(this.ref);
             dom.scrollToElement(el, { offset: this.itemIndex * 70 })
             this.$emit('onChange', {index: this.pickerIndex, value: this.listArray[this.itemIndex], ref: this.ref})
         }
@@ -128,12 +132,18 @@ export default {
 <style>
 .wrap {
   flex-direction: row;
+    justify-content: center;
+    align-items: center;
   background-color: #ffffff;
 }
 .scroller {
-  flex: 1;
+  flex: 2;
   align-content: center;
   align-items: center;
+}
+.unit{
+    font-size: 40px;
+    flex:1;
 }
 .list-item {
   width: 300px;

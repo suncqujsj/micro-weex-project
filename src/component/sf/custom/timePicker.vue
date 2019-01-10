@@ -3,25 +3,25 @@
         <midea-header title="scrollPicker 滚动选择器 " :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <scroller class="scroller">
             <!--<text class="padding14 desc">scrollPicker在弹窗中使用，也可以直接在当前页面使用，但不能在scroller中使用，除非此时scroller滚动功能还没有触发。也就是说页面高度小于屏幕高度时，是可以在scroll中使用scrollPicker的。（因为scroller互相嵌套，会有滚动冲突）</text>-->
-            <text class="sub-hd padding14">1.直接在界面上显示scrollPicker</text>
-            <midea-scroll-picker :listArray="list"  @onChange="changeValue"></midea-scroll-picker>
+            <!--<text class="sub-hd padding14">1.直接在界面上显示scrollPicker</text>-->
+            <!--<midea-scroll-picker :listArray="list"  @onChange="changeValue"></midea-scroll-picker>-->
             <!--<text class="sub-hd padding14">2.弹窗中使用scrollPicker</text>-->
             <!--<midea-button text="单个scrollPicker" @mideaButtonClicked="showBox(1)"></midea-button>-->
-            <!--<text class="sub-hd padding14">3.弹窗中使用多个scrollPicker</text>-->
-            <!--<midea-button text="多个scrollPicker" @mideaButtonClicked="showBox(2)"></midea-button>-->
+            <text class="sub-hd padding14">3.弹窗中使用多个scrollPicker</text>
+            <midea-button text="多个scrollPicker" @mideaButtonClicked="showBox(2)"></midea-button>
         </scroller>
         <!--<midea-confirm-box :show="show[1]" @leftBtnClick="cancel(1)" @rightBtnClick="confirm(1)" @mideaPopupOverlayClicked="close(1)">-->
             <!--<div class="scroll-picker-wrap">-->
                 <!--<midea-scroll-picker :listArray="list" @onChange="changeValue"></midea-scroll-picker>-->
             <!--</div>-->
         <!--</midea-confirm-box>-->
-        <!--<midea-confirm-box :show="show[2]" @leftBtnClick="cancel(2)" @rightBtnClick="confirm(2)" @mideaPopupOverlayClicked="close(2)">-->
-            <!--<div class="scroll-picker-wrap row-sb">-->
-                <!--<template v-for="(item, index) in time">-->
-                    <!--<midea-scroll-picker v-if="(index === 0 && max[index]) || (index > 0)" :pickerIndex="index" :wrapWidth="perPickerWidth" :listArray="item" :listItem="value[index]" @onChange="changeValue"></midea-scroll-picker>-->
-                <!--</template>-->
-            <!--</div>-->
-        <!--</midea-confirm-box>-->
+        <midea-confirm-box :show="show[2]" @leftBtnClick="cancel(2)" @rightBtnClick="confirm(2)" @mideaPopupOverlayClicked="close(2)">
+            <div class="scroll-picker-wrap row-sb">
+                <template v-for="(item, index) in time">
+                    <midea-scroll-picker v-if="(index === 0 && max[index]) || (index > 0)" :pickerIndex="index" :unit="units[index]" :wrapWidth="perPickerWidth" :listArray="item" :listItem="value[index]" @onChange="changeValue"></midea-scroll-picker>
+                </template>
+            </div>
+        </midea-confirm-box>
     </div>
 </template>
 <style scoped>
@@ -41,8 +41,8 @@
     import base from '@/midea-demo/base'
     import mideaButton from '@/midea-component/button.vue'
     import mideaConfirmBox from '@/midea-component/confirmBox.vue'
-    // import mideaScrollPicker from '@/component/sf/custom/base/scrollPicker.vue'
-    import mideaScrollPicker from '@/midea-component/scrollPicker.vue'
+    import mideaScrollPicker from '@/component/sf/custom/base/scrollPicker.vue'
+    // import mideaScrollPicker from '@/midea-component/scrollPicker.vue'
     import nativeService from '@/common/services/nativeService'
 
     module.exports = {
@@ -78,6 +78,7 @@
                     {index:9, value:9},
                 ],
                 time:this.initTime(),
+                units:['时','分', '秒'],
                 count:0,
             }
         },

@@ -238,7 +238,7 @@
           type: 'confirm',
           working: this.working,
           device:this.device,
-          tabs:this.tabs,
+          // tabs:this.tabs,
           isProbe: this.isProbe,
           whichCavity: this.whichCavity
         });

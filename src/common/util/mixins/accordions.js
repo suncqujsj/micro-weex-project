@@ -129,7 +129,11 @@ const accordionMixin = {
                 steamSwitch:false,
                 recipeId:null,
                 probeTemperature: null,
-                probe: false
+                probe: false,
+                isTemperatureChange: false,
+                isTimeChange: false,
+                isSteamAmountChange: false,
+                isFireAmountChange: false
             }
         },
         resetState: function(){
@@ -138,6 +142,19 @@ const accordionMixin = {
             this.currentItem = null;
         },
         handlePickerChange(data, key){
+            //记录哪个key的值修改到
+            if(key=='temperature' && this.current[key]!=data){
+                this.current.isTemperatureChange = true;
+            }
+            if(key=='time' && this.current[key]!=data){
+                this.current.isTimeChange = true;
+            }
+            if(key=='steamAmount' && this.current[key]!=data){
+                this.current.isSteamAmountChange = true;
+            }
+            if(key=='fireAmount' && this.current[key]!=data){
+                this.current.isFireAmountChange = true;
+            }
             this.current[key] = data;
             // nativeService.alert(this.current);
         },
@@ -147,7 +164,11 @@ const accordionMixin = {
         },
         openDialog(){
             this.show = true;
-            // nativeService.alert(this.currentItem);
+            //弹出时，重新初始值
+            this.current.isTemperatureChange = false;
+            this.current.isTimeChange = false;
+            this.current.isSteamAmountChange = false;
+            this.current.isFireAmountChange = false;
             this.current.preheat = this.currentItem['preheat'].default;
             this.current.steamSwitch = this.currentItem['steamSwitch'].default;
         },
@@ -171,6 +192,11 @@ const accordionMixin = {
                 recipeId:this.setValue('recipeId'),
                 probeTemperature: this.setValue('probeTemperature'),
                 probe:  this.currentItem.probe,
+                second: this.current.second,
+                isTemperatureChange:  this.current.isTemperatureChange,
+                isTimeChange: this.current.isTimeChange,
+                isSteamAmountChange: this.current.isSteamAmountChange,
+                isFireAmountChange: this.current.isFireAmountChange
             };
             
             // if(jsonCmd.mode === 0xE0) { // 自动菜单

@@ -93,12 +93,12 @@ let workingModalMixin  = {
             //this.show = false;
             //this.cmdObj = analysisObj;
             // nativeService.alert(analysisObj);
+            clearInterval(this.queryTimer);
             this.setWarningDialog("",null,false);
             this.modalVisibility = false;
             this.isWorkingPage = false;
                
             //提示
-
             if(analysisObj.displaySign.isError){
                 this.setWarningDialog("主人，您的设备发生故障了，请联系售后人员");
             }
@@ -120,6 +120,9 @@ let workingModalMixin  = {
                 // });
                 !this.modalVisibility && this.showModal();
             } 
+            if(analysisObj.workingState.value == 3){
+                this.queryRunTimer(6);//6秒轮询 
+            }
             if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6) {
                 this.isWorkingPage = true;
                 this.analysisWorkingFun(analysisObj,tabs);
@@ -272,14 +275,16 @@ let workingModalMixin  = {
 
             //倒计时按照设计来
             if(this.timeShow&&allSeconds>0){
-                if(allSeconds>60*60){ //大于1小时，有‘时’显示
+                if(allSeconds>=60*60){ //大于1小时，有‘时’显示
                     if(_hour>9){
                         this.hourMore10 = true;
                     }
                     this.workSpecialStatusText = _hour+"  "+(_minute>9?_minute:'0'+_minute);
                     this.tag_next = '分';
                     this.hasHour = true;
-                }else if(allSeconds>2*60){//大于2分钟，小于1小时，只显示分
+                }
+                else if(allSeconds<60*60 && allSeconds>2*60){//大于2分钟，小于1小时，只显示分
+                    // if(allSeconds==60*60){_minute=59;}
                     this.workSpecialStatusText = _minute;
                     this.tag_next = '分';
                     this.hasHour = false;

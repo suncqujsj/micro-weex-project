@@ -224,6 +224,7 @@ export default {
  
   //控制启动指令
   createControlMessage(params,callbackData) {
+    // nativeService.alert(params); 
     var time = params.minute;
     var hour = time/60;
     var minute = time%60;
@@ -266,14 +267,17 @@ export default {
       message.setByte(messageBody, 4, 0xff);
       message.setByte(messageBody, 5, 0xff);
       message.setByte(messageBody, 6, params.preheat?1:0);
-      message.setByte(messageBody, 7, hour);
-      message.setByte(messageBody, 8, minute);
-      message.setByte(messageBody, 9, second);
+      message.setByte(messageBody, 7, params.isTimeChange?hour:0xff);
+      message.setByte(messageBody, 8, params.isTimeChange?minute:0xff);
+      message.setByte(messageBody, 9, params.isTimeChange?second:0xff);
       message.setByte(messageBody, 10, set_mode);
-      message.setByte(messageBody, 12, params.temperature);
+      message.setByte(messageBody, 11,  0xff);
+      message.setByte(messageBody, 12,  params.isTemperatureChange?params.temperature:0xff);
+      message.setByte(messageBody, 13,  0xff);
+      message.setByte(messageBody, 14,  0xff);
       // message.setByte(messageBody, 14, params.temperature);
-      message.setByte(messageBody, 15, params.fireAmount/10);
-      message.setByte(messageBody, 16, params.steamAmount || params.weight/10);
+      message.setByte(messageBody, 15, params.isFireAmountChange?params.fireAmount/10:0xff);
+      message.setByte(messageBody, 16, params.isSteamAmountChange?(params.steamAmount || params.weight/10):0xff);
     }
     if(controltype == 2){//探针类下发
       message.setByte(messageBody, 0, 0x22);

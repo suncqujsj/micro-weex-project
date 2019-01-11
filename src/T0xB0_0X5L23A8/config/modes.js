@@ -34,7 +34,7 @@ let modes = [
                 fireAmount:{
                     set:true,
                     default:10,
-                    range:[10,50,20,80,100,20],
+                    range:[1,5,2,8,10,2],
                     hide: true
                 },
                

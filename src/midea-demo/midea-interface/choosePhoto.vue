@@ -5,41 +5,36 @@
         <textarea type="text" placeholder="Input Text" class="textarea" :value="messageParamString" @input="dataChange" rows=2 />
         <midea-button text="选择照片" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
-        <midea-title-bar title="代码"></midea-title-bar>
-        <text class="display-block">
-            nativeService.choosePhoto(this.messageParam).then( (resp) => { this.result = resp } )
-        </text>
-        <midea-title-bar title="结果"></midea-title-bar>
-
         <scroller>
-            <image :src="result.data" class="photo"></image>
-            <text class="display-block">{{result?('返回类型:'+typeof result):''}}</text>
+            <midea-title-bar title="代码"></midea-title-bar>
+            <text class="display-block">
+                nativeService.choosePhoto(this.messageParam).then( (resp) => { this.result = resp } )
+            </text>
+            <midea-title-bar title="结果"></midea-title-bar>
+
+            <image v-if="result.filePath" :src="result.filePath" class="photo":style="{width:'750px', height:result.height||'750px'}" @load="onImageLoad($event, result)"></image>
+            <text class="display-block">{{result?('返回类型:'+typeof result):''}}{{height}}</text>
             <text class="display-block">{{result}}</text>
         </scroller>
     </div>
 </template>
 <style scoped>
 .textarea {
-  font-size: 30px;
-  width: 750px;
-  border-color: gray;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-bottom: 30px;
+    font-size: 30px;
+    width: 750px;
+    border-color: gray;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 30px;
 }
 .display-block {
-  font-size: 30px;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+    font-size: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 .photo {
-  margin: 5px;
-  width: 200px;
-  height: 200px;
-  border-color: #e2e2e2;
-  border-width: 1px;
 }
 </style>
 <script>
@@ -57,9 +52,12 @@ module.exports = {
             messageParam: {
                 compressRage: 60,
                 type: 'jpg',
-                isNeedBase64: true
+                isNeedBase64: false
             },
-            result: ''
+            result: {
+                filePath: null
+            },
+            height: null
         }
     },
     computed: {
@@ -77,11 +75,19 @@ module.exports = {
         mideaButtonClicked() {
             nativeService.choosePhoto(this.messageParam).then(
                 (resp) => {
-                    this.result = resp
+                    this.result = {...resp}
+                    // this.result = {...resp, ...{'filePath': 'https://gw.alicdn.com/tps/TB1bEMYKXXXXXaLaXXXXXXXXXXX-360-388.png'}}
                 }
             ).catch((error) => {
                 this.result = "error: " + JSON.stringify(error || {})
             })
+        },
+        // 读取图片信息, 动态绑定图片高度
+        onImageLoad(element) {
+            // nativeService.alert("onImageLoad")
+            if (element && element.size && !isNaN(element.size.naturalHeight) && !isNaN(element.size.naturalWidth)) {
+                this.$set(this.result.height, 'height', ((element.size.naturalHeight * 750) / element.size.naturalWidth) || 750 + 'px')
+            }
         }
     },
     created() {

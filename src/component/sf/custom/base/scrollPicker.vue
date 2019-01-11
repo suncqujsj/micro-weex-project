@@ -16,6 +16,7 @@
                 ]">{{item}}</text>
             </div>
         </scroller>
+        <text class="unit">{{unit}}</text>
     </div>
 </template>
 <script>
@@ -42,6 +43,10 @@ export default {
         listItem: {
             type: Number,
             default: 10
+        },
+        unit: {
+            type: String,
+            default: ''
         },
         target: {
             type: String,
@@ -127,12 +132,19 @@ export default {
 <style>
 .wrap {
   flex-direction: row;
+    justify-content: center;
+    align-items: center;
   background-color: #ffffff;
 }
 .scroller {
-  flex: 1;
+  flex: 3;
   align-content: center;
   align-items: center;
+}
+.unit{
+    font-size: 40px;
+    flex:1;
+    margin-left: -100px;
 }
 .list-item {
   width: 300px;

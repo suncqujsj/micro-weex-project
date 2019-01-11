@@ -30,9 +30,10 @@
     import nativeService from "../common/services/nativeService";
     import commonMixin from  "@/common/util/mixins/common"
     import voiceMixin from  "@/common/util/mixins/voice.js"
+    import voiceOtaMixin from  "@/common/util/mixins/voiceOta"
 
     export default {
-        mixins: [commonMixin, voiceMixin],
+        mixins: [commonMixin, voiceMixin, voiceOtaMixin],
         data(){
             return {
                 authIndex:0,
@@ -62,7 +63,8 @@
             }
         },
         components: {mideaHeader, mideaCell, mideaSwitch2},
-        created(){},
+        created(){
+        },
         computed:{
         }
     }

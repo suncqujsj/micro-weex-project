@@ -21,6 +21,9 @@ let commonMixin = {
         back2Native(){
             nativeService.backToNative()
         },
+        openPage: function(pageName){
+            nativeService.goTo(`${pageName}.js`, {animated: true});
+        },
         isipx: function () {
             return weex && (
                 weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6' //iphoneX

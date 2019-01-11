@@ -280,7 +280,7 @@ export default {
       message.setByte(messageBody, 8, params.isTimeChange?minute:0xff);
       message.setByte(messageBody, 9, params.isTimeChange?second:0xff);
       message.setByte(messageBody, 10, set_mode);
-      message.setByte(messageBody, 11,  0xff);
+      message.setByte(messageBody, 11,   params.isTemperatureChange?0:0xff);
       message.setByte(messageBody, 12,  params.isTemperatureChange?params.temperature:0xff);
       message.setByte(messageBody, 13,  0xff);
       message.setByte(messageBody, 14,  0xff);
@@ -318,7 +318,7 @@ export default {
 
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
   
-    nativeService.alert(this.cmdToEasy(sendcmd));
+    // nativeService.alert(this.cmdToEasy(sendcmd));
 
     return sendcmd;
   },

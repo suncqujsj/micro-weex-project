@@ -8,15 +8,15 @@
     .light_section{
 
     }
-    .light_icon{
+   .light_icon{
         .pos(a);
         top: 0px;
-        right: 150px;
+        right: 136px;
         width: 83px;
         height: 288px;
     }
     .light_on{
-        right: 122px;
+        right: 108px;
         width: 140px;
         height: 330px;
     }

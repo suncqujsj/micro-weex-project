@@ -206,7 +206,21 @@
 
          <!-- 工作页面 -->
         <div class="working_section all_section" v-if="isWorkingPage" :style="{height: wrapHeight}">
-            <midea-header bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png" :title="constant.device.page_title" titleText="white" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2Native"></midea-header>
+            <midea-header bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png" :title="constant.device.page_title" titleText="white" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2Native">
+                 <div slot="customerContent" class="header-top-wrapper">
+                    <div class="header-top-inner-wrapper">
+                        <div class="header-right-image-wrapper" @click="openCloudRecipe">
+                            <image class="header-right-image" :src="'img/header/public_ic_cloud_recipe@3x.png'"></image>
+                        </div>
+                        <div class="header-right-image-wrapper" @click="childLock(true)">
+                            <image class="header-right-image" :src="'img/header/public_ic_babylock@3x.png'"></image>
+                        </div>
+                        <div class="header-right-image-wrapper" @click="openMorePage">
+                            <image class="header-right-image" :src="'img/header/public_ic_lots@3x.png'"></image>
+                        </div>
+                    </div>
+                </div>
+            </midea-header>
              <!--测试copy指令-->
             <!--<div><text @click="setContent">下发指令:{{testCmd}}</text></div>-->
             <div class="progress_content"  @longpress="onlongpressQuery()"><!--隐藏长按组件触发03查询，方便调试-->
@@ -398,7 +412,7 @@
                 return{
                     height: `${progress_radius * 2}px`,
                     width: `${progress_radius * 2}px`,
-                    marginTop: `${wrapHeight/2-progress_radius*2 -60}px`
+                    marginTop: `${wrapHeight/2-progress_radius*2}px`
                 }
             }
         },

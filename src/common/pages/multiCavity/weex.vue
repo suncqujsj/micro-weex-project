@@ -193,10 +193,6 @@
         >
         </midea-dialog>
 
-        <!-- 炉灯 -->
-        <!--<image :class="['light_icon',cmdObj.light.value && 'light_on']" :src="lightImg"  @click="sendLightCmd(cmdObj.light.value,tabs,constant.device)"></image>-->
-        <light :hasLight="constant.device.hasLight" :lightValue="cmdObj.up_cavity.light.value" :event="sendLightCmd"></light>
-
         <!--故障提示弹窗-->
         <midea-dialog :title="warningDialogTitle"
                         :show="warningDialogShow"
@@ -313,7 +309,7 @@
                             <text class="decs_text">{{cancleBtnText}}</text>
                         </div>
                     </div>
-                    <div class="btn_section" v-if="hasStopOrContinueBtn" >
+                    <div class="btn_section" v-if="hasStopOrContinueBtn && hasStopButton" >
                         <div class="image_section" @click="startOrPause()">
                             <image class="icon_image" :src="btnSrc"></image>
                         </div>
@@ -331,6 +327,10 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 炉灯 -->
+            <!--<image :class="['light_icon',cmdObj.light.value && 'light_on']" :src="lightImg"  @click="sendLightCmd(cmdObj.light.value,tabs,constant.device)"></image>-->
+            <light :hasLight="constant.device.hasLight" :lightValue="workingAnalysisObj.light.value" :event="sendLightCmd"></light>
         </div>
         <!--<working-component :analysisObj="cmdObj.up_cavity" :isCavityWorking="isUpCavityWorking" :pages="pages"></working-component>-->
 

@@ -303,25 +303,6 @@ let commonMixin = {
             // nativeService.alert(params);
             // return;
             return nativeService.requestDataTransmit(params)
-        },
-
-        /**
-         * 语音家电模组OTA
-         * 固件更新检查
-         */
-        otaCheckUpdate(){
-            let params = {
-                type: '0xAI',
-                queryStrings: {
-                    'serviceUrl': "/v1/device/ota/check"
-                },
-                transmitData: {
-                    deviceId: this.deviceId
-                }
-            };
-            // nativeService.alert(params);
-            // return;
-            return nativeService.requestDataTransmit(params)
         }
     }
 

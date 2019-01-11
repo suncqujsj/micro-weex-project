@@ -10,7 +10,7 @@
 
         <list style="margin-top: 24px" show-scrollbar="true">
             <template v-for="item in list">
-                <midea-cell v-if="item.type === 'link'" :title="item.title" :hasArrow="true" :hasMargin="true" :hasTopBorder="false" :clickActivied="true" @mideaCellClick="test"></midea-cell>
+                <midea-cell v-if="item.type === 'link'" :title="item.title" :hasArrow="true" :hasMargin="true" :hasTopBorder="false" :clickActivied="true" @mideaCellClick="item.event"></midea-cell>
                 <template v-if="item.type === 'switch' && !item.hide">
                     <midea-cell :title="item.title" :hasArrow="false">
                         <midea-switch2 :checked="item.value" @change="item.onchange" slot="value"> </midea-switch2>
@@ -53,9 +53,10 @@
                         onchange: this.onControlSwitchChange
                     },
                     {
-                        title: '软件更新(开发中)',
+                        title: '语音固件升级(ing)',
                         type: 'link',
-                        value: ''
+                        value: '',
+                        event: ()=>{this.openPage('ota')}
                     }
                 ]
             }

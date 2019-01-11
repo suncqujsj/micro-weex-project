@@ -77,10 +77,6 @@ let workingModalMixin  = {
                 probeProgress: null, //探针工作倒计时
                 probeTempText: "°C",
     
-                warningDialogShow: false,
-                warningDialogTitle: "温馨提示",
-                warningDialogContent: "主人，您的水箱缺水了，要及时添加水哦",
-    
                 showBar:false,
                 actionsheetItems:['确定关闭'],
                 lightImg:"img/light_off@3x.png",
@@ -91,12 +87,13 @@ let workingModalMixin  = {
     methods: {
         analysisFun(analysisObj,tabs) {                
             //this.show = false;
-            //this.cmdObj = analysisObj;
             // nativeService.alert(analysisObj);
             clearInterval(this.queryTimer);
             this.setWarningDialog("",null,false);
             this.modalVisibility = false;
             this.isWorkingPage = false;
+            this.cmdObj = analysisObj;
+            this.probeTempText = '°C';
                
             //提示
             if(analysisObj.displaySign.isError){
@@ -152,7 +149,6 @@ let workingModalMixin  = {
             this.timeShow = false;
             this.hasHour = false;
             this.hourMore10 = false;
-            this.warningDialogShow = false;
             // this.tag_next = '分';
             this.progressShow = true;
             this.finishStatus = false;
@@ -165,7 +161,6 @@ let workingModalMixin  = {
             this.cancleBtnText = '关闭';
             this.cancleIcon = 'img/footer/icon_cancle@2x.png';
 
-            this.cmdObj = analysisObj;
             var _hour = analysisObj.timeRemaining.hour, _minute = analysisObj.timeRemaining.minute, _second = analysisObj.timeRemaining.second;
             var allSeconds = _hour*60*60+_minute*60+_second;
             var progress_step = (10*60-allSeconds)/(10*60)*360; //360度倒计时为例
@@ -229,6 +224,7 @@ let workingModalMixin  = {
                this.progressShow = false;
                this.finishStatus = true;
                this.probeProgress = '烹饪完成';
+               this.probeTempText = '';
                this.cancleBtnText = '完成';
                this.cancleIcon = 'img/finish_icon@2x.png';
                this.countDownRunTimer(0,0,1);
@@ -260,8 +256,6 @@ let workingModalMixin  = {
                 this.timeShow = false;
                 this.hasHour = false;
                 this.workSpecialStatusText = "预热完成";
-                // this.warningDialogShow = true;
-                // this.warningDialogContent = "预热已完成，请放进食物再按'继续'，继续烹饪";
                 this.progressShow = false;
                 this.finishStatus = true;
                 this.preheatFinishTig = true;
@@ -313,9 +307,6 @@ let workingModalMixin  = {
             }else{
                 this.openActionsheet();            
             }
-        },
-        knowClicked(){
-            this.warningDialogShow = false;
         },
          //打开上拉菜单
         openActionsheet: function () {

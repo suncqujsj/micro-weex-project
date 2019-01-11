@@ -10,6 +10,40 @@ let autoMenu = [
             [
                 {
                     'icon': '',
+                    'text': '清蒸鱼',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:10,
+                        range:[5,120,1]
+                    },
+                    temperature:{
+                        set: false,
+                        default:100,
+                        range:null
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x01,
+                        range:null
+                    },
+                },
+                {
+                    'icon': '',
                     'text': '清蒸草鱼香菇',
                     'mode': 0xE0,
                     time:{

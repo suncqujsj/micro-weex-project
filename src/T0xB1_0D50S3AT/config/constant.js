@@ -3,7 +3,7 @@
  * 2018/10/26
  */
 var myDate = new Date();//获取系统当前时间
-var month = myDate.getMonth();
+var month = myDate.getMonth()+1;
 var date = myDate.getDate();
 module.exports = {
     device: {

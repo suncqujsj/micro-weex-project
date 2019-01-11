@@ -468,6 +468,7 @@
             tabClicked(tabIndex) {
                 let {constant,pages,cmdObj} = this;
                 this.index = tabIndex;
+                 this.current = this.initCurrentData();
                 this.dialogSetting(cmdObj);
                 // this.queryStatus(pages,constant.device,this.index);
                 let downCavityStatus = cmdObj.down_cavity.workingState.value;

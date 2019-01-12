@@ -87,7 +87,7 @@ let modes = [
             {
                 'icon': modeIcons[15].dir,
                 'text': modeIcons[15].cn,
-                'mode': 0x40,
+                'mode': 0x47,
                 time:{
                     set: true,
                     default:30,

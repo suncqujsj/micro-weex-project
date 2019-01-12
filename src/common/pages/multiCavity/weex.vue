@@ -440,7 +440,7 @@
                 return{
                     height: `${progress_radius * 2}px`,
                     width: `${progress_radius * 2}px`,
-                    marginTop: `${wrapHeight/2-progress_radius*2 -60}px`
+                    marginTop: `${wrapHeight/2-progress_radius*2}px`
                 }
             }
         },

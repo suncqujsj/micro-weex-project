@@ -1,15 +1,15 @@
 /**
- * Created by sf
+ * Created by parker
  * 2018/10/20
  */
-
+import modeIcons from "../../common/mapping/modeIcons";
 let modes = [
     {
         title: '',
         iconButtons: [
             {
-                'icon': 'assets/img/modes/steam@3x.png',
-                'text': '蒸汽',
+                'icon': modeIcons[16].dir,
+                'text': modeIcons[16].cn,
                 'mode': 0x20,
                 time:{
                     set: true,
@@ -35,8 +35,8 @@ let modes = [
                 }
             },
             {
-                'icon': 'assets/img/modes/descaling_cg@3x.png',
-                'text': '除垢',
+                'icon': modeIcons[10].dir,
+                'text': modeIcons[10].cn,
                 'mode': 0xC1,
                 time:{
                     set: false,
@@ -61,12 +61,13 @@ let modes = [
                     set:false,
                     default:0,
                     range:null
-                }
+                },
+                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
             },
            
             {
-                'icon': 'assets/img/modes/fermentation@3x.png',
-                'text': '发酵',
+                'icon': modeIcons[7].dir,
+                'text': modeIcons[7].cn,
                 'mode': 0xB0,
                 time:{
                     set: true,
@@ -94,8 +95,8 @@ let modes = [
                 }
             },
             {
-                'icon': 'assets/img/modes/dry_hg@3x.png',
-                'text': '烘干',
+                'icon': modeIcons[17].dir,
+                'text': modeIcons[17].cn,
                 'mode': 0xC4,
                 time:{
                     set: true,
@@ -128,8 +129,8 @@ let modes = [
         title: '',
         iconButtons: [
             {
-                'icon': 'assets/img/modes/clean@3x.png',
-                'text': '清洁',
+                'icon': modeIcons[20].dir,
+                'text': modeIcons[20].cn,
                 'mode': 0xC6,
                 time:{
                     set: false,
@@ -152,7 +153,8 @@ let modes = [
                 fireAmount:{
                     set:false,
                     default:0
-                }
+                },
+                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
             },
         ]
     },

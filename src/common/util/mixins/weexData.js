@@ -99,10 +99,10 @@ let workingModalMixin  = {
             if(analysisObj.displaySign.isError){
                 this.setWarningDialog("主人，您的设备发生故障了，请联系售后人员");
             }
-            if(analysisObj.displaySign.lackWater){
+            if(analysisObj.displaySign.lackWater && analysisObj.mode.value!=0xC4){
                 this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
             }
-            if(analysisObj.displaySign.waterBox){
+            if(analysisObj.displaySign.waterBox && analysisObj.mode.value!=0xC4){
                 this.setWarningDialog("主人，您的设备缺水盒了");
 
             }

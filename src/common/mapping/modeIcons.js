@@ -36,5 +36,6 @@ icons[16] = getIcon('蒸汽', 'steam@3x');
 icons[17] = getIcon('烘干', 'dry_hg@3x');
 icons[18] = getIcon('湿烤', 'dry_hg@3x');
 icons[19] = getIcon('ECO', 'ECO@3x');
+icons[20] = getIcon('清洁', 'clean@3x');
 
 export default icons;

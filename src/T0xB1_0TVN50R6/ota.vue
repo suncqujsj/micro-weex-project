@@ -12,6 +12,9 @@
     .item-left,.item-desc{
         .f(13*2px);
     }
+    .item-desc{
+        margin-bottom: 23px;
+    }
     .update-button{
         .radius(12*2px);
     }
@@ -61,11 +64,12 @@
         created(){
             nativeService.getDeviceInfo().then((data)=>{ // 获取deviceId
                 if(data.result && data.result.deviceId ) {
-                    this.deviceId = data.result.deviceId;
+                    // this.deviceId = data.result.deviceId;
+                    // this.deviceId = "mock.2199023365119"; // status '' hasNewVer=false
+                    this.deviceId = 2199023365121; // upgraded hasNewVer=false
                 }
                 return this.getUpgradeState();
             }).then((resp)=>{
-                nativeService.alert(resp);
                 let data = JSON.parse(resp.returnData).data;
                 if(data.status === 'upgrading') { // 发现固件在升级中
                     this.setData(true, data);
@@ -75,6 +79,7 @@
                 }
 
                 this.checkUpgrade().then((resp)=>{ // 发现当前无固件在升级中
+                    // nativeService.alert(resp);
                     let data = JSON.parse(resp.returnData).data;
                     if(data.hasNewVer) {
                         this.setData(true, data.nextFmVer);
@@ -82,7 +87,7 @@
                         return;
                     }
 
-                    this.setData(false, data.currFmVer);
+                    this.setData(false, data.nextFmVer);
                 });
             });
         },

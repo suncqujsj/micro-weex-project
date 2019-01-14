@@ -400,7 +400,7 @@
             let self = this;
             let {constant,pages,index} = this;
             if(this.isipx()){
-                this.srcollPaddingBottom = '80px';
+                this.srcollPaddingBottom = '110px';
             }
             //模拟设备数据
             nativeService.initMockData({

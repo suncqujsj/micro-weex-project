@@ -25,6 +25,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
+                    hide:true,
                     default: false
                 },
                 steamAmount:{
@@ -55,6 +56,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
+                    hide:true,
                     default: false
                 },
                 steamAmount:{
@@ -85,6 +87,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
+                    hide:true,
                     default: true
                 },
                 steamAmount:{
@@ -115,6 +118,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
+                    hide:true,
                     default: false
                 },
                 steamAmount:{
@@ -150,6 +154,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
+                    hide:true,
                     default: false
                 },
                 steamAmount:{
@@ -180,6 +185,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
+                    hide:true,
                     default: false
                 },
                 steamAmount:{
@@ -210,6 +216,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
+                    hide:true,
                     default: false
                 },
                 steamAmount:{
@@ -231,11 +238,11 @@ let modes = [
                 time:{
                     set: true,
                     default:30,
-                    range:[2,720,1]
+                    range:[1,540,1]
                 },
                 temperature:{
                     set: true,
-                    default:35,
+                    default:40,
                     range:[35,45,1]
                 },
                 preheat:{
@@ -277,6 +284,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
+                    hide:true,
                     default: false
                 },
                 steamAmount:{

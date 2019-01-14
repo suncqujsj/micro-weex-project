@@ -11,6 +11,7 @@ module.exports = {
         widget_version: '5.0.3',
         extra1: {
             sn8: '0TVN50R6'
-        }
+        },
+        hideChildLock: true
     }
 };

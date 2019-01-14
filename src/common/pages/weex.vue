@@ -11,7 +11,7 @@
                         <div class="header-right-image-wrapper" @click="openCloudRecipe">
                             <image class="header-right-image" :src="'img/header/public_ic_cloud_recipe@3x.png'"></image>
                         </div>
-                        <div class="header-right-image-wrapper" @click="childLock(true)">
+                        <div v-if="!constant.device.hideChildLock" class="header-right-image-wrapper" @click="childLock(true)">
                             <image class="header-right-image" :src="'img/header/public_ic_babylock@3x.png'"></image>
                         </div>
                         <div class="header-right-image-wrapper" @click="openMorePage">

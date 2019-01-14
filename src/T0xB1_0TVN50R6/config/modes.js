@@ -88,7 +88,7 @@ let modes = [
                 preheat:{
                     set:true,
                     hide:true,
-                    default: true
+                    default: false
                 },
                 steamAmount:{
                     set:false,

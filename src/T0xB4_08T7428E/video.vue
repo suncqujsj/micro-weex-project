@@ -41,7 +41,7 @@
         data() {
             return {
                 ppvideo_initdata: {
-                    user: '13631449763', // userId auth，必填3项字段之一
+                    user: 13631449763, // userId auth，必填3项字段之一
                     password: "",
                     serverAdd: "120.55.73.80:7781", // userId auth，必填3项字段之一
                     relayAddr: "",
@@ -65,7 +65,6 @@
                     // nativeService.alert(data);
                     return nativeService.getDeviceInfo();
                 }).then((data)=>{
-                    nativeService.alert(data);
                     if(data.result && data.result.deviceId) {
                         this.deviceId = data.result.deviceSn;
                     }
@@ -77,15 +76,15 @@
                 let param = {
                     api: "setVideoModelSize",
                     params: {
-                        mode: 0,
-                        width:760,
-                        height: 1080
+                        mode: 5,
+                        width:640,
+                        height: 360
                     }
                 };
                 ppvideoModule.ppvideoInterface(
                     this.$refs.ppvideo,
                     param, (result)=>{
-                    nativeService.toast(result);
+                    // nativeService.alert('success');
                 } ,(result)=>{
                     nativeService.alert(result);
                 })
@@ -97,7 +96,7 @@
                     this.$refs.ppvideo,
                     {
                         api: "startLive",
-                        params: { captureId: 25288767567528 } // device sn，必填3项字段之一
+                        params: { captureId: '0000B411108T7428E18A150000710000' } // device sn，必填3项字段之一
                     },
                     () => {
                         nativeService.toast("start 成功");

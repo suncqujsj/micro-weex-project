@@ -69,9 +69,27 @@
                     if(data.result && data.result.deviceId) {
                         this.deviceId = data.result.deviceSn;
                     }
+                    this.setVideoModeSize();
                 });
             },
 
+            setVideoModeSize(){
+                let param = {
+                    api: "setVideoModelSize",
+                    params: {
+                        mode: 0,
+                        width:760,
+                        height: 1080
+                    }
+                };
+                ppvideoModule.ppvideoInterface(
+                    this.$refs.ppvideo,
+                    param, (result)=>{
+                    nativeService.toast(result);
+                } ,(result)=>{
+                    nativeService.alert(result);
+                })
+            },
             start() {
                 // nativeService.alert(JSON.stringify(ppvideoModule) == '{}');
                 // return;

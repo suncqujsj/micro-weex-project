@@ -41,6 +41,7 @@ let autoMenu = [
                         default: 0x01,
                         range:null
                     },
+                    settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 },
                 {
                     'icon': '',
@@ -75,6 +76,7 @@ let autoMenu = [
                         default: 0x41,
                         range:null
                     },
+                    settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
                         foodMaterial:'香菇 34克\n' +
                         '草鱼 134克\n' +
@@ -127,6 +129,7 @@ let autoMenu = [
                         default: 0x42,
                         range:null
                     },
+                    settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
                         foodMaterial:'金针菇 200克\n' +
                         '水发粉丝 250克\n' +
@@ -186,6 +189,7 @@ let autoMenu = [
                         default: 0x43,
                         range:null
                     },
+                    settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
                         foodMaterial:'花蛤肉 65克\n' +
                         '鸡蛋 120克\n' +
@@ -249,6 +253,7 @@ let autoMenu = [
                         default: 0x47,
                         range:null
                     },
+                    settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
                         foodMaterial:'南瓜 25克\n' +
                         '牛奶 100克\n' +
@@ -294,6 +299,7 @@ let autoMenu = [
                         default: 0x48,
                         range:null
                     },
+                    settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
                         foodMaterial:'鲳鱼 500克\n'+
                         '白糖 10克\n'+
@@ -362,6 +368,7 @@ let autoMenu = [
                         default: 0x49,
                         range:null
                     },
+                    settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
                         foodMaterial:'牛肉 300克\n' +
                         '蒸肉米粉 100克\n' +
@@ -431,6 +438,7 @@ let autoMenu = [
                         default: 0x4A,
                         range:null
                     },
+                    settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
                         foodMaterial:'鲈鱼 100克\n' +
                         '葱 4克\n' +
@@ -482,6 +490,7 @@ let autoMenu = [
                         default: 0x4B,
                         range:null
                     },
+                    settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
                         foodMaterial:'鸡肉 400克\n' +
                         '葱花 10克\n' +
@@ -543,6 +552,7 @@ let autoMenu = [
                         default: 0x4C,
                         range:null
                     },
+                    settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
                         foodMaterial:'低筋面粉 90克\n' +
                         '高筋面粉 200克\n' +
@@ -611,6 +621,7 @@ let autoMenu = [
                         default: 0x4D,
                         range:null
                     },
+                    settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
                         foodMaterial:'鲈鱼 350克\n' +
                         '彩椒 20克\n' +
@@ -663,6 +674,7 @@ let autoMenu = [
                         default: 0x4E,
                         range:null
                     },
+                    settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
                         foodMaterial:'干贝 30克\n' +
                         '丝瓜 200克\n' +
@@ -719,6 +731,7 @@ let autoMenu = [
                         default: 0x4F,
                         range:null
                     },
+                    settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
                         foodMaterial:'水发香菇 55克\n' +
                         '鳕鱼肉 150克\n' +
@@ -779,6 +792,7 @@ let autoMenu = [
                         default: 0x44,
                         range:null
                     },
+                    settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
                         foodMaterial:'豆腐 125克\n' +
                         '五花肉 15克\n' +
@@ -829,6 +843,7 @@ let autoMenu = [
                         default: 0x45,
                         range:null
                     },
+                    settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
                         foodMaterial:'龙口粉丝 10克\n' +
                         '鲍鱼 150克\n' +
@@ -875,6 +890,7 @@ let autoMenu = [
                             default: 0x46,
                             range:null
                         },
+                        settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                         detail: {
                             foodMaterial:'排骨段 400克\n' +
                             '水发小米 90克\n' +

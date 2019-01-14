@@ -25,6 +25,14 @@ let accordions =  [
         hideArrow:false
     },
     {
+        key:'probeTemperature',
+        type:'picker',
+        isFolded: true,
+        subtitle:'设置探针温度',
+        unit:'°C',
+        hideArrow:false
+    },
+    {
         key:'steamAmount',
         type:'picker',
         isFolded: true,

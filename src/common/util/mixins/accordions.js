@@ -123,6 +123,7 @@ const accordionMixin = {
                 time: null,
                 temperature: null,
                 preheat:false,
+                preheatHide: false,
                 steamAmount:null,
                 fireAmount:0,
                 weight:0,
@@ -156,6 +157,13 @@ const accordionMixin = {
                 this.current.isFireAmountChange = true;
             }
             this.current[key] = data;
+            if(key=='temperature'){
+                if(data<100){
+                    this.current.preheatHide = true;
+                }else{
+                    this.current.preheatHide = false;
+                }
+            }
             // nativeService.alert(this.current);
         },
         onPreheatChange(event) {
@@ -169,6 +177,7 @@ const accordionMixin = {
              this.current.isTimeChange = false;
              this.current.isSteamAmountChange = false;
              this.current.isFireAmountChange = false;
+             this.current.preheatHide = false;
              this.current.preheat = this.currentItem['preheat'].default;
             // this.current.steamSwitch = this.currentItem['steamSwitch'].default;
             // this.current.time = this.currentItem['time'].default;
@@ -206,6 +215,7 @@ const accordionMixin = {
                 isSteamAmountChange: this.current.isSteamAmountChange,
                 isFireAmountChange: this.current.isFireAmountChange
             };
+            this.resetState();
             
             // if(jsonCmd.mode === 0xE0) { // 自动菜单
             //     jsonCmd.recipeId =  this.setValue('recipeId');

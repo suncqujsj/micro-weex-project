@@ -1,7 +1,6 @@
 <style lang="less" type="text/less">
     @import "../less/working.less";
 </style>
-
 <template>
     <div @viewappear="viewappear" @viewdisappear="viewdisappeaar">
         <div class="bg">
@@ -83,23 +82,28 @@
                 <!--<text v-if="currentItem" class="content-title" @click="showDetailModal">{{currentItem.text}}</text>-->
                 <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header" :title="currentItem.text" titleText="#000000" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
 
-                <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value">
-                    <sf-accordion type="picker" :value="setValue('probeTemperature')" unit="°C" title="设置探针温度" isFolded="true"  @callback="updateAccordionFoldingStatus">
-                        <div slot="content">
-                            <wx-picker :data="range('probeTemperature')" target="probeTemperature" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+               
+                <!--工作状态，弹出框设置-->
+                <div v-if="isWorkingPage">
+                    <div v-for="(item, index) in accordions">
+                        <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value">
+                            <div v-if="item.type==='picker' && item.key=='probeTemperature'" >
+                                <sf-accordion :type="item.type" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                                    <div slot="content">
+                                        <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                    </div>
+                                </sf-accordion>
+                            </div>
+                                <div v-if="item.type==='picker' && item.key=='steamAmount'" >
+                                <sf-accordion :type="item.type" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                                    <div slot="content">
+                                        <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                    </div>
+                                </sf-accordion>
+                            </div>
                         </div>
-                    </sf-accordion>
-                      <sf-accordion type="picker" :value="setValue('steamAmount')" unit="档" title="设置蒸汽量" isFolded="true"  @callback="updateAccordionFoldingStatus">
-                        <div slot="content">
-                            <wx-picker :data="range('steamAmount')" target="steamAmount" :visible="true" @wxChange="handlePickerChange"></wx-picker>
-                        </div>
-                    </sf-accordion>
-                </div>
-                <div v-else>
-                    <!--工作状态，弹出框设置-->
-                    <div v-if="isWorkingPage">
-                        <div v-for="(item, index) in accordions">
-                            <div v-if="item.type==='picker' && (currentItem && currentItem[item.key] && !currentItem[item.key].hide)" >
+                        <div v-else>
+                            <div v-if="item.type==='picker' &&  item.key!='probeTemperature' && (currentItem && currentItem[item.key] && !currentItem[item.key].hide)" >
                                 <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                                     <div slot="content">
                                         <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
@@ -115,17 +119,35 @@
                             </div>
                         </div>
                     </div>
-                     <!--待机状态，弹出框设置-->
-                     <div v-else>
-                        <div v-for="(item, index) in accordions">
-                            <div v-if="item.type==='picker'" >
+                </div>
+                    <!--待机状态，弹出框设置-->
+                <div v-else>
+                    <div v-for="(item, index) in accordions">
+                        <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value">
+                            <div v-if="item.type==='picker' && item.key=='probeTemperature'" >
+                                <sf-accordion :type="item.type" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                                    <div slot="content">
+                                        <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                    </div>
+                                </sf-accordion>
+                            </div>
+                            <div v-if="item.type==='picker' && item.key=='steamAmount'" >
+                                <sf-accordion :type="item.type" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                                    <div slot="content">
+                                        <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                    </div>
+                                </sf-accordion>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div v-if="item.type==='picker' &&  item.key!='probeTemperature'" >
                                 <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                                     <div slot="content">
                                         <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                                     </div>
                                 </sf-accordion>
                             </div>
-                            <div v-if="item.type==='switch'">
+                            <div v-if="item.type==='switch' && !current.preheatHide">
                                 <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
                                     <div slot="right">
                                         <midea-switch2 :itemKey="item.key" :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>

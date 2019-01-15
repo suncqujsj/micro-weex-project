@@ -2,18 +2,30 @@
     <div class="wrapper">
         <midea-header title="Switch" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
-        <midea-cell title="Midea切换按钮">
-            <midea-switch2 :checked="mideaChecked" @change="onMideachange" :width="106" :height="48" slot="value"></midea-switch2>
+        <midea-cell :title="'Midea切换按钮'">
+            <div slot="value">
+                <midea-switch2 :checked="mideaChecked" @change="onMideachange" slot="value"></midea-switch2>
+            </div>
+        </midea-cell>
+        <midea-cell :title="'Midea切换按钮失败复原'">
+            <div slot="value">
+                <midea-switch2 :checked="mideaCheckedA" @change="onMideachangeA"></midea-switch2>
+            </div>
+        </midea-cell>
+        <midea-cell :title="'Midea切换按钮失败复原'">
+            <div slot="value">
+                <midea-switch2 :checked="mideaCheckedB.isChecked" @change="onMideachangeB"></midea-switch2>
+            </div>
         </midea-cell>
     </div>
 </template>
 <style scoped>
 .wrapper {
-  background-color: #f2f2f2;
+    background-color: #f2f2f2;
 }
 .link-text {
-  color: #333333;
-  font-size: 24px;
+    color: #333333;
+    font-size: 24px;
 }
 </style>
 <script>  
@@ -28,24 +40,33 @@ module.exports = {
     mixins: [base],
     data() {
         return {
-            checked: true,
             mideaChecked: true,
-            iconOn: '../img/check/switch_on.png',
-            iconOff: '../img/check/switch_off.png'
+            mideaCheckedA: true,
+            mideaCheckedB: {
+                isChecked: false
+            }
         }
     },
     methods: {
-
-        onchange(event) {
-            this.checked = event.value;
-        },
         onMideachange(event) {
             this.mideaChecked = event.value;
-            // nativeService.alert(this.mideaChecked);
+        },
+        onMideachangeA(event) {
+            this.mideaCheckedA = event.value;
+            setTimeout(() => {
+                //模拟请求耗时
+                this.mideaCheckedA = !event.value;
+            }, 500);
+        },
+        onMideachangeB(event) {
+            this.mideaCheckedB.isChecked = event.value;
+            setTimeout(() => {
+                //模拟请求耗时
+                this.mideaCheckedB.isChecked = !event.value;
+            }, 500);
         },
     },
     created() {
-        //this.isIos=weex.config.env.platform=='iOS'?true:false;
     }
 };
 </script>

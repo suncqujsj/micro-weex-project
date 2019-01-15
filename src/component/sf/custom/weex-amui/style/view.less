@@ -1,0 +1,14 @@
+@import './variable.less';
+
+.am-picker {
+  &-header {
+    height: @picker-header-height;
+    border-color: @border-color-base;
+    border-bottom-width: @border-width-sm;
+  }
+}
+.am-picker-view {
+  flex-direction: row;
+  overflow: hidden;
+  height: @picker-item-height * 5;
+}

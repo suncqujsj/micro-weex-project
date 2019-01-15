@@ -37,7 +37,7 @@ let workingModalMixin  = {
                     "completedColor":"#FFFFFF", //环形进度条未完成后的颜色默认#267AFF
                     "incompletedColor":"#f5d5d5eb", //环形进度条未完成后的颜色，默认透明
                     "thickness":2, //环形进度条宽度，默认4
-                    "cornerRadius" : isIosLess5_4?140: 280,  //环形的半径，默认是width/2
+                    "cornerRadius" : isIosLess5_4?120: 240,  //环形的半径，默认是width/2
                     "totalCounter" : 360, //环形进度条的最大值，默认是360
                     "progressCounter" : 0, //设置进度值，默认是从0-360, 默认为0
                     "autoProgress" : false, //设置是否需要自动执行环形进度，默认false, 如果设置为true，则每秒进度值+1操作
@@ -49,7 +49,7 @@ let workingModalMixin  = {
                     "pointImageBase64" :  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAhCAYAAABX5MJvAAAERklEQVRYR82Yf2jUdRjHX5875137cbcfOF1Omfij1DDC3BKEWeCPUMERy2pgkQvBQUY5EfrB6AfIlrVFG4gYJWmaxASV/AHlQKptRTRSywyHu5oudttOt+623T3x3Pe8rbntbiTdvv99P5/n83ne3/fn/Tyf5/ka4nkqxObKJd3RS1Y/FCI8JpBnDLOATASvQJuBVoSvptpoCKTQ6fPQTYUJxXJhYhlkV8t0PxRjWIeQH3Ya6zF0As0IJ51wtOMlc2O8JWOD2CtJbj9FCK8KLACcsXyPMu83cBnDOz1O6tlqBkbbY1QQGXvFHQpQJiHeABy6cKodpiXD/AxYPxcezIbcVEh3QrcfPLfgpw448Tv81gV/9UF/MOoyYGy8aXNQ27XV9IwEcgcI13syDzsVwDMI4fn7MmHT/ZbzBZlYg2M8Alz2WmCO/AK/eiOGBp06RJAK38vmyvDl/9pPGQj6qUV4CrAbA88uhp0FMD0ZptjiP5DBENzog8pG+OQCiEKAIIbDdidlwxkZAqEaCFAuwtvKQHISlD0EryyDe6ZYznsH4JoPzrbC6Va42gNdfshwwhw3rMmDVXkw2wUpSdaavwdhTzPU/gh9qgiDGMNrPQ6qbmskCsJdI0+KcEA1oAzsWDYEICjw/XU4cAGOX4GewNiMuB2wYR5sXgwPz1A6h4C82xxlJGAMm3u2m891pzAIDcMAnBFYou/PPQC7C4cY+PIqlJ8Dz83oJuOei35EbhpUrYTH5wwxsqsBPv7ZejfQ4oDVGr4GTUSZbCNElYahirC+CGamgjJwphVKTkAwZsq5E5fdBgfXw+o8i5E/bkLRsahY/dgo93mpM2kfSpYJ8inCWg3DXQWwfaklwsZ22HIK2nzxC3Kk5SwX7F8LBTkwEIIPfoDdjZHwNZwiSImZViPzA8J3mglnpkH9RiskVYQ7G+DgxfiOYCyYejQli6Cy0BKrhqyyoawAXofhEeOukVIR9unIytlwrMgSyqVOWHN0fBHGy4+K9XQxLMwinCw21sO5axFtCC8Yd7UcEnhah/Y8CqVhaVq0vX4+Xjex7d5aAS8utez2tcCOr6MC/cy4quUbYLkOnd0E+TOsyXVfwHlP7M3jtViRCyefsKybrsOqI9GV3+pxtImQq0OXtsC9qdbkoo+i5xavn3HtVG8Xn7dM/rwFC/dHmDB4FESvCMk61F4GyZHsmFMXyXB3BQJoBm7fZm3WNwg5tVEQfaqJNiGBTIBnkmhiMkSH+30pFZPgPJHQjGnodMDyyXF3hG/RdDR4/v9bFMp93dRNknoikowSXlmFcUyGGlNxjFlt50N2CiRNoNrWAqajFyqbJlJtR44l4X3H7bsqVge2YS4siXRgWu5r2a8dWEsHHL8bHVj00kx0Lzr89g535TaKkQl05eDF0PTfu/LhSDShuUh32MnqD1GIGfF/ArwiI/5PBOn0+eL7P/EPYtpkF4ik2AkAAAAASUVORK5CYII=", //环形进度中的进度球的图片base64
                 },
                 progress:1,
-                progress_radius: 280,
+                progress_radius: 240,
                 tag_next: '',
                 btnText: "暂停",
                 btnSrc: "img/footer/icon_pause@2x.png",
@@ -89,27 +89,32 @@ let workingModalMixin  = {
             //this.show = false;
             // nativeService.alert(analysisObj);
             clearInterval(this.queryTimer);
-            this.setWarningDialog("",null,false);
+            // this.setWarningDialog("",null,false);
             this.modalVisibility = false;
             this.isWorkingPage = false;
             this.cmdObj = analysisObj;
             this.probeTempText = '°C';
                
             //提示
+            if(analysisObj.workingState.value == 2 || analysisObj.workingState.value == 1 ){
+                this.setWarningDialog("",null,false);
+            }
+            if(analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6){
+                if(analysisObj.displaySign.lackWater && analysisObj.mode.value!=0xC4){
+                    this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
+                }
+                if(analysisObj.displaySign.waterBox && analysisObj.mode.value!=0xC4){
+                    this.setWarningDialog("主人，您的设备缺水盒了");
+    
+                }
+                if(analysisObj.displaySign.doorSwitch){
+                    this.setWarningDialog("主人，您的设备炉门开了");
+                }
+            }
             if(analysisObj.displaySign.isError){
                 this.setWarningDialog("主人，您的设备发生故障了，请联系售后人员");
             }
-            if(analysisObj.displaySign.lackWater && analysisObj.mode.value!=0xC4){
-                this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
-            }
-            if(analysisObj.displaySign.waterBox && analysisObj.mode.value!=0xC4){
-                this.setWarningDialog("主人，您的设备缺水盒了");
-
-            }
-            if(analysisObj.displaySign.doorSwitch){
-                this.setWarningDialog("主人，您的设备炉门开了");
-            }
-
+           
             if(analysisObj.displaySign.lock){
                 // let context = this;
                 // this.setWarningDialog("你需要关闭童锁吗？", function(){

@@ -399,8 +399,11 @@
         created(){
             let self = this;
             let {constant,pages,index} = this;
+            if(this.isip9()){
+                this.srcollPaddingBottom = '50px';
+            }
             if(this.isipx()){
-                this.srcollPaddingBottom = '110px';
+                this.srcollPaddingBottom = '100px';
             }
             //模拟设备数据
             nativeService.initMockData({

@@ -11,7 +11,7 @@ module.exports = {
         page_title: "蒸汽炉",
         sales_model: "蒸汽炉 TPN50EQL-SSL",
         widget_name: 'MSO_T0xB2',
-        widget_version: '5.1.13',
+        widget_version: '5.1.16',
         extra1: {
             sn8: '0TPN50QL'
         },

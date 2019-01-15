@@ -117,13 +117,23 @@ let workingModalMixin  = {
                 // });
                 !this.modalVisibility && this.showModal();
             } 
-            if(analysisObj.workingState.value == 3){
-                this.queryRunTimer(6);//6秒轮询 
-            }
+            // if(analysisObj.workingState.value == 3){
+            //     this.queryRunTimer(6);//6秒轮询 
+            // }
             if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6) {
                 this.isWorkingPage = true;
                 this.analysisWorkingFun(analysisObj,tabs);
             }
+            if(analysisObj.workingState.value == 3){
+                var _hour = analysisObj.timeRemaining.hour, _minute = analysisObj.timeRemaining.minute, _second = analysisObj.timeRemaining.second;
+                var allSeconds = _hour*60*60+_minute*60+_second;
+                if(allSeconds<2*60){
+                    this.queryRunTimer(1);//6秒轮询 
+                }else{
+                    this.queryRunTimer(6);//6秒轮询 
+                }
+            }
+           
         },
         countDownRunTimer(minute,second,timeSet){
             var self = this;
@@ -227,7 +237,7 @@ let workingModalMixin  = {
                this.probeTempText = '';
                this.cancleBtnText = '完成';
                this.cancleIcon = 'img/finish_icon@2x.png';
-               this.countDownRunTimer(0,0,1);
+            //    this.countDownRunTimer(0,0,1);
               
             }
             // 不是烹饪完成 ，并且处于预热中状态
@@ -293,7 +303,7 @@ let workingModalMixin  = {
                         }
                         this.workSpecialStatusText = allSeconds;
                         this.tag_next = '秒';
-                        this.countDownRunTimer(_minute,_second,1);
+                        // this.countDownRunTimer(_minute,_second,1);
                     
                     }
                 }

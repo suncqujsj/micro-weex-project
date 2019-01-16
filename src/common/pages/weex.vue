@@ -123,7 +123,7 @@
                     <!--待机状态，弹出框设置-->
                 <div v-else>
                     <div v-for="(item, index) in accordions">
-                        <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value">
+                        <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value"><!--探针-->
                             <div v-if="item.type==='picker' && item.key=='probeTemperature'" >
                                 <sf-accordion :type="item.type" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                                     <div slot="content">
@@ -143,7 +143,7 @@
                             <div v-if="item.type==='picker' &&  item.key!='probeTemperature'" >
                                 <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                                     <div slot="content">
-                                        <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                        <wx-picker :index="index" :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                                     </div>
                                 </sf-accordion>
                             </div>
@@ -347,8 +347,8 @@
     import nativeService from "@/common/services/nativeService";
     import query from "../../dummy/query";
     import mideaSwitch2 from '@/midea-component/switch2.vue'
-    // import WxPicker from '@/component/sf/custom/picker.vue';
     import WxPicker from '@/component/sf/custom/picker_amui.vue';
+    //  import WxPicker from '@/component/sf/custom/picker_time.vue';
     import mideaDialog from '@/component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
     import light from "@/component/sf/common/light.vue";

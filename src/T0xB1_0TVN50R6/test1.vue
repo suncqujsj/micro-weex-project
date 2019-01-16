@@ -15,11 +15,10 @@
         data(){
             return {
                 value: [1,1,0],
-                hms:[1,0,0]
+                hms:[1,1,1]
             }
         },
         created(){
-            nativeService.showLoadingWithMsg('更新中')
         },
         components:{timePicker},
         methods: {

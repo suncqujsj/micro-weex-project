@@ -50,7 +50,7 @@
                                 <div class="icon-button column" v-for="item in items" @click="onIconButtonClicked(item)">
                                     <image v-if="item.icon" class="button-icon" :src="item.icon"></image>
                                     <div v-else class="button-icon row a-c j-c">
-                                        <text>{{item.time.default}}'</text>
+                                        <text style="font-size: 30px;">{{item.time.default}}'</text>
                                     </div>
                                     <!-- 不支持肉类探针的模式遮罩层 -->
                                     <div v-if="!item.probe && cmdObj.isProbe.value" class="button-icon a-c j-c probeClass"></div>
@@ -80,7 +80,7 @@
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
                 <!--</template>-->
                 <!--<text v-if="currentItem" class="content-title" @click="showDetailModal">{{currentItem.text}}</text>-->
-                <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header" :title="currentItem.text" titleText="#000000" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
+                <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header b-b-1" :title="currentItem.text" titleText="#000000" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
 
                
                 <!--工作状态，弹出框设置-->

@@ -66,15 +66,18 @@
 
 <style>
     .accordion-wrapper {
-        padding-left: 32px;
     }
     .accordion-item {
+        padding: 0 32px;
         align-items: center;
         justify-content: space-between;
         flex-direction: row;
         height: 92px;
         border-bottom-color: #e5e5e8;
         border-bottom-width: 1px;
+    }
+    .accordion-item:last-child{
+        border-bottom-width: 0;
     }
     .accordion-title {
         flex: 1;
@@ -89,6 +92,6 @@
     .accordion-icon {
         height: 40px;
         width: 40px;
-        margin-right: 24px;
+        /*margin-right: 24px;*/
     }
 </style>

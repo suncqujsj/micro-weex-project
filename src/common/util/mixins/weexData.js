@@ -96,23 +96,30 @@ let workingModalMixin  = {
             this.probeTempText = '°C';
                
             //提示
+            let isLackWater = false , isWaterBox = false, isDoorSwitch = false;
             if(analysisObj.workingState.value == 2 || analysisObj.workingState.value == 1 ){
                 this.setWarningDialog("",null,false);
             }
             if(analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6){
                 if(analysisObj.displaySign.lackWater && analysisObj.mode.value!=0xC4){
+                    isLackWater = true;
                     this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
                 }
                 if(analysisObj.displaySign.waterBox && analysisObj.mode.value!=0xC4){
+                    isWaterBox = true;
                     this.setWarningDialog("主人，您的设备缺水盒了");
     
                 }
                 if(analysisObj.displaySign.doorSwitch){
+                    isDoorSwitch = true;
                     this.setWarningDialog("主人，您的设备炉门开了");
                 }
             }
             if(analysisObj.displaySign.isError){
                 this.setWarningDialog("主人，您的设备发生故障了，请联系售后人员");
+            }
+            if(!isLackWater && !isWaterBox && !isDoorSwitch){
+                this.setWarningDialog("",null,false);
             }
            
             if(analysisObj.displaySign.lock){

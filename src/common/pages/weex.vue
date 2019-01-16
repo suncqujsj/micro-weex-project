@@ -274,7 +274,7 @@
                                 <text class="number_prev" v-if="hasHour">时</text>
                             </div>
                             <div class="content_section">
-                                <text :class="['number-text',timeShow && 'work_time',hasHour && 'hour_time']">{{workSpecialStatusText}}</text>
+                                <text :class="['number-text',timeShow && 'work_time',hasHour && 'hour_time',hourMore10 && 'moreThen10Hour']">{{workSpecialStatusText}}</text>
                             </div>
                             <div class="next_section">
                                 <text class="number_next">{{tag_next}}</text>

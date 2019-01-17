@@ -185,7 +185,7 @@
         </detail-modal>
 
         <!--童锁遮罩-->
-        <modal :show="modalVisibility" @close="closeModal">
+        <modal :show="modalVisibility">
             <div slot="header">
                 <modal-header leftImg="img/header/public_ic_home@3x.png" class="modal-header" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native"></modal-header>
             </div>

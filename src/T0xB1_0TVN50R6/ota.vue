@@ -65,13 +65,14 @@
             nativeService.getDeviceInfo().then((data)=>{ // 获取deviceId
                 if(data.result && data.result.deviceId ) {
                     // this.deviceId = data.result.deviceId;
-                    // this.deviceId = "mock.2199023365119"; // status '' hasNewVer=false
-                    this.deviceId = 2199023365121; // upgraded hasNewVer=false
+                    this.deviceId = "mock.2199023365119"; // status '' hasNewVer=false
+                    // this.deviceId = 2199023365121; // upgraded hasNewVer=false
                 }
                 return this.getUpgradeState();
             }).then((resp)=>{
                 let data = JSON.parse(resp.returnData).data;
                 if(data.status === 'upgrading') { // 发现固件在升级中
+                    nativeService.toast(data);
                     this.setData(true, data);
                     nativeService.showLoadingWithMsg('更新中...');
                     this.fetchUpgradeState();

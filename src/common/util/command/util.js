@@ -8,6 +8,7 @@ import  nativeService from '@/common/services/nativeService';
  var latesFrameRecord = 0;
 export default {
   //10进制转换8位2进制的方法
+  doorStatus: 0,
   initAnalysisObj(){
     var obj = {
         workingState:{
@@ -224,6 +225,10 @@ export default {
  
   //控制启动指令
   createControlMessage(params,callbackData) {
+    if(this.doorStatus){
+      nativeService.toast("主人，您的设备炉门开了");
+      return;
+    }
     // nativeService.alert(params); 
     var time = params.minute;
     var hour = time/60;
@@ -386,6 +391,7 @@ export default {
    
      obj.displaySign.lock = message.getBit(requestCmd, 26, 0);
      obj.displaySign.doorSwitch = message.getBit(requestCmd, 26, 1);
+     this.doorStatus = message.getBit(requestCmd, 26, 1);
      obj.displaySign.waterBox = message.getBit(requestCmd, 26, 2);
      obj.displaySign.lackWater = message.getBit(requestCmd, 26, 3);
      obj.displaySign.changeWater = message.getBit(requestCmd, 26, 4);

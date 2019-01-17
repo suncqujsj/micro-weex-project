@@ -56,6 +56,7 @@
         },
         created(){
             // this.init();
+            this.setVideoModeSize();
         },
         methods: {
 

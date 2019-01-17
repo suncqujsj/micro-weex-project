@@ -31,11 +31,11 @@
                 list:[
                     {
                         title: '产品型号：'+constant.device.sales_model,
-                        link:'https://m.ximalaya.com/wwys/v1/e/1?from=groupmessage&isappinstalled=0'
+                        link:''
                     },
                     {
                         title: '插件版本号：weex' + constant.device.widget_version,
-                        link: 'http://www.baidu.com'
+                        link: ''
                     }
                 ]
             }

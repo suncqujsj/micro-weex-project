@@ -12,5 +12,6 @@ module.exports = {
         extra1: {
             sn8: '0X5L23A8'
         },
+        hms:[0,1,1]
     }
 };

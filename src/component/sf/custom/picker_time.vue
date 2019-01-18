@@ -5,7 +5,7 @@
             :target="target"
             :pickerIndex="pickerIndex"
             :listItem="listItem"
-            wrapWidth="680"
+          
             @change="onChange"
         ></am-picker-view>
     </div>
@@ -51,7 +51,7 @@ module.exports = {
     },
     methods: {
         onChange(e){
-            var value = e[0].value;
+            var value = e.value;
             this.$emit('wxChange', value, this.target);
             //e的格式为 {index:x，value:x}
         }

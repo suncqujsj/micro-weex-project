@@ -2,7 +2,10 @@
     <div class="accordion-wrapper">
         <div class="accordion-item" @click="makeSwitch">
             <text class="accordion-title">{{title}}</text>
-            <text v-if="value || (value===0 && type=='picker')" class="accordion-value">{{value}}{{unit}}</text>
+            <text v-if="type==='pickers'" class="accordion-value">{{hms[0]}}{{hms[1]}}{{hms[2]}}</text>
+            <template v-else>
+                <text v-if="value || (value===0 && type=='picker')" class="accordion-value">{{value}}{{unit}}</text>
+            </template>
             <image v-if="!hideArrow" class="accordion-icon" :src="isFoldedStatus?foldIcon:unfoldIcon"></image>
             <slot v-if="hideArrow" name="right"></slot>
         </div>
@@ -13,6 +16,8 @@
 </template>
 
 <script>
+    import nativeService from "@/common/services/nativeService";
+
     export default {
         props: {
             title: "",
@@ -23,6 +28,10 @@
             value: {
                 type: Number,
                 default: 0
+            },
+            hms: {
+                type: Array,
+                default:[0,0,0]
             },
             type: {
                 type: String,
@@ -44,6 +53,9 @@
         watch: {
             isFolded(value) {
                 this.isFoldedStatus = value
+            },
+            hms(nvalue, ovalue){
+                // nativeService.alert(nvalue + '' + ovalue);
             }
         },
         data() {

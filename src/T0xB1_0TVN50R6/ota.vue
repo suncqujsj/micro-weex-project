@@ -67,7 +67,7 @@
                     // this.deviceId = data.result.deviceId;
                     // this.deviceId = "mock.2199023365119"; // status '' hasNewVer=false
                     // this.deviceId = 2199023365121; // upgraded hasNewVer=false
-                    this.deviceId = "mock.1";
+                    this.deviceId = "mock.2";
                 }
                 return this.getUpgradeState();
             }).then((resp)=>{

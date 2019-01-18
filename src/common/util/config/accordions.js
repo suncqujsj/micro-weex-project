@@ -9,14 +9,6 @@
 
 let accordions =  [
     {
-        key:'temperature',
-        type:'picker',
-        isFolded: true,
-        subtitle:'设置温度',
-        unit:'°C',
-        hideArrow:false
-    },
-    {
         key:'time',
         type:'picker',
         isFolded: true,
@@ -24,7 +16,14 @@ let accordions =  [
         unit:'分',
         hideArrow:false
     },
-   
+    {
+        key:'temperature',
+        type:'picker',
+        isFolded: true,
+        subtitle:'设置温度',
+        unit:'°C',
+        hideArrow:false
+    },
     {
         key:'probeTemperature',
         type:'picker',
@@ -72,6 +71,14 @@ let accordions =  [
         subtitle:'蒸汽开关',
         unit:'',
         hideArrow:true
+    },
+    {
+        key:'hms',
+        type:'pickers',
+        isFolded: true,
+        subtitle:'设置时间',
+        unit:'',
+        hideArrow:false
     },
 ];
 

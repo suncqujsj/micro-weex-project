@@ -58,7 +58,7 @@ export default {
         },
         wrapWidth: {
             type: Number,
-            default: 450
+            default: 680
         }
     },
     computed: {
@@ -67,7 +67,7 @@ export default {
         },
         wrapStyle(){
             return {
-                width: this.wrapWidth,
+                width: '680px',
                 height: this.wrapHeight
             }
         },
@@ -99,7 +99,7 @@ export default {
         scrollEnd(event) {
             const el = this.$refs[this.ref][0]
             dom.scrollToElement(el, { offset: this.itemIndex * 70 })
-            this.$emit('onChange', {index: this.pickerIndex, value: this.listArray[this.itemIndex], ref: this.ref})
+            this.$emit('change', {index: this.pickerIndex, value: this.listArray[this.itemIndex], ref: this.ref})
         }
     },
     mounted() {
@@ -111,10 +111,10 @@ export default {
                 this.itemIndex = i;
             }
         }
-        this.itemVal = this.listItem;
+        if(this.target=='temperature'){//温度这个比默认的位置少1，暂时特殊处理。
+            self.itemIndex = self.itemIndex+1;
+        }
         // nativeService.alert(this.listItem);
-        // var el = this.$refs.item[this.itemIndex]
-        nativeService.alert(this.ref);
         if (el) {
             let sid = setInterval(() => next(), 100)
             let next = () => {
@@ -149,7 +149,7 @@ export default {
   background-color: #ffffff;
 }
 .scroller {
-  flex: 3;
+  flex: 6;
   align-content: center;
   align-items: center;
 }

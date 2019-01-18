@@ -83,6 +83,14 @@
                 <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header b-b-1" :title="currentItem.text" titleText="#000000" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
 
                  <div v-for="(item, index) in accordions">
+                     <div v-if="item.type==='pickers'" >
+                         <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :hms="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                             <div slot="content">
+                                 <!--<wx-picker :index="index" :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>-->
+                                 <time-picker :value="current[item.key]" :hms="constant.device.hms" @change="onChange"></time-picker>
+                             </div>
+                         </sf-accordion>
+                     </div>
                     <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value"> <!--探针设置-->
                         <div v-if="item.type==='picker' && item.key=='probeTemperature'" >
                             <sf-accordion :type="item.type" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
@@ -142,7 +150,7 @@
             </div>
         </detail-modal>
 
-          <!--提示弹窗-->
+        <!--提示弹窗-->
         <midea-dialog :title="warningDialog.title"
                       :show="warningDialog.show"
                       :single="true"
@@ -152,6 +160,8 @@
                       mainBtnColor="#FFB632"
         >
         </midea-dialog>
+
+        
         <!--童锁遮罩-->
         <modal :show="modalVisibility">
             <div slot="header">
@@ -170,8 +180,6 @@
             </div>
         </modal>
         <!--<child-lock :modalVisibility="modalVisibility" :childLock="childLock" :closeModal="closeModal"></child-lock>-->
-
-      
         
         <!--确定/取消弹窗-->
         <midea-actionsheet
@@ -308,6 +316,7 @@
     import mideaSwitch2 from '@/midea-component/switch2.vue'
     // import WxPicker from '@/component/sf/custom/picker_amui.vue';
      import WxPicker from '@/component/sf/custom/picker_time.vue';
+    import timePicker from '@/component/sf/custom/timePicker.vue'
     import mideaDialog from '@/component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
     import light from "@/component/sf/common/light.vue";
@@ -348,7 +357,7 @@
                 default: () => ({})
             },
         },
-        components: {MideaHeader,sfDialog,mideaActionsheet,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modal,modalHeader,rowWrapItems,light},
+        components: {MideaHeader,sfDialog,mideaActionsheet,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modal,modalHeader,rowWrapItems,light,timePicker},
         created(){
             let self = this;
             let {constant,tabs} = this;
@@ -401,6 +410,11 @@
             }
         },
         methods: {
+            onChange(e){
+                // nativeService.alert(e);
+                this.$set(this.current, 'hms', JSON.parse(JSON.stringify(e.value)));
+                // nativeService.alert(this.current['hms']);
+            },
             isAutoMenuStyle: function(tab){
                 return tab.rows[0].title && tab.rows[0].title !== 'mode'
             },

@@ -71,6 +71,11 @@
                 let msArr = this.range(60);
                 return [hArr, msArr,msArr];
 
+            },
+            changeValue(e){
+                let time = this.value;
+                time[e.index] = e.value;
+                this.$emit('change', {value: time});
             }
         }
     };

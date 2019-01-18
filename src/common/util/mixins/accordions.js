@@ -121,6 +121,7 @@ const accordionMixin = {
         initCurrentData: function(){
             return {
                 time: null,
+                hms:[1,1,0],
                 temperature: null,
                 preheat:false,
                 preheatHide: false,

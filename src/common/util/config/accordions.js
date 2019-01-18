@@ -72,6 +72,14 @@ let accordions =  [
         unit:'',
         hideArrow:true
     },
+    {
+        key:'hms',
+        type:'pickers',
+        isFolded: true,
+        subtitle:'设置时间',
+        unit:'',
+        hideArrow:false
+    },
 ];
 
 export default accordions;

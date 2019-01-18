@@ -123,6 +123,14 @@
                     <!--待机状态，弹出框设置-->
                 <div v-else>
                     <div v-for="(item, index) in accordions">
+                        <div v-if="item.type==='pickers'" >
+                            <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :hms="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                                <div slot="content">
+                                    <!--<wx-picker :index="index" :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>-->
+                                    <time-picker :value="current[item.key]" :hms="constant.device.hms" @change="onChange"></time-picker>
+                                </div>
+                            </sf-accordion>
+                        </div>
                         <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value"><!--探针-->
                             <div v-if="item.type==='picker' && item.key=='probeTemperature'" >
                                 <sf-accordion :type="item.type" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
@@ -349,6 +357,7 @@
     import mideaSwitch2 from '@/midea-component/switch2.vue'
     import WxPicker from '@/component/sf/custom/picker_amui.vue';
     //  import WxPicker from '@/component/sf/custom/picker_time.vue';
+    import timePicker from '@/component/sf/custom/timePicker.vue'
     import mideaDialog from '@/component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
     import light from "@/component/sf/common/light.vue";
@@ -389,7 +398,7 @@
                 default: () => ({})
             },
         },
-        components: {MideaHeader,sfDialog,mideaActionsheet,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modal,modalHeader,rowWrapItems,light},
+        components: {MideaHeader,sfDialog,mideaActionsheet,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modal,modalHeader,rowWrapItems,light,timePicker},
         created(){
             let self = this;
             let {constant,tabs} = this;
@@ -442,6 +451,11 @@
             }
         },
         methods: {
+            onChange(e){
+                // nativeService.alert(e);
+                this.$set(this.current, 'hms', JSON.parse(JSON.stringify(e.value)));
+                // nativeService.alert(this.current['hms']);
+            },
             isAutoMenuStyle: function(tab){
                 return tab.rows[0].title && tab.rows[0].title !== 'mode'
             },

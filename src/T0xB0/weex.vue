@@ -5,11 +5,12 @@
 <script>
     // config data
     import constant from "./config/constant";
-    import modes from "./config/modes.js";
+    import  modes from "./config/modes.js";
+    import  modes_X9321D from "./config/modes_X9321D.js";
     import autoMenu from "./config/auto-menu.js";
     import commonWeex from "@/common/pages/weex.vue";
     import nativeService from "@/common/services/nativeService";
-    var numberRecord = 0; //记录跳页面的次数
+
     export default {
         data(){
             return {
@@ -22,7 +23,7 @@
                     {
                         name:'加热模式',
                         active:true,
-                        rows:modes
+                        rows:[]
                     }
                 ],
                 constant:constant
@@ -30,7 +31,16 @@
         },
         components:{commonWeex},
         created(){
-           
+            let self = this;
+            let tabs = JSON.parse(JSON.stringify(this.tabs));
+             nativeService.getDeviceInfo().then(function(data){
+                if(data.result.deviceSn8=='0ET470QL'){
+                   tabs[1].rows = modes_X9321D;
+                }else{
+                     tabs[1].rows = modes;
+                }
+                self.tabs = tabs;
+            });
         },
         methods: {
            

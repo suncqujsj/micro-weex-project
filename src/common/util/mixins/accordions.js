@@ -190,6 +190,7 @@ const accordionMixin = {
          
         },
         closeDialog(e) {
+            this.workingSettingRecord = false;
             this.show = false;
             if (e.type === 'cancel' || e.type === 'close'){
                 this.show = false;

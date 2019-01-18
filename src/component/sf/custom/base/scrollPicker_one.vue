@@ -1,5 +1,5 @@
 <template>
-    <div class="wrap" :style="wrapStyle" @appear="pickerShow" @disappear="pickerHide">
+    <div class="wrap" :style="wrapStyle">
     <!-- <div v-if="isShow" class="wrap" :style="wrapStyle"> -->
         <div class="select-area"></div>
         <scroller class="scroller" :style="scrollerStyle" :show-scrollbar="false" @scroll="scroll" @scrollend="scrollEnd">
@@ -89,12 +89,6 @@ export default {
         
     },
     methods: {
-        pickerShow(){
-            nativeService.alert('show');
-        },
-        pickerHide(){
-            nativeService.alert('hide');
-        },
         scroll(event) {
             let offsetY = event.contentOffset.y || ''
             if (offsetY % this.itemHeight != 0) {
@@ -109,8 +103,8 @@ export default {
         }
     },
     mounted() {
-        const el = this.$refs[this.ref][0]  
-        dom.scrollToElement(el, { offset: 0})
+        let self = this;
+        const el = this.$refs[this.ref][0];
         var _listArray = this.listArray;
         for(var i=0; i< _listArray.length; i++){
             if(_listArray[i] == this.listItem){
@@ -119,8 +113,22 @@ export default {
         }
         this.itemVal = this.listItem;
         // nativeService.alert(this.listItem);
-        
-        dom.scrollToElement(el, { offset: this.itemIndex * 70 })
+        // var el = this.$refs.item[this.itemIndex]
+        nativeService.alert(this.ref);
+        if (el) {
+            let sid = setInterval(() => next(), 100)
+            let next = () => {
+                dom.getComponentRect(el, (options) => {
+                    if (options.result && options.size.bottom) {
+                        dom.scrollToElement(el, { offset: self.itemIndex * 70 })
+                    } else {
+                        setTimeout(() => next(), 100)
+                    }
+                })
+                clearInterval(sid)
+            }
+        }
+       
     },
     created() {
     //   var _listArray = this.listArray;

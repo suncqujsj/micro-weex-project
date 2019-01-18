@@ -82,82 +82,40 @@
                 <!--<text v-if="currentItem" class="content-title" @click="showDetailModal">{{currentItem.text}}</text>-->
                 <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header b-b-1" :title="currentItem.text" titleText="#000000" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
 
-               
-                <!--工作状态，弹出框设置-->
-                <div v-if="isWorkingPage">
-                    <div v-for="(item, index) in accordions">
-                        <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value">
-                            <div v-if="item.type==='picker' && item.key=='probeTemperature'" >
-                                <sf-accordion :type="item.type" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
-                                    <div slot="content">
-                                        <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
-                                    </div>
-                                </sf-accordion>
-                            </div>
-                                <div v-if="item.type==='picker' && item.key=='steamAmount'" >
-                                <sf-accordion :type="item.type" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
-                                    <div slot="content">
-                                        <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
-                                    </div>
-                                </sf-accordion>
-                            </div>
+                 <div v-for="(item, index) in accordions">
+                    <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value"> <!--探针设置-->
+                        <div v-if="item.type==='picker' && item.key=='probeTemperature'" >
+                            <sf-accordion :type="item.type" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                                <div slot="content">
+                                    <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                </div>
+                            </sf-accordion>
                         </div>
-                        <div v-else>
-                            <div v-if="item.type==='picker' &&  item.key!='probeTemperature' && (currentItem && currentItem[item.key] && !currentItem[item.key].hide)" >
-                                <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
-                                    <div slot="content">
-                                        <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
-                                    </div>
-                                </sf-accordion>
-                            </div>
-                            <div v-if="item.type==='switch' && (currentItem && currentItem[item.key] && !currentItem[item.key].hide)">
-                                <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
-                                    <div slot="right">
-                                        <midea-switch2 :itemKey="item.key" :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
-                                    </div>
-                                </sf-accordion>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                    <!--待机状态，弹出框设置-->
-                <div v-else>
-                    <div v-for="(item, index) in accordions">
-                        <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value"><!--探针-->
-                            <div v-if="item.type==='picker' && item.key=='probeTemperature'" >
-                                <sf-accordion :type="item.type" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
-                                    <div slot="content">
-                                        <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
-                                    </div>
-                                </sf-accordion>
-                            </div>
                             <div v-if="item.type==='picker' && item.key=='steamAmount'" >
-                                <sf-accordion :type="item.type" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
-                                    <div slot="content">
-                                        <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
-                                    </div>
-                                </sf-accordion>
-                            </div>
+                            <sf-accordion :type="item.type" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                                <div slot="content">
+                                    <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                </div>
+                            </sf-accordion>
                         </div>
-                        <div v-else>
-                            <div v-if="item.type==='picker' &&  item.key!='probeTemperature'" >
-                                <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
-                                    <div slot="content">
-                                        <wx-picker :index="index" :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
-                                    </div>
-                                </sf-accordion>
-                            </div>
-                            <div v-if="item.type==='switch' && !current.preheatHide">
-                                <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
-                                    <div slot="right">
-                                        <midea-switch2 :itemKey="item.key" :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
-                                    </div>
-                                </sf-accordion>
-                            </div>
+                    </div>
+                    <div v-else>
+                        <div v-if="item.type==='picker' &&  item.key!='probeTemperature' && (currentItem && currentItem[item.key] && (!currentItem[item.key].hide && isWorkingPage || !isWorkingPage))">
+                            <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                                <div slot="content">
+                                    <wx-picker :pickerIndex="index" :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                </div>
+                            </sf-accordion>
+                        </div>
+                        <div v-if="item.type==='switch' && (currentItem && currentItem[item.key] && (!currentItem[item.key].hide && isWorkingPage || !isWorkingPage)) && !current.preheatHide">
+                            <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
+                                <div slot="right">
+                                    <midea-switch2 :itemKey="item.key" :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
+                                </div>
+                            </sf-accordion>
                         </div>
                     </div>
                 </div>
-
             </div>
         </sf-dialog>
 
@@ -184,6 +142,16 @@
             </div>
         </detail-modal>
 
+          <!--提示弹窗-->
+        <midea-dialog :title="warningDialog.title"
+                      :show="warningDialog.show"
+                      :single="true"
+                      noFooter="true"
+                      @mideaDialogConfirmBtnClicked="knowClicked"
+                      :content="warningDialog.content"
+                      mainBtnColor="#FFB632"
+        >
+        </midea-dialog>
         <!--童锁遮罩-->
         <modal :show="modalVisibility">
             <div slot="header">
@@ -203,16 +171,7 @@
         </modal>
         <!--<child-lock :modalVisibility="modalVisibility" :childLock="childLock" :closeModal="closeModal"></child-lock>-->
 
-        <!--提示弹窗-->
-        <midea-dialog :title="warningDialog.title"
-                      :show="warningDialog.show"
-                      :single="true"
-                      noFooter="true"
-                      @mideaDialogConfirmBtnClicked="knowClicked"
-                      :content="warningDialog.content"
-                      mainBtnColor="#FFB632"
-        >
-        </midea-dialog>
+      
         
         <!--确定/取消弹窗-->
         <midea-actionsheet

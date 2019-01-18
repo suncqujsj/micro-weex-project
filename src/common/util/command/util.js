@@ -229,7 +229,6 @@ export default {
       nativeService.toast("主人，您的设备炉门开了");
       return;
     }
-    // nativeService.alert(params); 
     var time = params.minute;
     var hour = time/60;
     var minute = time%60;
@@ -247,6 +246,9 @@ export default {
       controltype = 3 //探针工作设置类
     }
    
+    if(parseInt(params.temperature)<100){
+      params.preheat = false;
+    }
     if(controltype==0){
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 1);
@@ -304,7 +306,7 @@ export default {
       message.setByte(messageBody, 18, params.probeTemperature);
     }
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
-    // nativeService.alert(this.cmdTo16Hex(sendcmd));
+    nativeService.alert(this.cmdToEasy(sendcmd));
     return sendcmd;
   },
   //取消工作指令

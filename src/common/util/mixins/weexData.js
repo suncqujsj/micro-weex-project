@@ -82,6 +82,8 @@ let workingModalMixin  = {
                 lightImg:"img/light_off@3x.png",
 
                 isWorkingPage:false,
+
+                workingSettingRecord: false,
         };
     },
     methods: {
@@ -91,6 +93,8 @@ let workingModalMixin  = {
             clearInterval(this.queryTimer);
             // this.setWarningDialog("",null,false);
             this.modalVisibility = false;
+            this.showDetailVisibility = false;
+            this.show = false;    
             this.isWorkingPage = false;
             this.cmdObj = analysisObj;
             this.probeTempText = '°C';
@@ -166,6 +170,9 @@ let workingModalMixin  = {
             var self = this , timer = null;
             // clearInterval(this.countDownTimer);
             // nativeService.alert(analysisObj);
+            if(this.workingSettingRecord){
+                this.show = true;    
+            }
             this.isWorking = false;
             this.isFooterShow = true;
             this.timeShow = false;

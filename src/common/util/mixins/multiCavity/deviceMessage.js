@@ -171,7 +171,7 @@ const deviceMessageMixin = {
             this.current.weight = _analysisObj.weight.value;
             this.current.probeTemperature = _analysisObj.probeSetttingTemperature.value;
             // nativeService.toast(this.current,3);
-            
+            this.workingSettingRecord = true;
             this.openDialog();
         },
         controlDevice(jsonCmd, callbackData){

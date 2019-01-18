@@ -190,6 +190,7 @@ const accordionMixin = {
          
         },
         closeDialog(e) {
+            this.workingSettingRecord = false;
             this.show = false;
             if (e.type === 'cancel' || e.type === 'close'){
                 this.show = false;
@@ -202,6 +203,7 @@ const accordionMixin = {
                 minute: this.setValue('time'),
                 temperature: this.setValue('temperature'),
                 preheat: this.current.preheat,
+                preheatHide:  this.current.preheatHide,
                 steamAmount: this.setValue('steamAmount'),
                 weight: this.setValue('weight'),
                 steamSwitch: this.current.steamSwitch,

@@ -77,11 +77,13 @@ let workingModalMixin  = {
 
             showBar:false,
             actionsheetItems:['确定关闭'],
-            lightImg:"img/light_off@3x.png"
+            lightImg:"img/light_off@3x.png",
+
+            workingSettingRecord: false,
         };
     },
     methods: {
-        dialogSetting(analysisObj){
+        dialogSetting(analysisObj){        
             if(this.index==0){
                 this.setWarningDialog("",null,false);
                 this.modalVisibility = false;
@@ -137,8 +139,9 @@ let workingModalMixin  = {
         analysisFun(analysisObj) { 
             clearInterval(this.queryTimer);    
             this.cmdObj = analysisObj;
-        //    nativeService.alert(analysisObj);
-
+            //nativeService.alert(analysisObj);
+            this.showDetailVisibility = false;
+            this.show = false;    
             this.dialogSetting(analysisObj);
            
             this.isCavityWorking = false;
@@ -194,6 +197,9 @@ let workingModalMixin  = {
             },timeSet*1000);
         },
         analysisWorkingFun(analysisObj,tabs) {
+            if(this.workingSettingRecord){
+                this.show = true;    
+            }
             this.workingAnalysisObj = analysisObj;
             // nativeService.alert(this.workingAnalysisObj);
             var self = this , timer = null;

@@ -3,7 +3,7 @@
         <am-picker-view
             :listArray="listArray"
             :target="target"
-            :pickerIndex="index"
+            :pickerIndex="pickerIndex"
             :listItem="listItem"
             wrapWidth="680"
             @change="onChange"
@@ -32,7 +32,7 @@ module.exports = {
                 return {}
             }
         },
-        index:{
+        pickerIndex:{
             type: Number,
             default: 0
         }

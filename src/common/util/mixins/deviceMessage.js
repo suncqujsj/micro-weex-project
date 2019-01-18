@@ -169,7 +169,7 @@ const deviceMessageMixin = {
             this.current.probeTemperature = cmdObj.probeSetttingTemperature.value;
             // this.currentItem.steamSwitch.default = cmdObj.steam.value?true:false;
             // nativeService.toast(this.current,3);
-            
+            this.workingSettingRecord = true;
             this.openDialog();
         },
         controlDevice(jsonCmd, callbackData){

@@ -27,8 +27,8 @@
         methods: {
             async test(){
                 this.a = 666;
+                let c = await nativeService.getDeviceInfo();
                 this.b = 777;
-                // let c = await nativeService.getDeviceInfo();
             }
         }
     }

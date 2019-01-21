@@ -13,7 +13,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:20,
                         range: null
                     },
                     temperature:{
@@ -42,7 +42,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x1B,
                         range:null
                     },
                     detail: null,
@@ -54,7 +54,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:25,
                         range: null
                     },
                     temperature:{
@@ -83,7 +83,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x1A,
                         range:null
                     },
                     detail: null,
@@ -95,7 +95,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:26,
                         range: null
                     },
                     temperature:{
@@ -124,7 +124,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x69,
                         range:null
                     },
                     detail: null,
@@ -136,7 +136,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:11,
                         range: null
                     },
                     temperature:{
@@ -165,48 +165,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
-                        range:null
-                    },
-                    detail: null,
-                    settingHide:true
-                },
-                {
-                    'icon': '',
-                    'text': '秋葵蒸鸡蛋羹',
-                    'mode': 0xE0,
-                    time:{
-                        set: false,
-                        default:8,
-                        range: null
-                    },
-                    temperature:{
-                        set: false,
-                        default:0,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    weight:{
-                        set:false,
-                        default:100,
-                        range:[100,400,100],
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 0x22,
+                        default: 0x6A,
                         range:null
                     },
                     detail: null,
@@ -218,7 +177,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:15,
                         range: null
                     },
                     temperature:{
@@ -247,7 +206,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x6B,
                         range:null
                     },
                     detail: null,
@@ -259,7 +218,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:9,
                         range: null
                     },
                     temperature:{
@@ -288,7 +247,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x6C,
                         range:null
                     },
                     detail: null,
@@ -300,7 +259,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:45,
                         range: null
                     },
                     temperature:{
@@ -329,7 +288,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x6D,
                         range:null
                     },
                     detail: null,
@@ -337,7 +296,7 @@ let data = [
                 },
                 {
                     'icon': '',
-                    'text': '枸杞百合整鸡',
+                    'text': '枸杞百合蒸鸡',
                     'mode': 0xE0,
                     time:{
                         set: false,
@@ -411,7 +370,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x02,
                         range:null
                     },
                     detail: null,
@@ -423,7 +382,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:12,
                         range: null
                     },
                     temperature:{
@@ -452,7 +411,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x6E,
                         range:null
                     },
                     detail: null,
@@ -464,7 +423,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:5,
                         range: null
                     },
                     temperature:{
@@ -493,7 +452,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x29,
                         range:null
                     },
                     detail: null,
@@ -505,7 +464,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:6,
                         range: null
                     },
                     temperature:{
@@ -534,7 +493,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x6F,
                         range:null
                     },
                     detail: null,
@@ -546,7 +505,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:20,
                         range: null
                     },
                     temperature:{
@@ -575,7 +534,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x70,
                         range:null
                     },
                     detail: null,
@@ -587,7 +546,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:10,
                         range: null
                     },
                     temperature:{
@@ -616,7 +575,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x71,
                         range:null
                     },
                     detail: null,
@@ -657,7 +616,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x72,
                         range:null
                     },
                     detail: null,
@@ -669,7 +628,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:30,
                         range: null
                     },
                     temperature:{
@@ -698,7 +657,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x73,
                         range:null
                     },
                     detail: null,
@@ -718,7 +677,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:20,
                         range: null
                     },
                     temperature:{
@@ -747,7 +706,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x74,
                         range:null
                     },
                     detail: null,
@@ -759,7 +718,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:10,
                         range: null
                     },
                     temperature:{
@@ -788,7 +747,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x75,
                         range:null
                     },
                     detail: null,
@@ -800,7 +759,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:10,
                         range: null
                     },
                     temperature:{
@@ -829,7 +788,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x76,
                         range:null
                     },
                     detail: null,
@@ -870,7 +829,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x77,
                         range:null
                     },
                     detail: null,
@@ -911,7 +870,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x78,
                         range:null
                     },
                     detail: null,
@@ -923,7 +882,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:25,
                         range: null
                     },
                     temperature:{
@@ -952,7 +911,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x79,
                         range:null
                     },
                     detail: null,
@@ -964,7 +923,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:30,
                         range: null
                     },
                     temperature:{
@@ -993,7 +952,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x7A,
                         range:null
                     },
                     detail: null,
@@ -1005,7 +964,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:15,
                         range: null
                     },
                     temperature:{
@@ -1034,7 +993,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x7B,
                         range:null
                     },
                     detail: null,
@@ -1046,7 +1005,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:25,
                         range: null
                     },
                     temperature:{
@@ -1075,7 +1034,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x7C,
                         range:null
                     },
                     detail: null,
@@ -1087,7 +1046,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:15,
                         range: null
                     },
                     temperature:{
@@ -1116,7 +1075,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x7D,
                         range:null
                     },
                     detail: null,
@@ -1128,7 +1087,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:18,
                         range: null
                     },
                     temperature:{
@@ -1157,7 +1116,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x7E,
                         range:null
                     },
                     detail: null,
@@ -1169,7 +1128,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:4,
                         range: null
                     },
                     temperature:{
@@ -1198,7 +1157,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x7F,
                         range:null
                     },
                     detail: null,
@@ -1218,7 +1177,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:15,
                         range: null
                     },
                     temperature:{
@@ -1247,7 +1206,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x80,
                         range:null
                     },
                     detail: null,
@@ -1259,7 +1218,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:25,
                         range: null
                     },
                     temperature:{
@@ -1288,7 +1247,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x81,
                         range:null
                     },
                     detail: null,
@@ -1300,7 +1259,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:25,
                         range: null
                     },
                     temperature:{
@@ -1329,7 +1288,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x82,
                         range:null
                     },
                     detail: null,
@@ -1341,7 +1300,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:15,
                         range: null
                     },
                     temperature:{
@@ -1370,7 +1329,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x83,
                         range:null
                     },
                     detail: null,
@@ -1382,7 +1341,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:30,
                         range: null
                     },
                     temperature:{
@@ -1411,7 +1370,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x84,
                         range:null
                     },
                     detail: null,
@@ -1423,7 +1382,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:12,
                         range: null
                     },
                     temperature:{
@@ -1452,7 +1411,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x85,
                         range:null
                     },
                     detail: null,
@@ -1464,7 +1423,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:50,
                         range: null
                     },
                     temperature:{
@@ -1493,7 +1452,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x86,
                         range:null
                     },
                     detail: null,
@@ -1505,7 +1464,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:30,
                         range: null
                     },
                     temperature:{
@@ -1534,7 +1493,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x87,
                         range:null
                     },
                     detail: null,
@@ -1546,7 +1505,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:20,
                         range: null
                     },
                     temperature:{
@@ -1575,7 +1534,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x88,
                         range:null
                     },
                     detail: null,
@@ -1587,7 +1546,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:16,
                         range: null
                     },
                     temperature:{
@@ -1616,7 +1575,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x89,
                         range:null
                     },
                     detail: null,
@@ -1636,7 +1595,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:35,
                         range: null
                     },
                     temperature:{
@@ -1665,7 +1624,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x2C,
                         range:null
                     },
                     detail: null,
@@ -1677,7 +1636,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:40,
                         range: null
                     },
                     temperature:{
@@ -1706,7 +1665,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x8A,
                         range:null
                     },
                     detail: null,
@@ -1718,7 +1677,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:55,
                         range: null
                     },
                     temperature:{
@@ -1747,7 +1706,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x8B,
                         range:null
                     },
                     detail: null,
@@ -1759,7 +1718,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:50,
                         range: null
                     },
                     temperature:{
@@ -1788,7 +1747,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x50,
                         range:null
                     },
                     detail: null,

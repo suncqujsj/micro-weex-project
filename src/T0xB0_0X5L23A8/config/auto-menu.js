@@ -2,9 +2,11 @@
  * Created by sf
  * 2018/10/20
  */
+
+
 let data = [
     {
-        title: '家常菜谱',
+        title: 'mode',  // 首个 title 很重要，决定了是否平铺所有菜。当 title = mode，平铺； 当title = xxx，按分类显示
         iconButtons: [
             [
                 {
@@ -171,6 +173,14 @@ let data = [
                     detail: null,
                     settingHide:true
                 },
+            ]
+
+        ]
+    },
+    {
+        title: 'mode',  // 首个 title 很重要，决定了是否平铺所有菜。当 title = mode，平铺； 当title = xxx，按分类显示
+        iconButtons: [
+            [
                 {
                     'icon': '',
                     'text': '清蒸柠檬鲈鱼',
@@ -335,6 +345,14 @@ let data = [
                     detail: null,
                     settingHide:true
                 },
+            ]
+
+        ]
+    },
+    {
+        title: 'mode',  // 首个 title 很重要，决定了是否平铺所有菜。当 title = mode，平铺； 当title = xxx，按分类显示
+        iconButtons: [
+            [
                 {
                     'icon': '',
                     'text': '蒜蓉粉丝蒸扇贝',
@@ -499,6 +517,14 @@ let data = [
                     detail: null,
                     settingHide:true
                 },
+            ]
+
+        ]
+    },
+    {
+        title: 'mode',  // 首个 title 很重要，决定了是否平铺所有菜。当 title = mode，平铺； 当title = xxx，按分类显示
+        iconButtons: [
+            [
                 {
                     'icon': '',
                     'text': '糖醋小排',
@@ -835,6 +861,14 @@ let data = [
                     detail: null,
                     settingHide:true
                 },
+            ]
+
+        ]
+    },
+    {
+        title: '精致焗烤',
+        iconButtons: [
+            [
                 {
                     'icon': '',
                     'text': '蒜蓉烤扇贝',
@@ -999,6 +1033,14 @@ let data = [
                     detail: null,
                     settingHide:true
                 },
+            ]
+
+        ]
+    },
+    {
+        title: '精致焗烤',
+        iconButtons: [
+            [
                 {
                     'icon': '',
                     'text': '芝士焗番薯',
@@ -1158,6 +1200,178 @@ let data = [
                     recipeId:{
                         set:false,
                         default: 0x7F,
+                        range:null
+                    },
+                    detail: null,
+                    settingHide:true
+                },
+            ]
+
+        ]
+    },
+    {
+        title: '滋补养生',
+        iconButtons: [
+            [
+                {
+                    'icon': '',
+                    'text': '冰糖炖雪梨',
+                    'mode': 0xE0,
+                    time:{
+                        set: false,
+                        default:35,
+                        range: null
+                    },
+                    temperature:{
+                        set: false,
+                        default:0,
+                        range:null
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    weight:{
+                        set:false,
+                        default:100,
+                        range:[100,400,100],
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x2C,
+                        range:null
+                    },
+                    detail: null,
+                    settingHide:true
+                },
+                {
+                    'icon': '',
+                    'text': '银耳莲子羹',
+                    'mode': 0xE0,
+                    time:{
+                        set: false,
+                        default:40,
+                        range: null
+                    },
+                    temperature:{
+                        set: false,
+                        default:0,
+                        range:null
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    weight:{
+                        set:false,
+                        default:100,
+                        range:[100,400,100],
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x8A,
+                        range:null
+                    },
+                    detail: null,
+                    settingHide:true
+                },
+                {
+                    'icon': '',
+                    'text': '红枣乌鸡汤',
+                    'mode': 0xE0,
+                    time:{
+                        set: false,
+                        default:55,
+                        range: null
+                    },
+                    temperature:{
+                        set: false,
+                        default:0,
+                        range:null
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    weight:{
+                        set:false,
+                        default:100,
+                        range:[100,400,100],
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x8B,
+                        range:null
+                    },
+                    detail: null,
+                    settingHide:true
+                },
+                {
+                    'icon': '',
+                    'text': '虫草花炖排骨',
+                    'mode': 0xE0,
+                    time:{
+                        set: false,
+                        default:8,
+                        range: null
+                    },
+                    temperature:{
+                        set: false,
+                        default:0,
+                        range:null
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    weight:{
+                        set:false,
+                        default:100,
+                        range:[100,400,100],
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x50,
                         range:null
                     },
                     detail: null,
@@ -1335,6 +1549,14 @@ let data = [
                     detail: null,
                     settingHide:true
                 },
+            ]
+
+        ]
+    },
+    {
+        title: '午后时光',
+        iconButtons: [
+            [
                 {
                     'icon': '',
                     'text': '海绵蛋糕',
@@ -1499,6 +1721,14 @@ let data = [
                     detail: null,
                     settingHide:true
                 },
+            ]
+
+        ]
+    },
+    {
+        title: '午后时光',
+        iconButtons: [
+            [
                 {
                     'icon': '',
                     'text': '经典葡式蛋挞',
@@ -1576,178 +1806,6 @@ let data = [
                     recipeId:{
                         set:false,
                         default: 0x89,
-                        range:null
-                    },
-                    detail: null,
-                    settingHide:true
-                },
-            ]
-
-        ]
-    },
-    {
-        title: '滋补养生',
-        iconButtons: [
-            [
-                {
-                    'icon': '',
-                    'text': '冰糖炖雪梨',
-                    'mode': 0xE0,
-                    time:{
-                        set: false,
-                        default:35,
-                        range: null
-                    },
-                    temperature:{
-                        set: false,
-                        default:0,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    weight:{
-                        set:false,
-                        default:100,
-                        range:[100,400,100],
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 0x2C,
-                        range:null
-                    },
-                    detail: null,
-                    settingHide:true
-                },
-                {
-                    'icon': '',
-                    'text': '银耳莲子羹',
-                    'mode': 0xE0,
-                    time:{
-                        set: false,
-                        default:40,
-                        range: null
-                    },
-                    temperature:{
-                        set: false,
-                        default:0,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    weight:{
-                        set:false,
-                        default:100,
-                        range:[100,400,100],
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 0x8A,
-                        range:null
-                    },
-                    detail: null,
-                    settingHide:true
-                },
-                {
-                    'icon': '',
-                    'text': '红枣乌鸡汤',
-                    'mode': 0xE0,
-                    time:{
-                        set: false,
-                        default:55,
-                        range: null
-                    },
-                    temperature:{
-                        set: false,
-                        default:0,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    weight:{
-                        set:false,
-                        default:100,
-                        range:[100,400,100],
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 0x8B,
-                        range:null
-                    },
-                    detail: null,
-                    settingHide:true
-                },
-                {
-                    'icon': '',
-                    'text': '虫草花炖排骨',
-                    'mode': 0xE0,
-                    time:{
-                        set: false,
-                        default:50,
-                        range: null
-                    },
-                    temperature:{
-                        set: false,
-                        default:0,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    weight:{
-                        set:false,
-                        default:100,
-                        range:[100,400,100],
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 0x50,
                         range:null
                     },
                     detail: null,

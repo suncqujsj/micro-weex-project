@@ -5,7 +5,7 @@
 import modeIcons from "../../common/mapping/modeIcons";
 let modes = [
     {
-        title: '',
+        title: 'mode',
         iconButtons: [
             {
                 'icon': modeIcons[12].dir,

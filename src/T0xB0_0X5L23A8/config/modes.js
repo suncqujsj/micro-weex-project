@@ -39,7 +39,6 @@ let modes = [
                 },
                
             },
-           
             { //烧烤
                 'icon': modeIcons[13].dir,
                 'text': modeIcons[13].cn,
@@ -183,6 +182,99 @@ let modes = [
                 },
                 settingHide:false
 
+            },
+            {   // 炉腔清洁
+                'icon': modeIcons[20].dir,
+                'text': modeIcons[20].cn,
+                'mode': 0xC6,
+                time:{
+                    set: false,
+                    default:5,
+                    range:[1,95,1],
+                },
+                temperature:{
+                    set: false,
+                    default:null,
+                    range:null,
+                },
+                preheat:{
+                    set:false,
+                    default: null,
+                    hide: true, //工作中，隐藏预热选择
+                },
+                steamAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                },
+                fireAmount:{
+                    set:false,
+                    default:10,
+                    range:[1,5,2,8,10,2],
+                    hide: true
+                },
+            },
+            {   // 除味
+                'icon': modeIcons[20].dir,
+                'text': modeIcons[20].cn,
+                'mode': 0xC3,
+                time:{
+                    set: false,
+                    default:5,
+                    range:[1,95,1],
+                },
+                temperature:{
+                    set: false,
+                    default:null,
+                    range:null,
+                },
+                preheat:{
+                    set:false,
+                    default: null,
+                    hide: true, //工作中，隐藏预热选择
+                },
+                steamAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                },
+                fireAmount:{
+                    set:false,
+                    default:10,
+                    range:[1,5,2,8,10,2],
+                    hide: true
+                },
+            },
+            {   // 水垢清洁 or 炉腔除垢，常用有2种叫法
+                'icon': modeIcons[10].dir,
+                'text': modeIcons[10].cn,
+                'mode': 0xC1,
+                time:{
+                    set: false,
+                    default:5,
+                    range:[1,95,1],
+                },
+                temperature:{
+                    set: false,
+                    default:null,
+                    range:null,
+                },
+                preheat:{
+                    set:false,
+                    default: null,
+                    hide: true, //工作中，隐藏预热选择
+                },
+                steamAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                },
+                fireAmount:{
+                    set:false,
+                    default:10,
+                    range:[1,5,2,8,10,2],
+                    hide: true
+                },
             },
         ]
     },

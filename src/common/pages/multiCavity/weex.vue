@@ -224,14 +224,8 @@
                 </div>
                 <div slot="customerContent" class="header-top-wrapper">
                     <div class="header-top-inner-wrapper">
-                        <div class="header-right-image-wrapper" @click="openCloudRecipe">
-                            <image class="header-right-image" :src="'assets/img/header/public_ic_cloud_recipe@3x.png'"></image>
-                        </div>
                         <div class="header-right-image-wrapper" @click="childLock(true,index)">
                             <image class="header-right-image" :src="'img/header/public_ic_babylock@3x.png'"></image>
-                        </div>
-                        <div class="header-right-image-wrapper" @click="openMorePage">
-                            <image class="header-right-image" :src="'img/header/public_ic_lots@3x.png'"></image>
                         </div>
                     </div>
                 </div>

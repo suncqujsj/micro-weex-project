@@ -200,6 +200,7 @@ const accordionMixin = {
             }
 
             let jsonCmd = {
+                currentItem: this.currentItem,
                 mode: this.currentItem.mode,
                 minute: this.setValue('time'),
                 temperature: this.setValue('temperature'),

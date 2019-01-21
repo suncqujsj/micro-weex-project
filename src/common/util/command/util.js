@@ -9,6 +9,7 @@ import  nativeService from '@/common/services/nativeService';
 export default {
   //10进制转换8位2进制的方法
   doorStatus: 0,
+  isWorking: false,
   initAnalysisObj(){
     var obj = {
         workingState:{
@@ -33,9 +34,9 @@ export default {
         },
         timeRemaining:{
             name:"程序剩余时间",
-            hour: {name:"小时",value: 0x00},
-            minute: {name:"分钟",value: 0x00},
-            second: {name:"秒",value: 0x00},
+            hour: 0,
+            minute: 0,
+            second: 0,
         },
         temperature:{
           name:"发热管设置的温度",
@@ -70,6 +71,13 @@ export default {
         fire:{name: "火力",value: 0x00},
         weight:{name: "重量",value: 0x00},
         steam:{name: "蒸汽量",value: 0x00},
+        timeSetting:{
+          name:"程序设定总时间",
+          hour: 0,
+          minute: 0,
+          second:0,
+       },
+
     };
     return obj;
   },
@@ -249,6 +257,9 @@ export default {
     if(parseInt(params.temperature)<100){
       params.preheat = false;
     }
+    if(this.isWorking && params.currentItem  && params.currentItem.preheat && params.currentItem.preheat.hide){//如果隐藏
+      params.preheat = false;
+    }
     if(controltype==0){
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 1);
@@ -306,7 +317,7 @@ export default {
       message.setByte(messageBody, 18, params.probeTemperature);
     }
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
-    nativeService.alert(this.cmdToEasy(sendcmd));
+    // nativeService.alert(this.cmdToEasy(sendcmd));
     return sendcmd;
   },
   //取消工作指令
@@ -375,7 +386,12 @@ export default {
     var obj = this.initAnalysisObj();
     
   // if(parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)){
-    obj.workingState.value = parseInt(requestCmd[11]); 
+    obj.workingState.value = parseInt(requestCmd[11]);
+    if(parseInt(requestCmd[11]) == 3 || parseInt(requestCmd[11]) == 6){
+      this.isWorking = true;
+    }else{
+      this.isWorking = false;
+    }
     var recipeId = parseInt(requestCmd[12])*256*256+parseInt(requestCmd[13])*256+parseInt(requestCmd[14]);
     obj.recipeId.value = recipeId;
     obj.timeRemaining.hour = parseInt(requestCmd[16]);
@@ -416,6 +432,10 @@ export default {
     if(obj.isProbe.value){ //如果是探针，则为显示为探针设定温度
       obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
     }
+
+    obj.timeSetting.hour = parseInt(requestCmd[38]);
+    obj.timeSetting.minute = parseInt(requestCmd[39]);
+    obj.timeSetting.second = parseInt(requestCmd[40]);
 
     obj.fire.value = parseInt(requestCmd[24])*10;
     obj.weight.value = parseInt(requestCmd[25])*10;

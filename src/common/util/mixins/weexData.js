@@ -37,19 +37,19 @@ let workingModalMixin  = {
                     "completedColor":"#FFFFFF", //环形进度条未完成后的颜色默认#267AFF
                     "incompletedColor":"#f5d5d5eb", //环形进度条未完成后的颜色，默认透明
                     "thickness":2, //环形进度条宽度，默认4
-                    "cornerRadius" : isIosLess5_4?140: 280,  //环形的半径，默认是width/2
+                    "cornerRadius" : isIosLess5_4?120: 240,  //环形的半径，默认是width/2
                     "totalCounter" : 360, //环形进度条的最大值，默认是360
                     "progressCounter" : 0, //设置进度值，默认是从0-360, 默认为0
                     "autoProgress" : false, //设置是否需要自动执行环形进度，默认false, 如果设置为true，则每秒进度值+1操作
                     "clockwise" : true, //环形自动执行进度的方向，默认是true，即顺时针方向，false为逆时针方向
                     "startingSlice" : 360, //环形进度开始的起始位置，当totalCounter为360的时候，0: 0点钟位置起点，90:3点钟位置起点 180:6点钟位置起点
                     "pointShow" : false, //环形进度中的进度球是否需要显示，默认不显示
-                    "pointRadius" : 3, //默认是环形进度宽度的一半
+                    "pointRadius" : 4, //默认是环形进度宽度的一半
                     "pointColor" :  "#FFFFFF", //环形进度中的进度球颜色
-                    "pointImageBase64" :  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAhCAYAAABX5MJvAAAERklEQVRYR82Yf2jUdRjHX5875137cbcfOF1Omfij1DDC3BKEWeCPUMERy2pgkQvBQUY5EfrB6AfIlrVFG4gYJWmaxASV/AHlQKptRTRSywyHu5oudttOt+623T3x3Pe8rbntbiTdvv99P5/n83ne3/fn/Tyf5/ka4nkqxObKJd3RS1Y/FCI8JpBnDLOATASvQJuBVoSvptpoCKTQ6fPQTYUJxXJhYhlkV8t0PxRjWIeQH3Ya6zF0As0IJ51wtOMlc2O8JWOD2CtJbj9FCK8KLACcsXyPMu83cBnDOz1O6tlqBkbbY1QQGXvFHQpQJiHeABy6cKodpiXD/AxYPxcezIbcVEh3QrcfPLfgpw448Tv81gV/9UF/MOoyYGy8aXNQ27XV9IwEcgcI13syDzsVwDMI4fn7MmHT/ZbzBZlYg2M8Alz2WmCO/AK/eiOGBp06RJAK38vmyvDl/9pPGQj6qUV4CrAbA88uhp0FMD0ZptjiP5DBENzog8pG+OQCiEKAIIbDdidlwxkZAqEaCFAuwtvKQHISlD0EryyDe6ZYznsH4JoPzrbC6Va42gNdfshwwhw3rMmDVXkw2wUpSdaavwdhTzPU/gh9qgiDGMNrPQ6qbmskCsJdI0+KcEA1oAzsWDYEICjw/XU4cAGOX4GewNiMuB2wYR5sXgwPz1A6h4C82xxlJGAMm3u2m891pzAIDcMAnBFYou/PPQC7C4cY+PIqlJ8Dz83oJuOei35EbhpUrYTH5wwxsqsBPv7ZejfQ4oDVGr4GTUSZbCNElYahirC+CGamgjJwphVKTkAwZsq5E5fdBgfXw+o8i5E/bkLRsahY/dgo93mpM2kfSpYJ8inCWg3DXQWwfaklwsZ22HIK2nzxC3Kk5SwX7F8LBTkwEIIPfoDdjZHwNZwiSImZViPzA8J3mglnpkH9RiskVYQ7G+DgxfiOYCyYejQli6Cy0BKrhqyyoawAXofhEeOukVIR9unIytlwrMgSyqVOWHN0fBHGy4+K9XQxLMwinCw21sO5axFtCC8Yd7UcEnhah/Y8CqVhaVq0vX4+Xjex7d5aAS8utez2tcCOr6MC/cy4quUbYLkOnd0E+TOsyXVfwHlP7M3jtViRCyefsKybrsOqI9GV3+pxtImQq0OXtsC9qdbkoo+i5xavn3HtVG8Xn7dM/rwFC/dHmDB4FESvCMk61F4GyZHsmFMXyXB3BQJoBm7fZm3WNwg5tVEQfaqJNiGBTIBnkmhiMkSH+30pFZPgPJHQjGnodMDyyXF3hG/RdDR4/v9bFMp93dRNknoikowSXlmFcUyGGlNxjFlt50N2CiRNoNrWAqajFyqbJlJtR44l4X3H7bsqVge2YS4siXRgWu5r2a8dWEsHHL8bHVj00kx0Lzr89g535TaKkQl05eDF0PTfu/LhSDShuUh32MnqD1GIGfF/ArwiI/5PBOn0+eL7P/EPYtpkF4ik2AkAAAAASUVORK5CYII=", //环形进度中的进度球的图片base64
+                    "pointImageBase64" :  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAMAAADWZboaAAAA21BMVEUAAAD////t7e3i4uLf39/f39/f39/g4ODg4ODh4eHq6urq6urf39/g4ODg4ODm5ubg4ODj4+Pf39/g4ODg4ODg4OD5+fng4OD5+fnf39/e3t7f39/g4OD////u7u75+fn29vb5+fn4+Pj5+fnm5ub39/fx8fHf39/f39/7+/v19fXf39/f39/g4ODe3t7i4uL8/Pzg4OD6+vrn5+f6+vrv7+/6+vru7u7k5OT29vbp6en7+/v39/f6+vr6+vrz8/P29vbz8/Py8vL5+fn6+vrf39/u7u7i4uLq6uroWKUWAAAAQHRSTlMABA0I+NXvXzwvFgy5lEYdoiXosYVJjfPeyatnQiT58Oa+NzD++vrg3L+qjn5zVTQrIfPrlOvm3dPOzKt2ZkXCaN8LMwAAA3hJREFUSMeM0s2KwjAUBWBjN1pBcBO6UNtaHLArERHEn0mavP8zjTcnXm24HT2RxM3HKckdyVndjnVROlMW9fG2Gn2dRlfee+cd/SiVbr6Cm50HfGyMXb35CFcXj7iXM2Fr//9upV1gJKENQexbrYZlvkPhG4w8bKbOh+S+iBKO++hAir0s74fgwHyET+dMOMq72EmSMBa30kJrsEJvXhCDcYCQoe5lizyV6vmaXJpgTq0SqoNEaxRgDDk6mQRcKz8lOHSabX82LrjWAMFpSaXWmLY3tzyy/Vb6m0Da3ud5RwbhVu5LrLX2972UPxIn/goMvbZhesTwUIAfm9DHrVbzm576regTMJUGXKlIGzDEwLqUYVHoaGLpNSIsATJnfUVt1nIrmESwOG0W6PjcGx7gVEMyP49JqvwEykZojZBT5Yro4jB4PTCoJclZL4hmU8MwTWQJ7GzXTTOiE35MubWzwCyJTojOllsQIUA9h+1nOaMLnpdG/lgZU2e3no+J/hVaZyuuAkEYgIm96djtLqIO4VzkTALZCGGYYS4DGt//iU5p5XS79GBJjDcff3VZhOR/0FnGo4l2KB+fOdIvTa3bN6NDfSENflYPacbzqp/AGcaULiF+zfCIpsOYiKv+2pZnCgel7YdySU+97HOWimycCgod1j3zyLCI52/L4i1mO67vc7wZ1l/Ij0mkTkWDmePQrRSw/sOIo/s40/pGJqn3qB8wHpaZWKOMNKjtry3Do0LHoZCFcROt87SFTyFF+Ppdc1zFtgB7NWHzUKyOKRf6xdhbLXm7dkZsF25c1rchFGOPjD7AWfC8WsqOOnQ4bZo8Z2qa2P7PfCZpf1Jd/vVU8t1yC5aZO16err6RsBa5YsXz8RvDxD6zYCrHdTAtX6IDfbbWV9Lqh4Yeogu2a4rEotrTpusdXmOLvGvovhIxQWHK9+rqUDQYvFA9fDbFoao9f/nP0vFExHgD2DIdOGXTcBYJzzHtGuvHF1UmFHCnNWa2HUCalOoS+yAtRcLglDJOG9C7rm1Bwa3bNVCUs/QUhMTm8B1dxVEiNoVQHsXVvBVb06FbK8kSTunLwwNPmFS1G5pm7di5uSKLZMn2CYdK9qyUUSbcG85nBYdeIM6Ziqo0rSKVnUXghQjXMXHeYs99D/I8eHe9+M0hBq7rDSG+A+UTsvnF/QPk9EAXDmEvRAAAAABJRU5ErkJggg==", //环形进度中的进度球的图片base64
                 },
                 progress:1,
-                progress_radius: 280,
+                progress_radius: 240,
                 tag_next: '',
                 btnText: "暂停",
                 btnSrc: "img/footer/icon_pause@2x.png",
@@ -82,6 +82,8 @@ let workingModalMixin  = {
                 lightImg:"img/light_off@3x.png",
 
                 isWorkingPage:false,
+
+                workingSettingRecord: false,
         };
     },
     methods: {
@@ -89,27 +91,41 @@ let workingModalMixin  = {
             //this.show = false;
             // nativeService.alert(analysisObj);
             clearInterval(this.queryTimer);
-            this.setWarningDialog("",null,false);
+            // this.setWarningDialog("",null,false);
             this.modalVisibility = false;
+            this.showDetailVisibility = false;
+            this.show = false;    
             this.isWorkingPage = false;
             this.cmdObj = analysisObj;
             this.probeTempText = '°C';
                
             //提示
+            let isLackWater = false , isWaterBox = false, isDoorSwitch = false;
+            if(analysisObj.workingState.value == 2 || analysisObj.workingState.value == 1 ){
+                this.setWarningDialog("",null,false);
+            }
+            if(analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6){
+                if(analysisObj.displaySign.lackWater && analysisObj.mode.value!=0xC4){
+                    isLackWater = true;
+                    this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
+                }
+                if(analysisObj.displaySign.waterBox && analysisObj.mode.value!=0xC4){
+                    isWaterBox = true;
+                    this.setWarningDialog("主人，您的设备缺水盒了");
+    
+                }
+                if(analysisObj.displaySign.doorSwitch){
+                    isDoorSwitch = true;
+                    this.setWarningDialog("主人，您的设备炉门开了");
+                }
+            }
             if(analysisObj.displaySign.isError){
                 this.setWarningDialog("主人，您的设备发生故障了，请联系售后人员");
             }
-            if(analysisObj.displaySign.lackWater && analysisObj.mode.value!=0xC4){
-                this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
+            if(!isLackWater && !isWaterBox && !isDoorSwitch){
+                this.setWarningDialog("",null,false);
             }
-            if(analysisObj.displaySign.waterBox && analysisObj.mode.value!=0xC4){
-                this.setWarningDialog("主人，您的设备缺水盒了");
-
-            }
-            if(analysisObj.displaySign.doorSwitch){
-                this.setWarningDialog("主人，您的设备炉门开了");
-            }
-
+           
             if(analysisObj.displaySign.lock){
                 // let context = this;
                 // this.setWarningDialog("你需要关闭童锁吗？", function(){
@@ -117,13 +133,23 @@ let workingModalMixin  = {
                 // });
                 !this.modalVisibility && this.showModal();
             } 
-            if(analysisObj.workingState.value == 3){
-                this.queryRunTimer(6);//6秒轮询 
-            }
+            // if(analysisObj.workingState.value == 3){
+            //     this.queryRunTimer(6);//6秒轮询 
+            // }
             if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6) {
                 this.isWorkingPage = true;
                 this.analysisWorkingFun(analysisObj,tabs);
             }
+            if(analysisObj.workingState.value == 3){
+                var _hour = analysisObj.timeRemaining.hour, _minute = analysisObj.timeRemaining.minute, _second = analysisObj.timeRemaining.second;
+                var allSeconds = _hour*60*60+_minute*60+_second;
+                if(allSeconds<2*60){
+                    this.queryRunTimer(1);//6秒轮询 
+                }else{
+                    this.queryRunTimer(6);//6秒轮询 
+                }
+            }
+           
         },
         countDownRunTimer(minute,second,timeSet){
             var self = this;
@@ -144,6 +170,9 @@ let workingModalMixin  = {
             var self = this , timer = null;
             // clearInterval(this.countDownTimer);
             // nativeService.alert(analysisObj);
+            if(this.workingSettingRecord){
+                this.show = true;    
+            }
             this.isWorking = false;
             this.isFooterShow = true;
             this.timeShow = false;
@@ -163,8 +192,10 @@ let workingModalMixin  = {
 
             var _hour = analysisObj.timeRemaining.hour, _minute = analysisObj.timeRemaining.minute, _second = analysisObj.timeRemaining.second;
             var allSeconds = _hour*60*60+_minute*60+_second;
-            var progress_step = (10*60-allSeconds)/(10*60)*360; //360度倒计时为例
-            //this.chartJson.progressCounter = progress_step;
+            // var progress_step = (10*60-allSeconds)/(10*60)*360; //360度倒计时为例
+            // let chartJson = JSON.parse(JSON.stringify(this.chartJson));
+            // chartJson.progressCounter = progress_step;
+            // this.chartJson = chartJson;
 
             if(analysisObj.probeRealTemperature.value>analysisObj.probeSetttingTemperature.value){
                 analysisObj.probeRealTemperature.value = analysisObj.probeSetttingTemperature.value;
@@ -227,7 +258,7 @@ let workingModalMixin  = {
                this.probeTempText = '';
                this.cancleBtnText = '完成';
                this.cancleIcon = 'img/finish_icon@2x.png';
-               this.countDownRunTimer(0,0,1);
+            //    this.countDownRunTimer(0,0,1);
               
             }
             // 不是烹饪完成 ，并且处于预热中状态
@@ -293,7 +324,7 @@ let workingModalMixin  = {
                         }
                         this.workSpecialStatusText = allSeconds;
                         this.tag_next = '秒';
-                        this.countDownRunTimer(_minute,_second,1);
+                        // this.countDownRunTimer(_minute,_second,1);
                     
                     }
                 }

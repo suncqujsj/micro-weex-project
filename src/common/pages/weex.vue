@@ -10,7 +10,7 @@
                         <div class="header-right-image-wrapper" @click="openCloudRecipe">
                             <image class="header-right-image" :src="'img/header/public_ic_cloud_recipe@3x.png'"></image>
                         </div>
-                        <div class="header-right-image-wrapper" @click="childLock(true)">
+                        <div v-if="!constant.device.hideChildLock" class="header-right-image-wrapper" @click="childLock(true)">
                             <image class="header-right-image" :src="'img/header/public_ic_babylock@3x.png'"></image>
                         </div>
                         <div class="header-right-image-wrapper" @click="openMorePage">
@@ -50,7 +50,7 @@
                                 <div class="icon-button column" v-for="item in items" @click="onIconButtonClicked(item)">
                                     <image v-if="item.icon" class="button-icon" :src="item.icon"></image>
                                     <div v-else class="button-icon row a-c j-c">
-                                        <text>{{item.time.default}}'</text>
+                                        <text style="font-size: 30px;">{{item.time.default}}'</text>
                                     </div>
                                     <!-- 不支持肉类探针的模式遮罩层 -->
                                     <div v-if="!item.probe && cmdObj.isProbe.value" class="button-icon a-c j-c probeClass"></div>
@@ -80,84 +80,50 @@
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
                 <!--</template>-->
                 <!--<text v-if="currentItem" class="content-title" @click="showDetailModal">{{currentItem.text}}</text>-->
-                <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header" :title="currentItem.text" titleText="#000000" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
+                <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header b-b-1" :title="currentItem.text" titleText="#000000" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
 
-               
-                <!--工作状态，弹出框设置-->
-                <div v-if="isWorkingPage">
-                    <div v-for="(item, index) in accordions">
-                        <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value">
-                            <div v-if="item.type==='picker' && item.key=='probeTemperature'" >
-                                <sf-accordion :type="item.type" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
-                                    <div slot="content">
-                                        <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
-                                    </div>
-                                </sf-accordion>
-                            </div>
-                                <div v-if="item.type==='picker' && item.key=='steamAmount'" >
-                                <sf-accordion :type="item.type" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
-                                    <div slot="content">
-                                        <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
-                                    </div>
-                                </sf-accordion>
-                            </div>
+                 <div v-for="(item, index) in accordions">
+                     <div v-if="item.type==='pickers'" >
+                         <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :hms="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                             <div slot="content">
+                                 <!--<wx-picker :index="index" :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>-->
+                                 <time-picker :value="current[item.key]" :hms="constant.device.hms" @change="onChange"></time-picker>
+                             </div>
+                         </sf-accordion>
+                     </div>
+                    <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value"> <!--探针设置-->
+                        <div v-if="item.type==='picker' && item.key=='probeTemperature'" >
+                            <sf-accordion :type="item.type" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                                <div slot="content">
+                                    <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                </div>
+                            </sf-accordion>
                         </div>
-                        <div v-else>
-                            <div v-if="item.type==='picker' &&  item.key!='probeTemperature' && (currentItem && currentItem[item.key] && !currentItem[item.key].hide)" >
-                                <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
-                                    <div slot="content">
-                                        <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
-                                    </div>
-                                </sf-accordion>
-                            </div>
-                            <div v-if="item.type==='switch' && (currentItem && currentItem[item.key] && !currentItem[item.key].hide)">
-                                <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
-                                    <div slot="right">
-                                        <midea-switch2 :itemKey="item.key" :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
-                                    </div>
-                                </sf-accordion>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                    <!--待机状态，弹出框设置-->
-                <div v-else>
-                    <div v-for="(item, index) in accordions">
-                        <div v-if="currentItem && currentItem.probe && cmdObj.isProbe.value">
-                            <div v-if="item.type==='picker' && item.key=='probeTemperature'" >
-                                <sf-accordion :type="item.type" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
-                                    <div slot="content">
-                                        <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
-                                    </div>
-                                </sf-accordion>
-                            </div>
                             <div v-if="item.type==='picker' && item.key=='steamAmount'" >
-                                <sf-accordion :type="item.type" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
-                                    <div slot="content">
-                                        <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
-                                    </div>
-                                </sf-accordion>
-                            </div>
+                            <sf-accordion :type="item.type" :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                                <div slot="content">
+                                    <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                </div>
+                            </sf-accordion>
                         </div>
-                        <div v-else>
-                            <div v-if="item.type==='picker' &&  item.key!='probeTemperature'" >
-                                <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
-                                    <div slot="content">
-                                        <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
-                                    </div>
-                                </sf-accordion>
-                            </div>
-                            <div v-if="item.type==='switch' && !current.preheatHide">
-                                <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
-                                    <div slot="right">
-                                        <midea-switch2 :itemKey="item.key" :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
-                                    </div>
-                                </sf-accordion>
-                            </div>
+                    </div>
+                    <div v-else>
+                        <div v-if="item.type==='picker' &&  item.key!='probeTemperature' && (currentItem && currentItem[item.key] && (!currentItem[item.key].hide && isWorkingPage || !isWorkingPage))">
+                            <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                                <div slot="content">
+                                    <wx-picker :pickerIndex="index" :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                </div>
+                            </sf-accordion>
+                        </div>
+                        <div v-if="item.type==='switch' && (currentItem && currentItem[item.key] && (!currentItem[item.key].hide && isWorkingPage || !isWorkingPage)) && !current.preheatHide">
+                            <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
+                                <div slot="right">
+                                    <midea-switch2 :itemKey="item.key" :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
+                                </div>
+                            </sf-accordion>
                         </div>
                     </div>
                 </div>
-
             </div>
         </sf-dialog>
 
@@ -184,8 +150,20 @@
             </div>
         </detail-modal>
 
+        <!--提示弹窗-->
+        <midea-dialog :title="warningDialog.title"
+                      :show="warningDialog.show"
+                      :single="true"
+                      noFooter="true"
+                      @mideaDialogConfirmBtnClicked="knowClicked"
+                      :content="warningDialog.content"
+                      mainBtnColor="#FFB632"
+        >
+        </midea-dialog>
+
+        
         <!--童锁遮罩-->
-        <modal :show="modalVisibility" @close="closeModal">
+        <modal :show="modalVisibility">
             <div slot="header">
                 <modal-header leftImg="img/header/public_ic_home@3x.png" class="modal-header" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native"></modal-header>
             </div>
@@ -202,17 +180,6 @@
             </div>
         </modal>
         <!--<child-lock :modalVisibility="modalVisibility" :childLock="childLock" :closeModal="closeModal"></child-lock>-->
-
-        <!--提示弹窗-->
-        <midea-dialog :title="warningDialog.title"
-                      :show="warningDialog.show"
-                      :single="true"
-                      noFooter="true"
-                      @mideaDialogConfirmBtnClicked="knowClicked"
-                      :content="warningDialog.content"
-                      mainBtnColor="#FFB632"
-        >
-        </midea-dialog>
         
         <!--确定/取消弹窗-->
         <midea-actionsheet
@@ -274,7 +241,7 @@
                                 <text class="number_prev" v-if="hasHour">时</text>
                             </div>
                             <div class="content_section">
-                                <text :class="['number-text',timeShow && 'work_time',hasHour && 'hour_time']">{{workSpecialStatusText}}</text>
+                                <text :class="['number-text',timeShow && 'work_time',hasHour && 'hour_time',hourMore10 && 'moreThen10Hour']">{{workSpecialStatusText}}</text>
                             </div>
                             <div class="next_section">
                                 <text class="number_next">{{tag_next}}</text>
@@ -347,8 +314,9 @@
     import nativeService from "@/common/services/nativeService";
     import query from "../../dummy/query";
     import mideaSwitch2 from '@/midea-component/switch2.vue'
-    // import WxPicker from '@/component/sf/custom/picker.vue';
-    import WxPicker from '@/component/sf/custom/picker_amui.vue';
+    // import WxPicker from '@/component/sf/custom/picker_amui.vue';
+     import WxPicker from '@/component/sf/custom/picker_time.vue';
+    import timePicker from '@/component/sf/custom/timePicker.vue'
     import mideaDialog from '@/component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
     import light from "@/component/sf/common/light.vue";
@@ -389,7 +357,7 @@
                 default: () => ({})
             },
         },
-        components: {MideaHeader,sfDialog,mideaActionsheet,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modal,modalHeader,rowWrapItems,light},
+        components: {MideaHeader,sfDialog,mideaActionsheet,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modal,modalHeader,rowWrapItems,light,timePicker},
         created(){
             let self = this;
             let {constant,tabs} = this;
@@ -437,11 +405,16 @@
                 return{
                     height: `${progress_radius * 2}px`,
                     width: `${progress_radius * 2}px`,
-                    marginTop: `${wrapHeight/2-progress_radius*2}px`
+                    marginTop: `${wrapHeight/2-progress_radius*2-60}px`
                 }
             }
         },
         methods: {
+            onChange(e){
+                // nativeService.alert(e);
+                this.$set(this.current, 'hms', JSON.parse(JSON.stringify(e.value)));
+                // nativeService.alert(this.current['hms']);
+            },
             isAutoMenuStyle: function(tab){
                 return tab.rows[0].title && tab.rows[0].title !== 'mode'
             },

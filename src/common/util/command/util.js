@@ -8,6 +8,7 @@ import  nativeService from '@/common/services/nativeService';
  var latesFrameRecord = 0;
 export default {
   //10进制转换8位2进制的方法
+  doorStatus: 0,
   initAnalysisObj(){
     var obj = {
         workingState:{
@@ -224,7 +225,10 @@ export default {
  
   //控制启动指令
   createControlMessage(params,callbackData) {
-    // nativeService.alert(params); 
+    if(this.doorStatus){
+      nativeService.toast("主人，您的设备炉门开了");
+      return;
+    }
     var time = params.minute;
     var hour = time/60;
     var minute = time%60;
@@ -242,6 +246,9 @@ export default {
       controltype = 3 //探针工作设置类
     }
    
+    if(parseInt(params.temperature)<100){
+      params.preheat = false;
+    }
     if(controltype==0){
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 1);
@@ -299,7 +306,7 @@ export default {
       message.setByte(messageBody, 18, params.probeTemperature);
     }
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
-    // nativeService.alert(this.cmdTo16Hex(sendcmd));
+    nativeService.alert(this.cmdToEasy(sendcmd));
     return sendcmd;
   },
   //取消工作指令
@@ -386,6 +393,7 @@ export default {
    
      obj.displaySign.lock = message.getBit(requestCmd, 26, 0);
      obj.displaySign.doorSwitch = message.getBit(requestCmd, 26, 1);
+     this.doorStatus = message.getBit(requestCmd, 26, 1);
      obj.displaySign.waterBox = message.getBit(requestCmd, 26, 2);
      obj.displaySign.lackWater = message.getBit(requestCmd, 26, 3);
      obj.displaySign.changeWater = message.getBit(requestCmd, 26, 4);

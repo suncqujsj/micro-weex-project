@@ -90,7 +90,7 @@
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
                 <!--</template>-->
                 <!--<text v-if="currentItem" class="content-title" @click="showDetailModal">{{currentItem.text}}</text>-->
-                <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header" :title="currentItem.text" titleText="#000000" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
+                <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header  b-b-1" :title="currentItem.text" titleText="#000000" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
 
                 <div v-if="currentItem && currentItem.probe && cmdObj.up_cavity.isProbe.value">
                     <sf-accordion type="picker" :value="setValue('probeTemperature')" unit="°C" title="设置探针温度" isFolded="true"  @callback="updateAccordionFoldingStatus">
@@ -150,14 +150,14 @@
         </detail-modal>
 
         <!--童锁遮罩-->
-        <modal :show="modalVisibility" @close="closeModal">
+        <modal :show="modalVisibility">
             <div slot="header">
-                 <sf-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native" >
+                 <sf-header leftImg="img/header/public_ic_home@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native" >
                     <div slot="headerTitle">
                         <sf-tab ref="mTab" :tabArray="pages" @tabClicked="tabClicked">
                         </sf-tab>
                     </div>
-                    <div slot="customerContent" class="header-top-wrapper">
+                   <!-- <div slot="customerContent" class="header-top-wrapper">
                         <div class="header-top-inner-wrapper">
                             <div class="header-right-image-wrapper" @click="openCloudRecipe">
                                 <image class="header-right-image" :src="'assets/img/header/public_ic_cloud_recipe@3x.png'"></image>
@@ -167,7 +167,7 @@
                                 <image class="header-right-image" :src="'img/header/public_ic_lots@3x.png'"></image>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </sf-header>
             </div>
             <div class="a-c j-c" slot="content" :style="{height: wrapHeight+'px'}">

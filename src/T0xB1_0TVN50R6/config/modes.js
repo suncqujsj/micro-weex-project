@@ -25,6 +25,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
+                    hide:true,
                     default: false
                 },
                 steamAmount:{
@@ -50,11 +51,12 @@ let modes = [
                 },
                 temperature:{
                     set: true,
-                    default:180,
-                    range:[100,250,5]
+                    default:160,
+                    range:[50,250,5]
                 },
                 preheat:{
                     set:true,
+                    hide:true,
                     default: false
                 },
                 steamAmount:{
@@ -85,7 +87,8 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: true
+                    hide:true,
+                    default: false
                 },
                 steamAmount:{
                     set:false,
@@ -115,6 +118,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
+                    hide:true,
                     default: false
                 },
                 steamAmount:{
@@ -150,6 +154,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
+                    hide:true,
                     default: false
                 },
                 steamAmount:{
@@ -180,6 +185,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
+                    hide:true,
                     default: false
                 },
                 steamAmount:{
@@ -205,11 +211,12 @@ let modes = [
                 },
                 temperature:{
                     set: true,
-                    default:150,
-                    range:[100,235,5]
+                    default:180,
+                    range:[50,250,5]
                 },
                 preheat:{
                     set:true,
+                    hide:true,
                     default: false
                 },
                 steamAmount:{
@@ -231,11 +238,11 @@ let modes = [
                 time:{
                     set: true,
                     default:30,
-                    range:[2,720,1]
+                    range:[1,540,1]
                 },
                 temperature:{
                     set: true,
-                    default:35,
+                    default:40,
                     range:[35,45,1]
                 },
                 preheat:{
@@ -273,10 +280,11 @@ let modes = [
                 temperature:{
                     set: true,
                     default:180,
-                    range:[50,250,5]
+                    range:[50,50,1,100,250,5]
                 },
                 preheat:{
                     set:true,
+                    hide:true,
                     default: false
                 },
                 steamAmount:{

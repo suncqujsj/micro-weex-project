@@ -7,6 +7,42 @@ let modes = [
     {
         title: '',
         iconButtons: [
+            {   // 微波加热 测试
+                'icon': modeIcons[12].dir,
+                'text': modeIcons[12].cn,
+                'mode': 0x01,
+                hms:{
+                    set: true,
+                    default:[0,5,0]
+                },
+                time:{
+                    set: false,
+                    default:5,
+                    range:[1,95,1],
+                },
+                temperature:{
+                    set: false,
+                    default:null,
+                    range:null,
+                },
+                preheat:{
+                    set:false,
+                    default: null,
+                    hide: true, //工作中，隐藏预热选择
+                },
+                steamAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                },
+                fireAmount:{
+                    set:true,
+                    default:10,
+                    range:[1,5,2,8,10,2],
+                    hide: true
+                },
+
+            },
             {   // 微波加热
                 'icon': modeIcons[12].dir,
                 'text': modeIcons[12].cn,

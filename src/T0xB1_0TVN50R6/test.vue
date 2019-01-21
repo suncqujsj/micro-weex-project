@@ -27,20 +27,9 @@
         methods: {
             async test(){
                 this.a = 666;
-                try {
-                    let c = await d();
-                    nativeService.alert(c);
-                }catch (e) {
-                    nativeService.alert(e);
-                }
-
                 this.b = 777;
-            },
-            d(){
-                return new Promise((resolve, reject) => {
-                    resolve(10);
-                });
-            },
+                // let c = await nativeService.getDeviceInfo();
+            }
         }
     }
 </script>

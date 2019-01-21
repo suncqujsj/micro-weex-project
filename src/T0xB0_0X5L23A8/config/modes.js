@@ -220,8 +220,8 @@ let modes = [
                 },
             },
             {   // 除味
-                'icon': modeIcons[20].dir,
-                'text': modeIcons[20].cn,
+                'icon': modeIcons[21].dir,
+                'text': modeIcons[21].cn,
                 'mode': 0xC3,
                 time:{
                     set: false,

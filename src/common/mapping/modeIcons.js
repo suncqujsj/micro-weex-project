@@ -37,5 +37,6 @@ icons[17] = getIcon('烘干', 'dry_hg@3x');
 icons[18] = getIcon('湿烤', 'dry_hg@3x');
 icons[19] = getIcon('ECO', 'ECO@3x');
 icons[20] = getIcon('清洁', 'clean@3x');
+icons[21] = getIcon('除味', 'remove_flavor@3x');
 
 export default icons;

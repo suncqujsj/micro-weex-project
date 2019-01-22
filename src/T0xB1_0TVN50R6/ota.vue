@@ -91,7 +91,7 @@
                     return;
                 }
 
-                this.checkUpgrade().then((resp)=>{ // 发现当前无固件在升级中
+                this.checkUpgradeVersion().then((resp)=>{ // 发现当前无固件在升级中
                     // nativeService.alert(resp);
                     let data = JSON.parse(resp.returnData).data;
                     if(data.hasNewVer) {
@@ -136,7 +136,7 @@
                             clearInterval(this.t);
                         }
                     });
-                },2000);
+                },5000);
             },
         }
     }

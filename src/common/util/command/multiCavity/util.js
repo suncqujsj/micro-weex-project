@@ -488,6 +488,9 @@ export default {
     if(obj.isProbe.value){ //如果是探针，则为显示为探针设定温度
       obj.temperature.upLowTemperature = parseInt(requestCmd[33+length]);
     }
+    if(parseInt(requestCmd[19+length])==0xC4 || parseInt(requestCmd[19+length])==0xC1){//如果是烘干，则不显示温度
+      obj.temperature.upLowTemperature = 0;
+    }
 
     obj.fire.value = parseInt(requestCmd[24+length])*10;
     obj.weight.value = parseInt(requestCmd[25+length])*10;

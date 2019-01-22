@@ -165,7 +165,7 @@ let modes = [
                 },
                 temperature:{
                     set: true,
-                    default:100,
+                    default:180,
                     range:[50,250,1]
                 },
                 preheat:{

@@ -15,7 +15,7 @@ let autoMenu = [
                     time:{
                         set: true,
                         default:10,
-                        range:[5,120,1]
+                        range:[1,60,1]
                     },
                     temperature:{
                         set: false,
@@ -41,19 +41,19 @@ let autoMenu = [
                         default: 0x01,
                         range:null
                     },
-                    settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                    settingHide:false, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 },
                 {
                     'icon': '',
                     'text': '清蒸草鱼香菇',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:13,
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -101,12 +101,12 @@ let autoMenu = [
                     'text': '金针菇蒸粉丝',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:10,
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -161,12 +161,12 @@ let autoMenu = [
                     'text': '鲜虾花蛤蒸蛋羹',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:15,
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:95,
                         range:[35,70,1,75,100,5]
                     },
@@ -225,12 +225,12 @@ let autoMenu = [
                     'text': '南瓜泥牛奶蒸蛋',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:14,
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:95,
                         range:[35,70,1,75,100,5]
                     },
@@ -271,12 +271,12 @@ let autoMenu = [
                     'text': '清蒸鲳鱼',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:18,
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -340,12 +340,12 @@ let autoMenu = [
                     'text': '粉蒸牛肉',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:24,
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -410,12 +410,12 @@ let autoMenu = [
                     'mode': 0xE0,
                     hide:false,
                     time:{
-                        set: true,
+                        set: false,
                         default:12,
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -462,12 +462,12 @@ let autoMenu = [
                     'text': '枸杞百合蒸鸡',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:16,
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -524,12 +524,12 @@ let autoMenu = [
                     'text': '牛肉灌汤包',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:16,
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -593,12 +593,12 @@ let autoMenu = [
                     'text': '柠香鲈鱼',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:13,
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -646,12 +646,12 @@ let autoMenu = [
                     'text': '蒜蓉干贝蒸丝瓜',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:9,
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -703,12 +703,12 @@ let autoMenu = [
                     'text': '清蒸香菇鳕鱼',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:13,
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -764,12 +764,12 @@ let autoMenu = [
                     'text': '豆腐狮子头',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:12,
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -815,12 +815,12 @@ let autoMenu = [
                     'text': '蒜蓉粉丝鲍鱼',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:10,
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -862,12 +862,12 @@ let autoMenu = [
                         'text': '小米蒸排骨',
                         'mode': 0xE0,
                         time:{
-                            set: true,
+                            set: false,
                             default:25,
                             range:[5,120,1]
                         },
                         temperature:{
-                            set: true,
+                            set: false,
                             default:100,
                             range:[35,70,1,75,100,5]
                         },
@@ -940,7 +940,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:100,
-                    range:[30,100,1],
+                    range:[35,100,1],
                 },
                 preheat:{
                     set:false,
@@ -1047,7 +1047,7 @@ let modes = [
                 time:{
                     set: true,
                     default:10,
-                    range:[1,60,1]
+                    range:[5,60,1]
                 },
                 temperature:{
                     set: false,

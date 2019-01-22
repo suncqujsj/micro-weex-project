@@ -1,8 +1,11 @@
 <template>
     <div class="wrapper" ref="wrapper">
         <midea-header title="DolphinWeex" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="./assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
-        <midea-tab ref="mTab" :tabArray="tabData" @tabClicked="tabClicked">
-        </midea-tab>
+        <!-- <midea-tab ref="mTab" :tabArray="tabData" @tabClicked="tabClicked">
+        </midea-tab> -->
+
+        <midea-flow-tab :tabArray="tabData" :fixedWidth="180" @tabClicked="tabClicked">
+        </midea-flow-tab>
         <slider ref="slider" :value="val" :index="index" @change="changeArea" :class="['slider', env.platform=='Web'&&'web-page']" auto-play="false">
             <div :class="['sample-div', env.platform=='Web'&&'web-page']">
                 <list :class="['sample-list', env.platform=='Web'&&'web-page']" :style="{'height':containerHeight}" show-scrollbar="true">
@@ -13,6 +16,12 @@
             <div :class="['sample-div', env.platform=='Web'&&'web-page']">
                 <list :class="['sample-list', env.platform=='Web'&&'web-page']" :style="{'height':containerHeight}" show-scrollbar="true">
                     <midea-cell :clickActivied="true" v-for="(item,index) in sortedAdvancedlist" :key="'tab2'+index" :title="item.title" height="120" :has-arrow="true" @mideaCellClick="goToAdvanced(item.link)">
+                    </midea-cell>
+                </list>
+            </div>
+            <div :class="['sample-div', env.platform=='Web'&&'web-page']">
+                <list :class="['sample-list', env.platform=='Web'&&'web-page']" :style="{'height':containerHeight}" show-scrollbar="true">
+                    <midea-cell :clickActivied="true" v-for="(item,index) in sortedPageslist" :key="'tab2'+index" :title="item.title" height="120" :has-arrow="true" @mideaCellClick="goToPages(item.link)">
                     </midea-cell>
                 </list>
             </div>
@@ -33,32 +42,33 @@
 </template>
 <style scoped>
 .wrapper {
-  position: relative;
-  flex: 1;
-  flex-direction: column;
-  background-color: #f2f2f2;
+    position: relative;
+    flex: 1;
+    flex-direction: column;
+    background-color: #f2f2f2;
 }
 .slider {
-  width: 750px;
-  flex: 1;
+    width: 750px;
+    flex: 1;
 }
 .sample-div {
-  width: 750px;
-  flex: 1;
-  position: relative;
+    width: 750px;
+    flex: 1;
+    position: relative;
 }
 .sample-list {
-  width: 750px;
+    width: 750px;
 }
 .web-page {
-  height: 1200px;
-  overflow: scroll;
+    height: 1200px;
+    overflow: scroll;
 }
 </style>
 <script>  
 import base from './base'
 
 import mideaTab from '@/midea-component/mTab.vue';
+import mideaFlowTab from '@/midea-component/mFlowTab.vue'
 import mideaCell from '@/midea-component/item.vue';
 import nativeService from '@/common/services/nativeService'
 const dom = weex.requireModule('dom')
@@ -66,6 +76,7 @@ const dom = weex.requireModule('dom')
 module.exports = {
     components: {
         mideaTab,
+        mideaFlowTab,
         mideaCell
     },
     mixins: [base],
@@ -74,6 +85,7 @@ module.exports = {
         tabData: [
             { "name": "基本组件", "selected": true },
             { "name": "高级组件", "selected": false },
+            { "name": "插件模板", "selected": false },
             { "name": "Dolphin接口", "selected": false },
             { "name": "Weex接口", "selected": false }
         ],
@@ -126,7 +138,7 @@ module.exports = {
             // { title: 'TimeCycle时间转盘', link: "timeCycle" },
             { title: 'Video视频', link: "video" },
             { title: 'scrollPicker滚动选择器', link: "scrollPicker" },
-            { title: 'customLoading自定义加载', link: 'customLoading'}
+            { title: 'customLoading自定义加载', link: 'customLoading' }
         ],
         interfacelist: [
             { title: 'callTel打电话', link: "callTel" },
@@ -166,6 +178,10 @@ module.exports = {
             { title: 'weexBundleToWeb跳转web页面', link: "weexBundleToWeb" },
             { title: 'burialPoint美居埋点', link: "burialPoint" }
         ],
+        pagesList: [
+            { title: '滑动显示更多菜单', link: "moreMenu" },
+            { title: '滑动放缩图片', link: "scrollHeader" },
+        ],
         weexList: [
             { title: 'BroadcastChannel示例', link: "broadcastChannelA" },
             { title: 'storage数据', link: "storage" },
@@ -180,6 +196,9 @@ module.exports = {
         },
         sortedAdvancedlist() {
             return this.advancedlist.sort(this.compare)
+        },
+        sortedPageslist() {
+            return this.pagesList.sort(this.compare)
         },
         sortedInterfacelist() {
             return this.interfacelist.sort(this.compare)
@@ -205,6 +224,10 @@ module.exports = {
         },
         goToAdvanced(link) {
             var path = "midea-advanced/" + link + ".js";
+            nativeService.goTo(path);
+        },
+        goToPages(link) {
+            var path = "midea-pages/" + link + ".js";
             nativeService.goTo(path);
         },
         goToInterface(link) {

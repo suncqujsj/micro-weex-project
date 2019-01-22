@@ -98,9 +98,12 @@ let workingModalMixin  = {
             this.isWorkingPage = false;
             this.cmdObj = analysisObj;
             this.probeTempText = '°C';
+            let chartJson = JSON.parse(JSON.stringify(this.chartJson));
+            chartJson.pointShow = false;
+            this.chartJson = chartJson;
                
             //提示
-            let isLackWater = false , isWaterBox = false, isDoorSwitch = false;
+            let isLackWater = false , isWaterBox = false, isDoorSwitch = false, isError = false;
             if(analysisObj.workingState.value == 2 || analysisObj.workingState.value == 1 ){
                 this.setWarningDialog("",null,false);
             }
@@ -120,9 +123,10 @@ let workingModalMixin  = {
                 }
             }
             if(analysisObj.displaySign.isError){
+                isError = true;
                 this.setWarningDialog("主人，您的设备发生故障了，请联系售后人员");
             }
-            if(!isLackWater && !isWaterBox && !isDoorSwitch){
+            if(!isLackWater && !isWaterBox && !isDoorSwitch && !isError){
                 this.setWarningDialog("",null,false);
             }
            
@@ -191,11 +195,13 @@ let workingModalMixin  = {
             this.cancleIcon = 'img/footer/icon_cancle@2x.png';
 
             var _hour = analysisObj.timeRemaining.hour, _minute = analysisObj.timeRemaining.minute, _second = analysisObj.timeRemaining.second;
+            var allSettingSeconds = analysisObj.timeSetting.hour*60*60+analysisObj.timeSetting.minute*60+analysisObj.timeSetting.second;
             var allSeconds = _hour*60*60+_minute*60+_second;
-            // var progress_step = (10*60-allSeconds)/(10*60)*360; //360度倒计时为例
-            // let chartJson = JSON.parse(JSON.stringify(this.chartJson));
-            // chartJson.progressCounter = progress_step;
-            // this.chartJson = chartJson;
+            var progress_step = (allSettingSeconds-allSeconds)/allSettingSeconds*360; //360度倒计时为例
+            let chartJson = JSON.parse(JSON.stringify(this.chartJson));
+            chartJson.pointShow = true;
+            chartJson.progressCounter = progress_step;
+            this.chartJson = chartJson;
 
             if(analysisObj.probeRealTemperature.value>analysisObj.probeSetttingTemperature.value){
                 analysisObj.probeRealTemperature.value = analysisObj.probeSetttingTemperature.value;
@@ -279,6 +285,9 @@ let workingModalMixin  = {
                 if(_item.settingHide){
                     this.hasSetting = false;
                 }
+                let chartJson = JSON.parse(JSON.stringify(this.chartJson));
+                chartJson.pointShow = false;
+                this.chartJson = chartJson;
                 
             }
 
@@ -296,6 +305,14 @@ let workingModalMixin  = {
                 this.hasSetting = false;
                 this.btnText = "开始";
                 this.btnSrc = "img/footer/icon_start@2x.png";
+            }
+            if(analysisObj.menuFeel.value){
+                this.workSpecialStatusText = "感应中";
+                this.hasStopOrContinueBtn = false;
+            }
+
+            if(_item.stopBtnHide){
+                this.hasStopOrContinueBtn = false;
             }
 
             //倒计时按照设计来

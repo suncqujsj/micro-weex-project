@@ -20,7 +20,7 @@
         <list style="margin-top: 24px" show-scrollbar="true">
             <template v-for="item in list">
                     <midea-cell  v-if="item.type === 'link'" :title="item.title" :hasArrow="false" :hasMargin="true" :hasTopBorder="false" :clickActivied="true" @mideaCellClick="item.event">
-                        <div slot="value" class="flex" style="width: 16px;height:16px;position:relative">
+                        <div v-if="hasNewVer" slot="value" class="flex" style="width: 16px;height:16px;position:relative">
                             <div class="red-dot"></div>
                         </div>
                     </midea-cell>
@@ -78,27 +78,7 @@
         },
         components: {mideaHeader, mideaCell, mideaSwitch2},
         created(){
-            nativeService.getDeviceInfo().then((data)=>{ // 获取deviceId
-                if(data.result && data.result.deviceId ) {
-                    // this.deviceId = data.result.deviceId;
-                    // this.deviceId = "mock.2199023365119"; // status '' hasNewVer=false
-                    this.deviceId = 2199023365121; // upgraded hasNewVer=false
-                }
-                return this.getUpgradeState();
-            }).then((resp)=>{
-                let data = JSON.parse(resp.returnData).data;
-                if(data.status === 'upgrading') { // 发现固件在升级中
-                    this.updateState();
-                    return;
-                }
-
-                this.checkUpgrade().then((resp)=>{ // 发现当前无固件在升级中
-                    // nativeService.alert(resp);
-                    let data = JSON.parse(resp.returnData).data;
-                    if(data.hasNewVer) this.updateState();
-
-                });
-            });
+            this.init();
         },
         methods:{
             updateState(){

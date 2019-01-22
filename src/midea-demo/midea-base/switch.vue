@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <scroller class="wrapper">
         <midea-header title="Switch" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
         <midea-cell :title="'Midea切换按钮'">
@@ -17,7 +17,10 @@
                 <midea-switch2 :checked="mideaCheckedB.isChecked" @change="onMideachangeB"></midea-switch2>
             </div>
         </midea-cell>
-    </div>
+        <div style="padding:20px;">
+            <text style="font-size:32px;color:red;">switch的命名不要命名为midea-switch，由于历史原因，这个名字会有冲突造成显示问题。可以使用midea-switch2</text>
+        </div>
+    </scroller>
 </template>
 <style scoped>
 .wrapper {

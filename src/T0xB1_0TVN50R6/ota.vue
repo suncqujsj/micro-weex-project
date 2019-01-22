@@ -27,10 +27,11 @@
 
         <div class="wrap">
             <midea-cell style="padding: 0;" :title="hasNewVer?'待更新':'已是最新版本'" :hasArrow="false" :hasMargin="false" :hasTopBorder="false" :clickActivied="false" ></midea-cell>
+            <!--<text>{{state}}</text>-->
             <div class="firmware-item">
                 <div class="item-top row a-c">
                     <text class="item-left flex">v {{verNo}}</text>
-                    <midea-button v-if="hasNewVer" class="update-button" text="更新" type="primary" :btnStyle="{'width': '88px', 'height':'40px','border-radius':'24px'}" :textStyle="{'font-size':'26px'}" @mideaButtonClicked="test"></midea-button>
+                    <midea-button v-if="hasNewVer && !pressed" class="update-button" text="更新" type="primary" :btnStyle="{'width': '88px', 'height':'40px','border-radius':'24px'}" :textStyle="{'font-size':'26px'}" @mideaButtonClicked="upgrade"></midea-button>
                 </div>
                 <text class="item-desc">{{verDesc}}</text>
             </div>
@@ -55,7 +56,9 @@
                 t:null,
                 verNo: 1,
                 verDesc: null,
-                verId: null
+                verId: null,
+                pressed:false,
+                state:null
             }
         },
         computed:{
@@ -64,14 +67,14 @@
         created(){
             nativeService.getDeviceInfo().then((data)=>{ // 获取deviceId
                 if(data.result && data.result.deviceId ) {
-                    // this.deviceId = data.result.deviceId;
+                    this.deviceId = data.result.deviceId;
                     // this.deviceId = "mock.2199023365119"; // status '' hasNewVer=false
                     // this.deviceId = 2199023365121; // upgraded hasNewVer=false
-                    this.deviceId = "mock.2";
+                    // this.deviceId = "mock.1";
                 }
                 return this.getUpgradeState();
             }).then((resp)=>{
-                nativeService.alert(resp);
+                // nativeService.alert(resp);
                 let returnDataJson = JSON.parse(resp.returnData);
                 if(returnDataJson.code === '4007') { // 语音模块没有上报过状态
                     nativeService.toast(returnDataJson.msg);
@@ -79,14 +82,16 @@
                 }
                 let data = returnDataJson.data;
                 if(data.status === 'upgrading') { // 发现固件在升级中
-                    nativeService.toast(data);
+                    // nativeService.toast(data);
                     this.setData(true, data);
+                    this.markButtonPressedState();
                     nativeService.showLoadingWithMsg('更新中...');
+                    this.state = 'ing';
                     this.fetchUpgradeState();
                     return;
                 }
 
-                this.checkUpgrade().then((resp)=>{ // 发现当前无固件在升级中
+                this.checkUpgradeVersion().then((resp)=>{ // 发现当前无固件在升级中
                     // nativeService.alert(resp);
                     let data = JSON.parse(resp.returnData).data;
                     if(data.hasNewVer) {
@@ -100,10 +105,18 @@
             });
         },
         methods:{
+            markButtonPressedState(){
+                this.pressed = true;
+            },
             upgrade(){
+                if(this.pressed) return;
                 this.UpgradeFireware().then((resp)=>{ // 点击按钮，让设备升级语音固件
-                    if(resp.code === '0') {
+                    nativeService.alert(resp);
+                    let returnData = JSON.parse(resp.returnData);
+                    if(returnData.code === '200') {
+                        this.markButtonPressedState();
                         nativeService.showLoadingWithMsg('更新中...');
+                        this.state = 'ing';
                         this.fetchUpgradeState();
                         return;
                     }
@@ -114,13 +127,16 @@
             fetchUpgradeState(){ // 定时主动查询是否更新完成
                 this.t = setInterval(()=>{
                     this.getUpgradeState().then((result)=>{
+                        nativeService.toast('轮询中');
                         let data = JSON.parse(result.returnData).data;
                         if(data.status === 'upgraded') {
+                            this.hasNewVer = false;
+                            this.state = 'ed';
                             nativeService.showLoadingWithMsg('更新完毕');
                             clearInterval(this.t);
                         }
                     });
-                },2000);
+                },5000);
             },
         }
     }

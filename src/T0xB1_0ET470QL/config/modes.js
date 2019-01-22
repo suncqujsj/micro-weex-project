@@ -40,7 +40,7 @@ let modes = [
                     range:null,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
-               
+                // stopBtnHide:true,//工作中没有暂停按钮，默认有
                 probeTemperature:{
                     set: true,
                     default:60,

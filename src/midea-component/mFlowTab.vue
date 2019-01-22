@@ -16,46 +16,46 @@
 
 <style>
 .wrapper {
-  background-color: #ffffff;
-  padding: 0px;
-  margin: 0px;
+    background-color: #ffffff;
+    padding: 0px;
+    margin: 0px;
 }
 .scroller {
-  height: 84px;
-  display: flex;
-  flex-direction: column;
+    height: 84px;
+    display: flex;
+    flex-direction: column;
 }
 .scroller-wrapper {
-  height: 84px;
-  display: flex;
-  flex-direction: column;
+    height: 84px;
+    display: flex;
+    flex-direction: column;
 }
 .tab-wrapper {
-  display: flex;
-  flex-direction: row;
-  height: 84px;
-  background-color: #ffffff;
+    display: flex;
+    flex-direction: row;
+    height: 84px;
+    background-color: #ffffff;
 }
 .tab-item {
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 .tab-txt {
-  font-family: PingFangSC-Medium;
-  font-size: 32px;
-  line-height: 45px;
-  color: #666666;
+    font-family: PingFangSC-Medium;
+    font-size: 32px;
+    line-height: 45px;
+    color: #666666;
 }
 .tab-txt-selected {
-  color: #000000;
+    color: #000000;
 }
 .tab-indicator {
-  border-top-style: solid;
-  border-top-color: #000000;
-  border-top-width: 2px;
-  position: relative;
-  top: -4px;
+    border-top-style: solid;
+    border-top-color: #000000;
+    border-top-width: 2px;
+    position: relative;
+    top: -4px;
 }
 </style>
 
@@ -82,7 +82,7 @@ export default {
             }
             Vue.set(this.tabArray[index], "selected", true);
             var xDis = index * (750 / len) + "px";
-            if (len > 5) {
+            if (this.tabArray.length * this.fixedWidth > 750) {
                 xDis = index * this.fixedWidth + "px";
             }
             var ref = this.$refs.indicator;

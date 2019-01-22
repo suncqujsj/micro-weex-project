@@ -15,6 +15,17 @@ let voiceOtaMixin = {
     },
     methods: {
         /**
+         * 初始化流程
+         * 1.固件更新状态查询
+         * 2.固件版本检查
+         * 3.如果是更新中，需要轮询1的接口
+         */
+        async init(){
+            await this.setDeviceId();
+
+        },
+
+        /**
          * 固件升级是否完成查询
          *
          {

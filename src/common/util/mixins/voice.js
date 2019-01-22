@@ -37,16 +37,8 @@ let commonMixin = {
          * 语音开关、授初始状态
          * */
         async initVoice(){
-            let deviceInfo = await nativeService.getDeviceInfo();
-            if(deviceInfo.result && deviceInfo.result.deviceId ) {
-                this.deviceId = deviceInfo.result.deviceId;
-            }
-
-            let userInfo = await nativeService.getUserInfo();
-            // nativeService.alert(userInfo);
-            if(userInfo.uid) {
-                this.uid = userInfo.uid;
-            }
+            await this.setDeviceId();
+            await this.setUid();
             // nativeService.alert(this.uid);
 
             this.initVoiceAuth();

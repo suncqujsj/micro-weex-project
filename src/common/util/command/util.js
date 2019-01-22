@@ -77,6 +77,10 @@ export default {
           minute: 0,
           second:0,
        },
+       menuFeel:{
+        name:"感应菜单感应中",
+        value: 0
+       },
 
     };
     return obj;
@@ -322,54 +326,38 @@ export default {
   },
   //取消工作指令
   cmdCancelWork(device){
-    var messageBody = message.createMessageBody(7); 
+    var messageBody = message.createMessageFFBody(9); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02); 
     message.setByte(messageBody, 2,0x02);
-    message.setByte(messageBody, 3,0xff);
-    message.setByte(messageBody, 4,0xff);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,0xff);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
   //暂停or继续指令
   cmdStartOrPause(record,device){
-    var messageBody = message.createMessageBody(7); 
+    var messageBody = message.createMessageFFBody(9); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
     message.setByte(messageBody, 2,record);
-    message.setByte(messageBody, 3,0xff);
-    message.setByte(messageBody, 4,0xff);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,0xff);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
 
    //炉灯
    cmdLight(lightValue,device){
-    var messageBody = message.createMessageBody(7); 
+    var messageBody = message.createMessageFFBody(9); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
-    message.setByte(messageBody, 2,0xff);
-    message.setByte(messageBody, 3,0xff);
     message.setByte(messageBody, 4,lightValue?0:1);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,0xff);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
    //上锁解锁
    cmdLock(params,device){
-    var messageBody = message.createMessageBody(7); 
+    var messageBody = message.createMessageFFBody(9); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
-    message.setByte(messageBody, 2,0xff);
     message.setByte(messageBody, 3,params.childLock?1:0);
-    message.setByte(messageBody, 4,0xff);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,0xff);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     // nativeService.alert(this.cmdToEasy(sendMessage));
     return sendMessage;
@@ -419,7 +407,7 @@ export default {
 
      obj.light.value = message.getBit(requestCmd, 27, 2);
      obj.isProbe.value = message.getBit(requestCmd, 27, 6);
-
+     obj.menuFeel.value = message.getBit(requestCmd, 27, 1);
     //设置温度
     obj.temperature.upHighTemperature = parseInt(requestCmd[28]);
     obj.temperature.upLowTemperature = parseInt(requestCmd[29]);
@@ -431,6 +419,10 @@ export default {
     obj.probeSetttingTemperature.value = parseInt(requestCmd[33]);
     if(obj.isProbe.value){ //如果是探针，则为显示为探针设定温度
       obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
+    }
+
+    if(parseInt(requestCmd[19])==0xC4){//如果是烘干，则不显示温度
+      obj.temperature.upLowTemperature = 0;
     }
 
     obj.timeSetting.hour = parseInt(requestCmd[38]);

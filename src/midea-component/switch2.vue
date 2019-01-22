@@ -1,7 +1,7 @@
 <template>
     <div class="switch-container" :style="{'width': width+'px', 'height':height+'px'}" @click="onchange" v-on:swipe="onSwipe($event)">
         <div class="switch-bar" :style="{'width': width+'px', 'height':height+'px'}">
-            <div :class="['container', checked?'selected':'unselected']" :style="{'width':(width-2)+'px'}"></div>
+            <div :class="['container', checked?'selected':'unselected']" :style="{'width':(width-4)+'px'}"></div>
             <!-- <div class="container unselected" :style="{'width':width}"></div> -->
             <image ref="switchBar" class="switch-icon" :src="icon" resize='contain' :style="{'width':height+'px','height':height+'px', 'left':width-height+2+'px'}"></image>
         </div>

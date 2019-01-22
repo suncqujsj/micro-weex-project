@@ -324,70 +324,58 @@ export default {
   },
   //取消工作指令
   cmdCancelWork(device,whichCavity){
-    let byte16 = 0;
+    let byte17 = 0;
     if(whichCavity==0){
-      byte16 = 0x80;
+      byte17 = 0x80;
     } 
-    var messageBody = message.createMessageBody(7); 
+    var messageBody = message.createMessageFFBody(9); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02); 
     message.setByte(messageBody, 2,0x02);
-    message.setByte(messageBody, 3,0xff);
-    message.setByte(messageBody, 4,0xff);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,byte16);
+    message.setByte(messageBody, 7,byte17);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
   //暂停or继续指令
   cmdStartOrPause(record,device,whichCavity){
-    let byte16 = 0;
+    let byte17 = 0;
     if(whichCavity==0){
-      byte16 = 0x80;
+      byte17 = 0x80;
     } 
-    var messageBody = message.createMessageBody(7); 
+    var messageBody = message.createMessageFFBody(9); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
     message.setByte(messageBody, 2,record);
-    message.setByte(messageBody, 3,0xff);
-    message.setByte(messageBody, 4,0xff);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,byte16);
+    message.setByte(messageBody, 7,byte17);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
 
    //炉灯
    cmdLight(lightValue,device,whichCavity){
-    let byte16 = 0;
+    let byte17 = 0;
     if(whichCavity==0){
-      byte16 = 0x80;
+      byte17 = 0x80;
     } 
-    var messageBody = message.createMessageBody(7); 
+    var messageBody = message.createMessageFFBody(9); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
-    message.setByte(messageBody, 2,0xff);
-    message.setByte(messageBody, 3,0xff);
     message.setByte(messageBody, 4,lightValue?0:1);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,byte16);
+    message.setByte(messageBody, 7,byte17);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
    //上锁解锁
    cmdLock(params,device,whichCavity){
-    let byte16 = 0;
+    let byte17 = 0;
     if(whichCavity==0){
-      byte16 = 0x80;
+      byte17 = 0x80;
     } 
-    var messageBody = message.createMessageBody(7); 
+    var messageBody = message.createMessageFFBody(9); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
-    message.setByte(messageBody, 2,0xff);
     message.setByte(messageBody, 3,params.childLock?1:0);
-    message.setByte(messageBody, 4,0xff);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,byte16);
+    message.setByte(messageBody, 7,byte17);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },

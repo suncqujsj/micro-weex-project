@@ -149,6 +149,28 @@
             </div>
         </detail-modal>
 
+      
+
+        <midea-dialog :title="warningDialog.title"
+                      :show="warningDialog.show"
+                      :single="true"
+                     
+                      @mideaDialogConfirmBtnClicked="knowClicked"
+                      :content="warningDialog.content"
+                      mainBtnColor="#FFB632"
+        >
+        </midea-dialog>
+
+        <!--故障提示弹窗-->
+        <midea-dialog :title="warningDialogTitle"
+                        :show="warningDialogShow"
+                        :single="true"
+                        noFooter="true"
+                        @mideaDialogConfirmBtnClicked="knowClicked"
+                        :content="warningDialogContent"
+                        mainBtnColor="#FFB632"
+                        >
+        </midea-dialog>
         <!--童锁遮罩-->
         <modal :show="modalVisibility">
             <div slot="header">
@@ -183,27 +205,6 @@
             </div>
         </modal>
 
-        <midea-dialog :title="warningDialog.title"
-                      :show="warningDialog.show"
-                      :single="true"
-                     
-                      @mideaDialogConfirmBtnClicked="knowClicked"
-                      :content="warningDialog.content"
-                      mainBtnColor="#FFB632"
-        >
-        </midea-dialog>
-
-        <!--故障提示弹窗-->
-        <midea-dialog :title="warningDialogTitle"
-                        :show="warningDialogShow"
-                        :single="true"
-                        noFooter="true"
-                        @mideaDialogConfirmBtnClicked="knowClicked"
-                        :content="warningDialogContent"
-                        mainBtnColor="#FFB632"
-                        >
-        </midea-dialog>
-
         <!--确定/取消弹窗-->
         <midea-actionsheet
             :items="actionsheetItems"
@@ -224,14 +225,8 @@
                 </div>
                 <div slot="customerContent" class="header-top-wrapper">
                     <div class="header-top-inner-wrapper">
-                        <div class="header-right-image-wrapper" @click="openCloudRecipe">
-                            <image class="header-right-image" :src="'assets/img/header/public_ic_cloud_recipe@3x.png'"></image>
-                        </div>
                         <div class="header-right-image-wrapper" @click="childLock(true,index)">
                             <image class="header-right-image" :src="'img/header/public_ic_babylock@3x.png'"></image>
-                        </div>
-                        <div class="header-right-image-wrapper" @click="openMorePage">
-                            <image class="header-right-image" :src="'img/header/public_ic_lots@3x.png'"></image>
                         </div>
                     </div>
                 </div>

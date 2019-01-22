@@ -88,6 +88,26 @@ let commonMixin = {
                 //失败的回调
                 // nativeService.alert('upload error');
             });
+        },
+
+        /**
+         * 初始化deviceId
+         * */
+        async setDeviceId(){
+            let deviceInfo = await nativeService.getDeviceInfo();
+            if(deviceInfo.result && deviceInfo.result.deviceId ) {
+                this.deviceId = deviceInfo.result.deviceId;
+            }
+        },
+
+        /**
+         * 初始化uid
+         * */
+        async setUid(){
+            let userInfo = await nativeService.getUserInfo();
+            if(userInfo.uid) {
+                this.uid = userInfo.uid;
+            }
         }
     }
 };

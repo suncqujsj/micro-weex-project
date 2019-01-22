@@ -111,9 +111,9 @@ export default {
                 this.itemIndex = i;
             }
         }
-        if(this.target=='temperature'){//温度这个比默认的位置少1，暂时特殊处理。
-            self.itemIndex = self.itemIndex+1;
-        }
+        // if(this.target=='temperature'){//温度这个比默认的位置少1，暂时特殊处理。
+        //     self.itemIndex = self.itemIndex+1;
+        // }
         // nativeService.alert(this.listItem);
         if (el) {
             let sid = setInterval(() => next(), 100)

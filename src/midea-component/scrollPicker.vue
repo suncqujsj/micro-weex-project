@@ -12,7 +12,7 @@
                     index==itemIndex   ? 'selected-item':'unselected-item',
                     index==itemIndex+1 ? 'second-last-visible-item':'',
                     index==itemIndex+2 ? 'first-last-visible-item':''
-                ]">{{item}}</text>
+                ]">{{item.value}}</text>
             </div>
         </scroller>
     </div>
@@ -30,12 +30,8 @@ export default {
                 return []
             }
         },
-        listItem: {
+        itemIndex: {
             type: Number,
-            default: 10
-        },
-        target: {
-            type: String,
             default: null
         },
         wrapHeight: {
@@ -133,12 +129,6 @@ export default {
         }
     },
     created() {
-    //   var _listArray = this.listArray;
-    //   for(var i=0; i< _listArray.length; i++){
-    //       if(_listArray[i] == this.listItem){
-    //           this.itemIndex = i;
-    //       }
-    //   }
     }
 }
 </script>

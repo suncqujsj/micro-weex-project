@@ -331,6 +331,7 @@ let data = [
                 {
                     'icon': '',
                     'text': '芝士培根虾仁披萨',
+                    'ellipsisText': '芝士培根虾仁...',
                     'mode': 0xE0,
                     time:{
                         set: false,

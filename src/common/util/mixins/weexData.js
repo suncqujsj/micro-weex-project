@@ -306,6 +306,14 @@ let workingModalMixin  = {
                 this.btnText = "开始";
                 this.btnSrc = "img/footer/icon_start@2x.png";
             }
+            if(analysisObj.menuFeel.value){
+                this.workSpecialStatusText = "感应中";
+                this.hasStopOrContinueBtn = false;
+            }
+
+            if(_item.stopBtnHide){
+                this.hasStopOrContinueBtn = false;
+            }
 
             //倒计时按照设计来
             if(this.timeShow&&allSeconds>0){

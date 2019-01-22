@@ -317,7 +317,7 @@ export default {
       message.setByte(messageBody, 18, params.probeTemperature);
     }
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
-    // nativeService.alert(this.cmdToEasy(sendcmd));
+    nativeService.alert(this.cmdToEasy(sendcmd));
     return sendcmd;
   },
   //取消工作指令
@@ -431,6 +431,10 @@ export default {
     obj.probeSetttingTemperature.value = parseInt(requestCmd[33]);
     if(obj.isProbe.value){ //如果是探针，则为显示为探针设定温度
       obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
+    }
+
+    if(parseInt(requestCmd[19])==0xC4){//如果是烘干，则不显示温度
+      obj.temperature.upLowTemperature = 0;
     }
 
     obj.timeSetting.hour = parseInt(requestCmd[38]);

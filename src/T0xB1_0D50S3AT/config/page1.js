@@ -10,7 +10,7 @@ let autoMenu = [
             [
                 {
                     'icon': '',
-                    'text': '清蒸鱼',
+                    'text': '蒸鱼',
                     'mode': 0xE0,
                     time:{
                         set: true,

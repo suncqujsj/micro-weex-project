@@ -150,27 +150,18 @@
         </detail-modal>
 
       
-
+        <!--提示弹窗-->        
         <midea-dialog :title="warningDialog.title"
                       :show="warningDialog.show"
                       :single="true"
-                     
+                       noFooter="true"
                       @mideaDialogConfirmBtnClicked="knowClicked"
                       :content="warningDialog.content"
                       mainBtnColor="#FFB632"
         >
         </midea-dialog>
 
-        <!--故障提示弹窗-->
-        <midea-dialog :title="warningDialogTitle"
-                        :show="warningDialogShow"
-                        :single="true"
-                        noFooter="true"
-                        @mideaDialogConfirmBtnClicked="knowClicked"
-                        :content="warningDialogContent"
-                        mainBtnColor="#FFB632"
-                        >
-        </midea-dialog>
+       
         <!--童锁遮罩-->
         <modal :show="modalVisibility">
             <div slot="header">
@@ -304,7 +295,7 @@
                             <text class="decs_text">{{cancleBtnText}}</text>
                         </div>
                     </div>
-                    <div class="btn_section" v-if="hasStopOrContinueBtn && hasStopButton" >
+                    <div class="btn_section" v-if="hasStopOrContinueBtn" >
                         <div class="image_section" @click="startOrPause()">
                             <image class="icon_image" :src="btnSrc"></image>
                         </div>

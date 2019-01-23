@@ -245,7 +245,6 @@ let workingModalMixin  = {
                 this.hasSetting = true;
                 this.btnText = "暂停";
                 this.btnSrc = "img/footer/icon_pause@2x.png";
-                this.hasStopOrContinueBtn = true;
             }
 
              if(analysisObj.workingState.value == 6){
@@ -301,7 +300,6 @@ let workingModalMixin  = {
                 this.tag_next = '';
                 this.statusTag = '';
                 this.hasSetting = true;
-                this.hasStopOrContinueBtn = true;
                 if(_item.settingHide){
                     this.hasSetting = false;
                 }

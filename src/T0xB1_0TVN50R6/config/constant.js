@@ -12,6 +12,9 @@ module.exports = {
         extra1: {
             sn8: '0TVN50R6'
         },
-        hideChildLock: true
+        hideChildLock:{
+            standby: true,
+            working:true
+        }
     }
 };

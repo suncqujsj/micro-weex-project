@@ -70,6 +70,16 @@ export default {
         fire:{name: "火力",value: 0x00},
         weight:{name: "重量",value: 0x00},
         steam:{name: "蒸汽量",value: 0x00},
+        timeSetting:{
+          name:"程序设定总时间",
+          hour: 0,
+          minute: 0,
+          second:0,
+       },
+       menuFeel:{
+        name:"感应菜单感应中",
+        value: 0
+       },
     };
     return obj;
   },
@@ -436,6 +446,10 @@ export default {
     obj.fire.value = parseInt(requestCmd[24])*10;
     obj.weight.value = parseInt(requestCmd[25])*10;
     obj.steam.value = parseInt(requestCmd[25]);
+    obj.timeSetting.hour = parseInt(requestCmd[38]);
+    obj.timeSetting.minute = parseInt(requestCmd[39]);
+    obj.timeSetting.second = parseInt(requestCmd[40]);
+
     //上腔体蒸汽炉
     let upObj = this.analysisCmdUp(requestCmd,pages);
     let newObj = {'down_cavity':obj,'up_cavity':upObj};
@@ -495,6 +509,10 @@ export default {
     obj.fire.value = parseInt(requestCmd[24+length])*10;
     obj.weight.value = parseInt(requestCmd[25+length])*10;
     obj.steam.value = parseInt(requestCmd[25+length]);
+    obj.timeSetting.hour = parseInt(requestCmd[62]);
+    obj.timeSetting.minute = parseInt(requestCmd[63]);
+    obj.timeSetting.second = parseInt(requestCmd[64]);
+
     
     return obj;
   }

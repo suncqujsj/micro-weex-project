@@ -361,6 +361,7 @@
         created(){
             let self = this;
             let {constant,tabs} = this;
+            this.srcollPaddingBottom = '80px';
             if(this.isip9()){
                 this.srcollPaddingBottom = '50px';
             }

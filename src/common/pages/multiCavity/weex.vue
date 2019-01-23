@@ -5,7 +5,7 @@
 <template>
     <div @viewappear="viewappear" @viewdisappear="viewdisappear">
         <div class="bg">
-            <sf-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native" >
+            <sf-header leftImg="img/header/public_ic_back_white@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native" >
                 <div slot="headerTitle">
                     <sf-tab ref="mTab" :tabArray="pages" @tabClicked="tabClicked">
                     </sf-tab>
@@ -13,7 +13,7 @@
                 <div slot="customerContent" class="header-top-wrapper">
                     <div class="header-top-inner-wrapper">
                         <div class="header-right-image-wrapper" @click="openCloudRecipe">
-                            <image class="header-right-image" :src="'assets/img/header/public_ic_cloud_recipe@3x.png'"></image>
+                            <image class="header-right-image" :src="'img/header/public_ic_cloud_recipe@3x.png'"></image>
                         </div>
                         <div class="header-right-image-wrapper" @click="childLock(true,index)">
                             <image class="header-right-image" :src="'img/header/public_ic_babylock@3x.png'"></image>
@@ -154,7 +154,7 @@
         <midea-dialog :title="warningDialog.title"
                       :show="warningDialog.show"
                       :single="true"
-                       noFooter="true"
+                       confirmText="我知道了"
                       @mideaDialogConfirmBtnClicked="knowClicked"
                       :content="warningDialog.content"
                       mainBtnColor="#FFB632"
@@ -209,7 +209,7 @@
 
         <!-- 工作页面 -->
         <div class="working_section all_section" v-if="isCavityWorking" :style="{height: wrapHeight}">
-             <sf-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native" >
+             <sf-header leftImg="img/header/public_ic_back_white@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native" >
                 <div slot="headerTitle">
                     <sf-tab ref="mTab" :tabArray="pages" @tabClicked="tabClicked">
                     </sf-tab>
@@ -385,6 +385,7 @@
         created(){
             let self = this;
             let {constant,pages,index} = this;
+            this.srcollPaddingBottom = '80px';
             if(this.isip9()){
                 this.srcollPaddingBottom = '50px';
             }
@@ -429,7 +430,7 @@
                 return{
                     height: `${progress_radius * 2}px`,
                     width: `${progress_radius * 2}px`,
-                    marginTop: `${wrapHeight/2-progress_radius*2}px`
+                    marginTop: `${wrapHeight/2-progress_radius*2-60}px`
                 }
             }
         },
@@ -519,6 +520,7 @@
                 // nativeService.alert(typeof this.warningDialog.callback);
                 this.warningDialog.callback && this.warningDialog.callback();
                 this.warningDialog = this.initWarningDialog();
+                nativeService.backToNative();
             },
         }
     }

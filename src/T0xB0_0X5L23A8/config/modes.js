@@ -42,7 +42,7 @@ let modes = [
             { //烧烤
                 'icon': modeIcons[13].dir,
                 'text': modeIcons[13].cn,
-                'mode': 0x40,
+                'mode': 0x4C,
                 time:{
                     set: true,
                     default:20,
@@ -68,6 +68,7 @@ let modes = [
                     default:0,
                     range:null
                 }
+                // stopBtnHide:true, // 如果工作中没有暂停按钮，则设为 true ，默认是有暂停按钮的（无需专门设置）
             },
             { //解冻
                 'icon': modeIcons[14].dir,
@@ -118,8 +119,8 @@ let modes = [
                 },
                 temperature:{
                     set: false,
-                    default:false,
-                    range:false
+                    default:100,
+                    range:[100,100,0],
                 },
                 preheat:{
                     set:false,
@@ -218,6 +219,7 @@ let modes = [
                     range:[1,5,2,8,10,2],
                     hide: true
                 },
+                settingHide:true
             },
             {   // 除味
                 'icon': modeIcons[21].dir,
@@ -249,6 +251,7 @@ let modes = [
                     range:[1,5,2,8,10,2],
                     hide: true
                 },
+                settingHide:true
             },
             {   // 水垢清洁 or 炉腔除垢，常用有2种叫法
                 'icon': modeIcons[10].dir,
@@ -280,6 +283,7 @@ let modes = [
                     range:[1,5,2,8,10,2],
                     hide: true
                 },
+                settingHide:true
             },
         ]
     },

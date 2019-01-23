@@ -155,7 +155,7 @@
         <midea-dialog :title="warningDialog.title"
                       :show="warningDialog.show"
                       :single="true"
-                      noFooter="true"
+                      confirmText="我知道了"
                       @mideaDialogConfirmBtnClicked="knowClicked"
                       :content="warningDialog.content"
                       mainBtnColor="#FFB632"
@@ -361,6 +361,7 @@
         created(){
             let self = this;
             let {constant,tabs} = this;
+            this.srcollPaddingBottom = '80px';
             if(this.isip9()){
                 this.srcollPaddingBottom = '50px';
             }
@@ -472,6 +473,7 @@
                 // nativeService.alert(typeof this.warningDialog.callback);
                 this.warningDialog.callback && this.warningDialog.callback();
                 this.warningDialog = this.initWarningDialog();
+                nativeService.backToNative();
             }
         }
     }

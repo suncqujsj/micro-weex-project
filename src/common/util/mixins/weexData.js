@@ -46,7 +46,6 @@ let workingModalMixin  = {
                     "pointShow" : false, //环形进度中的进度球是否需要显示，默认不显示
                     "pointRadius" : 4, //默认是环形进度宽度的一半
                     "pointColor" :  "#FFFFFF", //环形进度中的进度球颜色
-                    "pointImageBase64" :  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAMAAADWZboaAAAA21BMVEUAAAD////t7e3i4uLf39/f39/f39/g4ODg4ODh4eHq6urq6urf39/g4ODg4ODm5ubg4ODj4+Pf39/g4ODg4ODg4OD5+fng4OD5+fnf39/e3t7f39/g4OD////u7u75+fn29vb5+fn4+Pj5+fnm5ub39/fx8fHf39/f39/7+/v19fXf39/f39/g4ODe3t7i4uL8/Pzg4OD6+vrn5+f6+vrv7+/6+vru7u7k5OT29vbp6en7+/v39/f6+vr6+vrz8/P29vbz8/Py8vL5+fn6+vrf39/u7u7i4uLq6uroWKUWAAAAQHRSTlMABA0I+NXvXzwvFgy5lEYdoiXosYVJjfPeyatnQiT58Oa+NzD++vrg3L+qjn5zVTQrIfPrlOvm3dPOzKt2ZkXCaN8LMwAAA3hJREFUSMeM0s2KwjAUBWBjN1pBcBO6UNtaHLArERHEn0mavP8zjTcnXm24HT2RxM3HKckdyVndjnVROlMW9fG2Gn2dRlfee+cd/SiVbr6Cm50HfGyMXb35CFcXj7iXM2Fr//9upV1gJKENQexbrYZlvkPhG4w8bKbOh+S+iBKO++hAir0s74fgwHyET+dMOMq72EmSMBa30kJrsEJvXhCDcYCQoe5lizyV6vmaXJpgTq0SqoNEaxRgDDk6mQRcKz8lOHSabX82LrjWAMFpSaXWmLY3tzyy/Vb6m0Da3ud5RwbhVu5LrLX2972UPxIn/goMvbZhesTwUIAfm9DHrVbzm576regTMJUGXKlIGzDEwLqUYVHoaGLpNSIsATJnfUVt1nIrmESwOG0W6PjcGx7gVEMyP49JqvwEykZojZBT5Yro4jB4PTCoJclZL4hmU8MwTWQJ7GzXTTOiE35MubWzwCyJTojOllsQIUA9h+1nOaMLnpdG/lgZU2e3no+J/hVaZyuuAkEYgIm96djtLqIO4VzkTALZCGGYYS4DGt//iU5p5XS79GBJjDcff3VZhOR/0FnGo4l2KB+fOdIvTa3bN6NDfSENflYPacbzqp/AGcaULiF+zfCIpsOYiKv+2pZnCgel7YdySU+97HOWimycCgod1j3zyLCI52/L4i1mO67vc7wZ1l/Ij0mkTkWDmePQrRSw/sOIo/s40/pGJqn3qB8wHpaZWKOMNKjtry3Do0LHoZCFcROt87SFTyFF+Ppdc1zFtgB7NWHzUKyOKRf6xdhbLXm7dkZsF25c1rchFGOPjD7AWfC8WsqOOnQ4bZo8Z2qa2P7PfCZpf1Jd/vVU8t1yC5aZO16err6RsBa5YsXz8RvDxD6zYCrHdTAtX6IDfbbWV9Lqh4Yeogu2a4rEotrTpusdXmOLvGvovhIxQWHK9+rqUDQYvFA9fDbFoao9f/nP0vFExHgD2DIdOGXTcBYJzzHtGuvHF1UmFHCnNWa2HUCalOoS+yAtRcLglDJOG9C7rm1Bwa3bNVCUs/QUhMTm8B1dxVEiNoVQHsXVvBVb06FbK8kSTunLwwNPmFS1G5pm7di5uSKLZMn2CYdK9qyUUSbcG85nBYdeIM6Ziqo0rSKVnUXghQjXMXHeYs99D/I8eHe9+M0hBq7rDSG+A+UTsvnF/QPk9EAXDmEvRAAAAABJRU5ErkJggg==", //环形进度中的进度球的图片base64
                 },
                 progress:1,
                 progress_radius: 240,
@@ -100,7 +99,7 @@ let workingModalMixin  = {
             this.probeTempText = '°C';
             let chartJson = JSON.parse(JSON.stringify(this.chartJson));
             chartJson.pointShow = false;
-            this.chartJson = chartJson;
+            this.chartJson = JSON.parse(JSON.stringify(chartJson));
                
             //提示
             let isLackWater = false , isWaterBox = false, isDoorSwitch = false, isError = false;
@@ -201,7 +200,7 @@ let workingModalMixin  = {
             let chartJson = JSON.parse(JSON.stringify(this.chartJson));
             chartJson.pointShow = true;
             chartJson.progressCounter = progress_step;
-            this.chartJson = chartJson;
+            this.chartJson = JSON.parse(JSON.stringify(chartJson));
 
             if(analysisObj.probeRealTemperature.value>analysisObj.probeSetttingTemperature.value){
                 analysisObj.probeRealTemperature.value = analysisObj.probeSetttingTemperature.value;

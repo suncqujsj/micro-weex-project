@@ -520,7 +520,7 @@
                 // nativeService.alert(typeof this.warningDialog.callback);
                 this.warningDialog.callback && this.warningDialog.callback();
                 this.warningDialog = this.initWarningDialog();
-                nativeService.backToNative();
+                // nativeService.backToNative();
             },
         }
     }

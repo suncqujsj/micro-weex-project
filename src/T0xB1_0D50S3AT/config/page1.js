@@ -167,7 +167,7 @@ let autoMenu = [
                     },
                     temperature:{
                         set: false,
-                        default:95,
+                        default:100,
                         range:[35,70,1,75,100,5]
                     },
                     preheat:{
@@ -226,12 +226,12 @@ let autoMenu = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:14,
+                        default:12,
                         range:[5,120,1]
                     },
                     temperature:{
                         set: false,
-                        default:95,
+                        default:100,
                         range:[35,70,1,75,100,5]
                     },
                     preheat:{
@@ -272,7 +272,7 @@ let autoMenu = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:18,
+                        default:15,
                         range:[5,120,1]
                     },
                     temperature:{
@@ -341,7 +341,7 @@ let autoMenu = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:24,
+                        default:20,
                         range:[5,120,1]
                     },
                     temperature:{
@@ -411,7 +411,7 @@ let autoMenu = [
                     hide:false,
                     time:{
                         set: false,
-                        default:12,
+                        default:8,
                         range:[5,120,1]
                     },
                     temperature:{
@@ -463,7 +463,7 @@ let autoMenu = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:16,
+                        default:15,
                         range:[5,120,1]
                     },
                     temperature:{
@@ -525,7 +525,7 @@ let autoMenu = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:16,
+                        default:15,
                         range:[5,120,1]
                     },
                     temperature:{
@@ -594,7 +594,7 @@ let autoMenu = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:13,
+                        default:8,
                         range:[5,120,1]
                     },
                     temperature:{
@@ -647,7 +647,7 @@ let autoMenu = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:9,
+                        default:7,
                         range:[5,120,1]
                     },
                     temperature:{
@@ -704,7 +704,7 @@ let autoMenu = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:13,
+                        default:12,
                         range:[5,120,1]
                     },
                     temperature:{
@@ -765,7 +765,7 @@ let autoMenu = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:12,
+                        default:10,
                         range:[5,120,1]
                     },
                     temperature:{
@@ -816,7 +816,7 @@ let autoMenu = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:10,
+                        default:8,
                         range:[5,120,1]
                     },
                     temperature:{
@@ -863,7 +863,7 @@ let autoMenu = [
                         'mode': 0xE0,
                         time:{
                             set: false,
-                            default:25,
+                            default:23,
                             range:[5,120,1]
                         },
                         temperature:{

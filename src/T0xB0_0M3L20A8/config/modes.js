@@ -72,6 +72,44 @@ let modes = [
             },
             {
                 'icon': modeIcons[14].dir,
+                'text': '微波烧烤',
+                'mode': 0x70,
+                time:{
+                    set: true,
+                    default:5,
+                    range:[5,95,5],
+                },
+                temperature:{
+                    set: false,
+                    default:false,
+                    range:false
+                },
+                preheat:{
+                    set:false,
+                    default: false,
+                    hide: false,
+                },
+                weight:{
+                    set:false,
+                    default:100,
+                    range:[100,2000,100],
+                    hide: true
+                },
+                steamAmount:{
+                    set:false,
+                    default:false,
+                    range:false,
+                },
+                fireAmount:{
+                    set:false,
+                    default:0,
+                    range:null,
+                },
+                settingHide:true
+
+            },
+            {
+                'icon': modeIcons[14].dir,
                 'text': modeIcons[14].cn,
                 'mode': 0xA0,
                 time:{

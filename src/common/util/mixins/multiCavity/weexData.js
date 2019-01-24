@@ -307,10 +307,18 @@ let workingModalMixin  = {
                 this.preheatFinishTig = true;
                 this.tag_next = '';
                 this.statusTag = '已预热到'+analysisObj.temperature.upLowTemperature+'°';
-                this.hasStopOrContinueBtn = true;
                 this.hasSetting = false;
-                this.btnText = "开始";
-                this.btnSrc = "img/footer/icon_start@2x.png";
+                // this.hasStopOrContinueBtn = true;
+                // this.btnText = "开始";
+                // this.btnSrc = "img/footer/icon_start@2x.png";
+                if(analysisObj.mode.value == 0xE0 && analysisObj.recipeId.value==1){
+                    this.hasStopOrContinueBtn = true;
+                    this.btnText = "开始";
+                    this.btnSrc = "img/footer/icon_start@2x.png";
+                }else{
+                    this.cancleBtnText = '完成';
+                    this.cancleIcon = 'img/finish_icon@2x.png';
+                }
             }
 
             //倒计时按照设计来

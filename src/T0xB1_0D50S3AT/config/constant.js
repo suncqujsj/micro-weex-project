@@ -7,11 +7,11 @@
 // var date = myDate.getDate();
 module.exports = {
     device: {
-        type: 0x9B,
+        type: 0xB1,
         page_title: "烤箱",
         sales_model: "双子星 D50S3AT1",
         widget_name: 'MSO_T0xB1',
-        widget_version: '5.1.28',
+        widget_version: '5.1.30',
         extra1: {
             sn8: '0ET470QL'
         },

@@ -92,7 +92,7 @@
                 <!--<text v-if="currentItem" class="content-title" @click="showDetailModal">{{currentItem.text}}</text>-->
                 <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header  b-b-1" :title="currentItem.text" titleText="#000000" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
 
-                <div v-if="currentItem && currentItem.probe && cmdObj.up_cavity.isProbe.value">
+                <div v-if="currentItem && currentItem.probe && workingAnalysisObj.isProbe.value">
                     <sf-accordion type="picker" :value="setValue('probeTemperature')" unit="°C" title="设置探针温度" isFolded="true"  @callback="updateAccordionFoldingStatus">
                         <div slot="content">
                             <wx-picker :data="range('probeTemperature')" target="probeTemperature" :visible="true" @wxChange="handlePickerChange"></wx-picker>
@@ -154,11 +154,20 @@
         <midea-dialog :title="warningDialog.title"
                       :show="warningDialog.show"
                       :single="true"
+                      :noFooter="true"
                        confirmText="我知道了"
                       @mideaDialogConfirmBtnClicked="knowClicked"
                       :content="warningDialog.content"
                       mainBtnColor="#FFB632"
         >
+         <div slot="header">
+                 <sf-header leftImg="img/header/public_ic_home@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native" >
+                    <div slot="headerTitle">
+                        <sf-tab ref="mTab" :tabArray="pages" @tabClicked="tabClicked">
+                        </sf-tab>
+                    </div>
+                </sf-header>
+            </div>
         </midea-dialog>
 
        
@@ -338,7 +347,8 @@
     import mideaSwitch2 from '@/midea-component/switch2.vue'
     // import WxPicker from '@/component/sf/custom/picker.vue';
     import WxPicker from '@/component/sf/custom/picker_amui.vue';
-    import mideaDialog from '@/component/dialog.vue';
+    // import mideaDialog from '@/component/dialog.vue';
+    import mideaDialog from '@/component/sf/custom/dialog_tips.vue'
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
     import light from "@/component/sf/common/light.vue";
     // import workingComponent from './working.vue';

@@ -8,7 +8,7 @@ import page2 from "./page2";
 
 let pages = [
     {
-        name: '纯蒸',
+        name: '蒸箱',
         double: true,
         selected: true,
         tabs: page1.tabs

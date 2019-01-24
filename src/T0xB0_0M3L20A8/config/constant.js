@@ -12,5 +12,8 @@ module.exports = {
         extra1: {
             sn8: '0M3L20A8'
         },
+        hideChildLock:{
+            working:true
+        }
     }
 };

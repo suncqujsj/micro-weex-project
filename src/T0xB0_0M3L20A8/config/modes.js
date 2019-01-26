@@ -42,7 +42,7 @@ let modes = [
            
             {
                 'icon': modeIcons[13].dir,
-                'text': '薄饼烧烤',
+                'text': '薄块烧烤',
                 'mode': 0x40,
                 time:{
                     set: true,

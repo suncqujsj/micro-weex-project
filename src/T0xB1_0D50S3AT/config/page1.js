@@ -345,12 +345,18 @@ let autoMenu = [
                     },
                     settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
-                        foodMaterial:'牛肉 300克、蒸肉米粉100克end'+
-                        '葱花 5克、蚝油 4克end'+
-                        '红椒 5克、鸡粉 2克end'+
-                        '料酒 5毫升、生抽 4毫升end'+
-                        '食用油 8克、水淀粉 5毫升end'+
-                        '蒜蓉 10克、盐 2克',
+                        foodMaterial:'牛肉 300克end'+
+                        '蒸肉米粉 100克 end'+
+                        '葱花 5克end'+
+                        '蚝油 4克 end'+
+                        '红椒 5克end'+
+                        '鸡粉 2克end'+
+                        '料酒 5毫升end'+
+                        '生抽 4毫升end'+
+                        '食用油 8克end'+
+                        '水淀粉 5毫升end'+
+                        '蒜蓉 10克end'+
+                        '盐 2克',
                         cookingSteps:'1.处理好的牛肉切成片，待用。end'+
                         '2.取一个碗，倒入牛肉，加入盐、鸡粉，放入少许料酒、生抽、蚝油、水淀粉，搅拌匀，加入蒸肉米粉，搅拌均匀。end'+
                         '3.取一个蒸盘，将拌好的牛肉装入盘中。end'+
@@ -458,12 +464,18 @@ let autoMenu = [
                     settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
                         foodMaterial:'鸡肉 400克end'+
-                        '葱花 10克、干百合 20克end'+
-                        '枸杞 15克、红枣 20克end'+
-                        '鸡粉 2克、姜 17克end'+
-                        '料酒 6毫升、生抽 8毫升end'+
-                        '生粉 8克、食用油 10克end'+
-                        '盐 3克、淀粉 4克',
+                        '葱花 10克end'+
+                        '干百合 20克end'+
+                        '枸杞 15克end'+
+                        '红枣 20克end'+
+                        '鸡粉 2克end'+
+                        '姜 17克end'+
+                        '料酒 6毫升end'+
+                        '生抽 8毫升end'+
+                        '生粉 8克end'+
+                        '食用油 10克end'+
+                        '盐 3克end'+
+                        '淀粉 4克',
                         cookingSteps:'1.把洗净的红枣切开，去除核，再把枣肉切碎。end'+
                         '2.洗净的鸡肉切开，再斩成小块。end'+
                         '3.将鸡块装入碗中，撒上备好的枣肉。end'+
@@ -508,12 +520,18 @@ let autoMenu = [
                     },
                     settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
-                        foodMaterial:'低筋面粉 90克、高筋面粉200克end'+
-                        '牛肉 150克、葱花 30克end'+
-                        '黄奶油 50克、鸡蛋 60克end'+
-                        '鸡粉 2克、姜末 10克end'+
-                        '生抽 3毫升、生粉 70克end'+
-                        '盐 2克、芝麻油 2毫升',
+                        foodMaterial:'低筋面粉 90克end'+
+                        '高筋面粉 200克end'+
+                        '牛肉 150克end'+
+                        '葱花 30克end'+
+                        '黄奶油 50克end'+
+                        '鸡蛋 60克end'+
+                        '鸡粉 2克end'+
+                        '姜末 10克end'+
+                        '生抽 3毫升end'+
+                        '生粉 70克end'+
+                        '盐 2克end'+
+                        '芝麻油 2毫升',
                         cookingSteps:'1.将洗净的牛肉切成小块，再剁碎，盛碗待用；end'+
                         '2.在装有牛肉的碗中，放入芝麻油、姜末、鸡粉、生抽、葱花、盐，搅拌均匀，end'+
                         '加入2勺清水，同方向搅拌均匀，制成馅料待用；end'+
@@ -571,11 +589,11 @@ let autoMenu = [
                     },
                     settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
-                        foodMaterial:'鲈鱼 350克、end'+
-                        '彩椒 20克、end'+
-                        '葱条 20克、end'+
-                        '姜 45克、end'+
-                        '柠檬 45克、end'+
+                        foodMaterial:'鲈鱼 350、end'+
+                        '彩椒 20克end'+
+                        '葱条 20克end'+
+                        '姜 45克end'+
+                        '柠檬 45克end'+
                         '盐 3克',
                         cookingSteps:'1.把柠檬切开，将柠檬汁挤入碗中，待用。end'+
                         '2.取部分洗净的葱切成细丝。end'+
@@ -673,7 +691,7 @@ let autoMenu = [
                     },
                     settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                     detail: {
-                        foodMaterial:'水发香菇55克end'+
+                        foodMaterial:'水发香菇 55克end'+
                         '鳕鱼肉 150克end'+
                         '彩椒 10克end'+
                         '葱丝 10克end'+
@@ -682,7 +700,7 @@ let autoMenu = [
                         '料酒 4毫升end'+
                         '杂粮 50克end'+
                         '油 20克end'+
-                        '盐 1小勺、end'+
+                        '盐 1小勺end'+
                         '黑胡椒 少量',
                         cookingSteps:'1.将洗净的香菇用斜刀切片。end'+
                         '2.洗好的彩椒切丝，改切成粒。end'+
@@ -788,9 +806,12 @@ let autoMenu = [
                     detail: {
                         foodMaterial:'龙口粉丝 10克end'+
                         '鲍鱼 150克end'+
-                        '蒜 4克、细香葱 4克end'+
-                        '生抽 2毫升、蚝油 2毫升end'+
-                        '料酒 2毫升、盐 1克',
+                        '蒜 4克end'+
+                        '细香葱 4克end'+
+                        '生抽 2毫升end'+
+                        '蚝油 2毫升end'+
+                        '料酒 2毫升end'+
+                        '盐 1克',
                         cookingSteps:'1.粉丝用水泡软，蒜，葱切碎，取一小碗，加入蒜末，油、生抽、盐、料酒、蚝油等爆香拌匀备用。end'+
                         '2.将鲍鱼洗干净，沥干水份，每个鲍鱼用刀横竖开刀花，在盘底部放入泡软的粉丝，再放上鲍鱼，淋上爆香的蒜末，end'+
                         '3.把蒸盘/烤架放入腔体第一层，把装食物的碟子放入蒸盘中间，水盒加水，选择菜单，启动即可。end'+
@@ -832,14 +853,14 @@ let autoMenu = [
                         },
                         settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                         detail: {
-                            foodMaterial:'排骨段 400克、end'+
+                            foodMaterial:'排骨段 400克end'+
                             '水发小米 90克end'+
-                            '葱花 10克、end'+
-                            '鸡粉 2克、end'+
+                            '葱花 10克end'+
+                            '鸡粉 2克end'+
                             '姜 15克end'+
-                            '料酒 3毫升、end'+
+                            '料酒 3毫升end'+
                             '生抽 3毫升end'+
-                            '生粉 5克、end'+
+                            '生粉 5克end'+
                             '食用油 10克end'+
                             '大蒜 8克end'+
                             '盐 2克end'+

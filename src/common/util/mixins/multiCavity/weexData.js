@@ -211,8 +211,7 @@ let workingModalMixin  = {
             let chartJson = JSON.parse(JSON.stringify(this.chartJson));
             chartJson.pointShow = true;
             chartJson.progressCounter = progress_step;
-            this.chartJson = JSON.parse(JSON.stringify(chartJson));
-
+            
             //this.cmdObj = analysisObj;
             if(analysisObj.probeRealTemperature.value>analysisObj.probeSetttingTemperature.value){
                 analysisObj.probeRealTemperature.value = analysisObj.probeSetttingTemperature.value;
@@ -289,11 +288,12 @@ let workingModalMixin  = {
                 if(_item.settingHide){
                     this.hasSetting = false;
                 }
-                let chartJson = JSON.parse(JSON.stringify(this.chartJson));
                 chartJson.pointShow = false;
-                this.chartJson = chartJson;
+                chartJson.progressCounter = 0;
                 
             }
+            this.chartJson = JSON.parse(JSON.stringify(chartJson));
+            
 
             // 不是烹饪完成 ，并且处于预热温度到达
             if(analysisObj.workingState.value != 4 &&  analysisObj.displaySign.preheatTemperature == 1){

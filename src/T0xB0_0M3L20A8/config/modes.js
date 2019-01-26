@@ -71,8 +71,8 @@ let modes = [
                 }
             },
             {
-                'icon': modeIcons[14].dir,
-                'text': '微波烧烤',
+                'icon': modeIcons[22].dir,
+                'text': modeIcons[22].cn,
                 'mode': 0x70,
                 time:{
                     set: true,
@@ -109,8 +109,8 @@ let modes = [
 
             },
             {
-                'icon': modeIcons[14].dir,
-                'text': modeIcons[14].cn,
+                'icon': modeIcons[23].dir,
+                'text': modeIcons[23].cn,
                 'mode': 0xA0,
                 time:{
                     set: false,

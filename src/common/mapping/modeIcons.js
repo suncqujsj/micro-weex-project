@@ -38,5 +38,8 @@ icons[18] = getIcon('湿烤', 'dry_hg@3x');
 icons[19] = getIcon('ECO', 'ECO@3x');
 icons[20] = getIcon('清洁', 'clean@3x');
 icons[21] = getIcon('除味', 'remove_flavor@3x');
+icons[22] = getIcon('微波烧烤', 'microwave_grill@3x');
+icons[23] = getIcon('按重解冻', 'defrost_by_weight@3x');
+icons[24] = getIcon('按时解冻', 'defrost_by_time@3x');
 
 export default icons;

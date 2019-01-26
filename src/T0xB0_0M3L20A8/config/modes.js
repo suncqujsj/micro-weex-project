@@ -42,7 +42,7 @@ let modes = [
            
             {
                 'icon': modeIcons[13].dir,
-                'text': modeIcons[13].cn,
+                'text': '薄饼烧烤',
                 'mode': 0x40,
                 time:{
                     set: true,
@@ -72,7 +72,7 @@ let modes = [
             },
             {
                 'icon': modeIcons[22].dir,
-                'text': modeIcons[22].cn,
+                'text': '双模快烤',
                 'mode': 0x70,
                 time:{
                     set: true,

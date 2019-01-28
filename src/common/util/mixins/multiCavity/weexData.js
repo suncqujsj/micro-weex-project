@@ -83,57 +83,37 @@ let workingModalMixin  = {
         };
     },
     methods: {
+        dialogTips(obj){
+            this.setWarningDialog("",null,false);
+            this.modalVisibility = false;
+            if(obj.displaySign.isError){
+                this.setWarningDialog("设备故障，请联系售后人员");
+            }
+            if(obj.displaySign.lackWater){
+                this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
+            }
+            if(obj.displaySign.waterBox){
+                this.setWarningDialog("缺水盒");
+
+            }
+            if(obj.displaySign.doorSwitch){
+                this.setWarningDialog("炉门开了");
+            }
+
+            if(obj.displaySign.lock){
+                // let context = this;
+                // this.setWarningDialog("你需要关闭童锁吗？", function(){
+                //     context.childLock(false);
+                // });
+                !this.modalVisibility && this.showModal();
+            }    
+        },
         dialogSetting(analysisObj){        
             if(this.index==0){
-                this.setWarningDialog("",null,false);
-                this.modalVisibility = false;
-                if(analysisObj.up_cavity.displaySign.isError){
-                    this.setWarningDialog("设备故障，请联系售后人员");
-                }
-                if(analysisObj.up_cavity.displaySign.lackWater){
-                    this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
-                }
-                if(analysisObj.up_cavity.displaySign.waterBox){
-                    this.setWarningDialog("缺水盒");
-    
-                }
-                if(analysisObj.up_cavity.displaySign.doorSwitch){
-                    this.setWarningDialog("炉门开了");
-                }
-    
-                if(analysisObj.up_cavity.displaySign.lock){
-                    // let context = this;
-                    // this.setWarningDialog("你需要关闭童锁吗？", function(){
-                    //     context.childLock(false);
-                    // });
-                    !this.modalVisibility && this.showModal();
-                }    
+               this.dialogTips(analysisObj.up_cavity);
             }
             if(this.index==1){
-                this.setWarningDialog("",null,false);
-                this.modalVisibility = false;
-                if(analysisObj.down_cavity.displaySign.isError){
-                    this.setWarningDialog("设备故障，请联系售后人员");
-                }
-                if(analysisObj.down_cavity.displaySign.lackWater){
-                    this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
-                }
-                if(analysisObj.down_cavity.displaySign.waterBox){
-                    this.setWarningDialog("缺水盒");
-    
-                }
-                if(analysisObj.down_cavity.displaySign.doorSwitch){
-                    this.setWarningDialog("炉门开了");
-                }
-    
-                if(analysisObj.down_cavity.displaySign.lock){
-                    // let context = this;
-                    // this.setWarningDialog("你需要关闭童锁吗？", function(){
-                    //     context.childLock(false);
-                    // });
-                    !this.modalVisibility && this.showModal();
-                }
-    
+               this.dialogTips(analysisObj.down_cavity);
             }
         },
         analysisFun(analysisObj) { 
@@ -231,8 +211,7 @@ let workingModalMixin  = {
             let chartJson = JSON.parse(JSON.stringify(this.chartJson));
             chartJson.pointShow = true;
             chartJson.progressCounter = progress_step;
-            this.chartJson = JSON.parse(JSON.stringify(chartJson));
-
+            
             //this.cmdObj = analysisObj;
             if(analysisObj.probeRealTemperature.value>analysisObj.probeSetttingTemperature.value){
                 analysisObj.probeRealTemperature.value = analysisObj.probeSetttingTemperature.value;
@@ -309,11 +288,12 @@ let workingModalMixin  = {
                 if(_item.settingHide){
                     this.hasSetting = false;
                 }
-                let chartJson = JSON.parse(JSON.stringify(this.chartJson));
                 chartJson.pointShow = false;
-                this.chartJson = chartJson;
+                chartJson.progressCounter = 0;
                 
             }
+            this.chartJson = JSON.parse(JSON.stringify(chartJson));
+            
 
             // 不是烹饪完成 ，并且处于预热温度到达
             if(analysisObj.workingState.value != 4 &&  analysisObj.displaySign.preheatTemperature == 1){
@@ -327,10 +307,18 @@ let workingModalMixin  = {
                 this.preheatFinishTig = true;
                 this.tag_next = '';
                 this.statusTag = '已预热到'+analysisObj.temperature.upLowTemperature+'°';
-                this.hasStopOrContinueBtn = true;
                 this.hasSetting = false;
-                this.btnText = "开始";
-                this.btnSrc = "img/footer/icon_start@2x.png";
+                // this.hasStopOrContinueBtn = true;
+                // this.btnText = "开始";
+                // this.btnSrc = "img/footer/icon_start@2x.png";
+                if(analysisObj.mode.value == 0xE0 && analysisObj.recipeId.value==1){
+                    this.hasStopOrContinueBtn = true;
+                    this.btnText = "开始";
+                    this.btnSrc = "img/footer/icon_start@2x.png";
+                }else{
+                    this.cancleBtnText = '完成';
+                    this.cancleIcon = 'img/finish_icon@2x.png';
+                }
             }
 
             //倒计时按照设计来
@@ -381,9 +369,6 @@ let workingModalMixin  = {
             }else{
                 this.openActionsheet();            
             }
-        },
-        knowClicked(){
-            this.warningDialogShow = false;
         },
          //打开上拉菜单
         openActionsheet: function () {

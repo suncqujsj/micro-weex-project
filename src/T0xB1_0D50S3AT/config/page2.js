@@ -236,7 +236,8 @@ let modes = [
                 fireAmount:{
                     set:false,
                     default:0
-                }
+                },
+                settingHide: true
             },
         ]
     },

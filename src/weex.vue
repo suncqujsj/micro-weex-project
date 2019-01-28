@@ -86,7 +86,7 @@ module.exports = {
             { key: 9, value: "T0xB1_0ET470QL",desc: "G55辅助蒸汽" },
             { key: 10, value: "T0xE1_000000H3",desc: "T0xE1_000000H3" },
             { key: 11, value: "T0xE1_000000H5",desc: "T0xE1_000000H5" },
-            { key: 12, value: "T0xB0_0M3L20A8",desc: "E厨20L微波炉" },
+            { key: 12, value: "T0xB0_0M3L20A8",desc: "年轻套系20L微波炉" },
             { key: 13, value: "T0xB0_0X5L23A8",desc: "G100一体机" },
         ],
         card: 'T0xB1',
@@ -327,7 +327,7 @@ module.exports = {
     padding: 22px;
 }
 .text-input-port {
-    width: 140;
+    width: 140px;
     font-family: PingFangSC-Regular;
     font-size: 32px;
     color: #000000;

@@ -19,78 +19,77 @@
                     <input class="text-input" type="text" placeholder="步长" v-model="step" />
                 </div>
             </div>
-            <midea-button  :text="(intervalHandler?'停止':'开始')+'增加进度（步长/秒）'" type="primary" :btnStyle="{'width': '500px', 'height':'60px', 'margin-top':'0px'}" @mideaButtonClicked="mideaButtonClicked">
+            <midea-button :text="(intervalHandler?'停止':'开始')+'增加进度（步长/秒）'" type="primary" :btnStyle="{'width': '500px', 'height':'60px', 'margin-top':'0px'}" @mideaButtonClicked="mideaButtonClicked">
             </midea-button>
-            <midea-button  text="增加进度" type="primary" :btnStyle="{'width': '500px', 'height':'60px', 'margin-top':'0px'}" @mideaButtonClicked="mideaButtonClicked1">
+            <midea-button text="增加进度" type="primary" :btnStyle="{'width': '500px', 'height':'60px', 'margin-top':'0px'}" @mideaButtonClicked="mideaButtonClicked1">
             </midea-button>
-            <midea-button  text="重新加载" type="primary" :btnStyle="{'width': '500px', 'height':'60px', 'margin-top':'0px'}" @mideaButtonClicked="mideaButtonClicked2">
+            <midea-button text="重新加载" type="primary" :btnStyle="{'width': '500px', 'height':'60px', 'margin-top':'0px'}" @mideaButtonClicked="mideaButtonClicked2">
             </midea-button>
-            <midea-button  text="清零" type="primary" :btnStyle="{'width': '500px', 'height':'60px', 'margin-top':'0px'}" @mideaButtonClicked="mideaButtonClicked3">
+            <midea-button text="清零" type="primary" :btnStyle="{'width': '500px', 'height':'60px', 'margin-top':'0px'}" @mideaButtonClicked="mideaButtonClicked3">
             </midea-button>
         </scroller>
     </div>
 </template>
 <style scoped>
 .wrapper {
-  background-color: #ffffff;
+    background-image: linear-gradient(to bottom, #ffbb00, #ffaa10);
 }
 .scroller {
-  padding-top: 20px;
-  padding-bottom: 50px;
+    padding-bottom: 50px;
 }
 .progresscycle-wrapper {
     width: 750px;
-    height: 350px;
     justify-content: center;
     align-items: center;
+    /* border-color: red;
+    border-width: 1px; */
+    padding: 20px;
 }
 .progresscycle {
-    width: 350px;
-    height: 350px;
+    width: 480px;
+    height: 480px;
     justify-content: center;
     align-items: center;
-    border-color: red;
-    border-width: 1px;
 }
 .param-wrapper {
     width: 750px;
-  padding-top: 32px;
-  padding-left: 32px;
-  padding-right: 32px;
-  background-color: #ffffff;
+    padding-top: 32px;
+    padding-left: 32px;
+    padding-right: 32px;
+    background-image: linear-gradient(to bottom, #ffbb00, #ffaa10);
 }
 .item-group {
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 10px;
-  padding-bottom: 10px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 .text-label {
-  font-family: PingFangSC-Regular;
-  font-size: 28px;
-  color: #000000;
-  width: 150px;
-  padding-top: 16px;
-  margin-bottom: 16px;
-  padding-right: 20px;
-  text-align: right;
+    font-family: PingFangSC-Regular;
+    font-size: 28px;
+    color: #000000;
+    width: 150px;
+    padding-top: 16px;
+    margin-bottom: 16px;
+    padding-right: 20px;
+    text-align: right;
 }
 .text-input {
-  flex: 1;
-  font-family: PingFangSC-Regular;
-  font-size: 28px;
-  color: #000000;
-  border-radius: 4px;
-  border-color: #e5e5e8;
-  border-width: 1px;
-  /* height: 72px; */
-  padding-top: 16px;
-  padding-left: 22px;
-  padding-right: 50px;
-  padding-bottom: 16px;
-  margin-bottom: 16px;
-  background-color: #fafafa;
+    flex: 1;
+    font-family: PingFangSC-Regular;
+    font-size: 28px;
+    color: #000000;
+    border-radius: 4px;
+    border-color: #e5e5e8;
+    border-width: 1px;
+    /* height: 72px; */
+    padding-top: 16px;
+    padding-left: 22px;
+    padding-right: 50px;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    background-color: #fafafa;
 }
 </style>
 <script>  
@@ -109,11 +108,11 @@ module.exports = {
             intervalHandler: null,
             step: 5,
             chartData: {
-                "completedColor": "#267aff", //环形进度条未完成后的颜色默认#267AFF
-                "incompletedColor": "#f2f2f2", //环形进度条未完成后的颜色，默认透明
-                "thickness": 4, //环形进度条宽度，默认4
-                "cornerRadius": 175,  //环形的半径，默认是width/2
-                "totalCounter": 100, //环形进度条的最大值，默认是360
+                "completedColor": "#ffffff", //环形进度条未完成后的颜色默认#267AFF
+                "incompletedColor": "#f5d5d5eb", //环形进度条未完成后的颜色，默认透明
+                "thickness": 2, //环形进度条宽度，默认4
+                "cornerRadius": 240,  //环形的半径，默认是width/2
+                "totalCounter": 360, //环形进度条的最大值，默认是360
                 "progressCounter": 0, //设置进度值，默认是从0-360, 默认为0
                 "autoProgress": false, //设置是否需要自动执行环形进度，默认false, 如果设置为true，则每秒进度值+1操作
                 "clockwise": true, //环形自动执行进度的方向，默认是true，即顺时针方向，false为逆时针方向
@@ -143,20 +142,25 @@ module.exports = {
                 }, 1000);
             }
         },
-        mideaButtonClicked1(){
+        mideaButtonClicked1() {
             let tempObj = JSON.parse(JSON.stringify(this.chartData))
             tempObj.progressCounter += (this.step || 1)
-            if (tempObj.progressCounter >= tempObj.totalCounter) {
+            if (tempObj.progressCounter <= tempObj.totalCounter) {
+                if (tempObj.progressCounter >= tempObj.totalCounter) {
+                    tempObj.progressCounter = tempObj.totalCounter
+                    clearInterval(this.intervalHandler)
+                    this.intervalHandler = null
+                }
                 this.chartData = JSON.parse(JSON.stringify(tempObj))
             }
         },
-        mideaButtonClicked2(){
+        mideaButtonClicked2() {
             this.isShow = false
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
                 this.isShow = true
             })
         },
-        mideaButtonClicked3(){
+        mideaButtonClicked3() {
             let tempObj = JSON.parse(JSON.stringify(this.chartData))
             tempObj.progressCounter = 0
             this.chartData = JSON.parse(JSON.stringify(tempObj))

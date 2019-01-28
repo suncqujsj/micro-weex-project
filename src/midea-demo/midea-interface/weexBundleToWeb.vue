@@ -7,8 +7,8 @@
         <midea-title-bar title="代码"></midea-title-bar>
         <text class="display-block">
             nativeService.weexBundleToWeb({
-                "url": "http://www.midea.com/cn/", //跳转的目标页面
-                "title": "美的官网"
+                "url": "http://qrcode.midea.com/test/h5Demo/demo.html#/base", //跳转的目标页面
+                "title": "美居H5测试页面"
             })
         </text>
         <midea-button text="打开指定原生页面" @mideaButtonClicked="methodWithNoArg">
@@ -49,8 +49,8 @@ module.exports = {
     data() {
         return {
             messageParam: {
-                "url": "http://www.midea.com/cn/", //跳转的目标页面
-                "title": "美的官网"
+                "url": "http://qrcode.midea.com/test/h5Demo/demo.html#/base", //跳转的目标页面
+                "title": "美居H5测试页面"
             },
             result: ''
         }

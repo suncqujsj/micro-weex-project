@@ -30,7 +30,7 @@
             return {
                 list:[
                     {
-                        title: '产品型号：年轻化20升微波炉',
+                        title: '产品型号：微波炉',
                         link:'https://m.ximalaya.com/wwys/v1/e/1?from=groupmessage&isappinstalled=0'
                     },
                     {

@@ -6,7 +6,7 @@
     // config data
     import constant from "./config/constant";
     import  modes from "./config/modes.js";
-    import  modes_X9321D from "./config/modes_X9321D.js";
+    import  modes_09X7321D from "./config/modes_09X7321D.js";
     import autoMenu from "./config/auto-menu.js";
     import commonWeex from "@/common/pages/weex.vue";
     import nativeService from "@/common/services/nativeService";
@@ -15,11 +15,11 @@
         data(){
             return {
                 tabs:[
-                    {
-                        name:'自动菜单',
-                        active:false,
-                        rows:autoMenu
-                    },
+                    // {
+                    //     name:'自动菜单',
+                    //     active:false,
+                    //     rows:autoMenu
+                    // },
                     {
                         name:'加热模式',
                         active:true,
@@ -34,12 +34,18 @@
             let self = this;
             let tabs = JSON.parse(JSON.stringify(this.tabs));
              nativeService.getDeviceInfo().then(function(data){
-                if(data.result.deviceSn8=='0ET470QL'){
-                   tabs[1].rows = modes_X9321D;
+                if(data.result && data.result.deviceSn8=='0ET470QL'){
+                    tabs[0].rows = modes_09X7321D;
+                    if(tabs.length>1){
+                        tabs[1].rows = modes_09X7321D;
+                    }
                 }else{
-                     tabs[1].rows = modes;
+                    tabs[0].rows = modes;
+                    if(tabs.length>1){
+                        tabs[1].rows = modes;
+                    }
                 }
-                self.tabs = tabs;
+                self.tabs = JSON.parse(JSON.stringify(tabs));
             });
         },
         methods: {

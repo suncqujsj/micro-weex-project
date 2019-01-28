@@ -10,7 +10,7 @@ module.exports = {
         widget_name: 'MSO_T0xB0',
         widget_version: '5.0.8',
         extra1: {
-            sn8: '0M3L20A8'
+            sn8: '09X7321D'
         },
     }
 };

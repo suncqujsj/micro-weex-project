@@ -169,7 +169,6 @@ const deviceMessageMixin = {
             this.current.probeTemperature = cmdObj.probeSetttingTemperature.value;
             // this.currentItem.steamSwitch.default = cmdObj.steam.value?true:false;
             // nativeService.toast(this.current,3);
-            this.workingSettingRecord = true;
             this.openDialog();
         },
         controlDevice(jsonCmd, callbackData){
@@ -285,6 +284,7 @@ const deviceMessageMixin = {
         listenerDeviceReiveMessage(){//传入模式配置数据
             let context = this;
             globalEvent.addEventListener("receiveMessage", function(e) {
+                context.settingClickRecord = false;
                 var str = e.data;
                 var arr = str.split(",");
                 // nativeService.alert(arr);

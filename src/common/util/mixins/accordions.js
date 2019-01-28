@@ -185,13 +185,13 @@ const accordionMixin = {
             // this.current.temperature = this.currentItem['temperature'].default;
             // this.current.steamAmount = this.currentItem['steamAmount'].default;
             // this.current.fireAmount = this.currentItem['fireAmount'].default;
-
+            this.settingClickRecord = true;
             this.show = true;
            
          
         },
         closeDialog(e) {
-            this.workingSettingRecord = false;
+            this.settingClickRecord = false;
             this.show = false;
             if (e.type === 'cancel' || e.type === 'close'){
                 this.show = false;

@@ -214,17 +214,11 @@
             <!--<div><text @click="setContent">下发指令:{{testCmd}}</text></div>-->
             <div class="progress_content"  @longpress="onlongpressQuery()"><!--隐藏长按组件触发03查询，方便调试-->
                 <div class="progress_section" :style="progress_style" > 
-                    <!--<wxcProgress :percent="progress" :progressShow="progressShow"
-                        :wxc_radius='progress_radius'>
-
-                    </wxcProgress>
-                <div class="animate_section" v-if="isWorking" :style="{left:`${progress_radius-50}px`}">
-                        <image class="animate_circle" src="img/ellipsis_px_2.gif"></image>
-                    </div>-->
+                    <!--倒计时组件-->
                     <div v-if="progressShow">
                         <midea-progresscycle-view class="circleprogress" :data="chartJson"></midea-progresscycle-view>
                     </div>
-
+                    <!--探针模式-->
                     <div v-if="cmdObj.isProbe.value" class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
                         <div class="content_section">
                             <text :class="['number-text',timeShow && 'work_time',hasHour && 'hour_time']">{{probeProgress}}</text>
@@ -233,21 +227,24 @@
                             <text class="number_next">{{probeTempText}}</text>
                         </div>
                     </div>
-                
+                    <!--非探针模式-->
                     <div v-if="!cmdObj.isProbe.value" class="time_section" :style="{ height: `${progress_radius*2}px`,width:`${progress_radius*2}px`}">
                         <div class="center_section">
-                            <!--<text class="number-text">{{progress}} {{timeRemain}}</text>-->
+                            <!--时tag-->
                             <div :class="['prev_section',hourMore10 && 'prev_section_more']">
                                 <text class="number_prev" v-if="hasHour">时</text>
                             </div>
+                            <!--中间显示时分/预热完成/预热中/烹饪完成-->
                             <div class="content_section">
                                 <text :class="['number-text',timeShow && 'work_time',hasHour && 'hour_time',hourMore10 && 'moreThen10Hour']">{{workSpecialStatusText}}</text>
                             </div>
+                            <!--分tag-->
                             <div class="next_section">
                                 <text class="number_next">{{tag_next}}</text>
                             </div>
                         </div>
                     </div>
+                    <!--剩余时间文案-->
                     <div class="cen status_tag_section" :style="{width:`${progress_radius*2}px`}">
                         <text class="status_tag">{{statusTag}}</text>
                     </div>
@@ -255,6 +252,7 @@
                 </div>
             </div>
 
+            <!--设置参数-->
             <div class="detail_section" v-if="!finishStatus" @click="setting(cmdObj)">
                 <div class="detail_item">
                     <text class="detail_text">{{cmdObj.mode.text}} {{cmdObj.temperature.upLowTemperature>0?cmdObj.temperature.upLowTemperature:''}}</text>
@@ -266,7 +264,7 @@
                     </div>
                 </div>
             </div>
-          
+            <!--底部按钮-->
             <div class="footer_section" v-if="isFooterShow">
                 <div class="btn_content">
                     <div class="btn_section">

@@ -79,7 +79,7 @@ let workingModalMixin  = {
             actionsheetItems:['确定关闭'],
             lightImg:"img/light_off@3x.png",
 
-            workingSettingRecord: false,
+            settingClickRecord: false,
         };
     },
     methods: {
@@ -121,10 +121,14 @@ let workingModalMixin  = {
             this.cmdObj = analysisObj;
             let chartJson = JSON.parse(JSON.stringify(this.chartJson));
             chartJson.pointShow = false;
+            chartJson.progressCounter = 0;
             this.chartJson = JSON.parse(JSON.stringify(chartJson));
             //nativeService.alert(analysisObj);
             this.showDetailVisibility = false;
             this.show = false;    
+            if(this.settingClickRecord){
+                this.show = true;    
+            }
             this.dialogSetting(analysisObj);
            
             this.isCavityWorking = false;
@@ -180,9 +184,6 @@ let workingModalMixin  = {
             },timeSet*1000);
         },
         analysisWorkingFun(analysisObj,tabs) {
-            if(this.workingSettingRecord){
-                this.show = true;    
-            }
             this.workingAnalysisObj = analysisObj;
             // nativeService.alert(this.workingAnalysisObj);
             var self = this , timer = null;
@@ -288,8 +289,10 @@ let workingModalMixin  = {
                 if(_item.settingHide){
                     this.hasSetting = false;
                 }
-                chartJson.pointShow = false;
-                chartJson.progressCounter = 0;
+                let settingTemp = analysisObj.temperature.upLowTemperature, realTemp = analysisObj.realTemperature.upLowTemperature;
+                let temp_step = realTemp/settingTemp*360; //360度倒计时为例
+                chartJson.pointShow = true;
+                chartJson.progressCounter = temp_step;
                 
             }
             this.chartJson = JSON.parse(JSON.stringify(chartJson));

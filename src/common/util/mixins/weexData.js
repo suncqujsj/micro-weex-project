@@ -58,7 +58,6 @@ let workingModalMixin  = {
                 finishStatus: false, //完成状态
                 preheatFinishTig: false, //预热完成指引
                 isFooterShow: false,
-                isWorking: false,
     
                 // cmdObj:cmdFun.initAnalysisObj(), //指令解析对象
               
@@ -82,7 +81,7 @@ let workingModalMixin  = {
 
                 isWorkingPage:false,
 
-                workingSettingRecord: false,
+                settingClickRecord: false,
         };
     },
     methods: {
@@ -94,6 +93,9 @@ let workingModalMixin  = {
             this.modalVisibility = false;
             this.showDetailVisibility = false;
             this.show = false;    
+            if(this.settingClickRecord){
+                this.show = true;    
+            }
             this.isWorkingPage = false;
             this.cmdObj = analysisObj;
             this.probeTempText = '°C';
@@ -173,10 +175,6 @@ let workingModalMixin  = {
             var self = this , timer = null;
             // clearInterval(this.countDownTimer);
             // nativeService.alert(analysisObj);
-            if(this.workingSettingRecord){
-                this.show = true;    
-            }
-            this.isWorking = false;
             this.isFooterShow = true;
             this.timeShow = false;
             this.hasHour = false;
@@ -214,7 +212,6 @@ let workingModalMixin  = {
             }
             
             if(analysisObj.workingState.value == 3){
-                this.isWorking = true;
                 this.timeShow = true;
                 this.hasSetting = true;
                 this.btnText = "暂停";
@@ -268,7 +265,6 @@ let workingModalMixin  = {
             }
             // 不是烹饪完成 ，并且处于预热中状态
              if(analysisObj.workingState.value != 4 && analysisObj.displaySign.preheat == 1){
-                this.isWorking = true;
                 this.timeShow = false;
                 this.hasHour = false;
                 this.workSpecialStatusText = "预热中";
@@ -306,6 +302,8 @@ let workingModalMixin  = {
                 this.btnSrc = "img/footer/icon_start@2x.png";
             }
             if(analysisObj.menuFeel.value){
+                this.timeShow = false;
+                this.hasHour = false;
                 this.workSpecialStatusText = "感应中";
                 this.hasStopOrContinueBtn = false;
             }

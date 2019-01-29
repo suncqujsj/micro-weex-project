@@ -8,23 +8,22 @@ let modes = [
         title: '',
         iconButtons: [
             {
-                'icon': modeIcons[12].dir,
-                'text': modeIcons[12].cn,
-                'mode': 0x01,
+                'icon': modeIcons[16].dir,
+                'text': modeIcons[16].cn,
+                'mode': 0x20,
                 time:{
-                    set: true,
+                    set: false,
                     default:20,
-                    range:[5,95,1],
+                    range:[1,119,1],
                 },
                 temperature:{
-                    set: false,
-                    default:null,
-                    range:null,
+                    set: true,
+                    default:100,
+                    range:[90,100,5],
                 },
                 preheat:{
                     set:false,
                     default: null,
-                    hide: true, //工作中，隐藏预热选择
                 },
                 steamAmount:{
                     set:false,
@@ -32,14 +31,76 @@ let modes = [
                     range:null,
                 },
                 fireAmount:{
-                    set:true,
-                    default:10,
-                    range:[10,50,20,80,100,20],
-                    hide: true
+                    set:false,
+                    default:null,
+                    range:null,
+                    hide: null
                 },
-               
+                hms:{
+                    set:true,
+                    default:[0,40,40]
+                }
             },
-           
+            {
+                'icon': modeIcons[13].dir,
+                'text': modeIcons[13].cn,
+                'mode': 0x40,
+                time:{
+                    set: true,
+                    default:30,
+                    range:[1,119,1],
+                },
+                temperature:{
+                    set: true,
+                    default:180,
+                    range:[100,300,10],
+                },
+                preheat:{
+                    set:true,
+                    default: false,
+                },
+                steamAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                },
+                fireAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                    hide: null
+                },
+            },
+            {
+                'icon': modeIcons[7].dir,
+                'text': modeIcons[7].cn,
+                'mode': 0xB0,
+                time:{
+                    set: true,
+                    default:30,
+                    range:[1,719,1],
+                },
+                temperature:{
+                    set: true,
+                    default:35,
+                    range:[35,45,5],
+                },
+                preheat:{
+                    set:false,
+                    default: null,
+                },
+                steamAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                },
+                fireAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                    hide: null
+                },
+            },
         ]
     },
 ];

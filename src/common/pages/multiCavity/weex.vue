@@ -95,12 +95,12 @@
                 <div v-if="currentItem && currentItem.probe && workingAnalysisObj.isProbe.value">
                     <sf-accordion type="picker" :value="setValue('probeTemperature')" unit="°C" title="设置探针温度" isFolded="true"  @callback="updateAccordionFoldingStatus">
                         <div slot="content">
-                            <wx-picker :data="range('probeTemperature')" target="probeTemperature" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                            <wx-picker :pickerIndex="index" :data="range('probeTemperature')" target="probeTemperature" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                         </div>
                     </sf-accordion>
                       <sf-accordion type="picker" :value="setValue('steamAmount')" unit="档" title="设置蒸汽量" isFolded="true"  @callback="updateAccordionFoldingStatus">
                         <div slot="content">
-                            <wx-picker :data="range('steamAmount')" target="steamAmount" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                            <wx-picker :pickerIndex="index" :data="range('steamAmount')" target="steamAmount" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                         </div>
                     </sf-accordion>
                 </div>
@@ -109,7 +109,7 @@
                         <div v-if="item.type==='picker'">
                             <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                                 <div slot="content">
-                                    <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                    <wx-picker :pickerIndex="index" :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                                 </div>
                             </sf-accordion>
                         </div>
@@ -346,7 +346,8 @@
     import query from "../../../dummy/query";
     import mideaSwitch2 from '@/midea-component/switch2.vue'
     // import WxPicker from '@/component/sf/custom/picker.vue';
-    import WxPicker from '@/component/sf/custom/picker_amui.vue';
+    // import WxPicker from '@/component/sf/custom/picker_amui.vue';
+     import WxPicker from '@/component/sf/custom/picker_time.vue';
     // import mideaDialog from '@/component/dialog.vue';
     import mideaDialog from '@/component/sf/custom/dialog_tips.vue'
     import mideaActionsheet from '@/midea-component/actionsheet.vue'

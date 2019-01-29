@@ -121,7 +121,7 @@ const accordionMixin = {
         initCurrentData: function(){
             return {
                 time: null,
-                hms:[1,1,0],
+                hms:null,
                 temperature: null,
                 preheat:false,
                 preheatHide: false,
@@ -180,6 +180,7 @@ const accordionMixin = {
              this.current.isFireAmountChange = false;
              this.current.preheatHide = false;
              this.current.preheat = this.currentItem['preheat'].default;
+            //  this.current.hms = this.currentItem['hms'].default;
             // this.current.steamSwitch = this.currentItem['steamSwitch'].default;
             // this.current.time = this.currentItem['time'].default;
             // this.current.temperature = this.currentItem['temperature'].default;

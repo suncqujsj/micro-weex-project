@@ -5,15 +5,14 @@
             :target="target"
             :pickerIndex="pickerIndex"
             :listItem="listItem"
-          
             @change="onChange"
         ></am-picker-view>
     </div>
 </template>
  
 <script type="text/javascript">
-import  AmPickerView  from './base/scrollPicker_one.vue'
 // import { AmPickerView } from 'weex-amui'
+import  AmPickerView  from '@/midea-component/scrollPicker.vue'
 import nativeService from '@/common/services/nativeService';
  
 module.exports = {

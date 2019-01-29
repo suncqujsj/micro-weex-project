@@ -1,6 +1,6 @@
 <template>
     <div class="wrap" :style="wrapStyle">
-        <div class="select-area" v-if="isShowIndicator" :style="indicatorStyle"></div>
+        <div class="select-area" :style="indicatorStyle"></div>
         <scroller ref="scroller" class="scroller" :style="scrollerStyle" :show-scrollbar="false" @scroll="scroll" @scrollend="scrollEnd">
             <div v-for="(item, index) in listArray" :key="index" ref="item">
                 <text v-bind:class="[
@@ -12,9 +12,10 @@
                     index==itemIndex   ? 'selected-item':'unselected-item',
                     index==itemIndex+1 ? 'second-last-visible-item':'',
                     index==itemIndex+2 ? 'first-last-visible-item':''
-                ]">{{item.value}}</text>
+                ]">{{item}}</text>
             </div>
         </scroller>
+        <text class="unit">{{unit}}</text>
     </div>
 </template>
 <script>
@@ -40,12 +41,28 @@ export default {
         },
         wrapWidth: {
             type: Number,
-            default: 750
+            default: 680
         },
         isShowIndicator: {
             type: Boolean,
             default: false
-        }
+        },
+        pickerIndex: {
+            type: Number,
+            default: 0
+        },
+         listItem: {
+            type: Number,
+            default: null
+        },
+        unit: {
+            type: String,
+            default: ''
+        },
+        target: {
+            type: String,
+            default: ''
+        },
     },
     computed: {
         wrapStyle() {
@@ -72,7 +89,7 @@ export default {
         return {
             isInit: false,
             itemHeight: 70,
-            index: this.itemIndex
+            itemIndex: 0,
         }
     },
     watch: {
@@ -103,17 +120,18 @@ export default {
             // const el = this.$refs['item'][0]
             // dom.scrollToElement(el, { offset: this.itemIndex * 70 })
             this.scrollToIndexItem(this.itemIndex);
-            this.$emit('onChange', this.listArray[this.itemIndex])
+            this.$emit('change', {index: this.pickerIndex, value: this.listArray[this.itemIndex]})
         },
         scrollToIndexItem(index, animated = true) {
+            let self = this;
             let el = this.$refs.item[index]
             if (el) {
                 let sid = setInterval(() => next(), 100)
                 let next = () => {
                     dom.getComponentRect(el, (options) => {
                         if (options.result && options.size.bottom) {
-                            dom.scrollToElement(el, { animated: animated, offset: index == 0 ? 0 : (- Math.floor((this.wrapHeight / this.itemHeight) / 2) * this.itemHeight) });
-                            this.isInit = true
+                            dom.scrollToElement(el, { animated: animated, offset: index == 0 ? 0 : (- Math.floor((self.wrapHeight / this.itemHeight) / 2) * self.itemHeight) });
+                            self.isInit = true
                         } else {
                             setTimeout(() => next(), 100)
                         }
@@ -124,6 +142,12 @@ export default {
         }
     },
     mounted() {
+        var _listArray = this.listArray;
+        for(var i=0; i< _listArray.length; i++){
+            if(_listArray[i] == this.listItem){
+                this.itemIndex = i;
+            }
+        }
         if (this.itemIndex != null) {
             this.scrollToIndexItem(this.itemIndex, false)
         }

@@ -1,6 +1,7 @@
 // 本解析js专门针对 新协议，支持微蒸烤所有产品  Giggs
 
 import message from "@/common/util/smartMessage";
+import sensoryMenus from '@/common/mapping/sensoryMenus'
 import  nativeService from '@/common/services/nativeService';
 // import {device} from "../config/constant";
 // import modes from "../config/modes.js";
@@ -170,6 +171,11 @@ export default {
     var text = '';
     var modeArr =  [];
     var isRecipe = false;
+
+    if(modeValue === 0xE2) {
+        return sensoryMenus[recipeId].cn;
+    }
+
     if(modeValue == 0xE0){ //如果是自动菜谱
         isRecipe = true;
     }
@@ -387,8 +393,8 @@ export default {
     obj.timeRemaining.minute = parseInt(requestCmd[17]);
     obj.timeRemaining.second = parseInt(requestCmd[18]);
     obj.mode.value = parseInt(requestCmd[19]);
-    
-    obj.mode.text = this.modeValueToModeText(recipeId,parseInt(requestCmd[19]),tabs);     
+
+    obj.mode.text = this.modeValueToModeText(recipeId,parseInt(requestCmd[19]),tabs);
     
      //实际温度
      obj.realTemperature.upHighTemperature = parseInt(requestCmd[20]);

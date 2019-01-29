@@ -187,6 +187,7 @@ module.exports = {
             { title: 'storage数据', link: "storage" },
             { title: 'weex环境变量', link: "weexEnv" },
             { title: 'remotePage测试页面', link: "remotePage" },
+            { title: 'websocket', link: "websocket" },
         ],
         containerHeight: 1200
     }),

@@ -36,10 +36,10 @@ let modes = [
                     range:null,
                     hide: null
                 },
-                hms:{
-                    set:true,
-                    default:[0,40,40]
-                }
+                // hms:{
+                //     set:true,
+                //     default:[0,40,40]
+                // }
             },
             {
                 'icon': modeIcons[13].dir,

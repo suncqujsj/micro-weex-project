@@ -305,6 +305,7 @@ let workingModalMixin  = {
                 this.timeShow = false;
                 this.hasHour = false;
                 this.workSpecialStatusText = "感应中";
+                this.hasSetting = false;
                 this.hasStopOrContinueBtn = false;
             }
 

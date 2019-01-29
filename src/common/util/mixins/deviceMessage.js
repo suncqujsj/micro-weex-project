@@ -287,7 +287,7 @@ const deviceMessageMixin = {
                 context.settingClickRecord = false;
                 var str = e.data;
                 var arr = str.split(",");
-                // nativeService.alert(arr);
+                // nativeService.alert(cmdFun.cmdToEasy(arr));
                 if(parseInt(arr[9])==0x0A){
                     return;
                 }

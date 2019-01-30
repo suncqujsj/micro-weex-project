@@ -346,8 +346,8 @@
     import query from "../../../dummy/query";
     import mideaSwitch2 from '@/midea-component/switch2.vue'
     // import WxPicker from '@/component/sf/custom/picker.vue';
-    // import WxPicker from '@/component/sf/custom/picker_amui.vue';
-     import WxPicker from '@/component/sf/custom/picker_time.vue';
+    import WxPicker from '@/component/sf/custom/picker_amui.vue';
+    //  import WxPicker from '@/component/sf/custom/picker_time.vue';
     // import mideaDialog from '@/component/dialog.vue';
     import mideaDialog from '@/component/sf/custom/dialog_tips.vue'
     import mideaActionsheet from '@/midea-component/actionsheet.vue'

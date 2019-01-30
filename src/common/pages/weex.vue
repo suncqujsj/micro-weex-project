@@ -47,7 +47,7 @@
                         </div>
                         <slider v-if="tab.rows[0].title" infinite="false" style="height: 234px">
                             <div class="icon-buttons" v-for="items in row.iconButtons">
-                                <div class="icon-button column" v-for="item in items" @click="onIconButtonClicked(item)">
+                                <div class="icon-button column" v-for="item in items" @click="onIconButtonClicked(item)" v-if="!item.standbyHide">
                                     <image v-if="item.icon" class="button-icon" :src="item.icon"></image>
                                     <div v-else class="button-icon row a-c j-c">
                                         <text style="font-size: 30px;">{{item.time.default}}'</text>
@@ -60,7 +60,7 @@
                             </div>
                         </slider>
                         <div class="icon-buttons" v-else>
-                            <div class="icon-button column" v-for="item in row.iconButtons" @click="onIconButtonClicked(item)">
+                            <div class="icon-button column" v-for="item in row.iconButtons" @click="onIconButtonClicked(item)"  v-if="!item.standbyHide">
                                 <image v-if="item.icon" class="button-icon" :src="item.icon"></image>
                                 <div v-else class="button-icon row a-c j-c">
                                     <text>{{item.time.default}}'</text>
@@ -312,8 +312,8 @@
     import nativeService from "@/common/services/nativeService";
     import query from "../../dummy/query";
     import mideaSwitch2 from '@/midea-component/switch2.vue'
-    // import WxPicker from '@/component/sf/custom/picker_amui.vue';
-     import WxPicker from '@/component/sf/custom/picker_time.vue';
+    import WxPicker from '@/component/sf/custom/picker_amui.vue';
+    //  import WxPicker from '@/component/sf/custom/picker_time.vue';
     import timePicker from '@/component/sf/custom/timePicker.vue'
     import mideaDialog from '@/component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'

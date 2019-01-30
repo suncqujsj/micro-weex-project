@@ -52,7 +52,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:160,
-                    range:[50,250,5]
+                    range:[50,50,1,100,250,5]
                 },
                 preheat:{
                     set:true,
@@ -238,7 +238,7 @@ let modes = [
                 time:{
                     set: true,
                     default:30,
-                    range:[1,540,1]
+                    range:[1,60,1,65,120,5,150,720,30]
                 },
                 temperature:{
                     set: true,

@@ -453,19 +453,6 @@
                 this.modeText = item.text;
                 this.openDialog();
             },
-            initWarningDialog(){
-                return {
-                    show: false,
-                    title: "温馨提示",
-                    content: "主人，您的水箱缺水了，要及时添加水哦",
-                    callback: null
-                };
-            },
-            setWarningDialog(content, callback=null, show=true){
-                this.warningDialog.show = show;
-                this.warningDialog.content = content;
-                this.warningDialog.callback = callback;
-            },
             knowClicked(){
                 this.show = false;
                 // nativeService.alert(typeof this.warningDialog.callback);

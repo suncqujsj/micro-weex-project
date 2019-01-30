@@ -63,6 +63,28 @@ let commonMixin = {
             return resultList;
         },
 
+        /**
+         * 提示弹窗设置
+         */
+        setWarningDialog(content, callback=null, show=true){
+            this.warningDialog.show = show;
+            this.warningDialog.content = content;
+            this.warningDialog.callback = callback;
+        },
+
+        hideWarningDialog(){
+            this.warningDialog.show = false;
+        },
+
+        initWarningDialog(){
+            return {
+                show: false,
+                title: "温馨提示",
+                content: "主人，您的水箱缺水了，要及时添加水哦",
+                callback: null
+            };
+        },
+
         statisticsUpload: function(data={}){
 
             // nativeService.alert(data);

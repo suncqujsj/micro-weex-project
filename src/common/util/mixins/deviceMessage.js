@@ -297,17 +297,28 @@ const deviceMessageMixin = {
 
              //监听设备在线离线状态
              globalEvent.addEventListener("receiveMessageFromApp", (data) => {
-               if(data && data.messageType == "deviceOnlineStatus") {
-                   if(data.messageBody && data.messageBody.onlineStatus == "online") {
-                       // this.onlineStatus = "1";
-                   } else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
-                       // this.onlineStatus = "0";
-                       nativeService.backToNative()
-                   } else {
-                       // this.onlineStatus = "0";
-                   }
-               }
-           });
+                 // 网络状态判断
+                 if(data.messageType === 'networkStatusChanged') {
+                     if(data.messageBody.status === 1) {
+                         this.hideWarningDialog();
+                         return;
+                     }
+
+                     this.setWarningDialog('主人，您的手机没有网络。');
+                 }
+
+
+                 if(data && data.messageType == "deviceOnlineStatus") {
+                     if(data.messageBody && data.messageBody.onlineStatus == "online") {
+                         // this.onlineStatus = "1";
+                     } else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+                         // this.onlineStatus = "0";
+                         nativeService.backToNative()
+                     } else {
+                         // this.onlineStatus = "0";
+                     }
+                 }
+             });
         },
     }
 };

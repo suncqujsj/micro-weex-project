@@ -36,6 +36,8 @@ let modes = [
                     range:null,
                     hide: null
                 },
+                settingHide:true //工作中隐藏设置参数
+                // standbyHide: true //standbyHide=true 待机中隐藏该对象,默认false或者没有这个key
                 // hms:{
                 //     set:true,
                 //     default:[0,40,40]
@@ -70,6 +72,173 @@ let modes = [
                     range:null,
                     hide: null
                 },
+                settingHide:true
+            },
+            {
+                'icon': modeIcons[27].dir,
+                'text': modeIcons[27].cn,
+                'mode': 0x03,
+                time:{
+                    set: true,
+                    default:1,
+                    range:[1,30,1],
+                },
+                temperature:{
+                    set: false,
+                    default:null,
+                    range:[35,45,5],
+                },
+                preheat:{
+                    set:false,
+                    default: null,
+                },
+                steamAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                },
+                fireAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                    hide: null
+                },
+                settingHide:true
+            },
+            {
+                'icon': modeIcons[20].dir,
+                'text': modeIcons[20].cn,
+                'mode': 0xC6,
+                time:{
+                    set: false,
+                    default:20,
+                    range:[1,719,1],
+                },
+                temperature:{
+                    set: false,
+                    default:null,
+                    range:[35,45,5],
+                },
+                preheat:{
+                    set:false,
+                    default: null,
+                },
+                steamAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                },
+                fireAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                    hide: null
+                },
+                settingHide:true,
+                standbyHide: true,
+            },
+        ],
+        
+    },
+    {
+        title:'',
+        iconButtons:[
+             //以下为待机中隐藏的对象
+             {
+                'icon': modeIcons[25].dir,
+                'text': modeIcons[25].cn,
+                'mode': 0x90,
+                time:{
+                    set: false,
+                    default:20,
+                    range:[1,719,1],
+                },
+                temperature:{
+                    set: false,
+                    default:null,
+                    range:[35,45,5],
+                },
+                preheat:{
+                    set:false,
+                    default: null,
+                },
+                steamAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                },
+                fireAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                    hide: null
+                },
+                settingHide:true,
+                standbyHide: true,
+            },
+            {
+                'icon': modeIcons[26].dir,
+                'text': modeIcons[26].cn,
+                'mode': 0x70,
+                time:{
+                    set: false,
+                    default:20,
+                    range:[1,719,1],
+                },
+                temperature:{
+                    set: false,
+                    default:null,
+                    range:[35,45,5],
+                },
+                preheat:{
+                    set:false,
+                    default: null,
+                },
+                steamAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                },
+                fireAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                    hide: null
+                },
+                settingHide:true,
+                standbyHide: true,
+            },
+            {
+                'icon': modeIcons[14].dir,
+                'text': modeIcons[14].cn,
+                'mode': 0xA1,
+                time:{
+                    set: false,
+                    default:20,
+                    range:[1,719,1],
+                },
+                temperature:{
+                    set: false,
+                    default:null,
+                    range:[35,45,5],
+                },
+                preheat:{
+                    set:false,
+                    default: null,
+                },
+                steamAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                },
+                fireAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                    hide: null
+                },
+                settingHide:true,
+                standbyHide: true,
             },
             {
                 'icon': modeIcons[7].dir,
@@ -100,9 +269,49 @@ let modes = [
                     range:null,
                     hide: null
                 },
+                settingHide:true,
+                standbyHide: true,
             },
         ]
     },
+    {
+        title:'',
+        iconButtons:[
+            {
+                'icon': modeIcons[28].dir,
+                'text': modeIcons[28].cn,
+                'mode': 0xD0,
+                time:{
+                    set: false,
+                    default:20,
+                    range:[1,719,1],
+                },
+                temperature:{
+                    set: false,
+                    default:null,
+                    range:[35,45,5],
+                },
+                preheat:{
+                    set:false,
+                    default: null,
+                },
+                steamAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                },
+                fireAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                    hide: null
+                },
+                settingHide:true,
+                standbyHide: true,
+            },
+           
+        ]
+    }
 ];
 
 export default modes;

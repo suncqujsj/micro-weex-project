@@ -42,7 +42,7 @@ icons[22] = getIcon('微波烧烤', 'microwave_grill@3x');
 icons[23] = getIcon('按重解冻', 'defrost_by_weight@3x');
 icons[24] = getIcon('按时解冻', 'defrost_by_time@3x');
 icons[25] = getIcon('快蒸', '');
-icons[26] = getIcon('变频加热', '');
+icons[26] = getIcon('变频加热', 'microwave@3x');
 icons[27] = getIcon('快捷微波', 'microwave@3x');
 icons[28] = getIcon('保温', '');
 export default icons;

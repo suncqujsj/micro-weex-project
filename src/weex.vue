@@ -88,6 +88,7 @@ module.exports = {
             { key: 11, value: "T0xE1_000000H5",desc: "T0xE1_000000H5" },
             { key: 12, value: "T0xB0_0M3L20A8",desc: "年轻套系20L微波炉" },
             { key: 13, value: "T0xB0_0X5L23A8",desc: "G100一体机" },
+            { key: 14, value: "T0xB2",desc: "蒸汽炉" },
         ],
         card: 'T0xB1',
         isShowCardList: false,

@@ -330,6 +330,8 @@
     import copyMixin from  "@/common/util/mixins/copy"
     import modalMixin from  "@/common/util/mixins/modal"
     import weexData from  "@/common/util/mixins/weexData"
+    const globalEvent = weex.requireModule("globalEvent");
+
 
     // import constant from "./config/constant";
 

@@ -15,7 +15,7 @@
             <div v-if="showRightText" class="header-right" @click="rightTextClick">
                 <text class="header-right-text" :style="{color: rightColor}">{{rightText}}</text>
             </div>
-            <slot name="customerContent">
+            <slot name="customerContent" :style="{top:this.statusBarHeight + 'wx'}">
             </slot>
         </div>
     </div>
@@ -95,6 +95,7 @@ export default {
                 } else {
                     //安卓使用px为单位
                     result = weex.config.env.statusBarHeight / weex.config.env.scale
+
                 }
             }
             return result

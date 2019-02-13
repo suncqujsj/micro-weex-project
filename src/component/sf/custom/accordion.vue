@@ -76,7 +76,9 @@
     }
 </script>
 
-<style>
+<style lang="less" type="text/less">
+    @import (reference) "../../../common/less/common.less";
+
     .accordion-wrapper {
     }
     .accordion-item {
@@ -85,8 +87,7 @@
         justify-content: space-between;
         flex-direction: row;
         height: 92px;
-        border-bottom-color: #e5e5e8;
-        border-bottom-width: 1px;
+        .b-b-1;
     }
     .accordion-item:last-child{
         border-bottom-width: 0;

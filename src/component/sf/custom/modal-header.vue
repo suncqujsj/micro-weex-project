@@ -108,10 +108,11 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="less" type="text/less" scoped>
+    @height:96px;
 .box {
   /*width: 750px;*/
-  height: 88px;
+  height:@height;
   display: inline-flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -137,7 +138,7 @@ export default {
 }
 .header-left-image-wrapper {
   width: 88px;
-  height: 88px;
+  height: @height;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -149,7 +150,7 @@ export default {
 }
 .header-right-image-wrapper {
   width: 88px;
-  height: 88px;
+  height: @height;
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -162,7 +163,7 @@ export default {
 .header-right {
   position: absolute;
   right: 0px;
-  height: 88px;
+  height: @height;
   display: flex;
   justify-content: center;
   align-items: center;

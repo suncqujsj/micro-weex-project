@@ -365,6 +365,7 @@
     import copyMixin from  "@/common/util/mixins/copy"
     import modalMixin from  "@/common/util/mixins/modal"
     import weexData from  "@/common/util/mixins/multiCavity/weexData"
+     const globalEvent = weex.requireModule("globalEvent");
     // import workingData from  "@/common/util/mixins/multiCavity/workingData"
     // import cmdFun from "@/common/util/command/multiCavity/util"; //解析指令
     // var numberRecord = 0; //记录跳页面的次数

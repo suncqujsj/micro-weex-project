@@ -276,14 +276,14 @@ export default {
       message.setByte(messageBody, 2, 0);
       message.setByte(messageBody, 3, 0);
       message.setByte(messageBody, 4, params.recipeId);
-      message.setByte(messageBody, 5, 0);
+      message.setByte(messageBody, 5, 0x11);
       message.setByte(messageBody, 6, params.preheat?1:0);
       message.setByte(messageBody, 7, hour);
       message.setByte(messageBody, 8, minute);
       message.setByte(messageBody, 9, second);
       message.setByte(messageBody, 10, set_mode);
       message.setByte(messageBody, 12, params.temperature);
-      // message.setByte(messageBody, 14, params.temperature);
+      message.setByte(messageBody, 14, params.temperature);
       message.setByte(messageBody, 15, params.fireAmount/10);
       message.setByte(messageBody, 16, params.steamAmount || params.weight/10);
     }

@@ -128,7 +128,7 @@
             </div>
         </sf-dialog>
 
-        <detail-modal :show="showDetailVisibility" @close="closeDetailModal">
+        <detail-modal :show="showDetailVisibility" :showMask="false" @close="closeDetailModal">
             <div slot="title">
                 <modal-header leftImg="img/header/public_ic_gray@3x.png" class="modal-header" :title="modeText" titleText="#000000" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>
             </div>

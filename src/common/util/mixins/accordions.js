@@ -141,6 +141,7 @@ const accordionMixin = {
         resetState: function(){
             this.accordions = this.initAccordions();
             this.current = this.initCurrentData();
+            this.closeDetailModal();
             this.currentItem = null;
         },
         handlePickerChange(data, key){

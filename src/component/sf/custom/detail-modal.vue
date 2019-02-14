@@ -1,6 +1,6 @@
 <template>
   <div ref="container" v-if="show" class="container">
-    <midea-mask @click="layoutClick"></midea-mask>
+    <midea-mask v-if="showMask" @click="layoutClick"></midea-mask>
     <div ref="dialog" class="dialog-box" :style="{top:dialogTop+'px'}">
       <div class="dialog-content">
         <slot name="title">
@@ -28,6 +28,10 @@
       show: {
         type: Boolean,
         default: false
+      },
+      showMask: {
+          type: Boolean,
+          default: true
       },
       working: {
           type: Boolean,

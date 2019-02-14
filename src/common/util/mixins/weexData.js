@@ -198,7 +198,6 @@ let workingModalMixin  = {
             let chartJson = JSON.parse(JSON.stringify(this.chartJson));
             chartJson.pointShow = true;
             chartJson.progressCounter = progress_step;
-            this.chartJson = JSON.parse(JSON.stringify(chartJson));
 
             if(analysisObj.probeRealTemperature.value>analysisObj.probeSetttingTemperature.value){
                 analysisObj.probeRealTemperature.value = analysisObj.probeSetttingTemperature.value;
@@ -246,6 +245,9 @@ let workingModalMixin  = {
             if(_item.settingHide){
                 this.hasSetting = false;
             }
+            if(_item.circleProgressPointHide){
+                chartJson.pointShow = false;
+            }
 
             if(analysisObj.workingState.value == 4){
                this.timeShow = false;
@@ -280,9 +282,7 @@ let workingModalMixin  = {
                 if(_item.settingHide){
                     this.hasSetting = false;
                 }
-                let chartJson = JSON.parse(JSON.stringify(this.chartJson));
                 chartJson.pointShow = false;
-                this.chartJson = chartJson;
                 
             }
 
@@ -312,6 +312,7 @@ let workingModalMixin  = {
             if(_item.stopBtnHide){
                 this.hasStopOrContinueBtn = false;
             }
+            this.chartJson = JSON.parse(JSON.stringify(chartJson));
 
             //倒计时按照设计来
             if(this.timeShow&&allSeconds>0){

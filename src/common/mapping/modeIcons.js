@@ -45,4 +45,6 @@ icons[25] = getIcon('快蒸', '');
 icons[26] = getIcon('变频加热', 'microwave@3x');
 icons[27] = getIcon('快捷微波', 'microwave@3x');
 icons[28] = getIcon('保温', '');
+icons[29] = getIcon('变频加热', '');
+icons[30] = getIcon('自动菜单', '');
 export default icons;

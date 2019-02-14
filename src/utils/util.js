@@ -70,7 +70,7 @@ export default {
       message.setByte(messageBody, 9, second);
       message.setByte(messageBody, 10, set_mode);
       message.setByte(messageBody, 12, params.temperature);
-      // message.setByte(messageBody, 14, params.temperature);
+      message.setByte(messageBody, 14, params.temperature);
       message.setByte(messageBody, 15, params.fireAmount);
       message.setByte(messageBody, 16, params.steamAmount);
     }else{

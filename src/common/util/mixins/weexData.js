@@ -305,6 +305,12 @@ let workingModalMixin  = {
                 this.timeShow = false;
                 this.hasHour = false;
                 this.workSpecialStatusText = "感应中";
+                this.timeShow = false;
+                this.hasHour = false;
+                let chartJson = JSON.parse(JSON.stringify(this.chartJson));
+                chartJson.pointShow = false;
+                this.chartJson = chartJson;
+                this.statusTag = '';
                 this.hasSetting = false;
                 this.hasStopOrContinueBtn = false;
             }

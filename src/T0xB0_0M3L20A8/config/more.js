@@ -7,11 +7,13 @@ import constant from "./constant.js";
 
 let list = [
     {
-        title: '产品型号：年轻化20升微波炉',
+        title: '产品型号',
+        rightText: 'M3-L20A8',
         link:''
     },
     {
-        title: '插件版本号：weex' + constant.device.widget_version,
+        title: '插件版本号',
+        rightText: constant.device.widget_version,
         link: ''
     }
 ];

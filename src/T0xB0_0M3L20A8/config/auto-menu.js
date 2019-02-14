@@ -50,7 +50,7 @@ let data = [
                 },
                 {
                     'icon': '',
-                    'text': '西蓝花培根意面',
+                    'text': '西兰花培根意面',
                     'mode': 0xE0,
                     time:{
                         set: false,

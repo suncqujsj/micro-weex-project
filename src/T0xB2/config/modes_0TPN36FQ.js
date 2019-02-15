@@ -142,71 +142,6 @@ let modes = [
     {
         title:'',
         iconButtons:[
-             //以下为待机中隐藏的对象
-             {
-                'icon': modeIcons[25].dir,
-                'text': modeIcons[25].cn,
-                'mode': 0x90,
-                time:{
-                    set: false,
-                    default:20,
-                    range:[1,719,1],
-                },
-                temperature:{
-                    set: false,
-                    default:null,
-                    range:[35,45,5],
-                },
-                preheat:{
-                    set:false,
-                    default: null,
-                },
-                steamAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                },
-                fireAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                    hide: null
-                },
-                settingHide:true,
-                standbyHide: true,
-            },
-            {
-                'icon': modeIcons[26].dir,
-                'text': modeIcons[26].cn,
-                'mode': 0x70,
-                time:{
-                    set: false,
-                    default:20,
-                    range:[1,719,1],
-                },
-                temperature:{
-                    set: false,
-                    default:null,
-                    range:[35,45,5],
-                },
-                preheat:{
-                    set:false,
-                    default: null,
-                },
-                steamAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                },
-                fireAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                    hide: null
-                },
-                settingHide:true,
-                standbyHide: true,
-            },
             {
                 'icon': modeIcons[14].dir,
                 'text': modeIcons[14].cn,
@@ -241,44 +176,6 @@ let modes = [
             },
         ]
     },
-    {
-        title:'',
-        iconButtons:[
-            {
-                'icon': modeIcons[28].dir,
-                'text': modeIcons[28].cn,
-                'mode': 0xD0,
-                time:{
-                    set: false,
-                    default:20,
-                    range:[1,719,1],
-                },
-                temperature:{
-                    set: false,
-                    default:null,
-                    range:[35,45,5],
-                },
-                preheat:{
-                    set:false,
-                    default: null,
-                },
-                steamAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                },
-                fireAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                    hide: null
-                },
-                settingHide:true,
-                standbyHide: true,
-            },
-           
-        ]
-    }
 ];
 
 export default modes;

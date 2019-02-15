@@ -88,7 +88,6 @@ let workingModalMixin  = {
         analysisFun(analysisObj,tabs) {                
             //this.show = false;
             // nativeService.alert(analysisObj);
-            clearInterval(this.queryTimer);
             // this.setWarningDialog("",null,false);
             this.modalVisibility = false;
             this.showDetailVisibility = false;
@@ -142,6 +141,7 @@ let workingModalMixin  = {
             //     this.queryRunTimer(6);//6秒轮询 
             // }
             if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6) {
+                clearInterval(this.queryTimer);
                 this.isWorkingPage = true;
                 this.analysisWorkingFun(analysisObj,tabs);
             }

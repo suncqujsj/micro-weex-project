@@ -305,13 +305,13 @@
     // import modes from "./config/modes.js";
     // import autoMenu from "./config/auto-menu.js";
 
-    import accordionMixin from  "@/common/util/mixins/accordions"
-    import deviceMessageMixin from  "@/common/util/mixins/deviceMessage"
-    import detailModalMixin from  "@/common/util/mixins/detailModal"
-    import commonMixin from  "@/common/util/mixins/common"
-    import copyMixin from  "@/common/util/mixins/copy"
-    import modalMixin from  "@/common/util/mixins/modal"
-    import weexData from  "@/common/util/mixins/weexData"
+    import accordionMixin from "@/common/util/mixins/accordions"
+    import deviceMessageMixin from "@/common/util/mixins/deviceMessage"
+    import detailModalMixin from "@/common/util/mixins/detailModal"
+    import commonMixin from "@/common/util/mixins/common"
+    import copyMixin from "@/common/util/mixins/copy"
+    import modalMixin from "@/common/util/mixins/modal"
+    import weexData from "@/common/util/mixins/weexData"
     const globalEvent = weex.requireModule("globalEvent");
 
 
@@ -355,7 +355,9 @@
                 query: query
             });
             this.queryStatus(tabs,constant.device);
-            // this.queryRunTimer(10);//20秒轮询 已放在解析指令那里处理
+            if(constant.device.standby03) {
+                this.queryRunTimer(10);//轮询 已放在解析指令那里处理
+            }
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             if (this.isIos){
                 this.listenerDeviceReiveMessage();

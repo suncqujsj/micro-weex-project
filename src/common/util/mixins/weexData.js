@@ -85,15 +85,15 @@ let workingModalMixin  = {
         };
     },
     methods: {
-        analysisFun(analysisObj,tabs) {                
+        analysisFun(analysisObj,tabs) {
             //this.show = false;
             // nativeService.alert(analysisObj);
             // this.setWarningDialog("",null,false);
             this.modalVisibility = false;
             this.showDetailVisibility = false;
-            this.show = false;    
+            this.show = false;
             if(this.settingClickRecord){
-                this.show = true;    
+                this.show = true;
             }
             this.isWorkingPage = false;
             this.cmdObj = analysisObj;
@@ -101,7 +101,7 @@ let workingModalMixin  = {
             let chartJson = JSON.parse(JSON.stringify(this.chartJson));
             chartJson.pointShow = false;
             this.chartJson = JSON.parse(JSON.stringify(chartJson));
-               
+
             //提示
             let isLackWater = false , isWaterBox = false, isDoorSwitch = false, isError = false;
             if(analysisObj.workingState.value == 2 || analysisObj.workingState.value == 1 ){
@@ -115,7 +115,7 @@ let workingModalMixin  = {
                 if(analysisObj.displaySign.waterBox && analysisObj.mode.value!=0xC4){
                     isWaterBox = true;
                     this.setWarningDialog("主人，您的设备缺水盒了");
-    
+
                 }
                 if(analysisObj.displaySign.doorSwitch){
                     isDoorSwitch = true;
@@ -129,32 +129,35 @@ let workingModalMixin  = {
             if(!isLackWater && !isWaterBox && !isDoorSwitch && !isError){
                 this.setWarningDialog("",null,false);
             }
-           
+
             if(analysisObj.displaySign.lock){
                 // let context = this;
                 // this.setWarningDialog("你需要关闭童锁吗？", function(){
                 //     context.childLock(false);
                 // });
                 !this.modalVisibility && this.showModal();
-            } 
+            }
             // if(analysisObj.workingState.value == 3){
             //     this.queryRunTimer(6);//6秒轮询 
             // }
+            var _hour = analysisObj.timeRemaining.hour, _minute = analysisObj.timeRemaining.minute, _second = analysisObj.timeRemaining.second;
+            var allSeconds = _hour*60*60+_minute*60+_second;
+            if(analysisObj.workingState.value == 4 && allSeconds > 0) {
+                analysisObj.workingState.value = 3
+            }
             if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6) {
                 clearInterval(this.queryTimer);
                 this.isWorkingPage = true;
                 this.analysisWorkingFun(analysisObj,tabs);
             }
-            if(analysisObj.workingState.value == 3){
-                var _hour = analysisObj.timeRemaining.hour, _minute = analysisObj.timeRemaining.minute, _second = analysisObj.timeRemaining.second;
-                var allSeconds = _hour*60*60+_minute*60+_second;
+            if(analysisObj.workingState.value == 3 || (this.constant.device.standby03 && analysisObj.workingState.value == 4)){
                 if(allSeconds<2*60){
                     this.queryRunTimer(1);//6秒轮询 
                 }else{
                     this.queryRunTimer(6);//6秒轮询 
                 }
             }
-           
+
         },
         countDownRunTimer(minute,second,timeSet){
             var self = this;
@@ -208,10 +211,6 @@ let workingModalMixin  = {
                 this.lightImg = "img/light_on@3x.png";
             }else{
                 this.lightImg = "img/light_off@3x.png";
-            }
-
-            if(analysisObj.workingState.value === 4 && allSeconds > 0) {
-                analysisObj.workingState.value = 3
             }
 
             if(analysisObj.workingState.value === 3){

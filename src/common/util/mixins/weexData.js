@@ -209,8 +209,12 @@ let workingModalMixin  = {
             }else{
                 this.lightImg = "img/light_off@3x.png";
             }
-            
-            if(analysisObj.workingState.value == 3){
+
+            if(analysisObj.workingState.value === 4 && allSeconds > 0) {
+                analysisObj.workingState.value = 3
+            }
+
+            if(analysisObj.workingState.value === 3){
                 this.timeShow = true;
                 this.hasSetting = true;
                 this.btnText = "暂停";
@@ -249,7 +253,7 @@ let workingModalMixin  = {
                 chartJson.pointShow = false;
             }
 
-            if(analysisObj.workingState.value == 4){
+            if(analysisObj.workingState.value === 4){
                this.timeShow = false;
                this.hasHour = false;
                this.workSpecialStatusText = "烹饪完成";

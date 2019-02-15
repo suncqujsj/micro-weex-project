@@ -16,18 +16,28 @@ let modes = [
                 time:{
                     set: true,
                     default:30,
-                    range:[1,120,1]
+                    range:[1,120,1],
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 temperature:{
                     set: true,
                     default:220,
-                    range:[60,230,5]
+                    range:[60,230,5],
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 preheat:{
                     set:true,
                     default: 1,
                     workingPreheatHide: true,
-                }
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
+                },
+                probeTemperature:{
+                    set: true,
+                    default:60,
+                    range:[50,100,1],
+                },
+                probe: true,//支持肉类探针
+                // settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
             },
             {
                 'icon': modeIcons[3].dir,

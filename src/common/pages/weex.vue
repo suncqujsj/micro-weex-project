@@ -355,7 +355,9 @@
                 query: query
             });
             this.queryStatus(tabs,constant.device);
-            // this.queryRunTimer(10);//20秒轮询 已放在解析指令那里处理
+            if(constant.device.standby03) {
+                this.queryRunTimer(10);//轮询 已放在解析指令那里处理
+            }
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             if (this.isIos){
                 this.listenerDeviceReiveMessage();

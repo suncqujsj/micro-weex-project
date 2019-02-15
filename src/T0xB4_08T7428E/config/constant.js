@@ -11,7 +11,8 @@ module.exports = {
         widget_version: '5.0.0',
         extra1: {
             sn8: '08T7428E'
-        }
+        },
+        standby03:true // 待机中打开03轮询
     }
 };
 

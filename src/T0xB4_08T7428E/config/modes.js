@@ -170,6 +170,9 @@ let modes = [
                     default:40,
                     range:[35,40,1]
                 },
+                preheat:{
+                    set:false
+                },
                 settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             },

@@ -221,13 +221,32 @@ const accordionMixin = {
                 isSteamAmountChange: this.current.isSteamAmountChange,
                 isFireAmountChange: this.current.isFireAmountChange
             };
-            this.resetState();
+
+            let msg = this.validate(jsonCmd);
+            if(msg) {
+                this.show = true;
+                nativeService.toast(msg);
+                return;
+            }
+
+            // this.resetState();
             
             // if(jsonCmd.mode === 0xE0) { // 自动菜单
             //     jsonCmd.recipeId =  this.setValue('recipeId');
             // }
             this.controlDevice(jsonCmd, e);
         },
+        validate(jsonCmd){
+            let sn8 = this.device.extra1.sn8;
+            switch (sn8){
+                case '08T7428E':
+                    if(jsonCmd.probeTemperature >= jsonCmd.temperature) {
+                        return '探针温度必须小于腔体温度';
+                    }
+                default:
+                    return null;
+            }
+        }
     }
 };
 

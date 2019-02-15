@@ -12,7 +12,11 @@ module.exports = {
         extra1: {
             sn8: '08T7428E'
         },
-        standby03:true // 待机中打开03轮询
+        standby03:true, // 待机中打开03轮询
+        hideChildLock:{
+            standby: true,
+            working:true
+        }
     }
 };
 

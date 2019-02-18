@@ -12,14 +12,14 @@ let modes = [
                 'text': modeIcons[16].cn,
                 'mode': 0x20,
                 time:{
-                    set: false,
-                    default:20,
+                    set: true,
+                    default:30,
                     range:[1,119,1],
                 },
                 temperature:{
                     set: true,
                     default:100,
-                    range:[90,100,5],
+                    range:[35,70,1,75,100,5],
                 },
                 preheat:{
                     set:false,
@@ -36,7 +36,8 @@ let modes = [
                     range:null,
                     hide: null
                 },
-                settingHide:true //工作中隐藏设置参数
+                settingHide:true, //工作中隐藏设置参数
+                circleProgressPointHide: true,
                 // standbyHide: true //standbyHide=true 待机中隐藏该对象,默认false或者没有这个key
                 // hms:{
                 //     set:true,
@@ -49,7 +50,7 @@ let modes = [
                 'mode': 0xC4,
                 time:{
                     set: true,
-                    default:30,
+                    default:5,
                     range:[1,60,1],
                 },
                 temperature:{
@@ -72,7 +73,8 @@ let modes = [
                     range:null,
                     hide: null
                 },
-                settingHide:true
+                settingHide:true,
+                circleProgressPointHide: true,
             },
             {
                 'icon': modeIcons[7].dir,
@@ -80,13 +82,13 @@ let modes = [
                 'mode': 0xB0,
                 time:{
                     set: true,
-                    default:30,
+                    default:40,
                     range:[1,719,1],
                 },
                 temperature:{
                     set: true,
                     default:35,
-                    range:[35,45,5],
+                    range:[35,45,1],
                 },
                 preheat:{
                     set:false,
@@ -104,14 +106,15 @@ let modes = [
                     hide: null
                 },
                 settingHide:true,
+                circleProgressPointHide: true,
             },
             {
                 'icon': modeIcons[20].dir,
                 'text': modeIcons[20].cn,
-                'mode': 0xC6,
+                'mode': 0xC1,
                 time:{
                     set: false,
-                    default:20,
+                    default:8,
                     range:[1,719,1],
                 },
                 temperature:{
@@ -135,6 +138,7 @@ let modes = [
                     hide: null
                 },
                 settingHide:true,
+                circleProgressPointHide: true,
             },
         ],
         
@@ -173,6 +177,40 @@ let modes = [
                 },
                 settingHide:true,
                 standbyHide: true,
+                circleProgressPointHide: true,
+            },
+            {
+                'icon': modeIcons[30].dir,
+                'text': modeIcons[30].cn,
+                'mode': 0xE0,
+                time:{
+                    set: false,
+                    default:20,
+                    range:[1,719,1],
+                },
+                temperature:{
+                    set: false,
+                    default:null,
+                    range:[35,45,5],
+                },
+                preheat:{
+                    set:false,
+                    default: null,
+                },
+                steamAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                },
+                fireAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                    hide: null
+                },
+                settingHide:true,
+                standbyHide: true,
+                circleProgressPointHide: true,
             },
         ]
     },

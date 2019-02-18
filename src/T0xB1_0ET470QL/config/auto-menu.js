@@ -49,7 +49,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:39,
+                        default:32,
                         range:null
                     },
                     temperature:{
@@ -159,7 +159,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:29,
+                        default:23,
                         range:null
                     },
                     temperature:{
@@ -335,7 +335,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:30,
+                        default:22,
                         range:null
                     },
                     temperature:{

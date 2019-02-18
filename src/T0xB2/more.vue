@@ -1,62 +1,24 @@
 <style lang="less" type="text/less">
-    @import "../common/less/common";
 
 </style>
 
 <template>
-    <div class="bg-gray" :style="{height: wrapHeight}">
-
-        <midea-header class="bg-white" title="更多功能" titleText="black" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back"></midea-header>
-
-        <list style="margin-top: 24px" show-scrollbar="true">
-            <midea-cell :clickActivied="true" v-for="(item,index) in list" :key="index" :title="item.title" :has-arrow="false" @mideaCellClick="link(item)">
-            </midea-cell>
-        </list>
-
-    </div>
+    <more-page :list="list"></more-page>
 </template>
 
 <script>
-    import mideaHeader from '@/midea-component/header.vue'
-    import mideaCell from '@/midea-component/item.vue';
-    import nativeService from "@/common/services/nativeService";
-
-    import commonMixin from  "@/common/util/mixins/common.js"
-    import constant from "./config/constant";
+    import morePage from "@/common/pages/more.vue";
+    import list from "./config/more.js";
 
     export default {
-        mixins: [commonMixin],
         data(){
             return {
-                list:[
-                    {
-                        title: '产品型号：'+constant.device.page_title,
-                        link:'https://m.ximalaya.com/wwys/v1/e/1?from=groupmessage&isappinstalled=0'
-                    },
-                    {
-                        title: '插件版本号：weex' + constant.device.widget_version,
-                        link: 'http://www.baidu.com'
-                    }
-                ]
+                list
             }
         },
-        components: {mideaHeader, mideaCell},
+        components: {morePage},
         created(){
 
-        },
-        computed:{
-        },
-        methods: {
-            back: function(){
-                nativeService.goBack();
-            },
-            link: function(item){
-                return;
-                nativeService.weexBundleToWeb({
-                    url: item.link,
-                    title: '测试'
-                })
-            }
         }
     }
 </script>

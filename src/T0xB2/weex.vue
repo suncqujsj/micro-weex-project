@@ -34,7 +34,7 @@
             let self = this;
             let tabs = JSON.parse(JSON.stringify(this.tabs));
              nativeService.getDeviceInfo().then(function(data){
-                if(data.result && data.result.deviceSn8=='0ET470QL'){
+                if(data.result && data.result.deviceSn8=='0TPN36FQ'){
                     tabs[0].rows = modes_0TPN36FQ;
                     if(tabs.length>1){
                         tabs[1].rows = modes_0TPN36FQ;

@@ -183,10 +183,10 @@ const accordionMixin = {
              this.current.preheat = this.currentItem['preheat'].default;
             //  this.current.hms = this.currentItem['hms'].default;
             // this.current.steamSwitch = this.currentItem['steamSwitch'].default;
-            // this.current.time = this.currentItem['time'].default;
-            // this.current.temperature = this.currentItem['temperature'].default;
-            // this.current.steamAmount = this.currentItem['steamAmount'].default;
-            // this.current.fireAmount = this.currentItem['fireAmount'].default;
+            this.current.time = this.currentItem['time'].default;
+            this.current.temperature = this.currentItem['temperature'].default;
+            this.current.steamAmount = this.currentItem['steamAmount'].default;
+            this.current.fireAmount = this.currentItem['fireAmount'].default;
             this.settingClickRecord = true;
             this.show = true;
            

@@ -7,6 +7,7 @@
     import constant from "./config/constant";
     import  modes from "./config/modes.js";
     import  modes_0TPN36FQ from "./config/modes_0TPN36FQ.js";
+    import  modes_0TPN36R5 from "./config/modes_0TPN36R5.js";
     import autoMenu from "./config/auto-menu.js";
     import commonWeex from "@/common/pages/weex.vue";
     import nativeService from "@/common/services/nativeService";
@@ -35,15 +36,13 @@
             let tabs = JSON.parse(JSON.stringify(this.tabs));
              nativeService.getDeviceInfo().then(function(data){
                 if(data.result && data.result.deviceSn8=='0TPN36FQ'){
-                    tabs[0].rows = modes_0TPN36FQ;
-                    if(tabs.length>1){
-                        tabs[1].rows = modes_0TPN36FQ;
-                    }
-                }else{
+                    tabs[0].rows = modes_0TPN36FQ;            
+                }
+                else if(data.result && data.result.deviceSn8=='0TPN36R5'){
+                    tabs[0].rows = modes_0TPN36R5;               
+                }
+                else{
                     tabs[0].rows = modes;
-                    if(tabs.length>1){
-                        tabs[1].rows = modes;
-                    }
                 }
                 self.tabs = JSON.parse(JSON.stringify(tabs));
             });

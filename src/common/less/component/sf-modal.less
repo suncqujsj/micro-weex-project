@@ -1,3 +1,5 @@
+@import (reference) "../common";
+
 .container {
   width: 750px;
   align-items: center;
@@ -43,10 +45,10 @@
 }
 
 .dialog-footer {
+  margin-top: -1px;
   flex-direction: row;
   align-items: center;
-  border-top-color: #F3F3F3;
-  border-top-width: 1px;//fixed 重合线，颜色加深问题
+  .b-t-1;
   /*H5处理兼容*/
   border-top: 1px solid #F3F3F3;
 }
@@ -60,8 +62,7 @@
 }
 
 .cancel {
-  border-right-color: #F3F3F3;
-  border-right-width: 1px;
+  .b-r-1;
   /*H5处理兼容*/
   border-right: 1px solid #F3F3F3;
 }

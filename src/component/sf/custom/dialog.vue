@@ -2,7 +2,7 @@
   <div ref="container" v-if="show" class="container">
     <midea-mask @click="layoutClick"></midea-mask>
     <div ref="dialog" class="dialog-box" :style="{top:dialogTop+'px'}">
-      <div class="dialog-content">
+      <div class="dialog-content" :style="{marginBottom:-(0.5/scale)+'px'}">
         <slot name="title">
           <text v-if="title" class="content-title">{{title}}</text>
         </slot>
@@ -110,7 +110,8 @@
       }
     },
     data: () => ({
-      
+        scale:weex.config.env.platform === "iOS"?weex.config.env.scale*0.3 : 0.5
+
     }),
     created () {
       //var self=this;

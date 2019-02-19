@@ -268,7 +268,16 @@ let workingModalMixin  = {
                this.probeTempText = '';
                this.cancleBtnText = '完成';
                this.cancleIcon = 'img/finish_icon@2x.png';
-            //    this.countDownRunTimer(0,0,1);
+               let isCookingTypeComplete = true;  //默认烹饪类 完成
+                if(analysisObj.mode.value == 0xC0 ||analysisObj.mode.value == 0xC1||analysisObj.mode.value == 0xC2||
+                   analysisObj.mode.value == 0xC3||analysisObj.mode.value == 0xC4||analysisObj.mode.value == 0xC5 || analysisObj.mode.value == 0xC6
+                ){
+                    isCookingTypeComplete = false;
+                }
+                if(!isCookingTypeComplete){ //非烹饪类完成，显示工作完成
+                    this.workSpecialStatusText = "工作完成";
+                    this.statusTag = '';
+                }
               
             }
             // 不是烹饪完成 ，并且处于预热中状态

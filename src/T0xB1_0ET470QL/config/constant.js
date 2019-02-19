@@ -11,7 +11,7 @@ module.exports = {
         page_title: "烤箱",
         sales_model: "G55蒸汽补湿烤箱",
         widget_name: 'MSO_T0xB1',
-        widget_version: '5.1.27',
+        widget_version: '5.1.28',
         extra1: {
             sn8: '0ET470QL'
         },

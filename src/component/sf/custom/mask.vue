@@ -16,7 +16,7 @@
         },
         created(){
             var env=weex.config.env;
-            this.maskHeight=env.deviceHeight;
+            this.maskHeight=env.deviceHeight / env.deviceWidth * 750;
         }
     }
 </script>

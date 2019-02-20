@@ -33,7 +33,7 @@
 
 <script>
   //const icon = require('./icon.base64.js');
-  import  mideaMask from '@/component/sf/custom/mask.vue'
+  import  mideaMask from '@/midea-component/mask.vue'
   const dom= weex.requireModule('dom');
   module.exports = {
     components: { mideaMask },

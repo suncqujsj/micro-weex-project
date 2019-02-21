@@ -12,6 +12,8 @@ let commonMixin = {
     data(){
         return {
             wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
+            state: null,
+            stateTime: null
         };
     },
     methods:{
@@ -130,6 +132,33 @@ let commonMixin = {
             if(userInfo.uid) {
                 this.uid = userInfo.uid;
             }
+        },
+
+        /**
+         * 状态组件state.vue的显示以及细节
+         */
+        showState(text,type='loading'){
+            this.state  = {
+                display: true,
+                type,
+                text
+            };
+
+            if(type === 'success') {
+                this.stateTime = setInterval(()=>{
+                    this.hideState();
+                    clearInterval(this.stateTime);
+                }, 2000);
+            }
+        },
+
+        /**
+         * 状态组件state.vue的隐藏
+         */
+        hideState(){
+            this.state  = {
+                display: false,
+            };
         }
     }
 };

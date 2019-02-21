@@ -36,6 +36,9 @@
                 <text class="item-desc">{{verDesc}}</text>
             </div>
         </div>
+
+        <sf-state v-if="state" :display="state.display" :text="state.text" :type="state.type"></sf-state>
+
     </div>
 </template>
 
@@ -43,6 +46,7 @@
     import mideaHeader from '@/midea-component/header.vue'
     import mideaCell from '@/midea-component/cell.vue'
     import mideaButton from '@/midea-component/button.vue'
+    import sfState from "@/component/sf/custom/state.vue"
 
 
     import nativeService from "../common/services/nativeService";
@@ -57,13 +61,12 @@
                 verNo: 1,
                 verDesc: null,
                 verId: null,
-                pressed:false,
-                state:null
+                pressed:false
             }
         },
         computed:{
         },
-        components: {mideaHeader, mideaCell, mideaButton},
+        components: {mideaHeader, mideaCell, mideaButton, sfState},
         created(){
             nativeService.getDeviceInfo().then((data)=>{ // 获取deviceId
                 if(data.result && data.result.deviceId ) {
@@ -85,8 +88,7 @@
                     // nativeService.toast(data);
                     this.setData(true, data);
                     this.markButtonPressedState();
-                    nativeService.showLoadingWithMsg('更新中...');
-                    this.state = 'ing';
+                    this.showUpgradingState();
                     this.fetchUpgradeState();
                     return;
                 }
@@ -111,28 +113,25 @@
             upgrade(){
                 if(this.pressed) return;
                 this.UpgradeFireware().then((resp)=>{ // 点击按钮，让设备升级语音固件
-                    nativeService.alert(resp);
+                    // nativeService.alert(resp);
                     let returnData = JSON.parse(resp.returnData);
                     if(returnData.code === '200') {
                         this.markButtonPressedState();
-                        nativeService.showLoadingWithMsg('更新中...');
-                        this.state = 'ing';
+                        this.showUpgradingState();
                         this.fetchUpgradeState();
                         return;
                     }
 
-                    nativeService.showLoadingWithMsg('请稍后再试');
+                    nativeService.toast('请稍后再试');
                 });
             },
             fetchUpgradeState(){ // 定时主动查询是否更新完成
                 this.t = setInterval(()=>{
                     this.getUpgradeState().then((result)=>{
-                        nativeService.toast('轮询中');
                         let data = JSON.parse(result.returnData).data;
                         if(data.status === 'upgraded') {
                             this.hasNewVer = false;
-                            this.state = 'ed';
-                            nativeService.showLoadingWithMsg('更新完毕');
+                            this.showState('更新完毕', 'success');
                             clearInterval(this.t);
                         }
                     });

@@ -20,7 +20,7 @@
         <list style="margin-top: 24px" show-scrollbar="true">
             <template v-for="item in list">
                     <midea-cell  v-if="item.type === 'link'" :title="item.title" :hasArrow="true" :hasMargin="true" :hasTopBorder="false" :clickActivied="true" @mideaCellClick="item.event">
-                        <div v-if="hasNewVer" slot="value" class="flex" style="width: 16px;height:16px;position:relative">
+                        <div slot="value" v-if="hasNewVer" style="width: 16px;height:16px;position:absolute;right: 58px;">
                             <div class="red-dot"></div>
                         </div>
                     </midea-cell>
@@ -31,7 +31,6 @@
                 </template>
             </template>
         </list>
-        <text>{{upgradeAvailable? '有更新':'无更新'}}</text>
     </div>
 </template>
 
@@ -81,9 +80,6 @@
             this.init();
         },
         methods:{
-            updateState(){
-                this.upgradeAvailable = true;
-            }
         }
     }
 </script>

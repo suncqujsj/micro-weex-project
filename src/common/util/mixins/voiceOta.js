@@ -42,7 +42,7 @@ let voiceOtaMixin = {
                 this.setData(true, data);
                 if(isOtaPage) {
                     this.markButtonPressedState();
-                    nativeService.showLoadingWithMsg('更新中...');
+                    this.showUpgradingState();
                     this.fetchUpgradeState();
                     return;
                 }
@@ -149,7 +149,11 @@ let voiceOtaMixin = {
             this.hasNewVer = hasNewVer;
             this.verNo = data.verNo;
             this.verDesc = data.verDesc;
-        }
+        },
+
+        showUpgradingState(){
+            this.showState('更新中...');
+        },
     }
 };
 

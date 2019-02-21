@@ -79,9 +79,10 @@
         components: {mideaHeader, mideaCell, mideaSwitch2},
         created(){
             this.init();
+            let context = this;
             appPageDataChannel.onmessage = function(event){
                 if(event.data === 'success') {
-                    this.hasNewVer = false;
+                    context.hasNewVer = false;
                 }
             };
         },

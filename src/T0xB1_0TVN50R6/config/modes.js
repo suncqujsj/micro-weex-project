@@ -4,11 +4,24 @@
  */
 
 import modeIcons from "../../common/mapping/modeIcons";
+
 let timeCommon = {
     set: true,
     default:30,
     range: [1,60,1, 65,120,5, 150,540,30]
 };
+
+
+function temperatureRange(start, end){
+    let a=[];
+    if(start < 100) {
+        a = [50, 50, 1];
+    }
+
+    let b = [100, end, 5];
+    return a.concat(b);
+}
+
 
 let modes = [
     {
@@ -22,7 +35,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:180,
-                    range:[100,235,5]
+                    range:temperatureRange(100, 235)
                 },
                 preheat:{
                     set:true,
@@ -49,7 +62,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:160,
-                    range:[50,50,1, 100,250,5]
+                    range:temperatureRange(50, 250)
                 },
                 preheat:{
                     set:true,
@@ -76,7 +89,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:160,
-                    range:[50,50,1, 100,235,5]
+                    range:temperatureRange(50,235)
                 },
                 preheat:{
                     set:true,
@@ -96,14 +109,14 @@ let modes = [
             },
 
             {
-                'icon': modeIcons[3].dir,
-                'text': modeIcons[3].cn,
-                'mode': 0x49,
+                'icon': modeIcons[4].dir,
+                'text': modeIcons[4].cn,
+                'mode': 0x47,
                 time: timeCommon,
                 temperature:{
                     set: true,
                     default:150,
-                    range:[50,50,1, 100,235,5]
+                    range: temperatureRange(100,235)
                 },
                 preheat:{
                     set:true,
@@ -120,7 +133,8 @@ let modes = [
                     default:0,
                     range:null
                 }
-            },
+            }
+
         ]
     },
     {
@@ -135,7 +149,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:180,
-                    range:[100,235,5]
+                    range:temperatureRange(100, 250)
                 },
                 preheat:{
                     set:true,
@@ -162,34 +176,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:180,
-                    range:[100,235,5]
-                },
-                preheat:{
-                    set:true,
-                    hide:true,
-                    default: false
-                },
-                steamAmount:{
-                    set:false,
-                    default:2,
-                    range:[40,40,1,"取消"]
-                },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
-                }
-            },
-
-            {
-                'icon': modeIcons[4].dir,
-                'text': modeIcons[4].cn,
-                'mode': 0x47,
-                time: timeCommon,
-                temperature:{
-                    set: true,
-                    default:180,
-                    range:[100,235,5]
+                    range:temperatureRange(100, 235)
                 },
                 preheat:{
                     set:true,
@@ -217,6 +204,33 @@ let modes = [
                     set: true,
                     default:180,
                     range:[50,50,1,100,250,5]
+                },
+                preheat:{
+                    set:true,
+                    hide:true,
+                    default: false
+                },
+                steamAmount:{
+                    set:false,
+                    default:2,
+                    range:[40,40,1,"取消"]
+                },
+                fireAmount:{
+                    set:false,
+                    default:0,
+                    range:null
+                }
+            },
+
+            {
+                'icon': modeIcons[3].dir,
+                'text': modeIcons[3].cn,
+                'mode': 0x49,
+                time: timeCommon,
+                temperature:{
+                    set: true,
+                    default:150,
+                    range:temperatureRange(100, 235)
                 },
                 preheat:{
                     set:true,

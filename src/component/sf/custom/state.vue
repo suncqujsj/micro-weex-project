@@ -78,6 +78,16 @@
                     this.loop();
                 }
             },
+            type(nVal) {
+                if (nVal !== 'loading') {
+                    this.reset();
+                    return;
+                }
+
+                if(!this.timer) {
+                    this.loop();
+                }
+            },
             isMask(nVal) {
                 this.$nextTick(() => {
                     this.maskFade(nVal);

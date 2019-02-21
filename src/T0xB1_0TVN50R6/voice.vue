@@ -19,8 +19,8 @@
 
         <list style="margin-top: 24px" show-scrollbar="true">
             <template v-for="item in list">
-                    <midea-cell  v-if="item.type === 'link'" :title="item.title" :hasArrow="true" :hasMargin="true" :hasTopBorder="false" :clickActivied="true" @mideaCellClick="item.event">
-                        <div slot="value" v-if="hasNewVer" style="width: 16px;height:16px;position:absolute;right: 58px;">
+                    <midea-cell  v-if="item.type === 'link'" :title="item.title" :hasArrow="true"  :hasBottomBorder="(list.length - 1) !== index" :hasTopBorder="false" :clickActivied="true" @mideaCellClick="item.event">
+                        <div slot="value" class="row a-c" style="width: 16px;height:100px;position:absolute;right: 58px;top:0;">
                             <div class="red-dot"></div>
                         </div>
                     </midea-cell>

@@ -136,7 +136,7 @@
 
 <script>
   //const icon = require('./icon.base64.js');
-  import  mideaMask from './mask.vue'
+  import  mideaMask from '@/midea-component/mask.vue'
   import nativeService from '@/common/services/nativeService'
   const dom= weex.requireModule('dom');
   module.exports = {

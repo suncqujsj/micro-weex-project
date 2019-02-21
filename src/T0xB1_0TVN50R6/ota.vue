@@ -52,6 +52,8 @@
     import nativeService from "../common/services/nativeService";
     import commonMixin from  "@/common/util/mixins/common"
     import voiceOtaMixin from  "@/common/util/mixins/voiceOta"
+    let appPageDataChannel = new BroadcastChannel('appPageData');
+
 
     export default {
         mixins: [commonMixin, voiceOtaMixin],
@@ -132,6 +134,7 @@
                         if(data.status === 'upgraded') {
                             this.hasNewVer = false;
                             this.showState('更新完毕', 'success');
+                            appPageDataChannel.postMessage('success');
                             clearInterval(this.t);
                         }
                     });

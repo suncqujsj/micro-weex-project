@@ -12,6 +12,7 @@ module.exports = {
         extra1: {
             sn8: '0M3L20A8'
         },
+        standby03:true, // 待机中打开03轮询
         hideChildLock:{
             working:true
         }

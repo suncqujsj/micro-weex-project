@@ -115,7 +115,7 @@ let modes = [
                 time: timeCommon,
                 temperature:{
                     set: true,
-                    default:180,
+                    default:150,
                     range: temperatureRange(100,235)
                 },
                 preheat:{
@@ -149,7 +149,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:180,
-                    range:temperatureRange(100, 235)
+                    range:temperatureRange(100, 250)
                 },
                 preheat:{
                     set:true,

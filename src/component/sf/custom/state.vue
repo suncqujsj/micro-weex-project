@@ -136,15 +136,15 @@
                     delay: 0 //ms
                 }, function () {
                 })
-            }
+            },
+            reset(){
+                clearInterval(this.timer);
+                this.deg = 0;
+            },
         },
-        reset(){
-            clearInterval(this.timer);
-            this.deg = 0;
-        },
-        mounted() {
-            this.reset();
-        },
+        // mounted() {
+        //     this.reset();
+        // },
         destroyed() {
             this.reset();
         }

@@ -31,7 +31,6 @@
                 </template>
             </template>
         </list>
-        <text>{{upgradeAvailable? '有更新':'无更新'}}</text>
     </div>
 </template>
 
@@ -81,9 +80,6 @@
             this.init();
         },
         methods:{
-            updateState(){
-                this.upgradeAvailable = true;
-            }
         }
     }
 </script>

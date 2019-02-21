@@ -61,8 +61,7 @@
                 verNo: 1,
                 verDesc: null,
                 verId: null,
-                pressed:false,
-                state:null
+                pressed:false
             }
         },
         computed:{

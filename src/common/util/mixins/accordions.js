@@ -174,6 +174,9 @@ const accordionMixin = {
         },
         openDialog(){
              //弹出时，重新初始值
+             if(!this.isWorkingPage){ //弹出框的参数为初始默认值,否则如果是工作页面，弹出框的参数为当前的温度时间蒸汽等
+                this.current = this.initCurrentData();
+             }
              this.accordions = this.initAccordions();
              this.current.isTemperatureChange = false;
              this.current.isTimeChange = false;
@@ -183,10 +186,10 @@ const accordionMixin = {
              this.current.preheat = this.currentItem['preheat'].default;
             //  this.current.hms = this.currentItem['hms'].default;
             // this.current.steamSwitch = this.currentItem['steamSwitch'].default;
-            this.current.time = this.currentItem['time'].default;
-            this.current.temperature = this.currentItem['temperature'].default;
-            this.current.steamAmount = this.currentItem['steamAmount'].default;
-            this.current.fireAmount = this.currentItem['fireAmount'].default;
+            // this.current.time = this.currentItem['time'].default;
+            // this.current.temperature = this.currentItem['temperature'].default;
+            // this.current.steamAmount = this.currentItem['steamAmount'].default;
+            // this.current.fireAmount = this.currentItem['fireAmount'].default;
             this.settingClickRecord = true;
             this.show = true;
            

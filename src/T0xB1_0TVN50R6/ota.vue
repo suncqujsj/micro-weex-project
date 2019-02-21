@@ -69,7 +69,6 @@
         },
         components: {mideaHeader, mideaCell, mideaButton, sfState},
         created(){
-            this.showState('更新中...');
             nativeService.getDeviceInfo().then((data)=>{ // 获取deviceId
                 if(data.result && data.result.deviceId ) {
                     this.deviceId = data.result.deviceId;

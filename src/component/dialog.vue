@@ -195,7 +195,8 @@
        },300);*/
       var env=weex.config.env;
       this.maskHeight=env.deviceHeight / env.deviceWidth * 750;
-      this.dialogTop= (this.maskHeight-300)/2-150;
+      // this.dialogTop= (this.maskHeight-300)/2-150;
+       this.dialogTop= (this.maskHeight-300)/2; //parker
     },
     methods: {
       checkDomHeight(){

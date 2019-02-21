@@ -169,7 +169,7 @@ const getBaseConfig = () => (
                         cacheDirectory: true,
                     }
                 },
-                exclude: /node_modules(?!\/.*(weex).*)/
+                // exclude: /node_modules(?!\/.*(weex).*)/
             }, {
                 test: /\.vue(\?[^?]+)?$/,
                 use: []

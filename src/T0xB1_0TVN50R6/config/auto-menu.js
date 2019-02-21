@@ -4,7 +4,7 @@
  */
 let data = [
     {
-        title: '所有人群',
+        title: 'mode',
         iconButtons: [
             [
                 {

@@ -6,11 +6,17 @@
 module.exports = {
     device: {
         type: 0xB0,
-        title_name: "年轻化20升微波炉",
+        page_title: "微波炉",
+        sales_model: "TPN36FQL_SSL",
         widget_name: 'MSO_T0xB0',
-        widget_version: '5.0.3',
+        widget_version: '5.0.1',
         extra1: {
-            sn8: '0M3L20A8'
+            sn8: '09X7321D'
+        },
+        hideChildLock:{
+            standby:true,
+            working:true
         }
+        // hms:[0,1,1] //是否用时分秒组件
     }
 };

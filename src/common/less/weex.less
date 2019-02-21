@@ -1,9 +1,10 @@
 @import "./common";
+@import "./component/childlock.less";
 .root{
   height: 100%;
 }
 .bg {
-  background-image: linear-gradient(to bottom, #FFCD00, #FFB632);
+  background-image: linear-gradient(to bottom, @bgStart, @bgEnd);
 }
 .panel-state{
   @h:30*2px;
@@ -95,7 +96,6 @@
 .header-top-wrapper {
   position: absolute;
   right: 0px;
-  bottom: 0px;
   height: 88px;
 }
 .header-top-inner-wrapper {
@@ -120,17 +120,20 @@
   /*padding-right: 32px;*/
 }
 .header-right-image {
-  height: 44px;
-  width: 44px;
+  height: 48px;
+  width: 48px;
 }
 
 .content-wrap{
-  padding: 0 31*2px;
+  padding: 0 16*2px;
 }
 
 .content-block{
   border-top-width: 1px;
   border-top-color: #E5E5E8;
+}
+.slider {
+  width: 750px;
 }
 
 .label{
@@ -142,6 +145,7 @@
 }
 .food-material-item-left, .food-material-item-right, .cooking-step{
   .f(12*2px);
+  line-height: 32px;
   .gray;
 }
 

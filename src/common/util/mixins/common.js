@@ -12,9 +12,23 @@ let commonMixin = {
     data(){
         return {
             wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
+            state: null,
+            stateTime: null
         };
     },
     methods:{
+        back: function(){
+            nativeService.goBack();
+        },
+        back2Native(){
+            nativeService.backToNative()
+        },
+        openPage: function(pageName){
+            nativeService.goTo(`${pageName}.js`, {animated: true});
+        },
+        isip9(){
+           return  weex && (weex.config.env.deviceModel === 'iPhone9,2');
+        },
         isipx: function () {
             return weex && (
                 weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6' //iphoneX
@@ -51,6 +65,28 @@ let commonMixin = {
             return resultList;
         },
 
+        /**
+         * 提示弹窗设置
+         */
+        setWarningDialog(content, callback=null, show=true){
+            this.warningDialog.show = show;
+            this.warningDialog.content = content;
+            this.warningDialog.callback = callback;
+        },
+
+        hideWarningDialog(){
+            this.warningDialog.show = false;
+        },
+
+        initWarningDialog(){
+            return {
+                show: false,
+                title: "温馨提示",
+                content: "主人，您的水箱缺水了，要及时添加水哦",
+                callback: null
+            };
+        },
+
         statisticsUpload: function(data={}){
 
             // nativeService.alert(data);
@@ -76,6 +112,53 @@ let commonMixin = {
                 //失败的回调
                 // nativeService.alert('upload error');
             });
+        },
+
+        /**
+         * 初始化deviceId
+         * */
+        async setDeviceId(){
+            let deviceInfo = await nativeService.getDeviceInfo();
+            if(deviceInfo.result && deviceInfo.result.deviceId ) {
+                this.deviceId = deviceInfo.result.deviceId;
+            }
+        },
+
+        /**
+         * 初始化uid
+         * */
+        async setUid(){
+            let userInfo = await nativeService.getUserInfo();
+            if(userInfo.uid) {
+                this.uid = userInfo.uid;
+            }
+        },
+
+        /**
+         * 状态组件state.vue的显示以及细节
+         */
+        showState(text,type='loading'){
+            this.state  = {
+                display: true,
+                type,
+                text
+            };
+
+            if(type === 'success') {
+                this.stateTime = setInterval(()=>{
+                    this.hideState();
+                    clearInterval(this.stateTime);
+                }, 2000);
+            }
+        },
+
+        /**
+         * 状态组件state.vue的隐藏
+         */
+        hideState(){
+            this.state  = {
+                display: false,
+            };
         }
     }
 };

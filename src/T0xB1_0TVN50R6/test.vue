@@ -1,52 +1,47 @@
-<style lang="less" type="text/less">
-    @import "../common/less/common";
-
-</style>
-
 <template>
-    <div class="bg-gray">
-
-        <midea-header class="bg-white" title="测试" titleText="black" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back"></midea-header>
-
-        <midea-switch2 v-if="!hide" style="margin: 100px;" :checked="checked" @change="onchange" slot="value"> </midea-switch2>
-
-        <midea-button text="显示开关" type="secondary" @mideaButtonClicked="mideaButtonClicked">            </midea-button>
-
-
+    <div class="wrapper">
+        <!--<div ref="test" @click="move" class="box"></div>-->
+        <!--<image ref="test" src="img/loading.png" class="box"></image>-->
+        <midea-button text="打开" type="primary" @mideaButtonClicked="mideaButtonClicked1">
+        </midea-button>
+        <sf-state :display="display" :isMask="true" :text="'更新完成'" :type="'success'"></sf-state>
     </div>
 </template>
 
 <script>
-    import mideaHeader from '@/midea-component/header.vue'
-    import mideaCell from '@/midea-component/item.vue';
-    import mideaSwitch2 from '@/midea-component/switch2.vue'
+    const animation = weex.requireModule('animation')
+    const modal = weex.requireModule('modal')
+    import nativeService from "@/common/services/nativeService";
+    import sfState from "@/component/sf/custom/state.vue"
     import mideaButton from '@/midea-component/button.vue'
 
-    import nativeService from "../common/services/nativeService";
 
     export default {
         data(){
-            return {
-                checked:false,
-                hide:true
-            }
+            return{
+               display:false,
+            };
         },
-        components: {mideaHeader, mideaCell, mideaSwitch2, mideaButton},
-        created(){},
-        computed:{
+        created(){
+            // var context = this;
+            // var t = setInterval(function(){
+            //   context.move()
+            // },20)
         },
+        components:{sfState, mideaButton},
         methods: {
-            back: function(){
-                nativeService.goBack();
-            },
-            onchange(event) {
-                // nativeService.alert(event.value);
-            },
-            mideaButtonClicked(){
-                this.hide = false;
+            mideaButtonClicked1(){
+                this.display = true;
             }
         }
     }
 </script>
 
-
+<style scoped>
+    .box {
+        width: 64px;
+        height: 64px;
+        margin-left: 100px;
+        margin-top: 100px;
+    }
+</style>

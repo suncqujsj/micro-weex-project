@@ -1,5 +1,5 @@
 {
-  "presets": ["es2015"],
+  "presets": ["es2015","stage-0"],
   "plugins": ["transform-object-rest-spread", [
             "component",
             {
@@ -12,5 +12,15 @@
             "libDir": "packages",
             "style": false
             }
-        ]]
+        ],
+        [
+          "transform-runtime",
+          {
+            "helpers": false,
+            "polyfill": false,
+            "regenerator": true,
+            "moduleName": "babel-runtime"
+          }
+        ]
+    ]
 }

@@ -6,20 +6,20 @@
             <div class="item-group">
                 <text class="text-label">目标地址:</text>
                 <input class="text-input" type="text" placeholder="请输入目标地址" v-model="host" @input="hostChange" />
-                <midea-button text="选择" :btnStyle="{width: '120px', height: '60px'}" @mideaButtonClicked="isShowHostList=true">
+                <midea-button text="选择" :btnStyle="{width: '120px', height: '60px'}" @mideaButtonClicked="showHostList">
                 </midea-button>
-                <input style="width:100px;padding-left:10px;" type="text" placeholder="端口" v-model="port" @input="portChange" />
+                <input class="text-input-port" type="text" placeholder="端口" v-model="port" @input="portChange" />
             </div>
             <div class="item-group">
                 <text class="text-label">测试模块:</text>
                 <input class="text-input" type="text" placeholder="请输入测试模块" v-model="module" @input="moduleChange" />
-                <midea-button text="选择" :btnStyle="{width: '120px', height: '60px'}" @mideaButtonClicked="isShowModuleList=true">
+                <midea-button text="选择" :btnStyle="{width: '120px', height: '60px'}" @mideaButtonClicked="showModuleList">
                 </midea-button>
             </div>
             <div class="item-group" v-if="module == 'midea-card' || module=='plugin'">
                 <text class="text-label">测试插件:</text>
                 <input class="text-input" type="text" placeholder="请输入插件" v-model="card" @input="cardChange" />
-                <midea-button text="选择" :btnStyle="{width: '120px', height: '60px'}" @mideaButtonClicked="isShowCardList=true">
+                <midea-button text="选择" :btnStyle="{width: '120px', height: '60px'}" @mideaButtonClicked="showCardList">
                 </midea-button>
             </div>
             <div class="item-group">
@@ -29,7 +29,7 @@
             </div>
             <div class="action-bar">
                 <midea-title-bar title="输入远端目标页面地址"></midea-title-bar>
-                <textarea type="text" placeholder="输入远端目标页面地址" class="textarea" v-model="url" rows=5 />
+                <textarea placeholder="输入远端目标页面地址" class="textarea" v-model="url" rows=5 />
                 <midea-button text="进入远端目标页面" @mideaButtonClicked="mideaButtonClicked"></midea-button>
             </div>
 
@@ -62,18 +62,18 @@ module.exports = {
         MideaSwitch2
     },
     data: () => ({
-        host: '10.8.81.45',
+        host: '10.8.81.37',
         isShowHostList: false,
         hostIndex: null,
         hostList: [],
         port: "8080",
-        module: 'midea-demo',
+        module: 'plugin',
         isShowModuleList: false,
         moduleIndex: null,
         moduleList: [
             { key: 0, value: "midea-demo", desc: "midea-demo 美居Demo" },
             { key: 1, value: "plugin", desc: "plugin 插件" },
-            { key: 2, value: "midea-card", desc: "midea-card卡片页" },
+            // { key: 2, value: "midea-card", desc: "midea-card卡片页" },
             { key: 3, value: "community", desc: "community 社区模块" },
             { key: 4, value: "midea-rooms", desc: "midea-rooms场景" },
             { key: 5, value: "customer-service", desc: "customer-service 服务模块" }
@@ -146,6 +146,18 @@ module.exports = {
         leftImgClick() {
             nativeService.goBack()
         },
+        showHostList() {
+            nativeService.killKeyboard()
+            this.isShowHostList = true
+        },
+        showModuleList() {
+            nativeService.killKeyboard()
+            this.isShowModuleList = true
+        },
+        showCardList() {
+            nativeService.killKeyboard()
+            this.isShowCardList = true
+        },
         mideaButtonClicked() {
             if (this.history.indexOf(this.url) < 0) {
                 this.history.push(this.url)
@@ -209,7 +221,6 @@ module.exports = {
         nativeService.getItem('demo_target_history', (resp) => {
             if (resp.result == 'success' && resp.data) {
                 this.history = JSON.parse(resp.data) || []
-                this.history.push("http://qrcode.midea.com/test/weexDemo/weex.js?root=midea-demo&isDummay=false")
                 if (this.history && this.history.length > 0) {
                     this.url = this.history[this.history.length - 1]
 
@@ -242,72 +253,78 @@ module.exports = {
 
 <style scoped>
 .wrapper {
-  position: relative;
+    position: relative;
 }
 .textarea {
-  height: 120px;
-  padding-left: 20px;
-  padding-right: 20px;
-  border-bottom-color: #e2e2e2;
-  border-bottom-width: 1px;
-  margin-bottom: 10px;
-  lines: 5;
+    height: 120px;
+    width: 750px;
+    text-align: left;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-bottom-color: #e2e2e2;
+    border-bottom-width: 1px;
+    margin-bottom: 10px;
+    lines: 5;
 }
 .history-item {
-  flex-direction: row;
-  padding: 20px;
-  align-content: center;
-  align-items: center;
-  border-bottom-color: #e2e2e2;
-  border-bottom-width: 1px;
+    flex-direction: row;
+    padding: 20px;
+    align-content: center;
+    align-items: center;
+    border-bottom-color: #e2e2e2;
+    border-bottom-width: 1px;
 }
 .history-item-selected {
-  background-color: #e8f1ff;
+    background-color: #e8f1ff;
 }
 .history-link {
-  flex: 1;
-  font-size: 26px;
+    flex: 1;
+    font-size: 26px;
 }
 .history-action {
-  width: 100px;
-  font-size: 28px;
-  color: red;
-  padding: 15px;
-  background-color: #e2e2e2;
-  text-align: center;
-  align-self: stretch;
+    width: 100px;
+    font-size: 28px;
+    color: red;
+    padding: 15px;
+    background-color: #e2e2e2;
+    text-align: center;
+    align-self: stretch;
 }
 
 .item-group {
-  /* padding-top: 10px; */
-  padding-left: 32px;
-  padding-right: 32px;
-  /* padding-bottom: 10px; */
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  border-color: #e5e5e8;
-  border-width: 1px;
+    padding-left: 32px;
+    padding-right: 32px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-color: #e5e5e8;
+    border-width: 1px;
 }
 .text-label {
-  font-family: PingFangSC-Regular;
-  font-size: 32px;
-  color: #000000;
-  width: 140px;
-  padding-top: 22px;
-  padding-bottom: 22px;
+    font-family: PingFangSC-Regular;
+    font-size: 32px;
+    color: #000000;
+    width: 140px;
+    padding-top: 22px;
+    padding-bottom: 22px;
 }
 .text-input {
-  flex: 1;
-  font-family: PingFangSC-Regular;
-  font-size: 32px;
-  color: #000000;
-  padding-left: 22px;
-  padding-right: 50px;
+    flex: 1;
+    font-family: PingFangSC-Regular;
+    font-size: 32px;
+    color: #000000;
+    padding: 22px;
+}
+.text-input-port {
+    width: 140;
+    font-family: PingFangSC-Regular;
+    font-size: 32px;
+    color: #000000;
+    padding: 22px;
 }
 .action-bar {
-  position: sticky;
-  background-color: #ffffff;
-  width: 750px;
+    position: sticky;
+    background-color: #ffffff;
+    width: 750px;
 }
 </style>

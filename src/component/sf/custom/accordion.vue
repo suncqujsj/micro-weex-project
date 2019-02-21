@@ -2,7 +2,10 @@
     <div class="accordion-wrapper">
         <div class="accordion-item" @click="makeSwitch">
             <text class="accordion-title">{{title}}</text>
-            <text v-if="value" class="accordion-value">{{value}}{{unit}}</text>
+            <text v-if="type==='pickers'" class="accordion-value">{{hms[0]}}{{hms[1]}}{{hms[2]}}</text>
+            <template v-else>
+                <text v-if="value || (value===0 && type=='picker')" class="accordion-value">{{value}}{{unit}}</text>
+            </template>
             <image v-if="!hideArrow" class="accordion-icon" :src="isFoldedStatus?foldIcon:unfoldIcon"></image>
             <slot v-if="hideArrow" name="right"></slot>
         </div>
@@ -13,6 +16,8 @@
 </template>
 
 <script>
+    import nativeService from "@/common/services/nativeService";
+
     export default {
         props: {
             title: "",
@@ -23,6 +28,14 @@
             value: {
                 type: Number,
                 default: 0
+            },
+            hms: {
+                type: Array,
+                default:[0,0,0]
+            },
+            type: {
+                type: String,
+                default: ''
             },
             unit: {
                 type:String,
@@ -40,6 +53,9 @@
         watch: {
             isFolded(value) {
                 this.isFoldedStatus = value
+            },
+            hms(nvalue, ovalue){
+                // nativeService.alert(nvalue + '' + ovalue);
             }
         },
         data() {
@@ -60,17 +76,21 @@
     }
 </script>
 
-<style>
+<style lang="less" type="text/less">
+    @import (reference) "../../../common/less/common.less";
+
     .accordion-wrapper {
-        padding-left: 32px;
     }
     .accordion-item {
+        padding: 0 32px;
         align-items: center;
         justify-content: space-between;
         flex-direction: row;
         height: 92px;
-        border-bottom-color: #e5e5e8;
-        border-bottom-width: 1px;
+        .b-b-1;
+    }
+    .accordion-item:last-child{
+        border-bottom-width: 0;
     }
     .accordion-title {
         flex: 1;
@@ -85,6 +105,6 @@
     .accordion-icon {
         height: 40px;
         width: 40px;
-        margin-right: 24px;
+        /*margin-right: 24px;*/
     }
 </style>

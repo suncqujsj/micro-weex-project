@@ -15,7 +15,7 @@
             <div v-if="showRightText" class="header-right" @click="rightTextClick">
                 <text class="header-right-text" :style="{color: rightColor}">{{rightText}}</text>
             </div>
-            <slot name="customerContent">
+            <slot name="customerContent" :style="{top:this.statusBarHeight + 'wx'}">
             </slot>
         </div>
     </div>
@@ -46,7 +46,7 @@ export default {
         },
         leftImg: {
             type: String,
-            default: './img/header/public_ic_back@3x.png'
+            default: './img/header/public_ic_gray@3x.png'
         },
         rightImg: {
             type: String,
@@ -95,6 +95,7 @@ export default {
                 } else {
                     //安卓使用px为单位
                     result = weex.config.env.statusBarHeight / weex.config.env.scale
+
                 }
             }
             return result
@@ -159,7 +160,7 @@ export default {
 <style scoped>
 .box {
   width: 750px;
-  height: 88px;
+  height: '44wx';
   display: inline-flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -207,8 +208,8 @@ export default {
   padding-right: 32px;
 }
 .header-right-image {
-  height: 44px;
-  width: 44px;
+  height: 58px;
+  width: 58px;
 }
 .header-right {
   position: absolute;

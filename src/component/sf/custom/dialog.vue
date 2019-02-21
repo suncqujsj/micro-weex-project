@@ -1,124 +1,36 @@
 <template>
   <div ref="container" v-if="show" class="container">
     <midea-mask @click="layoutClick"></midea-mask>
-    <div ref="dialog" class="dialog-box" :style="{top:dialogTop+'px'}">
-      <div class="dialog-content">
-        <slot name="title">
-          <text v-if="title" class="content-title">{{title}}</text>
-        </slot>
-        <slot name="content">
-          <text v-if="content" class="content-subtext">{{content}}</text>
-        </slot>
-      </div>
-      <div class="dialog-footer">
-        <div class="footer-btn cancel"
-             v-if="!single"
-             @click="secondaryClicked">
-          <text class="btn-text"
-                :style="{ color: secondBtnColor }">{{cancelText}}</text>
+    <div class="wrapper" :style="{height:maskHeight+'px'}">
+      <div ref="dialog" class="dialog-box">
+        <div class="dialog-content" :style="{marginBottom:-(0.5/scale)+'px'}">
+          <slot name="title">
+            <text v-if="title" class="content-title">{{title}}</text>
+          </slot>
+          <slot name="content">
+            <text v-if="content" class="content-subtext">{{content}}</text>
+          </slot>
         </div>
-        <div class="footer-btn confirm"
-             @click="primaryClicked">
-          <text class="btn-text"
-                :style="{ color: mainBtnColor }">{{confirmText}}</text>
+        <div class="dialog-footer">
+          <div class="footer-btn cancel"
+              v-if="!single"
+              @click="secondaryClicked">
+            <text class="btn-text"
+                  :style="{ color: secondBtnColor }">{{cancelText}}</text>
+          </div>
+          <div class="footer-btn confirm"
+              @click="primaryClicked">
+            <text class="btn-text"
+                  :style="{ color: mainBtnColor }">{{confirmText}}</text>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-  .container {
-    width: 750px;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .mask {
-    top: 0;
-    width: 750px;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .dialog-box {
-    background-color: #FFF;
-    width: 558px;
-    border-radius:20px;
-    position:fixed;
-    left:96px;
-    z-index:100;
-    top:350px;
-  }
-
-  .dialog-content {
-    padding-top: 36px;
-    padding-bottom: 36px;
-    padding-left: 36px;
-    padding-right: 36px;
-  }
-
-  .content-title {
-    color: #333333;
-    font-size: 36px;
-    text-align: center;
-    margin-bottom: 24px;
-  }
-
-  .content-subtext {
-    color: #666666;
-    font-size: 26px;
-    line-height: 36px;
-    text-align: center;
-  }
-
-  .dialog-footer {
-    flex-direction: row;
-    align-items: center;
-    border-top-color: #F3F3F3;
-    border-top-width: 1px;
-    /*H5处理兼容*/
-    border-top: 1px solid #F3F3F3;
-  }
-
-  .footer-btn {
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    height: 90px;
-  }
-
-  .cancel {
-    border-right-color: #F3F3F3;
-    border-right-width: 1px;
-    /*H5处理兼容*/
-    border-right: 1px solid #F3F3F3;
-  }
-
-  .btn-text {
-    font-size: 36px;
-    color: #666666;
-  }
-
-  .no-prompt {
-    width: 486px;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-    margin-top: 24px;
-  }
-
-  .no-prompt-icon {
-    width: 24px;
-    height: 24px;
-    margin-right: 12px;
-  }
-
-  .no-prompt-text {
-    font-size: 24px;
-    color: #A5A5A5;
-  }
+<style type="text/less" lang="less">
+  @import "../../../common/less/component/sf-modal.less";
 </style>
 
 <script>
@@ -153,6 +65,10 @@
       isProbe:{
         type: Number,
         default: 0
+      },
+      whichCavity:{ //哪个腔体
+        type: Number,
+        default: 1 //默认下腔体 byte16发0
       },
       title: {
         type: String,
@@ -196,7 +112,8 @@
       }
     },
     data: () => ({
-      
+        scale:weex.config.env.platform === "iOS"?weex.config.env.scale*0.3 : 0.5
+
     }),
     created () {
       //var self=this;
@@ -205,7 +122,7 @@
        },300);*/
       var env=weex.config.env;
       this.maskHeight=env.deviceHeight / env.deviceWidth * 750;
-      this.dialogTop= (this.maskHeight-300)/2-150;
+      // this.dialogTop= (this.maskHeight-300)/2-150;
     },
     methods: {
       checkDomHeight(){
@@ -234,8 +151,9 @@
           type: 'confirm',
           working: this.working,
           device:this.device,
-          tabs:this.tabs,
-          isProbe: this.isProbe
+          // tabs:this.tabs,
+          isProbe: this.isProbe,
+          whichCavity: this.whichCavity
         });
       },
       noPromptClicked (e) {

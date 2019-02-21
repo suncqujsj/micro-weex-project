@@ -1,28 +1,17 @@
 <template>
     <div>
-        <midea-header
-            title="bindingx"
-            :isImmersion="isImmersion"
-            @leftImgClick="back"
-            :showRightImg="true"
-            rightImg="../assets/img/smart_ic_reline@3x.png"
-            @rightImgClick="reload"
-        ></midea-header>
-        <scroller class="scroller">
-            <div
-                :ref="'box'"
-                class="box"
-                @touchstart="ontouchstart"
-                @appear="onappear"
-            ></div>
-        </scroller>
+        <midea-header title="bindingx" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
+        <div class="scroller">
+            <div :ref="'box'" class="box" @touchstart="ontouchstart" @appear="onappear"></div>
+        </div>
     </div>
 </template>
 
 <style scoped>
 .scroller {
     flex: 1;
-    background-color:yellow;
+    overflow: hidden;
+    background-color: yellow;
 }
 .box {
     border-width: 2px;
@@ -60,7 +49,7 @@ export default {
     },
     methods: {
         onappear() {
-            // this.bind();
+            this.bind();
         },
         bind() {
             var box = getEl(this.$refs.box);
@@ -95,6 +84,9 @@ export default {
         ontouchstart(event) {
             this.bind();
         }
+    },
+    mounted(){
+        this.bind();
     }
 }
 </script>

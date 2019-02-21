@@ -25,42 +25,53 @@ const accordionMixin = {
     data () {
             return {
                 accordions: this.initAccordions(),
-                // currentItem:null,
-                currentItem:{
-                    'icon': '',
-                    'text': '清蒸草鱼香菇',
-                    'mode': 0xE0,
-                    time:{
-                        set: true,
-                        default:13,
-                        range:[5,120,1]
-                    },
-                    temperature:{
-                        set: true,
-                        default:100,
-                        range:[35,70,1,75,100,5]
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 0x41,
-                        range:null
-                    },
-                    detail: null
-                },
+                currentItem:null,
+                // currentItem:{
+                //     'icon': '',
+                //     'text': '清蒸草鱼香菇',
+                //     'mode': 0xE0,
+                //     time:{
+                //         set: true,
+                //         default:13,
+                //         range:[5,120,1]
+                //     },
+                //     temperature:{
+                //         set: true,
+                //         default:100,
+                //         range:[35,70,1,75,100,5]
+                //     },
+                //     preheat:{
+                //         set:false,
+                //         default: false
+                //     },
+                //     steamAmount:{
+                //         set:false,
+                //         default:0,
+                //         range:null
+                //     },
+                //     fireAmount:{
+                //         set:false,
+                //         default:0,
+                //         range:null
+                //     },
+                //     weight:{
+                //         set:false,
+                //         default:0,
+                //         range:null
+                //     },
+                //     recipeId:{
+                //         set:false,
+                //         default: 0x41,
+                //         range:null
+                //     },
+                //     probeTemperature:{
+                //         set: false,
+                //         default:0,
+                //         range:null,
+                //     },
+                //     probe: null,//肉类探针
+                //     detail: null
+                // },
                 current:this.initCurrentData(),
                 show: false
             }
@@ -86,9 +97,6 @@ const accordionMixin = {
             };
         },
         setValue: function(key){
-            // if(this.current[key]==0){
-            //     return this.current[key];
-            // }
             return this.current[key] || (this.currentItem[key] ? this.currentItem[key].default : null);
         },
         updateAccordionFoldingStatus: function(key, value){
@@ -113,33 +121,82 @@ const accordionMixin = {
         initCurrentData: function(){
             return {
                 time: null,
+                hms:null,
                 temperature: null,
                 preheat:false,
-                steamAmount:0,
+                preheatHide: false,
+                steamAmount:null,
                 fireAmount:0,
+                weight:0,
+                steamSwitch:false,
                 recipeId:null,
                 probeTemperature: null,
-                probe: false
+                probe: false,
+                isTemperatureChange: false,
+                isTimeChange: false,
+                isSteamAmountChange: false,
+                isFireAmountChange: false
             }
         },
         resetState: function(){
             this.accordions = this.initAccordions();
             this.current = this.initCurrentData();
+            this.closeDetailModal();
             this.currentItem = null;
         },
         handlePickerChange(data, key){
+            //记录哪个key的值修改到
+            if(key=='temperature' && this.current[key]!=data){
+                this.current.isTemperatureChange = true;
+            }
+            if(key=='time' && this.current[key]!=data){
+                this.current.isTimeChange = true;
+            }
+            if(key=='steamAmount' && this.current[key]!=data){
+                this.current.isSteamAmountChange = true;
+            }
+            if(key=='fireAmount' && this.current[key]!=data){
+                this.current.isFireAmountChange = true;
+            }
             this.current[key] = data;
+            if(key=='temperature'){
+                if(data<100){
+                    this.current.preheatHide = true;
+                }else{
+                    this.current.preheatHide = false;
+                }
+            }
             // nativeService.alert(this.current);
         },
         onPreheatChange(event) {
-            this.current.preheat = event.value;
-            console.log('currentPreheat', this.current.preheat);
+            this.current[event.itemKey] = event.value;
+            // console.log('currentPreheat', this.current.preheat);
         },
         openDialog(){
+             //弹出时，重新初始值
+             if(!this.isWorkingPage){ //弹出框的参数为初始默认值,否则如果是工作页面，弹出框的参数为当前的温度时间蒸汽等
+                this.current = this.initCurrentData();
+             }
+             this.accordions = this.initAccordions();
+             this.current.isTemperatureChange = false;
+             this.current.isTimeChange = false;
+             this.current.isSteamAmountChange = false;
+             this.current.isFireAmountChange = false;
+             this.current.preheatHide = false;
+             this.current.preheat = this.currentItem['preheat'].default;
+            //  this.current.hms = this.currentItem['hms'].default;
+            // this.current.steamSwitch = this.currentItem['steamSwitch'].default;
+            // this.current.time = this.currentItem['time'].default;
+            // this.current.temperature = this.currentItem['temperature'].default;
+            // this.current.steamAmount = this.currentItem['steamAmount'].default;
+            // this.current.fireAmount = this.currentItem['fireAmount'].default;
+            this.settingClickRecord = true;
             this.show = true;
-            this.current.preheat = this.currentItem['preheat'].default;
+           
+         
         },
         closeDialog(e) {
+            this.settingClickRecord = false;
             this.show = false;
             if (e.type === 'cancel' || e.type === 'close'){
                 this.show = false;
@@ -148,22 +205,52 @@ const accordionMixin = {
             }
 
             let jsonCmd = {
+                currentItem: this.currentItem,
                 mode: this.currentItem.mode,
                 minute: this.setValue('time'),
                 temperature: this.setValue('temperature'),
                 preheat: this.current.preheat,
+                preheatHide:  this.current.preheatHide,
                 steamAmount: this.setValue('steamAmount'),
+                weight: this.setValue('weight'),
+                steamSwitch: this.current.steamSwitch,
                 fireAmount: this.setValue('fireAmount'),
                 recipeId:this.setValue('recipeId'),
                 probeTemperature: this.setValue('probeTemperature'),
                 probe:  this.currentItem.probe,
+                second: this.current.second,
+                isTemperatureChange:  this.current.isTemperatureChange,
+                isTimeChange: this.current.isTimeChange,
+                isSteamAmountChange: this.current.isSteamAmountChange,
+                isFireAmountChange: this.current.isFireAmountChange
             };
 
+            let msg = this.validate(jsonCmd);
+            if(msg) {
+                this.show = true;
+                nativeService.toast(msg);
+                return;
+            }
+
+            // this.resetState();
+            
             // if(jsonCmd.mode === 0xE0) { // 自动菜单
             //     jsonCmd.recipeId =  this.setValue('recipeId');
             // }
             this.controlDevice(jsonCmd, e);
         },
+        validate(jsonCmd){
+            let sn8 = this.device.extra1.sn8;
+            switch (sn8){
+                case '08T7428E':
+                case '0T7L421F':
+                    if(jsonCmd.probeTemperature >= jsonCmd.temperature) {
+                        return '探针温度必须小于腔体温度';
+                    }
+                default:
+                    return null;
+            }
+        }
     }
 };
 

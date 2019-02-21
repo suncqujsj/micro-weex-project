@@ -3,37 +3,65 @@
         <midea-header title="scrollPicker 滚动选择器 " :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <scroller class="scroller">
             <text class="padding14 desc">scrollPicker在弹窗中使用，也可以直接在当前页面使用，但不能在scroller中使用，除非此时scroller滚动功能还没有触发。也就是说页面高度小于屏幕高度时，是可以在scroll中使用scrollPicker的。（因为scroller互相嵌套，会有滚动冲突）</text>
-            <text class="sub-hd padding14">1.直接在界面上显示scrollPicker</text>
-            <midea-scroll-picker :listArray="list"  @onChange="changeValue"></midea-scroll-picker>
-            <text class="sub-hd padding14">2.弹窗中使用scrollPicker</text>
+            <text class="sub-hd padding14">1.直接在界面上显示scrollPicker:{{pickerIndex0}}</text>
+            <midea-scroll-picker :listArray="list" :itemIndex="pickerIndex0" isShowIndicator=true @onChange="changeValue"></midea-scroll-picker>
+            <text class="sub-hd padding14">2.弹窗中使用scrollPicker:{{pickerIndex1}}</text>
             <midea-button text="单个scrollPicker" @mideaButtonClicked="showBox(1)"></midea-button>
-            <text class="sub-hd padding14">3.弹窗中使用多个scrollPicker</text>
+            <text class="sub-hd padding14">3.弹窗中使用多个scrollPicker:{{pickerIndex2}},{{pickerIndex3}}</text>
             <midea-button text="多个scrollPicker" @mideaButtonClicked="showBox(2)"></midea-button>
         </scroller>
-        <midea-confirm-box :show="show[1]" @leftBtnClick="cancel(1)" @rightBtnClick="confirm(1)" @mideaPopupOverlayClicked="close(1)">
+        <midea-confirm-box :show="show[1]" @leftBtnClick="cancel(1)" @rightBtnClick="confirm" @mideaPopupOverlayClicked="close(1)">
             <div class="scroll-picker-wrap">
-                <midea-scroll-picker :listArray="list" @onChange="changeValue"></midea-scroll-picker>
+                <midea-scroll-picker ref="picker1" :listArray="list" :itemIndex="pickerIndex1" isShowIndicator=true></midea-scroll-picker>
             </div>
         </midea-confirm-box>
-        <midea-confirm-box :show="show[2]" @leftBtnClick="cancel(2)" @rightBtnClick="confirm(2)" @mideaPopupOverlayClicked="close(2)">
+        <midea-confirm-box :show="show[2]" @leftBtnClick="cancel(2)" @rightBtnClick="confirmMulti" @mideaPopupOverlayClicked="close(2)">
             <div class="scroll-picker-wrap row-sb">
-                <midea-scroll-picker :wrapWidth="375" :listArray="list" @onChange="changeValue"></midea-scroll-picker>
-                <midea-scroll-picker :wrapWidth="375" :listArray="list" @onChange="changeValue"></midea-scroll-picker>
+                <midea-scroll-picker ref="picker2" :wrapWidth="375" :listArray="list" :itemIndex="pickerIndex2" isShowIndicator=true></midea-scroll-picker>
+                <midea-scroll-picker ref="picker3" :wrapWidth="375" :listArray="list" :itemIndex="pickerIndex3" isShowIndicator=true></midea-scroll-picker>
             </div>
         </midea-confirm-box>
     </div>
 </template>
 <style scoped>
-    .row-sb{ flex-direction: row; align-items: center; justify-content: space-between; }
-    .wrapper { background-color: #f2f2f2; }
-    .scroller { padding-top: 20px; padding-bottom: 50px; }
-    .padding5{ padding: 5px; }
-    .padding14{ padding-left: 14px; padding-right: 14px; }
-    .padding20{ padding: 20px; }
-    .hd{ padding: 20px; font-size: 40px; }
-    .sub-hd{margin-top: 30px;}
-    .desc{ color: #959595; }
-    .scroll-picker-wrap{ padding-top: 30px; padding-bottom: 30px; height: 458px; background-color: #ffffff; }
+.row-sb {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.wrapper {
+    background-color: #f2f2f2;
+}
+.scroller {
+    padding-top: 20px;
+    padding-bottom: 50px;
+}
+.padding5 {
+    padding: 5px;
+}
+.padding14 {
+    padding-left: 14px;
+    padding-right: 14px;
+}
+.padding20 {
+    padding: 20px;
+}
+.hd {
+    padding: 20px;
+    font-size: 40px;
+}
+.sub-hd {
+    margin-top: 30px;
+}
+.desc {
+    color: #959595;
+}
+.scroll-picker-wrap {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    height: 458px;
+    background-color: #ffffff;
+}
 </style>
 <script>  
 
@@ -53,40 +81,46 @@ module.exports = {
                 2: false,
                 3: false,
             },
-            list: [
-                {index:0, value:0},
-                {index:1, value:1},
-                {index:2, value:2},
-                {index:3, value:3},
-                {index:4, value:4},
-                {index:5, value:5},
-                {index:6, value:6},
-                {index:7, value:7},
-                {index:8, value:8},
-                {index:9, value:9},
-           ]
+            list: [],
+            pickerIndex0: 2,
+            pickerIndex1: 1,
+            pickerIndex2: 2,
+            pickerIndex3: 3
         }
     },
     methods: {
-        showBox(index){
+        showBox(index) {
             this.show[index] = true
         },
-        cancel(index){
+        cancel(index) {
             this.show[index] = false
             nativeService.toast('您点击了取消')
         },
-        confirm(index){
-            this.show[index] = false
-            nativeService.toast('您点击了确定')
+        confirm() {
+            this.pickerIndex1 = this.$refs.picker1.index
+            nativeService.toast('您选择了：' + this.$refs.picker1.index)
+
+            this.show[1] = false
+
         },
-        close(index){
+        confirmMulti() {
+            this.pickerIndex2 = this.$refs.picker2.index
+            this.pickerIndex3 = this.$refs.picker3.index
+            nativeService.toast('您选择了：' + this.$refs.picker2.index + "," + this.$refs.picker3.index)
+            this.show[2] = false
+        },
+        close(index) {
             this.show[index] = false
         },
-        changeValue(e){
-            nativeService.toast('您选择了：'+e.value)
+        changeValue(e) {
+            this.pickerIndex0 = e.value
+            // nativeService.toast('您选择了：'+e.value)
         }
     },
     created() {
+        for (let index = 0; index < 100; index++) {
+            this.list.push({ index: index, value: index })
+        }
     }
 };
 </script>

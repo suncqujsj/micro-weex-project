@@ -11,7 +11,9 @@ const storage = weex.requireModule('storage');
 const deviceMessageMixin = {
     data () {
         return {
-            loading: true
+            loading: false,
+            device: null,
+            tabs: null
         }
     },
     methods: {
@@ -21,12 +23,16 @@ const deviceMessageMixin = {
             clearInterval(this.queryTimer);
             clearInterval(this.countDownTimer);
         },
-        viewappear(tabs){
-            this.listenerDeviceReiveMessage(tabs);
+        viewappear(){
+            this.listenerDeviceReiveMessage();
         },
-        onlongpressQuery(device){//隐藏调试，查看设备上报数据
+        onlongpressQuery(){//隐藏调试，查看设备上报数据
+             nativeService.getDeviceInfo().then(function(data){
+                nativeService.alert(data);
+            });
+
             var self = this;
-            var sendCmd = cmdFun.createQueryMessage(device);
+            var sendCmd = cmdFun.createQueryMessage(this.device);
             nativeService.toast("下发03查询:"+JSON.stringify(sendCmd),2);
             nativeService.startCmdProcess(
                 "query",
@@ -49,13 +55,12 @@ const deviceMessageMixin = {
             })
         },
         childLock: function(childLock){
-
             if(this.loading) return;
 
             this.loading=true;
 
             let context = this;
-            let deviceCmd = cmdFun.cmdLock({childLock});
+            let deviceCmd = cmdFun.cmdLock({childLock},this.device);
             nativeService.startCmdProcess(
                 "control",
                 deviceCmd,
@@ -69,22 +74,29 @@ const deviceMessageMixin = {
                 }
             )
         },
-        goBack(){
-            nativeService.backToNative()
-        },
         goTo(url){
             let path = url + '.js'
             nativeService.goTo(path, {animated: false, replace: true})
         },
-        queryRunTimer(timeSet,tabs,device){
+        queryRunTimer(timeSet){
             var self = this;
             this.queryTimer = setInterval(function(){
-                self.queryStatus(tabs,device);                
+                self.queryStatus();                
             },timeSet*1000);
         },
-        queryStatus(tabs,device) {//传入模式配置数据tabs
+        initData(tabs,device){
+            this.tabs = tabs;
+            this.device = device;
+        },
+        queryStatus(tabs=this.tabs,device=this.device) {//传入模式配置数据tabs
+            if(device) {
+                this.initData(tabs, device);
+            }
             var self = this;
-            var sendCmd = cmdFun.createQueryMessage(device);
+            // nativeService.alert(this.device);
+            var sendCmd = cmdFun.createQueryMessage(this.device);
+            // nativeService.alert(this.device);
+
             //nativeService.showLoading();
             // debugger;
             nativeService.startCmdProcess(
@@ -92,11 +104,11 @@ const deviceMessageMixin = {
                 sendCmd,
                 function (result) {
                     //nativeService.hideLoading();
-                    //nativeService.alert(JSON.stringify(result));
                     var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
                     var arr = result_arr.split(",");
-                    var analysisObj = cmdFun.analysisCmd(arr,tabs);
-                    self.analysisFun(analysisObj,tabs);
+                    // nativeService.alert(arr);
+                    var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
+                    self.analysisFun(analysisObj,self.tabs);
                 },
                 function (result) {
                     //nativeService.hideLoading();
@@ -104,19 +116,75 @@ const deviceMessageMixin = {
                 }
             );
         },
-        controlDevice(jsonCmd, callbackData){
+        sendLightCmd(lightValue){
             let context = this;
-            let deviceCmd = cmdFun.createControlMessage(jsonCmd, callbackData);
-            //this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
-            nativeService.showLoading();
-            // nativeService.alert(cmdFun.cmdToEasy(deviceCmd));
+            let deviceCmd = cmdFun.cmdLight(lightValue, this.device);
+            // this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
             // return;
+            nativeService.showLoading();
             nativeService.startCmdProcess(
                 "control",
                 deviceCmd,
                 function(result){
                     nativeService.hideLoading();
-                    context.queryStatus(callbackData.tabs,callbackData.device);
+                    // nativeService.alert(result);
+                    context.queryStatus();
+                },
+                function(result){
+                    nativeService.hideLoading();
+                    nativeService.toast('控制失败，请检查网络或者设置的参数');
+                    //console.log('fail', result);
+                }
+            )
+        },
+        setting(cmdObj){
+            if(!this.hasSetting){
+                return;
+            }
+            var _isRecipe = false;
+            let {constant,tabs} = this;
+            
+            if(cmdObj.mode.value == 0xE0){
+                _isRecipe = true;
+            }
+            var _item = cmdFun.getCurrentModeItem(tabs,cmdObj.recipeId.value,cmdObj.mode.value,_isRecipe);
+            
+            this.modeText = _item.text;
+            this.currentItem = _item;
+            // nativeService.alert(_item);
+            var time = cmdObj.timeRemaining.hour*60+cmdObj.timeRemaining.minute;
+            if(_item.time.range && _item.time.range.length>0){
+                let leastTime = _item.time.range[0];
+                if(time<leastTime){
+                    time = leastTime;
+                }
+            }
+            this.current.time = time;
+            this.current.second = cmdObj.timeRemaining.second;
+            this.current.temperature = cmdObj.temperature.upLowTemperature;
+            this.current.preheat = cmdObj.displaySign.preheat?true:false;
+            this.current.fireAmount = cmdObj.fire.value;
+            this.current.steamAmount = cmdObj.steam.value;
+            this.current.weight = cmdObj.weight.value;
+            this.current.probeTemperature = cmdObj.probeSetttingTemperature.value;
+            // this.currentItem.steamSwitch.default = cmdObj.steam.value?true:false;
+            // nativeService.toast(this.current,3);
+            this.openDialog();
+        },
+        controlDevice(jsonCmd, callbackData){
+            let context = this;
+            let deviceCmd = cmdFun.createControlMessage(jsonCmd, callbackData);
+            this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
+            // return;
+            nativeService.showLoading();
+            // nativeService.alert(cmdFun.cmdToEasy(deviceCmd));
+            nativeService.startCmdProcess(
+                "control",
+                deviceCmd,
+                function(result){
+                    nativeService.hideLoading();
+                    // nativeService.alert(result);
+                    context.queryStatus();
                 },
                 function(result){
                     nativeService.hideLoading();
@@ -126,7 +194,7 @@ const deviceMessageMixin = {
             )
         },
         
-        startOrPause(tabs,device){
+        startOrPause(){
             var self = this;
             var record = 3;
             if(this.btnText == "暂停"){
@@ -135,14 +203,14 @@ const deviceMessageMixin = {
              if(this.btnText == "继续" || this.btnText == "开始"){
                 record = 3;
             }
-            var deviceCmd = cmdFun.cmdStartOrPause(record,device);
+            var deviceCmd = cmdFun.cmdStartOrPause(record,this.device);
             nativeService.showLoading();
             nativeService.startCmdProcess(
                 "control",
                 deviceCmd,
                 function(result){
                     nativeService.hideLoading();
-                    self.queryStatus(tabs,device);
+                    self.queryStatus();
                 },
                 function(result){
                      nativeService.toast('控制失败，请检查网络或者设置的参数');
@@ -150,16 +218,16 @@ const deviceMessageMixin = {
                 }
             )
         },
-         cancleWorking(tabs,device){
+         cancleWorking(){
             var self = this;
-            var deviceCmd = cmdFun.cmdCancelWork(device);
+            var deviceCmd = cmdFun.cmdCancelWork(this.device);
             nativeService.showLoading();
             nativeService.startCmdProcess(
                 "control",
                 deviceCmd,
                 function(result){
                   nativeService.hideLoading();
-                  self.queryStatus(tabs,device);
+                  self.queryStatus();
                 },
                 function(result){
                     nativeService.toast('控制失败，请检查网络或者设置的参数');
@@ -213,30 +281,44 @@ const deviceMessageMixin = {
             });
         },
 
-        listenerDeviceReiveMessage(tabs){//传入模式配置数据
+        listenerDeviceReiveMessage(){//传入模式配置数据
             let context = this;
-            // nativeService.toast(tabs);
             globalEvent.addEventListener("receiveMessage", function(e) {
+                context.settingClickRecord = false;
                 var str = e.data;
-                // nativeService.alert(str);
                 var arr = str.split(",");
-                var analysisObj = cmdFun.analysisCmd(arr,tabs); //解析04上行指令
-                context.analysisFun(analysisObj,tabs);
+                // nativeService.alert(cmdFun.cmdToEasy(arr));
+                if(parseInt(arr[9])==0x0A){
+                    return;
+                }
+                var analysisObj = cmdFun.analysisCmd(arr,context.tabs);
+                context.analysisFun(analysisObj,context.tabs);
             });
 
              //监听设备在线离线状态
              globalEvent.addEventListener("receiveMessageFromApp", (data) => {
-               if(data && data.messageType == "deviceOnlineStatus") {
-                   if(data.messageBody && data.messageBody.onlineStatus == "online") {
-                       // this.onlineStatus = "1";
-                   } else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
-                       // this.onlineStatus = "0";
-                       nativeService.backToNative()
-                   } else {
-                       // this.onlineStatus = "0";
-                   }
-               }
-           });
+                 // 网络状态判断
+                 if(data.messageType === 'networkStatusChanged') {
+                     if(data.messageBody.status === 1) {
+                         this.hideWarningDialog();
+                         return;
+                     }
+
+                     this.setWarningDialog('主人，您的手机没有网络。');
+                 }
+
+
+                 if(data && data.messageType == "deviceOnlineStatus") {
+                     if(data.messageBody && data.messageBody.onlineStatus == "online") {
+                         // this.onlineStatus = "1";
+                     } else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+                         // this.onlineStatus = "0";
+                         nativeService.backToNative()
+                     } else {
+                         // this.onlineStatus = "0";
+                     }
+                 }
+             });
         },
     }
 };

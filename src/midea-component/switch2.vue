@@ -1,7 +1,7 @@
 <template>
     <div class="switch-container" :style="{'width': width+'px', 'height':height+'px'}" @click="onchange" v-on:swipe="onSwipe($event)">
         <div class="switch-bar" :style="{'width': width+'px', 'height':height+'px'}">
-            <div :class="['container', checked?'selected':'unselected']" :style="{'width':width+'px'}"></div>
+            <div :class="['container', checked?'selected':'unselected']" :style="{'width':(width-4)+'px'}"></div>
             <!-- <div class="container unselected" :style="{'width':width}"></div> -->
             <image ref="switchBar" class="switch-icon" :src="icon" resize='contain' :style="{'width':height+'px','height':height+'px', 'left':width-height+2+'px'}"></image>
         </div>
@@ -33,6 +33,10 @@ export default {
         height: {
             type: String,
             default: '48',
+        },
+        itemKey: {
+            type: String,
+            default: 'preheat',
         },
         checked: {
             type: Boolean,
@@ -66,14 +70,14 @@ export default {
             this.checked = !this.checked
             this.updateIcon()
 
-            this.$emit('change', { value: this.checked })
+            this.$emit('change', { value: this.checked,itemKey: this.itemKey })
         },
         updateIcon(durationTime = 100) {
             var switchBar = this.$refs.switchBar;
             if (this.checked) {
                 animation.transition(switchBar, {
                     styles: {
-                        transform: 'translateX(1.5px)'
+                        transform: 'translateX(0px)'
                     },
                     duration: durationTime, //ms
                     timingFunction: 'linear',

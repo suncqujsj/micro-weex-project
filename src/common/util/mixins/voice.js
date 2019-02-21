@@ -17,26 +17,73 @@ let commonMixin = {
         };
     },
     created(){
-        let context = this;
-        nativeService.getDeviceInfo().then(function(data){
-            context.deviceId = data.result.deviceId;
-            nativeService.getUserInfo().then((resp) => {
-                context.uid = resp.uid;
-                context.voiceInitial(data.result.deviceId, resp.uid, context.authIndex);
-
-            }).catch((error) => {
-                nativeService.toast(JSON.stringify(error));
-            });
-
-        });
+        // let context = this;
+        // nativeService.getDeviceInfo().then(function(data){
+        //     context.deviceId = data.result.deviceId;
+        //     nativeService.getUserInfo().then((resp) => {
+        //         context.uid = resp.uid;
+        //         context.initVoiceAuth();
+        //
+        //     }).catch((error) => {
+        //         nativeService.toast(JSON.stringify(error));
+        //     });
+        //
+        // });
+        this.initVoice();
     },
     methods:{
+
+        /**
+         * 语音开关、授初始状态
+         * */
+        async initVoice(){
+            await this.setDeviceId();
+            await this.setUid();
+            // nativeService.alert(this.uid);
+
+            this.initVoiceAuth();
+            this.initVoiceSwitch();
+
+        },
+
+        /**
+         * 语音开关初始化
+         */
+        async initVoiceSwitch(){
+            let microphoneState = await this.getMicrophoneState();
+            let data = JSON.parse(microphoneState.returnData).data;
+            this.list[this.controlIndex].value = data.micStatus === 'On'; // 注意O是大写
+        },
 
         /**
          * 语音开关点击事件
          */
         onControlSwitchChange(event){
+            let index = this.controlIndex;
+            let value = this.getSwitchValue(index);
+            nativeService.showLoading();
+            this.microphoneSetting(!value).then((resp)=>{
+                // nativeService.alert(resp);
+                if(parseInt(JSON.parse(resp.returnData).code) === 0) {
+                    this.setSwitchValue(index, !value);
+                    nativeService.hideLoading();
+                }
+            });
 
+        },
+
+        /**
+         * 获取开关状态
+         */
+        getSwitchValue(index){
+            return this.list[index].value;
+        },
+
+        /**
+         * 设置开关状态
+         */
+        setSwitchValue(index, value){
+            this.list[index].value = value;
         },
 
         /**
@@ -81,16 +128,28 @@ let commonMixin = {
          * 语音授权开关点击事件
          */
         onAuthSwitchChange(event) {
-            nativeService.alert(this.authIndex);
-            // if(event.value) {
-            //     this.voiceAuth().then((data)=>{
-            //         nativeService.alert(data);
-            //     });
-            // } else {
-            //     this.voiceAuthCancel().then((data)=>{
-            //         nativeService.alert(data);
-            //     });
-            // }
+            let index = this.authIndex;
+            let value = this.getSwitchValue(index);
+            // nativeService.toast(value);
+            if(value) {
+                nativeService.showLoading();
+                this.voiceAuthCancel().then((resp)=>{
+                    // nativeService.alert(resp);
+                    if(parseInt(JSON.parse(resp.returnData).code) === 0) {
+                        this.setSwitchValue(index, !value);
+                        nativeService.hideLoading();
+                    }
+
+                });
+                return;
+            }
+
+            this.voiceAuth().then((resp)=>{
+                // nativeService.alert(resp.code);
+                if(resp.code === 0) {
+                    this.setSwitchValue(index, !value);
+                }
+            });
 
         },
 
@@ -99,9 +158,10 @@ let commonMixin = {
          * 1.查询是否需要进入授权
          * 2.查询设备语音授权状态
          */
-        async voiceInitial(deviceId, uid, authIndex=0) {
+        async initVoiceAuth() {
+            let deviceId = this.deviceId;
+            let uid = this.uid;
 
-            //查询是否需要进入授权
             let url = 'appliance/authorize/check';
             let stamp = Date.parse(new Date());
             let params = {
@@ -109,21 +169,22 @@ let commonMixin = {
                 applianceCode: deviceId,
                 stamp,
                 reqId: 2
-            }
+            };
             // nativeService.alert(params);
             // return;
             try {
-                let result = await nativeService.sendMCloudRequest(url, params, {isValidate:false})
+                let result = await nativeService.sendMCloudRequest(url, params, {isValidate:false});
                 // nativeService.alert(result);
                 if (result.data && result.data.authorize == 1) {
                     this.url = result.data.url;
                     let voiceAuthStateResult = await  this.getVoiceAuth(deviceId, uid);
-                    // nativeService.alert(voiceAuthStateResult);
                     let data = JSON.parse(voiceAuthStateResult.returnData).data;
+                    // nativeService.toast('授权状态status：' + data.status);
                     if(data) {
-                        data.status == 1 ? this.list[authIndex].value = false : this.list[authIndex].value = true;
+                        // nativeService.alert(data);
+                        this.setSwitchValue(this.authIndex, data.status === '0');
                     }
-                    this.list[authIndex].hide = false;
+                    this.list[this.authIndex].hide = false;
                 }
             } catch (error) {
                 nativeService.alert(error);
@@ -234,28 +295,9 @@ let commonMixin = {
             // nativeService.alert(params);
             // return;
             return nativeService.requestDataTransmit(params)
-        },
-
-        /**
-         * 语音家电模组OTA
-         * 固件更新检查
-         */
-        otaCheckUpdate(){
-            let params = {
-                type: '0xAI',
-                queryStrings: {
-                    'serviceUrl': "/v1/device/ota/check"
-                },
-                transmitData: {
-                    deviceId: this.deviceId
-                }
-            };
-            // nativeService.alert(params);
-            // return;
-            return nativeService.requestDataTransmit(params)
         }
-
     }
+
 };
 
 export default commonMixin

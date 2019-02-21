@@ -1,11 +1,16 @@
+// 本解析js专门针对 新协议，支持微蒸烤所有产品  Giggs
+
 import message from "@/common/util/smartMessage";
+import sensoryMenus from '@/common/mapping/sensoryMenus'
 import  nativeService from '@/common/services/nativeService';
 // import {device} from "../config/constant";
 // import modes from "../config/modes.js";
 // import autoMenu from "../config/auto-menu.js";
-var latesFrameRecord = 0;
+ var latesFrameRecord = 0;
 export default {
   //10进制转换8位2进制的方法
+  doorStatus: 0,
+  isWorking: false,
   initAnalysisObj(){
     var obj = {
         workingState:{
@@ -30,9 +35,9 @@ export default {
         },
         timeRemaining:{
             name:"程序剩余时间",
-            hour: {name:"小时",value: 0x00},
-            minute: {name:"分钟",value: 0x00},
-            second: {name:"秒",value: 0x00},
+            hour: 0,
+            minute: 0,
+            second: 0,
         },
         temperature:{
           name:"发热管设置的温度",
@@ -47,6 +52,10 @@ export default {
           upLowTemperature: {name:"上管实际温度：低",value: 0x00},
           downHighTemperature: {name:"下管实际温度：高",value: 0x00},
           downLowTemperature: {name:"下管实际温度：低",value: 0x00},
+        },
+        light:{
+          name:"炉灯",
+          value: 0
         },
         isProbe:{
           name:"肉类探针模式",
@@ -63,6 +72,17 @@ export default {
         fire:{name: "火力",value: 0x00},
         weight:{name: "重量",value: 0x00},
         steam:{name: "蒸汽量",value: 0x00},
+        timeSetting:{
+          name:"程序设定总时间",
+          hour: 0,
+          minute: 0,
+          second:0,
+       },
+       menuFeel:{
+        name:"感应菜单感应中",
+        value: 0
+       },
+
     };
     return obj;
   },
@@ -101,68 +121,67 @@ export default {
   },
   getCurrentModeItem(tabs,recipeId,modeId,isRecipe){ 
       var  _item = {};
-      if(isRecipe){
-          var autoMenu = tabs[0].rows;
-          var  currentModes = autoMenu;
-          for(var i=0; i<currentModes.length; i++){
-              var iconButtonsArr = currentModes[i].iconButtons; 
-              for(var r=0; r<iconButtonsArr.length; r++){
-                  var iconButtons = iconButtonsArr[r];
-                  for(var m=0; m<iconButtons.length; m++){
-                      if(recipeId == iconButtons[m].recipeId.default){
-                          _item = iconButtons[m];
-                          break;
-                      }
-                  }
-              }                      
-            
+      if(tabs.length<=1){
+        let modes = tabs[0].rows;
+        for(var i=0; i<modes.length; i++){
+          var iconButton = modes[i].iconButtons;
+          for(var k=0; k<iconButton.length; k++){
+            if(modeId ==iconButton[k].mode){
+                _item = iconButton[k];
+                break;
+            }
           }
+        }
       }else{
-          var modes = tabs[1].rows;
-          var  currentModes = modes;
-          for(var i=0; i<currentModes.length; i++){
-              var iconButtons = currentModes[i].iconButtons;
-              for(var m=0; m<iconButtons.length; m++){
-                
-                  if(modeId == currentModes[i].iconButtons[m].mode){
-                      _item = currentModes[i].iconButtons[m];
-                      break;
-                  }
+        if(isRecipe){
+            var autoMenu = tabs[0].rows;
+            var  currentModes = autoMenu;
+            for(var i=0; i<currentModes.length; i++){
+                var iconButtonsArr = currentModes[i].iconButtons; 
+                for(var r=0; r<iconButtonsArr.length; r++){
+                    var iconButtons = iconButtonsArr[r];
+                    for(var m=0; m<iconButtons.length; m++){
+                        if(recipeId == iconButtons[m].recipeId.default){
+                            _item = iconButtons[m];
+                            break;
+                        }
+                    }
+                }                      
               
-              }
-          }
+            }
+        }else{
+            var modes = tabs[1].rows;
+            var  currentModes = modes;
+            for(var i=0; i<currentModes.length; i++){
+                var iconButtons = currentModes[i].iconButtons;
+                for(var m=0; m<iconButtons.length; m++){
+                  
+                    if(modeId == currentModes[i].iconButtons[m].mode){
+                        _item = currentModes[i].iconButtons[m];
+                        break;
+                    }
+                
+                }
+            }
+        }
       }
-    
       return _item;
   },
   modeValueToModeText(recipeId,modeValue,tabs){
     var text = '';
     var modeArr =  [];
     var isRecipe = false;
+
+    if(modeValue === 0xE2) {
+        return sensoryMenus[recipeId].cn;
+    }
+
     if(modeValue == 0xE0){ //如果是自动菜谱
         isRecipe = true;
     }
 
-    if(isRecipe){
-      let autoMenu = tabs[0].rows;
-      let  currentModes = autoMenu;
-       for(var i=0; i<currentModes.length; i++){
-           var iconButtonsArr = currentModes[i].iconButtons; 
-          for(var r=0; r<iconButtonsArr.length; r++){
-              var iconButtons = iconButtonsArr[r];
-               for(var m=0; m<iconButtons.length; m++){
-                  if(recipeId == iconButtons[m].recipeId.default){
-                      modeArr.push({
-                        'text': iconButtons[m].text,
-                        'mode': iconButtons[m].mode,
-                      })
-                  }
-              }
-          }                      
-         
-      }
-    }else{
-      let modes = tabs[1].rows;
+    if(tabs.length<=1){
+      let modes = tabs[0].rows;
       for(var i=0; i<modes.length; i++){
         var iconButton = modes[i].iconButtons;
         for(var k=0; k<iconButton.length; k++){
@@ -170,6 +189,37 @@ export default {
             'text': iconButton[k].text,
             'mode': iconButton[k].mode,
           })
+        }
+      }
+    }else{
+      if(isRecipe){
+        let autoMenu = tabs[0].rows;
+        let  currentModes = autoMenu;
+         for(var i=0; i<currentModes.length; i++){
+             var iconButtonsArr = currentModes[i].iconButtons; 
+            for(var r=0; r<iconButtonsArr.length; r++){
+                var iconButtons = iconButtonsArr[r];
+                 for(var m=0; m<iconButtons.length; m++){
+                    if(recipeId == iconButtons[m].recipeId.default){
+                        modeArr.push({
+                          'text': iconButtons[m].text,
+                          'mode': iconButtons[m].mode,
+                        })
+                    }
+                }
+            }                      
+           
+        }
+      }else{
+        let modes = tabs[1].rows;
+        for(var i=0; i<modes.length; i++){
+          var iconButton = modes[i].iconButtons;
+          for(var k=0; k<iconButton.length; k++){
+            modeArr.push({
+              'text': iconButton[k].text,
+              'mode': iconButton[k].mode,
+            })
+          }
         }
       }
     }
@@ -193,12 +243,16 @@ export default {
  
   //控制启动指令
   createControlMessage(params,callbackData) {
+    if(this.doorStatus){
+      nativeService.toast("主人，您的设备炉门开了");
+      return;
+    }
     var time = params.minute;
     var hour = time/60;
     var minute = time%60;
     var second = 0;
     var set_mode = params.mode;
-    var messageBody = message.createMessageFFBody(22); 
+    var messageBody = message.createMessageBody(22); 
     var controltype = 0;//待机类
     if(callbackData.working){
       controltype = 1 //工作类
@@ -206,23 +260,32 @@ export default {
     if(params.probe && callbackData.isProbe){//假如当前插上探针，并且 该模式支持探针，则，do
       controltype = 2 //探针类
     }
-    // nativeService.alert(controltype);
+    if(callbackData.working && params.probe && callbackData.isProbe){//假如当前插上探针，并且 该模式支持探针，则，工作设置类
+      controltype = 3 //探针工作设置类
+    }
+   
+    if(parseInt(params.temperature)<100){
+      params.preheat = false;
+    }
+    if(this.isWorking && params.currentItem  && params.currentItem.preheat && params.currentItem.preheat.hide){//如果隐藏
+      params.preheat = false;
+    }
     if(controltype==0){
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 1);
       message.setByte(messageBody, 2, 0);
       message.setByte(messageBody, 3, 0);
       message.setByte(messageBody, 4, params.recipeId);
-      message.setByte(messageBody, 5, 0);
+      message.setByte(messageBody, 5, 0x11);
       message.setByte(messageBody, 6, params.preheat?1:0);
       message.setByte(messageBody, 7, hour);
       message.setByte(messageBody, 8, minute);
       message.setByte(messageBody, 9, second);
       message.setByte(messageBody, 10, set_mode);
       message.setByte(messageBody, 12, params.temperature);
-      // message.setByte(messageBody, 14, params.temperature);
-      message.setByte(messageBody, 15, params.fireAmount);
-      message.setByte(messageBody, 16, params.steamAmount);
+      message.setByte(messageBody, 14, params.temperature);
+      message.setByte(messageBody, 15, params.fireAmount/10);
+      message.setByte(messageBody, 16, params.steamAmount || params.weight/10);
     }
     if(controltype == 1){//工作中设置类 byte11 发04，其他byte发ff
       message.setByte(messageBody, 0, 0x22);
@@ -232,80 +295,78 @@ export default {
       message.setByte(messageBody, 4, 0xff);
       message.setByte(messageBody, 5, 0xff);
       message.setByte(messageBody, 6, params.preheat?1:0);
-      message.setByte(messageBody, 7, hour);
-      message.setByte(messageBody, 8, minute);
-      message.setByte(messageBody, 9, second);
+      message.setByte(messageBody, 7, params.isTimeChange?hour:0xff);
+      message.setByte(messageBody, 8, params.isTimeChange?minute:0xff);
+      message.setByte(messageBody, 9, params.isTimeChange?second:0xff);
       message.setByte(messageBody, 10, set_mode);
-      message.setByte(messageBody, 12, params.temperature);
+      message.setByte(messageBody, 11,  params.isTemperatureChange?0:0xff);
+      message.setByte(messageBody, 12,  params.isTemperatureChange?params.temperature:0xff);
+      message.setByte(messageBody, 13,  0xff);
+      message.setByte(messageBody, 14,  0xff);
       // message.setByte(messageBody, 14, params.temperature);
-      message.setByte(messageBody, 15, params.fireAmount);
-      message.setByte(messageBody, 16, params.steamAmount);
+      message.setByte(messageBody, 15, params.isFireAmountChange?params.fireAmount/10:0xff);
+      message.setByte(messageBody, 16, params.isSteamAmountChange?(params.steamAmount || params.weight/10):0xff);
+      message.setByte(messageBody, 18,  0xff);
     }
     if(controltype == 2){//探针类下发
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 1);
+      message.setByte(messageBody, 6, 2);
       message.setByte(messageBody, 10, set_mode);
       message.setByte(messageBody, 12, 200);
+      message.setByte(messageBody, 16, params.steamAmount);
       message.setByte(messageBody, 18, params.probeTemperature);
     }
-    
+    if(controltype == 3){//探针工作类下发
+      message.setByte(messageBody, 0, 0x22);
+      message.setByte(messageBody, 1, 4);
+      message.setByte(messageBody, 6, 2);
+      message.setByte(messageBody, 10, set_mode);
+      message.setByte(messageBody, 11, 0xff);
+      message.setByte(messageBody, 12, 0xff);
+      message.setByte(messageBody, 16, params.steamAmount);
+      message.setByte(messageBody, 18, params.probeTemperature);
+    }
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
-    // nativeService.alert(this.cmdTo16Hex(sendcmd));
-
+    // nativeService.alert(this.cmdToEasy(sendcmd));
     return sendcmd;
   },
   //取消工作指令
   cmdCancelWork(device){
-    var messageBody = message.createMessageBody(7); 
+    var messageBody = message.createMessageFFBody(9); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02); 
     message.setByte(messageBody, 2,0x02);
-    message.setByte(messageBody, 3,0xff);
-    message.setByte(messageBody, 4,0xff);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,0xff);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
   //暂停or继续指令
   cmdStartOrPause(record,device){
-    var messageBody = message.createMessageBody(7); 
+    var messageBody = message.createMessageFFBody(9); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
     message.setByte(messageBody, 2,record);
-    message.setByte(messageBody, 3,0xff);
-    message.setByte(messageBody, 4,0xff);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,0xff);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
-
 
    //炉灯
-   cmdLight(params,device){
-    var messageBody = message.createMessageBody(7); 
+   cmdLight(lightValue,device){
+    var messageBody = message.createMessageFFBody(9); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
-    message.setByte(messageBody, 2,0xff);
-    message.setByte(messageBody, 3,params.light?1:0);
-    message.setByte(messageBody, 4,0xff);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,0xff);
+    message.setByte(messageBody, 4,lightValue?0:1);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
-   //上锁
+   //上锁解锁
    cmdLock(params,device){
-    var messageBody = message.createMessageBody(7); 
+    var messageBody = message.createMessageFFBody(9); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
-    message.setByte(messageBody, 2,0xff);
     message.setByte(messageBody, 3,params.childLock?1:0);
-    message.setByte(messageBody, 4,0xff);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,0xff);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
+    // nativeService.alert(this.cmdToEasy(sendMessage));
     return sendMessage;
   },
   analysisCmd: function(requestCmd,tabs) {
@@ -317,17 +378,23 @@ export default {
     // }
     // latesFrameRecord = receiveFrame;
     // nativeService.toast(latesFrameRecord,6);
-    
     var obj = this.initAnalysisObj();
+    
   // if(parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)){
-    obj.workingState.value = parseInt(requestCmd[11]); 
+    obj.workingState.value = parseInt(requestCmd[11]);
+    if(parseInt(requestCmd[11]) == 3 || parseInt(requestCmd[11]) == 6){
+      this.isWorking = true;
+    }else{
+      this.isWorking = false;
+    }
     var recipeId = parseInt(requestCmd[12])*256*256+parseInt(requestCmd[13])*256+parseInt(requestCmd[14]);
     obj.recipeId.value = recipeId;
     obj.timeRemaining.hour = parseInt(requestCmd[16]);
     obj.timeRemaining.minute = parseInt(requestCmd[17]);
     obj.timeRemaining.second = parseInt(requestCmd[18]);
     obj.mode.value = parseInt(requestCmd[19]);
-    obj.mode.text = this.modeValueToModeText(recipeId,parseInt(requestCmd[19]),tabs);     
+
+    obj.mode.text = this.modeValueToModeText(recipeId,parseInt(requestCmd[19]),tabs);
     
      //实际温度
      obj.realTemperature.upHighTemperature = parseInt(requestCmd[20]);
@@ -337,6 +404,7 @@ export default {
    
      obj.displaySign.lock = message.getBit(requestCmd, 26, 0);
      obj.displaySign.doorSwitch = message.getBit(requestCmd, 26, 1);
+     this.doorStatus = message.getBit(requestCmd, 26, 1);
      obj.displaySign.waterBox = message.getBit(requestCmd, 26, 2);
      obj.displaySign.lackWater = message.getBit(requestCmd, 26, 3);
      obj.displaySign.changeWater = message.getBit(requestCmd, 26, 4);
@@ -344,8 +412,9 @@ export default {
      obj.displaySign.preheatTemperature = message.getBit(requestCmd, 26, 6);
      obj.displaySign.isError = message.getBit(requestCmd, 26, 7);
 
+     obj.light.value = message.getBit(requestCmd, 27, 2);
      obj.isProbe.value = message.getBit(requestCmd, 27, 6);
-
+     obj.menuFeel.value = message.getBit(requestCmd, 27, 1);
     //设置温度
     obj.temperature.upHighTemperature = parseInt(requestCmd[28]);
     obj.temperature.upLowTemperature = parseInt(requestCmd[29]);
@@ -359,10 +428,20 @@ export default {
       obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
     }
 
-    obj.fire.value = parseInt(requestCmd[24]);
-    obj.weight.value = parseInt(requestCmd[25]);
-    obj.steam.value = parseInt(requestCmd[25]);
-    return obj;
-  }
+    if(parseInt(requestCmd[19])==0xC4){//如果是烘干，则不显示温度
+      obj.temperature.upLowTemperature = 0;
+    }
 
+    obj.timeSetting.hour = parseInt(requestCmd[38]);
+    obj.timeSetting.minute = parseInt(requestCmd[39]);
+    obj.timeSetting.second = parseInt(requestCmd[40]);
+
+    obj.fire.value = parseInt(requestCmd[24])*10;
+    obj.weight.value = parseInt(requestCmd[25])*10;
+    obj.steam.value = parseInt(requestCmd[25]);
+    
+    return obj;
+  },
 };
+
+

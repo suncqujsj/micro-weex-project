@@ -1,5 +1,5 @@
 /**
- * Created by sf
+ * Created by giggs , 兼容老协议版本中的 工作模式、温度、时间等参数。已检查ok
  * 2018/10/20
  */
 
@@ -24,7 +24,7 @@ let modes = [
                     range:[70,180,10]
                 },
                 preheat:{
-                    set:false,
+                    set:true,
                     default: 1,
                     workingPreheatHide: true,
                 },
@@ -37,7 +37,9 @@ let modes = [
                     set:false,
                     default:0,
                     range:null
-                }
+                },
+                settingHide:true,
+                circleProgressPointHide: true,
             },
             { // 下烤
                 'icon': modeIcons[3].dir,
@@ -54,7 +56,7 @@ let modes = [
                     range:[70,180,10]
                 },
                 preheat:{
-                    set:false,
+                    set:true,
                     default: 1,
                     workingPreheatHide: true,
                 },
@@ -67,7 +69,9 @@ let modes = [
                     set:false,
                     default:0,
                     range:null
-                }
+                },
+                settingHide:true,
+                circleProgressPointHide: true,
             },
 
             { // 上下烤
@@ -85,7 +89,7 @@ let modes = [
                     range:[70,230,10]
                 },
                 preheat:{
-                    set:false,
+                    set:true,
                     default: 1,
                     workingPreheatHide: true,
                 },
@@ -98,7 +102,9 @@ let modes = [
                     set:false,
                     default:0,
                     range:null
-                }
+                },
+                settingHide:true,
+                circleProgressPointHide: true,
             },
 
             { // 热风
@@ -116,7 +122,7 @@ let modes = [
                     range:[70,230,10]
                 },
                 preheat:{
-                    set:false,
+                    set:true,
                     default: 1,
                     workingPreheatHide: true,
                 },
@@ -129,7 +135,9 @@ let modes = [
                     set:false,
                     default:0,
                     range:null
-                }
+                },
+                settingHide:true,
+                circleProgressPointHide: true,
             },
 
             { // 旋转
@@ -147,7 +155,7 @@ let modes = [
                     range:[70,180,10]
                 },
                 preheat:{
-                    set:false,
+                    set:true,
                     default: 1,
                     workingPreheatHide: true,
                 },
@@ -160,7 +168,9 @@ let modes = [
                     set:false,
                     default:0,
                     range:null
-                }
+                },
+                settingHide:true,
+                circleProgressPointHide: true,
             },
 
             { // 发酵
@@ -179,7 +189,7 @@ let modes = [
                 },
                 preheat:{
                     set:false,
-                    default: 1,
+                    default: 0,
                     workingPreheatHide: true,
                 },
                 steamAmount:{
@@ -191,7 +201,9 @@ let modes = [
                     set:false,
                     default:0,
                     range:null
-                }
+                },
+                settingHide:true,
+                circleProgressPointHide: true,
             },
         ]
     },

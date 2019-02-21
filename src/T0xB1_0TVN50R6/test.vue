@@ -1,37 +1,47 @@
-<style lang="less" type="text/less">
-
-</style>
-
 <template>
-    <div style="margin-top: 200px;">
-        <text>{{a}}</text>
-        <text>{{b}}</text>
+    <div class="wrapper">
+        <!--<div ref="test" @click="move" class="box"></div>-->
+        <!--<image ref="test" src="img/loading.png" class="box"></image>-->
+        <midea-button text="打开" type="primary" @mideaButtonClicked="mideaButtonClicked1">
+        </midea-button>
+        <sf-state :display="display" :isMask="true" :text="'更新完成'" :type="'success'"></sf-state>
     </div>
 </template>
 
 <script>
+    const animation = weex.requireModule('animation')
+    const modal = weex.requireModule('modal')
+    import nativeService from "@/common/services/nativeService";
+    import sfState from "@/component/sf/custom/state.vue"
+    import mideaButton from '@/midea-component/button.vue'
 
-    import nativeService from '@/common/services/nativeService';
 
     export default {
         data(){
-            return {
-                a:123,
-                b:456
-            }
+            return{
+               display:false,
+            };
         },
         created(){
-            this.test();
+            // var context = this;
+            // var t = setInterval(function(){
+            //   context.move()
+            // },20)
         },
-
+        components:{sfState, mideaButton},
         methods: {
-            async test(){
-                this.a = 666;
-                let c = await nativeService.getDeviceInfo();
-                this.b = 777;
+            mideaButtonClicked1(){
+                this.display = true;
             }
         }
     }
 </script>
 
-
+<style scoped>
+    .box {
+        width: 64px;
+        height: 64px;
+        margin-left: 100px;
+        margin-top: 100px;
+    }
+</style>

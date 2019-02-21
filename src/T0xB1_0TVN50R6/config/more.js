@@ -17,7 +17,11 @@ let list = [
     {
         title: '智能语音',
         link:'voice.js'
-    }
+    },
+    // {
+    //     title: '动画',
+    //     link:'test.js'
+    // }
 ];
 
 export default list;

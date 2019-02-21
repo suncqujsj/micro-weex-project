@@ -1,26 +1,28 @@
 <template>
   <div ref="container" v-if="show" class="container">
     <midea-mask @click="layoutClick"></midea-mask>
-    <div ref="dialog" class="dialog-box" :style="{top:dialogTop+'px'}">
-      <div class="dialog-content" :style="{marginBottom:-(0.5/scale)+'px'}">
-        <slot name="title">
-          <text v-if="title" class="content-title">{{title}}</text>
-        </slot>
-        <slot name="content">
-          <text v-if="content" class="content-subtext">{{content}}</text>
-        </slot>
-      </div>
-      <div class="dialog-footer">
-        <div class="footer-btn cancel"
-             v-if="!single"
-             @click="secondaryClicked">
-          <text class="btn-text"
-                :style="{ color: secondBtnColor }">{{cancelText}}</text>
+    <div class="wrapper" :style="{height:maskHeight+'px'}">
+      <div ref="dialog" class="dialog-box">
+        <div class="dialog-content" :style="{marginBottom:-(0.5/scale)+'px'}">
+          <slot name="title">
+            <text v-if="title" class="content-title">{{title}}</text>
+          </slot>
+          <slot name="content">
+            <text v-if="content" class="content-subtext">{{content}}</text>
+          </slot>
         </div>
-        <div class="footer-btn confirm"
-             @click="primaryClicked">
-          <text class="btn-text"
-                :style="{ color: mainBtnColor }">{{confirmText}}</text>
+        <div class="dialog-footer">
+          <div class="footer-btn cancel"
+              v-if="!single"
+              @click="secondaryClicked">
+            <text class="btn-text"
+                  :style="{ color: secondBtnColor }">{{cancelText}}</text>
+          </div>
+          <div class="footer-btn confirm"
+              @click="primaryClicked">
+            <text class="btn-text"
+                  :style="{ color: mainBtnColor }">{{confirmText}}</text>
+          </div>
         </div>
       </div>
     </div>
@@ -120,7 +122,7 @@
        },300);*/
       var env=weex.config.env;
       this.maskHeight=env.deviceHeight / env.deviceWidth * 750;
-      this.dialogTop= (this.maskHeight-300)/2-150;
+      // this.dialogTop= (this.maskHeight-300)/2-150;
     },
     methods: {
       checkDomHeight(){

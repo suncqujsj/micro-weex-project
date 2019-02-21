@@ -9,9 +9,11 @@ const bridgeModule = weex.requireModule('bridgeModule');
 import nativeService from "@/common/services/nativeService"
 
 let voiceOtaMixin = {
-    data:{
-        deviceId: null,
-        hasNewVer:false
+    data(){
+        return {
+            deviceId: null,
+            hasNewVer:false
+        };
     },
     methods: {
         /**

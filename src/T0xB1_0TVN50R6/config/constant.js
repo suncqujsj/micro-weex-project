@@ -8,7 +8,7 @@ module.exports = {
         page_title: "烤箱",
         type: 0xB1,
         widget_name: 'MSO_T0xB1',
-        widget_version: '5.0.5',
+        widget_version: '5.0.6',
         extra1: {
             sn8: '0TVN50R6'
         },

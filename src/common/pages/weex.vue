@@ -341,6 +341,7 @@
         },
         components: {MideaHeader,sfDialog,mideaActionsheet,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modal,modalHeader,rowWrapItems,light,timePicker},
         created(){
+            this.isIos = weex.config.env.platform == "iOS" ? true : false;
             let self = this;
             let {constant,tabs} = this;
             this.srcollPaddingBottom = '80px';
@@ -355,10 +356,9 @@
                 query: query
             });
             this.queryStatus(tabs,constant.device);
-            if(constant.device.standby03) {
+            if(constant.device.standby03 && !this.isIos) {
                 this.queryRunTimer(10);//轮询 已放在解析指令那里处理
             }
-            this.isIos = weex.config.env.platform == "iOS" ? true : false;
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
             }

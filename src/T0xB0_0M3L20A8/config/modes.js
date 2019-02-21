@@ -1,8 +1,15 @@
-/**
+ /**
  * Created by sf
  * 2018/10/20
  */
 import modeIcons from "../../common/mapping/modeIcons";
+ let timeCommon = {
+     set: true,
+     default:5,
+     range:[1,95,1],
+ };
+
+
 let modes = [
     {
         title: '',
@@ -11,11 +18,7 @@ let modes = [
                 'icon': modeIcons[12].dir,
                 'text': modeIcons[12].cn,
                 'mode': 0x01,
-                time:{
-                    set: true,
-                    default:20,
-                    range:[5,95,1],
-                },
+                time: timeCommon,
                 temperature:{
                     set: false,
                     default:null,
@@ -44,11 +47,7 @@ let modes = [
                 'icon': modeIcons[13].dir,
                 'text': '薄块烧烤',
                 'mode': 0x40,
-                time:{
-                    set: true,
-                    default:20,
-                    range:[5,95,1],
-                },
+                time: timeCommon,
                 temperature:{
                     set: false,
                     default:false,
@@ -74,11 +73,7 @@ let modes = [
                 'icon': modeIcons[22].dir,
                 'text': '双模快烤',
                 'mode': 0x70,
-                time:{
-                    set: true,
-                    default:5,
-                    range:[5,95,5],
-                },
+                time: timeCommon,
                 temperature:{
                     set: false,
                     default:false,
@@ -105,7 +100,6 @@ let modes = [
                     default:0,
                     range:null,
                 },
-                settingHide:true
 
             },
             {

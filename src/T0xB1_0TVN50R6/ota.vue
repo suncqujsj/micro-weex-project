@@ -70,6 +70,7 @@
         },
         components: {mideaHeader, mideaCell, mideaButton, sfState},
         created(){
+            // this.test();
             nativeService.getDeviceInfo().then((data)=>{ // 获取deviceId
                 if(data.result && data.result.deviceId ) {
                     this.deviceId = data.result.deviceId;
@@ -109,6 +110,13 @@
             });
         },
         methods:{
+            test(){
+                this.showState('更新中');
+                this.a = setInterval(()=>{
+                    this.showState('更新完毕', 'success');
+                    clearInterval(this.a);
+                },2000);
+            },
             markButtonPressedState(){
                 this.pressed = true;
             },

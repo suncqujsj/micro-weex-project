@@ -1,6 +1,6 @@
 /**
  * Created by sf
- * 2018/10/26 test
+ * 2018/10/26
  */
 
 module.exports = {

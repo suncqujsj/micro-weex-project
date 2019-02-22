@@ -1,14 +1,16 @@
 <template>
   <div ref="container" v-if="show" class="container">
     <midea-mask v-if="showMask" @click="layoutClick"></midea-mask>
-    <div ref="dialog" class="dialog-box" :style="{top:dialogTop+'px'}">
-      <div class="dialog-content">
-        <slot name="title">
-          <text v-if="title" class="content-title">{{title}}</text>
-        </slot>
-        <slot name="content">
-          <text v-if="content" class="content-subtext">{{content}}</text>
-        </slot>
+    <div class="wrapper" :style="{height:maskHeight+'px'}">
+      <div ref="dialog" class="dialog-box">
+        <div class="dialog-content">
+          <slot name="title">
+            <text v-if="title" class="content-title">{{title}}</text>
+          </slot>
+          <slot name="content">
+            <text v-if="content" class="content-subtext">{{content}}</text>
+          </slot>
+        </div>
       </div>
     </div>
   </div>
@@ -92,7 +94,7 @@
        },300);*/
       var env=weex.config.env;
       this.maskHeight=env.deviceHeight / env.deviceWidth * 750;
-      this.dialogTop= (this.maskHeight-300)/2-150;
+      // this.dialogTop= (this.maskHeight-300)/2-150;
     },
     methods: {
       checkDomHeight(){

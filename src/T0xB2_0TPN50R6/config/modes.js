@@ -7,7 +7,7 @@ let modes = [
     {
         title: '',
         iconButtons: [
-            {
+            {    // 纯蒸
                 'icon': modeIcons[16].dir,
                 'text': modeIcons[16].cn,
                 'mode': 0x20,
@@ -34,10 +34,10 @@ let modes = [
                     default:0
                 }
             },
-            {
-                'icon': modeIcons[10].dir,
-                'text': modeIcons[10].cn,
-                'mode': 0xC1,
+            {    // 清洁
+                'icon': modeIcons[20].dir,
+                'text': modeIcons[20].cn,
+                'mode': 0xC1, // Giggs，根据协议清洁应该用 0xC6，但是这款是协议未跟新之前，所以用0xc1
                 time:{
                     set: false,
                     default:15,
@@ -65,7 +65,7 @@ let modes = [
                 settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
             },
            
-            {
+            {    // 发酵
                 'icon': modeIcons[7].dir,
                 'text': modeIcons[7].cn,
                 'mode': 0xB0,
@@ -94,7 +94,7 @@ let modes = [
                     range:null
                 }
             },
-            {
+            {    // 烘干
                 'icon': modeIcons[17].dir,
                 'text': modeIcons[17].cn,
                 'mode': 0xC4,

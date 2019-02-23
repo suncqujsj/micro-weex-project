@@ -189,7 +189,7 @@ export default {
   // 查询指令
   createQueryMessage(device) {
     var messageBody = message.createMessageBody(1);//createMessageBody默认从10开始，1表示11，2表示12....
-    message.setByte(messageBody, 0, 0);
+    // message.setByte(messageBody, 0, 0);
     var sendMessage = message.createMessage(device.type, 0x03, messageBody);
     return sendMessage;
   },
@@ -211,7 +211,7 @@ export default {
     message.setByte(messageBody, 6, params.temperature);
     message.setByte(messageBody, 9, second);
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
-    // nativeService.alert(this.cmdTo16Hex(sendcmd));
+    nativeService.alert(this.cmdToEasy(sendcmd));
 
     return sendcmd;
   },
@@ -248,7 +248,7 @@ export default {
     // }
     // latesFrameRecord = receiveFrame;
     // nativeService.toast(latesFrameRecord,6);
-    
+    // nativeService.alert(requestCmd);
     var obj = this.initAnalysisObj();
   // if(parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)){
     obj.workingState.value = this.getStatusCode(parseInt(requestCmd[10]));

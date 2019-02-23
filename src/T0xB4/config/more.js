@@ -14,10 +14,6 @@ let list = [
         title: '插件版本号：weex' + constant.device.widget_version,
         link: ''
     },
-    {
-        title: '烤箱实时监控',
-        link:'video.js'
-    }
 ];
 
 export default list;

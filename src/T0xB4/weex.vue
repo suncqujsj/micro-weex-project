@@ -8,7 +8,7 @@
     import modes from "./config/modes.js";
     import modes_00T7388D from "./config/modes_00T7388D.js";
     import autoMenu from "./config/auto-menu.js";
-    import commonWeex from "@/common/pages/oldProtocal/weex.vue";
+    import commonWeex from "@/common/pages/weex.vue";
     import nativeService from "@/common/services/nativeService";
     var numberRecord = 0; //记录跳页面的次数
     export default {

@@ -12,6 +12,7 @@ module.exports = {
         extra1: {
             sn8: '0X5L23A8'
         },
+        standby03:true, // 待机中打开03轮询
         // hms:[0,1,1],
     }
 };

@@ -11,10 +11,11 @@ module.exports = {
         page_title: "蒸汽炉",
         sales_model: "蒸汽炉 TPN50R6",
         widget_name: 'MSO_T0xB2',
-        widget_version: '5.1.5',
+        widget_version: '5.1.6',
         extra1: {
             sn8: '0TPN50R6'
         },
+        standby03:true, // 待机中打开03轮询
         hasLight: false , //是否有炉灯
         hideChildLock:{
             working:true,

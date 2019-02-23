@@ -14,7 +14,7 @@ let modes = [
                 time:{
                     set: true,
                     default:10,
-                    range:[1,300,1]
+                    range:[1,120,1]
                 },
                 temperature:{
                     set: true,
@@ -122,39 +122,6 @@ let modes = [
                     default:0,
                     range:null
                 }
-            },
-        ]
-    },
-    {
-        title: '',
-        iconButtons: [
-            {
-                'icon': modeIcons[20].dir,
-                'text': modeIcons[20].cn,
-                'mode': 0xC6,
-                time:{
-                    set: false,
-                    default:5,
-                    range:null
-                },
-                temperature:{
-                    set: false,
-                    default:0,
-                    range:null
-                },
-                preheat:{
-                    set:false,
-                    default: false
-                },
-                steamAmount:{
-                    set:false,
-                    default:0
-                },
-                fireAmount:{
-                    set:false,
-                    default:0
-                },
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
             },
         ]
     },

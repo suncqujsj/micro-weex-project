@@ -7,7 +7,7 @@
 
 let data = [
     {
-        title: 'mode',  // 首个 title 很重要，决定了是否平铺所有菜。当 title = mode，平铺； 当title = xxx，按分类显示
+        title: '健康家常',  // 首个 title 很重要，决定了是否平铺所有菜。当 title = mode，平铺； 当title = xxx，按分类显示
         iconButtons: [
             [
                 {
@@ -231,7 +231,7 @@ let data = [
         ]
     },
     {
-        title: 'mode',  // 首个 title 很重要，决定了是否平铺所有菜。当 title = mode，平铺； 当title = xxx，按分类显示
+        title: '健康家常',  // 首个 title 很重要，决定了是否平铺所有菜。当 title = mode，平铺； 当title = xxx，按分类显示
         iconButtons: [
             [
                 {
@@ -470,7 +470,7 @@ let data = [
         ]
     },
     {
-        title: 'mode',  // 首个 title 很重要，决定了是否平铺所有菜。当 title = mode，平铺； 当title = xxx，按分类显示
+        title: '健康家常',  // 首个 title 很重要，决定了是否平铺所有菜。当 title = mode，平铺； 当title = xxx，按分类显示
         iconButtons: [
             [
                 {
@@ -710,7 +710,7 @@ let data = [
         ]
     },
     {
-        title: 'mode',  // 首个 title 很重要，决定了是否平铺所有菜。当 title = mode，平铺； 当title = xxx，按分类显示
+        title: '健康家常',  // 首个 title 很重要，决定了是否平铺所有菜。当 title = mode，平铺； 当title = xxx，按分类显示
         iconButtons: [
             [
                 {

@@ -105,6 +105,7 @@ let workingModalMixin  = {
             //提示
             let isLackWater = false , isWaterBox = false, isDoorSwitch = false, isError = false;
             if(analysisObj.workingState.value == 2 || analysisObj.workingState.value == 1 ){
+                // clearInterval(this.queryTimer);
                 this.setWarningDialog("",null,false);
                 if(analysisObj.isProbe.value && !this.currentItem.probe && this.show) {
                     this.show = false;
@@ -149,7 +150,7 @@ let workingModalMixin  = {
                 analysisObj.workingState.value = 3
             }
             if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6) {
-                clearInterval(this.queryTimer);
+                
                 this.isWorkingPage = true;
                 this.analysisWorkingFun(analysisObj,tabs);
             }

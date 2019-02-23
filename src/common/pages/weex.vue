@@ -3,7 +3,7 @@
 </style>
 <template>
     <div @viewappear="viewappear" @viewdisappear="viewdisappeaar">
-        <div class="bg">
+        <div class="bg" v-if="!isWorkingPage">
             <midea-header bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png" :title="constant.device.page_title" titleText="white" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2Native" >
                 <div slot="customerContent" class="header-top-wrapper">
                     <div class="header-top-inner-wrapper">
@@ -221,7 +221,7 @@
                                 <text :class="['number-text',timeShow && 'work_time',hasHour && 'hour_time',hourMore10 && 'moreThen10Hour']">{{workSpecialStatusText}}</text>
                             </div>
                             <!--分tag-->
-                            <div class="next_section">
+                            <div :class="['next_section',hourMore10 && 'next_section_more']">
                                 <text class="number_next">{{tag_next}}</text>
                             </div>
                         </div>
@@ -356,7 +356,8 @@
                 query: query
             });
             this.queryStatus(tabs,constant.device);
-            if(constant.device.standby03 && !this.isIos) {
+            // if(constant.device.standby03 && !this.isIos) {
+            if(!this.isIos) {
                 this.queryRunTimer(10);//轮询 已放在解析指令那里处理
             }
             if (this.isIos){

@@ -2,7 +2,6 @@
  * Created by sf
  * 2018/11/1
  */
-
 let detailModalMixin  = {
     data(){
         return {
@@ -56,9 +55,11 @@ let detailModalMixin  = {
     },
     methods: {
         showDetailModal(){
+            this.settingClickRecord = true;
             this.showDetailVisibility = true;
         },
         closeDetailModal(){
+            this.settingClickRecord = false;
             this.showDetailVisibility = false;
         }
     }

@@ -73,6 +73,7 @@ module.exports = {
         moduleList: [
             { key: 0, value: "midea-demo", desc: "midea-demo 美居Demo" },
             { key: 1, value: "plugin", desc: "plugin 插件" },
+            { key: 2, value: "T0xBF_0TR934MJ", desc: "T0xBF_0TR934MJ" },
             // { key: 2, value: "midea-card", desc: "midea-card卡片页" },
             { key: 3, value: "community", desc: "community 社区模块" },
             { key: 4, value: "midea-rooms", desc: "midea-rooms场景" },

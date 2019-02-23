@@ -9,9 +9,9 @@ let modes = [
         title: '',
         iconButtons: [
             {
-                'icon': modeIcons[12].dir,
-                'text': modeIcons[12].cn,
-                'mode': 0x01,
+                'icon': modeIcons[33].dir,
+                'text': modeIcons[33].cn,
+                'mode': 0x20,
                 time: {
                     set: true,
                     default:5,

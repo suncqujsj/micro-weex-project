@@ -120,7 +120,7 @@ let data = [
                 },
                 {
                     'icon': '',
-                    'text': '鲜虾花蛤蒸蛋羹',
+                    'text': '鲜虾花蛤蒸蛋',
                     'mode': 0xE0,
                     time:{
                         set: true,

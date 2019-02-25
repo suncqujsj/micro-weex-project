@@ -49,5 +49,13 @@ icons[29] = getIcon('变频加热', '');
 icons[30] = getIcon('自动菜单', '');
 icons[31] = getIcon('热风烧烤', 'hot_wind_and_broil@3x');
 icons[32] = getIcon('旋转烧烤', 'rotate_grill@3x');
+
 icons[33] = getIcon('蒸汽', 'steam@3x');
+icons[34] = getIcon('蒸汽+上下烧烤', '');
+icons[35] = getIcon('蒸汽+热风对流', '');
+icons[36] = getIcon('蒸汽+立体烧烤', '');
+icons[37] = getIcon('蒸汽+底部烧烤', '');
+icons[38] = getIcon('蒸汽+大面积+风扇', '');
+icons[39] = getIcon('蒸汽+大面积', '');
+icons[40] = getIcon('蒸汽+小面积', '');
 export default icons;

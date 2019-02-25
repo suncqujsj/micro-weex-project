@@ -94,6 +94,7 @@ const deviceMessageMixin = {
             }
             var self = this;
             // nativeService.alert(this.device);
+            nativeService.hideLoading();
             var sendCmd = cmdFun.createQueryMessage(this.device);
             // nativeService.alert(this.device);
 
@@ -284,6 +285,7 @@ const deviceMessageMixin = {
         listenerDeviceReiveMessage(){//传入模式配置数据
             let context = this;
             globalEvent.addEventListener("receiveMessage", function(e) {
+                nativeService.hideLoading();
                 context.settingClickRecord = false;
                 var str = e.data;
                 var arr = str.split(",");

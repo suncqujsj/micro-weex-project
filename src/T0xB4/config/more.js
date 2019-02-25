@@ -7,17 +7,13 @@ import constant from "./constant.js";
 
 let list = [
     {
-        title: '产品型号：电烤箱 ',
+        title: '产品型号：小烤箱 ',
         link:''
     },
     {
         title: '插件版本号：weex' + constant.device.widget_version,
         link: ''
     },
-    {
-        title: '烤箱实时监控',
-        link:'video.js'
-    }
 ];
 
 export default list;

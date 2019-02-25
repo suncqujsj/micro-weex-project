@@ -3,7 +3,7 @@
 </style>
 <template>
     <div @viewappear="viewappear" @viewdisappear="viewdisappeaar">
-        <div class="bg">
+        <div class="bg" v-if="!isWorkingPage">
             <midea-header bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png" :title="constant.device.page_title" titleText="white" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2Native" >
                 <div slot="customerContent" class="header-top-wrapper">
                     <div class="header-top-inner-wrapper">

@@ -50,21 +50,35 @@ export default {
           downHighTemperature: {name:"下管实际温度：高",value: 0x00},
           downLowTemperature: {name:"下管实际温度：低",value: 0x00},
         },
-        isProbe:{
-          name:"肉类探针模式",
+        light:{
+            name:"炉灯",
+            value: 0
+          },
+          isProbe:{
+            name:"肉类探针模式",
+            value: 0
+          },
+          probeRealTemperature:{
+            name:"探针实际温度",
+            value: 0
+          },
+          probeSetttingTemperature:{
+            name:"探针设定温度",
+            value: 0
+          },
+          fire:{name: "火力",value: 0x00},
+          weight:{name: "重量",value: 0x00},
+          steam:{name: "蒸汽量",value: 0x00},
+          timeSetting:{
+            name:"程序设定总时间",
+            hour: 0,
+            minute: 0,
+            second:0,
+         },
+         menuFeel:{
+          name:"感应菜单感应中",
           value: 0
-        },
-        probeRealTemperature:{
-          name:"探针实际温度",
-          value: 0
-        },
-        probeSetttingTemperature:{
-          name:"探针设定温度",
-          value: 0
-        },
-        fire:{name: "火力",value: 0x00},
-        weight:{name: "重量",value: 0x00},
-        steam:{name: "蒸汽量",value: 0x00},
+         },  
     };
     return obj;
   },
@@ -120,7 +134,7 @@ export default {
             
           }
       }else{
-          var modes = tabs[1].rows;
+          var modes = tabs[0].rows;
           var  currentModes = modes;
           for(var i=0; i<currentModes.length; i++){
               var iconButtons = currentModes[i].iconButtons;
@@ -144,7 +158,6 @@ export default {
     if(modeValue == 0xE0){ //如果是自动菜谱
         isRecipe = true;
     }
-
     if(isRecipe){
       let autoMenu = tabs[0].rows;
       let  currentModes = autoMenu;
@@ -165,7 +178,7 @@ export default {
       }
     }
     else{
-      let modes = tabs[1].rows;
+      let modes = tabs[0].rows;
       for(var i=0; i<modes.length; i++){
         var iconButton = modes[i].iconButtons;
         for(var k=0; k<iconButton.length; k++){
@@ -176,6 +189,7 @@ export default {
         }
       }
     }
+    
     //modeArr.push({'text': '自动菜谱','mode': 0xE0});
 
     for(var i=0; i<modeArr.length; i++){
@@ -183,13 +197,13 @@ export default {
          text = modeArr[i].text;
       }
     }
-    //nativeService.alert(text);
+    // nativeService.alert(text);
     return text;
   },
   // 查询指令
   createQueryMessage(device) {
     var messageBody = message.createMessageBody(1);//createMessageBody默认从10开始，1表示11，2表示12....
-    message.setByte(messageBody, 0, 0);
+    // message.setByte(messageBody, 0, 0);
     var sendMessage = message.createMessage(device.type, 0x03, messageBody);
     return sendMessage;
   },
@@ -208,10 +222,11 @@ export default {
     message.setByte(messageBody, 2, hour);
     message.setByte(messageBody, 3, minute);
     message.setByte(messageBody, 4, params.temperature);
+    message.setByte(messageBody, 5, 0x11);
     message.setByte(messageBody, 6, params.temperature);
     message.setByte(messageBody, 9, second);
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
-    // nativeService.alert(this.cmdTo16Hex(sendcmd));
+    // nativeService.alert(this.cmdToEasy(sendcmd));
 
     return sendcmd;
   },
@@ -248,18 +263,20 @@ export default {
     // }
     // latesFrameRecord = receiveFrame;
     // nativeService.toast(latesFrameRecord,6);
-    
+    // nativeService.alert(requestCmd);
     var obj = this.initAnalysisObj();
   // if(parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)){
     obj.workingState.value = this.getStatusCode(parseInt(requestCmd[10]));
+    
     var recipeId = parseInt(requestCmd[24])*256*256+parseInt(requestCmd[25])*256+parseInt(requestCmd[26]);
     obj.recipeId.value = recipeId;
-    obj.timeRemaining.hour = parseInt(requestCmd[12])%60;
+    
+    obj.timeRemaining.hour = parseInt(requestCmd[12]);
     obj.timeRemaining.minute = parseInt(requestCmd[13]);
     obj.timeRemaining.second = parseInt(requestCmd[22]);
     obj.mode.value = parseInt(requestCmd[11]);
-    obj.mode.text = this.modeValueToModeText(recipeId,parseInt(requestCmd[11]),tabs);  // giggs stub
     
+    obj.mode.text = this.modeValueToModeText(recipeId,parseInt(requestCmd[11]),tabs);  // giggs stub
      //实际温度
      obj.realTemperature.upHighTemperature = 0;
      obj.realTemperature.upLowTemperature = parseInt(requestCmd[14]);

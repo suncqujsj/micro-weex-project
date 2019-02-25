@@ -87,7 +87,6 @@ let workingModalMixin  = {
     methods: {
         analysisFun(analysisObj,tabs) {
             //this.show = false;
-            // nativeService.alert(analysisObj);
             // this.setWarningDialog("",null,false);
             this.modalVisibility = false;
             this.showDetailVisibility = false;
@@ -160,6 +159,7 @@ let workingModalMixin  = {
                     this.queryRunTimer(6);//6秒轮询 
                 }
             }
+            
 
         },
         countDownRunTimer(minute,second,timeSet){
@@ -215,7 +215,6 @@ let workingModalMixin  = {
             }else{
                 this.lightImg = "img/light_off@3x.png";
             }
-
             if(analysisObj.workingState.value === 3){
                 this.timeShow = true;
                 this.hasSetting = true;
@@ -334,10 +333,10 @@ let workingModalMixin  = {
                 this.hasStopOrContinueBtn = false;
             }
             this.chartJson = JSON.parse(JSON.stringify(chartJson));
-
+            // nativeService.alert(allSeconds);
             //倒计时按照设计来
             if(this.timeShow&&allSeconds>0){
-                if(allSeconds>=60*60){ //大于1小时，有‘时’显示
+                if(allSeconds>60*60){ //大于1小时，有‘时’显示
                     if(_hour>9){
                         this.hourMore10 = true;
                     }
@@ -345,8 +344,8 @@ let workingModalMixin  = {
                     this.tag_next = '分';
                     this.hasHour = true;
                 }
-                else if(allSeconds<60*60 && allSeconds>2*60){//大于2分钟，小于1小时，只显示分
-                    // if(allSeconds==60*60){_minute=59;}
+                else if(allSeconds<=60*60 && allSeconds>2*60){//大于2分钟，小于1小时，只显示分
+                    if(allSeconds==60*60){_minute=59;}
                     this.workSpecialStatusText = _minute;
                     this.tag_next = '分';
                     this.hasHour = false;

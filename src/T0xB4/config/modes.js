@@ -25,7 +25,7 @@ let modes = [
                 },
                 preheat:{
                     set:false,
-                    default: false,
+                    default: 0,
                     workingPreheatHide: true,
                 },
                 steamAmount:{
@@ -38,6 +38,7 @@ let modes = [
                     default:0,
                     range:null
                 },
+                stopBtnHide: true,
                 settingHide:true,
                 circleProgressPointHide: true,
             },
@@ -56,8 +57,8 @@ let modes = [
                     range:[70,180,10]
                 },
                 preheat:{
-                    set:true,
-                    default: 1,
+                    set:false,
+                    default: 0,
                     workingPreheatHide: true,
                 },
                 steamAmount:{
@@ -70,6 +71,7 @@ let modes = [
                     default:0,
                     range:null
                 },
+                stopBtnHide: true,
                 settingHide:true,
                 circleProgressPointHide: true,
             },
@@ -77,7 +79,7 @@ let modes = [
             { // 上下烤
                 'icon': modeIcons[0].dir,
                 'text': modeIcons[0].cn,
-                'mode': 0x01,
+                'mode': 0x06,
                 time:{
                     set: true,
                     default:60,
@@ -89,8 +91,8 @@ let modes = [
                     range:[70,230,10]
                 },
                 preheat:{
-                    set:true,
-                    default: 1,
+                    set:false,
+                    default: 0,
                     workingPreheatHide: true,
                 },
                 steamAmount:{
@@ -103,6 +105,7 @@ let modes = [
                     default:0,
                     range:null
                 },
+                stopBtnHide: true,
                 settingHide:true,
                 circleProgressPointHide: true,
             },
@@ -122,8 +125,8 @@ let modes = [
                     range:[70,230,10]
                 },
                 preheat:{
-                    set:true,
-                    default: 1,
+                    set:false,
+                    default: 0,
                     workingPreheatHide: true,
                 },
                 steamAmount:{
@@ -136,9 +139,15 @@ let modes = [
                     default:0,
                     range:null
                 },
+                stopBtnHide: true,
                 settingHide:true,
                 circleProgressPointHide: true,
             },
+        ]
+    },
+    {
+        title: '',
+        iconButtons: [
 
             { // 旋转
                 'icon': modeIcons[2].dir,
@@ -155,8 +164,8 @@ let modes = [
                     range:[70,180,10]
                 },
                 preheat:{
-                    set:true,
-                    default: 1,
+                    set:false,
+                    default: 0,
                     workingPreheatHide: true,
                 },
                 steamAmount:{
@@ -169,6 +178,7 @@ let modes = [
                     default:0,
                     range:null
                 },
+                stopBtnHide: true,
                 settingHide:true,
                 circleProgressPointHide: true,
             },
@@ -185,7 +195,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:38,
-                    range:[38,38,0]
+                    range:[38,38,1]
                 },
                 preheat:{
                     set:false,
@@ -194,7 +204,7 @@ let modes = [
                 },
                 steamAmount:{
                     set:false,
-                    default:2,
+                    default:0,
                     range:[1,4,1,"取消"]
                 },
                 fireAmount:{
@@ -202,6 +212,7 @@ let modes = [
                     default:0,
                     range:null
                 },
+                stopBtnHide: true,
                 settingHide:true,
                 circleProgressPointHide: true,
             },

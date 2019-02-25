@@ -51,9 +51,9 @@
     const storage = weex.requireModule('storage')
     import nativeService from '@/common/services/nativeService.js'
     import MideaHeader from '@/midea-component/header.vue'
-    import CarouselCard from '@/T0x9B/components/carouselCard.vue'
-    import RecipeCard from '@/T0x9B/components/recipeCard.vue'
-    import needList from '@//T0x9B/components/needList.vue'
+    import CarouselCard from './components/carouselCard.vue'
+    import RecipeCard from './components/recipeCard.vue'
+    import needList from './components/needList.vue'
 
     export default {
         components: {

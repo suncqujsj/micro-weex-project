@@ -141,14 +141,14 @@
     const storage = weex.requireModule('storage')
     import nativeService from '@/common/services/nativeService.js'
     import MideaHeader from '@/midea-component/header.vue'
-    import NeedList from '@/T0x9B/components/needList.vue'
-    import StepCard from '@/T0x9B/components/stepCard.vue'
+    import NeedList from './components/needList.vue'
+    import StepCard from './components/stepCard.vue'
     import mideaPopup from '@/midea-component/popup.vue'
     import MideaProgress from '@/midea-component/mProgress.vue'
     import MideaVote from '@/midea-component/mVote.vue'
     import MideaModal from '@/midea-component/modal.vue'
-    import scale from '@/T0x9B/components/scale.vue'
-    import cover from '@/T0x9B/components/cover.vue'
+    import scale from './components/scale.vue'
+    import cover from './components/cover.vue'
 
     export default {
         components: {

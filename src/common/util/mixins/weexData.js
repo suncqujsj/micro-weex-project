@@ -93,6 +93,7 @@ let workingModalMixin  = {
             this.showDetailVisibility = false;
             this.show = false;
             if(this.settingClickRecord){
+                this.showDetailVisibility = true;
                 this.show = true;
             }
             this.isWorkingPage = false;
@@ -249,9 +250,7 @@ let workingModalMixin  = {
             }
             var _item = cmdFun.getCurrentModeItem(tabs,analysisObj.recipeId.value,analysisObj.mode.value,_isRecipe);
             //this.currentItem = _item;
-            if(_item.settingHide){
-                this.hasSetting = false;
-            }
+            this.settingHide(_item);
             if(_item.circleProgressPointHide){
                 chartJson.pointShow = false;
             }
@@ -295,9 +294,7 @@ let workingModalMixin  = {
                 this.statusTag = '';
                 this.hasSetting = true;
                 this.hasStopOrContinueBtn = true;
-                if(_item.settingHide){
-                    this.hasSetting = false;
-                }
+                this.settingHide(_item);
                 chartJson.pointShow = false;
                 
             }
@@ -367,6 +364,14 @@ let workingModalMixin  = {
                 }
             }
 
+        },
+        /**
+         * 工作状态中 模式不可编辑设置
+         */
+        settingHide(item){
+            if(item.settingHide || item.standbyHide) {
+                this.hasSetting = false;
+            }
         },
         cancle(){
             var self = this;

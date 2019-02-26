@@ -105,7 +105,7 @@
                         return;
                     }
 
-                    this.setData(false, data.nextFmVer);
+                    this.setData(false, data.currFmVer); // hasNewVer=false时，显示currFrmVer里的信息 20190226 1506
                 });
             });
         },

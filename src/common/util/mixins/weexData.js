@@ -90,10 +90,11 @@ let workingModalMixin  = {
             // nativeService.alert(analysisObj);
             // this.setWarningDialog("",null,false);
             this.modalVisibility = false;
-            this.showDetailVisibility = false;
+            if(analysisObj.workingState.value > 2) {
+                this.showDetailVisibility = false;
+            }
             this.show = false;
             if(this.settingClickRecord){
-                this.showDetailVisibility = true;
                 this.show = true;
             }
             this.isWorkingPage = false;

@@ -119,10 +119,12 @@ let workingModalMixin  = {
         analysisFun(analysisObj) { 
             clearInterval(this.queryTimer);    
             this.cmdObj = analysisObj;
-            let chartJson = JSON.parse(JSON.stringify(this.chartJson));
-            chartJson.pointShow = false;
-            chartJson.progressCounter = 0;
-            this.chartJson = JSON.parse(JSON.stringify(chartJson));
+            // 安卓手机倒计时进度条有问题，暂时隐藏
+            // let chartJson = JSON.parse(JSON.stringify(this.chartJson));
+            // chartJson.pointShow = false;
+            // chartJson.progressCounter = 0;
+            // this.chartJson = JSON.parse(JSON.stringify(chartJson));
+
             //nativeService.alert(analysisObj);
             this.showDetailVisibility = false;
             this.show = false;    
@@ -209,9 +211,9 @@ let workingModalMixin  = {
             var allSettingSeconds = analysisObj.timeSetting.hour*60*60+analysisObj.timeSetting.minute*60+analysisObj.timeSetting.second;
             var allSeconds = _hour*60*60+_minute*60+_second;
             var progress_step = (allSettingSeconds-allSeconds)/allSettingSeconds*360; //360度倒计时为例
-            let chartJson = JSON.parse(JSON.stringify(this.chartJson));
-            chartJson.pointShow = true;
-            chartJson.progressCounter = progress_step;
+            // let chartJson = JSON.parse(JSON.stringify(this.chartJson));
+            // chartJson.pointShow = true;
+            // chartJson.progressCounter = progress_step;
             
             //this.cmdObj = analysisObj;
             if(analysisObj.probeRealTemperature.value>analysisObj.probeSetttingTemperature.value){
@@ -291,11 +293,11 @@ let workingModalMixin  = {
                 }
                 let settingTemp = analysisObj.temperature.upLowTemperature, realTemp = analysisObj.realTemperature.upLowTemperature;
                 let temp_step = realTemp/settingTemp*360; //360度倒计时为例
-                chartJson.pointShow = true;
-                chartJson.progressCounter = temp_step;
+                // chartJson.pointShow = true;
+                // chartJson.progressCounter = temp_step;
                 
             }
-            this.chartJson = JSON.parse(JSON.stringify(chartJson));
+            // this.chartJson = JSON.parse(JSON.stringify(chartJson));
             
 
             // 不是烹饪完成 ，并且处于预热温度到达

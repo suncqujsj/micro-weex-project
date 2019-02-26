@@ -368,7 +368,6 @@ let workingModalMixin  = {
          * 工作状态中 模式不可编辑设置
          */
         settingHide(item){
-            nativeService.alert(item);
             if(item.settingHide || item.standbyHide) {
                 this.hasSetting = false;
             }

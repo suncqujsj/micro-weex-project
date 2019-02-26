@@ -93,6 +93,7 @@ let workingModalMixin  = {
             this.showDetailVisibility = false;
             this.show = false;
             if(this.settingClickRecord){
+                this.showDetailVisibility = true;
                 this.show = true;
             }
             this.isWorkingPage = false;

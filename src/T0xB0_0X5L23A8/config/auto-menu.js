@@ -15,7 +15,7 @@ let data = [
                     'text': '蒸速冻饺',
                     'mode': 0xE0,
                     time:{
-                        set: false,
+                        set: true,
                         default:20,
                         range: [17,23,1],
                     },
@@ -1572,7 +1572,8 @@ let data = [
                 },
                 {
                     'icon': '',
-                    'text': '芝士海鲜千层面',
+                    'text': '芝士海鲜焗千层面',
+                    'ellipsisText':'芝士海鲜焗千...', // Giggs，当菜名超过7个字，为了避免遮挡或超宽，要增加 ellipsisText 属性作为过渡
                     'mode': 0xE0,
                     time:{
                         set: false,
@@ -1805,9 +1806,9 @@ let data = [
                     'text': '虫草花炖排骨',
                     'mode': 0xE0,
                     time:{
-                        set: false,
-                        default:8,
-                        range: null
+                        set: true,
+                        default:50,
+                        range: [45,55,1],
                     },
                     temperature:{
                         set: false,

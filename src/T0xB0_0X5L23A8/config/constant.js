@@ -14,5 +14,8 @@ module.exports = {
         },
         standby03:true, // 待机中打开03轮询
         // hms:[0,1,1],
+        hideChildLock:{
+            working:true
+        }
     }
 };

@@ -13,7 +13,7 @@ let modes = [
                 'mode': 0x01,
                 time:{
                     set: true,
-                    default:5,
+                    default:1,
                     range:[1,95,1],
                 },
                 temperature:{
@@ -56,7 +56,7 @@ let modes = [
                 preheat:{
                     set:true,
                     default: false,
-                    hide: false,
+                    hide: true, //工作中，隐藏预热选择
                 },
                 steamAmount:{
                     set:false,
@@ -87,7 +87,7 @@ let modes = [
                 preheat:{
                     set:false,
                     default: false,
-                    hide: false,
+                    hide: true, //工作中，隐藏预热选择
                 },
                 weight:{
                     set:true,
@@ -120,12 +120,12 @@ let modes = [
                 temperature:{
                     set: true,
                     default:100,
-                    range:[50,100,1],
+                    range:[50,100,10],
                 },
                 preheat:{
                     set:false,
                     default: false,
-                    hide: false,
+                    hide: true, //工作中，隐藏预热选择
                 },
                 weight:{
                     set:false,
@@ -168,7 +168,7 @@ let modes = [
                 preheat:{
                     set:false,
                     default: false,
-                    hide: false,
+                    hide: true, //工作中，隐藏预热选择
                 },
                 weight:{
                     set:false,

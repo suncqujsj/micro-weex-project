@@ -177,6 +177,7 @@ const accordionMixin = {
              if(!this.isWorkingPage){ //弹出框的参数为初始默认值,否则如果是工作页面，弹出框的参数为当前的温度时间蒸汽等
                 this.current = this.initCurrentData();
              }
+             
              this.accordions = this.initAccordions();
              this.current.isTemperatureChange = false;
              this.current.isTimeChange = false;
@@ -192,7 +193,6 @@ const accordionMixin = {
             // this.current.fireAmount = this.currentItem['fireAmount'].default;
             this.settingClickRecord = true;
             this.show = true;
-           
          
         },
         closeDialog(e) {

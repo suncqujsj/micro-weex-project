@@ -206,6 +206,10 @@ const deviceMessageMixin = {
              if(this.btnText == "继续" || this.btnText == "开始"){
                 record = 3;
             }
+            if(this.btnText == "开始"){
+                nativeService.toast('主人，要先放进食物哦');
+                return;
+            }
             var deviceCmd = cmdFun.cmdStartOrPause(record,this.device,this.index);
             nativeService.showLoading();
             nativeService.startCmdProcess(

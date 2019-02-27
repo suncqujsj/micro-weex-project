@@ -115,9 +115,49 @@ let modes = [
                 },
                 settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
 
-            }
+            },
+            {
+                'text': '蒸汽+微波',
+                'mode': 0x90,
+                standbyHide: true
+            },
+            {
+                'text': '蒸汽+热风对流',
+                'mode': 0x31,
+                standbyHide: true
+            },
         ]
     },
+    {
+        title: '',
+        iconButtons: [
+            {
+                'text': '蒸汽+微波',
+                'mode': 0x90,
+                standbyHide: true
+            },
+            {
+                'text': '蒸汽+热风对流',
+                'mode': 0x31,
+                standbyHide: true
+            },
+            {
+                'text': '热风对流+微波',
+                'mode': 0x71,
+                standbyHide: true
+            },
+            {
+                'text': '热风烧烤+微波',
+                'mode': 0x73,
+                standbyHide: true
+            },
+            {
+                'text': '烧烤+微波',
+                'mode': 0x70,
+                standbyHide: true
+            },
+        ]
+    }
 ];
 
 export default modes;

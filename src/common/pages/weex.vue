@@ -357,9 +357,9 @@
             });
             this.queryStatus(tabs,constant.device);
             // if(constant.device.standby03 && !this.isIos) {
-            if(!this.isIos) {
-                this.queryRunTimer(10);//轮询 已放在解析指令那里处理
-            }
+            // if(!this.isIos) {
+            //     this.queryRunTimer(10);//轮询 已放在解析指令那里处理
+            // }
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
             }

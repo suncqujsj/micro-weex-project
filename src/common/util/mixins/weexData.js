@@ -89,8 +89,11 @@ let workingModalMixin  = {
             //this.show = false;
             // nativeService.alert(analysisObj);
             // this.setWarningDialog("",null,false);
+            clearInterval(this.queryTimer);
             this.modalVisibility = false;
-            this.showDetailVisibility = false;
+            if(analysisObj.workingState.value > 2) {
+                this.showDetailVisibility = false;
+            }
             this.show = false;
             if(this.settingClickRecord){
                 this.show = true;
@@ -105,7 +108,7 @@ let workingModalMixin  = {
             //提示
             let isLackWater = false , isWaterBox = false, isDoorSwitch = false, isError = false;
             if(analysisObj.workingState.value == 2 || analysisObj.workingState.value == 1 ){
-                // clearInterval(this.queryTimer);
+                this.queryRunTimer(10);//10秒轮询 
                 this.setWarningDialog("",null,false);
                 if(analysisObj.isProbe.value && !this.currentItem.probe && this.show) {
                     this.show = false;
@@ -150,17 +153,21 @@ let workingModalMixin  = {
                 analysisObj.workingState.value = 3
             }
             if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6) {
-                
                 this.isWorkingPage = true;
                 this.analysisWorkingFun(analysisObj,tabs);
-            }
-            if(analysisObj.workingState.value == 3 || (this.constant.device.standby03 && analysisObj.workingState.value == 4)){
-                if(allSeconds<2*60){
+                if(allSeconds<2*60 && analysisObj.workingState.value == 3){
                     this.queryRunTimer(1);//6秒轮询 
                 }else{
                     this.queryRunTimer(6);//6秒轮询 
                 }
             }
+            // if(analysisObj.workingState.value == 3 || (this.constant.device.standby03 && analysisObj.workingState.value == 4)){
+            //     if(allSeconds<2*60){
+            //         this.queryRunTimer(1);//6秒轮询 
+            //     }else{
+            //         this.queryRunTimer(6);//6秒轮询 
+            //     }
+            // }
 
         },
         countDownRunTimer(minute,second,timeSet){
@@ -180,7 +187,6 @@ let workingModalMixin  = {
         },
         analysisWorkingFun(analysisObj,tabs) {
             var self = this , timer = null;
-            // clearInterval(this.countDownTimer);
             // nativeService.alert(analysisObj);
             this.isFooterShow = true;
             this.timeShow = false;
@@ -249,9 +255,7 @@ let workingModalMixin  = {
             }
             var _item = cmdFun.getCurrentModeItem(tabs,analysisObj.recipeId.value,analysisObj.mode.value,_isRecipe);
             //this.currentItem = _item;
-            if(_item.settingHide){
-                this.hasSetting = false;
-            }
+            this.settingHide(_item);
             if(_item.circleProgressPointHide){
                 chartJson.pointShow = false;
             }
@@ -295,9 +299,7 @@ let workingModalMixin  = {
                 this.statusTag = '';
                 this.hasSetting = true;
                 this.hasStopOrContinueBtn = true;
-                if(_item.settingHide){
-                    this.hasSetting = false;
-                }
+                this.settingHide(_item);
                 chartJson.pointShow = false;
                 
             }
@@ -367,6 +369,14 @@ let workingModalMixin  = {
                 }
             }
 
+        },
+        /**
+         * 工作状态中 模式不可编辑设置
+         */
+        settingHide(item){
+            if(item.settingHide || item.standbyHide) {
+                this.hasSetting = false;
+            }
         },
         cancle(){
             var self = this;

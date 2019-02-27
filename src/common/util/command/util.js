@@ -338,7 +338,6 @@ export default {
     message.setByte(messageBody, 1,0x02); 
     message.setByte(messageBody, 2,0x02);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
-    nativeService.alert(this.cmdToEasy(sendcmd)); // Giggs
     return sendMessage;
   },
   //暂停or继续指令

@@ -17,7 +17,7 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -69,7 +69,7 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -128,7 +128,7 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:95,
                         range:[35,70,1,75,100,5]
                     },
@@ -191,7 +191,7 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:95,
                         range:[35,70,1,75,100,5]
                     },
@@ -236,7 +236,7 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -304,7 +304,7 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -373,7 +373,7 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -424,7 +424,7 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -485,7 +485,7 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -553,7 +553,7 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -605,7 +605,7 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -625,7 +625,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x4E,
+                        default: 0x4F,
                         range:null
                     },
                     detail: {
@@ -661,7 +661,7 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -681,7 +681,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x4F,
+                        default: 0x50,
                         range:null
                     },
                     detail: {
@@ -721,7 +721,7 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -771,7 +771,7 @@ let data = [
                         range:[5,120,1]
                     },
                     temperature:{
-                        set: true,
+                        set: false,
                         default:100,
                         range:[35,70,1,75,100,5]
                     },
@@ -817,7 +817,7 @@ let data = [
                             range:[5,120,1]
                         },
                         temperature:{
-                            set: true,
+                            set: false,
                             default:100,
                             range:[35,70,1,75,100,5]
                         },

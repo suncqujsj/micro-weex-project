@@ -432,7 +432,7 @@
             },
             onIconButtonClicked: function(item){
                 if(!item.probe && this.cmdObj.isProbe.value){
-                    nativeService.toast("该模式不支持肉类探针");
+                    nativeService.toast("主人，为了您的食物更美味，请在烤箱上操作探针模式。");
                     return;
                 }
                 this.currentItem = item;

@@ -4,6 +4,7 @@
  */
 
 import modeIcons from "../../common/mapping/modeIcons";
+let probe = false;
 
 let modes = [
     {
@@ -31,11 +32,11 @@ let modes = [
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 probeTemperature:{
-                    set: true,
+                    set: probe,
                     default:65,
                     range:[30,90,1],
                 },
-                probe: true,//支持肉类探针
+                probe,//支持肉类探针
                 settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             },
@@ -61,11 +62,11 @@ let modes = [
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 probeTemperature:{
-                    set: true,
+                    set: probe,
                     default:65,
                     range:[30,90,1],
                 },
-                probe: true,//支持肉类探针
+                probe,//支持肉类探针
                 settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             },
@@ -91,11 +92,11 @@ let modes = [
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 probeTemperature:{
-                    set: true,
+                    set: probe,
                     default:65,
                     range:[30,90,1],
                 },
-                probe: true,//支持肉类探针
+                probe,//支持肉类探针
                 settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             },
@@ -121,11 +122,11 @@ let modes = [
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 probeTemperature:{
-                    set: true,
+                    set: probe,
                     default:65,
                     range:[30,90,1],
                 },
-                probe: true,//支持肉类探针
+                probe,//支持肉类探针
                 settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             }

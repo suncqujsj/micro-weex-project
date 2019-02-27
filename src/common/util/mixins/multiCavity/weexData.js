@@ -25,6 +25,7 @@ let workingModalMixin  = {
             srcollPaddingBottom:'',
             cmdObj: {'down_cavity':cmdFun.initAnalysisObj(),'up_cavity':cmdFun.initAnalysisObj()},
             isCavityWorking:false,
+            isWorkingPage: false,
 
             chartJson: {
                 "completedColor":"#FFFFFF", //环形进度条未完成后的颜色默认#267AFF
@@ -134,34 +135,59 @@ let workingModalMixin  = {
             this.dialogSetting(analysisObj);
            
             this.isCavityWorking = false;
+            this.isWorkingPage = false;
             let downCavityStatus = analysisObj.down_cavity.workingState.value;
             let upCavityStatus = analysisObj.up_cavity.workingState.value;
+            if(this.index==0 && (upCavityStatus==2||upCavityStatus==1)){
+                this.queryRunTimer(10);//6秒轮询 
+            }
+            if(this.index==1 && (downCavityStatus==2||downCavityStatus==1)){
+                this.queryRunTimer(10);//6秒轮询 
+            }
+            
             if(this.index==0 && (upCavityStatus==3||upCavityStatus==4||upCavityStatus==6)){
                 this.isCavityWorking = true;
+                this.isWorkingPage = true;
                 this.analysisWorkingFun(analysisObj.up_cavity,this.pages[0].tabs);
+                var _hour = analysisObj.up_cavity.timeRemaining.hour, _minute = analysisObj.up_cavity.timeRemaining.minute, _second = analysisObj.up_cavity.timeRemaining.second;
+                var allSeconds = _hour*60*60+_minute*60+_second;
+                if(allSeconds<2*60 && upCavityStatus==3){
+                    this.queryRunTimer(1);//6秒轮询 
+                }else{
+                    this.queryRunTimer(6);//6秒轮询 
+                }
             }
              if(this.index==1 && (downCavityStatus==3||downCavityStatus==4||downCavityStatus==6)){
                 this.isCavityWorking = true;
+                this.isWorkingPage = true;
                 this.analysisWorkingFun(analysisObj.down_cavity,this.pages[1].tabs);
-            }
-            if(this.index==0 && upCavityStatus==3){
-                var _hour = analysisObj.up_cavity.timeRemaining.hour, _minute = analysisObj.up_cavity.timeRemaining.minute, _second = analysisObj.up_cavity.timeRemaining.second;
-                var allSeconds = _hour*60*60+_minute*60+_second;
-                if(allSeconds<2*60){
-                    this.queryRunTimer(1);//6秒轮询 
-                }else{
-                    this.queryRunTimer(6);//6秒轮询 
-                }
-            }
-            if(this.index==1 && downCavityStatus==3){
                 var _hour = analysisObj.down_cavity.timeRemaining.hour, _minute = analysisObj.down_cavity.timeRemaining.minute, _second = analysisObj.down_cavity.timeRemaining.second;
                 var allSeconds = _hour*60*60+_minute*60+_second;
-                if(allSeconds<2*60){
+                if(allSeconds<2*60 && downCavityStatus==3){
                     this.queryRunTimer(1);//6秒轮询 
                 }else{
                     this.queryRunTimer(6);//6秒轮询 
                 }
             }
+          
+            // if(this.index==0 && upCavityStatus==3){
+            //     var _hour = analysisObj.up_cavity.timeRemaining.hour, _minute = analysisObj.up_cavity.timeRemaining.minute, _second = analysisObj.up_cavity.timeRemaining.second;
+            //     var allSeconds = _hour*60*60+_minute*60+_second;
+            //     if(allSeconds<2*60){
+            //         this.queryRunTimer(1);//6秒轮询 
+            //     }else{
+            //         this.queryRunTimer(6);//6秒轮询 
+            //     }
+            // }
+            // if(this.index==1 && downCavityStatus==3){
+            //     var _hour = analysisObj.down_cavity.timeRemaining.hour, _minute = analysisObj.down_cavity.timeRemaining.minute, _second = analysisObj.down_cavity.timeRemaining.second;
+            //     var allSeconds = _hour*60*60+_minute*60+_second;
+            //     if(allSeconds<2*60){
+            //         this.queryRunTimer(1);//6秒轮询 
+            //     }else{
+            //         this.queryRunTimer(6);//6秒轮询 
+            //     }
+            // }
         },
         //  countDownRunTimer(timeSet){
         //     var self = this;

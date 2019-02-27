@@ -16,7 +16,8 @@ module.exports = {
         hideChildLock:{
             standby: true,
             working:true
-        }
+        },
+        showPreheatContinueBtn: true // 当设备预热完成时，显示继续按钮
     }
 };
 
@@ -30,4 +31,5 @@ module.exports = {
  * 5.待机模式打开03轮询
  * 6.待机模式下，插入探针，主动关闭不支持的模式弹窗
  * 7.探针温度必须小于腔体温度
+ * 8.当设备预热完成时，显示继续按钮
  * */

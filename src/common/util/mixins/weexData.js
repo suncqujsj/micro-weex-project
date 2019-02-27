@@ -332,7 +332,7 @@ let workingModalMixin  = {
                 this.hasStopOrContinueBtn = false;
             }
 
-            if(_item.stopBtnHide){
+            if(_item.stopBtnHide && (!this.constant.device.showPreheatContinueBtn || !analysisObj.displaySign.preheatTemperature)){
                 this.hasStopOrContinueBtn = false;
             }
             this.chartJson = JSON.parse(JSON.stringify(chartJson));

@@ -8,11 +8,14 @@ module.exports = {
         type: 0xB0,
         page_title: "微波炉",
         widget_name: 'MSO_T0xB0',
-        widget_version: '5.0.3',
+        widget_version: '5.0.4',
         extra1: {
             sn8: '0X5L23A8'
         },
         standby03:true, // 待机中打开03轮询
         // hms:[0,1,1],
+        hideChildLock:{
+            working:true
+        }
     }
 };

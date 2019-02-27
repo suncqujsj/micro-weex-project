@@ -100,6 +100,11 @@ let modes = [
                     default:1,
                     range:[1,30,1]
                 },
+                fireAmount:{
+                    set:true,
+                    default:10,
+                    range:[10,50,20, 80,100,20] // 1,3,5,8,10
+                },
                 settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
 
             },

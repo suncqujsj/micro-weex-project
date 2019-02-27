@@ -284,7 +284,7 @@ export default {
       message.setByte(messageBody, 10, set_mode);
       message.setByte(messageBody, 12, params.temperature);
       message.setByte(messageBody, 14, params.temperature);
-      message.setByte(messageBody, 15, params.fireAmount/10);
+      message.setByte(messageBody, 15, params.fireAmount);
       message.setByte(messageBody, 16, params.steamAmount || params.weight/10);
     }
     if(controltype == 1){//工作中设置类 byte11 发04，其他byte发ff

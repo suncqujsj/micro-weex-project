@@ -89,6 +89,7 @@ let workingModalMixin  = {
             //this.show = false;
             // nativeService.alert(analysisObj);
             // this.setWarningDialog("",null,false);
+            clearInterval(this.queryTimer);
             this.modalVisibility = false;
             if(analysisObj.workingState.value > 2) {
                 this.showDetailVisibility = false;
@@ -107,7 +108,7 @@ let workingModalMixin  = {
             //提示
             let isLackWater = false , isWaterBox = false, isDoorSwitch = false, isError = false;
             if(analysisObj.workingState.value == 2 || analysisObj.workingState.value == 1 ){
-                // clearInterval(this.queryTimer);
+                this.queryRunTimer(10);//10秒轮询 
                 this.setWarningDialog("",null,false);
                 if(analysisObj.isProbe.value && !this.currentItem.probe && this.show) {
                     this.show = false;
@@ -152,17 +153,21 @@ let workingModalMixin  = {
                 analysisObj.workingState.value = 3
             }
             if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6) {
-                
                 this.isWorkingPage = true;
                 this.analysisWorkingFun(analysisObj,tabs);
-            }
-            if(analysisObj.workingState.value == 3 || (this.constant.device.standby03 && analysisObj.workingState.value == 4)){
-                if(allSeconds<2*60){
+                if(allSeconds<2*60 && analysisObj.workingState.value == 3){
                     this.queryRunTimer(1);//6秒轮询 
                 }else{
                     this.queryRunTimer(6);//6秒轮询 
                 }
             }
+            // if(analysisObj.workingState.value == 3 || (this.constant.device.standby03 && analysisObj.workingState.value == 4)){
+            //     if(allSeconds<2*60){
+            //         this.queryRunTimer(1);//6秒轮询 
+            //     }else{
+            //         this.queryRunTimer(6);//6秒轮询 
+            //     }
+            // }
 
         },
         countDownRunTimer(minute,second,timeSet){
@@ -182,7 +187,6 @@ let workingModalMixin  = {
         },
         analysisWorkingFun(analysisObj,tabs) {
             var self = this , timer = null;
-            // clearInterval(this.countDownTimer);
             // nativeService.alert(analysisObj);
             this.isFooterShow = true;
             this.timeShow = false;

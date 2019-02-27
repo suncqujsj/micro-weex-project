@@ -442,7 +442,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x22,
+                        default: 0x4B,
                         range:null
                     },
                     detail: {
@@ -1836,7 +1836,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x50,
+                        default: 0x8C,
                         range:null
                     },
                     detail: {

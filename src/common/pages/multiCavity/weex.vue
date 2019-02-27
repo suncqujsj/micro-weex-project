@@ -4,7 +4,7 @@
 
 <template>
     <div @viewappear="viewappear" @viewdisappear="viewdisappear">
-        <div class="bg">
+        <div class="bg" v-if="!isCavityWorking">
             <sf-header leftImg="img/header/public_ic_back_white@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native" >
                 <div slot="headerTitle">
                     <sf-tab ref="mTab" :tabArray="pages" @tabClicked="tabClicked">
@@ -412,6 +412,9 @@
             this.queryStatus(pages,constant.device,index);
             //this.queryRunTimer(20);//20秒轮询 
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
+            if(!this.isIos) {
+                this.queryRunTimer(10);//轮询 已放在解析指令那里处理
+            }
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
             }

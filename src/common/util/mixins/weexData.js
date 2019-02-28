@@ -5,6 +5,7 @@
  */
 // var numberRecord = 0; //记录跳页面的次数
 import cmdFun from "../command/util.js"; //解析指令
+const objectAssign = require('object-assign');
 import nativeService  from '@/common/services/nativeService';
 //ios5.4.0以下版本判断做兼容倒计时组件
 let isIosLess5_4 = false;
@@ -58,9 +59,6 @@ let workingModalMixin  = {
                 finishStatus: false, //完成状态
                 preheatFinishTig: false, //预热完成指引
                 isFooterShow: false,
-    
-                // cmdObj:cmdFun.initAnalysisObj(), //指令解析对象
-              
                 timeShow: false, //是否显示时间
                 workSpecialStatusText: '',  //显示当前状态
                 queryTimer: null,  
@@ -99,6 +97,7 @@ let workingModalMixin  = {
                 this.show = true;
             }
             this.isWorkingPage = false;
+            analysisObj = this.formatCmdObj(analysisObj)
             this.cmdObj = analysisObj;
             this.probeTempText = '°C';
             let chartJson = JSON.parse(JSON.stringify(this.chartJson));
@@ -170,6 +169,29 @@ let workingModalMixin  = {
             // }
 
         },
+
+        /**
+         * 处理 03，04 数据
+         */
+        formatCmdObj(cmdObj){
+            let customData = {
+                temperatureText:null // 工作中显示的设定温度文案
+            };
+
+            if(cmdObj.isProbe.value) { // 有探针显示探针温度
+                customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature);
+            } else { // 非探针模式显示较大温度
+                customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature >= cmdObj.temperature.downLowTemperature ? cmdObj.temperature.upLowTemperature : cmdObj.temperature.downLowTemperature);
+            }
+
+            let buffer = objectAssign({}, cmdObj, customData);
+            return buffer;
+        },
+
+        addTemperatureUnit(temp){
+            return temp + '°';
+        },
+
         countDownRunTimer(minute,second,timeSet){
             var self = this;
             var allSeconds = minute*60+second;
@@ -313,7 +335,7 @@ let workingModalMixin  = {
                 this.finishStatus = true;
                 this.preheatFinishTig = true;
                 this.tag_next = '';
-                this.statusTag = '已预热到'+analysisObj.temperature.upLowTemperature+'°';
+                this.statusTag = '已预热到'+analysisObj.temperatureText;
                 this.hasStopOrContinueBtn = true;
                 this.hasSetting = false;
                 this.btnText = "开始";
@@ -332,7 +354,7 @@ let workingModalMixin  = {
                 this.hasStopOrContinueBtn = false;
             }
 
-            if(_item.stopBtnHide){
+            if(_item.stopBtnHide && (!this.constant.device.showPreheatContinueBtn || !analysisObj.displaySign.preheatTemperature)){
                 this.hasStopOrContinueBtn = false;
             }
             this.chartJson = JSON.parse(JSON.stringify(chartJson));

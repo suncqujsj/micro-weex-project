@@ -90,7 +90,7 @@
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
                 <!--</template>-->
                 <!--<text v-if="currentItem" class="content-title" @click="showDetailModal">{{currentItem.text}}</text>-->
-                <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header  b-b-1" :title="currentItem.text" titleText="#000000" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
+                <!--<modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header  b-b-1" :title="currentItem.text" titleText="#000000" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
 
                 <div v-if="currentItem && currentItem.probe && workingAnalysisObj.isProbe.value">
                     <sf-accordion type="picker" :value="setValue('probeTemperature')" unit="°C" title="设置探针温度" isFolded="true"  @callback="updateAccordionFoldingStatus">
@@ -121,12 +121,30 @@
                             </sf-accordion>
                         </div>
                     </div>
+                </div>-->
+                 <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header b-b-1" :title="currentItem.text" titleText="#000000" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
+
+                 <div v-for="(item, index) in accordions" class="modal-header">
+                    <div v-if="item.type==='picker' && (currentItem && currentItem[item.key] && (!currentItem[item.key].hide && isCavityWorking || !isCavityWorking))">
+                        <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set && ((!workingAnalysisObj.isProbe.value && item.key!='probeTemperature') || (currentItem.probe && workingAnalysisObj.isProbe.value && !currentItem[item.key].isProbeThenThisHide)) " :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                            <div slot="content">
+                                <wx-picker :pickerIndex="index" :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                            </div>
+                        </sf-accordion>
+                    </div>
+                    <div v-if="item.type==='switch' && (currentItem && currentItem[item.key] && (!currentItem[item.key].hide && isCavityWorking || !isCavityWorking)) && !current.preheatHide">
+                        <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set && ((!workingAnalysisObj.isProbe.value && item.key!='probeTemperature') || (currentItem.probe && workingAnalysisObj.isProbe.value && !currentItem[item.key].isProbeThenThisHide))  " :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
+                            <div slot="right">
+                                <midea-switch2 :itemKey="item.key" :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
+                            </div>
+                        </sf-accordion>
+                    </div>
                 </div>
 
             </div>
         </sf-dialog>
 
-        <detail-modal :show="showDetailVisibility" @close="closeDetailModal">
+        <detail-modal :show="showDetailVisibility" :showMask="false" @close="closeDetailModal">
             <div slot="title">
                 <modal-header leftImg="img/header/public_ic_gray@3x.png" class="modal-header" :title="modeText" titleText="#000000" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>
             </div>
@@ -412,9 +430,9 @@
             this.queryStatus(pages,constant.device,index);
             //this.queryRunTimer(20);//20秒轮询 
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
-            if(!this.isIos) {
-                this.queryRunTimer(10);//轮询 已放在解析指令那里处理
-            }
+            // if(!this.isIos) {
+            //     this.queryRunTimer(10);//轮询 已放在解析指令那里处理
+            // }
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
             }
@@ -508,10 +526,6 @@
                 this.pages[x].tabs = tabs;
             },
             onIconButtonClicked: function(item){
-                if(!item.probe && this.cmdObj.up_cavity.isProbe.value){
-                    nativeService.toast("该模式不支持肉类探针");
-                    return;
-                }
                 this.currentItem = item;
                 // nativeService.alert(this.currentItem);
                 this.modeText = item.text;

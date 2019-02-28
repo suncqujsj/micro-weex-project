@@ -237,8 +237,9 @@
             <!--设置参数-->
             <div class="detail_section" v-if="!finishStatus" @click="setting(cmdObj)">
                 <div class="detail_item">
-                    <text class="detail_text">{{cmdObj.mode.text}} {{cmdObj.temperature.upLowTemperature>0?cmdObj.temperature.upLowTemperature:''}}</text>
-                    <text class="temp_text">{{cmdObj.temperature.upLowTemperature>0?"°":''}}</text>
+                    <text class="detail_text">{{cmdObj.mode.text}} {{cmdObj.temperatureText}}</text>
+                    <!--<text class="detail_text">{{cmdObj.mode.text}} {{cmdObj.temperature.upLowTemperature>0?cmdObj.temperature.upLowTemperature + '°':''}}{{cmdObj.temperature.upLowTemperature!==cmdObj.temperature.downLowTemperature && cmdObj.temperature.downLowTemperature>0?'，'+cmdObj.temperature.downLowTemperature+ '°':''}}</text>-->
+                    <!--<text class="temp_text">{{cmdObj.temperature.upLowTemperature>0?"°":''}}</text>-->
                 </div>
                 <div class="detail_item" v-if="hasSetting">
                     <div class="edit_section">
@@ -432,7 +433,7 @@
             },
             onIconButtonClicked: function(item){
                 if(!item.probe && this.cmdObj.isProbe.value){
-                    nativeService.toast("该模式不支持肉类探针");
+                    nativeService.toast("主人，为了您的食物更美味，请在烤箱上操作探针模式。");
                     return;
                 }
                 this.currentItem = item;

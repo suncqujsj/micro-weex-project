@@ -26,52 +26,6 @@ const accordionMixin = {
             return {
                 accordions: this.initAccordions(),
                 currentItem:null,
-                // currentItem:{
-                //     'icon': '',
-                //     'text': '清蒸草鱼香菇',
-                //     'mode': 0xE0,
-                //     time:{
-                //         set: true,
-                //         default:13,
-                //         range:[5,120,1]
-                //     },
-                //     temperature:{
-                //         set: true,
-                //         default:100,
-                //         range:[35,70,1,75,100,5]
-                //     },
-                //     preheat:{
-                //         set:false,
-                //         default: false
-                //     },
-                //     steamAmount:{
-                //         set:false,
-                //         default:0,
-                //         range:null
-                //     },
-                //     fireAmount:{
-                //         set:false,
-                //         default:0,
-                //         range:null
-                //     },
-                //     weight:{
-                //         set:false,
-                //         default:0,
-                //         range:null
-                //     },
-                //     recipeId:{
-                //         set:false,
-                //         default: 0x41,
-                //         range:null
-                //     },
-                //     probeTemperature:{
-                //         set: false,
-                //         default:0,
-                //         range:null,
-                //     },
-                //     probe: null,//肉类探针
-                //     detail: null
-                // },
                 current:this.initCurrentData(),
                 show: false
             }

@@ -199,7 +199,7 @@ const accordionMixin = {
             switch (sn8){
                 case '08T7428E':
                 case '0T7L421F':
-                    if(jsonCmd.probeTemperature >= jsonCmd.temperature) {
+                    if(this.cmdObj.isProbe.value && (jsonCmd.probeTemperature >= jsonCmd.temperature)) {
                         return '探针温度必须小于腔体温度';
                     }
                 default:

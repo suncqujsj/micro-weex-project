@@ -194,6 +194,7 @@ const accordionMixin = {
             this.controlDevice(jsonCmd, e);
         },
         validate(jsonCmd){
+            nativeService.alert(this.cmdObj.isProbe.value)
             let sn8 = this.device.extra1.sn8;
             switch (sn8){
                 case '08T7428E':

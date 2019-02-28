@@ -14,7 +14,7 @@ let modes = [
                 time:{
                     set: true,
                     default:10,
-                    range:[1,120,1]
+                    range:[1,60,1,65,120,5]
                 },
                 temperature:{
                     set: true,

@@ -237,7 +237,8 @@
             <!--设置参数-->
             <div class="detail_section" v-if="!finishStatus" @click="setting(cmdObj)">
                 <div class="detail_item">
-                    <text class="detail_text">{{cmdObj.mode.text}} {{cmdObj.temperature.upLowTemperature>0?cmdObj.temperature.upLowTemperature + '°':''}}{{cmdObj.temperature.upLowTemperature!==cmdObj.temperature.downLowTemperature && cmdObj.temperature.downLowTemperature>0?'，'+cmdObj.temperature.downLowTemperature+ '°':''}}</text>
+                    <text class="detail_text">{{cmdObj.mode.text}} {{cmdObj.temperatureText}}</text>
+                    <!--<text class="detail_text">{{cmdObj.mode.text}} {{cmdObj.temperature.upLowTemperature>0?cmdObj.temperature.upLowTemperature + '°':''}}{{cmdObj.temperature.upLowTemperature!==cmdObj.temperature.downLowTemperature && cmdObj.temperature.downLowTemperature>0?'，'+cmdObj.temperature.downLowTemperature+ '°':''}}</text>-->
                     <!--<text class="temp_text">{{cmdObj.temperature.upLowTemperature>0?"°":''}}</text>-->
                 </div>
                 <div class="detail_item" v-if="hasSetting">

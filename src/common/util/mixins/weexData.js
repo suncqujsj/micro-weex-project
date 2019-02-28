@@ -58,9 +58,6 @@ let workingModalMixin  = {
                 finishStatus: false, //完成状态
                 preheatFinishTig: false, //预热完成指引
                 isFooterShow: false,
-    
-                // cmdObj:cmdFun.initAnalysisObj(), //指令解析对象
-              
                 timeShow: false, //是否显示时间
                 workSpecialStatusText: '',  //显示当前状态
                 queryTimer: null,  

@@ -154,7 +154,7 @@ let workingModalMixin  = {
             if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6) {
                 this.isWorkingPage = true;
                 this.analysisWorkingFun(analysisObj,tabs);
-                if(allSeconds<2*60 && analysisObj.workingState.value == 3){
+                if(allSeconds<=60 && analysisObj.workingState.value == 3){
                     this.queryRunTimer(1);//6秒轮询 
                 }else{
                     this.queryRunTimer(6);//6秒轮询 
@@ -191,22 +191,6 @@ let workingModalMixin  = {
         addTemperatureUnit(temp){
             return temp + '°';
         },
-
-        countDownRunTimer(minute,second,timeSet){
-            var self = this;
-            var allSeconds = minute*60+second;
-            var countDownTimer = setInterval(function(){
-                if(self.isTimerStop||allSeconds<=0){
-                    clearInterval(countDownTimer);
-                    return;
-                }
-                if(allSeconds<=60 && allSeconds>0){
-                     allSeconds--;   
-                     self.tag_next = '秒';
-                     self.workSpecialStatusText = allSeconds;
-                }
-            },timeSet*1000);
-        },
         analysisWorkingFun(analysisObj,tabs) {
             var self = this , timer = null;
             // nativeService.alert(analysisObj);
@@ -232,7 +216,7 @@ let workingModalMixin  = {
             var progress_step = (allSettingSeconds-allSeconds)/allSettingSeconds*360; //360度倒计时为例
             let chartJson = JSON.parse(JSON.stringify(this.chartJson));
             chartJson.pointShow = true;
-            chartJson.progressCounter = progress_step;
+            chartJson.progressCounter = parseInt(progress_step);
 
             if(analysisObj.probeRealTemperature.value>analysisObj.probeSetttingTemperature.value){
                 analysisObj.probeRealTemperature.value = analysisObj.probeSetttingTemperature.value;
@@ -368,29 +352,21 @@ let workingModalMixin  = {
                     this.workSpecialStatusText = _hour+"  "+(_minute>9?_minute:'0'+_minute);
                     this.tag_next = '分';
                     this.hasHour = true;
-                }
-                else if(allSeconds<60*60 && allSeconds>2*60){//大于2分钟，小于1小时，只显示分
-                    // if(allSeconds==60*60){_minute=59;}
+                }else if(allSeconds>60){//大于1分钟，小于1小时，只显示分
                     this.workSpecialStatusText = _minute;
                     this.tag_next = '分';
                     this.hasHour = false;
-                }else{ //小于2分钟开始倒计时
+                }
+                else{ //小于1分钟开始倒计时
                     this.hasHour = false;
-                    if(allSeconds>60){
-                        this.workSpecialStatusText = 1;
-                        this.tag_next = '分';
-                    }else{
-                        if(allSeconds==60){
-                            allSeconds = allSeconds-1;
-                        }
-                        this.workSpecialStatusText = allSeconds;
-                        this.tag_next = '秒';
-                        // this.countDownRunTimer(_minute,_second,1);
-                    
+                    if(allSeconds==60){
+                        allSeconds = allSeconds-1;
                     }
+                    this.workSpecialStatusText = allSeconds;
+                    this.tag_next = '秒';
+                    
                 }
             }
-
         },
         /**
          * 工作状态中 模式不可编辑设置

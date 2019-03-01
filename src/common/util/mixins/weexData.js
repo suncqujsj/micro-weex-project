@@ -238,6 +238,10 @@ let workingModalMixin  = {
                 this.lightImg = "img/light_off@3x.png";
             }
 
+            if(analysisObj.isProbe.value){
+                this.statusTag = '当前实时温度';
+            }
+
             if(analysisObj.workingState.value === 3){
                 this.timeShow = true;
                 this.hasSetting = true;
@@ -247,6 +251,17 @@ let workingModalMixin  = {
                 // if(analysisObj.mode.value == 0xE0){//云菜谱没有设置时间温度蒸汽那些
                 //      this.hasSetting = false;
                 // }
+
+                if(this.device.extra1.sn8 === '08T7428E') {
+                    this.probeProgress = '工作中';
+                    this.timeShow = false;
+                    this.hasHour = false;
+                    this.probeTempText = '';
+                    this.statusTag = '探针模式';
+                    this.cmdObj.mode.text = '';
+                    this.cmdObj.temperatureText = '';
+                    chartJson.pointShow = false;
+                }
             }
              if(analysisObj.workingState.value == 6){
                 this.timeShow = true;
@@ -259,9 +274,6 @@ let workingModalMixin  = {
                 // if(analysisObj.mode.value == 0xE0){//云菜谱没有设置时间温度蒸汽那些
                 //      this.hasSetting = false;
                 // }
-            }
-            if(analysisObj.isProbe.value){
-                this.statusTag = '当前实时温度';
             }
             
             var _isRecipe = false;

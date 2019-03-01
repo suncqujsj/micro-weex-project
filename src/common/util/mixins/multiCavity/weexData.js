@@ -121,10 +121,10 @@ let workingModalMixin  = {
             clearInterval(this.queryTimer);    
             this.cmdObj = analysisObj;
             // 安卓手机倒计时进度条有问题，暂时隐藏
-            // let chartJson = JSON.parse(JSON.stringify(this.chartJson));
-            // chartJson.pointShow = false;
-            // chartJson.progressCounter = 0;
-            // this.chartJson = JSON.parse(JSON.stringify(chartJson));
+            let chartJson = JSON.parse(JSON.stringify(this.chartJson));
+            chartJson.pointShow = false;
+            chartJson.progressCounter = 0;
+            this.chartJson = JSON.parse(JSON.stringify(chartJson));
 
             //nativeService.alert(analysisObj);
             this.showDetailVisibility = false;
@@ -151,7 +151,7 @@ let workingModalMixin  = {
                 this.analysisWorkingFun(analysisObj.up_cavity,this.pages[0].tabs);
                 var _hour = analysisObj.up_cavity.timeRemaining.hour, _minute = analysisObj.up_cavity.timeRemaining.minute, _second = analysisObj.up_cavity.timeRemaining.second;
                 var allSeconds = _hour*60*60+_minute*60+_second;
-                if(allSeconds<2*60 && upCavityStatus==3){
+                if(allSeconds<=60 && upCavityStatus==3){
                     this.queryRunTimer(1);//6秒轮询 
                 }else{
                     this.queryRunTimer(6);//6秒轮询 
@@ -163,53 +163,12 @@ let workingModalMixin  = {
                 this.analysisWorkingFun(analysisObj.down_cavity,this.pages[1].tabs);
                 var _hour = analysisObj.down_cavity.timeRemaining.hour, _minute = analysisObj.down_cavity.timeRemaining.minute, _second = analysisObj.down_cavity.timeRemaining.second;
                 var allSeconds = _hour*60*60+_minute*60+_second;
-                if(allSeconds<2*60 && downCavityStatus==3){
+                if(allSeconds<=60 && downCavityStatus==3){
                     this.queryRunTimer(1);//6秒轮询 
                 }else{
                     this.queryRunTimer(6);//6秒轮询 
                 }
             }
-          
-            // if(this.index==0 && upCavityStatus==3){
-            //     var _hour = analysisObj.up_cavity.timeRemaining.hour, _minute = analysisObj.up_cavity.timeRemaining.minute, _second = analysisObj.up_cavity.timeRemaining.second;
-            //     var allSeconds = _hour*60*60+_minute*60+_second;
-            //     if(allSeconds<2*60){
-            //         this.queryRunTimer(1);//6秒轮询 
-            //     }else{
-            //         this.queryRunTimer(6);//6秒轮询 
-            //     }
-            // }
-            // if(this.index==1 && downCavityStatus==3){
-            //     var _hour = analysisObj.down_cavity.timeRemaining.hour, _minute = analysisObj.down_cavity.timeRemaining.minute, _second = analysisObj.down_cavity.timeRemaining.second;
-            //     var allSeconds = _hour*60*60+_minute*60+_second;
-            //     if(allSeconds<2*60){
-            //         this.queryRunTimer(1);//6秒轮询 
-            //     }else{
-            //         this.queryRunTimer(6);//6秒轮询 
-            //     }
-            // }
-        },
-        //  countDownRunTimer(timeSet){
-        //     var self = this;
-        //      this.countDownTimer = setInterval(function(){
-        //         self.queryStatus();
-        //     },timeSet*1000);
-        // },
-        countDownRunTimer(allSeconds,timeSet){
-            var self = this;
-            var countDownTimer = setInterval(function(){
-                if(self.isTimerStop||allSeconds<=0){
-                    self.allSeconds = null;
-                    clearInterval(countDownTimer);
-                    return;
-                }
-                if(allSeconds<=60 && allSeconds>0){
-                     allSeconds--;   
-                     self.tag_next = '秒';
-                     self.allSeconds = allSeconds;
-                     self.workSpecialStatusText = allSeconds;
-                }
-            },timeSet*1000);
         },
         analysisWorkingFun(analysisObj,tabs) {
             this.workingAnalysisObj = analysisObj;
@@ -237,9 +196,9 @@ let workingModalMixin  = {
             var allSettingSeconds = analysisObj.timeSetting.hour*60*60+analysisObj.timeSetting.minute*60+analysisObj.timeSetting.second;
             var allSeconds = _hour*60*60+_minute*60+_second;
             var progress_step = (allSettingSeconds-allSeconds)/allSettingSeconds*360; //360度倒计时为例
-            // let chartJson = JSON.parse(JSON.stringify(this.chartJson));
-            // chartJson.pointShow = true;
-            // chartJson.progressCounter = progress_step;
+            let chartJson = JSON.parse(JSON.stringify(this.chartJson));
+            chartJson.pointShow = true;
+            chartJson.progressCounter = parseInt(progress_step);
             
             //this.cmdObj = analysisObj;
             if(analysisObj.probeRealTemperature.value>analysisObj.probeSetttingTemperature.value){
@@ -297,7 +256,6 @@ let workingModalMixin  = {
                this.probeProgress = '烹饪完成';
                this.cancleBtnText = '完成';
                this.cancleIcon = 'img/finish_icon@2x.png';
-            //    this.countDownRunTimer(0,0,1);
                     
             }
             // 不是烹饪完成 ，并且处于预热中状态
@@ -319,11 +277,11 @@ let workingModalMixin  = {
                 }
                 let settingTemp = analysisObj.temperature.upLowTemperature, realTemp = analysisObj.realTemperature.upLowTemperature;
                 let temp_step = realTemp/settingTemp*360; //360度倒计时为例
-                // chartJson.pointShow = true;
-                // chartJson.progressCounter = temp_step;
+                chartJson.pointShow = true;
+                chartJson.progressCounter = parseInt(temp_step);
                 
             }
-            // this.chartJson = JSON.parse(JSON.stringify(chartJson));
+            this.chartJson = JSON.parse(JSON.stringify(chartJson));
             
 
             // 不是烹饪完成 ，并且处于预热温度到达
@@ -361,34 +319,18 @@ let workingModalMixin  = {
                     this.workSpecialStatusText = _hour+"  "+(_minute>9?_minute:'0'+_minute);
                     this.tag_next = '分';
                     this.hasHour = true;
-                }else if(allSeconds>2*60){//大于2分钟，小于1小时，只显示分
+                }else if(allSeconds>60){//大于1分钟，小于1小时，只显示分
                     this.workSpecialStatusText = _minute;
                     this.tag_next = '分';
                     this.hasHour = false;
                 }
                 else{ //小于2分钟开始倒计时
                     this.hasHour = false;
-                    // if(allSeconds<=60){
-                    //     this.workSpecialStatusText = 1;
-                    //     this.tag_next = '分';
-                    // }
-                    if(allSeconds>60){
-                        this.workSpecialStatusText = 1;
-                        this.tag_next = '分';
-                    }else{
-                        if(allSeconds==60){
-                            allSeconds = allSeconds-1;
-                        }
-                        this.workSpecialStatusText = allSeconds;
-                        this.tag_next = '秒';
-                        // if(this.allSeconds){
-                        //     this.countDownRunTimer(this.allSeconds,1);
-                        // }else{
-                        //     this.countDownRunTimer(allSeconds,1);
-                        // }
-                      
+                    if(allSeconds==60){
+                        allSeconds = allSeconds-1;
                     }
-                    //this.countDownRunTimer(1);//1秒03轮询
+                    this.workSpecialStatusText = allSeconds;
+                    this.tag_next = '秒';
                     
                 }
             }

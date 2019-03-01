@@ -14,7 +14,7 @@ let data = [
                     time:{
                         set: true,
                         default:13,
-                        range:[5,120,1]
+                        range:[1,120,1]
                     },
                     temperature:{
                         set: false,
@@ -66,7 +66,7 @@ let data = [
                     time:{
                         set: true,
                         default:10,
-                        range:[5,120,1]
+                        range:[1,120,1]
                     },
                     temperature:{
                         set: false,
@@ -125,7 +125,7 @@ let data = [
                     time:{
                         set: true,
                         default:15,
-                        range:[5,120,1]
+                        range:[1,120,1]
                     },
                     temperature:{
                         set: false,
@@ -188,7 +188,7 @@ let data = [
                     time:{
                         set: true,
                         default:14,
-                        range:[5,120,1]
+                        range:[1,120,1]
                     },
                     temperature:{
                         set: false,
@@ -233,7 +233,7 @@ let data = [
                     time:{
                         set: true,
                         default:18,
-                        range:[5,120,1]
+                        range:[1,120,1]
                     },
                     temperature:{
                         set: false,
@@ -301,7 +301,7 @@ let data = [
                     time:{
                         set: true,
                         default:24,
-                        range:[5,120,1]
+                        range:[1,120,1]
                     },
                     temperature:{
                         set: false,
@@ -370,7 +370,7 @@ let data = [
                     time:{
                         set: true,
                         default:12,
-                        range:[5,120,1]
+                        range:[1,120,1]
                     },
                     temperature:{
                         set: false,
@@ -421,7 +421,7 @@ let data = [
                     time:{
                         set: true,
                         default:16,
-                        range:[5,120,1]
+                        range:[1,120,1]
                     },
                     temperature:{
                         set: false,
@@ -482,7 +482,7 @@ let data = [
                     time:{
                         set: true,
                         default:16,
-                        range:[5,120,1]
+                        range:[1,120,1]
                     },
                     temperature:{
                         set: false,
@@ -550,7 +550,7 @@ let data = [
                     time:{
                         set: true,
                         default:13,
-                        range:[5,120,1]
+                        range:[1,120,1]
                     },
                     temperature:{
                         set: false,
@@ -602,7 +602,7 @@ let data = [
                     time:{
                         set: true,
                         default:9,
-                        range:[5,120,1]
+                        range:[1,120,1]
                     },
                     temperature:{
                         set: false,
@@ -658,7 +658,7 @@ let data = [
                     time:{
                         set: true,
                         default:13,
-                        range:[5,120,1]
+                        range:[1,120,1]
                     },
                     temperature:{
                         set: false,
@@ -718,7 +718,7 @@ let data = [
                     time:{
                         set: true,
                         default:12,
-                        range:[5,120,1]
+                        range:[1,120,1]
                     },
                     temperature:{
                         set: false,
@@ -768,7 +768,7 @@ let data = [
                     time:{
                         set: true,
                         default:10,
-                        range:[5,120,1]
+                        range:[1,120,1]
                     },
                     temperature:{
                         set: false,
@@ -814,7 +814,7 @@ let data = [
                         time:{
                             set: true,
                             default:25,
-                            range:[5,120,1]
+                            range:[1,120,1]
                         },
                         temperature:{
                             set: false,

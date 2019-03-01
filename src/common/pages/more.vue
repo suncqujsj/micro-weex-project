@@ -9,7 +9,7 @@
         <midea-header class="bg-white" title="更多功能" titleText="black" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back"></midea-header>
 
         <list style="margin-top: 24px" show-scrollbar="true">
-            <midea-cell :clickActivied="true" v-for="(item,index) in list" :key="index" :title="item.title" :has-arrow="false" @mideaCellClick="link(item)">
+            <midea-cell :clickActivied="false" v-for="(item,index) in list" :hasBottomBorder="(list.length - 1) !== index" :key="index" :title="item.title" :rightText="item.rightText" :hasArrow="!!item.link" @mideaCellClick="link(item)">
             </midea-cell>
         </list>
 
@@ -39,6 +39,7 @@
         },
         methods: {
             link: function(item){
+                if(!item.link) return;
                 nativeService.goTo(item.link, {animated: true});
                 return;
                 nativeService.weexBundleToWeb({

@@ -9,7 +9,7 @@ let data = [
             [
                 {
                     'icon': '',
-                    'text': '西班牙海鲜饭',
+                    'text': '西班牙海鲜炒饭',
                     'mode': 0xE0,
                     time:{
                         set: false,
@@ -50,7 +50,7 @@ let data = [
                 },
                 {
                     'icon': '',
-                    'text': '西蓝花培根意面',
+                    'text': '西兰花培根意面',
                     'mode': 0xE0,
                     time:{
                         set: false,
@@ -132,7 +132,7 @@ let data = [
                 },
                 {
                     'icon': '',
-                    'text': '冬阴功汤',
+                    'text': '泰式冬阴功汤',
                     'mode': 0xE0,
                     time:{
                         set: false,
@@ -262,7 +262,7 @@ let data = [
                 }, 
                 {
                     'icon': '',
-                    'text': '烤虾',
+                    'text': '黑椒烤鲜虾',
                     'mode': 0xE0,
                     time:{
                         set: false,
@@ -303,7 +303,7 @@ let data = [
                 }, 
                 {
                     'icon': '',
-                    'text': '烤鸡翅',
+                    'text': '蒜香鸡中翅',
                     'mode': 0xE0,
                     time:{
                         set: false,
@@ -352,7 +352,7 @@ let data = [
             [
                 {
                     'icon': '',
-                    'text': '烤肉串',
+                    'text': '孜然肉串',
                     'mode': 0xE0,
                     time:{
                         set: false,
@@ -393,7 +393,7 @@ let data = [
                 }, 
                 {
                     'icon': '',
-                    'text': '烤红薯片',
+                    'text': '酥脆番薯片',
                     'mode': 0xE0,
                     time:{
                         set: false,

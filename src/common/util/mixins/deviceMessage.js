@@ -81,7 +81,8 @@ const deviceMessageMixin = {
         queryRunTimer(timeSet){
             var self = this;
             this.queryTimer = setInterval(function(){
-                self.queryStatus();                
+                self.queryStatus();   
+                // nativeService.toast(111);
             },timeSet*1000);
         },
         initData(tabs,device){
@@ -94,6 +95,7 @@ const deviceMessageMixin = {
             }
             var self = this;
             // nativeService.alert(this.device);
+            nativeService.hideLoading();
             var sendCmd = cmdFun.createQueryMessage(this.device);
             // nativeService.alert(this.device);
 
@@ -169,7 +171,6 @@ const deviceMessageMixin = {
             this.current.probeTemperature = cmdObj.probeSetttingTemperature.value;
             // this.currentItem.steamSwitch.default = cmdObj.steam.value?true:false;
             // nativeService.toast(this.current,3);
-            
             this.openDialog();
         },
         controlDevice(jsonCmd, callbackData){
@@ -285,9 +286,11 @@ const deviceMessageMixin = {
         listenerDeviceReiveMessage(){//传入模式配置数据
             let context = this;
             globalEvent.addEventListener("receiveMessage", function(e) {
+                nativeService.hideLoading();
+                context.settingClickRecord = false;
                 var str = e.data;
                 var arr = str.split(",");
-                // nativeService.alert(arr);
+                // nativeService.alert(cmdFun.cmdToEasy(arr));
                 if(parseInt(arr[9])==0x0A){
                     return;
                 }
@@ -297,17 +300,28 @@ const deviceMessageMixin = {
 
              //监听设备在线离线状态
              globalEvent.addEventListener("receiveMessageFromApp", (data) => {
-               if(data && data.messageType == "deviceOnlineStatus") {
-                   if(data.messageBody && data.messageBody.onlineStatus == "online") {
-                       // this.onlineStatus = "1";
-                   } else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
-                       // this.onlineStatus = "0";
-                       nativeService.backToNative()
-                   } else {
-                       // this.onlineStatus = "0";
-                   }
-               }
-           });
+                 // 网络状态判断
+                 if(data.messageType === 'networkStatusChanged') {
+                     if(data.messageBody.status === 1) {
+                         this.hideWarningDialog();
+                         return;
+                     }
+
+                     this.setWarningDialog('主人，您的手机没有网络。');
+                 }
+
+
+                 if(data && data.messageType == "deviceOnlineStatus") {
+                     if(data.messageBody && data.messageBody.onlineStatus == "online") {
+                         // this.onlineStatus = "1";
+                     } else if(data.messageBody && data.messageBody.onlineStatus == "offline") {
+                         // this.onlineStatus = "0";
+                         nativeService.backToNative()
+                     } else {
+                         // this.onlineStatus = "0";
+                     }
+                 }
+             });
         },
     }
 };

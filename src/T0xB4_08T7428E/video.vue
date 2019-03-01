@@ -50,23 +50,28 @@
                     sVideoParam: "(MaxStream){0}",
                     sAudioParam: ""
                 },
-                deviceId: null,
+                deviceId: '0000B411108T7428E18A150000680000',
                 uid: null
             };
         },
+        mounted(){
+            this.setVideoModeSize();
+        },
         created(){
             // this.init();
+            // this.setVideoModeSize();
         },
         methods: {
 
             init(){
+                let context = this;
                 nativeService.getUserInfo().then((data)=>{
                     data.uid && (this.uid = data.mobile);
                     // nativeService.alert(data);
                     return nativeService.getDeviceInfo();
                 }).then((data)=>{
                     if(data.result && data.result.deviceId) {
-                        this.deviceId = data.result.deviceSn;
+                        context.deviceId = data.result.deviceSn;
                     }
                     this.setVideoModeSize();
                 });
@@ -74,17 +79,19 @@
 
             setVideoModeSize(){
                 let param = {
-                    api: "setVideoModelSize",
+                    api: "setVideoModeSize",
                     params: {
                         mode: 5,
                         width:640,
                         height: 360
                     }
                 };
+                let context = this;
                 ppvideoModule.ppvideoInterface(
-                    this.$refs.ppvideo,
+                    context.$refs.ppvideo,
                     param, (result)=>{
-                    // nativeService.alert('success');
+                    nativeService.alert('success');
+                        context.start();
                 } ,(result)=>{
                     nativeService.alert(result);
                 })
@@ -92,11 +99,12 @@
             start() {
                 // nativeService.alert(JSON.stringify(ppvideoModule) == '{}');
                 // return;
+                let context = this;
                 ppvideoModule.ppvideoInterface(
-                    this.$refs.ppvideo,
+                    context.$refs.ppvideo,
                     {
                         api: "startLive",
-                        params: { captureId: '0000B411108T7428E18A150000710000' } // device sn，必填3项字段之一
+                        params: { captureId: context.deviceId } // device sn，必填3项字段之一
                     },
                     () => {
                         nativeService.toast("start 成功");

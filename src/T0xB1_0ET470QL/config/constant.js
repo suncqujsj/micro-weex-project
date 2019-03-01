@@ -9,9 +9,9 @@ module.exports = {
     device: {
         type: 0xB1,
         page_title: "烤箱",
-        sales_model: "辅助蒸汽烤箱G55",
+        sales_model: "G55蒸汽补湿烤箱",
         widget_name: 'MSO_T0xB1',
-        widget_version: '5.1.12',
+        widget_version: '5.1.30',
         extra1: {
             sn8: '0ET470QL'
         },

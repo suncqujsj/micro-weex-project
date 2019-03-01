@@ -160,12 +160,12 @@ let modes = [
                 'mode': 0x53,
                 time:{
                     set: true,
-                    default:15,
+                    default:45,
                     range:[1,300,1]
                 },
                 temperature:{
                     set: true,
-                    default:100,
+                    default:180,
                     range:[50,250,1]
                 },
                 preheat:{
@@ -236,7 +236,8 @@ let modes = [
                 fireAmount:{
                     set:false,
                     default:0
-                }
+                },
+                settingHide: true
             },
         ]
     },

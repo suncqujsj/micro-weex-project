@@ -82,7 +82,8 @@ const deviceMessageMixin = {
         queryRunTimer(timeSet){
             var self = this;
             this.queryTimer = setInterval(function(){
-                self.queryStatus();                
+                self.queryStatus();    
+                // nativeService.toast(111);            
             },timeSet*1000);
         },
         initData(tabs,device,index){
@@ -171,7 +172,7 @@ const deviceMessageMixin = {
             this.current.weight = _analysisObj.weight.value;
             this.current.probeTemperature = _analysisObj.probeSetttingTemperature.value;
             // nativeService.toast(this.current,3);
-            
+            this.workingSettingRecord = true;
             this.openDialog();
         },
         controlDevice(jsonCmd, callbackData){
@@ -205,6 +206,10 @@ const deviceMessageMixin = {
             }
              if(this.btnText == "继续" || this.btnText == "开始"){
                 record = 3;
+            }
+            if(this.btnText == "开始"){
+                nativeService.toast('主人，要先放进食物哦');
+                return;
             }
             var deviceCmd = cmdFun.cmdStartOrPause(record,this.device,this.index);
             nativeService.showLoading();
@@ -288,6 +293,7 @@ const deviceMessageMixin = {
             let context = this;
             // nativeService.toast(this.tabs);
             globalEvent.addEventListener("receiveMessage", function(e) {
+                context.settingClickRecord = false;
                 var str = e.data;
                 var arr = str.split(",");
                 // nativeService.alert(arr);

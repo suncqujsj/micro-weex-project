@@ -46,6 +46,7 @@
   display: block;
   width: 103px;
   text-align: center;
+  .radius(3*2px);
 }
 .tab-txt-selected {
   color: #FFBD00;

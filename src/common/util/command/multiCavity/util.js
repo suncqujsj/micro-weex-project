@@ -70,6 +70,16 @@ export default {
         fire:{name: "火力",value: 0x00},
         weight:{name: "重量",value: 0x00},
         steam:{name: "蒸汽量",value: 0x00},
+        timeSetting:{
+          name:"程序设定总时间",
+          hour: 0,
+          minute: 0,
+          second:0,
+       },
+       menuFeel:{
+        name:"感应菜单感应中",
+        value: 0
+       },
     };
     return obj;
   },
@@ -324,70 +334,58 @@ export default {
   },
   //取消工作指令
   cmdCancelWork(device,whichCavity){
-    let byte16 = 0;
+    let byte17 = 0;
     if(whichCavity==0){
-      byte16 = 0x80;
+      byte17 = 0x80;
     } 
-    var messageBody = message.createMessageBody(7); 
+    var messageBody = message.createMessageFFBody(9); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02); 
     message.setByte(messageBody, 2,0x02);
-    message.setByte(messageBody, 3,0xff);
-    message.setByte(messageBody, 4,0xff);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,byte16);
+    message.setByte(messageBody, 7,byte17);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
   //暂停or继续指令
   cmdStartOrPause(record,device,whichCavity){
-    let byte16 = 0;
+    let byte17 = 0;
     if(whichCavity==0){
-      byte16 = 0x80;
+      byte17 = 0x80;
     } 
-    var messageBody = message.createMessageBody(7); 
+    var messageBody = message.createMessageFFBody(9); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
     message.setByte(messageBody, 2,record);
-    message.setByte(messageBody, 3,0xff);
-    message.setByte(messageBody, 4,0xff);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,byte16);
+    message.setByte(messageBody, 7,byte17);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
 
    //炉灯
    cmdLight(lightValue,device,whichCavity){
-    let byte16 = 0;
+    let byte17 = 0;
     if(whichCavity==0){
-      byte16 = 0x80;
+      byte17 = 0x80;
     } 
-    var messageBody = message.createMessageBody(7); 
+    var messageBody = message.createMessageFFBody(9); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
-    message.setByte(messageBody, 2,0xff);
-    message.setByte(messageBody, 3,0xff);
     message.setByte(messageBody, 4,lightValue?0:1);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,byte16);
+    message.setByte(messageBody, 7,byte17);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
    //上锁解锁
    cmdLock(params,device,whichCavity){
-    let byte16 = 0;
+    let byte17 = 0;
     if(whichCavity==0){
-      byte16 = 0x80;
+      byte17 = 0x80;
     } 
-    var messageBody = message.createMessageBody(7); 
+    var messageBody = message.createMessageFFBody(9); 
     message.setByte(messageBody, 0,0x22);
     message.setByte(messageBody, 1,0x02);
-    message.setByte(messageBody, 2,0xff);
     message.setByte(messageBody, 3,params.childLock?1:0);
-    message.setByte(messageBody, 4,0xff);
-    message.setByte(messageBody, 5,0xff);
-    message.setByte(messageBody, 6,byte16);
+    message.setByte(messageBody, 7,byte17);
     var sendMessage = message.createMessage(device.type, 0x02, messageBody);
     return sendMessage;
   },
@@ -448,6 +446,10 @@ export default {
     obj.fire.value = parseInt(requestCmd[24])*10;
     obj.weight.value = parseInt(requestCmd[25])*10;
     obj.steam.value = parseInt(requestCmd[25]);
+    obj.timeSetting.hour = parseInt(requestCmd[38]);
+    obj.timeSetting.minute = parseInt(requestCmd[39]);
+    obj.timeSetting.second = parseInt(requestCmd[40]);
+
     //上腔体蒸汽炉
     let upObj = this.analysisCmdUp(requestCmd,pages);
     let newObj = {'down_cavity':obj,'up_cavity':upObj};
@@ -500,10 +502,17 @@ export default {
     if(obj.isProbe.value){ //如果是探针，则为显示为探针设定温度
       obj.temperature.upLowTemperature = parseInt(requestCmd[33+length]);
     }
+    if(parseInt(requestCmd[19+length])==0xC4 || parseInt(requestCmd[19+length])==0xC1){//如果是烘干，则不显示温度
+      obj.temperature.upLowTemperature = 0;
+    }
 
     obj.fire.value = parseInt(requestCmd[24+length])*10;
     obj.weight.value = parseInt(requestCmd[25+length])*10;
     obj.steam.value = parseInt(requestCmd[25+length]);
+    obj.timeSetting.hour = parseInt(requestCmd[62]);
+    obj.timeSetting.minute = parseInt(requestCmd[63]);
+    obj.timeSetting.second = parseInt(requestCmd[64]);
+
     
     return obj;
   }

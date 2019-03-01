@@ -7,11 +7,11 @@
         <midea-button text="仅带确认按钮对话框" @mideaButtonClicked="openSingleDialog">
         </midea-button>
 
-        <midea-dialog title="使用协议" :show="show" @close="closeDialog" @mideaDialogCancelBtnClicked="mideaDialogConfirmBtnClicked" @mideaDialogConfirmBtnClicked="mideaDialogConfirmBtnClicked" content="美的智慧生活解决方案" :single="single">
-        </midea-dialog>
-
         <midea-button text="自定义格式" @mideaButtonClicked="openCustomeDialog">
         </midea-button>
+
+        <midea-dialog title="使用协议" :show="show" @close="closeDialog" @mideaDialogCancelBtnClicked="mideaDialogConfirmBtnClicked" @mideaDialogConfirmBtnClicked="mideaDialogConfirmBtnClicked" content="美的智慧生活解决方案" :single="single">
+        </midea-dialog>
 
         <midea-dialog :show="showCustome" @close="closeCustomeDialog" @mideaDialogCancelBtnClicked="closeCustomeDialog" @mideaDialogConfirmBtnClicked="closeCustomeDialog">
             <div slot="content">

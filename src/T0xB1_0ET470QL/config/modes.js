@@ -21,6 +21,7 @@ let modes = [
                     set: true,
                     default:180,
                     range:[30,250,1],
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 preheat:{
                     set:true,
@@ -40,7 +41,7 @@ let modes = [
                     range:null,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
-               
+                // stopBtnHide:true,//工作中没有暂停按钮，默认有
                 probeTemperature:{
                     set: true,
                     default:60,
@@ -99,6 +100,7 @@ let modes = [
                     set: true,
                     default:160,
                     range:[50,250,1],
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 preheat:{
                     set:true,
@@ -229,6 +231,7 @@ let modes = [
                     set: true,
                     default:180,
                     range:[50,250,1],
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 preheat:{
                     set:true,

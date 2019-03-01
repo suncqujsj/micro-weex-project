@@ -71,8 +71,11 @@ module.exports = {
         isShowModuleList: false,
         moduleIndex: null,
         moduleList: [
+            { key: -2, value: "T0xB4_08T7428E", desc: "美的Fun烤箱II代， T7-428E" },
+            { key: -1, value: "T0xB4_0T7L421F", desc: "美的Fun烤箱简版， T7-L421F" },
             { key: 0, value: "midea-demo", desc: "midea-demo 美居Demo" },
             { key: 1, value: "plugin", desc: "plugin 插件" },
+            { key: 2, value: "T0xBF_0TR934MJ", desc: "T0xBF_0TR934MJ" },
             // { key: 2, value: "midea-card", desc: "midea-card卡片页" },
             { key: 3, value: "community", desc: "community 社区模块" },
             { key: 4, value: "midea-rooms", desc: "midea-rooms场景" },
@@ -86,8 +89,13 @@ module.exports = {
             { key: 9, value: "T0xB1_0ET470QL",desc: "G55辅助蒸汽" },
             { key: 10, value: "T0xE1_000000H3",desc: "T0xE1_000000H3" },
             { key: 11, value: "T0xE1_000000H5",desc: "T0xE1_000000H5" },
-            { key: 12, value: "T0xB0_0M3L20A8",desc: "E厨20L微波炉" },
+            { key: 12, value: "T0xB0_0M3L20A8",desc: "年轻套系20L微波炉" },
             { key: 13, value: "T0xB0_0X5L23A8",desc: "G100一体机" },
+            { key: 14, value: "T0xB2",desc: "蒸汽炉" },
+            { key: 15, value: "T0xB2_0TPN50R6",desc: "R6 蒸汽炉" },
+            { key: 16, value: "T0xB4",desc: "小烤箱" },
+            { key: 17, value: "T0x9B",desc: "蒸汽烤箱" },
+            { key: 18, value: "T0xB1",desc: "大烤箱" },
         ],
         card: 'T0xB1',
         isShowCardList: false,
@@ -327,7 +335,7 @@ module.exports = {
     padding: 22px;
 }
 .text-input-port {
-    width: 140;
+    width: 140px;
     font-family: PingFangSC-Regular;
     font-size: 32px;
     color: #000000;

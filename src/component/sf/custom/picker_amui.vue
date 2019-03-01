@@ -9,7 +9,8 @@
 </template>
  
 <script type="text/javascript">
-import { AmPickerView } from 'weex-amui'
+import  AmPickerView  from './weex-amui/index.vue'
+// import { AmPickerView } from 'weex-amui'
 import nativeService from '@/common/services/nativeService';
  
 module.exports = {
@@ -50,7 +51,7 @@ module.exports = {
         this.listArray = singleList;
         selectList.push(_listItem);
         this.listItem = selectList;
-        // nativeService.alert(this.listItem);
+        // nativeService.alert(this.listArray);
     },
     methods: {
         onChange(e){

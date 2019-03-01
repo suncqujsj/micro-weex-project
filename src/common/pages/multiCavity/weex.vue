@@ -4,8 +4,8 @@
 
 <template>
     <div @viewappear="viewappear" @viewdisappear="viewdisappear">
-        <div class="bg">
-            <sf-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native" >
+        <div class="bg" v-if="!isCavityWorking">
+            <sf-header leftImg="img/header/public_ic_back_white@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native" >
                 <div slot="headerTitle">
                     <sf-tab ref="mTab" :tabArray="pages" @tabClicked="tabClicked">
                     </sf-tab>
@@ -13,7 +13,7 @@
                 <div slot="customerContent" class="header-top-wrapper">
                     <div class="header-top-inner-wrapper">
                         <div class="header-right-image-wrapper" @click="openCloudRecipe">
-                            <image class="header-right-image" :src="'assets/img/header/public_ic_cloud_recipe@3x.png'"></image>
+                            <image class="header-right-image" :src="'img/header/public_ic_cloud_recipe@3x.png'"></image>
                         </div>
                         <div class="header-right-image-wrapper" @click="childLock(true,index)">
                             <image class="header-right-image" :src="'img/header/public_ic_babylock@3x.png'"></image>
@@ -90,17 +90,17 @@
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
                 <!--</template>-->
                 <!--<text v-if="currentItem" class="content-title" @click="showDetailModal">{{currentItem.text}}</text>-->
-                <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header" :title="currentItem.text" titleText="#000000" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
+                <!--<modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header  b-b-1" :title="currentItem.text" titleText="#000000" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
 
-                <div v-if="currentItem && currentItem.probe && cmdObj.up_cavity.isProbe.value">
+                <div v-if="currentItem && currentItem.probe && workingAnalysisObj.isProbe.value">
                     <sf-accordion type="picker" :value="setValue('probeTemperature')" unit="°C" title="设置探针温度" isFolded="true"  @callback="updateAccordionFoldingStatus">
                         <div slot="content">
-                            <wx-picker :data="range('probeTemperature')" target="probeTemperature" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                            <wx-picker :pickerIndex="index" :data="range('probeTemperature')" target="probeTemperature" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                         </div>
                     </sf-accordion>
                       <sf-accordion type="picker" :value="setValue('steamAmount')" unit="档" title="设置蒸汽量" isFolded="true"  @callback="updateAccordionFoldingStatus">
                         <div slot="content">
-                            <wx-picker :data="range('steamAmount')" target="steamAmount" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                            <wx-picker :pickerIndex="index" :data="range('steamAmount')" target="steamAmount" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                         </div>
                     </sf-accordion>
                 </div>
@@ -109,7 +109,7 @@
                         <div v-if="item.type==='picker'">
                             <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set " :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                                 <div slot="content">
-                                    <wx-picker  :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                                    <wx-picker :pickerIndex="index" :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                                 </div>
                             </sf-accordion>
                         </div>
@@ -121,12 +121,30 @@
                             </sf-accordion>
                         </div>
                     </div>
+                </div>-->
+                 <modal-header style="margin:0 -36px;" v-if="currentItem" :showRightImg="!detailEmpty && currentItem.mode === 0xE0" rightImg="img/header/public_ic_help@3x.png" class="modal-header b-b-1" :title="currentItem.text" titleText="#000000" :isImmersion="false"  :showLeftImg="false" @rightImgClick="showDetailModal"></modal-header>
+
+                 <div v-for="(item, index) in accordions" class="modal-header">
+                    <div v-if="item.type==='picker' && (currentItem && currentItem[item.key] && (!currentItem[item.key].hide && isCavityWorking || !isCavityWorking))">
+                        <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set && ((!workingAnalysisObj.isProbe.value && item.key!='probeTemperature') || (currentItem.probe && workingAnalysisObj.isProbe.value && !currentItem[item.key].isProbeThenThisHide)) " :value="setValue(item.key)" :unit="item.unit" :index="index" :title="item.subtitle" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                            <div slot="content">
+                                <wx-picker :pickerIndex="index" :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
+                            </div>
+                        </sf-accordion>
+                    </div>
+                    <div v-if="item.type==='switch' && (currentItem && currentItem[item.key] && (!currentItem[item.key].hide && isCavityWorking || !isCavityWorking)) && !current.preheatHide">
+                        <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set && ((!workingAnalysisObj.isProbe.value && item.key!='probeTemperature') || (currentItem.probe && workingAnalysisObj.isProbe.value && !currentItem[item.key].isProbeThenThisHide))  " :title="item.subtitle" index="-1" :hideArrow="item.hideArrow">
+                            <div slot="right">
+                                <midea-switch2 :itemKey="item.key" :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
+                            </div>
+                        </sf-accordion>
+                    </div>
                 </div>
 
             </div>
         </sf-dialog>
 
-        <detail-modal :show="showDetailVisibility" @close="closeDetailModal">
+        <detail-modal :show="showDetailVisibility" :showMask="false" @close="closeDetailModal">
             <div slot="title">
                 <modal-header leftImg="img/header/public_ic_gray@3x.png" class="modal-header" :title="modeText" titleText="#000000" :isImmersion="false"  :showLeftImg="true" @leftImgClick="closeDetailModal"></modal-header>
             </div>
@@ -149,15 +167,37 @@
             </div>
         </detail-modal>
 
-        <!--童锁遮罩-->
-        <modal :show="modalVisibility" @close="closeModal">
-            <div slot="header">
-                 <sf-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native" >
+      
+        <!--提示弹窗-->        
+        <midea-dialog :title="warningDialog.title"
+                      :show="warningDialog.show"
+                      :single="true"
+                      :noFooter="true"
+                       confirmText="我知道了"
+                      @mideaDialogConfirmBtnClicked="knowClicked"
+                      :content="warningDialog.content"
+                      mainBtnColor="#FFB632"
+        >
+         <div slot="header">
+                 <sf-header leftImg="img/header/public_ic_home@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native" >
                     <div slot="headerTitle">
                         <sf-tab ref="mTab" :tabArray="pages" @tabClicked="tabClicked">
                         </sf-tab>
                     </div>
-                    <div slot="customerContent" class="header-top-wrapper">
+                </sf-header>
+            </div>
+        </midea-dialog>
+
+       
+        <!--童锁遮罩-->
+        <modal :show="modalVisibility">
+            <div slot="header">
+                 <sf-header leftImg="img/header/public_ic_home@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native" >
+                    <div slot="headerTitle">
+                        <sf-tab ref="mTab" :tabArray="pages" @tabClicked="tabClicked">
+                        </sf-tab>
+                    </div>
+                   <!-- <div slot="customerContent" class="header-top-wrapper">
                         <div class="header-top-inner-wrapper">
                             <div class="header-right-image-wrapper" @click="openCloudRecipe">
                                 <image class="header-right-image" :src="'assets/img/header/public_ic_cloud_recipe@3x.png'"></image>
@@ -167,7 +207,7 @@
                                 <image class="header-right-image" :src="'img/header/public_ic_lots@3x.png'"></image>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </sf-header>
             </div>
             <div class="a-c j-c" slot="content" :style="{height: wrapHeight+'px'}">
@@ -183,27 +223,6 @@
             </div>
         </modal>
 
-        <midea-dialog :title="warningDialog.title"
-                      :show="warningDialog.show"
-                      :single="true"
-                     
-                      @mideaDialogConfirmBtnClicked="knowClicked"
-                      :content="warningDialog.content"
-                      mainBtnColor="#FFB632"
-        >
-        </midea-dialog>
-
-        <!--故障提示弹窗-->
-        <midea-dialog :title="warningDialogTitle"
-                        :show="warningDialogShow"
-                        :single="true"
-                        noFooter="true"
-                        @mideaDialogConfirmBtnClicked="knowClicked"
-                        :content="warningDialogContent"
-                        mainBtnColor="#FFB632"
-                        >
-        </midea-dialog>
-
         <!--确定/取消弹窗-->
         <midea-actionsheet
             :items="actionsheetItems"
@@ -217,21 +236,15 @@
 
         <!-- 工作页面 -->
         <div class="working_section all_section" v-if="isCavityWorking" :style="{height: wrapHeight}">
-             <sf-header leftImg="assets/img/header/public_ic_back@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native" >
+             <sf-header leftImg="img/header/public_ic_back_white@3x.png" title="蒸汽炉" titleText="white" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native" >
                 <div slot="headerTitle">
                     <sf-tab ref="mTab" :tabArray="pages" @tabClicked="tabClicked">
                     </sf-tab>
                 </div>
                 <div slot="customerContent" class="header-top-wrapper">
                     <div class="header-top-inner-wrapper">
-                        <div class="header-right-image-wrapper" @click="openCloudRecipe">
-                            <image class="header-right-image" :src="'assets/img/header/public_ic_cloud_recipe@3x.png'"></image>
-                        </div>
                         <div class="header-right-image-wrapper" @click="childLock(true,index)">
                             <image class="header-right-image" :src="'img/header/public_ic_babylock@3x.png'"></image>
-                        </div>
-                        <div class="header-right-image-wrapper" @click="openMorePage">
-                            <image class="header-right-image" :src="'img/header/public_ic_lots@3x.png'"></image>
                         </div>
                     </div>
                 </div>
@@ -309,7 +322,7 @@
                             <text class="decs_text">{{cancleBtnText}}</text>
                         </div>
                     </div>
-                    <div class="btn_section" v-if="hasStopOrContinueBtn && hasStopButton" >
+                    <div class="btn_section" v-if="hasStopOrContinueBtn" >
                         <div class="image_section" @click="startOrPause()">
                             <image class="icon_image" :src="btnSrc"></image>
                         </div>
@@ -352,7 +365,9 @@
     import mideaSwitch2 from '@/midea-component/switch2.vue'
     // import WxPicker from '@/component/sf/custom/picker.vue';
     import WxPicker from '@/component/sf/custom/picker_amui.vue';
-    import mideaDialog from '@/component/dialog.vue';
+    //  import WxPicker from '@/component/sf/custom/picker_time.vue';
+    // import mideaDialog from '@/component/dialog.vue';
+    import mideaDialog from '@/component/sf/custom/dialog_tips.vue'
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
     import light from "@/component/sf/common/light.vue";
     // import workingComponent from './working.vue';
@@ -368,6 +383,7 @@
     import copyMixin from  "@/common/util/mixins/copy"
     import modalMixin from  "@/common/util/mixins/modal"
     import weexData from  "@/common/util/mixins/multiCavity/weexData"
+     const globalEvent = weex.requireModule("globalEvent");
     // import workingData from  "@/common/util/mixins/multiCavity/workingData"
     // import cmdFun from "@/common/util/command/multiCavity/util"; //解析指令
     // var numberRecord = 0; //记录跳页面的次数
@@ -399,8 +415,12 @@
         created(){
             let self = this;
             let {constant,pages,index} = this;
+            this.srcollPaddingBottom = '80px';
+            if(this.isip9()){
+                this.srcollPaddingBottom = '50px';
+            }
             if(this.isipx()){
-                this.srcollPaddingBottom = '80px';
+                this.srcollPaddingBottom = '100px';
             }
             //模拟设备数据
             nativeService.initMockData({
@@ -410,6 +430,9 @@
             this.queryStatus(pages,constant.device,index);
             //this.queryRunTimer(20);//20秒轮询 
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
+            // if(!this.isIos) {
+            //     this.queryRunTimer(10);//轮询 已放在解析指令那里处理
+            // }
             if (this.isIos){
                 this.listenerDeviceReiveMessage();
             }
@@ -440,7 +463,7 @@
                 return{
                     height: `${progress_radius * 2}px`,
                     width: `${progress_radius * 2}px`,
-                    marginTop: `${wrapHeight/2-progress_radius*2}px`
+                    marginTop: `${wrapHeight/2-progress_radius*2-60}px`
                 }
             }
         },
@@ -503,10 +526,6 @@
                 this.pages[x].tabs = tabs;
             },
             onIconButtonClicked: function(item){
-                if(!item.probe && this.cmdObj.up_cavity.isProbe.value){
-                    nativeService.toast("该模式不支持肉类探针");
-                    return;
-                }
                 this.currentItem = item;
                 // nativeService.alert(this.currentItem);
                 this.modeText = item.text;
@@ -530,6 +549,7 @@
                 // nativeService.alert(typeof this.warningDialog.callback);
                 this.warningDialog.callback && this.warningDialog.callback();
                 this.warningDialog = this.initWarningDialog();
+                // nativeService.backToNative();
             },
         }
     }

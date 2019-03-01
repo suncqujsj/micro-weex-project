@@ -200,6 +200,12 @@ let workingModalMixin  = {
         addTemperatureUnit(temp){
             return temp + '°';
         },
+
+        // 判断当前是否云菜谱
+        isCloudMenu(obj){
+            return obj.recipeId.value > 0 && obj.mode.value !== 0xE0
+        },
+
         analysisWorkingFun(analysisObj,tabs) {
             var self = this , timer = null;
             // nativeService.alert(analysisObj);
@@ -252,13 +258,13 @@ let workingModalMixin  = {
                 //      this.hasSetting = false;
                 // }
 
-                if(this.device.extra1.sn8 === '08T7428E') {
+                if(analysisObj.isProbe.value && !this.isCloudMenu(analysisObj) && this.device.extra1.sn8 === '08T7428E') {
                     this.probeProgress = '工作中';
                     this.timeShow = false;
                     this.hasHour = false;
                     this.probeTempText = '';
                     this.statusTag = '探针模式';
-                    this.cmdObj.mode.text = '';
+                    // this.cmdObj.mode.text = '';
                     this.cmdObj.temperatureText = '';
                     chartJson.pointShow = false;
                 }

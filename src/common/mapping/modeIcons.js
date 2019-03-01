@@ -58,4 +58,7 @@ icons[37] = getIcon('蒸汽+底部烧烤', '');
 icons[38] = getIcon('蒸汽+大面积+风扇', '');
 icons[39] = getIcon('蒸汽+大面积', '');
 icons[40] = getIcon('蒸汽+小面积', '');
+
+icons[41] = getIcon('旋转小分量上色', '');
+icons[42] = getIcon('双层烧烤', '');
 export default icons;

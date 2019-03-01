@@ -399,7 +399,7 @@ let workingModalMixin  = {
          * 工作状态中 模式不可编辑设置
          */
         settingHide(item){
-            if(item.settingHide || item.standbyHide) {
+            if(item.settingHide || item.standbyHide || this.isCloudMenu(this.cmdObj)) {
                 this.hasSetting = false;
             }
         },

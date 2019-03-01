@@ -181,11 +181,20 @@ let workingModalMixin  = {
             if(cmdObj.isProbe.value) { // 有探针显示探针温度
                 customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature);
             } else { // 非探针模式显示较大温度
-                customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature >= cmdObj.temperature.downLowTemperature ? cmdObj.temperature.upLowTemperature : cmdObj.temperature.downLowTemperature);
+                customData.temperatureText = this.getTemperatureTextWithoutProbe(cmdObj);
             }
 
             let buffer = objectAssign({}, cmdObj, customData);
             return buffer;
+        },
+
+        getTemperatureTextWithoutProbe(cmdObj){ // 获取未插入探针时，工作中温度的显示文案
+            if(!cmdObj.temperature.upLowTemperature && !cmdObj.temperature.downLowTemperature) {
+                return '';
+            }
+
+            // 温度非0时，返回上低、下低温度的较大值
+            return this.addTemperatureUnit(cmdObj.temperature.upLowTemperature >= cmdObj.temperature.downLowTemperature ? cmdObj.temperature.upLowTemperature : cmdObj.temperature.downLowTemperature);
         },
 
         addTemperatureUnit(temp){

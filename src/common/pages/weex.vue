@@ -428,7 +428,10 @@
                         confirmText: '我知道了',
                         cancelText: '稍后再试',
                         cancelCallback: this.hideHintDialog,
-                        confirmCallback: this.openCloudMenuPage
+                        confirmCallback: ()=>{
+                            this.hideHintDialog();
+                            this.openCloudMenuPage();
+                        }
                     });
                     return;
                 }

@@ -7,7 +7,7 @@
             <midea-header bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png" :title="constant.device.page_title" titleText="white" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2Native" >
                 <div slot="customerContent" class="header-top-wrapper">
                     <div class="header-top-inner-wrapper">
-                        <div class="header-right-image-wrapper" @click="openCloudRecipe">
+                        <div class="header-right-image-wrapper" @click="onCloudMenuIconClicked">
                             <image class="header-right-image" :src="'img/header/public_ic_cloud_recipe@3x.png'"></image>
                         </div>
                         <div v-if="childLockVisibility('standby')" class="header-right-image-wrapper" @click="childLock(true)">
@@ -133,13 +133,26 @@
             </div>
         </detail-modal>
 
-        <!--提示弹窗-->
+        <!--警告弹窗-->
         <midea-dialog :title="warningDialog.title"
                       :show="warningDialog.show"
                       :single="true"
                       confirmText="我知道了"
                       @mideaDialogConfirmBtnClicked="knowClicked"
                       :content="warningDialog.content"
+                      mainBtnColor="#FFB632"
+        >
+        </midea-dialog>
+
+        <!--提示弹窗-->
+        <midea-dialog :title="hintDialog.title"
+                      :show="hintDialog.show"
+                      :single="false"
+                      :confirmText="hintDialog.confirmText"
+                      :cancelText="hintDialog.cancelText"
+                      @mideaDialogCancelBtnClicked="hintDialog.cancelCallback"
+                      @mideaDialogConfirmBtnClicked="hintDialog.confirmCallback"
+                      :content="hintDialog.content"
                       mainBtnColor="#FFB632"
         >
         </midea-dialog>
@@ -406,7 +419,22 @@
             isAutoMenuStyle: function(tab){
                 return tab.rows[0].title && tab.rows[0].title !== 'mode'
             },
-            openCloudRecipe: function(){
+            onCloudMenuIconClicked(){
+                if(this.isFun2Oven()) {
+                    this.setHintDialog({
+                        show:true,
+                        content: '主人，检测到烤箱插入了探针，云食谱目前不支持此功能，请取出探针后再操作。',
+                        confirmText: '我知道了',
+                        cancelText: '稍后再试',
+                        cancelCallback: this.hideHintDialog,
+                        confirmCallback: this.openCloudMenuPage
+                    });
+                    return;
+                }
+
+                this.openCloudMenuPage();
+            },
+            openCloudMenuPage: function(){
                 nativeService.jumpNativePage({
                     "pageName": "CookbookHome",
                     "data": {}

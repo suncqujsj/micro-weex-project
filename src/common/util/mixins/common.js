@@ -66,7 +66,7 @@ let commonMixin = {
         },
 
         /**
-         * 提示弹窗设置
+         * 警告弹窗设置
          */
         setWarningDialog(content, callback=null, show=true){
             this.warningDialog.show = show;
@@ -85,6 +85,30 @@ let commonMixin = {
                 content: "主人，您的水箱缺水了，要及时添加水哦",
                 callback: null
             };
+        },
+
+        /**
+         * 提示弹窗设置
+         */
+        initHintDialog(){
+            return {
+                show: false,
+                title: "温馨提示",
+                content: "请填写",
+                confirmText: '确定',
+                cancelText: '取消',
+                cancelCallback: ()=>{},
+                confirmCallback: ()=>{},
+            };
+        },
+
+        hideHintDialog(){
+            this.hintDialog.show = false;
+        },
+
+        setHintDialog(config){
+            let hintDialog = this.initHintDialog();
+            this.hintDialog = objectAssign({}, hintDialog, config)
         },
 
         statisticsUpload: function(data={}){

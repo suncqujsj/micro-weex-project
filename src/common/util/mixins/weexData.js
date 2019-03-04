@@ -30,6 +30,7 @@ let workingModalMixin  = {
                 //     }
                 // ],
                 warningDialog: this.initWarningDialog(),
+                hintDialog: this.initHintDialog(),
                 modeText:'',
                 srcollPaddingBottom:'',
                 cmdObj: cmdFun.initAnalysisObj(),
@@ -214,6 +215,13 @@ let workingModalMixin  = {
             return obj.recipeId.value > 0 && obj.mode.value !== 0xE0
         },
 
+        /**
+         * 是否是fun烤箱二代判断
+         */
+        isFun2Oven(){
+            return this.device.extra1.sn8 === '08T7428E';
+        },
+
         analysisWorkingFun(analysisObj,tabs) {
             var self = this , timer = null;
             // nativeService.alert(analysisObj);
@@ -266,12 +274,12 @@ let workingModalMixin  = {
                 //      this.hasSetting = false;
                 // }
 
-                if(analysisObj.isProbe.value && this.isCloudMenu(analysisObj) && this.device.extra1.sn8 === '08T7428E') {
+                if(analysisObj.isProbe.value && this.isCloudMenu(analysisObj) && this.isFun2Oven()) {
                     analysisObj.isProbe.value = 0;
                     this.statusTag = '剩余时间';
                 }
 
-                if(analysisObj.isProbe.value && !this.isCloudMenu(analysisObj) && this.device.extra1.sn8 === '08T7428E') {
+                if(analysisObj.isProbe.value && !this.isCloudMenu(analysisObj) && this.isFun2Oven()) {
                     this.probeProgress = '工作中';
                     this.timeShow = false;
                     this.hasHour = false;

@@ -258,6 +258,11 @@ let workingModalMixin  = {
                 //      this.hasSetting = false;
                 // }
 
+                if(analysisObj.isProbe.value && this.isCloudMenu(analysisObj) && this.device.extra1.sn8 === '08T7428E') {
+                    analysisObj.isProbe.value = 0;
+                    this.statusTag = '剩余时间';
+                }
+
                 if(analysisObj.isProbe.value && !this.isCloudMenu(analysisObj) && this.device.extra1.sn8 === '08T7428E') {
                     this.probeProgress = '工作中';
                     this.timeShow = false;

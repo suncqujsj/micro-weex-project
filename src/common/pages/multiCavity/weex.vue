@@ -27,11 +27,11 @@
 
             <!--测试查看指令-->
             <!--<div><text @click="setContent">下发指令:{{testCmd}}</text></div>-->
-
+            <div class="onlongpressQuery"  @longpress="onlongpressQuery()"></div><!--隐藏长按组件触发03查询，方便调试-->
             <slider :index="index" @change="changeArea" class="slider" :style="{height: wrapHeight}" scrollable="false">
                 <div v-for="(item,x) in pages" style="width: 750px;">
                     <!--面板切换tabs-->
-                    <div class="panel"  @longpress="onlongpressQuery()"> <!--隐藏长按组件触发03查询，方便调试-->
+                    <div class="panel">
                         <text class="panel-state">待机中</text>
                         <div v-if="item.tabs.length>1" class="tabs">
                             <template v-for="(tab, y) in item.tabs">
@@ -249,7 +249,8 @@
                     </div>
                 </div>
             </sf-header>
-            <div class="progress_content"  @longpress="onlongpressQuery()"><!--隐藏长按组件触发03查询，方便调试-->
+            <div class="onlongpressQuery"  @longpress="onlongpressQuery()"></div><!--隐藏长按组件触发03查询，方便调试-->
+            <div class="progress_content">
                 <div class="progress_section" :style="progress_style" > 
                     <!--<wxcProgress :percent="progress" :progressShow="progressShow"
                         :wxc_radius='progress_radius'>

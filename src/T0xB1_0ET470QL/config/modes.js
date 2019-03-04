@@ -201,7 +201,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:170,
-                    range:[30,220,1]
+                    range:[30,200,1]
                 },
                 preheat:{
                     set:true,
@@ -334,6 +334,34 @@ let modes = [
                     set: false,
                     default:120,
                     range:null
+                },
+                preheat:{
+                    set:false,
+                    default: null,
+                    hide: true,
+                },
+                steamAmount:{
+                    set:false,
+                    default:0
+                },
+                fireAmount:{
+                    set:false,
+                    default:0
+                }
+            },
+            {
+                'icon': modeIcons[19].dir,
+                'text': modeIcons[19].cn,
+                'mode': 0x4D,
+                time:{
+                    set: true,
+                    default:60,
+                    range:[1,300,1]
+                },
+                temperature:{
+                    set: true,
+                    default:160,
+                    range:[140,240,20]
                 },
                 preheat:{
                     set:false,

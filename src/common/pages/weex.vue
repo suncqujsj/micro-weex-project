@@ -22,9 +22,9 @@
 
             <!--测试查看指令-->
             <!--<div><text @click="setContent">下发指令:{{testCmd}}</text></div>-->
-
+            <div class="onlongpressQuery"  @longpress="onlongpressQuery()"></div><!--隐藏长按组件触发03查询，方便调试-->
             <!--面板切换tabs-->
-            <div class="panel"  @longpress="onlongpressQuery()"> <!--隐藏长按组件触发03查询，方便调试-->
+            <div class="panel">
                 <text class="panel-state">待机中</text>
                 <div v-if="tabs.length>1" class="tabs">
                     <template v-for="(tab, x) in tabs">
@@ -207,7 +207,8 @@
             </midea-header>
              <!--测试copy指令-->
             <!--<div><text @click="setContent">下发指令:{{testCmd}}</text></div>-->
-            <div class="progress_content"  @longpress="onlongpressQuery()"><!--隐藏长按组件触发03查询，方便调试-->
+            <div class="onlongpressQuery"  @longpress="onlongpressQuery()"></div><!--隐藏长按组件触发03查询，方便调试-->
+            <div class="progress_content">
                 <div class="progress_section" :style="progress_style" > 
                     <!--倒计时组件-->
                     <div v-if="progressShow">

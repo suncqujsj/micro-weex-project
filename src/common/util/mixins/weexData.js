@@ -246,6 +246,7 @@ let workingModalMixin  = {
 
             if(analysisObj.isProbe.value){
                 this.statusTag = '当前实时温度';
+                chartJson.pointShow = false;
             }
 
             if(analysisObj.workingState.value === 3){

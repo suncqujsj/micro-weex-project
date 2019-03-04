@@ -186,7 +186,7 @@ let workingModalMixin  = {
                 temperatureText:null // 工作中显示的设定温度文案
             };
 
-            if(cmdObj.isProbe.value) { // 有探针显示探针温度
+            if(cmdObj.isProbe.value && !this.isCloudMenu(cmdObj)) { // 有探针显示探针温度
                 customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature);
             } else { // 非探针模式显示较大温度
                 customData.temperatureText = this.getTemperatureTextWithoutProbe(cmdObj);

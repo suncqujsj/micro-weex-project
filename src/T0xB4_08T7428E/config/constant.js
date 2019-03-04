@@ -8,7 +8,7 @@ module.exports = {
         page_title: "烤箱",
         type: 0xB4,
         widget_name: 'MSO_T0xB1',  // 埋点的时候，只保留 B0，B1，B2
-        widget_version: '5.0.1',
+        widget_version: '5.0.2',
         extra1: {
             sn8: '08T7428E'
         },
@@ -34,4 +34,6 @@ module.exports = {
  * 8.当设备预热完成时，显示继续按钮
  * 9.隐藏探针实时以及目标温度
  * 10.云菜谱上报探针模式value置为0
+ * 11.云菜谱加时显示上下管设置、探针设置温度较大者
+ * 12.云菜谱入口添加插入探针提示
  * */

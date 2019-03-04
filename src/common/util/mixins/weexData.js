@@ -113,7 +113,7 @@ let workingModalMixin  = {
                     this.show = false;
                 }
             }
-            if(analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6){
+            if(analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || this.periodPauseCondition(analysisObj)){
                 if(analysisObj.displaySign.lackWater && analysisObj.mode.value!=0xC4){
                     isLackWater = true;
                     this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
@@ -151,7 +151,7 @@ let workingModalMixin  = {
             if(analysisObj.workingState.value == 4 && allSeconds > 0) {
                 analysisObj.workingState.value = 3
             }
-            if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || analysisObj.workingState.value == 6) {
+            if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || this.periodPauseCondition(analysisObj)) {
                 this.isWorkingPage = true;
                 this.analysisWorkingFun(analysisObj,tabs);
                 if(allSeconds<=60 && analysisObj.workingState.value == 3){
@@ -171,6 +171,14 @@ let workingModalMixin  = {
         },
 
         /**
+         * 段间等待判断条件
+         */
+        periodPauseCondition(cmdObj){
+            let workingState = cmdObj.workingState.value;
+            return workingState === 6 || workingState === 7;
+        },
+
+        /**
          * 处理 03，04 数据
          */
         formatCmdObj(cmdObj){
@@ -178,7 +186,7 @@ let workingModalMixin  = {
                 temperatureText:null // 工作中显示的设定温度文案
             };
 
-            if(cmdObj.isProbe.value) { // 有探针显示探针温度
+            if(cmdObj.isProbe.value && !this.isCloudMenu(cmdObj)) { // 有探针显示探针温度
                 customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature);
             } else { // 非探针模式显示较大温度
                 customData.temperatureText = this.getTemperatureTextWithoutProbe(cmdObj);
@@ -275,7 +283,7 @@ let workingModalMixin  = {
                     chartJson.pointShow = false;
                 }
             }
-             if(analysisObj.workingState.value == 6){
+             if(this.periodPauseCondition(analysisObj)){
                 this.timeShow = true;
                 this.hasSetting = true;
                 this.btnText = "继续";

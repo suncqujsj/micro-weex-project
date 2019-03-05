@@ -157,7 +157,7 @@ let workingModalMixin  = {
                 if(allSeconds<=60 && analysisObj.workingState.value == 3){
                     this.queryRunTimer(1);//6秒轮询 
                 }else{
-                    this.queryRunTimer(6);//6秒轮询 
+                    this.queryRunTimer(10);//6秒轮询 
                 }
             }
             // if(analysisObj.workingState.value == 3 || (this.constant.device.standby03 && analysisObj.workingState.value == 4)){

@@ -88,17 +88,17 @@ let workingModalMixin  = {
             this.setWarningDialog("",null,false);
             this.modalVisibility = false;
             if(obj.displaySign.isError){
-                this.setWarningDialog("设备故障，请联系售后人员");
+                this.setWarningDialog("主人，您的设备发生故障了，请联系售后人员");
             }
             if(obj.displaySign.lackWater){
                 this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
             }
             if(obj.displaySign.waterBox){
-                this.setWarningDialog("缺水盒");
+                this.setWarningDialog("主人，您的设备缺水盒了");
 
             }
             if(obj.displaySign.doorSwitch){
-                this.setWarningDialog("炉门开了");
+                this.setWarningDialog("主人，您的设备炉门开了");
             }
 
             if(obj.displaySign.lock){
@@ -154,7 +154,7 @@ let workingModalMixin  = {
                 if(allSeconds<=60 && upCavityStatus==3){
                     this.queryRunTimer(1);//6秒轮询 
                 }else{
-                    this.queryRunTimer(6);//6秒轮询 
+                    this.queryRunTimer(10);//6秒轮询 
                 }
             }
              if(this.index==1 && (downCavityStatus==3||downCavityStatus==4||downCavityStatus==6)){
@@ -166,7 +166,7 @@ let workingModalMixin  = {
                 if(allSeconds<=60 && downCavityStatus==3){
                     this.queryRunTimer(1);//6秒轮询 
                 }else{
-                    this.queryRunTimer(6);//6秒轮询 
+                    this.queryRunTimer(10);//6秒轮询 
                 }
             }
         },

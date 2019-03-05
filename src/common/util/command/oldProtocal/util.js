@@ -202,7 +202,7 @@ export default {
   },
   // 查询指令
   createQueryMessage(device) {
-    var messageBody = message.createMessageBody(1);//createMessageBody默认从10开始，1表示11，2表示12....
+    var messageBody = message.createMessageBody(13);//createMessageBody默认从10开始，1表示11，2表示12....
     // message.setByte(messageBody, 0, 0);
     var sendMessage = message.createMessage(device.type, 0x03, messageBody);
     return sendMessage;

@@ -110,7 +110,7 @@ let workingModalMixin  = {
             if(analysisObj.workingState.value == 2 || analysisObj.workingState.value == 1 ){
                 this.queryRunTimer(10);//10秒轮询 
                 this.setWarningDialog("",null,false);
-                if(analysisObj.isProbe.value && !this.currentItem.probe && this.show) {
+                if(this.isProbeInserted(analysisObj) && !this.currentItem.probe && this.show) {
                     this.show = false;
                 }
             }
@@ -187,7 +187,7 @@ let workingModalMixin  = {
                 temperatureText:null // 工作中显示的设定温度文案
             };
 
-            if(cmdObj.isProbe.value && !this.isCloudMenu(cmdObj)) { // 有探针显示探针温度
+            if(this.isProbeInserted(cmdObj) && !this.isCloudMenu(cmdObj)) { // 有探针显示探针温度
                 customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature);
             } else { // 非探针模式显示较大温度
                 customData.temperatureText = this.getTemperatureTextWithoutProbe(cmdObj);
@@ -210,7 +210,16 @@ let workingModalMixin  = {
             return temp + '°';
         },
 
-        // 判断当前是否云菜谱
+        /**
+         * 判断是否插入探针
+         */
+        isProbeInserted(cmdObj){
+            return cmdObj.isProbe.value;
+        },
+
+        /**
+         * 判断当前是否云菜谱
+         */
         isCloudMenu(obj){
             return obj.recipeId.value > 0 && obj.mode.value !== 0xE0
         },
@@ -260,7 +269,7 @@ let workingModalMixin  = {
                 this.lightImg = "img/light_off@3x.png";
             }
 
-            if(analysisObj.isProbe.value){
+            if(this.isProbeInserted(analysisObj)){
                 this.statusTag = '当前实时温度';
                 chartJson.pointShow = false;
             }
@@ -275,12 +284,12 @@ let workingModalMixin  = {
                 //      this.hasSetting = false;
                 // }
 
-                if(analysisObj.isProbe.value && this.isCloudMenu(analysisObj) && this.isFun2Oven()) {
+                if(this.isProbeInserted(analysisObj) && this.isCloudMenu(analysisObj) && this.isFun2Oven()) {
                     analysisObj.isProbe.value = 0;
                     this.statusTag = '剩余时间';
                 }
 
-                if(analysisObj.isProbe.value && !this.isCloudMenu(analysisObj) && this.isFun2Oven()) {
+                if(this.isProbeInserted(analysisObj) && !this.isCloudMenu(analysisObj) && this.isFun2Oven()) {
                     this.probeProgress = '工作中';
                     this.timeShow = false;
                     this.hasHour = false;

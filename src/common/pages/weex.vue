@@ -421,7 +421,7 @@
                 return tab.rows[0].title && tab.rows[0].title !== 'mode'
             },
             onCloudMenuIconClicked(){
-                if(this.isFun2Oven()) {
+                if(this.isFun2Oven() && this.isProbeInserted(this.cmdObj)) {
                     this.setHintDialog({
                         show:true,
                         content: '主人，检测到烤箱插入了探针，云食谱目前不支持此功能，请取出探针后再操作。',

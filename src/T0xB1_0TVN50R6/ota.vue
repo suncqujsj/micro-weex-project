@@ -30,7 +30,7 @@
             <!--<text>{{state}}</text>-->
             <div class="firmware-item">
                 <div class="item-top row a-c">
-                    <text class="item-left flex">v {{verNo}}</text>
+                    <text v-if="verNo" class="item-left flex">v {{verNo}}</text>
                     <midea-button v-if="hasNewVer && !pressed" class="update-button" text="更新" type="primary" :btnStyle="{'width': '88px', 'height':'40px','border-radius':'24px'}" :textStyle="{'font-size':'26px'}" @mideaButtonClicked="upgrade"></midea-button>
                 </div>
                 <text class="item-desc">{{verDesc}}</text>
@@ -60,7 +60,7 @@
         data(){
             return {
                 t:null,
-                verNo: 1,
+                verNo: '',
                 verDesc: null,
                 verId: null,
                 pressed:false

@@ -88,7 +88,8 @@ let workingModalMixin  = {
         analysisFun(analysisObj,tabs) {
             //this.show = false;
             // this.setWarningDialog("",null,false);
-            clearInterval(this.queryTimer);
+            // clearInterval(this.queryTimer);
+            // nativeService.alert(analysisObj);
             this.modalVisibility = false;
             this.showDetailVisibility = false;
             this.show = false;

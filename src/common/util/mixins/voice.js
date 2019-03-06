@@ -13,7 +13,8 @@ let commonMixin = {
         return {
             deviceId:null,
             uid:null,
-            url:null
+            url:null,
+            iotAppId:null
         };
     },
     created(){
@@ -145,7 +146,7 @@ let commonMixin = {
             }
 
             this.voiceAuth().then((resp)=>{
-                // nativeService.alert(resp.code);
+                // nativeService.alert(resp);
                 if(resp.code === 0) {
                     this.setSwitchValue(index, !value);
                 }
@@ -177,6 +178,7 @@ let commonMixin = {
                 // nativeService.alert(result);
                 if (result.data && result.data.authorize == 1) {
                     this.url = result.data.url;
+                    this.iotAppId = result.data.iotAppId;
                     let voiceAuthStateResult = await  this.getVoiceAuth(deviceId, uid);
                     let data = JSON.parse(voiceAuthStateResult.returnData).data;
                     // nativeService.toast('授权状态status：' + data.status);
@@ -270,10 +272,12 @@ let commonMixin = {
                     timestamp: timestamp,
                     data: {
                         deviceId: this.deviceId, // 设备id
-                        aiUpdateTokenUrl: this.url
+                        aiUpdateTokenUrl: this.url,
+                        iotAppId: this.iotAppId
                     }
                 }
             }
+            // nativeService.alert(params)
 
 
             return nativeService.sendCentralCloundRequest(url, params)

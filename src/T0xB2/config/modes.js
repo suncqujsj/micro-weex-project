@@ -14,12 +14,12 @@ let modes = [
                 time:{
                     set: true,
                     default:30,
-                    range:[1,119,1],
+                    range:[1,300,1],
                 },
                 temperature:{
                     set: true,
                     default:100,
-                    range:[35,70,1,75,100,5],
+                    range:[35,50,1,55,100,5],
                 },
                 preheat:{
                     set:false,
@@ -83,7 +83,7 @@ let modes = [
                 time:{
                     set: true,
                     default:40,
-                    range:[1,719,1],
+                    range:[1,720,1],
                 },
                 temperature:{
                     set: true,
@@ -115,7 +115,7 @@ let modes = [
                 time:{
                     set: false,
                     default:8,
-                    range:[1,719,1],
+                    range:[1,720,1],
                 },
                 temperature:{
                     set: false,
@@ -147,46 +147,13 @@ let modes = [
         title:'',
         iconButtons:[
             {
-                'icon': modeIcons[14].dir,
-                'text': modeIcons[14].cn,
-                'mode': 0xA1,
-                time:{
-                    set: false,
-                    default:20,
-                    range:[1,719,1],
-                },
-                temperature:{
-                    set: false,
-                    default:null,
-                    range:[35,45,5],
-                },
-                preheat:{
-                    set:false,
-                    default: null,
-                },
-                steamAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                },
-                fireAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                    hide: null
-                },
-                settingHide:true,
-                standbyHide: true,
-                circleProgressPointHide: true,
-            },
-            {
                 'icon': modeIcons[30].dir,
                 'text': modeIcons[30].cn,
                 'mode': 0xE0,
                 time:{
                     set: false,
                     default:20,
-                    range:[1,719,1],
+                    range:[1,720,1],
                 },
                 temperature:{
                     set: false,

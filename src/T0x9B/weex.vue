@@ -44,7 +44,7 @@
         methods: {
            loadOwnMode(data,tabs){
                if(tabs.length>1){
-                    if(data.result && data.result.deviceSn8=='0TQN50QL'){
+                    if(data.result && data.result.deviceSn8=='0D50S3AT'){
                         tabs[0].rows = autoMenu_0TQN50QL;   
                         tabs[1].rows = modes_0TQN50QL;            
                     }

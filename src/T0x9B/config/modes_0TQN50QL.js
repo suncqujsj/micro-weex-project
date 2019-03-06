@@ -8,8 +8,8 @@ let modes = [
         title: '',
         iconButtons: [
             { // 快速预热
-                // 'icon': modeIcons[11].dir,
-                'icon': '',
+                'icon': modeIcons[11].dir,
+                // 'icon': '',
                 'text': modeIcons[11].cn,
                 'mode': 0x4B,
                 time:{
@@ -42,8 +42,8 @@ let modes = [
                 circleProgressPointHide: true,
             },
             { // 立体烧烤、上下烧烤+风扇
-                // 'icon': modeIcons[2].dir,
-                'icon': '',
+                'icon': modeIcons[2].dir,
+                // 'icon': '',
                 'text': modeIcons[2].cn,
                 'mode': 0x44,
                 time:{
@@ -77,8 +77,8 @@ let modes = [
             },
 
             { // 上下烤
-                // 'icon': modeIcons[0].dir,
-                'icon': '',
+                'icon': modeIcons[0].dir,
+                // 'icon': '',
                 'text': modeIcons[0].cn,
                 'mode': 0x4C,
                 time:{
@@ -112,8 +112,8 @@ let modes = [
             },
 
             { // 热风
-                // 'icon': modeIcons[1].dir,
-                'icon': '',
+                'icon': modeIcons[1].dir,
+                // 'icon': '',
                 'text': modeIcons[1].cn,
                 'mode': 0x41,
                 time:{
@@ -151,8 +151,8 @@ let modes = [
         title: '',
         iconButtons: [
             {//下管烧烤
-                // 'icon': modeIcons[3].dir,
-                'icon': '',
+                'icon': modeIcons[3].dir,
+                // 'icon': '',
                 'text': modeIcons[3].cn,
                 'mode': 0x49,
                 time:{
@@ -189,8 +189,8 @@ let modes = [
                 // }
             },
             {//
-                // 'icon': modeIcons[9].dir,
-                'icon': '',
+                'icon': modeIcons[9].dir,
+                // 'icon': '',
                 'text': modeIcons[9].cn,
                 'mode': 0x51,
                 time:{
@@ -222,8 +222,8 @@ let modes = [
                 circleProgressPointHide: true,
             },
             {
-                // 'icon': modeIcons[6].dir,
-                'icon': '',
+                'icon': modeIcons[6].dir,
+                // 'icon': '',
                 'text': modeIcons[6].cn,
                 'mode': 0x46,
                 time:{
@@ -255,8 +255,8 @@ let modes = [
                 circleProgressPointHide: true,
             },
             {
-                // 'icon': modeIcons[13].dir,
-                'icon': '',
+                'icon': modeIcons[13].dir,
+                // 'icon': '',
                 'text': modeIcons[13].cn,
                 'mode': 0x47,
                 time:{
@@ -294,8 +294,8 @@ let modes = [
         title:'',
         iconButtons:[
             {
-                // 'icon': modeIcons[16].dir,
-                'icon': '',
+                'icon': modeIcons[16].dir,
+                // 'icon': '',
                 'text': modeIcons[16].cn,
                 'mode': 0x20,
                 time:{
@@ -327,7 +327,8 @@ let modes = [
                 circleProgressPointHide: true,
             },
             { //蒸汽+上下烧烤
-                'icon': '',
+                'icon': modeIcons[34].dir,
+                // 'icon': '',
                 'text': modeIcons[34].cn,
                 'mode': 0x3C,
                 time:{
@@ -359,7 +360,8 @@ let modes = [
                 circleProgressPointHide: true,
             },
             { //蒸汽+热风
-                'icon': '',
+                'icon': modeIcons[35].dir,
+                // 'icon': '',
                 'text': modeIcons[35].cn,
                 'mode': 0x31,
                 time:{
@@ -391,7 +393,8 @@ let modes = [
                 circleProgressPointHide: true,
             },
             { //蒸汽+立体烧烤
-                'icon': '',
+                'icon': modeIcons[36].dir,
+                // 'icon': '',
                 'text': modeIcons[36].cn,
                 'mode': 0x34,
                 time:{
@@ -428,7 +431,8 @@ let modes = [
         title:'',
         iconButtons:[
             { //蒸汽+底部烧烤
-                'icon': '',
+                'icon': modeIcons[37].dir,
+                // 'icon': '',
                 'text': modeIcons[37].cn,
                 'mode': 0x39,
                 time:{
@@ -460,7 +464,8 @@ let modes = [
                 circleProgressPointHide: true,
             },
             { //蒸汽+大面积+风扇
-                'icon': '',
+                'icon': modeIcons[38].dir,
+                // 'icon': '',
                 'text': modeIcons[38].cn,
                 'mode': 0x61,
                 time:{
@@ -492,7 +497,8 @@ let modes = [
                 circleProgressPointHide: true,
             },
             { //蒸汽+大面积
-                'icon': '',
+                'icon': modeIcons[39].dir,
+                // 'icon': '',
                 'text': modeIcons[39].cn,
                 'mode': 0x36,
                 time:{
@@ -524,7 +530,8 @@ let modes = [
                 circleProgressPointHide: true,
             },
             { //蒸汽+小面积烧烤
-                'icon': '',
+                'icon': modeIcons[40].dir,
+                // 'icon': '',
                 'text': modeIcons[40].cn,
                 'mode': 0x37,
                 time:{

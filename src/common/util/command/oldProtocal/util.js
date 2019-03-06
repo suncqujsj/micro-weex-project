@@ -202,7 +202,7 @@ export default {
   },
   // 查询指令
   createQueryMessage(device) {
-    var messageBody = message.createMessageBody(13);//createMessageBody默认从10开始，1表示11，2表示12....
+    var messageBody = message.createMessageBody(1);//createMessageBody默认从10开始，1表示11，2表示12....
     // message.setByte(messageBody, 0, 0);
     var sendMessage = message.createMessage(device.type, 0x03, messageBody);
     return sendMessage;
@@ -263,7 +263,6 @@ export default {
     // }
     // latesFrameRecord = receiveFrame;
     // nativeService.toast(latesFrameRecord,6);
-    // nativeService.alert(requestCmd);
     var obj = this.initAnalysisObj();
   // if(parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)){
     obj.workingState.value = this.getStatusCode(parseInt(requestCmd[10]));
@@ -290,7 +289,7 @@ export default {
      obj.displaySign.changeWater = 0;// 无此状态检测
      obj.displaySign.preheat = parseInt(requestCmd[10]) === 8 ? 1:0;  // B10状态位 ，不预热工作0x02，预热工作0x08
      obj.displaySign.preheatTemperature = parseInt(requestCmd[14]);
-     obj.displaySign.isError = parseInt(requestCmd[15]) != 0 ? 1:0;
+     obj.displaySign.isError = parseInt(requestCmd[15]) ? 1:0;
 
      obj.isProbe.value = 0;// 无此状态检测
 
@@ -319,6 +318,9 @@ export default {
       switch (status_code) {
           case 7: // 省电
               result = 1;
+              break;
+          case 0: // 省电
+              result = 0;
               break;
           case 1: // 待机
               result = 2;

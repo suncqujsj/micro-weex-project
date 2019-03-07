@@ -1,5 +1,5 @@
 <template>
-    <common-weex :tabs="tabs" :constant="constant"></common-weex>
+    <common-weex :tabs="tabs" :constant="constant" v-if="pageShow"></common-weex>
 </template>
 
 <script>
@@ -29,7 +29,8 @@
                         rows:[]
                     }
                 ],
-                constant:constant
+                constant:constant,
+                pageShow: false
             }
         },
         components:{commonWeex},
@@ -39,6 +40,7 @@
              nativeService.getDeviceInfo().then(function(data){
                 var _tabs = self.loadOwnMode(data,tabs);
                 self.tabs = JSON.parse(JSON.stringify(_tabs));
+                self.pageShow = true;
             });
         },
         methods: {

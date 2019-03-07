@@ -51,7 +51,7 @@ let modes = [
                 time:{
                     set: true,
                     default:5,
-                    range:[1,60,1],
+                    range:[5,60,1],
                 },
                 temperature:{
                     set: false,
@@ -151,7 +151,7 @@ let modes = [
                 'text': modeIcons[14].cn,
                 'mode': 0xA1,
                 time:{
-                    set: false,
+                    set: true,
                     default:20,
                     range:[1,120,1],
                 },

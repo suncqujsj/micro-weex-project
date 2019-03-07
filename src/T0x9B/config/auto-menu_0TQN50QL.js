@@ -47,6 +47,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
                 {
                     'icon': '',
@@ -88,6 +89,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
                 {
                     'icon': '',
@@ -129,6 +131,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
                 {
                     'icon': '',
@@ -170,6 +173,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
             ],
         ]
@@ -218,6 +222,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
                 {
                     'icon': '',
@@ -259,6 +264,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
                 {
                     'icon': '',
@@ -300,6 +306,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
                 {
                     'icon': '',
@@ -341,6 +348,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
             ],
         ]
@@ -389,6 +397,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
                 {
                     'icon': '',
@@ -430,6 +439,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
                 {
                     'icon': '',
@@ -471,6 +481,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
                 {
                     'icon': '',
@@ -512,6 +523,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
             ],
         ]
@@ -560,6 +572,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
                 {
                     'icon': '',
@@ -601,6 +614,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
                 {
                     'icon': '',
@@ -642,6 +656,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
                 {
                     'icon': '',
@@ -683,6 +698,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
             ],
         ]
@@ -731,6 +747,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
                 {
                     'icon': '',
@@ -772,6 +789,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
                 {
                     'icon': '',
@@ -813,6 +831,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
                 {
                     'icon': '',
@@ -854,6 +873,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
+                    circleProgressPointHide: true,
                 },
             ],
         ]

@@ -5,9 +5,11 @@
 import modeIcons from "../../common/mapping/modeIcons";
  let timeCommon = {
      set: true,
-     default:5,
-     range:[1,95,1],
+     default:0,
+     range:[0,100,1],
  };
+
+ let fireAmountRange = [0,10, 1];
 
 
 let modes = [
@@ -16,116 +18,42 @@ let modes = [
         iconButtons: [
             {
                 'icon': modeIcons[12].dir,
-                'text': modeIcons[12].cn,
+                'text': modeIcons[12].en,
                 'mode': 0x01,
                 time: timeCommon,
-                temperature:{
-                    set: false,
-                    default:null,
-                    range:null,
-                },
-                fireAmount:{
+                fireAmount: {
                     set:true,
                     default:10,
-                    range:[3,5,2,8,10,2],
-                    hide: true
+                    range:fireAmountRange
                 },
                
             },
-           
             {
-                'icon': modeIcons[13].dir,
-                'text': '薄块烧烤',
-                'mode': 0x40,
-                time: timeCommon,
-                temperature:{
-                    set: false,
-                    default:false,
-                    range:null
-                },
-                preheat:{
-                    set:false,
-                    default: false,
-                    hide: false,
-                },
-                steamAmount:{
-                    set:false,
-                    default:false,
-                    range:false
-                },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
-                }
-            },
-            {
-                'icon': modeIcons[22].dir,
-                'text': '双模快烤',
-                'mode': 0x70,
-                time: timeCommon,
-                temperature:{
-                    set: false,
-                    default:false,
-                    range:false
-                },
-                preheat:{
-                    set:false,
-                    default: false,
-                    hide: false,
-                },
+                'icon': modeIcons[23].dir,
+                'text': modeIcons[23].en,
+                'mode': 0xA0,
                 weight:{
-                    set:false,
-                    default:100,
-                    range:[100,2000,100],
-                    hide: true
+                    set:true,
+                    default:4,
+                    range:[4,100,1]
                 },
-                steamAmount:{
-                    set:false,
-                    default:false,
-                    range:false,
+                fireAmount: {
+                    set:true,
+                    default:5,
+                    range:fireAmountRange
                 },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null,
-                },
+                settingHide:true
 
             },
             {
-                'icon': modeIcons[23].dir,
-                'text': modeIcons[23].cn,
+                'icon': modeIcons[24].dir,
+                'text': modeIcons[24].en,
                 'mode': 0xA0,
-                time:{
-                    set: false,
-                    default:false,
-                    range:false,
-                },
-                temperature:{
-                    set: false,
-                    default:false,
-                    range:false
-                },
-                preheat:{
-                    set:false,
-                    default: false,
-                    hide: false,
-                },
-                weight:{
+                time: timeCommon,
+                fireAmount: {
                     set:true,
-                    default:100,
-                    range:[100,2000,100],
-                    hide: true
-                },
-                steamAmount:{
-                    set:false,
-                    default:false,
-                    range:false,
-                },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null,
+                    default:3,
+                    range:fireAmountRange
                 },
                 settingHide:true
 

@@ -6,7 +6,7 @@
 module.exports = {
     device: {
         type: 0xB0,
-        page_title: "微波炉",
+        page_title: "Microwave Oven",
         widget_name: 'MSO_T0xB0',
         widget_version: '5.1.3',
         extra1: {

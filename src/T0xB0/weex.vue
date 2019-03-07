@@ -1,5 +1,5 @@
 <template>
-    <common-weex :tabs="tabs" :constant="constant"></common-weex>
+    <common-weex :tabs="tabs" :constant="constant" v-if="pageShow"></common-weex>
 </template>
 
 <script>
@@ -26,7 +26,8 @@
                         rows:[]
                     }
                 ],
-                constant:constant
+                constant:constant,
+                pageShow: false
             }
         },
         components:{commonWeex},
@@ -46,6 +47,7 @@
                     }
                 }
                 self.tabs = JSON.parse(JSON.stringify(tabs));
+                self.pageShow = true;
             });
         },
         methods: {

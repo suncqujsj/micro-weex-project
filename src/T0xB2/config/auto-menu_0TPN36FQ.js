@@ -508,7 +508,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x09,
+                        default: 0x0C,
                         range:null
                     },
                     detail: null,
@@ -558,7 +558,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x0A,
+                        default: 0x0D,
                         range:null
                     },
                     detail: null,
@@ -599,7 +599,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x0B,
+                        default: 0x0E,
                         range:null
                     },
                     detail: null,
@@ -640,7 +640,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x09,
+                        default: 0x0F,
                         range:null
                     },
                     detail: null,
@@ -681,7 +681,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x0A,
+                        default: 0x10,
                         range:null
                     },
                     detail: null,
@@ -730,7 +730,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x0B,
+                        default: 0x11,
                         range:null
                     },
                     detail: null,
@@ -771,7 +771,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x09,
+                        default: 0x12,
                         range:null
                     },
                     detail: null,
@@ -812,7 +812,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x0A,
+                        default: 0x13,
                         range:null
                     },
                     detail: null,
@@ -853,7 +853,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x0B,
+                        default: 0x14,
                         range:null
                     },
                     detail: null,

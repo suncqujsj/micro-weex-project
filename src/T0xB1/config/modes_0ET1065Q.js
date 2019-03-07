@@ -9,19 +9,19 @@ let modes = [
     {
         title: '',
         iconButtons: [
-            { // 烧烤
-                'icon': modeIcons[3].dir,
-                'text': modeIcons[3].cn,
-                'mode': 0xd0,
+            { // 解冻
+                'icon': modeIcons[24].dir,
+                'text': modeIcons[24].cn,
+                'mode': 0xa1,
                 time:{
                     set: true,
-                    default:1,
-                    range:[1,540,1]
+                    default:30,
+                    range:[1,60,1,65,120,5,120,540,30]
                 },
                 temperature:{
-                    set: true,
-                    default:220,
-                    range:[50,100,1,105,250,5]
+                    set: false,
+                    default:35,
+                    range:[30,40,1]
                 },
                 preheat:{
                     set:false,
@@ -38,38 +38,7 @@ let modes = [
                     default:0,
                     range:null
                 },
-                settingHide:true,
-                circleProgressPointHide: true,
-            },
-            { // 上管+红外+风扇/中心烧烤
-                'icon': modeIcons[9].dir,
-                'text': modeIcons[9].cn,
-                'mode': 0x46,
-                time:{
-                    set: true,
-                    default:1,
-                    range:[1,540,1]
-                },
-                temperature:{
-                    set: true,
-                    default:210,
-                    range:[180,240,5]
-                },
-                preheat:{
-                    set:false,
-                    default: 0,
-                    workingPreheatHide: true,
-                },
-                steamAmount:{
-                    set:false,
-                    default:0,
-                    range:[1,4,1,"取消"]
-                },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
-                },
+                standbyHide:true,
                 settingHide:true,
                 circleProgressPointHide: true,
             },
@@ -83,7 +52,7 @@ let modes = [
                     range:[1,2540,1]
                 },
                 temperature:{
-                    set: true,
+                    set: false,
                     default:180,
                     range:[160,180,5]
                 },
@@ -105,77 +74,6 @@ let modes = [
                 settingHide:true,
                 circleProgressPointHide: true,
             },
-            { // 热风
-                'icon': modeIcons[1].dir,
-                'text': modeIcons[1].cn,
-                'mode': 0x41,
-                time:{
-                    set: true,
-                    default:1,
-                    range:[1,540,1]
-                },
-                temperature:{
-                    set: true,
-                    default:180,
-                    range:[50,100,1,105,240,5]
-                },
-                preheat:{
-                    set:false,
-                    default: 0,
-                    workingPreheatHide: true,
-                },
-                steamAmount:{
-                    set:false,
-                    default:2,
-                    range:[1,4,1,"取消"]
-                },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
-                },
-                settingHide:true,
-                circleProgressPointHide: true,
-            },
-        ]
-    },
-    {
-        title: '',
-        iconButtons: [
-
-            { // 上下烧烤/立体烧烤
-                'icon': modeIcons[2].dir,
-                'text': modeIcons[2].cn,
-                'mode': 0x44,
-                time:{
-                    set: true,
-                    default:1,
-                    range:[1,540,1]
-                },
-                temperature:{
-                    set: true,
-                    default:220,
-                    range:[50,100,1,105,250,5]
-                },
-                preheat:{
-                    set:false,
-                    default: 0,
-                    workingPreheatHide: true,
-                },
-                steamAmount:{
-                    set:false,
-                    default:2,
-                    range:[1,4,1,"取消"]
-                },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
-                },
-                settingHide:true,
-                circleProgressPointHide: true,
-            },
-
             { // 发酵
                 'icon': modeIcons[7].dir,
                 'text': modeIcons[7].cn,
@@ -183,7 +81,7 @@ let modes = [
                 time:{
                     set: true,
                     default:30,
-                    range:[1,2540,1]
+                    range:[1,60,1,65,120,5,120,540,30]
                 },
                 temperature:{
                     set: true,
@@ -208,152 +106,19 @@ let modes = [
                 settingHide:true,
                 circleProgressPointHide: true,
             },
-
-            { // 
-                'icon': modeIcons[0].dir,
-                'text': modeIcons[0].cn,
-                'mode': 0x4c,
+            {   // 保温
+                'icon': modeIcons[28].dir,
+                'text': modeIcons[28].cn,
+                'mode': 0xD0,
                 time:{
                     set: true,
-                    default:30,
-                    range:[1,2540,1]
+                    default:1,
+                    range:[1,60,1,65,120,5,120,540,30]
                 },
                 temperature:{
                     set: true,
-                    default:35,
-                    range:[30,40,1]
-                },
-                preheat:{
-                    set:false,
-                    default: 0,
-                    workingPreheatHide: true,
-                },
-                steamAmount:{
-                    set:false,
-                    default:0,
-                    range:[1,4,1,"取消"]
-                },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
-                },
-                standbyHide:true,
-                settingHide:true,
-                circleProgressPointHide: true,
-            },
-            { // 
-                'icon': modeIcons[41].dir,
-                'text': modeIcons[41].cn,
-                'mode': 0x4f,
-                time:{
-                    set: true,
-                    default:30,
-                    range:[1,2540,1]
-                },
-                temperature:{
-                    set: true,
-                    default:35,
-                    range:[30,40,1]
-                },
-                preheat:{
-                    set:false,
-                    default: 0,
-                    workingPreheatHide: true,
-                },
-                steamAmount:{
-                    set:false,
-                    default:0,
-                    range:[1,4,1,"取消"]
-                },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
-                },
-                standbyHide:true,
-                settingHide:true,
-                circleProgressPointHide: true,
-            },
-            { // 
-                'icon': modeIcons[42].dir,
-                'text': modeIcons[42].cn,
-                'mode': 0x50,
-                time:{
-                    set: true,
-                    default:30,
-                    range:[1,2540,1]
-                },
-                temperature:{
-                    set: true,
-                    default:35,
-                    range:[30,40,1]
-                },
-                preheat:{
-                    set:false,
-                    default: 0,
-                    workingPreheatHide: true,
-                },
-                steamAmount:{
-                    set:false,
-                    default:0,
-                    range:[1,4,1,"取消"]
-                },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
-                },
-                standbyHide:true,
-                settingHide:true,
-                circleProgressPointHide: true,
-            },
-            { // 
-                'icon': modeIcons[24].dir,
-                'text': modeIcons[24].cn,
-                'mode': 0xa1,
-                time:{
-                    set: true,
-                    default:30,
-                    range:[1,2540,1]
-                },
-                temperature:{
-                    set: true,
-                    default:35,
-                    range:[30,40,1]
-                },
-                preheat:{
-                    set:false,
-                    default: 0,
-                    workingPreheatHide: true,
-                },
-                steamAmount:{
-                    set:false,
-                    default:0,
-                    range:[1,4,1,"取消"]
-                },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
-                },
-                standbyHide:true,
-                settingHide:true,
-                circleProgressPointHide: true,
-            },
-            {
-                'icon': modeIcons[30].dir,
-                'text': modeIcons[30].cn,
-                'mode': 0xE0,
-                time:{
-                    set: false,
-                    default:20,
-                    range:[1,719,1],
-                },
-                temperature:{
-                    set: false,
-                    default:null,
-                    range:[35,45,5],
+                    default:60,
+                    range:[60,100,1,105,120,5]
                 },
                 preheat:{
                     set:false,
@@ -371,10 +136,244 @@ let modes = [
                     hide: null
                 },
                 settingHide:true,
-                standbyHide: true,
+                // standbyHide: true,
                 circleProgressPointHide: true,
             },
-
+        ]
+    },
+    {
+        title: '',
+        iconButtons: [
+            { // 烧烤
+                'icon': modeIcons[32].dir,
+                'text': '烧烤',
+                'mode': 0x4c,
+                time:{
+                    set: true,
+                    default:1,
+                    range:[1,60,1,65,120,5,120,540,30]
+                },
+                temperature:{
+                    set: true,
+                    default:220,
+                    range:[50,100,1,105,250,5]
+                },
+                preheat:{
+                    set:true,
+                    default: 0,
+                    workingPreheatHide: true,
+                },
+                steamAmount:{
+                    set:false,
+                    default:0,
+                    range:[1,4,1,"取消"]
+                },
+                fireAmount:{
+                    set:false,
+                    default:0,
+                    range:null
+                },
+                settingHide:true,
+                circleProgressPointHide: true,
+            },
+            { // 上下烧烤/立体烧烤
+                'icon': modeIcons[2].dir,
+                'text': '立体烧烤',
+                'mode': 0x44,
+                time:{
+                    set: true,
+                    default:1,
+                    range:[1,60,1,65,120,5,120,540,30]
+                },
+                temperature:{
+                    set: true,
+                    default:220,
+                    range:[50,100,1,105,250,5]
+                },
+                preheat:{
+                    set:true,
+                    default: 0,
+                    workingPreheatHide: true,
+                },
+                steamAmount:{
+                    set:false,
+                    default:2,
+                    range:[1,4,1,"取消"]
+                },
+                fireAmount:{
+                    set:false,
+                    default:0,
+                    range:null
+                },
+                settingHide:true,
+                circleProgressPointHide: true,
+            },
+            { // 上管+红外+风扇/中心烧烤
+                'icon': modeIcons[9].dir,
+                'text': '中心烧烤',
+                'mode': 0x46,
+                time:{
+                    set: true,
+                    default:1,
+                    range:[1,60,1,65,120,5,120,540,30]
+                },
+                temperature:{
+                    set: true,
+                    default:210,
+                    range:[180,240,5]
+                },
+                preheat:{
+                    set:true,
+                    default: 0,
+                    workingPreheatHide: true,
+                },
+                steamAmount:{
+                    set:false,
+                    default:0,
+                    range:[1,4,1,"取消"]
+                },
+                fireAmount:{
+                    set:false,
+                    default:0,
+                    range:null
+                },
+                settingHide:true,
+                circleProgressPointHide: true,
+            },
+            { // 双层烧烤
+                'icon': modeIcons[42].dir,
+                'text': modeIcons[42].cn,
+                'mode': 0x50,
+                time:{
+                    set: true,
+                    default:30,
+                    range:[1,60,1,65,120,5,120,540,30]
+                },
+                temperature:{
+                    set: true,
+                    default:210,
+                    range:[180,240,5]
+                },
+                preheat:{
+                    set:true,
+                    default: 0,
+                    workingPreheatHide: true,
+                },
+                steamAmount:{
+                    set:false,
+                    default:0,
+                    range:[1,4,1,"取消"]
+                },
+                fireAmount:{
+                    set:false,
+                    default:0,
+                    range:null
+                },
+                standbyHide:true,
+                settingHide:true,
+                circleProgressPointHide: true,
+            },
+        ]
+    },
+    {
+        title: '',
+        iconButtons: [
+            { // 旋转小份量上色
+                'icon': modeIcons[41].dir,
+                'text': modeIcons[41].cn,
+                'mode': 0x4F,
+                time:{
+                    set: true,
+                    default:1,
+                    range:[1,60,1,65,120,5,120,540,30]
+                },
+                temperature:{
+                    set: true,
+                    default:210,
+                    range:[180,240,5]
+                },
+                preheat:{
+                    set:true,
+                    default: 0,
+                    workingPreheatHide: true,
+                },
+                steamAmount:{
+                    set:false,
+                    default:2,
+                    range:[1,4,1,"取消"]
+                },
+                fireAmount:{
+                    set:false,
+                    default:0,
+                    range:null
+                },
+                settingHide:true,
+                circleProgressPointHide: true,
+            },
+            { // 热风对流
+                'icon': modeIcons[1].dir,
+                'text': modeIcons[1].cn,
+                'mode': 0x41,
+                time:{
+                    set: true,
+                    default:1,
+                    range:[1,60,1,65,120,5,120,540,30]
+                },
+                temperature:{
+                    set: true,
+                    default:180,
+                    range:[50,100,1,105,240,5]
+                },
+                preheat:{
+                    set:true,
+                    default: 0,
+                    workingPreheatHide: true,
+                },
+                steamAmount:{
+                    set:false,
+                    default:0,
+                    range:[1,4,1,"取消"]
+                },
+                fireAmount:{
+                    set:false,
+                    default:0,
+                    range:null
+                },
+                settingHide:true,
+                circleProgressPointHide: true,
+            },
+            { // 高温自清洁
+                'icon': modeIcons[20].dir,
+                'text': modeIcons[20].cn,
+                'mode': 0xC0,
+                time:{
+                    set: true,
+                    default:30,
+                    range:[90,120,30]
+                },
+                temperature:{
+                    set: true,
+                    default:450,
+                    range:[450,450,1]
+                },
+                preheat:{
+                    set:false,
+                    default: 0,
+                    workingPreheatHide: true,
+                },
+                steamAmount:{
+                    set:false,
+                    default:0,
+                    range:[1,4,1,"取消"]
+                },
+                fireAmount:{
+                    set:false,
+                    default:0,
+                    range:null
+                },
+                settingHide:true,
+                circleProgressPointHide: true,
+            },
         ]
     },
 ];

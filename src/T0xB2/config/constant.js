@@ -13,10 +13,10 @@ module.exports = {
         extra1: {
             sn8: '0TPN36FQ'
         },
-        hideChildLock:{
-            standby:true,
-            working:true
-        }
+        // hideChildLock:{
+        //     standby:true,
+        //     working:true
+        // }
         // hms:[0,1,1] //是否用时分秒组件
     }
 };

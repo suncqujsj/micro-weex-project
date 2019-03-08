@@ -75,7 +75,7 @@
             </div>
         </div>
         <!--模式参数设置弹窗-->
-        <sf-dialog :show="show" :tabs="tabs" :device="constant.device" :working="isWorkingPage" :isProbe="cmdObj.isProbe.value" mainBtnColor="#267AFF" secondBtnColor="#267AFF" :confirmText="getLanguage('sfDialog.confirmText')" :cancelText="getLanguage('sfDialog.cancelText')" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
+        <sf-dialog :show="show" :tabs="tabs" :device="constant.device" :working="isWorkingPage" :isProbe="cmdObj.isProbe.value" mainBtnColor="#267AFF" secondBtnColor="#267AFF" :confirmText="getLanguage('start')" :cancelText="getLanguage('cancel')" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <!--<template v-for="tab in tabs">-->
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
@@ -184,7 +184,7 @@
             @itemClick="actionsheetItemClick"
             @btnClick="actionsheetBtnClick"
             ref="actionsheet"
-            button="我再想想"
+            :button="getLanguage('wait')"
         ></midea-actionsheet>
 
 
@@ -228,7 +228,7 @@
                         <div class="center_section">
                             <!--时tag-->
                             <div :class="['prev_section',hourMore10 && 'prev_section_more']">
-                                <text class="number_prev" v-if="hasHour">时</text>
+                                <text class="number_prev" v-if="hasHour">{{getLanguage('hour')}}</text>
                             </div>
                             <!--中间显示时分/预热完成/预热中/烹饪完成-->
                             <div class="content_section">
@@ -281,8 +281,8 @@
                         <!--预热完成引导-->
                         <div class="preheatFinishTig" v-if="preheatFinishTig">
                             <div class="preheat_tig_section">
-                                <div><text class="preheat_tig">放入食物</text></div>
-                                <div><text class="preheat_tig" style="marginTop:10px">点击开始</text></div>
+                                <div><text class="preheat_tig">{{getLanguage('putIntoFoodMaterial')}}</text></div>
+                                <div><text class="preheat_tig" style="marginTop:10px">{{getLanguage('pressToStart')}}</text></div>
                             </div>
                         </div>
                     </div>

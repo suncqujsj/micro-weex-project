@@ -67,7 +67,7 @@ let accordions =  [
         key:'preheat',
         type:'switch',
         isFolded: true,
-        subtitle: getTitle('预热', 'Preheat'),
+        subtitle: getTitle('预热', 'Preheating'),
         unit:'',
         hideArrow:true
     },

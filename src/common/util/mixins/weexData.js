@@ -77,7 +77,7 @@ let workingModalMixin  = {
                 probeTempText: "°C",
     
                 showBar:false,
-                actionsheetItems:['确定关闭'],
+                actionsheetItems:[this.getLanguage('confirmClose')],
                 lightImg:"img/light_off@3x.png",
 
                 isWorkingPage:false,
@@ -91,8 +91,16 @@ let workingModalMixin  = {
             return this.constant.device.lang;
         },
         getLanguage(key){
-
             return languages[key][this.constant.device.lang];
+        },
+        getLanguages(keys){
+            let len = keys.length;
+            let space = this.getLang() === 'cn' ? '' : ' ';
+            let buffer = '';
+            for(let i=0;i<len;i++) {
+                buffer += this.getLanguage(keys[i]) + space;
+             }
+             return buffer;
         },
         analysisFun(analysisObj,tabs) {
             //this.show = false;
@@ -255,9 +263,11 @@ let workingModalMixin  = {
             this.hasSetting = false;
             this.isTimerStop = false;
             this.preheatFinishTig = false;
-            this.statusTag = '剩余时间';
+            this.statusTag = this.getLanguage('timeLeft');
+            // this.statusTag = '剩余时间';
             this.hasStopOrContinueBtn = false;
-            this.cancleBtnText = '关闭';
+            this.cancleBtnText = this.getLanguage('close');
+            // this.cancleBtnText = '关闭';
             this.cancleIcon = 'img/footer/icon_cancle@2x.png';
 
             var _hour = analysisObj.timeRemaining.hour, _minute = analysisObj.timeRemaining.minute, _second = analysisObj.timeRemaining.second;
@@ -280,7 +290,7 @@ let workingModalMixin  = {
             }
 
             if(this.isProbeInserted(analysisObj)){
-                this.statusTag = '当前实时温度';
+                this.statusTag = this.getLanguage('currentTemperature');
                 chartJson.pointShow = false;
             }
 
@@ -296,15 +306,15 @@ let workingModalMixin  = {
 
                 if(this.isProbeInserted(analysisObj) && this.isCloudMenu(analysisObj) && this.isFun2Oven()) {
                     analysisObj.isProbe.value = 0;
-                    this.statusTag = '剩余时间';
+                    this.statusTag = this.getLanguage('timeLeft');
                 }
 
                 if(this.isProbeInserted(analysisObj) && !this.isCloudMenu(analysisObj) && this.isFun2Oven()) {
-                    this.probeProgress = '工作中';
+                    this.probeProgress = this.getLanguage('working');
                     this.timeShow = false;
                     this.hasHour = false;
                     this.probeTempText = '';
-                    this.statusTag = '探针模式';
+                    this.statusTag = this.getLanguage('probeMode');
                     // this.cmdObj.mode.text = '';
                     this.cmdObj.temperatureText = '';
                     chartJson.pointShow = false;
@@ -337,15 +347,15 @@ let workingModalMixin  = {
             if(analysisObj.workingState.value === 4){
                this.timeShow = false;
                this.hasHour = false;
-               this.workSpecialStatusText = "烹饪完成";
+               this.workSpecialStatusText = this.getLanguages(['cooking', 'finish']);
                this.isTimerStop = true;
                this.tag_next = '';
-               this.statusTag = '取出时小心烫手';
+               this.statusTag = this.getLanguage('hotCaution');
                this.progressShow = false;
                this.finishStatus = true;
                this.probeProgress = '烹饪完成';
                this.probeTempText = '';
-               this.cancleBtnText = '完成';
+               this.cancleBtnText = this.getLanguage('finish');
                this.cancleIcon = 'img/finish_icon@2x.png';
                let isCookingTypeComplete = true;  //默认烹饪类 完成
                 if(analysisObj.mode.value == 0xC0 ||analysisObj.mode.value == 0xC1||analysisObj.mode.value == 0xC2||
@@ -363,12 +373,13 @@ let workingModalMixin  = {
              if(analysisObj.workingState.value != 4 && analysisObj.displaySign.preheat == 1){
                 this.timeShow = false;
                 this.hasHour = false;
-                this.workSpecialStatusText = "预热中";
+                this.workSpecialStatusText = this.getLanguages(['preheating', 'ing']);
+                // this.workSpecialStatusText = '预热中';
                 let mode_text = analysisObj.mode.text;
                 if(analysisObj.mode.value == 0x4B){ //如果是快速预热，文案就变为快速
                     mode_text = "快速";
                 }
-                this.cmdObj.mode.text = mode_text+"预热到";
+                this.cmdObj.mode.text = mode_text + this.getLanguages(['preheat', 'to']);
                 this.tag_next = '';
                 this.statusTag = '';
                 this.hasSetting = true;
@@ -382,21 +393,23 @@ let workingModalMixin  = {
             if(analysisObj.workingState.value != 4 &&  analysisObj.displaySign.preheatTemperature == 1){
                 this.timeShow = false;
                 this.hasHour = false;
-                this.workSpecialStatusText = "预热完成";
+                this.workSpecialStatusText = this.getLanguages(['preheating', 'finish']);
+                // this.workSpecialStatusText = '预热完成';
                 this.progressShow = false;
                 this.finishStatus = true;
                 this.preheatFinishTig = true;
                 this.tag_next = '';
-                this.statusTag = '已预热到'+analysisObj.temperatureText;
+                this.statusTag = this.getLanguages(['preheat', 'to']) + analysisObj.temperatureText;
                 this.hasStopOrContinueBtn = true;
                 this.hasSetting = false;
-                this.btnText = "开始";
+                // this.btnText = this.getLanguage('start');
+                this.btnText = this.getLanguage('start');
                 this.btnSrc = "img/footer/icon_start@2x.png";
             }
             if(analysisObj.menuFeel.value){
                 this.timeShow = false;
                 this.hasHour = false;
-                this.workSpecialStatusText = "感应中";
+                this.workSpecialStatusText = this.getLanguage('sensing');
                 this.timeShow = false;
                 this.tag_next = '';
                 this.hasHour = false;
@@ -418,11 +431,11 @@ let workingModalMixin  = {
                         this.hourMore10 = true;
                     }
                     this.workSpecialStatusText = _hour+"  "+(_minute>9?_minute:'0'+_minute);
-                    this.tag_next = '分';
+                    this.tag_next = this.getLanguage('minute');;
                     this.hasHour = true;
                 }else if(allSeconds>60){//大于1分钟，小于1小时，只显示分
                     this.workSpecialStatusText = _minute;
-                    this.tag_next = '分';
+                    this.tag_next = this.getLanguage('minute');
                     this.hasHour = false;
                 }
                 else{ //小于1分钟开始倒计时
@@ -431,7 +444,7 @@ let workingModalMixin  = {
                         allSeconds = allSeconds-1;
                     }
                     this.workSpecialStatusText = allSeconds;
-                    this.tag_next = '秒';
+                    this.tag_next = this.getLanguage('second');;
                     
                 }
             }

@@ -67,7 +67,7 @@ let accordions =  [
         key:'preheat',
         type:'switch',
         isFolded: true,
-        subtitle:'设置预热',
+        subtitle: getTitle('预热', 'Preheat'),
         unit:'',
         hideArrow:true
     },
@@ -91,7 +91,7 @@ let accordions =  [
         key:'hms',
         type:'pickers',
         isFolded: true,
-        subtitle:'设置时间',
+        subtitle: getTitle('时间', 'Time'),
         unit:'',
         hideArrow:false
     },

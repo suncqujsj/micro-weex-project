@@ -96,6 +96,8 @@ module.exports = {
             { key: 16, value: "T0xB4",desc: "小烤箱" },
             { key: 17, value: "T0x9B",desc: "蒸汽烤箱" },
             { key: 18, value: "T0xB1",desc: "大烤箱" },
+            { key: 19, value: "T0x9B",desc: "50QL 蒸烤" },
+            { key: 20, value: "T0x9B",desc: "36QL 蒸烤" },
         ],
         card: 'T0xB1',
         isShowCardList: false,

@@ -9,7 +9,7 @@ module.exports = {
         page_title: "蒸汽炉",
         sales_model: "TPN36FQL_SSL",
         widget_name: 'MSO_T0xB2',
-        widget_version: '5.0.3',
+        widget_version: '5.0.5',
         extra1: {
             sn8: '0TPN36FQ'
         },

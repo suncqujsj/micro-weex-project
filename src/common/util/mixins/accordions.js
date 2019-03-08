@@ -54,7 +54,7 @@ const accordionMixin = {
             return this.current[key] || (this.currentItem[key] ? this.currentItem[key].default : null);
         },
         getAccordionLanguage(item, key){
-            return item[key][this.getLang()]
+            return item[key][this.getLang()] ? item[key][this.getLang()] : item[key];
         },
         updateAccordionFoldingStatus: function(key, value){
             // debugger;

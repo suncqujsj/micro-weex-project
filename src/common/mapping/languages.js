@@ -18,4 +18,8 @@ let setItem = function(key, cn='',en=''){
 setItem('standbyState', '待机中', 'standby');
 setItem('tabs', ['自动菜单', '加热菜单'], ['Auto Menu', 'Heat Mode']);
 
+//参数框
+setItem('sfDialog.confirmText', '开始', 'Start');
+setItem('sfDialog.cancelText', '取消', 'Cancel');
+
 export default languages;

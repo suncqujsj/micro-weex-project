@@ -86,9 +86,12 @@ let workingModalMixin  = {
         };
     },
     methods: {
-        getLanguage(key){
+        getLang(){
             if (!this.constant.device.lang) this.constant.device.lang = 'cn';
-            return languages[key][this.constant.device.lang];
+            return this.constant.device.lang;
+        },
+        getLanguage(key){
+            return languages[key][this.getLang()];
         },
         analysisFun(analysisObj,tabs) {
             //this.show = false;

@@ -53,6 +53,9 @@ const accordionMixin = {
         setValue: function(key){
             return this.current[key] || (this.currentItem[key] ? this.currentItem[key].default : null);
         },
+        getAccordionLanguage(item, key){
+            return item[key][this.getLang()]
+        },
         updateAccordionFoldingStatus: function(key, value){
             // debugger;
             let accordions = JSON.parse(JSON.stringify(this.accordions));

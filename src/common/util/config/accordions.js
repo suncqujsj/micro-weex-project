@@ -6,21 +6,36 @@
 /**
  * 弹窗参数设置
  */
+let en_prefix = 'Set ';
+let cn_prefix = '设置 ';
+
+let getTitle = function(cn, en, ){
+    return {
+        cn: cn_prefix + cn,
+        en: en_prefix + en
+    };
+};
+
+let getUnit = function(cn, en){
+    return {
+        cn,en
+    };
+};
 
 let accordions =  [
     {
         key:'time',
         type:'picker',
         isFolded: true,
-        subtitle:'设置时间',
-        unit:'分',
+        subtitle: getTitle('时间', 'Time'),
+        unit: getUnit('分', 'Minute'),
         hideArrow:false
     },
     {
         key:'temperature',
         type:'picker',
         isFolded: true,
-        subtitle:'设置温度',
+        subtitle: getTitle('温度', 'Temperature'),
         unit:'°C',
         hideArrow:false
     },
@@ -28,7 +43,7 @@ let accordions =  [
         key:'probeTemperature',
         type:'picker',
         isFolded: true,
-        subtitle:'设置探针温度',
+        subtitle:getTitle('探针温度', 'Probe Temperature'),
         unit:'°C',
         hideArrow:false
     },
@@ -36,7 +51,7 @@ let accordions =  [
         key:'steamAmount',
         type:'picker',
         isFolded: true,
-        subtitle:'设置蒸汽量',
+        subtitle: getTitle('蒸汽量', 'Steam Amount'),
         unit:'档',
         hideArrow:false
     },
@@ -44,8 +59,8 @@ let accordions =  [
         key:'fireAmount',
         type:'picker',
         isFolded: true,
-        subtitle:'设置火力',
-        unit:'档',
+        subtitle: getTitle('设置火力', 'Fire Amount'),
+        unit: getUnit('档位', 'Gear'),
         hideArrow:false
     },
     {
@@ -60,7 +75,7 @@ let accordions =  [
         key:'weight',
         type:'picker',
         isFolded: true,
-        subtitle:'设置重量',
+        subtitle:getTitle('重量', 'Weight'),
         unit:'g',
         hideArrow:false
     },
@@ -68,7 +83,7 @@ let accordions =  [
         key:'steamSwitch',
         type:'switch',
         isFolded: true,
-        subtitle:'蒸汽开关',
+        subtitle: getTitle('蒸汽开关', 'Steam Switch'),
         unit:'',
         hideArrow:true
     },

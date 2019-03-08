@@ -16,12 +16,12 @@
             return {
                 tabs:[
                     {
-                        name:'自动菜单',
+                        name:'Auto Menu',
                         active:false,
                         rows:autoMenu
                     },
                     {
-                        name:'加热模式',
+                        name:'heat mode',
                         active:true,
                         rows:modes
                     }

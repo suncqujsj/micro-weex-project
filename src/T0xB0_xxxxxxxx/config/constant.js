@@ -8,11 +8,12 @@ module.exports = {
         type: 0xB0,
         page_title: "Microwave Oven",
         widget_name: 'MSO_T0xB0',
-        widget_version: '5.1.3',
+        widget_version: '5.0.0',
         extra1: {
-            sn8: '0M3L20A8'
+            sn8: 'xxxxxxxx'
         },
         standby03:true, // 待机中打开03轮询
+        lang: 'en',
         hideChildLock:{
             working:true
         }

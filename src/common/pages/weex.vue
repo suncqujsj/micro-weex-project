@@ -25,11 +25,11 @@
             <div class="onlongpressQuery"  @longpress="onlongpressQuery()"></div><!--隐藏长按组件触发03查询，方便调试-->
             <!--面板切换tabs-->
             <div class="panel">
-                <text class="panel-state">待机中</text>
+                <text class="panel-state">{{getLanguage('standbyState')}}</text>
                 <div v-if="tabs.length>1" class="tabs">
                     <template v-for="(tab, x) in tabs">
                         <div class="tab" @click="onTabClicked(x)">
-                            <text class="tab-text" :class="[tab.active && 'tab-active' ]">{{tab.name}}</text>
+                            <text class="tab-text" :class="[tab.active && 'tab-active' ]">{{getLanguage('tabs')[x]}}</text>
                         </div>
                     </template>
                 </div>

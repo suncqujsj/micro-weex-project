@@ -2,7 +2,11 @@
  * Created by sf
  * 2018/10/20
  */
+ import constant from './constant';
 import modeIcons from "../../common/mapping/modeIcons";
+
+let lang = constant.device.lang || 'cn';
+
  let timeCommon = {
      set: true,
      default:0,
@@ -18,7 +22,7 @@ let modes = [
         iconButtons: [
             {
                 'icon': modeIcons[12].dir,
-                'text': modeIcons[12].en,
+                'text': modeIcons[12][lang],
                 'mode': 0x01,
                 time: timeCommon,
                 fireAmount: {
@@ -30,7 +34,7 @@ let modes = [
             },
             {
                 'icon': modeIcons[23].dir,
-                'text': modeIcons[23].en,
+                'text': modeIcons[23][lang],
                 'mode': 0xA0,
                 weight:{
                     set:true,
@@ -47,7 +51,7 @@ let modes = [
             },
             {
                 'icon': modeIcons[24].dir,
-                'text': modeIcons[24].en,
+                'text': modeIcons[24][lang],
                 'mode': 0xA0,
                 time: timeCommon,
                 fireAmount: {

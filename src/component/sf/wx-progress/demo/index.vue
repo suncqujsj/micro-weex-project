@@ -31,7 +31,7 @@
 
 
 <script>
-  import {wxProgress, wxcProgress} from './index.js';
+  import {wxProgress, wxcProgress} from './languages.js';
   
   export default {
     components: { wxProgress, wxcProgress }

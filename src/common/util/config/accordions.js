@@ -6,10 +6,10 @@
 /**
  * 弹窗参数设置
  */
-let en_prefix = 'Set ';
-let cn_prefix = '设置 ';
 
-let getTitle = function(cn, en, ){
+let getTitle = function(cn, en){
+    let en_prefix = 'Set ';
+    let cn_prefix = '设置';
     return {
         cn: cn_prefix + cn,
         en: en_prefix + en
@@ -59,8 +59,8 @@ let accordions =  [
         key:'fireAmount',
         type:'picker',
         isFolded: true,
-        subtitle: getTitle('设置火力', 'Fire Amount'),
-        unit: getUnit('档位', 'Gear'),
+        subtitle: getTitle('火力', 'Fire Amount'),
+        unit: getUnit('档', 'Gear'),
         hideArrow:false
     },
     {

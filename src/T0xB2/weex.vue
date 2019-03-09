@@ -44,7 +44,7 @@
             });
         },
         methods: {
-            loadOwnMode(data,tabs){
+            loadOwnMode(data,tabs){                
                if(tabs.length>1){
                     if(data.result && data.result.deviceSn8=='0TPN36FQ'){
                         tabs[0].rows = autoMenu_0TPN36FQ;   
@@ -57,7 +57,7 @@
                     else{
                         tabs[0].rows = autoMenu;
                         tabs[1].rows = modes;
-                    }
+                    }                    
                }else{
                      if(data.result && data.result.deviceSn8=='0TPN36FQ'){
                         tabs[0].rows = modes_0TPN36FQ;            
@@ -69,7 +69,7 @@
                         tabs[0].rows = modes;
                     }
                }
-               return tabs;
+               return tabs;               
            }
         }
     }

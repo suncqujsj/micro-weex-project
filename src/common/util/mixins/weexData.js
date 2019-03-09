@@ -106,7 +106,7 @@ let workingModalMixin  = {
             this.initStandbyData(analysisObj);//初始待机页面数据
 
             analysisObj = this.formatCmdObj(analysisObj)
-            this.cmdObj = analysisObj; 
+            this.cmdObj = analysisObj;             
          
             /**
              * 倒计时组件进度条数据
@@ -124,13 +124,14 @@ let workingModalMixin  = {
                     this.show = false;
                 }
             }
+            
 
             /**
              * 提示弹出框
-            */
+            */            
             this.getWarningDialog(analysisObj);
 
-
+            
             /**
              * fun 二代特殊处理
              */
@@ -157,6 +158,7 @@ let workingModalMixin  = {
          * 初始化待机页面数据
          */
         initStandbyData(cmdObj){
+            
             this.modalVisibility = false;
             if(cmdObj.workingState.value > 2) {
                 this.showDetailVisibility = false;
@@ -290,7 +292,6 @@ let workingModalMixin  = {
          * 初始化工作页面数据
          */
         initWorkingData(){
-            // nativeService.alert(analysisObj);
             this.isFooterShow = true;
             this.timeShow = false;
             this.hasHour = false;
@@ -451,12 +452,10 @@ let workingModalMixin  = {
          */
         getMenuFeelStatusHandle(cmdObj,chartJson){
             if(cmdObj.menuFeel.value){
-                this.timeShow = false;
                 this.hasHour = false;
                 this.workSpecialStatusText = this.getLanguage('sensing');
                 this.timeShow = false;
                 this.tag_next = '';
-                this.hasHour = false;
                 chartJson.pointShow = false;
                 this.statusTag = '';
                 this.hasSetting = false;

@@ -91,7 +91,7 @@ let workingModalMixin  = {
             return this.constant.device.lang;
         },
         getLanguage(key){
-            return languages[key][this.constant.device.lang];
+            return languages[key][this.getLang()];
         },
         getLanguages(keys){
             let len = keys.length;

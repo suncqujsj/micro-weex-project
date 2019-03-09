@@ -47,7 +47,7 @@ let modes = [
                 time:{
                     set: true,
                     default:60,
-                    range:[1,60,1,65,120,5,120,300,30]
+                    range:[1,60,1,65,120,5,150,300,30]
                 },
                 temperature:{
                     set: true,
@@ -81,7 +81,7 @@ let modes = [
                 time:{
                     set: true,
                     default:30,
-                    range:[1,60,1,65,120,5,120,300,30]
+                    range:[1,60,1,65,120,5,150,300,30]
                 },
                 temperature:{
                     set: true,
@@ -115,7 +115,7 @@ let modes = [
                 time:{
                     set: true,
                     default:60,
-                    range:[1,60,1,65,120,5,120,300,30]
+                    range:[1,60,1,65,120,5,150,300,30]
                 },
                 temperature:{
                     set: true,
@@ -154,7 +154,7 @@ let modes = [
                 time:{
                     set: true,
                     default:15,
-                    range:[1,60,1,65,120,5,120,300,30]
+                    range:[1,60,1,65,120,5,150,300,30]
                 },
                 temperature:{
                     set: true,
@@ -186,7 +186,7 @@ let modes = [
                 time:{
                     set: true,
                     default:20,
-                    range:[1,60,1,65,120,5,120,300,30]
+                    range:[1,60,1,65,120,5,150,300,30]
                 },
                 temperature:{
                     set: true,
@@ -214,12 +214,12 @@ let modes = [
             },
             { // 大面积烧烤
                 'icon': modeIcons[6].dir,
-                'text': modeIcons[6].cn,
+                'text': '大面积烧烤',
                 'mode': 0x46,
                 time:{
                     set: true,
                     default:20,
-                    range:[1,60,1,65,120,5,120,300,30]
+                    range:[1,60,1,65,120,5,150,300,30]
                 },
                 temperature:{
                     set: true,
@@ -252,7 +252,7 @@ let modes = [
                 time:{
                     set: true,
                     default:10,
-                    range:[1,60,1,65,120,5,120,300,30]
+                    range:[1,60,1,65,120,5,150,300,30]
                 },
                 temperature:{
                     set: true,
@@ -291,7 +291,7 @@ let modes = [
                 time:{
                     set: true,
                     default:30,
-                    range:[1,60,1,65,120,5,120,300,30]
+                    range:[1,60,1,65,120,5,150,300,30]
                 },
                 temperature:{
                     set: true,
@@ -323,7 +323,7 @@ let modes = [
                 time:{
                     set: true,
                     default:60,
-                    range:[1,60,1,65,120,5,120,300,30]
+                    range:[1,60,1,65,120,5,150,300,30]
                 },
                 temperature:{
                     set: true,
@@ -356,7 +356,7 @@ let modes = [
                 time:{
                     set: true,
                     default:30,
-                    range:[1,60,1,65,120,5,120,300,30]
+                    range:[1,60,1,65,120,5,150,300,30]
                 },
                 temperature:{
                     set: true,
@@ -389,7 +389,7 @@ let modes = [
                 time:{
                     set: true,
                     default:60,
-                    range:[1,60,1,65,120,5,120,300,30]
+                    range:[1,60,1,65,120,5,150,300,30]
                 },
                 temperature:{
                     set: true,
@@ -428,7 +428,7 @@ let modes = [
                 time:{
                     set: true,
                     default:15,
-                    range:[1,60,1,65,120,5,120,300,30]
+                    range:[1,60,1,65,120,5,150,300,30]
                 },
                 temperature:{
                     set: true,
@@ -460,7 +460,7 @@ let modes = [
                 time:{
                     set: true,
                     default:20,
-                    range:[1,60,1,65,120,5,120,300,30]
+                    range:[1,60,1,65,120,5,150,300,30]
                 },
                 temperature:{
                     set: true,
@@ -493,7 +493,7 @@ let modes = [
                 time:{
                     set: true,
                     default:20,
-                    range:[1,60,1,65,120,5,120,300,30]
+                    range:[1,60,1,65,120,5,150,300,30]
                 },
                 temperature:{
                     set: true,
@@ -526,7 +526,7 @@ let modes = [
                 time:{
                     set: true,
                     default:10,
-                    range:[1,60,1,65,120,5,120,300,30]
+                    range:[1,60,1,65,120,5,150,300,30]
                 },
                 temperature:{
                     set: true,
@@ -630,7 +630,7 @@ let modes = [
                 time:{
                     set: false,
                     default:20,
-                    range:[1,60,1,65,120,5,120,300,30]
+                    range:[1,60,1,65,120,5,150,300,30]
                 },
                 temperature:{
                     set: false,

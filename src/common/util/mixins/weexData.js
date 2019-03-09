@@ -6,6 +6,8 @@
 // var numberRecord = 0; //记录跳页面的次数
 import cmdFun from "../command/util.js"; //解析指令
 const objectAssign = require('object-assign');
+import languages from '../../mapping/languages';
+
 import nativeService  from '@/common/services/nativeService';
 //ios5.4.0以下版本判断做兼容倒计时组件
 let isIosLess5_4 = false;
@@ -75,7 +77,7 @@ let workingModalMixin  = {
                 probeTempText: "°C",
     
                 showBar:false,
-                actionsheetItems:['确定关闭'],
+                actionsheetItems:[this.getLanguage('confirmClose')],
                 lightImg:"img/light_off@3x.png",
 
                 isWorkingPage:false,
@@ -84,6 +86,22 @@ let workingModalMixin  = {
         };
     },
     methods: {
+        getLang(){
+            if (!this.constant.device.lang) this.constant.device.lang = 'cn';
+            return this.constant.device.lang;
+        },
+        getLanguage(key){
+            return languages[key][this.constant.device.lang];
+        },
+        getLanguages(keys){
+            let len = keys.length;
+            let space = this.getLang() === 'cn' ? '' : ' ';
+            let buffer = '';
+            for(let i=0;i<len;i++) {
+                buffer += this.getLanguage(keys[i]) + space;
+             }
+             return buffer;
+        },
         analysisFun(analysisObj,tabs) {
             this.initStandbyData(analysisObj);//初始待机页面数据
 
@@ -284,9 +302,11 @@ let workingModalMixin  = {
             this.hasSetting = false;
             this.isTimerStop = false;
             this.preheatFinishTig = false;
-            this.statusTag = '剩余时间';
+            this.statusTag = this.getLanguage('timeLeft');
+            // this.statusTag = '剩余时间';
             this.hasStopOrContinueBtn = false;
-            this.cancleBtnText = '关闭';
+            this.cancleBtnText = this.getLanguage('close');
+            // this.cancleBtnText = '关闭';
             this.cancleIcon = 'img/footer/icon_cancle@2x.png';
         },
 
@@ -308,15 +328,15 @@ let workingModalMixin  = {
     
                 if(this.isProbeInserted(cmdObj) && this.isCloudMenu(cmdObj) && this.isFun2Oven()) {
                     cmdObj.isProbe.value = 0;
-                    this.statusTag = '剩余时间';
+                    this.statusTag = this.getLanguage('timeLeft');
                 }
 
                 if(this.isProbeInserted(cmdObj) && !this.isCloudMenu(cmdObj) && this.isFun2Oven()) {
-                    this.probeProgress = '工作中';
+                    this.probeProgress = this.getLanguage('working');
                     this.timeShow = false;
                     this.hasHour = false;
                     this.probeTempText = '';
-                    this.statusTag = '探针模式';
+                    this.statusTag = this.getLanguage('probeMode');
                     // this.cmdObj.mode.text = '';
                     this.cmdObj.temperatureText = '';
                     chartJson.pointShow = false;
@@ -362,15 +382,15 @@ let workingModalMixin  = {
             if(cmdObj.workingState.value === 4){
                 this.timeShow = false;
                 this.hasHour = false;
-                this.workSpecialStatusText = "烹饪完成";
+                this.workSpecialStatusText = this.getLanguages(['cooking', 'finish']);
                 this.isTimerStop = true;
                 this.tag_next = '';
-                this.statusTag = '取出时小心烫手';
+                this.statusTag = this.getLanguage('hotCaution');
                 this.progressShow = false;
                 this.finishStatus = true;
                 this.probeProgress = '烹饪完成';
                 this.probeTempText = '';
-                this.cancleBtnText = '完成';
+                this.cancleBtnText = this.getLanguage('finish');
                 this.cancleIcon = 'img/finish_icon@2x.png';
                 if(this.isNonCookingTypeComplete(cmdObj)){ //非烹饪类完成，显示工作完成
                      this.workSpecialStatusText = "工作完成";
@@ -387,12 +407,12 @@ let workingModalMixin  = {
             if(cmdObj.workingState.value != 4 && cmdObj.displaySign.preheat == 1){
                 this.timeShow = false;
                 this.hasHour = false;
-                this.workSpecialStatusText = "预热中";
+                this.workSpecialStatusText =  this.getLanguages(['preheating', 'ing']);
                 let mode_text = cmdObj.mode.text;
                 if(cmdObj.mode.value == 0x4B){ //如果是快速预热，文案就变为快速
                     mode_text = "快速";
                 }
-                this.cmdObj.mode.text = mode_text+"预热到";
+                this.cmdObj.mode.text = mode_text + this.getLanguages(['preheat', 'to']);
                 this.tag_next = '';
                 this.statusTag = '';
                 this.hasSetting = true;
@@ -410,15 +430,17 @@ let workingModalMixin  = {
             if(cmdObj.workingState.value != 4 &&  cmdObj.displaySign.preheatTemperature == 1){
                 this.timeShow = false;
                 this.hasHour = false;
-                this.workSpecialStatusText = "预热完成";
+                this.workSpecialStatusText = this.getLanguages(['preheating', 'finish']);
+                // this.workSpecialStatusText = '预热完成';
                 this.progressShow = false;
                 this.finishStatus = true;
                 this.preheatFinishTig = true;
                 this.tag_next = '';
-                this.statusTag = '已预热到'+cmdObj.temperatureText;
+                this.statusTag = this.getLanguages(['preheat', 'to']) + cmdObj.temperatureText;
                 this.hasStopOrContinueBtn = true;
                 this.hasSetting = false;
-                this.btnText = "开始";
+                // this.btnText = this.getLanguage('start');
+                this.btnText = this.getLanguage('start');
                 this.btnSrc = "img/footer/icon_start@2x.png";
             }
             
@@ -431,7 +453,7 @@ let workingModalMixin  = {
             if(cmdObj.menuFeel.value){
                 this.timeShow = false;
                 this.hasHour = false;
-                this.workSpecialStatusText = "感应中";
+                this.workSpecialStatusText = this.getLanguage('sensing');
                 this.timeShow = false;
                 this.tag_next = '';
                 this.hasHour = false;
@@ -454,12 +476,12 @@ let workingModalMixin  = {
                         this.hourMore10 = true;
                     }
                     this.workSpecialStatusText = _hour+"  "+(_minute>9?_minute:'0'+_minute);
-                    this.tag_next = '分';
+                    this.tag_next = this.getLanguage('minute');;
                     this.hasHour = true;
             
                 }else if(this.getAllSeconds(cmdObj)>60){//大于1分钟，小于1小时，只显示分
                     this.workSpecialStatusText = _minute;
-                    this.tag_next = '分';
+                    this.tag_next = this.getLanguage('minute');
                     this.hasHour = false;
                 }
                 else{ //小于1分钟开始倒计时

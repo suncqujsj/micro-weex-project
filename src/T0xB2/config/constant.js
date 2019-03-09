@@ -9,14 +9,14 @@ module.exports = {
         page_title: "蒸汽炉",
         sales_model: "TPN36FQL_SSL",
         widget_name: 'MSO_T0xB2',
-        widget_version: '5.0.5',
+        widget_version: '5.0.6',
         extra1: {
             sn8: '0TPN36FQ'
         },
-        // hideChildLock:{
-        //     standby:true,
-        //     working:true
-        // }
+        hideChildLock:{
+            standby:true,
+            working:true
+        }
         // hms:[0,1,1] //是否用时分秒组件
     }
 };

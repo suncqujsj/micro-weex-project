@@ -85,12 +85,62 @@ let workingModalMixin  = {
     },
     methods: {
         analysisFun(analysisObj,tabs) {
-            //this.show = false;
-            // nativeService.alert(analysisObj);
-            // this.setWarningDialog("",null,false);
-            clearInterval(this.queryTimer);
+            this.initStandbyData(analysisObj);//初始待机页面数据
+
+            analysisObj = this.formatCmdObj(analysisObj)
+            this.cmdObj = analysisObj; 
+         
+            /**
+             * 倒计时组件进度条数据
+             */
+            let chartJson = JSON.parse(JSON.stringify(this.chartJson));
+            chartJson.pointShow = false;
+            this.chartJson = JSON.parse(JSON.stringify(chartJson));
+
+            /**
+             * 待机页面10s轮询
+             */
+            if(analysisObj.workingState.value == 2 || analysisObj.workingState.value == 1 ){
+                this.queryRunTimer(10);//10秒轮询 
+                if(this.isProbeInserted(analysisObj) && !this.currentItem.probe && this.show) {//探针特殊处理
+                    this.show = false;
+                }
+            }
+
+            /**
+             * 提示弹出框
+            */
+            this.getWarningDialog(analysisObj);
+
+
+            /**
+             * fun 二代特殊处理
+             */
+            if(analysisObj.workingState.value == 4 && this.getAllSeconds(analysisObj) > 0 && this.isFun2Oven(analysisObj)) {
+                analysisObj.workingState.value = 3
+            }
+            
+            /**
+             * 工作页面判断以及10s轮询
+             */
+            if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 ||  analysisObj.workingState.value === 5 || this.periodPauseCondition(analysisObj)) {
+                this.isWorkingPage = true;
+                this.analysisWorkingFun(analysisObj,tabs); //跳转到工作页面数据处理
+                if(this.getAllSeconds(analysisObj)<=60 && analysisObj.workingState.value == 3){
+                    this.queryRunTimer(1);//工作状态小于等于1分钟 1秒轮询 
+                }else{
+                    this.queryRunTimer(10);//10秒轮询 
+                }
+            }
+
+        },
+
+         /**
+         * 初始化待机页面数据
+         */
+        initStandbyData(cmdObj){
             this.modalVisibility = false;
-            if(analysisObj.workingState.value > 2) {
+            if(cmdObj.workingState.value > 2) {
                 this.showDetailVisibility = false;
             }
             this.show = false;
@@ -98,38 +148,33 @@ let workingModalMixin  = {
                 this.show = true;
             }
             this.isWorkingPage = false;
-            analysisObj = this.formatCmdObj(analysisObj)
-            this.cmdObj = analysisObj;
             this.probeTempText = '°C';
-            let chartJson = JSON.parse(JSON.stringify(this.chartJson));
-            chartJson.pointShow = false;
-            this.chartJson = JSON.parse(JSON.stringify(chartJson));
+        },
 
-            //提示
+        /**
+         * 提示弹出框判断
+         */
+        getWarningDialog(cmdObj){
             let isLackWater = false , isWaterBox = false, isDoorSwitch = false, isError = false;
-            if(analysisObj.workingState.value == 2 || analysisObj.workingState.value == 1 ){
-                this.queryRunTimer(10);//10秒轮询 
+            if(cmdObj.workingState.value == 2 || cmdObj.workingState.value == 1 ){
                 this.setWarningDialog("",null,false);
-                if(this.isProbeInserted(analysisObj) && !this.currentItem.probe && this.show) {
-                    this.show = false;
-                }
             }
-            if(analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || this.periodPauseCondition(analysisObj)){
-                if(analysisObj.displaySign.lackWater && analysisObj.mode.value!=0xC4){
+            if(cmdObj.workingState.value == 3 || cmdObj.workingState.value == 4 ||  cmdObj.workingState.value === 5 || this.periodPauseCondition(cmdObj)){
+                if(cmdObj.displaySign.lackWater && cmdObj.mode.value!=0xC4){
                     isLackWater = true;
                     this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
                 }
-                if(analysisObj.displaySign.waterBox && analysisObj.mode.value!=0xC4){
+                if(cmdObj.displaySign.waterBox && cmdObj.mode.value!=0xC4){
                     isWaterBox = true;
                     this.setWarningDialog("主人，您的设备缺水盒了");
 
                 }
-                if(analysisObj.displaySign.doorSwitch){
+                if(cmdObj.displaySign.doorSwitch){
                     isDoorSwitch = true;
                     this.setWarningDialog("主人，您的设备炉门开了");
                 }
             }
-            if(analysisObj.displaySign.isError){
+            if(cmdObj.displaySign.isError){
                 isError = true;
                 this.setWarningDialog("主人，您的设备发生故障了，请联系售后人员");
             }
@@ -137,38 +182,19 @@ let workingModalMixin  = {
                 this.setWarningDialog("",null,false);
             }
 
-            if(analysisObj.displaySign.lock){
-                // let context = this;
-                // this.setWarningDialog("你需要关闭童锁吗？", function(){
-                //     context.childLock(false);
-                // });
+            if(cmdObj.displaySign.lock){
                 !this.modalVisibility && this.showModal();
             }
-            // if(analysisObj.workingState.value == 3){
-            //     this.queryRunTimer(6);//6秒轮询 
-            // }
-            var _hour = analysisObj.timeRemaining.hour, _minute = analysisObj.timeRemaining.minute, _second = analysisObj.timeRemaining.second;
-            var allSeconds = _hour*60*60+_minute*60+_second;
-            if(analysisObj.workingState.value == 4 && allSeconds > 0) {
-                analysisObj.workingState.value = 3
-            }
-            if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 || this.periodPauseCondition(analysisObj)) {
-                this.isWorkingPage = true;
-                this.analysisWorkingFun(analysisObj,tabs);
-                if(allSeconds<=60 && analysisObj.workingState.value == 3){
-                    this.queryRunTimer(1);//6秒轮询 
-                }else{
-                    this.queryRunTimer(10);//6秒轮询 
-                }
-            }
-            // if(analysisObj.workingState.value == 3 || (this.constant.device.standby03 && analysisObj.workingState.value == 4)){
-            //     if(allSeconds<2*60){
-            //         this.queryRunTimer(1);//6秒轮询 
-            //     }else{
-            //         this.queryRunTimer(6);//6秒轮询 
-            //     }
-            // }
+        },
 
+
+         /**
+         * 获取当前上报的总时间秒
+         */
+        getAllSeconds(cmdObj){
+            var _hour = cmdObj.timeRemaining.hour, _minute = cmdObj.timeRemaining.minute, _second = cmdObj.timeRemaining.second;
+            var allSeconds = _hour*60*60+_minute*60+_second;
+            return allSeconds;
         },
 
         /**
@@ -201,6 +227,9 @@ let workingModalMixin  = {
             if(!cmdObj.temperature.upLowTemperature && !cmdObj.temperature.downLowTemperature) {
                 return '';
             }
+            if(this.isNonCookingTypeComplete(cmdObj)){
+                return '';
+            }
 
             // 温度非0时，返回上低、下低温度的较大值
             return this.addTemperatureUnit(cmdObj.temperature.upLowTemperature >= cmdObj.temperature.downLowTemperature ? cmdObj.temperature.upLowTemperature : cmdObj.temperature.downLowTemperature);
@@ -230,9 +259,19 @@ let workingModalMixin  = {
         isFun2Oven(){
             return this.device.extra1.sn8 === '08T7428E';
         },
+          /**
+         * 是否是非烹饪类模式
+         */
+        isNonCookingTypeComplete(cmdObj){
+            return (cmdObj.mode.value == 0xC0 ||cmdObj.mode.value == 0xC1||cmdObj.mode.value == 0xC2||
+                cmdObj.mode.value == 0xC3||cmdObj.mode.value == 0xC4||cmdObj.mode.value == 0xC5 || cmdObj.mode.value == 0xC6 ||
+                cmdObj.mode.value == 0xA1);
+        },
 
-        analysisWorkingFun(analysisObj,tabs) {
-            var self = this , timer = null;
+        /**
+         * 初始化工作页面数据
+         */
+        initWorkingData(){
             // nativeService.alert(analysisObj);
             this.isFooterShow = true;
             this.timeShow = false;
@@ -249,47 +288,30 @@ let workingModalMixin  = {
             this.hasStopOrContinueBtn = false;
             this.cancleBtnText = '关闭';
             this.cancleIcon = 'img/footer/icon_cancle@2x.png';
+        },
 
-            var _hour = analysisObj.timeRemaining.hour, _minute = analysisObj.timeRemaining.minute, _second = analysisObj.timeRemaining.second;
-            var allSettingSeconds = analysisObj.timeSetting.hour*60*60+analysisObj.timeSetting.minute*60+analysisObj.timeSetting.second;
-            var allSeconds = _hour*60*60+_minute*60+_second;
-            var progress_step = (allSettingSeconds-allSeconds)/allSettingSeconds*360; //360度倒计时为例
-            let chartJson = JSON.parse(JSON.stringify(this.chartJson));
-            chartJson.pointShow = true;
-            chartJson.progressCounter = parseInt(progress_step);
-
-            if(analysisObj.probeRealTemperature.value>analysisObj.probeSetttingTemperature.value){
-                analysisObj.probeRealTemperature.value = analysisObj.probeSetttingTemperature.value;
-            }
-            this.probeProgress =analysisObj.probeRealTemperature.value;
-
-            if(analysisObj.light.value){
-                this.lightImg = "img/light_on@3x.png";
-            }else{
-                this.lightImg = "img/light_off@3x.png";
-            }
-
-            if(this.isProbeInserted(analysisObj)){
-                this.statusTag = '当前实时温度';
-                chartJson.pointShow = false;
-            }
-
-            if(analysisObj.workingState.value === 3){
+        /**
+         * 工作状态判断以及数据处理
+         */
+        getWorkingStatusHandle(cmdObj,chartJson){
+            if(cmdObj.workingState.value === 3){
                 this.timeShow = true;
                 this.hasSetting = true;
                 this.btnText = "暂停";
                 this.btnSrc = "img/footer/icon_pause@2x.png";
                 this.hasStopOrContinueBtn = true;
-                // if(analysisObj.mode.value == 0xE0){//云菜谱没有设置时间温度蒸汽那些
-                //      this.hasSetting = false;
-                // }
-
-                if(this.isProbeInserted(analysisObj) && this.isCloudMenu(analysisObj) && this.isFun2Oven()) {
-                    analysisObj.isProbe.value = 0;
+                if(cmdObj.light.value){
+                    this.lightImg = "img/light_on@3x.png";
+                }else{
+                    this.lightImg = "img/light_off@3x.png";
+                }
+    
+                if(this.isProbeInserted(cmdObj) && this.isCloudMenu(cmdObj) && this.isFun2Oven()) {
+                    cmdObj.isProbe.value = 0;
                     this.statusTag = '剩余时间';
                 }
 
-                if(this.isProbeInserted(analysisObj) && !this.isCloudMenu(analysisObj) && this.isFun2Oven()) {
+                if(this.isProbeInserted(cmdObj) && !this.isCloudMenu(cmdObj) && this.isFun2Oven()) {
                     this.probeProgress = '工作中';
                     this.timeShow = false;
                     this.hasHour = false;
@@ -300,7 +322,13 @@ let workingModalMixin  = {
                     chartJson.pointShow = false;
                 }
             }
-             if(this.periodPauseCondition(analysisObj)){
+        },
+
+        /**
+         * 暂停状态以及段间等待
+         */
+        getPauseStatusHandle(cmdObj){
+            if(this.periodPauseCondition(cmdObj)){
                 this.timeShow = true;
                 this.hasSetting = true;
                 this.btnText = "继续";
@@ -308,54 +336,60 @@ let workingModalMixin  = {
                 this.isTimerStop = true;
                 this.statusTag = '暂停中';
                 this.hasStopOrContinueBtn = true;
-                // if(analysisObj.mode.value == 0xE0){//云菜谱没有设置时间温度蒸汽那些
-                //      this.hasSetting = false;
-                // }
             }
-            
-            var _isRecipe = false;
-            if(this.cmdObj.mode.value == 0xE0){
-                _isRecipe = true;
-            }
-            var _item = cmdFun.getCurrentModeItem(tabs,analysisObj.recipeId.value,analysisObj.mode.value,_isRecipe);
-            //this.currentItem = _item;
-            this.settingHide(_item);
-            if(_item.circleProgressPointHide){
-                chartJson.pointShow = false;
-            }
+        },
 
-            if(analysisObj.workingState.value === 4){
-               this.timeShow = false;
-               this.hasHour = false;
-               this.workSpecialStatusText = "烹饪完成";
-               this.isTimerStop = true;
-               this.tag_next = '';
-               this.statusTag = '取出时小心烫手';
-               this.progressShow = false;
-               this.finishStatus = true;
-               this.probeProgress = '烹饪完成';
-               this.probeTempText = '';
-               this.cancleBtnText = '完成';
-               this.cancleIcon = 'img/finish_icon@2x.png';
-               let isCookingTypeComplete = true;  //默认烹饪类 完成
-                if(analysisObj.mode.value == 0xC0 ||analysisObj.mode.value == 0xC1||analysisObj.mode.value == 0xC2||
-                   analysisObj.mode.value == 0xC3||analysisObj.mode.value == 0xC4||analysisObj.mode.value == 0xC5 || analysisObj.mode.value == 0xC6
-                ){
-                    isCookingTypeComplete = false;
-                }
-                if(!isCookingTypeComplete){ //非烹饪类完成，显示工作完成
-                    this.workSpecialStatusText = "工作完成";
-                    this.statusTag = '';
-                }
-              
+        /**
+         * 预约状态
+         */
+        getOrderStatusHandle(cmdObj){
+            if(cmdObj.workingState.value == 5){
+                this.timeShow = false;
+                this.hasSetting = false;
+                this.workSpecialStatusText = "预约中";
+                this.btnText = "";
+                this.btnSrc = "img/footer/icon_start@2x.png";
+                this.isTimerStop = true;
+                this.statusTag = '';
+                this.hasStopOrContinueBtn = false;
             }
-            // 不是烹饪完成 ，并且处于预热中状态
-             if(analysisObj.workingState.value != 4 && analysisObj.displaySign.preheat == 1){
+        },
+
+        /**
+         * 烹饪完成状态
+         */
+        getCookingFinishStatus(cmdObj){
+            if(cmdObj.workingState.value === 4){
+                this.timeShow = false;
+                this.hasHour = false;
+                this.workSpecialStatusText = "烹饪完成";
+                this.isTimerStop = true;
+                this.tag_next = '';
+                this.statusTag = '取出时小心烫手';
+                this.progressShow = false;
+                this.finishStatus = true;
+                this.probeProgress = '烹饪完成';
+                this.probeTempText = '';
+                this.cancleBtnText = '完成';
+                this.cancleIcon = 'img/finish_icon@2x.png';
+                if(this.isNonCookingTypeComplete(cmdObj)){ //非烹饪类完成，显示工作完成
+                     this.workSpecialStatusText = "工作完成";
+                     this.statusTag = '';
+                }
+               
+            }
+        },
+
+        /**
+         * 不是烹饪完成 ，并且处于预热中状态
+         */
+        getPreheatStatusHandle(cmdObj,chartJson,_item){
+            if(cmdObj.workingState.value != 4 && cmdObj.displaySign.preheat == 1){
                 this.timeShow = false;
                 this.hasHour = false;
                 this.workSpecialStatusText = "预热中";
-                let mode_text = analysisObj.mode.text;
-                if(analysisObj.mode.value == 0x4B){ //如果是快速预热，文案就变为快速
+                let mode_text = cmdObj.mode.text;
+                if(cmdObj.mode.value == 0x4B){ //如果是快速预热，文案就变为快速
                     mode_text = "快速";
                 }
                 this.cmdObj.mode.text = mode_text+"预热到";
@@ -367,9 +401,13 @@ let workingModalMixin  = {
                 chartJson.pointShow = false;
                 
             }
+        },
 
-            // 不是烹饪完成 ，并且处于预热温度到达
-            if(analysisObj.workingState.value != 4 &&  analysisObj.displaySign.preheatTemperature == 1){
+        /**
+         * 不是烹饪完成 ，并且处于预热温度到达,预热完成
+         */
+        getPreheatFinishStatusHandle(cmdObj){
+            if(cmdObj.workingState.value != 4 &&  cmdObj.displaySign.preheatTemperature == 1){
                 this.timeShow = false;
                 this.hasHour = false;
                 this.workSpecialStatusText = "预热完成";
@@ -377,13 +415,20 @@ let workingModalMixin  = {
                 this.finishStatus = true;
                 this.preheatFinishTig = true;
                 this.tag_next = '';
-                this.statusTag = '已预热到'+analysisObj.temperatureText;
+                this.statusTag = '已预热到'+cmdObj.temperatureText;
                 this.hasStopOrContinueBtn = true;
                 this.hasSetting = false;
                 this.btnText = "开始";
                 this.btnSrc = "img/footer/icon_start@2x.png";
             }
-            if(analysisObj.menuFeel.value){
+            
+        },
+
+        /**
+         * 菜单感应中
+         */
+        getMenuFeelStatusHandle(cmdObj,chartJson){
+            if(cmdObj.menuFeel.value){
                 this.timeShow = false;
                 this.hasHour = false;
                 this.workSpecialStatusText = "感应中";
@@ -395,36 +440,142 @@ let workingModalMixin  = {
                 this.hasSetting = false;
                 this.hasStopOrContinueBtn = false;
             }
+            
+        },
 
-            if(_item.stopBtnHide && (!this.constant.device.showPreheatContinueBtn || !analysisObj.displaySign.preheatTemperature)){
-                this.hasStopOrContinueBtn = false;
-            }
-            this.chartJson = JSON.parse(JSON.stringify(chartJson));
-
-            //倒计时按照设计来
-            if(this.timeShow&&allSeconds>0){
-                if(allSeconds>=60*60){ //大于1小时，有‘时’显示
+        /**
+         * 时间倒计时
+         */
+        getTimeGoingHandle(cmdObj){    
+            var _hour = cmdObj.timeRemaining.hour, _minute = cmdObj.timeRemaining.minute, _second = cmdObj.timeRemaining.second;
+            if(this.timeShow&&this.getAllSeconds(cmdObj)>0){
+                if(this.getAllSeconds(cmdObj)>=60*60){ //大于1小时，有‘时’显示
                     if(_hour>9){
                         this.hourMore10 = true;
                     }
                     this.workSpecialStatusText = _hour+"  "+(_minute>9?_minute:'0'+_minute);
                     this.tag_next = '分';
                     this.hasHour = true;
-                }else if(allSeconds>60){//大于1分钟，小于1小时，只显示分
+            
+                }else if(this.getAllSeconds(cmdObj)>60){//大于1分钟，小于1小时，只显示分
                     this.workSpecialStatusText = _minute;
                     this.tag_next = '分';
                     this.hasHour = false;
                 }
                 else{ //小于1分钟开始倒计时
                     this.hasHour = false;
-                    if(allSeconds==60){
-                        allSeconds = allSeconds-1;
+                    let allSeconds = this.getAllSeconds(cmdObj);
+                    if(this.getAllSeconds(cmdObj)==60){
+                        allSeconds = this.getAllSeconds(cmdObj)-1;
                     }
                     this.workSpecialStatusText = allSeconds;
                     this.tag_next = '秒';
-                    
-                }
+                }            
             }
+        },
+
+        /**
+         * 倒计时百分比数据处理
+         */
+        getProgressStepHandle(cmdObj,chartJson){
+            var allSettingSeconds = cmdObj.timeSetting.hour*60*60+cmdObj.timeSetting.minute*60+cmdObj.timeSetting.second;
+            var progress_step = (allSettingSeconds-this.getAllSeconds(cmdObj))/allSettingSeconds*360; //360度倒计时为例
+           
+            chartJson.pointShow = true;
+            chartJson.progressCounter = parseInt(progress_step);
+
+            if(cmdObj.probeRealTemperature.value>cmdObj.probeSetttingTemperature.value){
+                cmdObj.probeRealTemperature.value = cmdObj.probeSetttingTemperature.value;
+            }
+        },
+
+        /**
+         * 工作页面
+         */
+        analysisWorkingFun(analysisObj,tabs) {
+            var self = this , timer = null;
+            this.initWorkingData();
+
+            let chartJson = JSON.parse(JSON.stringify(this.chartJson));
+
+            /**
+             * 倒计时百分比数据处理
+             */
+            this.getProgressStepHandle(analysisObj,chartJson);
+
+            /**
+             * 探针特殊判断处理
+             */
+            this.probeProgress =analysisObj.probeRealTemperature.value;
+            if(this.isProbeInserted(analysisObj)){
+                this.statusTag = '当前实时温度';
+                chartJson.pointShow = false;
+            }
+            
+            /**
+             * 工作状态判断以及数据处理
+             */
+            this.getWorkingStatusHandle(analysisObj,chartJson);
+            
+            /**
+             * 暂停状态以及段间等待
+             */
+            this.getPauseStatusHandle(analysisObj);
+            
+            /**
+             * 预约状态
+             */
+            this.getOrderStatusHandle(analysisObj);
+            
+            /**
+             * 获取配置文件mode.js或者auto-menu.js的对象
+             */
+            var _isRecipe = false;
+            if(this.cmdObj.mode.value == 0xE0){
+                _isRecipe = true;
+            }
+            var _item = cmdFun.getCurrentModeItem(tabs,analysisObj.recipeId.value,analysisObj.mode.value,_isRecipe);
+            this.settingHide(_item);
+            if(_item.circleProgressPointHide){
+                chartJson.pointShow = false;
+            }
+
+            /**
+             * 烹饪完成状态
+             */
+            this.getCookingFinishStatus(analysisObj);
+
+          
+            /**
+             * 不是烹饪完成 ，并且处于预热中状态
+             */
+            this.getPreheatStatusHandle(analysisObj,chartJson,_item);
+
+
+            /**
+             * 不是烹饪完成 ，并且处于预热温度到达,预热完成
+             */
+            this.getPreheatFinishStatusHandle(analysisObj);
+
+            /**
+             * 菜单感应中
+             */
+            
+            this.getMenuFeelStatusHandle(analysisObj,chartJson);
+           
+            /**
+             * 是否有暂停，继续按钮
+             */
+            if(_item.stopBtnHide && (!this.constant.device.showPreheatContinueBtn || !analysisObj.displaySign.preheatTemperature)){
+                this.hasStopOrContinueBtn = false;
+            }
+
+            this.chartJson = JSON.parse(JSON.stringify(chartJson));
+
+            /**
+             * 倒计时
+             */
+            this.getTimeGoingHandle(analysisObj);
         },
         /**
          * 工作状态中 模式不可编辑设置

@@ -6,7 +6,7 @@
 module.exports = {
     device: {
         type: 0x9B,
-        // page_title: "蒸汽烤箱", // 此字段已作废
+        page_title: "蒸汽烤箱", // 此字段需要保留 parker
         //sales_model: "TPN50QL_SSL", // 此字段已作废
         widget_name: 'MSO_T0xB1',
         widget_version: '5.0.6',

@@ -15,7 +15,7 @@ let setItem = function(key, cn='',en=''){
 /**
  * 待机
  */
-setItem('standbyState', '待机中', 'standby');
+setItem('standbyState', '待机中', 'Standby');
 setItem('tabs', ['自动菜单', '加热菜单'], ['Auto Menu', 'Heat Mode']);
 
 //参数框

@@ -248,7 +248,7 @@ export default {
       return;
     }
     var time = params.minute;
-    var hour = time/60;
+    var hour = time/60; // 201903091702 sf 为什么不是下舍入
     var minute = time%60;
     var second = 0;
     var set_mode = params.mode;

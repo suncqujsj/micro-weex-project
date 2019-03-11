@@ -7,6 +7,7 @@
     import constant from "./config/constant";
     import modes from "./config/modes.js";
     import modes_00T7388D from "./config/modes_00T7388D.js";
+    import modes_00T7329E from "./config/modes_00T7329E.js";
     import autoMenu from "./config/auto-menu.js";
     import commonWeex from "@/common/pages/oldProtocal/weex.vue";
     import nativeService from "@/common/services/nativeService";
@@ -35,6 +36,9 @@
                 }
                 else if(data.result && data.result.deviceSn8=='00T7389D'){
                     tabs[0].rows = modes_00T7388D;               
+                }
+                else if(data.result && data.result.deviceSn8=='00T7329E'){
+                    tabs[0].rows = modes_00T7329E;
                 }
                 else{
                     tabs[0].rows = modes;

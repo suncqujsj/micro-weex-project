@@ -6,7 +6,7 @@
 const bridgeModule = weex.requireModule('bridgeModule');
 const objectAssign = require('object-assign');
 import nativeService from '@/common/services/nativeService';
-
+import languages from '../../mapping/languages';
 
 let commonMixin = {
     data(){
@@ -63,6 +63,26 @@ let commonMixin = {
                 }
             }
             return resultList;
+        },
+
+        /**
+         * 语言包
+         */
+        getLang(){
+            if (!this.constant.device.lang) this.constant.device.lang = 'cn';
+            return this.constant.device.lang;
+        },
+        getLanguage(key){
+            return languages[key][this.getLang()];
+        },
+        getLanguages(keys){
+            let len = keys.length;
+            let space = this.getLang() === 'cn' ? '' : ' ';
+            let buffer = '';
+            for(let i=0;i<len;i++) {
+                buffer += this.getLanguage(keys[i]) + space;
+             }
+             return buffer;
         },
 
         /**

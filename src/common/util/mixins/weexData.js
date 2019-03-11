@@ -6,7 +6,6 @@
 // var numberRecord = 0; //记录跳页面的次数
 import cmdFun from "../command/util.js"; //解析指令
 const objectAssign = require('object-assign');
-import languages from '../../mapping/languages';
 
 import nativeService  from '@/common/services/nativeService';
 //ios5.4.0以下版本判断做兼容倒计时组件
@@ -86,22 +85,7 @@ let workingModalMixin  = {
         };
     },
     methods: {
-        getLang(){
-            if (!this.constant.device.lang) this.constant.device.lang = 'cn';
-            return this.constant.device.lang;
-        },
-        getLanguage(key){
-            return languages[key][this.getLang()];
-        },
-        getLanguages(keys){
-            let len = keys.length;
-            let space = this.getLang() === 'cn' ? '' : ' ';
-            let buffer = '';
-            for(let i=0;i<len;i++) {
-                buffer += this.getLanguage(keys[i]) + space;
-             }
-             return buffer;
-        },
+      
         analysisFun(analysisObj,tabs) {
             this.initStandbyData(analysisObj);//初始待机页面数据
 

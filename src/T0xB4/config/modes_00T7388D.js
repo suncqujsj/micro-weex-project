@@ -15,7 +15,7 @@ let modes = [
                 'mode': 0x05,
                 time:{
                     set: true,
-                    default:60,
+                    default:30,
                     range:[1,120,1]
                 },
                 temperature:{
@@ -48,7 +48,7 @@ let modes = [
                 'mode': 0x0A,
                 time:{
                     set: true,
-                    default:60,
+                    default:30,
                     range:[1,120,1]
                 },
                 temperature:{
@@ -82,7 +82,7 @@ let modes = [
                 'mode': 0x06,
                 time:{
                     set: true,
-                    default:60,
+                    default:30,
                     range:[1,120,1]
                 },
                 temperature:{
@@ -116,7 +116,7 @@ let modes = [
                 'mode': 0x08,
                 time:{
                     set: true,
-                    default:60,
+                    default:30,
                     range:[1,120,1]
                 },
                 temperature:{
@@ -155,7 +155,7 @@ let modes = [
                 'mode': 0x07,
                 time:{
                     set: true,
-                    default:60,
+                    default:30,
                     range:[1,120,1]
                 },
                 temperature:{
@@ -189,7 +189,7 @@ let modes = [
                 'mode': 0x09,
                 time:{
                     set: true,
-                    default:60,
+                    default:90,
                     range:[1,240,1]
                 },
                 temperature:{

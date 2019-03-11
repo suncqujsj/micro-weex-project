@@ -8,7 +8,7 @@ module.exports = {
         type: 0xB0,
         page_title: "微蒸烤一体机",
         widget_name: 'MSO_T0xB0',
-        widget_version: '5.0.7',
+        widget_version: '5.0.11',
         extra1: {
             sn8: '00PG23E0'
         },

@@ -7,8 +7,8 @@ import constant from "./constant.js";
 
 let list = [
     {
-        title: '产品类型',
-        rightText: '蒸汽烤箱',
+        title: '产品型号',
+        rightText: 'TQN50EQL-TS',
         link:''
     },
     {

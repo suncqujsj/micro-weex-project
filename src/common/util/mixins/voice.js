@@ -159,7 +159,7 @@ let commonMixin = {
          * 1.查询是否需要进入授权
          * 2.查询设备语音授权状态
          */
-        async initVoiceAuth() {
+        async initVoiceAuth(isIndexPage=false) { // 判断是否是插件首页
             let deviceId = this.deviceId;
             let uid = this.uid;
 
@@ -187,6 +187,18 @@ let commonMixin = {
                         this.setSwitchValue(this.authIndex, data.status === '0');
                     }
                     this.list[this.authIndex].hide = false;
+
+                    if(!isIndexPage) return;
+
+                    if (data.status == 1) { // 未授权
+                        nativeService.confirm('允许烤箱控制其他美的智能设备', async (result) => {
+                            if (result == '允许') {
+                                this.voiceAuth()
+                            }
+                        }, '允许', '不允许')
+                    } else {
+                        console.log('已授权')
+                    }
                 }
             } catch (error) {
                 nativeService.alert(error);

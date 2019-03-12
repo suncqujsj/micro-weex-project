@@ -120,6 +120,9 @@ export default {
     return cmd.toUpperCase();
   },
   getCurrentModeItem(tabs,recipeId,modeId,isRecipe){ 
+    // if(isRecipe && recipeId==0){
+    //   isRecipe = false;
+    // }
       var  _item = {};
       if(tabs.length<=1){
         let modes = tabs[0].rows;
@@ -147,7 +150,6 @@ export default {
                         }
                     }
                 }                      
-              
             }
         }else{
             var modes = tabs[1].rows;

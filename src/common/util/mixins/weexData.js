@@ -540,6 +540,7 @@ let workingModalMixin  = {
                 _isRecipe = true;
             }
             var _item = cmdFun.getCurrentModeItem(tabs,analysisObj.recipeId.value,analysisObj.mode.value,_isRecipe);
+            // nativeService.alert(_item);
             this.settingHide(_item);
             if(_item.circleProgressPointHide){
                 chartJson.pointShow = false;

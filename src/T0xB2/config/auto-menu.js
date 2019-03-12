@@ -432,6 +432,49 @@ let data = [
                     detail: null,
                     settingHide:true
                 }, 
+                {
+                    'icon': '',
+                    'text': '本地菜单',
+                    'mode': 0xE0,
+                    time:{
+                        set: false,
+                        default:120,
+                        range: [1,120,1]
+                    },
+                    temperature:{
+                        set: false,
+                        default:0,
+                        range:null
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    weight:{
+                        set:false,
+                        default:0,
+                        range:[100,150,50],
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0,
+                        range:null
+                    },
+                    standbyHide: true,
+                    detail: null,
+                    settingHide:true,
+                    circleProgressPointHide: true,
+                }, 
             ]
 
         ]

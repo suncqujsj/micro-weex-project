@@ -198,7 +198,7 @@ export default {
             min: 0, //最小值
             value: 210, //初始化值
             step: 5, //步长
-            axisH: 4, //轴高度(px)
+            axisH: 3, //轴高度(px)
             pointH: 26, //圆球高度（px）
             axisColor: '#DFE5E7',//滑条颜色
             axisBgColor: '#267aff', //滑条背景颜色 

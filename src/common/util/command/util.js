@@ -250,11 +250,8 @@ export default {
       return;
     }
     var time = params.minute;
-<<<<<<< HEAD
     var hour = Math.floor(time/60);
-=======
-    var hour = time/60; // 201903091702 sf 为什么不是下舍入
->>>>>>> 5415f60d5b19cbe8b1bf9b9f9115c73021c77dda
+    // var hour = time/60; // 201903091702 sf 为什么不是下舍入
     var minute = time%60;
     var second = 0;
     var set_mode = params.mode;

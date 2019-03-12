@@ -14,7 +14,7 @@ module.exports = {
             sn8: '09X7321D'
         },
         hideChildLock:{
-            standby:true,
+            standby:false,
             working:true
         }
         // hms:[0,1,1] //是否用时分秒组件

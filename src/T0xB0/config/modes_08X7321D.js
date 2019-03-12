@@ -7,22 +7,22 @@ let modes = [
     {
         title: '',
         iconButtons: [
-            {
-                'icon': modeIcons[16].dir,
-                'text': modeIcons[16].cn,
-                'mode': 0x20,
+            {      // 烘烤/发酵
+                'icon': modeIcons[13].dir,
+                'text': '烘烤/发酵',
+                'mode': 0xB0,
                 time:{
-                    set: false,
-                    default:20,
-                    range:[1,120,1],
+                    set: true,
+                    default:1,
+                    range:[1,99,1],
                 },
                 temperature:{
                     set: true,
-                    default:100,
-                    range:[90,100,5],
+                    default:40,
+                    range:[40,40,0,100,300,10],
                 },
                 preheat:{
-                    set:false,
+                    set:true,
                     default: null,
                 },
                 steamAmount:{
@@ -44,22 +44,22 @@ let modes = [
                 //     default:[0,40,40]
                 // }
             },
-            {
-                'icon': modeIcons[13].dir,
-                'text': modeIcons[13].cn,
-                'mode': 0x40,
+            {   // 蒸汽
+                'icon': modeIcons[16].dir,
+                'text': modeIcons[16].cn,
+                'mode': 0x20,
                 time:{
                     set: true,
                     default:30,
                     range:[1,120,1],
                 },
                 temperature:{
-                    set: true,
+                    set: false,
                     default:180,
                     range:[100,300,10],
                 },
                 preheat:{
-                    set:true,
+                    set:false,
                     default: false,
                 },
                 steamAmount:{
@@ -76,14 +76,14 @@ let modes = [
                 settingHide:true,
                 circleProgressPointHide: true,
             },
-            {
-                'icon': modeIcons[27].dir,
-                'text': modeIcons[27].cn,
-                'mode': 0x03,
+            {   // 微波
+                'icon': modeIcons[12].dir,
+                'text': modeIcons[12].cn,
+                'mode': 0x01,
                 time:{
                     set: true,
                     default:1,
-                    range:[1,30,1],
+                    range:[1,99,1],
                 },
                 temperature:{
                     set: false,
@@ -100,22 +100,22 @@ let modes = [
                     range:null,
                 },
                 fireAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
+                    set:true,
+                    default:10,
+                    range:[1,5,2,8,10,2],
                     hide: null
                 },
                 settingHide:true,
                 circleProgressPointHide: true,
             },
-            {
-                'icon': modeIcons[20].dir,
-                'text': modeIcons[20].cn,
-                'mode': 0xC6,
+            {   // 快蒸
+                'icon': modeIcons[39].dir,
+                'text': '快蒸',
+                'mode': 0x90,
                 time:{
-                    set: false,
-                    default:20,
-                    range:[1,720,1],
+                    set: true,
+                    default:1,
+                    range:[1,99,1],
                 },
                 temperature:{
                     set: false,
@@ -138,65 +138,31 @@ let modes = [
                     hide: null
                 },
                 settingHide:true,
-                standbyHide: true,
+                // standbyHide: true,
                 circleProgressPointHide: true,
             },
         ],
         
     },
     {
-        title:'',
-        iconButtons:[
-             //以下为待机中隐藏的对象
-             {
-                'icon': modeIcons[25].dir,
-                'text': modeIcons[25].cn,
-                'mode': 0x90,
-                time:{
-                    set: false,
-                    default:20,
-                    range:[1,720,1],
-                },
-                temperature:{
-                    set: false,
-                    default:null,
-                    range:[35,45,5],
-                },
-                preheat:{
-                    set:false,
-                    default: null,
-                },
-                steamAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                },
-                fireAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                    hide: null
-                },
-                settingHide:true,
-                standbyHide: true,
-                circleProgressPointHide: true,
-            },
-            {
-                'icon': modeIcons[26].dir,
-                'text': modeIcons[26].cn,
+        title: '',
+        iconButtons: [
+            {      // 快烤
+                'icon': modeIcons[13].dir,
+                'text': '快烤',
                 'mode': 0x70,
                 time:{
-                    set: false,
-                    default:20,
-                    range:[1,720,1],
+                    set: true,
+                    default:1,
+                    range:[1,99,1],
                 },
                 temperature:{
                     set: false,
-                    default:null,
-                    range:[35,45,5],
+                    default:40,
+                    range:[40,40,0,100,300,10],
                 },
                 preheat:{
-                    set:false,
+                    set:true,
                     default: null,
                 },
                 steamAmount:{
@@ -210,18 +176,54 @@ let modes = [
                     range:null,
                     hide: null
                 },
-                settingHide:true,
-                standbyHide: true,
+                settingHide:true, //工作中隐藏设置参数
+                // standbyHide: true //standbyHide=true 待机中隐藏该对象,默认false或者没有这个key
                 circleProgressPointHide: true,
+                // hms:{
+                //     set:true,
+                //     default:[0,40,40]
+                // }
             },
-            {
-                'icon': modeIcons[14].dir,
-                'text': modeIcons[14].cn,
+            {   // 解冻
+                'icon': modeIcons[23].dir,
+                'text': '解冻',
                 'mode': 0xA0,
                 time:{
                     set: false,
-                    default:20,
-                    range:[1,720,1],
+                    default:30,
+                    range:[1,120,1],
+                },
+                temperature:{
+                    set: false,
+                    default:180,
+                    range:[100,300,10],
+                },
+                preheat:{
+                    set:false,
+                    default: false,
+                },
+                steamAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                },
+                fireAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                    hide: null
+                },
+                settingHide:true,
+                circleProgressPointHide: true,
+            },
+            {   // 复脆
+                'icon': modeIcons[29].dir,
+                'text': '复脆',
+                'mode': 0x1E,
+                time:{
+                    set: true,
+                    default:1,
+                    range:[1,99,1],
                 },
                 temperature:{
                     set: false,
@@ -244,48 +246,17 @@ let modes = [
                     hide: null
                 },
                 settingHide:true,
-                standbyHide: true,
                 circleProgressPointHide: true,
             },
-            {
-                'icon': modeIcons[7].dir,
-                'text': modeIcons[7].cn,
-                'mode': 0xB0,
-                time:{
-                    set: true,
-                    default:30,
-                    range:[1,720,1],
-                },
-                temperature:{
-                    set: true,
-                    default:35,
-                    range:[35,45,5],
-                },
-                preheat:{
-                    set:false,
-                    default: null,
-                },
-                steamAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                },
-                fireAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                    hide: null
-                },
-                settingHide:true,
-                standbyHide: true,
-                circleProgressPointHide: true,
-            },
-        ]
+        ],
+
     },
+
+
     {
         title:'',
         iconButtons:[
-            {
+            {   // 保温
                 'icon': modeIcons[28].dir,
                 'text': modeIcons[28].cn,
                 'mode': 0xD0,
@@ -324,7 +295,7 @@ let modes = [
     {
         title:'',
         iconButtons:[
-            {
+            {   // 智能清洗
                 'icon': modeIcons[20].dir,
                 'text': modeIcons[20].cn,
                 'mode': 0xC5,
@@ -363,7 +334,7 @@ let modes = [
     {
         title:'',
         iconButtons:[
-            {
+            {   // 清洁
                 'icon': modeIcons[20].dir,
                 'text': modeIcons[20].cn,
                 'mode': 0xC1,
@@ -402,86 +373,10 @@ let modes = [
     {
         title:'',
         iconButtons:[
-            {
+            {   // 除味
                 'icon': modeIcons[20].dir,
                 'text': modeIcons[20].cn,
                 'mode': 0xC3,
-                time:{
-                    set: false,
-                    default:20,
-                    range:[1,720,1],
-                },
-                temperature:{
-                    set: false,
-                    default:null,
-                    range:[35,45,5],
-                },
-                preheat:{
-                    set:false,
-                    default: null,
-                },
-                steamAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                },
-                fireAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                    hide: null
-                },
-                settingHide:true,
-                standbyHide: true,
-                circleProgressPointHide: true,
-            },
-        ]
-    },
-    {
-        title:'',
-        iconButtons:[
-            {
-                'icon': modeIcons[20].dir,
-                'text': modeIcons[20].cn,
-                'mode': 0xC3,
-                time:{
-                    set: false,
-                    default:20,
-                    range:[1,720,1],
-                },
-                temperature:{
-                    set: false,
-                    default:null,
-                    range:[35,45,5],
-                },
-                preheat:{
-                    set:false,
-                    default: null,
-                },
-                steamAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                },
-                fireAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                    hide: null
-                },
-                settingHide:true,
-                standbyHide: true,
-                circleProgressPointHide: true,
-            },
-        ]
-    },
-    {
-        title:'',
-        iconButtons:[
-            {
-                'icon': modeIcons[29].dir,
-                'text': modeIcons[29].cn,
-                'mode': 0x01,
                 time:{
                     set: false,
                     default:20,

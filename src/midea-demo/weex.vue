@@ -4,7 +4,7 @@
         <!-- <midea-tab ref="mTab" :tabArray="tabData" @tabClicked="tabClicked">
         </midea-tab> -->
 
-        <midea-flow-tab :tabArray="tabData" :fixedWidth="180" @tabClicked="tabClicked">
+        <midea-flow-tab ref="mTab" :tabArray="tabData" :fixedWidth="180" @tabClicked="tabClicked">
         </midea-flow-tab>
         <slider ref="slider" :value="val" :index="index" @change="changeArea" :class="['slider', env.platform=='Web'&&'web-page']" auto-play="false">
             <div :class="['sample-div', env.platform=='Web'&&'web-page']">

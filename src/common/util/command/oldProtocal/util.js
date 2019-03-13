@@ -211,13 +211,13 @@ export default {
   //控制启动指令
   createControlMessage(params,callbackData) {
     var time = params.minute;
-    var hour = time/60;
+    var hour = Math.floor(time/60);
     var minute = time%60;
     var second = 0;
     var set_mode = params.mode;
     var messageBody = message.createMessageBody(13); 
   
-    message.setByte(messageBody, 0, 0x02);
+    message.setByte(messageBody, 0, params.preheat?0x08:0x02);
     message.setByte(messageBody, 1, set_mode);
     message.setByte(messageBody, 2, hour);
     message.setByte(messageBody, 3, minute);

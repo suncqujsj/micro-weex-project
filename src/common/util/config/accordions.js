@@ -39,6 +39,27 @@ let accordions =  [
         unit:'°C',
         hideArrow:false
     },
+
+    /**
+     * 上下独立温度
+     */
+    {
+        key:'upTemperature',
+        type:'picker',
+        isFolded: true,
+        subtitle: '设置上管温度',
+        unit:'',
+        hideArrow:false
+    },
+    {
+        key:'downTemperature',
+        type:'picker',
+        isFolded: true,
+        subtitle: '设置下管温度',
+        unit:'',
+        hideArrow:false
+    },
+
     {
         key:'probeTemperature',
         type:'picker',

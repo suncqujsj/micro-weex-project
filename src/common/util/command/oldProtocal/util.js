@@ -210,6 +210,16 @@ export default {
  
   //控制启动指令
   createControlMessage(params,callbackData) {
+  
+    var upTemp =  params.temperature, downTemp = params.temperature;
+    if(params.upTemperature || params.downTemperature){//如果是上下烧烤
+        let abs_value = Math.abs(params.upTemperature- params.downTemperature);
+        if(abs_value>30){
+            nativeService.toast('上管与下管的温度相差不能超过30哦');
+            return;
+        }
+        upTemp =  params.upTemperature, downTemp = params.downTemperature;
+    }
     var time = params.minute;
     var hour = Math.floor(time/60);
     var minute = time%60;
@@ -221,13 +231,12 @@ export default {
     message.setByte(messageBody, 1, set_mode);
     message.setByte(messageBody, 2, hour);
     message.setByte(messageBody, 3, minute);
-    message.setByte(messageBody, 4, params.temperature);
+    message.setByte(messageBody, 4, upTemp);
     message.setByte(messageBody, 5, 0x11);
-    message.setByte(messageBody, 6, params.temperature);
+    message.setByte(messageBody, 6, downTemp);
     message.setByte(messageBody, 9, second);
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
     // nativeService.alert(this.cmdToEasy(sendcmd));
-
     return sendcmd;
   },
   //取消工作指令
@@ -278,9 +287,9 @@ export default {
     obj.mode.text = this.modeValueToModeText(recipeId,parseInt(requestCmd[11]),tabs);  // giggs stub
      //实际温度
      obj.realTemperature.upHighTemperature = 0;
-     obj.realTemperature.upLowTemperature = parseInt(requestCmd[14]);
+     obj.realTemperature.upLowTemperature = parseInt(requestCmd[18]);
      obj.realTemperature.downHighTemperature = 0;
-     obj.realTemperature.downLowTemperature = parseInt(requestCmd[14]);
+     obj.realTemperature.downLowTemperature = parseInt(requestCmd[19]);
    
      obj.displaySign.lock = parseInt(requestCmd[10]) === 5 ? 1:0; // 状态位 0x05是童锁
      obj.displaySign.doorSwitch = 0;// 无此状态检测
@@ -295,9 +304,9 @@ export default {
 
     //设置温度
     obj.temperature.upHighTemperature = 0;// 没有这个字段，直接填0就好
-    obj.temperature.upLowTemperature = 0;// 没有这个字段，直接填0就好
+    obj.temperature.upLowTemperature = parseInt(requestCmd[14]);// 没有这个字段，直接填0就好
     obj.temperature.downHighTemperature = 0;// 没有这个字段，直接填0就好
-    obj.temperature.downLowTemperature = 0;// 没有这个字段，直接填0就好
+    obj.temperature.downLowTemperature = parseInt(requestCmd[14]);// 没有这个字段，直接填0就好
 
     //探针温度
     obj.probeRealTemperature.value = 0;// 没有这个字段，直接填0就好

@@ -7,7 +7,7 @@ import constant from "./constant.js";
 
 let list = [
     {
-        title: '产品型号',
+        title: '产品类型',
         rightText: '小烤箱',
         link:''
     },

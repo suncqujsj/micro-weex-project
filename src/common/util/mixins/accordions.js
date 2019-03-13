@@ -92,7 +92,9 @@ const accordionMixin = {
                 isTemperatureChange: false,
                 isTimeChange: false,
                 isSteamAmountChange: false,
-                isFireAmountChange: false
+                isFireAmountChange: false,
+                upTemperature: null,
+                downTemperature: null
             }
         },
         resetState: function(){
@@ -179,7 +181,9 @@ const accordionMixin = {
                 isTemperatureChange:  this.current.isTemperatureChange,
                 isTimeChange: this.current.isTimeChange,
                 isSteamAmountChange: this.current.isSteamAmountChange,
-                isFireAmountChange: this.current.isFireAmountChange
+                isFireAmountChange: this.current.isFireAmountChange,
+                upTemperature:this.setValue('upTemperature'),
+                downTemperature:this.setValue('downTemperature'),
             };
 
             let msg = this.validate(jsonCmd);

@@ -24,7 +24,7 @@ let modes = [
                     range:[70,180,10]
                 },
                 preheat:{
-                    set:false,
+                    set:true,
                     default: 0,
                     workingPreheatHide: true,
                 },
@@ -57,7 +57,7 @@ let modes = [
                     range:[70,180,10]
                 },
                 preheat:{
-                    set:false,
+                    set:true,
                     default: 0,
                     workingPreheatHide: true,
                 },
@@ -85,13 +85,18 @@ let modes = [
                     default:30,
                     range:[1,120,1]
                 },
-                temperature:{
+                upTemperature:{
+                    set: true,
+                    default:230,
+                    range:[70,230,10]
+                },
+                downTemperature:{
                     set: true,
                     default:230,
                     range:[70,230,10]
                 },
                 preheat:{
-                    set:false,
+                    set:true,
                     default: 0,
                     workingPreheatHide: true,
                 },
@@ -125,7 +130,7 @@ let modes = [
                     range:[70,230,10]
                 },
                 preheat:{
-                    set:false,
+                    set:true,
                     default: 0,
                     workingPreheatHide: true,
                 },
@@ -164,7 +169,7 @@ let modes = [
                     range:[70,180,10]
                 },
                 preheat:{
-                    set:false,
+                    set:true,
                     default: 0,
                     workingPreheatHide: true,
                 },

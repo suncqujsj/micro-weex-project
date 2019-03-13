@@ -45,31 +45,19 @@
         },
         methods: {
             loadOwnMode(data,tabs){                
-               if(tabs.length>1){
-                    if(data.result && data.result.deviceSn8=='0TPN36FQ'){
-                        tabs[0].rows = autoMenu_0TPN36FQ;   
-                        tabs[1].rows = modes_0TPN36FQ;            
-                    }
-                    else if(data.result && data.result.deviceSn8=='0TPN36R5'){
-                        tabs[0].rows = autoMenu_0TPN36R5; 
-                        tabs[1].rows = modes_0TPN36R5;               
-                    }
-                    else{
-                        tabs[0].rows = autoMenu;
-                        tabs[1].rows = modes;
-                    }                    
-               }else{
-                     if(data.result && data.result.deviceSn8=='0TPN36FQ'){
-                        tabs[0].rows = modes_0TPN36FQ;            
-                    }
-                    else if(data.result && data.result.deviceSn8=='0TPN36R5'){
-                        tabs[0].rows = modes_0TPN36R5;               
-                    }
-                    else{
-                        tabs[0].rows = modes;
-                    }
-               }
-               return tabs;               
+                if(data.result && data.result.deviceSn8=='0TPN36FQ'){
+                    tabs[0].rows = autoMenu_0TPN36FQ;   
+                    tabs[1].rows = modes_0TPN36FQ;
+                }
+                else if(data.result && data.result.deviceSn8=='0TPN36R5'){
+                    tabs[0].rows = autoMenu_0TPN36R5; 
+                    tabs[1].rows = modes_0TPN36R5; 
+                }
+                else{
+                    tabs[0].rows = autoMenu;
+                    tabs[1].rows = modes;
+                }                    
+                return tabs;               
            }
         }
     }

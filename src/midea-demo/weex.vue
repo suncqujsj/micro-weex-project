@@ -40,19 +40,21 @@
         </slider>
     </div>
 </template>
-<style scoped>
+<style lang="less" scoped>
+@width: 750px;
+@bgColor: #f2f2f2;
 .wrapper {
     position: relative;
     flex: 1;
     flex-direction: column;
-    background-color: #f2f2f2;
+    background-color: @bgColor;
 }
 .slider {
-    width: 750px;
+    width: @width;
     flex: 1;
 }
 .sample-div {
-    width: 750px;
+    width: @width;
     flex: 1;
     position: relative;
 }

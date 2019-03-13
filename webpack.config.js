@@ -179,6 +179,14 @@ const getBaseConfig = () => (
                     loader: 'css-loader'
                 }]
             },
+            {
+                test: /\.less$/,
+                use: [
+                    {loader: 'css-loader'},
+                    {loader: 'less-loader'}
+                ],
+                exclude: /node_modules(?!(\/|\\).*(weex).*)/
+            },
                 {test: /\.(png|jpg|gif)$/,
                     use: [
                         {

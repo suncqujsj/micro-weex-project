@@ -41,6 +41,8 @@
     "file-loader": "^1.1.11",
     "glob": "^7.1.2",
     "lerna": "~2.2.0",
+    "less": "^3.9.0",
+    "less-loader": "^4.1.0",
     "mockjs": "^1.0.1-beta3",
     "serve": "^1.4.0",
     "url-loader": "^1.0.1",

@@ -1,6 +1,8 @@
 <template>
     <div class="container">
-        <midea-mask v-if="show" @click="layoutClick"></midea-mask>
+        <midea-overlay :show="show" :hasAnimation="false"
+            v-if="show"
+            v-on:mideaOverlayBodyClicked="layoutClick"></midea-overlay>
         <div v-if="show" class="wrapper" :style="{height:pageHeight+'px'}">
             <div class="dialog-box">
                 <div class="dialog-content">
@@ -107,9 +109,9 @@
 </style>
 
 <script>
-import mideaMask from './mask.vue'
+import mideaOverlay from './overlay.vue';
 module.exports = {
-    components: { mideaMask },
+    components: { mideaOverlay },
     props: {
         show: {
             type: Boolean,

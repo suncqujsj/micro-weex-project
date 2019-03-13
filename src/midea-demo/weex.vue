@@ -4,7 +4,7 @@
         <!-- <midea-tab ref="mTab" :tabArray="tabData" @tabClicked="tabClicked">
         </midea-tab> -->
 
-        <midea-flow-tab :tabArray="tabData" :fixedWidth="180" @tabClicked="tabClicked">
+        <midea-flow-tab ref="mTab" :tabArray="tabData" :fixedWidth="180" @tabClicked="tabClicked">
         </midea-flow-tab>
         <slider ref="slider" :value="val" :index="index" @change="changeArea" :class="['slider', env.platform=='Web'&&'web-page']" auto-play="false">
             <div :class="['sample-div', env.platform=='Web'&&'web-page']">
@@ -40,19 +40,21 @@
         </slider>
     </div>
 </template>
-<style scoped>
+<style lang="less" scoped>
+@width: 750px;
+@bgColor: #f2f2f2;
 .wrapper {
     position: relative;
     flex: 1;
     flex-direction: column;
-    background-color: #f2f2f2;
+    background-color: @bgColor;
 }
 .slider {
-    width: 750px;
+    width: @width;
     flex: 1;
 }
 .sample-div {
-    width: 750px;
+    width: @width;
     flex: 1;
     position: relative;
 }
@@ -155,6 +157,10 @@ module.exports = {
             { title: 'getLoginInfo获取登录态', link: "getLoginInfo" },
             { title: 'getNetworkStatus获取网络信息', link: "getNetworkStatus" },
             { title: 'getWeexPath获取weex页面根目录', link: "getWeexPath" },
+            { title: 'getWeatherInfo获取城市天气', link: "getWeatherInfo" },
+            { title: 'getCityInfo获取城市信息', link: "getCityInfo" },
+            { title: 'baiduGeocoder获取位置信息', link: "baiduGeocoder" },
+            { title: 'getAddressBookPerson通讯录', link: "getAddressBookPerson" },
             { title: 'hapticFeedback手机震动', link: "hapticFeedback" },
             { title: 'interfaceForThirdParty第三方SDK接口', link: "interfaceForThirdParty" },
             { title: 'jumpNativePage打开原生页面', link: "jumpNativePage" },

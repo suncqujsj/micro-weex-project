@@ -184,7 +184,8 @@ module.exports = {
             { title: 'updateAutoList更新自动化列表', link: "updateAutoList" },
             { title: 'uploadImgFile上传图片', link: "uploadImgFile" },
             { title: 'weexBundleToWeb跳转web页面', link: "weexBundleToWeb" },
-            { title: 'burialPoint美居埋点', link: "burialPoint" }
+            { title: 'burialPoint美居埋点', link: "burialPoint" },
+            { title: 'gesturePassword手势密码', link: "gesturePassword" }
         ],
         pagesList: [
             { title: '滑动显示更多菜单', link: "moreMenu" },

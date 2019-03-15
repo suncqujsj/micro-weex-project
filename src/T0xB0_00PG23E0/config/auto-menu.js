@@ -240,8 +240,8 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:15,
-                        range: [12,18,1],
+                        default:12,
+                        range: [11,13,1],
                     },
                     temperature:{
                         set: false,
@@ -1572,8 +1572,8 @@ let data = [
                 },
                 {
                     'icon': '',
-                    'text': '芝士海鲜焗千层面',
-                    'ellipsisText':'芝士海鲜焗千...', // Giggs，当菜名超过7个字，为了避免遮挡或超宽，要增加 ellipsisText 属性作为过渡
+                    'text': '芝士焗海鲜千层面',
+                    'ellipsisText':'芝士焗海鲜千...', // Giggs，当菜名超过7个字，为了避免遮挡或超宽，要增加 ellipsisText 属性作为过渡
                     'mode': 0xE0,
                     time:{
                         set: false,

@@ -297,7 +297,7 @@ export default {
      obj.displaySign.lackWater =  0;// 无此状态检测
      obj.displaySign.changeWater = 0;// 无此状态检测
      obj.displaySign.preheat = parseInt(requestCmd[10]) === 8 ? 1:0;  // B10状态位 ，不预热工作0x02，预热工作0x08
-     obj.displaySign.preheatTemperature = parseInt(requestCmd[14]);
+     obj.displaySign.preheatTemperature = parseInt(requestCmd[10]) === 0x88 ? 1:0;  //预热完成
      obj.displaySign.isError = parseInt(requestCmd[15]) ? 1:0;
 
      obj.isProbe.value = 0;// 无此状态检测
@@ -351,6 +351,9 @@ export default {
               break;
           case 102: // 云菜段结束
               result = 7;
+              break;
+          case 136: // 预热结束
+              result = 3;
               break;
       }
       return result;

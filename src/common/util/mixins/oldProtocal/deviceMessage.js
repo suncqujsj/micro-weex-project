@@ -81,7 +81,7 @@ const deviceMessageMixin = {
         queryRunTimer(timeSet){
             var self = this;
             this.queryTimer = setInterval(function(){
-                self.queryStatus();                
+                self.queryStatus();    
             },timeSet*1000);
         },
         initData(tabs,device){

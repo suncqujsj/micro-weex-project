@@ -87,6 +87,7 @@ let workingModalMixin  = {
     methods: {
       
         analysisFun(analysisObj,tabs) {
+            clearInterval(this.queryTimer);  
             this.initStandbyData(analysisObj);//初始待机页面数据
 
             analysisObj = this.formatCmdObj(analysisObj)
@@ -404,7 +405,11 @@ let workingModalMixin  = {
                 this.hasStopOrContinueBtn = true;
                 this.settingHide(_item);
                 chartJson.pointShow = false;
-                
+                if(this.constant.device.preheatingCanSetting){
+                    this.hasSetting = true;
+                }else{
+                    this.hasSetting = false;
+                }
             }
         },
 

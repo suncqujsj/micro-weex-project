@@ -15,6 +15,7 @@ module.exports = {
         extra1: {
             sn8: '0ET470QL'
         },
-        hasLight: true , //是否有炉灯        
+        hasLight: true , //是否有炉灯 
+        preheatingCanSetting: true,  //预热中可以设置时间温度等 ，默认不可设置 
     }
 };

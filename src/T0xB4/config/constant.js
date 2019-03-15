@@ -15,6 +15,6 @@ module.exports = {
         hideChildLock:{
             // standby:true,
             working:true
-        }
+        },
     }
 };

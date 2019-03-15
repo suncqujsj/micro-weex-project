@@ -155,8 +155,8 @@ let modes = [
         iconButtons: [
 
             { // 旋转
-                'icon': modeIcons[2].dir,
-                'text': modeIcons[2].cn,
+                'icon': modeIcons[41].dir,
+                'text': modeIcons[41].cn,
                 'mode': 0x07,
                 time:{
                     set: true,

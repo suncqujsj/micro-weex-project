@@ -59,7 +59,7 @@ icons[38] = getIcon('蒸汽+大面积+风扇', 'steam_largeArea_wind');
 icons[39] = getIcon('蒸汽+大面积', 'steam_largeArea');
 icons[40] = getIcon('蒸汽+小面积', 'steam_smallArea');
 
-icons[41] = getIcon('旋转小分量上色', 'rotate@3x');
+icons[41] = getIcon('旋转', 'rotate@3x');
 icons[42] = getIcon('双层烧烤', '');
 icons[43] = getIcon('快烤', 'quick_bake@3x');
 export default icons;

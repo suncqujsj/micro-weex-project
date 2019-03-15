@@ -88,7 +88,7 @@ let workingModalMixin  = {
         analysisFun(analysisObj,tabs) {
             //this.show = false;
             // this.setWarningDialog("",null,false);
-            // clearInterval(this.queryTimer);
+            clearInterval(this.queryTimer);
             // nativeService.alert(analysisObj);
             this.modalVisibility = false;
             this.showDetailVisibility = false;
@@ -280,6 +280,11 @@ let workingModalMixin  = {
                 if(_item.settingHide){
                     this.hasSetting = false;
                 }
+                if(this.constant.device.preheatingCanSetting){
+                    this.hasSetting = true;
+                }else{
+                    this.hasSetting = false;
+                }
                 chartJson.pointShow = false;
                 
             }
@@ -313,7 +318,7 @@ let workingModalMixin  = {
                 this.hasStopOrContinueBtn = false;
             }
 
-            if(_item.stopBtnHide){
+            if(_item.stopBtnHide && analysisObj.displaySign.preheatTemperature != 1){
                 this.hasStopOrContinueBtn = false;
             }
             this.chartJson = JSON.parse(JSON.stringify(chartJson));

@@ -12,7 +12,7 @@ let modes = [
                 'text': modeIcons[16].cn,
                 'mode': 0x20,
                 time:{
-                    set: false,
+                    set: true,
                     default:20,
                     range:[1,120,1],
                 },
@@ -77,13 +77,13 @@ let modes = [
                 circleProgressPointHide: true,
             },
             {
-                'icon': modeIcons[27].dir,
-                'text': modeIcons[27].cn,
-                'mode': 0x03,
+                'icon': modeIcons[12].dir,
+                'text': modeIcons[12].cn,
+                'mode': 0x01,
                 time:{
                     set: true,
-                    default:1,
-                    range:[1,30,1],
+                    default:5,
+                    range:[1,99,1],
                 },
                 temperature:{
                     set: false,
@@ -100,22 +100,22 @@ let modes = [
                     range:null,
                 },
                 fireAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
+                    set:true,
+                    default:10,
+                    range:[1,5,2,8,10,2],
                     hide: null
                 },
                 settingHide:true,
                 circleProgressPointHide: true,
             },
             {
-                'icon': modeIcons[20].dir,
-                'text': modeIcons[20].cn,
-                'mode': 0xC6,
+                'icon': modeIcons[25].dir,
+                'text': modeIcons[25].cn,
+                'mode': 0x90,
                 time:{
-                    set: false,
+                    set: true,
                     default:20,
-                    range:[1,720,1],
+                    range:[1,120,1],
                 },
                 temperature:{
                     set: false,
@@ -138,7 +138,7 @@ let modes = [
                     hide: null
                 },
                 settingHide:true,
-                standbyHide: true,
+                // standbyHide: true,
                 circleProgressPointHide: true,
             },
         ],
@@ -147,48 +147,14 @@ let modes = [
     {
         title:'',
         iconButtons:[
-             //以下为待机中隐藏的对象
-             {
-                'icon': modeIcons[25].dir,
-                'text': modeIcons[25].cn,
-                'mode': 0x90,
-                time:{
-                    set: false,
-                    default:20,
-                    range:[1,720,1],
-                },
-                temperature:{
-                    set: false,
-                    default:null,
-                    range:[35,45,5],
-                },
-                preheat:{
-                    set:false,
-                    default: null,
-                },
-                steamAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                },
-                fireAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                    hide: null
-                },
-                settingHide:true,
-                standbyHide: true,
-                circleProgressPointHide: true,
-            },
             {
                 'icon': modeIcons[26].dir,
                 'text': modeIcons[26].cn,
                 'mode': 0x70,
                 time:{
                     set: false,
-                    default:20,
-                    range:[1,720,1],
+                    default:5,
+                    range:[1,29,1],
                 },
                 temperature:{
                     set: false,
@@ -220,7 +186,7 @@ let modes = [
                 'mode': 0xA0,
                 time:{
                     set: false,
-                    default:20,
+                    default:null,
                     range:[1,720,1],
                 },
                 temperature:{
@@ -237,6 +203,11 @@ let modes = [
                     default:null,
                     range:null,
                 },
+                weight:{
+                    set:true,
+                    default:500,
+                    range:[100,2000,100],
+                },
                 fireAmount:{
                     set:false,
                     default:null,
@@ -244,7 +215,7 @@ let modes = [
                     hide: null
                 },
                 settingHide:true,
-                standbyHide: true,
+                // standbyHide: true,
                 circleProgressPointHide: true,
             },
             {
@@ -277,22 +248,17 @@ let modes = [
                     hide: null
                 },
                 settingHide:true,
-                standbyHide: true,
+                // standbyHide: true,
                 circleProgressPointHide: true,
             },
-        ]
-    },
-    {
-        title:'',
-        iconButtons:[
             {
                 'icon': modeIcons[28].dir,
                 'text': modeIcons[28].cn,
                 'mode': 0xD0,
                 time:{
-                    set: false,
-                    default:20,
-                    range:[1,720,1],
+                    set: true,
+                    default:60,
+                    range:[1,120,1],
                 },
                 temperature:{
                     set: false,
@@ -315,22 +281,16 @@ let modes = [
                     hide: null
                 },
                 settingHide:true,
-                standbyHide: true,
+                // standbyHide: true,
                 circleProgressPointHide: true,
             },
-           
-        ]
-    },
-    {
-        title:'',
-        iconButtons:[
             {
                 'icon': modeIcons[20].dir,
-                'text': modeIcons[20].cn,
+                'text':"腔体智能清洗",
                 'mode': 0xC5,
                 time:{
                     set: false,
-                    default:20,
+                    default:null,
                     range:[1,720,1],
                 },
                 temperature:{
@@ -354,10 +314,9 @@ let modes = [
                     hide: null
                 },
                 settingHide:true,
-                standbyHide: true,
+                // standbyHide: true,
                 circleProgressPointHide: true,
             },
-           
         ]
     },
     {
@@ -365,11 +324,11 @@ let modes = [
         iconButtons:[
             {
                 'icon': modeIcons[20].dir,
-                'text': modeIcons[20].cn,
+                'text': "水垢清洗",
                 'mode': 0xC1,
                 time:{
                     set: false,
-                    default:20,
+                    default:null,
                     range:[1,720,1],
                 },
                 temperature:{
@@ -393,7 +352,40 @@ let modes = [
                     hide: null
                 },
                 settingHide:true,
-                standbyHide: true,
+                // standbyHide: true,
+                circleProgressPointHide: true,
+            },
+            {
+                'icon': modeIcons[20].dir,
+                'text': "腔体除味",
+                'mode': 0xC3,
+                time:{
+                    set: false,
+                    default:null,
+                    range:[1,720,1],
+                },
+                temperature:{
+                    set: false,
+                    default:null,
+                    range:[35,45,5],
+                },
+                preheat:{
+                    set:false,
+                    default: null,
+                },
+                steamAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                },
+                fireAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                    hide: null
+                },
+                settingHide:true,
+                // standbyHide: true,
                 circleProgressPointHide: true,
             },
            
@@ -403,9 +395,9 @@ let modes = [
         title:'',
         iconButtons:[
             {
-                'icon': modeIcons[20].dir,
-                'text': modeIcons[20].cn,
-                'mode': 0xC3,
+                'icon': modeIcons[27].dir,
+                'text': modeIcons[27].cn,
+                'mode': 0x03,
                 time:{
                     set: false,
                     default:20,
@@ -435,91 +427,43 @@ let modes = [
                 standbyHide: true,
                 circleProgressPointHide: true,
             },
-        ]
-    },
-    {
-        title:'',
-        iconButtons:[
-            {
-                'icon': modeIcons[20].dir,
-                'text': modeIcons[20].cn,
-                'mode': 0xC3,
-                time:{
-                    set: false,
-                    default:20,
-                    range:[1,720,1],
-                },
-                temperature:{
-                    set: false,
-                    default:null,
-                    range:[35,45,5],
-                },
-                preheat:{
-                    set:false,
-                    default: null,
-                },
-                steamAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                },
-                fireAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                    hide: null
-                },
-                settingHide:true,
-                standbyHide: true,
-                circleProgressPointHide: true,
-            },
-        ]
-    },
-    {
-        title:'',
-        iconButtons:[
-            {
-                'icon': modeIcons[29].dir,
-                'text': modeIcons[29].cn,
-                'mode': 0x01,
-                time:{
-                    set: false,
-                    default:20,
-                    range:[1,720,1],
-                },
-                temperature:{
-                    set: false,
-                    default:null,
-                    range:[35,45,5],
-                },
-                preheat:{
-                    set:false,
-                    default: null,
-                },
-                steamAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                },
-                fireAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
-                    hide: null
-                },
-                settingHide:true,
-                standbyHide: true,
-                circleProgressPointHide: true,
-            },
-        ]
-    },
-    {
-        title:'',
-        iconButtons:[
             {
                 'icon': modeIcons[30].dir,
                 'text': modeIcons[30].cn,
                 'mode': 0xE0,
+                time:{
+                    set: false,
+                    default:20,
+                    range:[1,720,1],
+                },
+                temperature:{
+                    set: false,
+                    default:null,
+                    range:[35,45,5],
+                },
+                preheat:{
+                    set:false,
+                    default: null,
+                },
+                steamAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                },
+                fireAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                    hide: null
+                },
+                settingHide:true,
+                standbyHide: true,
+                circleProgressPointHide: true,
+            },
+            {
+                'icon': modeIcons[20].dir,
+                'text': modeIcons[20].cn,
+                'mode': 0xC6,
                 time:{
                     set: false,
                     default:20,

@@ -52,12 +52,32 @@ var pluginObj = {};
 var subProjectAssets = []
 var commonImagePath = path.join(__dirname, './src/img')
 const entryPath = path.resolve(__dirname, './entry/')
-var entry = {
-    'index': './src/entry.js',
-    'weex': './src/weex-entry.js'
+var webEntry = {
+    'index': './src/web-entry.js'
 };
+var weexEntry = {
+    'weex': './src/weex-entry.js'
+}
 const FILE_TYPE = '.vue'
-const getEntryFileContent = path => {
+
+// Wraping the entry file for web.
+const getWebEntryFileContent = path => {
+    return `// 自动生成的入口文件
+    import Vue from 'vue'
+    import weex from 'weex-vue-render'
+
+    weex.init(Vue)
+
+    import App from '${path}${FILE_TYPE}'   
+    new Vue({
+      el: '#root',
+      render: h => h(App)
+    })
+    `
+}
+
+// Wraping the entry file for native.
+const getNativeEntryFileContent = path => {
     return `// 自动生成的入口文件
 import App from '${path}${FILE_TYPE}'
 new Vue({
@@ -99,10 +119,13 @@ function runWalk(dir) {
                     targetDir = dir + '/midea-card'
                 }
                 let name = path.join(targetDir, path.basename(file, extname))
-                let entryFile = path.resolve(entryPath, name + '.js')
-                console.log((path.resolve(entryPath, name + '.js')) + "@@" + directory + "@@"  + name);
-                fs.outputFileSync(path.resolve(entryPath, name + '.js'), getEntryFileContent('@/' + dir.replace('\\', '/') + '/' + path.basename(file, extname)))
-                entry[name] = entryFile;
+                let webEntryFile = path.resolve(entryPath, name + '.web.js')
+                let weexEntryFile = path.resolve(entryPath, name + '.js')
+                // console.log(weexEntryFile + "@@" + directory + "@@"  + name);
+                fs.outputFileSync(webEntryFile, getWebEntryFileContent('@/' + dir.replace('\\', '/') + '/' + path.basename(file, extname)))
+                fs.outputFileSync(weexEntryFile, getNativeEntryFileContent('@/' + dir.replace('\\', '/') + '/' + path.basename(file, extname)))
+                webEntry[name] = webEntryFile;
+                weexEntry[name] = weexEntryFile;
                 hasTargetFile = true
             } else if (stat.isDirectory()) {
                 if (file == "assets") {
@@ -145,7 +168,6 @@ plugins.push(
 const getBaseConfig = () => (
     {
         //devtool: '#source-map',
-        entry,
         context: __dirname,
         output: {
             path: path.join(__dirname, 'dist')
@@ -222,6 +244,8 @@ const getBaseConfig = () => (
     });
 
 const webCfg = getBaseConfig();
+console.log(webEntry);
+webCfg.entry = webEntry;
 webCfg.output.filename = '[name].web.js';
 webCfg.module.rules[1].use.push({
     loader: 'vue-loader',
@@ -238,6 +262,8 @@ webCfg.module.rules[1].use.push({
 });
 
 const nativeCfg = getBaseConfig();
+console.log(weexEntry);
+nativeCfg.entry = weexEntry;
 nativeCfg.output.filename = '[name].js';
 nativeCfg.module.rules[1].use.push('weex-loader');
 

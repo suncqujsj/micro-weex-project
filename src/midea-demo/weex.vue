@@ -142,7 +142,7 @@ module.exports = {
             // { title: 'TimeCycle时间转盘', link: "timeCycle" },
             { title: 'Video视频', link: "video" },
             { title: 'scrollPicker滚动选择器', link: "scrollPicker" },
-            { title: 'customLoading自定义加载', link: 'customLoading' }
+            // { title: 'customLoading自定义加载', link: 'customLoading' },
         ],
         interfacelist: [
             { title: 'callTel打电话', link: "callTel" },
@@ -184,7 +184,8 @@ module.exports = {
             { title: 'updateAutoList更新自动化列表', link: "updateAutoList" },
             { title: 'uploadImgFile上传图片', link: "uploadImgFile" },
             { title: 'weexBundleToWeb跳转web页面', link: "weexBundleToWeb" },
-            { title: 'burialPoint美居埋点', link: "burialPoint" }
+            { title: 'burialPoint美居埋点', link: "burialPoint" },
+            { title: 'gesturePassword手势密码', link: "gesturePassword" }
         ],
         pagesList: [
             { title: '滑动显示更多菜单', link: "moreMenu" },

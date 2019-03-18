@@ -62,7 +62,7 @@
     background-color:#FFFFFF;
     height: 48px;
     font-size:24px;
-    padding-left: 16px;
+    padding-left: 8px;
   }
   .box-btn-group{
     flex-direction:row;border-top-style:solid;border-top-width:1px;border-top-color:#e5e5e5;height:84px;overflow-x: hidden; overflow-y: hidden;

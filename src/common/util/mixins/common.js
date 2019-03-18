@@ -13,7 +13,8 @@ let commonMixin = {
         return {
             wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
             state: null,
-            stateTime: null
+            stateTime: null,
+            count:0
         };
     },
     methods:{
@@ -66,11 +67,21 @@ let commonMixin = {
         },
 
         /**
+         * 测试计数
+         */
+        counts(key){
+            this.test = key;
+            ++this.count;
+        },
+
+
+        /**
          * 语言包
          */
         getLang(){
-            if (!this.constant.device.lang) this.constant.device.lang = 'cn';
-            return this.constant.device.lang;
+            // if (!this.constant.device.lang) this.constant.device.lang = 'cn';
+            // return this.constant.device.lang;
+            return this.constant.device.lang || 'cn'
         },
         getLanguage(key){
             return languages[key][this.getLang()];

@@ -69,8 +69,9 @@ let commonMixin = {
          * 语言包
          */
         getLang(){
-            if (!this.constant.device.lang) this.constant.device.lang = 'cn';
-            return this.constant.device.lang;
+            // if (!this.constant.device.lang) this.constant.device.lang = 'cn';
+            // return this.constant.device.lang;
+            return this.constant.device.lang || 'cn'
         },
         getLanguage(key){
             return languages[key][this.getLang()];

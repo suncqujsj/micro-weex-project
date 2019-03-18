@@ -13,7 +13,8 @@ let commonMixin = {
         return {
             wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
             state: null,
-            stateTime: null
+            stateTime: null,
+            count:0
         };
     },
     methods:{

@@ -117,7 +117,7 @@ let modes = [
 
 
             { // 热风
-                'icon': modeIcons[1].dir,
+                'icon': modeIcons[2].dir,
                 'text': modeIcons[1].cn,
                 'mode': 0x08,
                 time:{

@@ -306,7 +306,7 @@
     // import modes from "./config/modes.js";
     // import autoMenu from "./config/auto-menu.js";
 
-    import accordionMixin from "@/common/util/mixins/accordions"
+    import accordionMixin from "@/common/util/mixins/oldProtocal/accordions"
     import deviceMessageMixin from "@/common/util/mixins/oldProtocal/deviceMessage"
     import detailModalMixin from "@/common/util/mixins/detailModal"
     import commonMixin from "@/common/util/mixins/common"

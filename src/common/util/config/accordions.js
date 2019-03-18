@@ -48,7 +48,7 @@ let accordions =  [
         type:'picker',
         isFolded: true,
         subtitle: '设置上管温度',
-        unit:'',
+        unit:'°C',
         hideArrow:false
     },
     {
@@ -56,7 +56,7 @@ let accordions =  [
         type:'picker',
         isFolded: true,
         subtitle: '设置下管温度',
-        unit:'',
+        unit:'°C',
         hideArrow:false
     },
 

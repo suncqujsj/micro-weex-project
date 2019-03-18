@@ -357,6 +357,7 @@ let workingModalMixin  = {
                 this.btnSrc = "img/footer/icon_start@2x.png";
                 this.isTimerStop = true;
                 this.statusTag = '';
+                this.tag_next = '';
                 this.hasStopOrContinueBtn = false;
             }
         },

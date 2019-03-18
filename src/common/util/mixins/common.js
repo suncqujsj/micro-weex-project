@@ -66,6 +66,15 @@ let commonMixin = {
         },
 
         /**
+         * 测试计数
+         */
+        counts(key){
+            this.test = key;
+            ++this.count;
+        },
+
+
+        /**
          * 语言包
          */
         getLang(){

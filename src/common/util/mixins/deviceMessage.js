@@ -185,7 +185,20 @@ const deviceMessageMixin = {
                 deviceCmd,
                 function(result){
                     nativeService.hideLoading();
-                    // nativeService.alert(result);
+                    var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
+                    var arr = result_arr.split(",");
+                    // nativeService.alert(arr[11]);
+                    if(parseInt(arr[11])==254){
+                        if(parseInt(arr[13])==6){
+                            nativeService.toast('参数错误');
+                            return;
+                        }
+                        if(parseInt(arr[13])==7){
+                            nativeService.toast('腔体温度过高');
+                            return;
+                        }
+                    
+                    }
                     context.queryStatus();
                 },
                 function(result){

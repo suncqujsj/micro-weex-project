@@ -30,13 +30,13 @@
         methods: {
             loadOwnMode(data,_list){       
                 if(data.result && data.result.deviceSn8=='09X7321D'){
-                    _list[0].rightText = "X7";   
+                    _list[0].rightText = "X7-321D耀石黑";   
                 }
                 else if(data.result && data.result.deviceSn8=='08X7321D'){
-                    _list[0].rightText = "X7";  
+                    _list[0].rightText = "X7-321D";  
                 }
                 else{
-                   _list[0].rightText = "X7"; 
+                   _list[0].rightText = "X7-321D"; 
                 }                    
                 return _list;               
            }

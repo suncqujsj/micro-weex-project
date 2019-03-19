@@ -265,7 +265,6 @@ export default {
     if(callbackData.working && params.probe && callbackData.isProbe){//假如当前插上探针，并且 该模式支持探针，则，工作设置类
       controltype = 3 //探针工作设置类
     }
-   
     if(parseInt(params.temperature)<100){
       params.preheat = false;
     }
@@ -284,13 +283,14 @@ export default {
       message.setByte(messageBody, 8, minute);
       message.setByte(messageBody, 9, second);
       message.setByte(messageBody, 10, set_mode);
-      message.setByte(messageBody, 11, params.temperature-255); // Giggs ， 2019-03-19
+      message.setByte(messageBody, 11, parseInt(params.temperature)>255?parseInt(params.temperature)-255:0); // Giggs ， 2019-03-19
       message.setByte(messageBody, 12, params.temperature);
-      message.setByte(messageBody, 13, params.temperature-255); // Giggs ， 2019-03-19
+      message.setByte(messageBody, 13, parseInt(params.temperature)>255?parseInt(params.temperature)-255:0); // Giggs ， 2019-03-19
       message.setByte(messageBody, 14, params.temperature);
       message.setByte(messageBody, 15, params.fireAmount);
       message.setByte(messageBody, 16, params.steamAmount || params.weight/10);
     }
+
     if(controltype == 1){//工作中设置类 byte11 发04，其他byte发ff
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 4);
@@ -303,7 +303,8 @@ export default {
       message.setByte(messageBody, 8, params.isTimeChange?minute:0xff);
       message.setByte(messageBody, 9, params.isTimeChange?second:0xff);
       message.setByte(messageBody, 10, set_mode);
-      message.setByte(messageBody, 11,  params.isTemperatureChange?params.temperature-255:0xff);
+      message.setByte(messageBody, 11,  params.isTemperatureChange?params.temperature:0xff);
+      //message.setByte(messageBody, 11,  params.isTemperatureChange?params.temperature-255:0xff); //Giggs
       message.setByte(messageBody, 12,  params.isTemperatureChange?params.temperature:0xff);
       message.setByte(messageBody, 13,  0xff);
       message.setByte(messageBody, 14,  0xff);

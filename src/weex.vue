@@ -71,6 +71,7 @@ module.exports = {
         isShowModuleList: false,
         moduleIndex: null,
         moduleList: [
+            { key: -3, value: "T0xB0_xxxxxxxx", desc: "V项目" },
             { key: -2, value: "T0xB4_08T7428E", desc: "美的Fun烤箱II代， T7-428E" },
             { key: -1, value: "T0xB4_0T7L421F", desc: "美的Fun烤箱简版， T7-L421F" },
             { key: 0, value: "midea-demo", desc: "midea-demo 美居Demo" },

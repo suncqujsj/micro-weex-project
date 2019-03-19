@@ -7,9 +7,9 @@ module.exports = {
     device: {
         type: 0xB0,
         page_title: "微波炉",
-        sales_model: "TPN36FQL_SSL",
+        sales_model: "X7-321D耀石黑",
         widget_name: 'MSO_T0xB0',
-        widget_version: '5.0.3',
+        widget_version: '5.0.5',
         extra1: {
             sn8: '09X7321D'
         },

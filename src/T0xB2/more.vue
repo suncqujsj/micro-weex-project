@@ -33,7 +33,7 @@
                     _list[0].rightText = "蒸汽炉 TPN36FQ-SSL";   
                 }
                 else if(data.result && data.result.deviceSn8=='0TPN36R5'){
-                    _list[0].rightText = "蒸汽炉 TPN36TR5-SAL";  
+                    _list[0].rightText = "蒸汽炉 TPN36FR5-SSL";  
                 }
                 else{
                    

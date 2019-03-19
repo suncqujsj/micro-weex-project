@@ -7,14 +7,14 @@ let modes = [
     {
         title: '',
         iconButtons: [
-            {
+            {   // 纯蒸汽
                 'icon': modeIcons[16].dir,
                 'text': modeIcons[16].cn,
                 'mode': 0x20,
                 time:{
                     set: true,
                     default:20,
-                    range:[1,120,1],
+                    range:[1,119,1],
                 },
                 temperature:{
                     set: true,
@@ -44,14 +44,14 @@ let modes = [
                 //     default:[0,40,40]
                 // }
             },
-            {
+            {   // 烧烤
                 'icon': modeIcons[13].dir,
                 'text': modeIcons[13].cn,
                 'mode': 0x40,
                 time:{
                     set: true,
                     default:30,
-                    range:[1,120,1],
+                    range:[1,119,1],
                 },
                 temperature:{
                     set: true,
@@ -76,14 +76,14 @@ let modes = [
                 settingHide:true,
                 circleProgressPointHide: true,
             },
-            {
+            {   // 微波
                 'icon': modeIcons[12].dir,
                 'text': modeIcons[12].cn,
                 'mode': 0x01,
                 time:{
                     set: true,
                     default:5,
-                    range:[1,99,1],
+                    range:[1,29,1],
                 },
                 temperature:{
                     set: false,
@@ -108,14 +108,14 @@ let modes = [
                 settingHide:true,
                 circleProgressPointHide: true,
             },
-            {
+            {   // 快蒸
                 'icon': modeIcons[25].dir,
                 'text': modeIcons[25].cn,
                 'mode': 0x90,
                 time:{
                     set: true,
                     default:20,
-                    range:[1,120,1],
+                    range:[1,119,1],
                 },
                 temperature:{
                     set: false,
@@ -218,14 +218,14 @@ let modes = [
                 // standbyHide: true,
                 circleProgressPointHide: true,
             },
-            {
+            {   // 发酵
                 'icon': modeIcons[7].dir,
                 'text': modeIcons[7].cn,
                 'mode': 0xB0,
                 time:{
                     set: true,
                     default:30,
-                    range:[1,720,1],
+                    range:[1,719,1],
                 },
                 temperature:{
                     set: true,
@@ -251,14 +251,14 @@ let modes = [
                 // standbyHide: true,
                 circleProgressPointHide: true,
             },
-            {
+            {   // 保温
                 'icon': modeIcons[28].dir,
                 'text': modeIcons[28].cn,
                 'mode': 0xD0,
                 time:{
                     set: true,
                     default:60,
-                    range:[1,120,1],
+                    range:[1,119,1],
                 },
                 temperature:{
                     set: false,

@@ -284,7 +284,9 @@ export default {
       message.setByte(messageBody, 8, minute);
       message.setByte(messageBody, 9, second);
       message.setByte(messageBody, 10, set_mode);
+      message.setByte(messageBody, 11, params.temperature-255); // Giggs ， 2019-03-19
       message.setByte(messageBody, 12, params.temperature);
+      message.setByte(messageBody, 13, params.temperature-255); // Giggs ， 2019-03-19
       message.setByte(messageBody, 14, params.temperature);
       message.setByte(messageBody, 15, params.fireAmount);
       message.setByte(messageBody, 16, params.steamAmount || params.weight/10);
@@ -301,7 +303,7 @@ export default {
       message.setByte(messageBody, 8, params.isTimeChange?minute:0xff);
       message.setByte(messageBody, 9, params.isTimeChange?second:0xff);
       message.setByte(messageBody, 10, set_mode);
-      message.setByte(messageBody, 11,  params.isTemperatureChange?0:0xff);
+      message.setByte(messageBody, 11,  params.isTemperatureChange?params.temperature-255:0xff);
       message.setByte(messageBody, 12,  params.isTemperatureChange?params.temperature:0xff);
       message.setByte(messageBody, 13,  0xff);
       message.setByte(messageBody, 14,  0xff);

@@ -283,10 +283,10 @@ export default {
       message.setByte(messageBody, 8, minute);
       message.setByte(messageBody, 9, second);
       message.setByte(messageBody, 10, set_mode);
-      message.setByte(messageBody, 11, parseInt(params.temperature)>255?parseInt(params.temperature)-255:0); // Giggs ， 2019-03-19
-      message.setByte(messageBody, 12, params.temperature);
-      message.setByte(messageBody, 13, parseInt(params.temperature)>255?parseInt(params.temperature)-255:0); // Giggs ， 2019-03-19
-      message.setByte(messageBody, 14, params.temperature);
+      message.setByte(messageBody, 11, parseInt(params.temperature)>255?1:0); // Giggs ， 2019-03-19
+      message.setByte(messageBody, 12, parseInt(params.temperature)>255?parseInt(params.temperature)-256:parseInt(params.temperature));
+      message.setByte(messageBody, 13, parseInt(params.temperature)>255?1:0); // Giggs ， 2019-03-19
+      message.setByte(messageBody, 14, parseInt(params.temperature)>255?parseInt(params.temperature)-256:parseInt(params.temperature));
       message.setByte(messageBody, 15, params.fireAmount);
       message.setByte(messageBody, 16, params.steamAmount || params.weight/10);
     }
@@ -421,8 +421,9 @@ export default {
      obj.isProbe.value = message.getBit(requestCmd, 27, 6);
      obj.menuFeel.value = message.getBit(requestCmd, 27, 1);
     //设置温度
+
     obj.temperature.upHighTemperature = parseInt(requestCmd[28]);
-    obj.temperature.upLowTemperature = parseInt(requestCmd[29]);
+    obj.temperature.upLowTemperature = parseInt(requestCmd[28])>0?(256+parseInt(requestCmd[29])):parseInt(requestCmd[29]);
     obj.temperature.downHighTemperature = parseInt(requestCmd[30]);
     obj.temperature.downLowTemperature = parseInt(requestCmd[31]);
 

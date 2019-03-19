@@ -178,7 +178,7 @@
         
         <!--确定/取消弹窗-->
         <midea-actionsheet
-            :items="actionsheetItems"
+            :items="[language.confirmClose]"
             :show="showBar"
             @close="closeActionsheet"
             @itemClick="actionsheetItemClick"
@@ -337,9 +337,6 @@
             return {
                
             }
-        },
-        computed:{
-
         },
         props: {
             tabs:{

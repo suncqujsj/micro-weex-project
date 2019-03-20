@@ -122,7 +122,7 @@ const accordionMixin = {
                 this.current.isFireAmountChange = true;
             }
             this.current[key] = data;
-            if(key=='temperature'){
+            if(this.preheatCondition(key) && !this.isSmallOven()){
                 if(data<100){
                     this.current.preheatHide = true;
                 }else{
@@ -130,6 +130,10 @@ const accordionMixin = {
                 }
             }
             // nativeService.alert(this.current);
+        },
+        preheatCondition(key){ // sf 各种温度判断
+            const keys = ['temperature', 'upTemperature', 'downTemperature'];
+            return keys.indexOf(key) > -1
         },
         onPreheatChange(event) {
             this.current[event.itemKey] = event.value;

@@ -270,7 +270,15 @@ let workingModalMixin  = {
          * 是否是fun烤箱二代判断
          */
         isFun2Oven(){
-            return this.device.extra1.sn8 === '08T7428E';
+            const sns = ['08T7428E', '0T7L421F'];
+            return sns.indexOf(this.device.extra1.sn8) > -1;
+        },
+
+        /**
+         *  是否是小烤箱
+         */
+        isSmallOven(){
+            return this.constant.device.type === 0xB4;
         },
 
          /**

@@ -276,7 +276,8 @@ export default {
     if(callbackData.working && params.probe && callbackData.isProbe){//假如当前插上探针，并且 该模式支持探针，则，工作设置类
       controltype = 3 //探针工作设置类
     }
-    if(parseInt(params.temperature)<100){
+
+    if(parseInt(params.temperature)<100 && !this.isSmallOven(callbackData.device.type)){ // sf 不是小烤箱判断
       params.preheat = false;
     }
     if(this.isWorking && params.currentItem  && params.currentItem.preheat && params.currentItem.preheat.hide){//如果隐藏
@@ -354,6 +355,11 @@ export default {
   getLowTemperature(t){ // sf 获取低位温度值
       return parseInt(t)>255?parseInt(t)-256:parseInt(t);
   },
+
+    isSmallOven(type){
+      return type === 0xB4;
+    },
+
   //取消工作指令
   cmdCancelWork(device){
     var messageBody = message.createMessageFFBody(9); 

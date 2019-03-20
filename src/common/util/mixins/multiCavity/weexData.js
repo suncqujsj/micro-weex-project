@@ -29,7 +29,7 @@ let workingModalMixin  = {
 
             chartJson: {
                 "completedColor":"#FFFFFF", //环形进度条未完成后的颜色默认#267AFF
-                "incompletedColor":"#f5d5d5eb", //环形进度条未完成后的颜色，默认透明
+                "incompletedColor":"#FFDB81", //环形进度条未完成后的颜色，默认透明
                 "thickness":2, //环形进度条宽度，默认4
                 "cornerRadius" : isIosLess5_4?140:240,  //环形的半径，默认是width/2
                 "totalCounter" : 360, //环形进度条的最大值，默认是360

@@ -6,6 +6,11 @@
 import modeIcons from "../../common/mapping/modeIcons";
 let probe = false;
 let preheatDefault = false;
+let udTemperature = {
+        set: true,
+        default:220,
+        range:[60,230,5],
+    };
 
 let modes = [
     {
@@ -81,11 +86,8 @@ let modes = [
                     range:[1,120,1],
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
-                temperature:{
-                    set: true,
-                    default:220,
-                    range:[60,230,5],
-                },
+                upTemperature:udTemperature,
+                downTemperature:udTemperature,
                 preheat:{
                     set:true,
                     default: 1,

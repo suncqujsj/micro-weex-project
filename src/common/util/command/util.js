@@ -249,6 +249,17 @@ export default {
       nativeService.toast("主人，您的设备炉门开了");
       return;
     }
+
+      var upTemp =  params.temperature, downTemp = params.temperature;
+      if(params.upTemperature || params.downTemperature){//如果是上下烧烤 独立控温
+          let abs_value = Math.abs(params.upTemperature- params.downTemperature);
+          if(abs_value>30){
+              nativeService.toast('上管与下管的温度相差不能超过30哦');
+              return;
+          }
+          upTemp =  params.upTemperature, downTemp = params.downTemperature;
+      }
+
     var time = params.minute;
     var hour = Math.floor(time/60);
     var minute = time%60;
@@ -284,9 +295,9 @@ export default {
       message.setByte(messageBody, 9, second);
       message.setByte(messageBody, 10, set_mode);
       message.setByte(messageBody, 11, parseInt(params.temperature)>255?1:0); // Giggs ， 2019-03-19
-      message.setByte(messageBody, 12, parseInt(params.temperature)>255?parseInt(params.temperature)-256:parseInt(params.temperature));
+      message.setByte(messageBody, 12, this.getLowTemperature(upTemp));
       message.setByte(messageBody, 13, parseInt(params.temperature)>255?1:0); // Giggs ， 2019-03-19
-      message.setByte(messageBody, 14, parseInt(params.temperature)>255?parseInt(params.temperature)-256:parseInt(params.temperature));
+      message.setByte(messageBody, 14, this.getLowTemperature(downTemp));
       message.setByte(messageBody, 15, params.fireAmount);
       message.setByte(messageBody, 16, params.steamAmount || params.weight/10);
 
@@ -338,6 +349,10 @@ export default {
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
     // nativeService.alert(this.cmdToEasy(sendcmd));
     return sendcmd;
+  },
+
+  getLowTemperature(t){ // sf 获取低位温度值
+      return parseInt(t)>255?parseInt(t)-256:parseInt(t);
   },
   //取消工作指令
   cmdCancelWork(device){

@@ -76,7 +76,7 @@ let workingModalMixin  = {
                 probeTempText: "°C",
     
                 showBar:false,
-                actionsheetItems:[this.getLanguage('confirmClose')],
+                actionsheetItems:[],
                 lightImg:"img/light_off@3x.png",
 
                 isWorkingPage:false,

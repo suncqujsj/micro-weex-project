@@ -25,11 +25,11 @@
             <div class="onlongpressQuery"  @longpress="onlongpressQuery()"></div><!--隐藏长按组件触发03查询，方便调试-->
             <!--面板切换tabs-->
             <div class="panel">
-                <text class="panel-state">{{getLanguage('standbyState')}}</text>
+                <text class="panel-state">{{language.standbyState}}</text>
                 <div v-if="tabs.length>1" class="tabs">
                     <template v-for="(tab, x) in tabs">
                         <div class="tab" @click="onTabClicked(x)">
-                            <text class="tab-text" :class="[tab.active && 'tab-active' ]">{{getLanguage('tabs')[x]}}</text>
+                            <text class="tab-text" :class="[tab.active && 'tab-active' ]">{{language.tabs[x]}}</text>
                         </div>
                     </template>
                 </div>
@@ -75,7 +75,7 @@
             </div>
         </div>
         <!--模式参数设置弹窗-->
-        <sf-dialog :show="show" :tabs="tabs" :device="constant.device" :working="isWorkingPage" :isProbe="cmdObj.isProbe.value" mainBtnColor="#267AFF" secondBtnColor="#267AFF" :confirmText="getLanguage('start')" :cancelText="getLanguage('cancel')" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
+        <sf-dialog :show="show" :tabs="tabs" :device="constant.device" :working="isWorkingPage" :isProbe="cmdObj.isProbe.value" mainBtnColor="#267AFF" secondBtnColor="#267AFF" :confirmText="language.start" :cancelText="language.cancel" @close="closeDialog" @mideaDialogCancelBtnClicked="closeDialog" @mideaDialogConfirmBtnClicked="closeDialog">
             <div slot="content">
                 <!--<template v-for="tab in tabs">-->
                 <!--<text v-if="tab.active" class="content-title">{{tab.name}}</text>-->
@@ -93,14 +93,14 @@
                          </sf-accordion>
                     </div>
                     <div v-if="item.type==='picker' && (currentItem && currentItem[item.key] && (!currentItem[item.key].hide && isWorkingPage || !isWorkingPage))">
-                        <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set && ((!cmdObj.isProbe.value && item.key!='probeTemperature') || (currentItem.probe && cmdObj.isProbe.value && !currentItem[item.key].isProbeThenThisHide)) " :value="setValue(item.key)" :unit="getAccordionLanguage(item, 'unit')" :index="index" :title="getAccordionLanguage(item, 'subtitle')" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                        <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set && ((!cmdObj.isProbe.value && item.key!='probeTemperature') || (currentItem.probe && cmdObj.isProbe.value && !currentItem[item.key].isProbeThenThisHide)) " :value="setValue(item.key)" :unit="currentItem[item.key].unit||item.unit[constant.device.lang]||item.unit" :index="index" :title="language[item.key]" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                             <div slot="content">
                                 <wx-picker :pickerIndex="index" :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                             </div>
                         </sf-accordion>
                     </div>
                     <div v-if="item.type==='switch' && (currentItem && currentItem[item.key] && (!currentItem[item.key].hide && isWorkingPage || !isWorkingPage)) && !current.preheatHide">
-                        <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set && ((!cmdObj.isProbe.value && item.key!='probeTemperature') || (currentItem.probe && cmdObj.isProbe.value && !currentItem[item.key].isProbeThenThisHide))  " :title="getAccordionLanguage(item, 'subtitle')" index="-1" :hideArrow="item.hideArrow">
+                        <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set && ((!cmdObj.isProbe.value && item.key!='probeTemperature') || (currentItem.probe && cmdObj.isProbe.value && !currentItem[item.key].isProbeThenThisHide))  " :title="language[item.key]" index="-1" :hideArrow="item.hideArrow">
                             <div slot="right">
                                 <midea-switch2 :itemKey="item.key" :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
                             </div>
@@ -178,13 +178,13 @@
         
         <!--确定/取消弹窗-->
         <midea-actionsheet
-            :items="actionsheetItems"
+            :items="[language.confirmClose]"
             :show="showBar"
             @close="closeActionsheet"
             @itemClick="actionsheetItemClick"
             @btnClick="actionsheetBtnClick"
             ref="actionsheet"
-            :button="getLanguage('wait')"
+            :button="language.wait"
         ></midea-actionsheet>
 
 
@@ -228,7 +228,7 @@
                         <div class="center_section">
                             <!--时tag-->
                             <div :class="['prev_section',hourMore10 && 'prev_section_more']">
-                                <text class="number_prev" v-if="hasHour">{{getLanguage('hour')}}</text>
+                                <text class="number_prev" v-if="hasHour">{{language.hour}}</text>
                             </div>
                             <!--中间显示时分/预热完成/预热中/烹饪完成-->
                             <div class="content_section">
@@ -281,8 +281,8 @@
                         <!--预热完成引导-->
                         <div class="preheatFinishTig" v-if="preheatFinishTig">
                             <div class="preheat_tig_section">
-                                <div><text class="preheat_tig">{{getLanguage('putIntoFoodMaterial')}}</text></div>
-                                <div><text class="preheat_tig" style="marginTop:10px">{{getLanguage('pressToStart')}}</text></div>
+                                <div><text class="preheat_tig">{{language.putIntoFoodMaterial}}</text></div>
+                                <div><text class="preheat_tig" style="marginTop:10px">{{language.pressToStart}}</text></div>
                             </div>
                         </div>
                     </div>
@@ -329,6 +329,7 @@
 
 
     // import constant from "./config/constant";
+    import languages from '../mapping/_languages'
 
     export default {
         mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin,copyMixin,weexData,modalMixin],
@@ -336,9 +337,6 @@
             return {
                
             }
-        },
-        computed:{
-
         },
         props: {
             tabs:{
@@ -406,6 +404,9 @@
                     width: `${progress_radius * 2}px`,
                     marginTop: `${wrapHeight/2-progress_radius*2-60}px`
                 }
+            },
+            language(){
+                return languages[this.getLang()];
             }
         },
         methods: {

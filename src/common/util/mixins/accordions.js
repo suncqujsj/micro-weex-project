@@ -24,11 +24,15 @@ var settingArrData = function(start,end,step){
 const accordionMixin = {
     data () {
             return {
-                accordions: this.initAccordions(),
                 currentItem:null,
                 current:this.initCurrentData(),
                 show: false
             }
+    },
+    computed:{
+        accordions(){
+            return this.initAccordions()
+        }
     },
     methods: {
         range: function(key){ // picker属性范围

@@ -39,7 +39,8 @@ let modes = [
                 weight:{
                     set:true,
                     default:4,
-                    range:[4,100,1]
+                    range:[4,100,1],
+                    // unit: 'oz'
                 },
                 fireAmount: {
                     set:true,

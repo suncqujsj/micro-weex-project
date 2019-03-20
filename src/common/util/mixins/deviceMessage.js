@@ -194,7 +194,7 @@ const deviceMessageMixin = {
                             return;
                         }
                         if(parseInt(arr[13])==7){
-                            nativeService.toast('腔体温度过高');
+                            nativeService.toast('腔体温度过高，请冷却后使用！');
                             return;
                         }
                     

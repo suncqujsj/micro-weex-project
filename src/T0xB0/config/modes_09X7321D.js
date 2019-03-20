@@ -493,6 +493,39 @@ let modes = [
                 standbyHide: true,
                 circleProgressPointHide: true,
             },
+            {
+                'icon': modeIcons[30].dir,
+                'text': modeIcons[30].cn,
+                'mode': 0,
+                time:{
+                    set: false,
+                    default:0,
+                    range:[1,720,1],
+                },
+                temperature:{
+                    set: false,
+                    default:null,
+                    range:[35,45,5],
+                },
+                preheat:{
+                    set:false,
+                    default: null,
+                },
+                steamAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                },
+                fireAmount:{
+                    set:false,
+                    default:null,
+                    range:null,
+                    hide: null
+                },
+                settingHide:true,
+                standbyHide: true,
+                circleProgressPointHide: true,
+            },
         ]
     }
 ];

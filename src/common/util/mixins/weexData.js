@@ -123,6 +123,14 @@ let workingModalMixin  = {
             if(analysisObj.workingState.value == 4 && this.getAllSeconds(analysisObj) > 0 && this.isFun2Oven(analysisObj)) {
                 analysisObj.workingState.value = 3
             }
+
+            /**
+             * 微波炉X7 预热完成特殊处理
+             */
+            if(analysisObj.workingState.value == 2 && this.isX7Micro() &&  analysisObj.displaySign.preheatTemperature == 1) {
+                analysisObj.workingState.value = 3
+            }
+
             
             /**
              * 工作页面判断以及10s轮询
@@ -263,6 +271,13 @@ let workingModalMixin  = {
          */
         isFun2Oven(){
             return this.device.extra1.sn8 === '08T7428E';
+        },
+
+         /**
+         * 是否是X7微波炉判断
+         */
+        isX7Micro(){
+            return this.device.extra1.sn8 === '09X7321D';
         },
           /**
          * 是否是非烹饪类模式

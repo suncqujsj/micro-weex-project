@@ -289,6 +289,9 @@ export default {
       message.setByte(messageBody, 14, parseInt(params.temperature)>255?parseInt(params.temperature)-256:parseInt(params.temperature));
       message.setByte(messageBody, 15, params.fireAmount);
       message.setByte(messageBody, 16, params.steamAmount || params.weight/10);
+
+      // 数据埋点
+      // this.statisticsUpload({...constant.device});
     }
 
     if(controltype == 1){//工作中设置类 byte11 发04，其他byte发ff

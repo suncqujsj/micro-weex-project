@@ -65,7 +65,8 @@
                     </div>
                     <scroller class="custome-scroller" scroll-direction="horizontal" show-scrollbar="false" @scroll="scroll" @scrollend="scrollEnd">
                         <div :ref="'customeScroller'" class="point-wrapper" :style="{'width':(2*customeSliderWidth+40)+'px'}">
-                            <div class="point" :style="{'margin-left':customeSliderWidth+'px'}"></div>
+                            <!-- <div class="point" :style="{'margin-left':customeSliderWidth+'px'}"></div> -->
+                            <image class="point" :src="sliderImageBase64" resize="container" :style="{'margin-left':customeSliderWidth+'px'}" />
                         </div>
                     </scroller>
                 </div>
@@ -160,7 +161,7 @@
 }
 .custome-line-container {
   position: absolute;
-  top: 40px;
+  top: 46px;
   left: 20px;
   height: 6px;
   flex-direction: row;
@@ -169,13 +170,13 @@
 }
 .custome-scroller {
   flex: 1;
-  height: 40px;
+  height: 52px;
 }
 .point {
-  height: 40px;
-  width: 40px;
-  border-radius: 40px;
-  background-color: #267aff;
+  height: 52px;
+  width: 52px;
+  /* border-radius: 52px; */
+  /* background-color: #267aff; */
   
 }
 </style>

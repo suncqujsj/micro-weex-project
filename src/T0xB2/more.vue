@@ -30,7 +30,7 @@
          methods: {
             loadOwnMode(data,_list){       
                 if(data.result && data.result.deviceSn8=='0TPN36FQ'){
-                    _list[0].rightText = "蒸汽炉 TPN36FQ-SSL";   
+                    _list[0].rightText = "蒸汽炉 TPN36FQL-SSL";   
                 }
                 else if(data.result && data.result.deviceSn8=='0TPN36R5'){
                     _list[0].rightText = "蒸汽炉 TPN36FR5-SSL";  

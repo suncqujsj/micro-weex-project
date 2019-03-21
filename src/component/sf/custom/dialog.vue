@@ -3,7 +3,8 @@
     <midea-mask @click="layoutClick"></midea-mask>
     <div class="wrapper" :style="{height:maskHeight+'px'}">
       <div ref="dialog" class="dialog-box">
-        <div class="dialog-content" :style="{marginBottom:-(0.5/scale)+'px'}">
+        <!--<div class="dialog-content" :style="{marginBottom:-(0.5/scale)+'px'}">-->
+        <div class="dialog-content">
           <slot name="title">
             <text v-if="title" class="content-title">{{title}}</text>
           </slot>

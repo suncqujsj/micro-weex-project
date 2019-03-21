@@ -63,7 +63,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: 1,
+                    default: preheatDefault,
                     workingPreheatHide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
@@ -90,7 +90,7 @@ let modes = [
                 downTemperature:udTemperature,
                 preheat:{
                     set:true,
-                    default: 1,
+                    default: preheatDefault,
                     workingPreheatHide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
@@ -120,7 +120,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: 1,
+                    default: preheatDefault,
                     workingPreheatHide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
@@ -154,7 +154,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: 1,
+                    default: preheatDefault,
                     workingPreheatHide: true,
                 },
                 settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示

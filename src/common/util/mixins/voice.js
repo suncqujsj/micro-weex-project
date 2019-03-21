@@ -177,7 +177,7 @@ let commonMixin = {
                     let data = JSON.parse(voiceAuthStateResult.returnData).data;
                     // nativeService.toast('授权状态status：' + data.status);
 
-                    // nativeService.alert(data);
+                    nativeService.alert(data);
                     if(!data || !data.status) {
                         return;
                     }
@@ -202,7 +202,7 @@ let commonMixin = {
         voiceAuthConfirm(status){
             // nativeService.alert(status)
             if (status == 1) {
-                nativeService.confirm('允许烤箱控制其他美的智能设备', async (result) => {
+                nativeService.confirm('允许后，您可以通过"烤箱"的语音功能控制家庭的其他美的智能设备', async (result) => {
                     this.voiceAuth(result == '允许' ? 1 : 0);
                 }, '允许', '不允许')
             } else {
@@ -291,7 +291,7 @@ let commonMixin = {
                         deviceId: this.deviceId, // 设备id
                         aiUpdateTokenUrl: this.url,
                         iotAppId: this.iotAppId,
-                        userOption
+                        userOption //
                     }
                 }
             }
@@ -304,14 +304,15 @@ let commonMixin = {
         /**
          * 取消授权
          */
-        voiceAuthCancel(){
+        voiceAuthCancel(isDel=0){
             let params = {
                 type: '0xAI',
                 queryStrings: {
                     'serviceUrl': '/v1/user/token/cancel'
                 },
                 transmitData: {
-                    deviceId: this.deviceId
+                    deviceId: this.deviceId,
+                    isDel
                 }
             };
             // nativeService.alert(params);

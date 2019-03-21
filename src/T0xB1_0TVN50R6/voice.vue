@@ -78,6 +78,7 @@
         },
         components: {mideaHeader, mideaCell, mideaSwitch2},
         created(){
+            this.initVoice();
             this.init();
             let context = this;
             appPageDataChannel.onmessage = function(event){

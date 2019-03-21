@@ -330,9 +330,10 @@
 
     // import constant from "./config/constant";
     import languages from '../mapping/_languages'
+    import voiceMixin from  "@/common/util/mixins/voice.js"
 
     export default {
-        mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin,copyMixin,weexData,modalMixin],
+        mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin,copyMixin,weexData,modalMixin,voiceMixin],
         data(){
             return {
                
@@ -352,6 +353,10 @@
         },
         components: {MideaHeader,sfDialog,mideaActionsheet,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modal,modalHeader,rowWrapItems,light,timePicker},
         created(){
+
+
+            this.initVoiceWithParams(true); // sf 判断设备是否显示语音授权提示框
+
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             let self = this;
             let {constant,tabs} = this;

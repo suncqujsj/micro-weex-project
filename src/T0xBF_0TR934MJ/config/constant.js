@@ -6,7 +6,7 @@
 module.exports = {
     device: {
         type: 0xBF,
-        page_title: "微蒸烤一体机",
+        page_title: "微波蒸汽烤箱",
         widget_name: 'MSO_T0xB1',
         widget_version: '5.0.0',
         extra1: {

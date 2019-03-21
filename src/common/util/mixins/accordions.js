@@ -26,13 +26,9 @@ const accordionMixin = {
             return {
                 currentItem:null,
                 current:this.initCurrentData(),
-                show: false
+                show: false,
+                accordions: this.initAccordions()
             }
-    },
-    computed:{
-        accordions(){
-            return this.initAccordions()
-        }
     },
     methods: {
         range: function(key){ // picker属性范围

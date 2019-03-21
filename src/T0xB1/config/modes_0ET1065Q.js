@@ -38,7 +38,7 @@ let modes = [
                     default:0,
                     range:null
                 },
-                standbyHide:true,
+                // standbyHide:true,
                 settingHide:true,
                 circleProgressPointHide: true,
             },
@@ -49,7 +49,7 @@ let modes = [
                 time:{
                     set: false,
                     default:0,
-                    range:[1,2540,1]
+                    range:[1,540,1]
                 },
                 temperature:{
                     set: false,
@@ -121,8 +121,8 @@ let modes = [
                     range:[60,100,1,105,120,5]
                 },
                 preheat:{
-                    set:false,
-                    default: null,
+                    set:true,
+                    default: 0,
                 },
                 steamAmount:{
                     set:false,
@@ -176,7 +176,7 @@ let modes = [
                 settingHide:true,
                 circleProgressPointHide: true,
             },
-            { // 上下烧烤/立体烧烤
+            { // 上下烧烤+风扇/立体烧烤
                 'icon': modeIcons[2].dir,
                 'text': '立体烧烤',
                 'mode': 0x44,
@@ -246,7 +246,7 @@ let modes = [
                 'mode': 0x50,
                 time:{
                     set: true,
-                    default:30,
+                    default:1,
                     range:[1,60,1,65,120,5,120,540,30]
                 },
                 temperature:{
@@ -269,7 +269,7 @@ let modes = [
                     default:0,
                     range:null
                 },
-                standbyHide:true,
+                // standbyHide:true,
                 settingHide:true,
                 circleProgressPointHide: true,
             },
@@ -348,7 +348,7 @@ let modes = [
                 'mode': 0xC0,
                 time:{
                     set: true,
-                    default:30,
+                    default:90,
                     range:[90,120,30]
                 },
                 temperature:{

@@ -177,7 +177,7 @@ let commonMixin = {
                     let data = JSON.parse(voiceAuthStateResult.returnData).data;
                     // nativeService.toast('授权状态status：' + data.status);
 
-                    nativeService.alert(data);
+                    // nativeService.alert(data);
                     if(!data || !data.status) {
                         return;
                     }

@@ -204,6 +204,9 @@ let commonMixin = {
             if (status == 1) {
                 nativeService.confirm('允许后，您可以通过"烤箱"的语音功能控制家庭的其他美的智能设备', async (result) => {
                     this.voiceAuth(result == '允许' ? 1 : 0);
+                    // this.voiceAuth(result == '允许' ? 1 : 0).then((resp)=>{
+                    //     nativeService.alert(resp);
+                    // });
                 }, '允许', '不允许')
             } else {
                 console.log('已授权')

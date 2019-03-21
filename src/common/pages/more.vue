@@ -8,7 +8,7 @@
 
         <midea-header class="bg-white" title="更多功能" titleText="black" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back"></midea-header>
 
-        <list style="margin-top: 24px" show-scrollbar="true">
+        <list style="margin-top: 24px;" show-scrollbar="false">
             <midea-cell :clickActivied="false" v-for="(item,index) in list" :hasBottomBorder="(list.length - 1) !== index" :key="index" :title="item.title" :rightText="item.rightText" :hasArrow="!!item.link" @mideaCellClick="link(item)">
             </midea-cell>
         </list>

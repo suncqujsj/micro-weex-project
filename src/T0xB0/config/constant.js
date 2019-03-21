@@ -9,7 +9,7 @@ module.exports = {
         page_title: "微波炉",
         sales_model: "X7-321D耀石黑",
         widget_name: 'MSO_T0xB0',
-        widget_version: '5.1.0',
+        widget_version: '5.1.2',
         extra1: {
             sn8: '09X7321D'
         },

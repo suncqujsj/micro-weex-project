@@ -47,6 +47,11 @@ let commonMixin = {
             let microphoneState = await this.getMicrophoneState();
             let data = JSON.parse(microphoneState.returnData).data;
             this.list[this.controlIndex].value = data.micStatus === 'On'; // 注意O是大写
+            let t = setInterval(()=>{
+                this.hideState();
+                clearInterval(t);
+                this.loading = false;
+            }, 1000);
         },
 
         /**
@@ -189,7 +194,6 @@ let commonMixin = {
 
                     this.setSwitchValue(this.authIndex, data.status === '0');
                     this.list[this.authIndex].hide = false;
-
                 }
             } catch (error) {
                 nativeService.alert(error);

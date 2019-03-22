@@ -8,7 +8,7 @@ import constant from "./constant.js";
 let list = [
     {
         title: '产品型号',
-        rightText: 'BT50B1W',
+        rightText: '烤箱 BT50B1W',
         link:''
     },
     {

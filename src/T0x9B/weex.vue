@@ -20,12 +20,12 @@
                 tabs:[
                     {
                         name:'自动菜单',
-                        active:false,
+                        active:true,
                         rows:autoMenu
                     },
                     {
                         name:'加热模式',
-                        active:true,
+                        active:false,
                         rows:[]
                     }
                 ],

@@ -47,6 +47,11 @@ let commonMixin = {
             let microphoneState = await this.getMicrophoneState();
             let data = JSON.parse(microphoneState.returnData).data;
             this.list[this.controlIndex].value = data.micStatus === 'On'; // 注意O是大写
+            let t = setInterval(()=>{
+                this.hideState();
+                clearInterval(t);
+                this.loading = false;
+            }, 1000);
         },
 
         /**
@@ -189,7 +194,6 @@ let commonMixin = {
 
                     this.setSwitchValue(this.authIndex, data.status === '0');
                     this.list[this.authIndex].hide = false;
-
                 }
             } catch (error) {
                 nativeService.alert(error);
@@ -202,8 +206,11 @@ let commonMixin = {
         voiceAuthConfirm(status){
             // nativeService.alert(status)
             if (status == 1) {
-                nativeService.confirm('允许烤箱控制其他美的智能设备', async (result) => {
+                nativeService.confirm('允许后，您可以通过"烤箱"的语音功能控制家庭的其他美的智能设备', async (result) => {
                     this.voiceAuth(result == '允许' ? 1 : 0);
+                    // this.voiceAuth(result == '允许' ? 1 : 0).then((resp)=>{
+                    //     nativeService.alert(resp);
+                    // });
                 }, '允许', '不允许')
             } else {
                 console.log('已授权')
@@ -291,7 +298,7 @@ let commonMixin = {
                         deviceId: this.deviceId, // 设备id
                         aiUpdateTokenUrl: this.url,
                         iotAppId: this.iotAppId,
-                        userOption
+                        userOption //
                     }
                 }
             }
@@ -304,14 +311,15 @@ let commonMixin = {
         /**
          * 取消授权
          */
-        voiceAuthCancel(){
+        voiceAuthCancel(isDel=0){
             let params = {
                 type: '0xAI',
                 queryStrings: {
                     'serviceUrl': '/v1/user/token/cancel'
                 },
                 transmitData: {
-                    deviceId: this.deviceId
+                    deviceId: this.deviceId,
+                    isDel
                 }
             };
             // nativeService.alert(params);

@@ -71,14 +71,14 @@ const en = {
     working: 'Working',
     probeMode: 'Probe Mode',
     currentTemperature: 'Current Temperature',
-    time: '时间',
-    temperature: '温度',
-    upTemperature: '上管温度',
-    downTemperature: '下管温度',
-    probeTemperature: '探针温度',
-    steamAmount: '蒸汽量',
-    fireAmount: '火力',
-    weight: '重量'
+    time: 'Time',
+    temperature: 'Temperature',
+    upTemperature: 'Up Pipe Temperature',
+    downTemperature: 'Down Pipe Temperature',
+    probeTemperature: 'Probe Temperature',
+    steamAmount: 'Steam Amount',
+    fireAmount: 'Fire Amount',
+    weight: 'Weight'
 };
 
 const lang = {

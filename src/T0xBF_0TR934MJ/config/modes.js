@@ -36,7 +36,7 @@ let modes = [
             {
                 // 蒸汽+微波
                 'icon': modeIcons[33].dir,
-                'text': modeIcons[33].cn,
+                'text': '蒸汽+微波',
                 'mode': 0x90,
                 fireAmount:{
                     set:true,

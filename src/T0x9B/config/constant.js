@@ -11,7 +11,7 @@ module.exports = {
         widget_name: 'MSO_T0xB1',
         widget_version: '5.0.13',
         extra1: {
-            sn8: '0TQN50QL'
+            sn8: '0TQN36QL'
         },
         hideChildLock:{
             standby:false,

@@ -91,8 +91,10 @@ let workingModalMixin  = {
             clearInterval(this.queryTimer);
             // nativeService.alert(analysisObj);
             this.modalVisibility = false;
-            this.showDetailVisibility = false;
-            this.show = false;
+            if(analysisObj.workingState.value > 2) {
+                this.showDetailVisibility = false;
+                this.show = false;
+            }
             if(this.settingClickRecord){
                 this.show = true;
             }

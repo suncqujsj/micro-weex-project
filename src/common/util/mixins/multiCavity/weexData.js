@@ -127,8 +127,10 @@ let workingModalMixin  = {
             this.chartJson = JSON.parse(JSON.stringify(chartJson));
 
             //nativeService.alert(analysisObj);
-            this.showDetailVisibility = false;
-            this.show = false;    
+            if(analysisObj.workingState.value > 2) {
+                this.showDetailVisibility = false;
+                this.show = false;
+            }
             if(this.settingClickRecord){
                 this.show = true;    
             }

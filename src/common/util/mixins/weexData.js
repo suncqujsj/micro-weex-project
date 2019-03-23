@@ -105,7 +105,7 @@ let workingModalMixin  = {
              */
             if(analysisObj.workingState.value == 2 || analysisObj.workingState.value == 1 ){
                 this.queryRunTimer(10);//10秒轮询 
-                if(this.isProbeInserted(analysisObj) && !this.currentItem.probe && this.show) {//探针特殊处理
+                if(this.isProbeInserted(analysisObj) && !this.currentItem.probe && t) {//探针特殊处理
                     this.show = false;
                 }
             }
@@ -155,8 +155,8 @@ let workingModalMixin  = {
             this.modalVisibility = false;
             if(cmdObj.workingState.value > 2) {
                 this.showDetailVisibility = false;
+                this.show = false;
             }
-            this.show = false;
             if(this.settingClickRecord){
                 this.show = true;
             }

@@ -144,9 +144,9 @@ let modes = [
     {
         title: '',
         iconButtons: [
-            { // 烧烤
-                'icon': modeIcons[32].dir,
-                'text': '烧烤',
+            { // 上下烧烤
+                'icon': modeIcons[0].dir,
+                'text': '上下烧烤',
                 'mode': 0x4c,
                 time:{
                     set: true,
@@ -352,7 +352,7 @@ let modes = [
                     range:[90,120,30]
                 },
                 temperature:{
-                    set: true,
+                    set: false,
                     default:450,
                     range:[450,450,1]
                 },

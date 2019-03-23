@@ -232,6 +232,10 @@ let workingModalMixin  = {
                 customData.temperatureText = this.getTemperatureTextWithoutProbe(cmdObj);
             }
 
+            if(this.isLargeOven1065()){ //大烤箱旧插件 0ET1065Q ，上报的温度问题，下管上报了错乱的温度...需要只读上管温度
+                customData.temperatureText = cmdObj.temperature.upLowTemperature +'°'; 
+            }
+
             let buffer = objectAssign({}, cmdObj, customData);
             return buffer;
         },
@@ -272,6 +276,13 @@ let workingModalMixin  = {
         isFun2Oven(){
             const sns = ['08T7428E', '0T7L421F'];
             return sns.indexOf(this.device.extra1.sn8) > -1;
+        },
+
+        /**
+         * 大烤箱
+         */
+        isLargeOven1065(){
+            return this.device.extra1.sn8 === '0ET1065Q';
         },
 
         /**

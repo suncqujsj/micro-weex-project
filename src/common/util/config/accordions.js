@@ -101,6 +101,14 @@ let accordions =  [
         hideArrow:false
     },
     {
+        key:'quantity',
+        type:'picker',
+        isFolded: true,
+        subtitle:getTitle('数量', 'Quantity'),
+        unit:getUnit('份', 'Copies'),
+        hideArrow:false
+    },
+    {
         key:'steamSwitch',
         type:'switch',
         isFolded: true,

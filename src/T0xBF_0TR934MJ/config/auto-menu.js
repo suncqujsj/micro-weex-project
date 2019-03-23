@@ -385,10 +385,10 @@ let data = [
                         default:0,
                         range:null
                     },
-                    weight:{
+                    quantity:{
                         set:true,
-                        default:500,
-                        range:[100,500,100], // Giggs，个数1，2，3，默认3
+                        default:3,
+                        range:[1,3,1], // Giggs，个数1，2，3，默认3
                     },
                     recipeId:{
                         set:false,
@@ -952,10 +952,12 @@ let data = [
                         default:0,
                         range:null
                     },
-                    weight:{
+                    quantity:{
                         set:true,
-                        default:500,
-                        range:[200,600,100], // Giggs，个数1，2，3，默认3
+                        default:3,
+                        range:[1,3,1], // Giggs，个数1，2，3，默认3
+                        // title: '杯数'
+                        // unit: '杯'
                     },
                     recipeId:{
                         set:false,
@@ -996,8 +998,8 @@ let data = [
                     },
                     weight:{
                         set:true,
-                        default:500,
-                        range:[200,600,100],// Giggs，个数1，2，3，默认3
+                        default:3,
+                        range:[1,3,1],// Giggs，个数1，2，3，默认3
                     },
                     recipeId:{
                         set:false,
@@ -1087,8 +1089,8 @@ let data = [
                     },
                     weight:{
                         set:true,
-                        default:500,
-                        range:[100,500,100],// Giggs，个数1，2，3，默认3
+                        default:3,
+                        range:[1,3,1],// Giggs，个数1，2，3，默认3
                     },
                     recipeId:{
                         set:false,
@@ -1129,8 +1131,8 @@ let data = [
                     },
                     weight:{
                         set:true,
-                        default:500,
-                        range:[200,600,100], // Giggs，个数1，2，3，默认3
+                        default:3,
+                        range:[1,3,1], // Giggs，个数1，2，3，默认3
                     },
                     recipeId:{
                         set:false,
@@ -1171,8 +1173,8 @@ let data = [
                     },
                     weight:{
                         set:true,
-                        default:500,
-                        range:[200,600,100],// Giggs，个数1，2，3，4 默认4
+                        default:4,
+                        range:[1,4,1],// Giggs，个数1，2，3，4 默认4
                     },
                     recipeId:{
                         set:false,
@@ -1262,8 +1264,8 @@ let data = [
                     },
                     weight:{
                         set:true,
-                        default:500,
-                        range:[100,500,100],// Giggs，个数1，2，3 默认3
+                        default:3,
+                        range:[1,3,1],// Giggs，个数1，2，3 默认3
                     },
                     recipeId:{
                         set:false,
@@ -1563,8 +1565,8 @@ let data = [
                     },
                     weight:{
                         set:true,
-                        default:500,
-                        range:[200,600,100],// Giggs，个数12 默认12
+                        default:12,
+                        range:[12,12,1],// Giggs，个数12 默认12
                     },
                     recipeId:{
                         set:false,

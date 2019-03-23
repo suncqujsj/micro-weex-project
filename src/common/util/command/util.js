@@ -300,9 +300,9 @@ export default {
       message.setByte(messageBody, 13, parseInt(params.temperature)>255?1:0); // Giggs ， 2019-03-19
       message.setByte(messageBody, 14, this.getLowTemperature(downTemp));
       message.setByte(messageBody, 15, params.fireAmount);
-      message.setByte(messageBody, 16, params.steamAmount || params.weight/10);
+      message.setByte(messageBody, 16, this.setByte26(params));
 
-      // 数据埋点
+        // 数据埋点
       // this.statisticsUpload({...constant.device});
     }
 
@@ -325,7 +325,7 @@ export default {
       message.setByte(messageBody, 14,  0xff);
       // message.setByte(messageBody, 14, params.temperature);
       message.setByte(messageBody, 15, params.isFireAmountChange?params.fireAmount/10:0xff);
-      message.setByte(messageBody, 16, params.isSteamAmountChange?(params.steamAmount || params.weight/10):0xff);
+      message.setByte(messageBody, 16, params.isSteamAmountChange?(this.setByte26(params)):0xff);
       message.setByte(messageBody, 18,  0xff);
     }
     if(controltype == 2){//探针类下发
@@ -351,6 +351,10 @@ export default {
     // nativeService.alert(this.cmdToEasy(sendcmd));
     return sendcmd;
   },
+
+    setByte26(params){
+      return params.steamAmount || params.weight/10 || params.quantity;
+    },
 
   getLowTemperature(t){ // sf 获取低位温度值
       return parseInt(t)>255?parseInt(t)-256:parseInt(t);

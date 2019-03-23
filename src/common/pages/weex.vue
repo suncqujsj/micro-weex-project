@@ -93,7 +93,7 @@
                          </sf-accordion>
                     </div>
                     <div v-if="item.type==='picker' && (currentItem && currentItem[item.key] && (!currentItem[item.key].hide && isWorkingPage || !isWorkingPage))">
-                        <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set && ((!cmdObj.isProbe.value && item.key!='probeTemperature') || (currentItem.probe && cmdObj.isProbe.value && !currentItem[item.key].isProbeThenThisHide)) " :value="setValue(item.key)" :unit="currentItem[item.key].unit||item.unit[constant.device.lang]||item.unit" :index="index" :title="language[item.key]" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                        <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set && ((!cmdObj.isProbe.value && item.key!='probeTemperature') || (currentItem.probe && cmdObj.isProbe.value && !currentItem[item.key].isProbeThenThisHide)) " :value="setValue(item.key)" :unit="currentItem[item.key].unit||item.unit[constant.device.lang]||item.unit" :index="index" :title="currentItem[item.key].title || language[item.key]" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                             <div slot="content">
                                 <wx-picker :pickerIndex="index" :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                             </div>

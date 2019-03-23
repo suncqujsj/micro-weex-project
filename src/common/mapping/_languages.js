@@ -42,7 +42,9 @@ const cn = {
     probeTemperature: '探针温度',
     steamAmount: '蒸汽量',
     fireAmount: '火力',
-    weight: '重量'
+    weight: '重量',
+    quantity: '数量',
+    quantityDefaultUnit: '份'
 };
 
 const en = {
@@ -78,7 +80,9 @@ const en = {
     probeTemperature: 'Probe Temperature',
     steamAmount: 'Steam Amount',
     fireAmount: 'Fire Amount',
-    weight: 'Weight'
+    weight: 'Weight',
+    quantity: 'Quantity',
+    quantityDefaultUnit: 'Copies'
 };
 
 const lang = {

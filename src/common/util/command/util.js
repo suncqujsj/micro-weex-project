@@ -57,6 +57,10 @@ export default {
           name:"炉灯",
           value: 0
         },
+        highClearLock:{
+          name:"高温自清洁锁",
+          value: 0
+        },
         isProbe:{
           name:"肉类探针模式",
           value: 0
@@ -447,6 +451,7 @@ export default {
 
      obj.light.value = message.getBit(requestCmd, 27, 2);
      obj.isProbe.value = message.getBit(requestCmd, 27, 6);
+     obj.highClearLock.value = message.getBit(requestCmd, 27, 3);
      obj.menuFeel.value = message.getBit(requestCmd, 27, 1);
     //设置温度
 

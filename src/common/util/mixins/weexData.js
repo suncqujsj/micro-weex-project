@@ -198,6 +198,10 @@ let workingModalMixin  = {
             if(cmdObj.displaySign.lock){
                 !this.modalVisibility && this.showModal();
             }
+
+            if(cmdObj.highClearLock.value==1){
+                this.setWarningDialog("高温自清洁锁检查失效");
+            }
         },
 
 
@@ -362,6 +366,10 @@ let workingModalMixin  = {
                     chartJson.pointShow = false;
                 }
             }
+
+            if(this.isLargeOven1065() && cmdObj.mode.value==0x4b){ //如果是大烤箱1065，而且模式为快速预热，则修复大烤箱1065该模式的兼容问题...
+                cmdObj.displaySign.preheat = 1;
+            }
         },
 
         /**
@@ -416,6 +424,11 @@ let workingModalMixin  = {
                 if(this.isNonCookingTypeComplete(cmdObj)){ //非烹饪类完成，显示工作完成
                      this.workSpecialStatusText = "工作完成";
                      this.statusTag = '';
+                }
+
+                if(this.isLargeOven1065() && cmdObj.mode.value==0x4b){ //如果是大烤箱1065，而且模式为快速预热，则修复大烤箱1065该模式的兼容问题...
+                    cmdObj.displaySign.preheatTemperature = 1;
+                    cmdObj.workingState.value = 3;
                 }
                
             }

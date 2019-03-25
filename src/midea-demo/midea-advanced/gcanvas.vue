@@ -6,8 +6,14 @@
             <text class="display-text">GCanvas主页和接口支持 (请使用桌面浏览器打开)</text>
             <text class="display-link" @click="openWeb('https://alibaba.github.io/GCanvas/')">主页：https://alibaba.github.io/GCanvas/</text>
             <text class="display-link" @click="openWeb('https://alibaba.github.io/GCanvas/docs/Graphics%202D.html')">2D接口:https://alibaba.github.io/GCanvas/docs/Graphics%202D.html</text>
-            <text class="display-link" @click="openWeb('https://alibaba.github.io/GCanvas/docs/WebGL.html')">WebGL接口：https://alibaba.github.io/GCanvas/docs/WebGL.html  {{positionY}}</text>
+            <text class="display-link" @click="openWeb('https://alibaba.github.io/GCanvas/docs/WebGL.html')">WebGL接口：https://alibaba.github.io/GCanvas/docs/WebGL.html {{positionY}}</text>
         </div>
+        <div class="text-row">
+            <text class="text-label">刷新间隔(毫秒）</text>
+            <input class="text-input" type="text" placeholder="刷新间隔(毫秒）" v-model="timer" />
+        </div>
+        <midea-button :text="'定时刷新数据'+counter" @mideaButtonClicked="mideaButtonClicked">
+        </midea-button>
         <gcanvas @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend" ref="gcanvess" style="width: 750;height: 600px;background-color: yellow;">
         </gcanvas>
         <scroller ref="test" style="flex:1;background-color: #1ba1e2">
@@ -18,22 +24,45 @@
 
 <style scoped>
 .display-text {
-  font-size: 30px;
-  margin-left: 10px;
-  margin-right: 10px;
+    font-size: 30px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 .display-link {
-  font-size: 24px;
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  color: blue;
-  text-decoration: blue;
+    font-size: 24px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    color: blue;
+    text-decoration: blue;
+}
+.text-row {
+    display: flex;
+    flex-direction: row;
+}
+.text-label {
+    font-family: PingFangSC-Regular;
+    font-size: 32px;
+    color: #000000;
+    width: 160px;
+    padding-left: 22px;
+}
+.text-input {
+    flex: 1;
+    font-family: PingFangSC-Regular;
+    font-size: 32px;
+    color: #000000;
+    padding-left: 22px;
+    padding-right: 50px;
+
+    border-color: #e2e2e2;
+    border-width: 1px;
 }
 </style>
 <script>  
 import base from '../base'
 import mideaHeader from '@/midea-component/header.vue'
+import mideaButton from '@/midea-component/button.vue'
 import nativeService from '@/common/services/nativeService'
 
 const dom = weex.requireModule("dom");
@@ -41,6 +70,7 @@ var GCanvas = require('weex-gcanvas')
 var Image = require('weex-gcanvas/gcanvasimage');
 var modal = weex.requireModule("modal");
 export default {
+    components: { mideaHeader, mideaButton },
     mixins: [base],
     data() {
         return {
@@ -51,7 +81,10 @@ export default {
             currentX: 0,
             currentY: 0,
             context: {},
-            canvasObj: {}
+            canvasObj: {},
+            timer: 1000,
+            intervalHandler: null,
+            counter: 0
         }
     },
     methods: {
@@ -81,6 +114,25 @@ export default {
         },
         touchend(event) {
 
+        },
+        mideaButtonClicked() {
+            var ref = this.$refs.gcanvess
+            /*通过元素引用获取canvas对象*/
+            this.canvasObj = GCanvas.start(ref)
+            /*获取绘图所需的上下文，目前不支持3d*/
+            this.context = this.canvasObj.getContext('2d')
+            if (this.intervalHandler) {
+                clearInterval(this.intervalHandler)
+                this.intervalHandler = null
+                this.counter = 0
+                this.context.clearRect(0, 0, 750, 600);
+            } else {
+                this.intervalHandler = setInterval(() => {
+                    this.context.clearRect(0, 0, 750, 600);
+                    this.test3()
+                    this.counter++
+                }, (isNaN(this.timer) ? 1000 : this.timer));
+            }
         },
         test1() {
             // 第一部分canvas
@@ -137,12 +189,6 @@ export default {
         },
         test3() {
             // 第二部分canvas
-            /*获取元素引用*/
-            var ref = this.$refs.gcanvess
-            /*通过元素引用获取canvas对象*/
-            this.canvasObj = GCanvas.start(ref)
-            /*获取绘图所需的上下文，目前不支持3d*/
-            this.context = this.canvasObj.getContext('2d')
 
             this.context.save();
             this.context.globalAlpha = 0.1;     //此时  画出的图片的透明度为0.5
@@ -165,29 +211,37 @@ export default {
             this.context.save();
             this.context.globalAlpha = 0.6;     //此时  画出的图片的透明度为0.5
             this.context.fillStyle = 'rgb(86,59,235)';
-            this.context.fillRect(0, 0, 100, 100);
+            let width = Math.floor(Math.random() * 200)
+            this.context.fillRect(0, 0, width, width);
             this.context.restore();
 
             this.context.fillStyle = 'rgb(86,59,235)';
             this.context.fillRect(150, 0, 100, 100);
 
-            this.context.fillStyle = 'rgba(86,59,235,0.3)';
-            this.context.fillRect(300, 0, 100, 100);
+            this.context.fillStyle = 'rgba(86,59,235,0.7)';
+            this.context.fillRect(300, 0, width, width);
 
             this.context.beginPath()
             this.context.moveTo(200, 400)
             this.context.lineTo(400, 500)
             this.context.lineTo(200, 600)
             this.context.lineTo(0, 500)
+            // let gradient1 = this.context.createLinearGradient(0, 500, 400, 500);
+            // gradient1.addColorStop(0, 'rgba(0,0,0,0.8)');
+            // gradient1.addColorStop(1, 'rgba(86,59,235,0.2)');
+            // this.context.strokeStyle = gradient1;
             this.context.closePath()
-            let gradient1 = this.context.createLinearGradient(0, 500, 400, 500);
-            gradient1.addColorStop(0, 'rgba(0,0,0,0.8)');
-            gradient1.addColorStop(1, 'rgba(86,59,235,0.2)');
-            this.context.strokeStyle = gradient1;
             this.context.fill();
         }
     },
     mounted() {
+
+        /*获取元素引用*/
+        var ref = this.$refs.gcanvess
+        /*通过元素引用获取canvas对象*/
+        this.canvasObj = GCanvas.start(ref)
+        /*获取绘图所需的上下文，目前不支持3d*/
+        this.context = this.canvasObj.getContext('2d')
         this.test1()
         // this.test2()
         this.test3()

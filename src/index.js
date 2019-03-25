@@ -1,4 +1,4 @@
-import MideaDialog from '@/component/dialog.vue'
+import MideaDialog from '@/midea-component/dialog.vue'
 import MideaImageSlider from '@/component/image-slider.vue'
 import MideaOption from '@/component/option.vue'
 import MideaGridSelect from '@/component/optionList.vue'
@@ -23,11 +23,9 @@ import MideaProgress from '@/midea-component/mProgress.vue'
 import MideaProgressDialog from '@/midea-component/mProgressDialog.vue'
 import MideaSelect from '@/midea-component/mSelect.vue'
 import MideaTab from '@/midea-component/mTab.vue'
-import MideaOperationModal from '@/midea-component/operation-modal.vue'
 import MideaOverlay from '@/midea-component/overlay.vue'
 import MideaPopup from '@/midea-component/popup.vue'
 import MideaSlider from '@/midea-component/slider.vue'
-import MideaSwitch1 from '@/midea-component/switch.vue'
 import MideaSwitch2 from '@/midea-component/switch2.vue'
 import MideaTitleBar from '@/midea-component/title-bar.vue'
 
@@ -62,11 +60,9 @@ export {
   MideaProgressDialog,
   MideaSelect,
   MideaTab,
-  MideaOperationModal,
   MideaOverlay,
   MideaPopup,
   MideaSlider,
-  MideaSwitch1,
   MideaSwitch2,
   MideaTitleBar,
   MideaSearchbar,

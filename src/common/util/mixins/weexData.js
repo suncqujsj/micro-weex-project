@@ -283,10 +283,17 @@ let workingModalMixin  = {
         },
 
         /**
-         * 大烤箱
+         * 大烤箱 1065
          */
         isLargeOven1065(){
             return this.device.extra1.sn8 === '0ET1065Q';
+        },
+
+        /**
+         * 蒸汽烤箱 36L  / TQN36FQL_SS
+         */
+        isSteamOven36L(){
+            return this.device.extra1.sn8 === '0TQN36QL';
         },
 
         /**
@@ -367,7 +374,7 @@ let workingModalMixin  = {
                 }
             }
 
-            if(this.isLargeOven1065() && cmdObj.mode.value==0x4b){ //如果是大烤箱1065，而且模式为快速预热，则修复大烤箱1065该模式的兼容问题...
+            if((this.isLargeOven1065() || this.isSteamOven36L())&& cmdObj.mode.value==0x4b){ //如果是大烤箱1065或者蒸汽烤箱，而且模式为快速预热，则修复该模式快速预热的兼容问题...
                 cmdObj.displaySign.preheat = 1;
             }
         },
@@ -426,7 +433,7 @@ let workingModalMixin  = {
                      this.statusTag = '';
                 }
 
-                if(this.isLargeOven1065() && cmdObj.mode.value==0x4b){ //如果是大烤箱1065，而且模式为快速预热，则修复大烤箱1065该模式的兼容问题...
+                if((this.isLargeOven1065()|| this.isSteamOven36L()) && cmdObj.mode.value==0x4b){ //如果是大烤箱1065，而且模式为快速预热，则修复大烤箱1065该模式的兼容问题...
                     cmdObj.displaySign.preheatTemperature = 1;
                     cmdObj.workingState.value = 3;
                 }
@@ -480,6 +487,10 @@ let workingModalMixin  = {
                 // this.btnText = this.getLanguage('start');
                 this.btnText = this.getLanguage('start');
                 this.btnSrc = "img/footer/icon_start@2x.png";
+
+                if((this.isLargeOven1065()|| this.isSteamOven36L()) && cmdObj.mode.value==0x4b){ //如果是大烤箱1065，而且模式为快速预热，则修复大烤箱1065该模式的兼容问题...
+                    this.hasStopOrContinueBtn = false;
+                }
             }
             
         },

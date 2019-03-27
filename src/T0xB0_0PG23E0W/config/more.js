@@ -8,7 +8,7 @@ import constant from "./constant.js";
 let list = [
     {
         title: '产品型号',
-        rightText: '蒸汽烤箱'+constant.device.sales_model,
+        rightText: '微蒸烤一体机 PG23E0W',
         link:''
     },
     {

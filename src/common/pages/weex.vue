@@ -67,6 +67,7 @@
                                 </div>
                                 <!-- 不支持肉类探针的模式遮罩层 -->
                                 <div v-if="!item.probe && cmdObj.isProbe.value" class='button-icon a-c j-c probeClass'></div>
+                                <text class="button-text" v-if="item.ellipsisText">{{item.ellipsisText}}</text>
                                 <text class="button-text">{{item.text}}</text>
                             </div>
                         </div>

@@ -7,9 +7,9 @@ module.exports = {
     device: {
         type: 0x9B,
         page_title: "蒸汽烤箱", // 此字段是页面顶端标题
-        //sales_model: "TPN50QL_SSL", // 此字段已作废
+        sales_model: "TQN36FQL_SS", 
         widget_name: 'MSO_T0xB1',
-        widget_version: '5.0.13',
+        widget_version: '5.1.0',
         extra1: {
             sn8: '0TQN36QL'
         },

@@ -15,6 +15,13 @@ let microwaveTimeCommon = {
      range:[1, 90, 1]
  };
 
+ let hotWindTimeCommon = {
+     set: true,
+     default:10,
+     range:[1, 300, 1]
+ };
+
+
  let preheatCommon = {
         set:true,
         default: false
@@ -71,7 +78,7 @@ let modes = [
                 'mode': 0x31,
                 temperature:{
                     set: true,
-                    default:100,
+                    default:180,
                     range:[180,200,10],
                 },
                 steamAmount:{

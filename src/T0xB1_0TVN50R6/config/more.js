@@ -22,7 +22,7 @@ let list = [
     },
     // {
     //     title: '动画',
-    //     link:'test.js'
+    //     link:'tests.jss'
     // }
 ];
 

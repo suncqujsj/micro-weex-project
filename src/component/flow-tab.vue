@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <scroller  show-scrollbar="false" scroll-direction="horizontal" class="scroller">
-        <div class="scroller-wrapper" :style="{width:tabsWidth}" ref="test">
+        <div class="scroller-wrapper" :style="{width:tabsWidth}" ref="tests">
              <div class="tab-wrapper" > 
                  <div :ref="'text'+index" :style="{width:tabWidth}" v-for="(item,index) in tabArray" class="tab-item" @click="tabClicked(index)">
                       <text class="tab-txt" :class="[item.selected?'tab-txt-selected':'']">{{item.name}}</text>

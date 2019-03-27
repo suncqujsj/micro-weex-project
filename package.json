@@ -6,6 +6,7 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack --watch",
+
     "sf": "webpack --watch --env=T0x9B_0TQN36XJ",
     "parker": "webpack --watch --env=T0xB2_0TPN50QL",
     "dev_demo": "webpack --watch --env=midea-demo",

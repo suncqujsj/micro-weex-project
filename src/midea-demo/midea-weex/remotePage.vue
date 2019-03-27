@@ -240,7 +240,7 @@ module.exports = {
                     }
                 }
             } else {
-                this.history.push("http://qrcode.midea.com/test/weexDemo/weex.js?root=midea-demo&isDummay=false")
+                this.history.push("http://qrcode.midea.com/tests/weexDemo/weex.js?root=midea-demo&isDummay=false")
             }
 
             if (!this.url) {

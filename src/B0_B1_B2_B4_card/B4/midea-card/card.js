@@ -2894,8 +2894,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 					if (obj && key in obj) return obj[key];
 
 					// @index @key
-					// if (Constant.RE_INDEX.test(key)) return +options.name
-					// if (Constant.RE_KEY.test(key)) return options.name
+					// if (Constant.RE_INDEX.tests(key)) return +options.name
+					// if (Constant.RE_KEY.tests(key)) return options.name
 
 					// 绝对路径 or 相对路径
 					if (key.charAt(0) === '/' || pathParts.length > 1) return this.getValueByKeyPath(key, options);

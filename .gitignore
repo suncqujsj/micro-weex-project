@@ -5,7 +5,7 @@
 
 # Created by Builder
 examples/build
-test/build
+tests/build
 weex_tmp
 coverage
 dist

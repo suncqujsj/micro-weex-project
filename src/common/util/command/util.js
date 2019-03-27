@@ -240,6 +240,7 @@ export default {
     var messageBody = message.createMessageBody(1);//createMessageBody默认从10开始，1表示11，2表示12....
     message.setByte(messageBody, 0, 0x31);
     var sendMessage = message.createMessage(device.type, 0x03, messageBody);
+    nativeService.alert(this.cmdTo16Hex(sendMessage));
     return sendMessage;
   },
  

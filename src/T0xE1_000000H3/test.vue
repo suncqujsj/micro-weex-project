@@ -6,7 +6,7 @@
   </div>
 
   <div  class="test">
-   <div class="_btn_display" ref="test">徽章</div>
+   <div class="_btn_display" ref="tests">徽章</div>
 
   </div>
    <div>

@@ -62,7 +62,7 @@ module.exports = {
         MideaSwitch2
     },
     data: () => ({
-        host: '10.8.81.45',
+        host: '192.168.1.136',
         isShowHostList: false,
         hostIndex: null,
         hostList: [],
@@ -71,7 +71,9 @@ module.exports = {
         isShowModuleList: false,
         moduleIndex: null,
         moduleList: [
-            { key: -3, value: "T0xB0_xxxxxxxx", desc: "V项目" },
+            // { key: -5, value: "T0xB4_03TESTB4", desc: "小烤箱7" },
+            { key: -4, value: "T0xB0_01TESTB0", desc: "白色微波炉" },
+            { key: -3, value: "T0xB0_0EM34A2E", desc: "V项目" },
             { key: -2, value: "T0xB4_08T7428E", desc: "美的Fun烤箱II代， T7-428E" },
             { key: -1, value: "T0xB4_0T7L421F", desc: "美的Fun烤箱简版， T7-L421F" },
             { key: 0, value: "midea-demo", desc: "midea-demo 美居Demo" },
@@ -263,7 +265,7 @@ module.exports = {
                     }
                 }
             } else {
-                this.history.push("http://qrcode.midea.com/test/weexDemo/weex.js?root=midea-demo&isDummay=false")
+                this.history.push("http://qrcode.midea.com/tests/weexDemo/weex.js?root=midea-demo&isDummay=false")
             }
 
             if (!this.url) {

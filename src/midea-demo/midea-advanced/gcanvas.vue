@@ -10,7 +10,7 @@
         </div>
         <gcanvas @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend" ref="gcanvess" style="width: 750;height: 600px;background-color: yellow;">
         </gcanvas>
-        <scroller ref="test" style="flex:1;background-color: #1ba1e2">
+        <scroller ref="tests" style="flex:1;background-color: #1ba1e2">
             <gcanvas ref="canvas_holder" style="width:750px; height:600px; background-color:rgba(0, 0, 0, 0.1)"></gcanvas>
         </scroller>
     </div>

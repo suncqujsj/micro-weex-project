@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
-        <!--<div ref="test" @click="move" class="box"></div>-->
-        <!--<image ref="test" src="img/loading.png" class="box"></image>-->
+        <!--<div ref="tests" @click="move" class="box"></div>-->
+        <!--<image ref="tests" src="img/loading.png" class="box"></image>-->
         <midea-button text="打开" type="primary" @mideaButtonClicked="mideaButtonClicked1">
         </midea-button>
         <sf-state :display="display" :isMask="true" :text="'更新完成'" :type="'success'"></sf-state>

@@ -66,7 +66,7 @@
             </scroller>
         </div>
 
-        <!--<text class="r test" @click="doing">{{progress}}</text>-->
+        <!--<text class="r tests" @click="doing">{{progress}}</text>-->
         <!--<wxProgress :percent='progress' :bar_width='650'></wxProgress>-->
         <!--<wxcProgress :percent="progress"-->
         <!--:wxc_radius='200'>-->

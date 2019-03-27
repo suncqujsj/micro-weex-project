@@ -1170,10 +1170,7 @@ export default {
         return this.commandInterfaceWrapper(param)
     },
     /* weex卡片页打开控制页页面接口 */
-    showControlPanelPage(pageName) {
-        let param = {
-            controlPanelName: pageName || "controlPanel.html"
-        }
+    showControlPanelPage(params = {}) {
         bridgeModule.showControlPanelPage(params)
     },
     /* 上传图片文件，调用一次，上传一份图片文件 */

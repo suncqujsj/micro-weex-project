@@ -20,6 +20,13 @@ let microwaveTimeCommon = {
         default: false
     };
 
+ let temperatureGears = {
+         set:true,
+         default:3,
+         range:[1,3,1],
+         unit: '档',
+    };
+
 let modes = [
     {
         title: '',
@@ -116,11 +123,7 @@ let modes = [
                 'icon': modeIcons[15].dir,
                 'text': '烧烤',
                 'mode': 0x40,
-                fireAmount:{
-                    set:true,
-                    default:3,
-                    range:[1,3,1]
-                },
+                temperature: temperatureGears,
                 time:microwaveTimeCommon,
                 settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
 
@@ -176,7 +179,8 @@ let modes = [
                 'icon': modeIcons[15].dir,
                 'text': '烧烤+微波',
                 'mode': 0x70,
-                fireAmount:{ //档位设在了byte29 上低 sf
+                temperature: temperatureGears,
+                fireAmount:{
                     set:true,
                     default:3,
                     range:[1,3,2]

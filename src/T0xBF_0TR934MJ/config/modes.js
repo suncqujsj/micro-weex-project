@@ -100,7 +100,7 @@ let modes = [
                     default:180,
                     range:[50,50,1,100,230,5],
                 },
-                time: heatTimeCommon,
+                time: hotWindTimeCommon,
 
                 settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
 
@@ -116,7 +116,7 @@ let modes = [
                 'text': modeIcons[31].cn,
                 'mode': 0x43,
                 preheat: preheatCommon,
-                time: heatTimeCommon,
+                time: hotWindTimeCommon,
                 temperature:{
                     set: true,
                     default:180,

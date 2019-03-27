@@ -9,7 +9,7 @@ module.exports = {
         page_title: "蒸汽烤箱", // 此字段是页面顶端标题
         sales_model: "TQN36FQL_SS", 
         widget_name: 'MSO_T0xB1',
-        widget_version: '5.1.0',
+        widget_version: '5.1.1',
         extra1: {
             sn8: '0TQN36QL'
         },

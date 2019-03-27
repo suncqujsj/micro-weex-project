@@ -335,6 +335,7 @@ export default {
     if(controltype == 2){//探针类下发
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 1);
+      message.setByte(messageBody, 5, 0x11);
       message.setByte(messageBody, 6, 2);
       message.setByte(messageBody, 10, set_mode);
       message.setByte(messageBody, 12, 200);
@@ -344,6 +345,7 @@ export default {
     if(controltype == 3){//探针工作类下发
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 4);
+      message.setByte(messageBody, 5, 0x11);
       message.setByte(messageBody, 6, 2);
       message.setByte(messageBody, 10, set_mode);
       message.setByte(messageBody, 11, 0xff);
@@ -463,9 +465,9 @@ export default {
     //探针温度
     obj.probeRealTemperature.value = parseInt(requestCmd[32]);
     obj.probeSetttingTemperature.value = parseInt(requestCmd[33]);
-    if(obj.isProbe.value){ //如果是探针，则为显示为探针设定温度
-      obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
-    }
+    // if(obj.isProbe.value){ //如果是探针，则为显示为探针设定温度
+    //   obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
+    // }
 
     if(parseInt(requestCmd[19])==0xC4){//如果是烘干，则不显示温度
       obj.temperature.upLowTemperature = 0;

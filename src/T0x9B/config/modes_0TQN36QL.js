@@ -227,36 +227,47 @@ let modes = [
                     set: true,
                     default:20,
                     range:[1,120,1],
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 temperature:{
                     set: true,
                     default:180,
                     range:[100,200,5],
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 preheat:{
                     set:false,
                     default: null,
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 steamAmount:{
                     set:false,
                     default:null,
                     range:null,
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 fireAmount:{
                     set:false,
                     default:null,
                     range:null,
-                    hide: null
+                    hide: null,
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 settingHide:true, //工作中隐藏设置参数
                 circleProgressPointHide: true,
+                probeTemperature:{
+                    set: true,
+                    default:65,
+                    range:[65,100,1],
+                },
+                probe: true,//支持肉类探针
                 // standbyHide: true //standbyHide=true 待机中隐藏该对象,默认false或者没有这个key
                 // hms:{
                 //     set:true,
                 //     default:[0,40,40]
                 // }
             },
-            {   // 热风烧烤+蒸汽
+            {   // 立体烧烤+蒸汽
                 'icon': modeIcons[36].dir,
                 'text': modeIcons[36].cn,
                 'mode': 0x33,
@@ -264,29 +275,40 @@ let modes = [
                     set: true,
                     default:30,
                     range:[1,120,1],
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 temperature:{
                     set: true,
                     default:200,
                     range:[100,230,5],
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 preheat:{
                     set:false,
                     default: null,
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 steamAmount:{
                     set:false,
                     default:null,
                     range:null,
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 fireAmount:{
                     set:false,
                     default:null,
                     range:null,
-                    hide: null
+                    hide: null,
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 settingHide:true, //工作中隐藏设置参数
                 circleProgressPointHide: true,
+                probeTemperature:{
+                    set: true,
+                    default:70,
+                    range:[70,100,1],
+                },
+                probe: true,//支持肉类探针
                 // standbyHide: true //standbyHide=true 待机中隐藏该对象,默认false或者没有这个key
                 // hms:{
                 //     set:true,
@@ -307,29 +329,40 @@ let modes = [
                     set: true,
                     default:40,
                     range:[1,120,1],
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 temperature:{
                     set: true,
                     default:150,
                     range:[100,180,5],
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 preheat:{
                     set:false,
                     default: null,
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 steamAmount:{
                     set:false,
                     default:null,
                     range:null,
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 fireAmount:{
                     set:false,
                     default:null,
                     range:null,
-                    hide: null
+                    hide: null,
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 settingHide:true, //工作中隐藏设置参数
                 circleProgressPointHide: true,
+                probeTemperature:{
+                    set: true,
+                    default:60,
+                    range:[60,100,1],
+                },
+                probe: true,//支持肉类探针
                 // standbyHide: true //standbyHide=true 待机中隐藏该对象,默认false或者没有这个key
                 // hms:{
                 //     set:true,

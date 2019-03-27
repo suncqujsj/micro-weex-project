@@ -253,7 +253,13 @@ let workingModalMixin  = {
             }
 
             // 温度非0时，返回上低、下低温度的较大值
-            return this.addTemperatureUnit(cmdObj.temperature.upLowTemperature >= cmdObj.temperature.downLowTemperature ? cmdObj.temperature.upLowTemperature : cmdObj.temperature.downLowTemperature);
+            let temperature = cmdObj.temperature.upLowTemperature >= cmdObj.temperature.downLowTemperature ? cmdObj.temperature.upLowTemperature : cmdObj.temperature.downLowTemperature;
+
+            if(temperature <= 10) { // 如果温度值为档位，作隐藏处理。 sf
+                return '';
+            }
+
+            return this.addTemperatureUnit(temperature);
         },
 
         addTemperatureUnit(temp){

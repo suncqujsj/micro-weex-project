@@ -15,6 +15,25 @@ let microwaveTimeCommon = {
      range:[1, 90, 1]
  };
 
+ let hotWindTimeCommon = {
+     set: true,
+     default:10,
+     range:[1, 300, 1]
+ };
+
+
+ let preheatCommon = {
+        set:true,
+        default: false
+    };
+
+ let temperatureGears = {
+         set:true,
+         default:3,
+         range:[1,3,1],
+         unit: '档',
+    };
+
 let modes = [
     {
         title: '',
@@ -59,7 +78,7 @@ let modes = [
                 'mode': 0x31,
                 temperature:{
                     set: true,
-                    default:100,
+                    default:180,
                     range:[180,200,10],
                 },
                 steamAmount:{
@@ -75,12 +94,13 @@ let modes = [
                 'icon': modeIcons[1].dir,
                 'text': modeIcons[1].cn,
                 'mode': 0x41,
+                preheat:preheatCommon,
                 temperature:{
                     set: true,
                     default:180,
                     range:[50,50,1,100,230,5],
                 },
-                time: heatTimeCommon,
+                time: hotWindTimeCommon,
 
                 settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
 
@@ -95,7 +115,8 @@ let modes = [
                 'icon': modeIcons[31].dir,
                 'text': modeIcons[31].cn,
                 'mode': 0x43,
-                time: heatTimeCommon,
+                preheat: preheatCommon,
+                time: hotWindTimeCommon,
                 temperature:{
                     set: true,
                     default:180,
@@ -109,12 +130,69 @@ let modes = [
                 'icon': modeIcons[15].dir,
                 'text': '烧烤',
                 'mode': 0x40,
+                temperature: temperatureGears,
+                time:microwaveTimeCommon,
+                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+
+            },
+            {
+                // 热风对流+微波
+                'icon': modeIcons[15].dir,
+                'text': '热风对流+微波',
+                'mode': 0x71,
+                preheat: preheatCommon,
+                temperature:{
+                    set: true,
+                    default:180,
+                    range:[50,50,1,100,180,5],
+                },
                 fireAmount:{
                     set:true,
                     default:3,
-                    range:[1,3,1]
+                    range:[1,3,2]
                 },
-                time:microwaveTimeCommon,
+                time:heatTimeCommon,
+                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+
+            },
+
+            {
+                // 热风烧烤+微波
+                'icon': modeIcons[15].dir,
+                'text': '热风烧烤+微波',
+                'mode': 0x73,
+                preheat: preheatCommon,
+                temperature:{
+                    set: true,
+                    default:180,
+                    range:[50,50,1,100,180,5],
+                },
+                fireAmount:{
+                    set:true,
+                    default:3,
+                    range:[1,3,2]
+                },
+                time:heatTimeCommon,
+                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+
+            },
+        ]
+    },
+    {
+        title: '',
+        iconButtons: [
+            {
+                // 烧烤+微波
+                'icon': modeIcons[15].dir,
+                'text': '烧烤+微波',
+                'mode': 0x70,
+                temperature: temperatureGears,
+                fireAmount:{
+                    set:true,
+                    default:3,
+                    range:[1,3,2]
+                },
+                time:heatTimeCommon,
                 settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
 
             },

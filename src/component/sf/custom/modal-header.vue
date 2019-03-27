@@ -75,7 +75,12 @@ export default {
     },
     computed: {
         isipx: function () {
-            return weex && (weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6');
+            return weex && (
+                weex.config.env.deviceModel === 'iPhone10,3' || weex.config.env.deviceModel === 'iPhone10,6' //iphoneX
+                || weex.config.env.deviceModel === 'iPhone11,8' //iPhone XR
+                || weex.config.env.deviceModel === 'iPhone11,2' //iPhone XS
+                || weex.config.env.deviceModel === 'iPhone11,4' || weex.config.env.deviceModel === 'iPhone11,6' //iPhone XS Max
+                );
         }
     },
     data() {
@@ -121,10 +126,12 @@ export default {
 }
 .immersion {
   padding-top: 40px;
+  padding-left: 16px;
   height: 128px;
 }
 .immersion-ipx {
   padding-top: 88px;
+  padding-left: 16px;
   height: 176px;
 }
 .header-title {

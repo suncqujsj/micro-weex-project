@@ -38,7 +38,7 @@ let workingModalMixin  = {
 
                 chartJson: {
                     "completedColor":"#FFFFFF", //环形进度条未完成后的颜色默认#267AFF
-                    "incompletedColor":"#f5d5d5eb", //环形进度条未完成后的颜色，默认透明
+                    "incompletedColor":"#FFDB81", //环形进度条未完成后的颜色，默认透明
                     "thickness":2, //环形进度条宽度，默认4
                     "cornerRadius" : isIosLess5_4?120: 240,  //环形的半径，默认是width/2
                     "totalCounter" : 360, //环形进度条的最大值，默认是360
@@ -76,7 +76,7 @@ let workingModalMixin  = {
                 probeTempText: "°C",
     
                 showBar:false,
-                actionsheetItems:[this.getLanguage('confirmClose')],
+                actionsheetItems:[],
                 lightImg:"img/light_off@3x.png",
 
                 isWorkingPage:false,
@@ -105,7 +105,7 @@ let workingModalMixin  = {
              */
             if(analysisObj.workingState.value == 2 || analysisObj.workingState.value == 1 ){
                 this.queryRunTimer(10);//10秒轮询 
-                if(this.isProbeInserted(analysisObj) && !this.currentItem.probe && this.show) {//探针特殊处理
+                if(this.isProbeInserted(analysisObj) && !this.currentItem.probe && t) {//探针特殊处理
                     this.show = false;
                 }
             }
@@ -123,11 +123,19 @@ let workingModalMixin  = {
             if(analysisObj.workingState.value == 4 && this.getAllSeconds(analysisObj) > 0 && this.isFun2Oven(analysisObj)) {
                 analysisObj.workingState.value = 3
             }
+
+            /**
+             * 微波炉X7 预热完成特殊处理
+             */
+            if(analysisObj.workingState.value == 2 && this.isX7Micro() &&  analysisObj.displaySign.preheatTemperature == 1) {
+                analysisObj.workingState.value = 3
+            }
+
             
             /**
              * 工作页面判断以及10s轮询
              */
-            if (analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 ||  analysisObj.workingState.value === 5 || this.periodPauseCondition(analysisObj)) {
+            if (this.currentIsWorkingPage(analysisObj)) {
                 this.isWorkingPage = true;
                 this.analysisWorkingFun(analysisObj,tabs); //跳转到工作页面数据处理
                 if(this.getAllSeconds(analysisObj)<=60 && analysisObj.workingState.value == 3){
@@ -147,8 +155,8 @@ let workingModalMixin  = {
             this.modalVisibility = false;
             if(cmdObj.workingState.value > 2) {
                 this.showDetailVisibility = false;
+                this.show = false;
             }
-            this.show = false;
             if(this.settingClickRecord){
                 this.show = true;
             }
@@ -190,6 +198,10 @@ let workingModalMixin  = {
             if(cmdObj.displaySign.lock){
                 !this.modalVisibility && this.showModal();
             }
+
+            if(cmdObj.highClearLock.value==1){
+                this.setWarningDialog("高温自清洁锁检查失效");
+            }
         },
 
 
@@ -217,11 +229,27 @@ let workingModalMixin  = {
             let customData = {
                 temperatureText:null // 工作中显示的设定温度文案
             };
-
+            // if(cmdObj.isProbe.value){ //如果是探针，则为显示为探针设定温度
+            //     obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
+            //   }
+            
             if(this.isProbeInserted(cmdObj) && !this.isCloudMenu(cmdObj)) { // 有探针显示探针温度
-                customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature);
+                customData.temperatureText = this.addTemperatureUnit(cmdObj.probeSetttingTemperature.value);
             } else { // 非探针模式显示较大温度
                 customData.temperatureText = this.getTemperatureTextWithoutProbe(cmdObj);
+            }
+
+            if(this.isLargeOven1065()){ //大烤箱旧插件 0ET1065Q ，上报的温度问题，下管上报了错乱的温度...需要只读上管温度
+                customData.temperatureText = cmdObj.temperature.upLowTemperature +'°'; 
+            }
+
+            if(this.isSteamOven36L() && cmdObj.isProbe.value==1){//如果是旧插件36L蒸汽烤箱0TQN36QL，探针模式下，强行转换为非探针模式，因为该型号，探针模式下，还可以启动所有的模式
+                if(this.currentIsWorkingPage(cmdObj)){
+                    if(cmdObj.mode.value!=0x31 && cmdObj.mode.value!=0x33 && cmdObj.mode.value!=0x3A){
+                        cmdObj.isProbe.value = 0;
+                        customData.temperatureText = cmdObj.temperature.upLowTemperature +'°'; 
+                    }
+                }
             }
 
             let buffer = objectAssign({}, cmdObj, customData);
@@ -237,11 +265,24 @@ let workingModalMixin  = {
             }
 
             // 温度非0时，返回上低、下低温度的较大值
-            return this.addTemperatureUnit(cmdObj.temperature.upLowTemperature >= cmdObj.temperature.downLowTemperature ? cmdObj.temperature.upLowTemperature : cmdObj.temperature.downLowTemperature);
+            let temperature = cmdObj.temperature.upLowTemperature >= cmdObj.temperature.downLowTemperature ? cmdObj.temperature.upLowTemperature : cmdObj.temperature.downLowTemperature;
+
+            if(temperature <= 10) { // 如果温度值为档位，作隐藏处理。 sf
+                return '';
+            }
+
+            return this.addTemperatureUnit(temperature);
         },
 
         addTemperatureUnit(temp){
             return temp + '°';
+        },
+
+        /**
+         * 工作页面判断
+         */
+        currentIsWorkingPage(analysisObj){
+            return analysisObj.workingState.value == 3 || analysisObj.workingState.value == 4 ||  analysisObj.workingState.value === 5 || this.periodPauseCondition(analysisObj);
         },
 
         /**
@@ -262,7 +303,36 @@ let workingModalMixin  = {
          * 是否是fun烤箱二代判断
          */
         isFun2Oven(){
-            return this.device.extra1.sn8 === '08T7428E';
+            const sns = ['08T7428E', '0T7L421F'];
+            return sns.indexOf(this.device.extra1.sn8) > -1;
+        },
+
+        /**
+         * 大烤箱 1065
+         */
+        isLargeOven1065(){
+            return this.device.extra1.sn8 === '0ET1065Q';
+        },
+
+        /**
+         * 蒸汽烤箱 36L  / TQN36FQL_SS
+         */
+        isSteamOven36L(){
+            return this.device.extra1.sn8 === '0TQN36QL';
+        },
+
+        /**
+         *  是否是小烤箱
+         */
+        isSmallOven(){
+            return this.constant.device.type === 0xB4;
+        },
+
+         /**
+         * 是否是X7微波炉判断
+         */
+        isX7Micro(){
+            return this.device.extra1.sn8 === '09X7321D';
         },
           /**
          * 是否是非烹饪类模式
@@ -328,6 +398,10 @@ let workingModalMixin  = {
                     chartJson.pointShow = false;
                 }
             }
+
+            if((this.isLargeOven1065() || this.isSteamOven36L())&& cmdObj.mode.value==0x4b){ //如果是大烤箱1065或者蒸汽烤箱，而且模式为快速预热，则修复该模式快速预热的兼容问题...
+                cmdObj.displaySign.preheat = 1;
+            }
         },
 
         /**
@@ -383,6 +457,11 @@ let workingModalMixin  = {
                      this.workSpecialStatusText = "工作完成";
                      this.statusTag = '';
                 }
+
+                if((this.isLargeOven1065()|| this.isSteamOven36L()) && cmdObj.mode.value==0x4b){ //如果是大烤箱1065，而且模式为快速预热，则修复大烤箱1065该模式的兼容问题...
+                    cmdObj.displaySign.preheatTemperature = 1;
+                    cmdObj.workingState.value = 3;
+                }
                
             }
         },
@@ -433,6 +512,10 @@ let workingModalMixin  = {
                 // this.btnText = this.getLanguage('start');
                 this.btnText = this.getLanguage('start');
                 this.btnSrc = "img/footer/icon_start@2x.png";
+
+                if((this.isLargeOven1065()|| this.isSteamOven36L()) && cmdObj.mode.value==0x4b){ //如果是大烤箱1065，而且模式为快速预热，则修复大烤箱1065该模式的兼容问题...
+                    this.hasStopOrContinueBtn = false;
+                }
             }
             
         },
@@ -491,7 +574,12 @@ let workingModalMixin  = {
         getProgressStepHandle(cmdObj,chartJson){
             var allSettingSeconds = cmdObj.timeSetting.hour*60*60+cmdObj.timeSetting.minute*60+cmdObj.timeSetting.second;
             var progress_step = (allSettingSeconds-this.getAllSeconds(cmdObj))/allSettingSeconds*360; //360度倒计时为例
-           
+
+            if(!allSettingSeconds) { // 如果设置时间不上报，自动隐藏倒计时小球 sf
+                chartJson.pointShow = false;
+                return;
+            }
+
             chartJson.pointShow = true;
             chartJson.progressCounter = parseInt(progress_step);
 

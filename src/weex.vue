@@ -101,7 +101,7 @@ module.exports = {
             { key: 18, value: "T0xB1",desc: "大烤箱" },
             { key: 19, value: "T0x9B",desc: "50QL 蒸烤" },
             { key: 20, value: "T0x9B",desc: "36QL 蒸烤" },
-            { key: 21, value: "T0xB0_00PG23E0",desc: "PG23E0" },
+            { key: 21, value: "T0xB0_0PG23E0W",desc: "PG23E0" },
         ],
         card: 'T0xB1',
         isShowCardList: false,

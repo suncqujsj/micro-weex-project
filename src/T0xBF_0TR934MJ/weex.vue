@@ -6,6 +6,7 @@
     // config data
     import constant from "./config/constant";
     import modes from "./config/modes.js";
+    import autoMenu from "./config/auto-menu.js";
     import commonWeex from "@/common/pages/weex.vue";
     import nativeService from "@/common/services/nativeService";
 
@@ -15,8 +16,13 @@
             return {
                 tabs:[
                     {
-                        name:'加热模式',
+                        name:'自动菜单',
                         active:true,
+                        rows:autoMenu
+                    },
+                    {
+                        name:'加热模式',
+                        active:false,
                         rows:modes
                     }
                 ],

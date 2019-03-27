@@ -1,6 +1,6 @@
 <template>
     <div class="accordion-wrapper">
-        <div class="accordion-item" @click="makeSwitch">
+        <div :class="underlineClass" @click="makeSwitch">
             <text class="accordion-title">{{title}}</text>
             <text v-if="type==='pickers'" class="accordion-value">{{hms[0]}}{{hms[1]}}{{hms[2]}}</text>
             <template v-else>
@@ -65,6 +65,11 @@
                 isFoldedStatus: this.isFolded
             }
         },
+        computed:{
+            underlineClass(){
+                return ['accordion-item', !this.isFolded?'b_b_1':''];
+            }
+        },
         methods: {
             makeSwitch(e) {
                 // debugger;
@@ -87,6 +92,9 @@
         justify-content: space-between;
         flex-direction: row;
         height: 92px;
+        .b-t-1;
+    }
+    .b_b_1{
         .b-b-1;
     }
     .accordion-item:last-child{

@@ -40,7 +40,6 @@ let tests = [
                     set:true,
                     default:4,
                     range:[4,100,1],
-                    unit:"oz",
                 },
                 fireAmount: {
                     set:true,

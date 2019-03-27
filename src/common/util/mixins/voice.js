@@ -18,31 +18,24 @@ let commonMixin = {
         };
     },
     created(){
-        // let context = this;
-        // nativeService.getDeviceInfo().then(function(data){
-        //     context.deviceId = data.result.deviceId;
-        //     nativeService.getUserInfo().then((resp) => {
-        //         context.uid = resp.uid;
-        //         context.initVoiceAuth();
-        //
-        //     }).catch((error) => {
-        //         nativeService.toast(JSON.stringify(error));
-        //     });
-        //
-        // });
-        this.initVoice();
     },
     methods:{
+
+        /**
+         *  语音开关状态初始化
+         */
+        async initVoiceWithParams(isIndexPage=false){
+            await this.setDeviceId();
+            await this.setUid();
+            // nativeService.alert(this.uid);
+            this.initVoiceAuth(isIndexPage);
+        },
 
         /**
          * 语音开关、授初始状态
          * */
         async initVoice(){
-            await this.setDeviceId();
-            await this.setUid();
-            // nativeService.alert(this.uid);
-
-            this.initVoiceAuth();
+            await this.initVoiceWithParams();
             this.initVoiceSwitch();
 
         },
@@ -54,6 +47,11 @@ let commonMixin = {
             let microphoneState = await this.getMicrophoneState();
             let data = JSON.parse(microphoneState.returnData).data;
             this.list[this.controlIndex].value = data.micStatus === 'On'; // 注意O是大写
+            let t = setInterval(()=>{
+                this.hideState();
+                clearInterval(t);
+                this.loading = false;
+            }, 1000);
         },
 
         /**
@@ -159,7 +157,7 @@ let commonMixin = {
          * 1.查询是否需要进入授权
          * 2.查询设备语音授权状态
          */
-        async initVoiceAuth(isIndexPage=false) { // 判断是否是插件首页
+        async initVoiceAuth(isIndexPage) { // 判断是否是插件首页
             let deviceId = this.deviceId;
             let uid = this.uid;
 
@@ -177,31 +175,45 @@ let commonMixin = {
                 let result = await nativeService.sendMCloudRequest(url, params, {isValidate:false});
                 // nativeService.alert(result);
                 if (result.data && result.data.authorize == 1) {
+
                     this.url = result.data.url;
                     this.iotAppId = result.data.iotAppId;
                     let voiceAuthStateResult = await  this.getVoiceAuth(deviceId, uid);
                     let data = JSON.parse(voiceAuthStateResult.returnData).data;
                     // nativeService.toast('授权状态status：' + data.status);
-                    if(data) {
-                        // nativeService.alert(data);
-                        this.setSwitchValue(this.authIndex, data.status === '0');
+
+                    // nativeService.alert(data);
+                    if(!data || !data.status) {
+                        return;
                     }
+
+                    if(isIndexPage) {
+                        this.voiceAuthConfirm(data.status);
+                        return;
+                    }
+
+                    this.setSwitchValue(this.authIndex, data.status === '0');
                     this.list[this.authIndex].hide = false;
-
-                    if(!isIndexPage) return;
-
-                    if (data.status == 1) { // 未授权
-                        nativeService.confirm('允许烤箱控制其他美的智能设备', async (result) => {
-                            if (result == '允许') {
-                                this.voiceAuth()
-                            }
-                        }, '允许', '不允许')
-                    } else {
-                        console.log('已授权')
-                    }
                 }
             } catch (error) {
                 nativeService.alert(error);
+            }
+        },
+
+        /**
+         *  用户在配网完成的授权页面关闭了app情况下，插件首页的弹窗提示
+         */
+        voiceAuthConfirm(status){
+            // nativeService.alert(status)
+            if (status == 1) {
+                nativeService.confirm('允许后，您可以通过"烤箱"的语音功能控制家庭的其他美的智能设备', async (result) => {
+                    this.voiceAuth(result == '允许' ? 1 : 0);
+                    // this.voiceAuth(result == '允许' ? 1 : 0).then((resp)=>{
+                    //     nativeService.alert(resp);
+                    // });
+                }, '允许', '不允许')
+            } else {
+                console.log('已授权')
             }
         },
 
@@ -273,7 +285,7 @@ let commonMixin = {
         /**
          * 用户授权给指定设备
          */
-        voiceAuth() {
+        voiceAuth(userOption=1) {
             let url = '/mj/user/auth/device';
 
             var timestamp = Date.parse(new Date())
@@ -285,7 +297,8 @@ let commonMixin = {
                     data: {
                         deviceId: this.deviceId, // 设备id
                         aiUpdateTokenUrl: this.url,
-                        iotAppId: this.iotAppId
+                        iotAppId: this.iotAppId,
+                        userOption //
                     }
                 }
             }
@@ -298,14 +311,15 @@ let commonMixin = {
         /**
          * 取消授权
          */
-        voiceAuthCancel(){
+        voiceAuthCancel(isDel=0){
             let params = {
                 type: '0xAI',
                 queryStrings: {
                     'serviceUrl': '/v1/user/token/cancel'
                 },
                 transmitData: {
-                    deviceId: this.deviceId
+                    deviceId: this.deviceId,
+                    isDel
                 }
             };
             // nativeService.alert(params);

@@ -1,25 +1,21 @@
 /**
  * Created by sf
- * 2018/1/2
+ * 2018/12/27
  */
 
 import constant from "./constant.js";
 
 let list = [
     {
-        title: '产品型号 ',
-        rightText: '烤箱 Fun简版',
+        title: '产品型号',
+        rightText: '微蒸烤一体机 PG23E0W',
         link:''
     },
     {
         title: '插件版本号',
         rightText: constant.device.widget_version,
         link: ''
-    },
-    // {
-    //     title: '烤箱实时监控',
-    //     link:'video.js'
-    // }
+    }
 ];
 
 export default list;

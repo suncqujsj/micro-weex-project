@@ -57,6 +57,10 @@ export default {
           name:"炉灯",
           value: 0
         },
+        highClearLock:{
+          name:"高温自清洁锁",
+          value: 0
+        },
         isProbe:{
           name:"肉类探针模式",
           value: 0
@@ -250,6 +254,17 @@ export default {
       nativeService.toast("主人，您的设备炉门开了");
       return;
     }
+
+      var upTemp =  params.temperature, downTemp = params.temperature;
+      if(params.upTemperature || params.downTemperature){//如果是上下烧烤 独立控温
+          let abs_value = Math.abs(params.upTemperature- params.downTemperature);
+          if(abs_value>30){
+              nativeService.toast('上管与下管的温度相差不能超过30哦');
+              return;
+          }
+          upTemp =  params.upTemperature, downTemp = params.downTemperature;
+      }
+
     var time = params.minute;
     var hour = Math.floor(time/60);
     var minute = time%60;
@@ -266,7 +281,8 @@ export default {
     if(callbackData.working && params.probe && callbackData.isProbe){//假如当前插上探针，并且 该模式支持探针，则，工作设置类
       controltype = 3 //探针工作设置类
     }
-    if(parseInt(params.temperature)<100){
+
+    if(parseInt(params.temperature)<100 && !this.isSmallOven(callbackData.device.type)){ // sf 不是小烤箱判断
       params.preheat = false;
     }
     if(this.isWorking && params.currentItem  && params.currentItem.preheat && params.currentItem.preheat.hide){//如果隐藏
@@ -280,16 +296,19 @@ export default {
       message.setByte(messageBody, 4, params.recipeId);
       message.setByte(messageBody, 5, 0x11);
       message.setByte(messageBody, 6, params.preheat?1:0);
-      message.setByte(messageBody, 7, hour);
-      message.setByte(messageBody, 8, minute);
-      message.setByte(messageBody, 9, second);
+      message.setByte(messageBody, 7, hour||0xff);
+      message.setByte(messageBody, 8, minute||0xff);
+      message.setByte(messageBody, 9, second||0xff);
       message.setByte(messageBody, 10, set_mode);
       message.setByte(messageBody, 11, parseInt(params.temperature)>255?1:0); // Giggs ， 2019-03-19
-      message.setByte(messageBody, 12, parseInt(params.temperature)>255?parseInt(params.temperature)-256:parseInt(params.temperature));
+      message.setByte(messageBody, 12, this.getLowTemperature(upTemp));
       message.setByte(messageBody, 13, parseInt(params.temperature)>255?1:0); // Giggs ， 2019-03-19
-      message.setByte(messageBody, 14, parseInt(params.temperature)>255?parseInt(params.temperature)-256:parseInt(params.temperature));
+      message.setByte(messageBody, 14, this.getLowTemperature(downTemp));
       message.setByte(messageBody, 15, params.fireAmount);
-      message.setByte(messageBody, 16, params.steamAmount || params.weight/10);
+      message.setByte(messageBody, 16, this.setByte26(params));
+
+        // 数据埋点
+      // this.statisticsUpload({...constant.device});
     }
 
     if(controltype == 1){//工作中设置类 byte11 发04，其他byte发ff
@@ -311,12 +330,13 @@ export default {
       message.setByte(messageBody, 14,  0xff);
       // message.setByte(messageBody, 14, params.temperature);
       message.setByte(messageBody, 15, params.isFireAmountChange?params.fireAmount/10:0xff);
-      message.setByte(messageBody, 16, params.isSteamAmountChange?(params.steamAmount || params.weight/10):0xff);
+      message.setByte(messageBody, 16, params.isSteamAmountChange?(this.setByte26(params)):0xff);
       message.setByte(messageBody, 18,  0xff);
     }
     if(controltype == 2){//探针类下发
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 1);
+      message.setByte(messageBody, 5, 0x11);
       message.setByte(messageBody, 6, 2);
       message.setByte(messageBody, 10, set_mode);
       message.setByte(messageBody, 12, 200);
@@ -326,6 +346,7 @@ export default {
     if(controltype == 3){//探针工作类下发
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 4);
+      message.setByte(messageBody, 5, 0x11);
       message.setByte(messageBody, 6, 2);
       message.setByte(messageBody, 10, set_mode);
       message.setByte(messageBody, 11, 0xff);
@@ -337,6 +358,19 @@ export default {
     // nativeService.alert(this.cmdToEasy(sendcmd));
     return sendcmd;
   },
+
+    setByte26(params){
+      return params.steamAmount || params.weight/10 || params.quantity;
+    },
+
+  getLowTemperature(t){ // sf 获取低位温度值
+      return parseInt(t)>255?parseInt(t)-256:parseInt(t);
+  },
+
+    isSmallOven(type){
+      return type === 0xB4;
+    },
+
   //取消工作指令
   cmdCancelWork(device){
     var messageBody = message.createMessageFFBody(9); 
@@ -420,6 +454,7 @@ export default {
 
      obj.light.value = message.getBit(requestCmd, 27, 2);
      obj.isProbe.value = message.getBit(requestCmd, 27, 6);
+     obj.highClearLock.value = message.getBit(requestCmd, 27, 3);
      obj.menuFeel.value = message.getBit(requestCmd, 27, 1);
     //设置温度
 
@@ -431,9 +466,9 @@ export default {
     //探针温度
     obj.probeRealTemperature.value = parseInt(requestCmd[32]);
     obj.probeSetttingTemperature.value = parseInt(requestCmd[33]);
-    if(obj.isProbe.value){ //如果是探针，则为显示为探针设定温度
-      obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
-    }
+    // if(obj.isProbe.value){ //如果是探针，则为显示为探针设定温度
+    //   obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
+    // }
 
     if(parseInt(requestCmd[19])==0xC4){//如果是烘干，则不显示温度
       obj.temperature.upLowTemperature = 0;

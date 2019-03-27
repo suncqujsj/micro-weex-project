@@ -6,9 +6,9 @@
 module.exports = {
     device: {
         type: 0xBF,
-        page_title: "微蒸烤一体机",
+        page_title: "微波蒸汽烤箱",
         widget_name: 'MSO_T0xB1',
-        widget_version: '5.0.0',
+        widget_version: '5.0.2',
         extra1: {
             sn8: '0TR934MJ'
         },
@@ -21,6 +21,10 @@ module.exports = {
 
 /**
  * 注意事项
- * 1.水盒位置在左上，水盒水位在下时（互相垂直），水盒位置上方短路为缺水盒，水盒水位右边为缺水。（板子）
+ * 1.烧烤、烧烤+微波 档位设置通过修改温度设置单位为"档"
+ * 2.byte29 上报的温度档位隐藏处理
+ * 3.自动菜单不应该设置time default
+ * 4.自动菜单02下行hms设置为0xff
+ * 5.设置时间不上报，自动隐藏倒计时小球
  *
  * */

@@ -5,6 +5,7 @@
 
 import accordions from "../config/accordions.js";
 import  nativeService  from '@/common/services/nativeService.js';
+const objectAssign = require('object-assign');
 
 var settingArrData = function(start,end,step){
     var arr=[];
@@ -24,10 +25,10 @@ var settingArrData = function(start,end,step){
 const accordionMixin = {
     data () {
             return {
-                accordions: this.initAccordions(),
                 currentItem:null,
                 current:this.initCurrentData(),
-                show: false
+                show: false,
+                accordions: this.initAccordions()
             }
     },
     methods: {
@@ -85,6 +86,7 @@ const accordionMixin = {
                 steamAmount:null,
                 fireAmount:0,
                 weight:0,
+                quantity:0,
                 steamSwitch:false,
                 recipeId:null,
                 probeTemperature: null,
@@ -118,7 +120,7 @@ const accordionMixin = {
                 this.current.isFireAmountChange = true;
             }
             this.current[key] = data;
-            if(key=='temperature'){
+            if(this.preheatCondition(key) && !this.isSmallOven()){
                 if(data<100){
                     this.current.preheatHide = true;
                 }else{
@@ -126,6 +128,10 @@ const accordionMixin = {
                 }
             }
             // nativeService.alert(this.current);
+        },
+        preheatCondition(key){ // sf 各种温度判断
+            const keys = ['temperature', 'upTemperature', 'downTemperature'];
+            return keys.indexOf(key) > -1
         },
         onPreheatChange(event) {
             this.current[event.itemKey] = event.value;
@@ -172,6 +178,7 @@ const accordionMixin = {
                 preheatHide:  this.current.preheatHide,
                 steamAmount: this.setValue('steamAmount'),
                 weight: this.setValue('weight'),
+                quantity: this.setValue('quantity'),
                 steamSwitch: this.current.steamSwitch,
                 fireAmount: this.setValue('fireAmount'),
                 recipeId:this.setValue('recipeId'),
@@ -198,6 +205,9 @@ const accordionMixin = {
             // if(jsonCmd.mode === 0xE0) { // 自动菜单
             //     jsonCmd.recipeId =  this.setValue('recipeId');
             // }
+
+            jsonCmd = this.formatJsonCmd(jsonCmd);
+
             this.controlDevice(jsonCmd, e);
         },
         validate(jsonCmd){
@@ -212,6 +222,20 @@ const accordionMixin = {
                 default:
                     return null;
             }
+        },
+
+        formatJsonCmd(jsonCmd){
+            let buffer = objectAssign({}, jsonCmd);
+            let sn8 = this.device.extra1.sn8;
+            if(sn8 === '0TR934MJ' && this.isAutoMenu(jsonCmd.mode)) { // 电控根据重量自动计算烹饪时间。
+                buffer.minute = null;
+            }
+
+            return buffer;
+        },
+
+        isAutoMenu(mode){
+            return mode === 0xE0;
         }
     }
 };

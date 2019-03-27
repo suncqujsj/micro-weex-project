@@ -25,7 +25,7 @@
 
         <midea-header class="bg-white" title="语音固件升级" titleText="black" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back"></midea-header>
 
-        <div class="wrap">
+        <div class="wrap" v-if="verNo">
             <midea-cell style="padding: 0;" :title="hasNewVer?'待更新':'已是最新版本'" :hasArrow="false" :hasMargin="false" :hasTopBorder="false" :clickActivied="false" ></midea-cell>
             <!--<text>{{state}}</text>-->
             <div class="firmware-item">

@@ -13,7 +13,7 @@ module.exports = {
             sn8: '0EM34A2E'
         },
         standby03:true, // 待机中打开03轮询
-        lang: 'en',
+        lang: 'cn',
         hideChildLock:{
             working:true
         }

@@ -1,5 +1,5 @@
 <template>
-    <div class="switch-container" :style="{'width': width+'px', 'height':height+'px'}" @click="onchange" v-on:swipe="onSwipe($event)">
+    <div class="switch-container" :style="{'width': width+'px', 'height':height+'px'}" @click="onchange">
         <div class="switch-bar" :style="{'width': width+'px', 'height':height+'px'}">
             <div :class="['container', checked?'selected':'unselected']" :style="{'width':width+'px'}"></div>
             <!-- <div class="container unselected" :style="{'width':width}"></div> -->

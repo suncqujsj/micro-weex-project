@@ -17,7 +17,7 @@
 
         <midea-header class="bg-white" title="智能语音" titleText="black" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back"></midea-header>
 
-        <list style="margin-top: 24px" show-scrollbar="true">
+        <list v-if="!loading" style="margin-top: 24px" show-scrollbar="true">
             <template v-for="item in list">
                     <midea-cell  v-if="item.type === 'link'" :title="item.title" :hasArrow="true"  :hasBottomBorder="(list.length - 1) !== index" :hasTopBorder="false" :clickActivied="true" @mideaCellClick="item.event">
                         <div slot="value" v-if="hasNewVer" class="row a-c" style="width: 16px;height:100px;position:absolute;right: 58px;top:0;">
@@ -31,6 +31,8 @@
                 </template>
             </template>
         </list>
+
+        <sf-state v-if="state" :display="state.display" :text="state.text" :type="state.type"></sf-state>
     </div>
 </template>
 
@@ -38,6 +40,7 @@
     import mideaHeader from '@/midea-component/header.vue'
     import mideaCell from '@/midea-component/item.vue';
     import mideaSwitch2 from '@/component/sf/custom/switch.vue'
+    import sfState from "@/component/sf/custom/state.vue"
 
     import nativeService from "../common/services/nativeService";
     import commonMixin from  "@/common/util/mixins/common"
@@ -49,6 +52,7 @@
         mixins: [commonMixin, voiceMixin, voiceOtaMixin],
         data(){
             return {
+                loading:true,
                 authIndex:0,
                 controlIndex:1,
                 list:[
@@ -76,8 +80,10 @@
                 upgradeAvailable: false,
             }
         },
-        components: {mideaHeader, mideaCell, mideaSwitch2},
+        components: {mideaHeader, mideaCell, mideaSwitch2, sfState},
         created(){
+            this.showState('加载中');
+            this.initVoice();
             this.init();
             let context = this;
             appPageDataChannel.onmessage = function(event){

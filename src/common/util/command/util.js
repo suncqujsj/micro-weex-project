@@ -295,9 +295,9 @@ export default {
       message.setByte(messageBody, 4, params.recipeId);
       message.setByte(messageBody, 5, 0x11);
       message.setByte(messageBody, 6, params.preheat?1:0);
-      message.setByte(messageBody, 7, hour);
-      message.setByte(messageBody, 8, minute);
-      message.setByte(messageBody, 9, second);
+      message.setByte(messageBody, 7, hour||0xff);
+      message.setByte(messageBody, 8, minute||0xff);
+      message.setByte(messageBody, 9, second||0xff);
       message.setByte(messageBody, 10, set_mode);
       message.setByte(messageBody, 11, parseInt(params.temperature)>255?1:0); // Giggs ， 2019-03-19
       message.setByte(messageBody, 12, this.getLowTemperature(upTemp));

@@ -5,6 +5,7 @@
 
 import accordions from "../config/accordions.js";
 import  nativeService  from '@/common/services/nativeService.js';
+const objectAssign = require('object-assign');
 
 var settingArrData = function(start,end,step){
     var arr=[];
@@ -204,6 +205,9 @@ const accordionMixin = {
             // if(jsonCmd.mode === 0xE0) { // 自动菜单
             //     jsonCmd.recipeId =  this.setValue('recipeId');
             // }
+
+            jsonCmd = this.formatJsonCmd(jsonCmd);
+
             this.controlDevice(jsonCmd, e);
         },
         validate(jsonCmd){
@@ -218,6 +222,20 @@ const accordionMixin = {
                 default:
                     return null;
             }
+        },
+
+        formatJsonCmd(jsonCmd){
+            let buffer = objectAssign({}, jsonCmd);
+            let sn8 = this.device.extra1.sn8;
+            if(sn8 === '0TR934MJ' && this.isAutoMenu(jsonCmd.mode)) { // 电控根据重量自动计算烹饪时间。
+                buffer.minute = null;
+            }
+
+            return buffer;
+        },
+
+        isAutoMenu(mode){
+            return mode === 0xE0;
         }
     }
 };

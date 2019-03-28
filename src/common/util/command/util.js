@@ -297,9 +297,9 @@ export default {
       message.setByte(messageBody, 4, params.recipeId);
       message.setByte(messageBody, 5, 0x11);
       // message.setByte(messageBody, 6, params.preheat?1:0);
-      message.setByte(messageBody, 7, hour||0xff);
-      message.setByte(messageBody, 8, minute||0xff);
-      message.setByte(messageBody, 9, second||0xff);
+      message.setByte(messageBody, 7, this.setHms(hour, set_mode, callbackData.device.extra1.sn8));
+      message.setByte(messageBody, 8, this.setHms(minute, set_mode, callbackData.device.extra1.sn8));
+      message.setByte(messageBody, 9, this.setHms(second, set_mode, callbackData.device.extra1.sn8));
       message.setByte(messageBody, 10, set_mode);
       message.setByte(messageBody, 11, parseInt(params.temperature)>255?1:0); // Giggs ， 2019-03-19
       message.setByte(messageBody, 12, this.getLowTemperature(upTemp));
@@ -387,12 +387,25 @@ export default {
       return params.steamAmount || params.weight/10 || params.quantity;
     },
 
+    setHms(t, mode, sn8){ // 自动菜单hms为0时候需要传0xff
+      return this.is934MJ(sn8) && this.isAutoMenu(mode) ? (t || 0xff) : t;
+
+    },
+
+    isAutoMenu(mode){ // sf
+      return mode === 0xE0;
+    },
+
   getLowTemperature(t){ // sf 获取低位温度值
       return parseInt(t)>255?parseInt(t)-256:parseInt(t);
   },
 
     isSmallOven(type){
       return type === 0xB4;
+    },
+
+    is934MJ(sn8){ // sf 判断是否微波蒸汽烤箱
+      return sn8 === '0TR934MJ'
     },
 
   //取消工作指令

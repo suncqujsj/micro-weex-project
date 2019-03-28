@@ -62,4 +62,8 @@ icons[40] = getIcon('蒸汽+小面积', 'steam_smallArea');
 icons[41] = getIcon('旋转烧烤', 'rotate@3x');
 icons[42] = getIcon('双层烧烤', 'rotate_grill@3x');
 icons[43] = getIcon('快烤', 'quick_bake@3x');
+icons[44] = getIcon('蒸汽+微波', 'steam_and_microwave');
+icons[45] = getIcon('热风对流+微波', 'hot_wind_and_microwave');
+icons[46] = getIcon('热风烧烤+微波', 'hot_wind_and_broil_and_microwave');
+icons[47] = getIcon('烧烤+微波', 'up_tube_and_microwave');
 export default icons;

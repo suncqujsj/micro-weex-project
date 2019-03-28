@@ -234,22 +234,22 @@ let workingModalMixin  = {
             //   }
             
             if(this.isProbeInserted(cmdObj) && !this.isCloudMenu(cmdObj)) { // 有探针显示探针温度
-                customData.temperatureText = this.addTemperatureUnit(cmdObj.probeSetttingTemperature.value);
+                customData.temperatureText = this.addTemperatureUnit(cmdObj.probeSetttingTemperature.value, cmdObj.temperature.unit);
             } else { // 非探针模式显示较大温度
                 customData.temperatureText = this.getTemperatureTextWithoutProbe(cmdObj);
             }
 
             if(this.isLargeOven1065()){ //大烤箱旧插件 0ET1065Q ，上报的温度问题，下管上报了错乱的温度...需要只读上管温度
-                customData.temperatureText = cmdObj.temperature.upLowTemperature +'°'; 
+                customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature, cmdObj.temperature.unit);
             }
 
             if(this.isSteamOven36L() && cmdObj.isProbe.value==1){//如果是旧插件36L蒸汽烤箱0TQN36QL，探针模式下，强行转换为非探针模式，因为该型号，探针模式下，还可以启动所有的模式
                 if(this.currentIsWorkingPage(cmdObj)){
                     if(cmdObj.mode.value!=0x31 && cmdObj.mode.value!=0x33 && cmdObj.mode.value!=0x3A){
                         cmdObj.isProbe.value = 0;
-                        customData.temperatureText = cmdObj.temperature.upLowTemperature +'°'; 
+                        customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature, cmdObj.temperature.unit);
                     }else{
-                        customData.temperatureText = cmdObj.temperature.upLowTemperature +'°'; 
+                        customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature, cmdObj.temperature.unit);
                     }
                 }
             }
@@ -276,8 +276,9 @@ let workingModalMixin  = {
             return this.addTemperatureUnit(temperature);
         },
 
-        addTemperatureUnit(temp){
-            return temp + '°';
+        addTemperatureUnit(temp, unitValue=0){
+            let unit = unitValue === 1 ? '℉' :'°';
+            return temp + unit;
         },
 
         /**

@@ -45,6 +45,7 @@ export default {
           upLowTemperature: {name:"上管设置温度：低",value: 0x00},
           downHighTemperature: {name:"下管设置温度：高",value: 0x00},
           downLowTemperature: {name:"下管设置温度：低",value: 0x00},
+            unit: 0
         },
         realTemperature:{
           name:"发热管实际的温度",
@@ -295,7 +296,7 @@ export default {
       message.setByte(messageBody, 3, 0);
       message.setByte(messageBody, 4, params.recipeId);
       message.setByte(messageBody, 5, 0x11);
-      message.setByte(messageBody, 6, params.preheat?1:0);
+      // message.setByte(messageBody, 6, params.preheat?1:0);
       message.setByte(messageBody, 7, hour||0xff);
       message.setByte(messageBody, 8, minute||0xff);
       message.setByte(messageBody, 9, second||0xff);
@@ -317,7 +318,7 @@ export default {
       message.setByte(messageBody, 3, 0xff);
       message.setByte(messageBody, 4, 0xff);
       message.setByte(messageBody, 5, 0xff);
-      message.setByte(messageBody, 6, params.preheat?1:0);
+      // message.setByte(messageBody, 6, params.preheat?1:0);
       message.setByte(messageBody, 7, params.isTimeChange?hour:0xff);
       message.setByte(messageBody, 8, params.isTimeChange?minute:0xff);
       message.setByte(messageBody, 9, params.isTimeChange?second:0xff);
@@ -332,6 +333,11 @@ export default {
       message.setByte(messageBody, 16, params.isSteamAmountChange?(this.setByte26(params)):0xff);
       message.setByte(messageBody, 18,  0xff);
     }
+    if(controltype ==0 || controltype == 1) { // 非探针预热设置 sf
+        message.setBit(messageBody,6,0,params.preheat?1:0);
+    }
+
+
     if(controltype == 2){//探针类下发
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 1);
@@ -353,6 +359,25 @@ export default {
       message.setByte(messageBody, 16, params.steamAmount);
       message.setByte(messageBody, 18, params.probeTemperature);
     }
+
+    if(controltype == 2 || controltype == 3) { // 探针预热设置 sf
+        if(params.preheat) {
+            message.setBit(messageBody,6,0,1);
+            message.setBit(messageBody,6,1,1);
+        } else {
+            message.setBit(messageBody,6,0,0);
+            message.setBit(messageBody,6,1,1);
+        }
+    }
+
+    // 温度华氏度、重量盎司设置 sf
+      if(params.currentItem.weight && params.currentItem.weight.unit === 'oz') {
+          message.setBit(messageBody,6,3,1);
+      }
+      if(params.currentItem.temperature && params.currentItem.temperature.unit === '℉') {
+          message.setBit(messageBody,6,4,1);
+      }
+
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
     // nativeService.alert(this.cmdToEasy(sendcmd));
     return sendcmd;
@@ -467,6 +492,7 @@ export default {
     // if(obj.isProbe.value){ //如果是探针，则为显示为探针设定温度
     //   obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
     // }
+      obj.temperature.unit = message.getBit(requestCmd, 34, 4);
 
     if(parseInt(requestCmd[19])==0xC4){//如果是烘干，则不显示温度
       obj.temperature.upLowTemperature = 0;

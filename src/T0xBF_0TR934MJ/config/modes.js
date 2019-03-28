@@ -18,7 +18,7 @@ let microwaveTimeCommon = {
  let hotWindTimeCommon = {
      set: true,
      default:10,
-     range:[1, 300, 1]
+     range:[1,60,1, 65,300,5]
  };
 
 

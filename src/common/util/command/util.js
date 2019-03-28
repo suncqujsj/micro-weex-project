@@ -295,7 +295,7 @@ export default {
       message.setByte(messageBody, 3, 0);
       message.setByte(messageBody, 4, params.recipeId);
       message.setByte(messageBody, 5, 0x11);
-      message.setByte(messageBody, 6, params.preheat?1:0);
+      // message.setByte(messageBody, 6, params.preheat?1:0);
       message.setByte(messageBody, 7, hour||0xff);
       message.setByte(messageBody, 8, minute||0xff);
       message.setByte(messageBody, 9, second||0xff);
@@ -317,7 +317,7 @@ export default {
       message.setByte(messageBody, 3, 0xff);
       message.setByte(messageBody, 4, 0xff);
       message.setByte(messageBody, 5, 0xff);
-      message.setByte(messageBody, 6, params.preheat?1:0);
+      // message.setByte(messageBody, 6, params.preheat?1:0);
       message.setByte(messageBody, 7, params.isTimeChange?hour:0xff);
       message.setByte(messageBody, 8, params.isTimeChange?minute:0xff);
       message.setByte(messageBody, 9, params.isTimeChange?second:0xff);
@@ -332,6 +332,11 @@ export default {
       message.setByte(messageBody, 16, params.isSteamAmountChange?(this.setByte26(params)):0xff);
       message.setByte(messageBody, 18,  0xff);
     }
+    if(controltype ==0 || controltype == 1) { // 非探针预热设置 sf
+        message.setBit(messageBody,6,0,params.preheat?1:0);
+    }
+
+
     if(controltype == 2){//探针类下发
       message.setByte(messageBody, 0, 0x22);
       message.setByte(messageBody, 1, 1);
@@ -353,8 +358,23 @@ export default {
       message.setByte(messageBody, 16, params.steamAmount);
       message.setByte(messageBody, 18, params.probeTemperature);
     }
+
+    if(controltype == 2 || controltype == 3) { // 探针预热设置 sf
+        if(params.preheat) {
+            message.setBit(messageBody,6,0,1);
+            message.setBit(messageBody,6,1,1);
+        } else {
+            message.setBit(messageBody,6,0,0);
+            message.setBit(messageBody,6,1,1);
+        }
+    }
+
+    // 温度华氏度、重量盎司设置 sf
+    // message.setBit(messageBody,6,3,params.currentItem.weight.unit === 'oz' ? 1 : 0);
+    message.setBit(messageBody,6,4,params.currentItem.temperature.unit === '℉' ? 1 : 0);
+
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
-    // nativeService.alert(this.cmdToEasy(sendcmd));
+    nativeService.alert(this.cmdToEasy(sendcmd));
     return sendcmd;
   },
 

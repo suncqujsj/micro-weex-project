@@ -50,7 +50,9 @@
                                 <div class="icon-button column" v-for="item in items" @click="onIconButtonClicked(item)" v-if="!item.standbyHide">
                                     <image v-if="item.icon" class="button-icon" :src="item.icon"></image>
                                     <div v-else class="button-icon row a-c j-c">
-                                        <text style="font-size: 30px;">{{item.time.default}}'</text>
+                                        <text v-if="item.time.text" style="font-size: 30px;">{{item.time.text}}</text>
+                                        <text v-else style="font-size: 30px;">{{item.time.default}}'</text>
+                                        <!--<text style="font-size: 30px;">{{item.time.default}}'</text>-->
                                     </div>
                                     <!-- 不支持肉类探针的模式遮罩层 -->
                                     <div v-if="!item.probe && cmdObj.isProbe.value" class="button-icon a-c j-c probeClass"></div>

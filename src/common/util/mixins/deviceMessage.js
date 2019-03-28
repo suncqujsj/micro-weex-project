@@ -169,14 +169,24 @@ const deviceMessageMixin = {
             this.current.steamAmount = cmdObj.steam.value;
             this.current.weight = cmdObj.weight.value;
             this.current.probeTemperature = cmdObj.probeSetttingTemperature.value;
+            this.current.isProbeSettingTemperature = cmdObj.temperature.upLowTemperature;
             // this.currentItem.steamSwitch.default = cmdObj.steam.value?true:false;
             // nativeService.toast(this.current,3);
             this.openDialog();
         },
         controlDevice(jsonCmd, callbackData){
             let context = this;
+
+            // 蒸汽烤箱0TQN36QL判断探针温度与设定的常规温度
+            if(this.device.extra1.sn8 =='0TQN36QL'){
+                if(jsonCmd.isProbeSettingTemperature < jsonCmd.probeTemperature){
+                    nativeService.toast('设定的温度不能低于探针温度哦');
+                    return;
+                }
+            }
+           
             let deviceCmd = cmdFun.createControlMessage(jsonCmd, callbackData);
-            this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
+            // this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
             // return;
             nativeService.showLoading();
             // nativeService.alert(cmdFun.cmdToEasy(deviceCmd));

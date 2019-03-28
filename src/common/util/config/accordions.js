@@ -60,6 +60,17 @@ let accordions =  [
         hideArrow:false
     },
 
+    /**
+     * 探针
+     */
+    {
+        key:'isProbeSettingTemperature',
+        type:'picker',
+        isFolded: true,
+        subtitle:getTitle('温度', 'Probe Setting Temperature'),
+        unit:'°C',
+        hideArrow:false
+    },
     {
         key:'probeTemperature',
         type:'picker',
@@ -68,6 +79,8 @@ let accordions =  [
         unit:'°C',
         hideArrow:false
     },
+
+
     {
         key:'steamAmount',
         type:'picker',

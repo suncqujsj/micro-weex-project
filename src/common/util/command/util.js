@@ -45,6 +45,7 @@ export default {
           upLowTemperature: {name:"上管设置温度：低",value: 0x00},
           downHighTemperature: {name:"下管设置温度：高",value: 0x00},
           downLowTemperature: {name:"下管设置温度：低",value: 0x00},
+            unit: 0
         },
         realTemperature:{
           name:"发热管实际的温度",
@@ -370,11 +371,15 @@ export default {
     }
 
     // 温度华氏度、重量盎司设置 sf
-    // message.setBit(messageBody,6,3,params.currentItem.weight.unit === 'oz' ? 1 : 0);
-    message.setBit(messageBody,6,4,params.currentItem.temperature.unit === '℉' ? 1 : 0);
+      if(params.currentItem.weight && params.currentItem.weight.unit === 'oz') {
+          message.setBit(messageBody,6,3,1);
+      }
+      if(params.currentItem.temperature && params.currentItem.temperature.unit === '℉') {
+          message.setBit(messageBody,6,4,1);
+      }
 
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
-    nativeService.alert(this.cmdToEasy(sendcmd));
+    // nativeService.alert(this.cmdToEasy(sendcmd));
     return sendcmd;
   },
 
@@ -487,6 +492,7 @@ export default {
     // if(obj.isProbe.value){ //如果是探针，则为显示为探针设定温度
     //   obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
     // }
+      obj.temperature.unit = message.getBit(requestCmd, 34, 4);
 
     if(parseInt(requestCmd[19])==0xC4){//如果是烘干，则不显示温度
       obj.temperature.upLowTemperature = 0;

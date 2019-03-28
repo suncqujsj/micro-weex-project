@@ -1,0 +1,28 @@
+/**
+ * Created by sf
+ * 2019/02/14
+ */
+
+module.exports = {
+    device: {
+        page_title: "小烤箱",
+        type: 0xB4,
+        widget_name: 'MSO_T0xB1',  // 埋点的时候，只保留 B0，B1，B2
+        widget_version: '5.0.1',
+        extra1: {
+            sn8: '03TESTB4'
+        },
+        standby03:true, // 待机中打开03轮询
+        lang: 'en',
+        hideChildLock:{
+            standby: true,
+            working:true
+        }
+    }
+};
+
+
+/**
+ * 注意事项
+ * 参考fun烤箱二代（无探针部分） 08T7428E
+ * */

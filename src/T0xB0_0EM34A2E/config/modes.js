@@ -40,6 +40,7 @@ let tests = [
                     set:true,
                     default:4,
                     range:[4,100,1],
+                    unit: 'oz' // custom weight unit
                 },
                 fireAmount: {
                     set:true,

@@ -94,14 +94,14 @@
                          </sf-accordion>
                     </div>
                     <div v-if="item.type==='picker' && (currentItem && currentItem[item.key] && (!currentItem[item.key].hide && isWorkingPage || !isWorkingPage))">
-                        <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set && ((!cmdObj.isProbe.value && item.key!='probeTemperature') || (currentItem.probe && cmdObj.isProbe.value && !currentItem[item.key].isProbeThenThisHide)) " :value="setValue(item.key)" :unit="currentItem[item.key].unit||item.unit[constant.device.lang]||item.unit" :index="index" :title="currentItem[item.key].title || language[item.key]" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
+                        <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set && ((!cmdObj.isProbe.value && item.key!='probeTemperature' && item.key!='isProbeSettingTemperature') || (currentItem.probe && cmdObj.isProbe.value && !currentItem[item.key].isProbeThenThisHide)) " :value="setValue(item.key)" :unit="currentItem[item.key].unit||item.unit[constant.device.lang]||item.unit" :index="index" :title="currentItem[item.key].title || language[item.key]" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                             <div slot="content">
                                 <wx-picker :pickerIndex="index" :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
                             </div>
                         </sf-accordion>
                     </div>
                     <div v-if="item.type==='switch' && (currentItem && currentItem[item.key] && (!currentItem[item.key].hide && isWorkingPage || !isWorkingPage)) && !current.preheatHide">
-                        <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set && ((!cmdObj.isProbe.value && item.key!='probeTemperature') || (currentItem.probe && cmdObj.isProbe.value && !currentItem[item.key].isProbeThenThisHide))  " :title="language[item.key]" index="-1" :hideArrow="item.hideArrow">
+                        <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set && ((!cmdObj.isProbe.value && item.key!='probeTemperature' && item.key!='isProbeSettingTemperature') || (currentItem.probe && cmdObj.isProbe.value && !currentItem[item.key].isProbeThenThisHide))  " :title="language[item.key]" index="-1" :hideArrow="item.hideArrow">
                             <div slot="right">
                                 <midea-switch2 :itemKey="item.key" :checked="current[item.key]" @change="onPreheatChange" width="70" height="38" slot="value"></midea-switch2>
                             </div>

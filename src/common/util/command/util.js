@@ -338,7 +338,7 @@ export default {
       message.setByte(messageBody, 5, 0x11);
       message.setByte(messageBody, 6, 2);
       message.setByte(messageBody, 10, set_mode);
-      message.setByte(messageBody, 12, 200);
+      message.setByte(messageBody, 12, params.isProbeSettingTemperature || 200); //罗强的电控 探针下发需要发一个默认的温度200
       message.setByte(messageBody, 16, params.steamAmount);
       message.setByte(messageBody, 18, params.probeTemperature);
     }

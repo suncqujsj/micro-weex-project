@@ -248,6 +248,8 @@ let workingModalMixin  = {
                     if(cmdObj.mode.value!=0x31 && cmdObj.mode.value!=0x33 && cmdObj.mode.value!=0x3A){
                         cmdObj.isProbe.value = 0;
                         customData.temperatureText = cmdObj.temperature.upLowTemperature +'°'; 
+                    }else{
+                        customData.temperatureText = cmdObj.temperature.upLowTemperature +'°'; 
                     }
                 }
             }

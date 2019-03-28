@@ -8,4 +8,5 @@
  * 隐藏模式的 暂停按钮 stopBtnHide = TRUE,默认微 false显示
  * 2019-02-25 新增蒸汽烤箱旧插件升级
  * 2019-03-15 constant配置preheatingCanSetting = true预热中可以设置时间温度等 ，默认不可设置 
+ * 2019-03-27 添加 盎司和 华氏度单位
 */

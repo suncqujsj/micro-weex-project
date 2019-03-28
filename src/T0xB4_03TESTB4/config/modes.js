@@ -30,6 +30,7 @@ let modes = [
                     set: true,
                     default:350,
                     range:[300,450,10],
+                    unit: '℉'
                 },
                 preheat:{
                     set:true,

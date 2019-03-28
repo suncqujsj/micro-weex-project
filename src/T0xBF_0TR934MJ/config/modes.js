@@ -54,8 +54,8 @@ let modes = [
             },
             {
                 // 蒸汽+微波
-                'icon': modeIcons[33].dir,
-                'text': '蒸汽+微波',
+                'icon': modeIcons[44].dir,
+                'text': modeIcons[44].cn,
                 'mode': 0x90,
                 fireAmount:{
                     set:true,
@@ -137,8 +137,8 @@ let modes = [
             },
             {
                 // 热风对流+微波
-                'icon': modeIcons[15].dir,
-                'text': '热风对流+微波',
+                'icon': modeIcons[45].dir,
+                'text': modeIcons[45].cn,
                 'mode': 0x71,
                 preheat: preheatCommon,
                 temperature:{
@@ -158,8 +158,8 @@ let modes = [
 
             {
                 // 热风烧烤+微波
-                'icon': modeIcons[15].dir,
-                'text': '热风烧烤+微波',
+                'icon': modeIcons[46].dir,
+                'text': modeIcons[46].cn,
                 'mode': 0x73,
                 preheat: preheatCommon,
                 temperature:{
@@ -183,8 +183,8 @@ let modes = [
         iconButtons: [
             {
                 // 烧烤+微波
-                'icon': modeIcons[15].dir,
-                'text': '烧烤+微波',
+                'icon': modeIcons[47].dir,
+                'text': modeIcons[47].cn,
                 'mode': 0x70,
                 temperature: temperatureGears,
                 fireAmount:{

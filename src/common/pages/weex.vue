@@ -68,7 +68,7 @@
                                 <!-- 不支持肉类探针的模式遮罩层 -->
                                 <div v-if="!item.probe && cmdObj.isProbe.value" class='button-icon a-c j-c probeClass'></div>
                                 <text class="button-text" v-if="item.ellipsisText">{{item.ellipsisText}}</text>
-                                <text class="button-text">{{item.text}}</text>
+                                <text class="button-text" v-else>{{item.text}}</text>
                             </div>
                         </div>
                     </div>
@@ -469,8 +469,12 @@
                 this.tabs = tabs;
             },
             onIconButtonClicked: function(item){
+                let text = "主人，为了您的食物更美味，请在烤箱上操作探针模式。";
                 if(!item.probe && this.cmdObj.isProbe.value){
-                    nativeService.toast("主人，为了您的食物更美味，请在烤箱上操作探针模式。");
+                    if(this.constant.device.extra1.sn8=='0TQN36QL'){ //兼容蒸汽烤箱 0TQN36QL 的探针模式提示语
+                        text = '该模式为非探针模式，为了您的食物更美味，请启动探针模式哦';
+                    }
+                    nativeService.toast(text);
                     return;
                 }
                 this.currentItem = item;

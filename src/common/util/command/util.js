@@ -305,8 +305,7 @@ export default {
       message.setByte(messageBody, 14, this.getLowTemperature(downTemp));
       message.setByte(messageBody, 15, params.fireAmount);
       message.setByte(messageBody, 16, this.setByte26(params));
-
-        // 数据埋点
+      // 数据埋点
       // this.statisticsUpload({...constant.device});
     }
 
@@ -419,7 +418,6 @@ export default {
     // nativeService.toast(latesFrameRecord,6);
     var obj = this.initAnalysisObj();
     
-  // if(parseInt(requestCmd[9])==2 || parseInt(requestCmd[9])==3 || parseInt(requestCmd[9]==4)){
     obj.workingState.value = parseInt(requestCmd[11]);
     if(parseInt(requestCmd[11]) == 3 || parseInt(requestCmd[11]) == 6){
       this.isWorking = true;

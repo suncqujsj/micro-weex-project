@@ -182,9 +182,9 @@ let modes = [
                 //     default:[0,40,40]
                 // }
             },
-            {   // 上管+红外+风扇
+            {   // 上管+红外+风扇/热风+风扇
                 'icon': modeIcons[9].dir,
-                'text': modeIcons[9].cn,
+                'text': '热风+风扇',
                 'mode': 0x4a,
                 time:{
                     set: true,
@@ -221,7 +221,7 @@ let modes = [
             },
             {   // 热风对流+蒸汽
                 'icon': modeIcons[35].dir,
-                'text': modeIcons[35].cn,
+                'text': '热风对流+蒸汽',
                 'mode': 0x31,
                 time:{
                     set: true,
@@ -267,9 +267,9 @@ let modes = [
                 //     default:[0,40,40]
                 // }
             },
-            {   // 立体烧烤+蒸汽
+            {   // 立体烧烤+蒸汽 / 热风烧烤+蒸汽
                 'icon': modeIcons[36].dir,
-                'text': modeIcons[36].cn,
+                'text': '热风烧烤+蒸汽',
                 'mode': 0x33,
                 time:{
                     set: true,
@@ -322,8 +322,8 @@ let modes = [
         iconButtons: [
             {   // 烧烤+风扇+蒸汽  、 蒸汽+大面积+风扇
                 'icon': modeIcons[38].dir,
-                'text': modeIcons[38].cn,
-                'ellipsisText': '蒸汽+大面积+...',
+                'text': '烧烤+风扇+蒸汽',
+                // 'ellipsisText': '蒸汽+大面积+...',
                 'mode': 0x3A,
                 time:{
                     set: true,

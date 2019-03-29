@@ -20,7 +20,8 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:15,
+                        default:12,
+                        text:"15'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -59,6 +60,7 @@ let data = [
                     time:{
                         set: false,
                         default:12,
+                        text:"12'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -97,6 +99,7 @@ let data = [
                     time:{
                         set: false,
                         default:15.5,
+                        text:"15'30''",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -139,6 +142,7 @@ let data = [
                     time:{
                         set: false,
                         default:15.5,
+                        text:"15'30''",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -188,6 +192,7 @@ let data = [
                     time:{
                         set: false,
                         default:14,
+                        text:"14'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -230,6 +235,7 @@ let data = [
                     time:{
                         set: false,
                         default:13,
+                        text:"13'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -272,6 +278,7 @@ let data = [
                     time:{
                         set: false,
                         default:13,
+                        text:"13'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -314,6 +321,7 @@ let data = [
                     time:{
                         set: false,
                         default:14,
+                        text:"14'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -363,6 +371,7 @@ let data = [
                     time:{
                         set: false,
                         default:13,
+                        text:"13'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -405,6 +414,7 @@ let data = [
                     time:{
                         set: false,
                         default:14.5,
+                        text:"14'30''",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -447,6 +457,7 @@ let data = [
                     time:{
                         set: false,
                         default:9.5,
+                        text:"9'30''",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -489,6 +500,7 @@ let data = [
                     time:{
                         set: false,
                         default:28,
+                        text:"28'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -538,6 +550,7 @@ let data = [
                     time:{
                         set: false,
                         default:18,
+                        text:"18'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -580,6 +593,7 @@ let data = [
                     time:{
                         set: false,
                         default:26,
+                        text:"26'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -622,6 +636,7 @@ let data = [
                     time:{
                         set: false,
                         default:30,
+                        text:"30'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -664,6 +679,7 @@ let data = [
                     time:{
                         set: false,
                         default:2.83,
+                        text:"2'50''",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -713,6 +729,7 @@ let data = [
                     time:{
                         set: false,
                         default:17,
+                        text:"17'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -755,6 +772,7 @@ let data = [
                     time:{
                         set: false,
                         default:50,
+                        text:"50'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -797,6 +815,7 @@ let data = [
                     time:{
                         set: false,
                         default:18,
+                        text:"18'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -839,6 +858,7 @@ let data = [
                     time:{
                         set: false,
                         default:16,
+                        text:"16'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -888,6 +908,7 @@ let data = [
                     time:{
                         set: false,
                         default:3.5,
+                        text:"3'30''",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -930,6 +951,7 @@ let data = [
                     time:{
                         set: false,
                         default:11,
+                        text:"11'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -974,6 +996,7 @@ let data = [
                     time:{
                         set: false,
                         default:2.5,
+                        text:"2'30''",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -1016,6 +1039,7 @@ let data = [
                     time:{
                         set: false,
                         default:22,
+                        text:"22'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -1065,6 +1089,7 @@ let data = [
                     time:{
                         set: false,
                         default:5.33,
+                        text:"5'20''",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -1107,6 +1132,7 @@ let data = [
                     time:{
                         set: false,
                         default:2,
+                        text:"2'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -1149,6 +1175,7 @@ let data = [
                     time:{
                         set: false,
                         default:0.5,
+                        text:"30''",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -1191,6 +1218,7 @@ let data = [
                     time:{
                         set: false,
                         default:15,
+                        text:"15'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -1240,6 +1268,7 @@ let data = [
                     time:{
                         set: false,
                         default:1.33,
+                        text:"1'20''",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -1282,6 +1311,7 @@ let data = [
                     time:{
                         set: false,
                         default:1.67,
+                        text:"1'40''",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -1324,6 +1354,7 @@ let data = [
                     time:{
                         set: false,
                         default:30,
+                        text:"30''",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -1366,6 +1397,7 @@ let data = [
                     time:{
                         set: false,
                         default:9,
+                        text:"9'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -1415,6 +1447,7 @@ let data = [
                     time:{
                         set: false,
                         default:18,
+                        text:"18'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -1457,6 +1490,7 @@ let data = [
                     time:{
                         set: false,
                         default:16,
+                        text:"16'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -1499,6 +1533,7 @@ let data = [
                     time:{
                         set: false,
                         default:18,
+                        text:"18'",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -1541,6 +1576,7 @@ let data = [
                     time:{
                         set: false,
                         default:20,
+                        text:"20'",
                         range: [1,120,1]
                     },
                     temperature:{

@@ -384,7 +384,12 @@ export default {
   },
 
     setByte26(params){
-      return params.steamAmount || params.weight/10 || params.quantity;
+      let _weight = params.weight/10;
+      // 温度华氏度、重量盎司设置
+      if(params.currentItem.weight && params.currentItem.weight.unit === 'oz') { //如果是盎司单位，则不需要除以10
+        _weight = params.weight;
+      }
+      return params.steamAmount || _weight || params.quantity;
     },
 
     setHms(t, mode, sn8){ // 自动菜单hms为0时候需要传0xff

@@ -397,6 +397,7 @@ let data = [
                         set:true,
                         default:3,
                         range:[1,3,1], // Giggs，个数1，2，3，默认3
+                        unit:'个'
                     },
                     recipeId:{
                         set:false,
@@ -977,6 +978,7 @@ let data = [
                         set:true,
                         default:3,
                         range:[1,3,1], // Giggs，个数1，2，3，默认3
+                        unit: '个'
                         // title: '杯数'
                         // unit: '杯'
                     },
@@ -1018,7 +1020,7 @@ let data = [
                         default:0,
                         range:null
                     },
-                    weight:{
+                    quantity:{
                         set:true,
                         default:3,
                         range:[1,3,1],// Giggs，个数1，2，3，默认3
@@ -1111,7 +1113,7 @@ let data = [
                         default:0,
                         range:null
                     },
-                    weight:{
+                    quantity:{
                         set:true,
                         default:3,
                         range:[1,3,1],// Giggs，个数1，2，3，默认3
@@ -1154,7 +1156,7 @@ let data = [
                         default:0,
                         range:null
                     },
-                    weight:{
+                    quantity:{
                         set:true,
                         default:3,
                         range:[1,3,1], // Giggs，个数1，2，3，默认3
@@ -1174,8 +1176,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:0.5,
-                        text:"30''",
+                        text:"35''",
                         range: [1,120,1]
                     },
                     temperature:{
@@ -1197,10 +1198,11 @@ let data = [
                         default:0,
                         range:null
                     },
-                    weight:{
+                    quantity:{
                         set:true,
                         default:4,
                         range:[1,4,1],// Giggs，个数1，2，3，4 默认4
+                        unit:'个'
                     },
                     recipeId:{
                         set:false,
@@ -1290,10 +1292,11 @@ let data = [
                         default:0,
                         range:null
                     },
-                    weight:{
+                    quantity:{
                         set:true,
                         default:3,
                         range:[1,3,1],// Giggs，个数1，2，3 默认3
+                        unit:'个'
                     },
                     recipeId:{
                         set:false,
@@ -1354,7 +1357,7 @@ let data = [
                     time:{
                         set: false,
                         default:30,
-                        text:"30''",
+                        text:"30'",
                         range: [1,120,1]
                     },
                     temperature:{

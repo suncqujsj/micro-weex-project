@@ -6,13 +6,13 @@ import modeIcons from "../../common/mapping/modeIcons";
 let microwaveTimeCommon = {
     set: true,
     default:10,
-    range:[1, 90, 1]
+    range:[1,60,1, 65,90,5]
 };
 
  let heatTimeCommon = {
      set: true,
      default:10,
-     range:[1, 90, 1]
+     range:[1,60,1, 65,90,5]
  };
 
  let hotWindTimeCommon = {
@@ -222,7 +222,7 @@ let modes = [
                 'mode': 0xC1,
                 time: {
                     set: false,
-                    default:480,
+                    default:20,
                 },
                 settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
 

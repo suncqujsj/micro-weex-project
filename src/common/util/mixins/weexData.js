@@ -247,9 +247,9 @@ let workingModalMixin  = {
                 if(this.currentIsWorkingPage(cmdObj)){
                     if(cmdObj.mode.value!=0x31 && cmdObj.mode.value!=0x33 && cmdObj.mode.value!=0x3A){
                         cmdObj.isProbe.value = 0;
-                        customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature, cmdObj.temperature.unit);
+                        customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature, 0); 
                     }else{
-                        customData.temperatureText = this.addTemperatureUnit(cmdObj.probeSetttingTemperature.value, cmdObj.temperature.unit);
+                        customData.temperatureText = this.addTemperatureUnit(cmdObj.probeSetttingTemperature.value, 0);
                     }
                 }
             }

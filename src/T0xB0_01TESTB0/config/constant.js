@@ -6,14 +6,14 @@
 module.exports = {
     device: {
         type: 0xB0,
-        page_title: "白色微波炉",
+        page_title: "White Microwave Oven",
         widget_name: 'MSO_T0xB0',
         widget_version: '5.0.0',
         extra1: {
             sn8: '01TESTB0'
         },
         standby03:true, // 待机中打开03轮询
-        lang: 'cn',
+        lang: 'en',
         hideChildLock:{
             working:true
         }

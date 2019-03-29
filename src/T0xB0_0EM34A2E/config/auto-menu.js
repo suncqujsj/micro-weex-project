@@ -37,8 +37,9 @@ let data = [
                     },
                     weight:{
                         set:true,
-                        default:10,
-                        range:[10,20,10],
+                        default:1,
+                        range:[1,2,1],
+                        unit:"oz"
                     },
                     recipeId:{
                         set:false,
@@ -78,8 +79,9 @@ let data = [
                     },
                     weight:{
                         set:true,
-                        default:10,
-                        range:[10,40,10],
+                        default:1,
+                        range:[1,4,1],
+                        unit:"oz"
                     },
                     recipeId:{
                         set:false,

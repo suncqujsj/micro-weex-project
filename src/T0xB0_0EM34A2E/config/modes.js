@@ -7,13 +7,7 @@ import modeIcons from "../../common/mapping/modeIcons";
 
 let lang = constant.device.lang || 'cn';
 
-let timeCommon = {
-    set: true,
-    default:0,
-    range:[0,100,3],
-};
-
-let fireAmountRange = [0,10, 1];
+let fireAmountRange = [1,10, 1];
 
 
 let tests = [
@@ -24,7 +18,11 @@ let tests = [
                 'icon': modeIcons[12].dir,
                 'text': modeIcons[12][lang],
                 'mode': 0x01,
-                time: timeCommon,
+                time: {
+                    set: true,
+                    default:1,
+                    range:[1,60,1],
+                },
                 fireAmount: {
                     set:true,
                     default:10,
@@ -39,7 +37,8 @@ let tests = [
                 weight:{
                     set:true,
                     default:4,
-                    range:[4,100,1],
+                    range:[4,10,1],
+                    unit:"oz"
                 },
                 fireAmount: {
                     set:true,
@@ -53,7 +52,11 @@ let tests = [
                 'icon': modeIcons[24].dir,
                 'text': modeIcons[24][lang],
                 'mode': 0xA1,
-                time: timeCommon,
+                time: {
+                    set: true,
+                    default:10,
+                    range:[1,60,1],
+                },
                 fireAmount: {
                     set:true,
                     default:3,

@@ -15,13 +15,13 @@
         data(){
             return {
                 tabs:[
+                    // {
+                    //     name:'Auto Menu',
+                    //     active:false,
+                    //     rows:autoMenu
+                    // },
                     {
-                        name:'Auto Menu',
-                        active:false,
-                        rows:autoMenu
-                    },
-                    {
-                        name:'加热模式',
+                        name:'Heat Mode',
                         active:true,
                         rows:modes
                     },

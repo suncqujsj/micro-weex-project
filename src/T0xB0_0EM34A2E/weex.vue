@@ -21,7 +21,7 @@
                         rows:autoMenu
                     },
                     {
-                        name:'heat mode',
+                        name:'Heat Mode',
                         active:true,
                         rows:modes
                     },

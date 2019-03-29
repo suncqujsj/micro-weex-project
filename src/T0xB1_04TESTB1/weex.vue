@@ -16,27 +16,22 @@
             return {
                 tabs:[
                     // {
-                    //     name:'Auto Menu',
-                    //     active:false,
+                    //     name:'自动菜单',
+                    //     active:true,
                     //     rows:autoMenu
                     // },
                     {
                         name:'Heat Mode',
                         active:true,
                         rows:modes
-                    },
-                    // {
-                    //     name:'test',
-                    //     active:true,
-                    //     rows:tests
-                    // }
+                    }
                 ],
                 constant:constant
             }
         },
         components:{commonWeex},
         created(){
-          
+         
         },
         methods: {
            

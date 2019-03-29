@@ -249,7 +249,7 @@ let workingModalMixin  = {
                         cmdObj.isProbe.value = 0;
                         customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature, cmdObj.temperature.unit);
                     }else{
-                        customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature, cmdObj.temperature.unit);
+                        customData.temperatureText = this.addTemperatureUnit(cmdObj.probeSetttingTemperature.value, cmdObj.temperature.unit);
                     }
                 }
             }

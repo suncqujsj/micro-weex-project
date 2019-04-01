@@ -23,8 +23,8 @@ let modes = [
                 },
                 temperature:{
                     set: true,
-                    default:450,
-                    range:[300,440,10],
+                    default:350,
+                    range:[300,450,10],
                     unit:'℉'
                 },
                 preheat:{
@@ -55,7 +55,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:350,
-                    range:[300,440,10],
+                    range:[300,450,10],
                     unit:"℉"
                 },
                 preheat:{
@@ -86,7 +86,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:350,
-                    range:[300,440,10],
+                    range:[300,450,10],
                     unit:"℉"
                 },
                 preheat:{

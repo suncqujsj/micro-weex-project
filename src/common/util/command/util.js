@@ -389,6 +389,9 @@ export default {
         if(params.currentItem.weight && params.currentItem.weight.unit === 'oz') { //如果是盎司单位，则不需要除以10
             _weight = params.weight;
         }
+        if(params.currentItem.weight && params.currentItem.weight.ratio){
+            _weight = parseInt((params.weight-params.currentItem.weight.index)/params.currentItem.weight.ratio);
+        }
         return params.steamAmount || _weight || params.quantity;
     },
 

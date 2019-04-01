@@ -62,7 +62,7 @@ module.exports = {
         MideaSwitch2
     },
     data: () => ({
-        host: '192.168.1.136',
+        host: '192.168.1.183',
         isShowHostList: false,
         hostIndex: null,
         hostList: [],

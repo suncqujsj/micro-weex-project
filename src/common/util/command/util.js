@@ -378,7 +378,7 @@ export default {
         }
 
         var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
-        // nativeService.alert(this.cmdToEasy(sendcmd));
+        nativeService.alert(this.cmdToEasy(sendcmd));
         return sendcmd;
     },
 
@@ -505,7 +505,7 @@ export default {
         obj.temperature.upHighTemperature = parseInt(requestCmd[28]);
         obj.temperature.upLowTemperature = parseInt(requestCmd[28])>0?(256+parseInt(requestCmd[29])):parseInt(requestCmd[29]);
         obj.temperature.downHighTemperature = parseInt(requestCmd[30]);
-        obj.temperature.downLowTemperature = parseInt(requestCmd[31]);
+        obj.temperature.downLowTemperature = parseInt(requestCmd[30])>0?(256+parseInt(requestCmd[31])):parseInt(requestCmd[31]);
 
         //探针温度
         obj.probeRealTemperature.value = parseInt(requestCmd[32]);
@@ -514,6 +514,7 @@ export default {
         //   obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
         // }
         obj.temperature.unit = message.getBit(requestCmd, 34, 4);
+        // nativeService.alert(obj.temperature.unit);
 
         if(parseInt(requestCmd[19])==0xC4){//如果是烘干，则不显示温度
             obj.temperature.upLowTemperature = 0;

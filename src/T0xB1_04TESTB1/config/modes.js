@@ -192,9 +192,9 @@ let modes = [
                 }
             },
             {
-                'icon': modeIcons[9].dir,
-                'text': modeIcons[9].cn,
-                'mode': 0x51,
+                'icon': `${'img/modes/'}${'up_double_grill@3x'}${'.png'}`,
+                'text': "上管+红外",
+                'mode': 0x46,
                 time:{
                     set: true,
                     default:60,

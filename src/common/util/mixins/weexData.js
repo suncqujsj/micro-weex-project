@@ -236,7 +236,7 @@ let workingModalMixin  = {
             if(this.isProbeInserted(cmdObj) && !this.isCloudMenu(cmdObj)) { // 有探针显示探针温度
                 customData.temperatureText = this.addTemperatureUnit(cmdObj.probeSetttingTemperature.value, cmdObj.temperature.unit);
             } else { // 非探针模式显示较大温度
-                customData.temperatureText = this.getTemperatureTextWithoutProbe(cmdObj);
+                customData.temperatureText = this.getTemperatureTextWithoutProbe(cmdObj, cmdObj.temperature.unit);
             }
 
             if(this.isLargeOven1065()){ //大烤箱旧插件 0ET1065Q ，上报的温度问题，下管上报了错乱的温度...需要只读上管温度
@@ -258,7 +258,7 @@ let workingModalMixin  = {
             return buffer;
         },
 
-        getTemperatureTextWithoutProbe(cmdObj){ // 获取未插入探针时，工作中温度的显示文案
+        getTemperatureTextWithoutProbe(cmdObj,unit){ // 获取未插入探针时，工作中温度的显示文案
             if(!cmdObj.temperature.upLowTemperature && !cmdObj.temperature.downLowTemperature) {
                 return '';
             }
@@ -273,7 +273,7 @@ let workingModalMixin  = {
                 return '';
             }
 
-            return this.addTemperatureUnit(temperature);
+            return this.addTemperatureUnit(temperature,unit);
         },
 
         addTemperatureUnit(temp, unitValue=0){

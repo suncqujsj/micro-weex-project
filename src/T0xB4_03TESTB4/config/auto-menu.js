@@ -10,16 +10,18 @@ let data = [
                 {
                     'icon': '',
                     'text': 'TOAST',
-                    'mode': 0xE0,
+                    'mode': 0xff,
                     time:{
                         set: false,
-                        default:9,
-                        range: null
+                        default:false,
+                        range: null,
+                        text:1
                     },
                     temperature:{
                         set: false,
-                        default:0,
-                        range:null
+                        default:false,
+                        range:null,
+                        unit:"℉"
                     },
                     preheat:{
                         set:false,
@@ -31,18 +33,21 @@ let data = [
                         range:null
                     },
                     fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
+                        set:true,
+                        default:4,
+                        range:[1,6,1]
                     },
                     weight:{
                         set:true,
-                        default:10,
-                        range:[10,20,10],
+                        default:6,
+                        range:[1,6,1],
+                        ratio:1,
+                        index:0,
+                        unit:"Slice"
                     },
                     recipeId:{
                         set:false,
-                        default: 0x8D,
+                        default: 0x9e,
                         range:null
                     },
                     detail: null,
@@ -51,16 +56,18 @@ let data = [
                 {
                     'icon': '',
                     'text': 'BAGEL',
-                    'mode': 0x9F,
+                    'mode': 0xFF,
                     time:{
                         set: false,
-                        default:15,
-                        range: null
+                        default:false,
+                        range: null,
+                        text:2
                     },
                     temperature:{
                         set: false,
-                        default:0,
-                        range:null
+                        default:false,
+                        range:null,
+                        unit:"℉"
                     },
                     preheat:{
                         set:false,
@@ -72,18 +79,21 @@ let data = [
                         range:null
                     },
                     fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
+                        set:true,
+                        default:4,
+                        range:[1,6,1]
                     },
                     weight:{
                         set:true,
-                        default:10,
-                        range:[10,40,10],
+                        default:4,
+                        range:[2,6,2],
+                        ratio:2,
+                        index:0,
+                        unit:"Slice"
                     },
                     recipeId:{
                         set:false,
-                        default: 0x8E,
+                        default: 0x9f,
                         range:null
                     },
                     detail: null,
@@ -92,16 +102,18 @@ let data = [
                 {
                     'icon': '',
                     'text': 'PIZZA',
-                    'mode': 0x27,
+                    'mode': 0xFF,
                     time:{
                         set: false,
-                        default:15,
-                        range: null
+                        default:false,
+                        range: null,
+                        text:3
                     },
                     temperature:{
-                        set: false,
-                        default:0,
-                        range:null
+                        set: true,
+                        default:400,
+                        range:[300,450,10],
+                        unit:"℉"
                     },
                     preheat:{
                         set:false,
@@ -114,17 +126,20 @@ let data = [
                     },
                     fireAmount:{
                         set:false,
-                        default:0,
-                        range:null
+                        default:4,
+                        range:[1,6,1]
                     },
                     weight:{
                         set:true,
-                        default:10,
-                        range:[10,40,10],
+                        default:9,
+                        range:[6,12,3],
+                        ratio:3,
+                        index:3,
+                        unit:"inch"
                     },
                     recipeId:{
                         set:false,
-                        default: 0x8E,
+                        default: 0xa0,
                         range:null
                     },
                     detail: null,

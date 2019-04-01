@@ -266,6 +266,7 @@ export default {
             upTemp =  params.upTemperature, downTemp = params.downTemperature;
         }
 
+
         var time = params.minute;
         var hour = Math.floor(time/60);
         var minute = time%60;
@@ -297,9 +298,9 @@ export default {
             message.setByte(messageBody, 4, params.recipeId);
             message.setByte(messageBody, 5, 0x11);
             // message.setByte(messageBody, 6, params.preheat?1:0);
-            message.setByte(messageBody, 7, this.setHms(hour, set_mode, callbackData.device.extra1.sn8));
-            message.setByte(messageBody, 8, this.setHms(minute, set_mode, callbackData.device.extra1.sn8));
-            message.setByte(messageBody, 9, this.setHms(second, set_mode, callbackData.device.extra1.sn8));
+            message.setByte(messageBody, 7, this.setHms(time,hour, set_mode, callbackData.device.extra1.sn8));
+            message.setByte(messageBody, 8, this.setHms(time,minute, set_mode, callbackData.device.extra1.sn8));
+            message.setByte(messageBody, 9, this.setHms(time,second, set_mode, callbackData.device.extra1.sn8));
             message.setByte(messageBody, 10, set_mode);
             message.setByte(messageBody, 11, this.getHighTemperature(upTemp));
             message.setByte(messageBody, 12, this.getLowTemperature(upTemp));
@@ -391,7 +392,8 @@ export default {
         return params.steamAmount || _weight || params.quantity;
     },
 
-    setHms(t, mode, sn8){ // 自动菜单hms为0时候需要传0xff
+    setHms(time, t, mode, sn8){ // 自动菜单hms为0时候需要传0xff
+        if(time === false) return 0xff;
         return this.is934MJ(sn8) && this.isAutoMenu(mode) ? (t || 0xff) : t;
 
     },
@@ -401,11 +403,13 @@ export default {
     },
 
     getHighTemperature(t){ // 高温控温
-        return parseInt(t)>255?1:0;
+        if(t === false) return 0xff;
+        return parseInt(t/256);
     },
 
     getLowTemperature(t){ // sf 获取低位温度值
-        return parseInt(t)>255?parseInt(t)-256:parseInt(t);
+        if(t === false) return 0xff;
+        return parseInt(t)%256;
     },
 
     isSmallOven(type){

@@ -20,7 +20,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:180,
-                    range:[30,250,1],
+                    range:[30,250,10],
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 preheat:{
@@ -63,7 +63,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:160,
-                    range:[50,250,1]
+                    range:[50,250,10]
                 },
                 preheat:{
                     set:true,
@@ -100,7 +100,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:160,
-                    range:[50,250,1],
+                    range:[50,250,10],
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 preheat:{
@@ -140,7 +140,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:180,
-                    range:[150,250,1]
+                    range:[150,250,10]
                 },
                 preheat:{
                     set:true,
@@ -174,7 +174,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:180,
-                    range:[50,250,1]
+                    range:[50,250,10]
                 },
                 preheat:{
                     set:true,
@@ -203,7 +203,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:180,
-                    range:[50,250,1]
+                    range:[150,250,10]
                 },
                 preheat:{
                     set:true,
@@ -233,7 +233,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:180,
-                    range:[50,250,1],
+                    range:[50,250,10],
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 preheat:{
@@ -272,7 +272,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:170,
-                    range:[30,220,1],
+                    range:[30,200,10],
                 },
                 preheat:{
                     set:true,
@@ -337,7 +337,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:40,
-                    range:[30,50,1]
+                    range:[30,45,1]
                 },
                 preheat:{
                     set:false,

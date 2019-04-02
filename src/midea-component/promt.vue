@@ -12,7 +12,7 @@
        </div>
        <div class="box-btn-group">
           <div @click="onCancled" class="box-btn-wrapper btn-border-r">
-            <text class="box-btn-text" :style="{color: cancelColor}">取消</text>
+            <text class="box-btn-text cancel-text" :style="{color: cancelColor}">取消</text>
           </div>
           <div  @click="onOkClicked" class="box-btn-wrapper">
             <text  class="box-btn-text" :style="{color: cancelColor}">确定</text>
@@ -49,7 +49,7 @@
     padding-top:30px;padding-bottom:20px
   }
   .box-title-text{
-   font-family: PingFangSC-Medium;font-size:32px;color:#000000;text-align:center
+   font-family: PingFangSC-Medium;font-weight: bold; font-size:32px;color:#000000;text-align:center
   }
   .box-input-wrapper{
     padding-left:32px;padding-right:32px;padding-top:10px;padding-bottom:24px;
@@ -77,7 +77,7 @@
     text-align:center;font-family:PingFangSC-Regular;font-size:32px
   }
   .cancel-text {
-    color: #666666;
+    font-weight: bold;
   }
   .confirm-text {
     color: #000000;

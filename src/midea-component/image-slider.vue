@@ -29,37 +29,47 @@
     module.exports = {
         props: {
             sliderStyle: {
-                default: {
+                type: Object,
+                default: ()=> ({
                     "width": "750px",
                     "height": "400px",
                     "position":"relative"
-                }
+                })
             },
             indicatorStyle: {
-                default: ""
+                type: Object,
+                default: ()=> ({})
             },
             items: {
+                type: Array,
                 default: []
             },
             interval: {
+                type: Number,
                 default: 2000
             },
             autoplay: {
+                type: Boolean,
                 default: true
             },
             infinite: {
+                type: Boolean,
                 default: true
             },
             imgResize: {
+                type: String,
                 default: "stretch"
             },
             imgWidth: {
+                type: String,
                 default: "750px"
             },
             imgHeight: {
+                type: String,
                 default: "400px"
             },
             placeholder: {
+                type: String,
                 default: ""
             }
         },

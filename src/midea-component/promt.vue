@@ -15,7 +15,7 @@
             <text class="box-btn-text cancel-text" :style="{color: cancelColor}">取消</text>
           </div>
           <div  @click="onOkClicked" class="box-btn-wrapper">
-            <text  class="box-btn-text" :style="{color: cancelColor}">确定</text>
+            <text  class="box-btn-text" :style="{color: confirmColor}">确定</text>
           </div>
        </div>
      </div>

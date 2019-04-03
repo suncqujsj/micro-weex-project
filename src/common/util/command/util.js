@@ -87,6 +87,7 @@ export default {
                 name:"感应菜单感应中",
                 value: 0
             },
+            cmdLength: 18
 
         };
         return obj;
@@ -471,7 +472,7 @@ export default {
         // latesFrameRecord = receiveFrame;
         // nativeService.toast(latesFrameRecord,6);
         var obj = this.initAnalysisObj();
-
+        obj.cmdLength = parseInt(requestCmd[1]); // 指令长度
         obj.workingState.value = parseInt(requestCmd[11]);
         if(parseInt(requestCmd[11]) == 3 || parseInt(requestCmd[11]) == 6){
             this.isWorking = true;

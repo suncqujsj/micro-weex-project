@@ -233,22 +233,22 @@ let workingModalMixin  = {
             //   }
             
             if(this.isProbeInserted(cmdObj) && !this.isCloudMenu(cmdObj)) { // 有探针显示探针温度
-                customData.temperatureText = this.addTemperatureUnit(cmdObj.probeSetttingTemperature.value, cmdObj.temperature.unit);
+                customData.temperatureText = this.addTemperatureUnit(cmdObj,cmdObj.probeSetttingTemperature.value, cmdObj.temperature.unit);
             } else { // 非探针模式显示较大温度
                 customData.temperatureText = this.getTemperatureTextWithoutProbe(cmdObj, cmdObj.temperature.unit);
             }
 
             if(this.isLargeOven1065()){ //大烤箱旧插件 0ET1065Q ，上报的温度问题，下管上报了错乱的温度...需要只读上管温度
-                customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature, cmdObj.temperature.unit);
+                customData.temperatureText = this.addTemperatureUnit(cmdObj,cmdObj.temperature.upLowTemperature, cmdObj.temperature.unit);
             }
 
-            if(this.isSteamOven36L() && cmdObj.isProbe.value==1){//如果是旧插件36L蒸汽烤箱0TQN36QL，探针模式下，强行转换为非探针模式，因为该型号，探针模式下，还可以启动所有的模式
-                if(this.currentIsWorkingPage(cmdObj)){
+            if(this.isSteamOven36L()){//如果是旧插件36L蒸汽烤箱0TQN36QL，探针模式下，强行转换为非探针模式，因为该型号，探针模式下，还可以启动所有的模式
+                if(this.currentIsWorkingPage(cmdObj) && cmdObj.isProbe.value==1){
                     if(cmdObj.mode.value!=0x31 && cmdObj.mode.value!=0x33 && cmdObj.mode.value!=0x3A){
                         cmdObj.isProbe.value = 0;
-                        customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature, 0); 
+                        customData.temperatureText = this.addTemperatureUnit(cmdObj,cmdObj.temperature.upLowTemperature, 0); 
                     }else{
-                        customData.temperatureText = this.addTemperatureUnit(cmdObj.probeSetttingTemperature.value, 0);
+                        customData.temperatureText = this.addTemperatureUnit(cmdObj,cmdObj.probeSetttingTemperature.value, 0);
                     }
                 }
             }
@@ -272,10 +272,15 @@ let workingModalMixin  = {
                 return '';
             }
 
-            return this.addTemperatureUnit(temperature,unit);
+            return this.addTemperatureUnit(cmdObj,temperature,unit);
         },
 
-        addTemperatureUnit(temp, unitValue=0){
+        addTemperatureUnit(cmdObj,temp, unitValue=0){
+
+            if(cmdObj.cmdLength<=34){//parker: 现在的温度单位判断放在了byte34，以前旧插件会存在上报长度的指令小于或者等于34的情况例如蒸汽烤箱0TQN36QL
+                unitValue = 0;
+            }
+
             let unit = unitValue === 1 ? '℉' :'°';
             return temp + unit;
         },
@@ -576,13 +581,12 @@ let workingModalMixin  = {
         getProgressStepHandle(cmdObj,chartJson){
             var allSettingSeconds = cmdObj.timeSetting.hour*60*60+cmdObj.timeSetting.minute*60+cmdObj.timeSetting.second;
             var progress_step = (allSettingSeconds-this.getAllSeconds(cmdObj))/allSettingSeconds*360; //360度倒计时为例
-
+            chartJson.pointShow = true;
             if(!allSettingSeconds) { // 如果设置时间不上报，自动隐藏倒计时小球 sf
                 chartJson.pointShow = false;
-                return;
+                // return;  //parker: 如果不上报总的设定时间，如果直接return，函数后面的语句都不执行了。
             }
 
-            chartJson.pointShow = true;
             chartJson.progressCounter = parseInt(progress_step);
 
             if(cmdObj.probeRealTemperature.value>cmdObj.probeSetttingTemperature.value){

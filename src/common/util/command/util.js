@@ -87,6 +87,7 @@ export default {
                 name:"感应菜单感应中",
                 value: 0
             },
+            cmdLength: 18
 
         };
         return obj;
@@ -344,7 +345,7 @@ export default {
             message.setByte(messageBody, 5, 0x11);
             message.setByte(messageBody, 6, 2);
             message.setByte(messageBody, 10, set_mode);
-            message.setByte(messageBody, 12, params.isProbeSettingTemperature || 200); //罗强的电控 探针下发需要发一个默认的温度200
+            message.setByte(messageBody, 12, params.isProbeSettingTemperature || 200); //parker:罗强的电控 探针下发需要发一个默认的温度200
             message.setByte(messageBody, 16, params.steamAmount);
             message.setByte(messageBody, 18, params.probeTemperature);
         }
@@ -379,7 +380,7 @@ export default {
         }
 
         var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
-        nativeService.alert(this.cmdToEasy(sendcmd));
+        // nativeService.alert(this.cmdToEasy(sendcmd));
         return sendcmd;
     },
 
@@ -471,7 +472,7 @@ export default {
         // latesFrameRecord = receiveFrame;
         // nativeService.toast(latesFrameRecord,6);
         var obj = this.initAnalysisObj();
-
+        obj.cmdLength = parseInt(requestCmd[1]); // 指令长度
         obj.workingState.value = parseInt(requestCmd[11]);
         if(parseInt(requestCmd[11]) == 3 || parseInt(requestCmd[11]) == 6){
             this.isWorking = true;

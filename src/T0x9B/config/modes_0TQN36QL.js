@@ -258,12 +258,12 @@ let modes = [
                 probeTemperature:{
                     set: true,
                     default:65,
-                    range:[65,100,1],
+                    range:[50,100,1],
                 },
                 isProbeSettingTemperature:{ //探针模式的，常规温度设置
                     set: true,
-                    default:210,
-                    range:[50,250,5],
+                    default:180,
+                    range:[50,200,5],
                 },
                 probe: true,//支持肉类探针
                 // standbyHide: true //standbyHide=true 待机中隐藏该对象,默认false或者没有这个key
@@ -311,12 +311,12 @@ let modes = [
                 probeTemperature:{
                     set: true,
                     default:70,
-                    range:[70,100,1],
+                    range:[50,100,1],
                 },
                 isProbeSettingTemperature:{
                     set: true,
-                    default:210,
-                    range:[50,250,5],
+                    default:200,
+                    range:[50,200,5],
                 },
                 probe: true,//支持肉类探针
                 // standbyHide: true //standbyHide=true 待机中隐藏该对象,默认false或者没有这个key
@@ -370,12 +370,12 @@ let modes = [
                 probeTemperature:{
                     set: true,
                     default:60,
-                    range:[60,100,1],
+                    range:[50,100,1],
                 },
                 isProbeSettingTemperature:{
                     set: true,
-                    default:210,
-                    range:[50,250,5],
+                    default:150,
+                    range:[50,200,5],
                 },
                 probe: true,//支持肉类探针
                 // standbyHide: true //standbyHide=true 待机中隐藏该对象,默认false或者没有这个key

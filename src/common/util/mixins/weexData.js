@@ -688,7 +688,8 @@ let workingModalMixin  = {
          * 工作状态中 模式不可编辑设置
          */
         settingHide(item){
-            if(item.settingHide || item.standbyHide || this.isCloudMenu(this.cmdObj)) {
+            // if(item.settingHide || item.standbyHide || this.isCloudMenu(this.cmdObj)) {
+            if(item.settingHide || item.standbyHide) { // 云菜谱可编辑 sf 杨工提的需求
                 this.hasSetting = false;
             }
         },

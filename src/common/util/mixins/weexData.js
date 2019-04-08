@@ -421,7 +421,7 @@ let workingModalMixin  = {
                 this.btnText = "继续";
                 this.btnSrc = "img/footer/icon_start@2x.png";
                 this.isTimerStop = true;
-                this.statusTag = '暂停中';
+                this.statusTag = this.getLanguage('pausing');
                 this.hasStopOrContinueBtn = true;
             }
         },

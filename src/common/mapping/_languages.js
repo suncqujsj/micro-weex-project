@@ -48,7 +48,10 @@ const cn = {
     quantityDefaultUnit: '份',
     morePageTitle: '更多功能',
     childLockOpenedText: '童锁已开启',
-    pausing: '暂停中'
+    closeChildLock: '关闭童锁',
+    pausing: '暂停中',
+    resume: '继续',
+    pause: '暂停'
 };
 
 const en = {
@@ -90,7 +93,10 @@ const en = {
     quantityDefaultUnit: 'Copies',
     morePageTitle: 'More functions',
     childLockOpenedText: 'Child lock opened',
-    pausing: 'Pausing'
+    closeChildLock: 'Close the Child lock',
+    pausing: 'Pausing',
+    resume: 'Resume',
+    pause: 'Pause'
 };
 
 const lang = {

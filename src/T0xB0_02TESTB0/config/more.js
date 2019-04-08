@@ -7,12 +7,12 @@ import constant from "./constant.js";
 
 let list = [
     {
-        title: '产品型号',
-        rightText: '微波炉X7'+constant.device.sales_model,
+        title: 'Product Model',
+        rightText: constant.device.sales_model,
         link:''
     },
     {
-        title: '插件版本号',
+        title: 'Version',
         rightText: constant.device.widget_version,
         link: ''
     }

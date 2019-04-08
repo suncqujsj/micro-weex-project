@@ -8,7 +8,6 @@
     import modes from "./config/modes.js";
     import autoMenu from "./config/auto-menu.js";
     import commonWeex from "@/common/pages/weex.vue";
-    import nativeService from "@/common/services/nativeService";
 
     var numberRecord = 0; //记录跳页面的次数
     export default {
@@ -25,11 +24,6 @@
                         active:true,
                         rows:modes
                     },
-                    // {
-                    //     name:'test',
-                    //     active:true,
-                    //     rows:tests
-                    // }
                 ],
                 constant:constant
             }

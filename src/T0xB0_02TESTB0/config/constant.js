@@ -6,10 +6,11 @@
 module.exports = {
     device: {
         type: 0xB0,
-        page_title: "嵌入式微波炉",
-        sales_model: "嵌入式微波炉",
+        page_title: "BUILT IN MI",
+        sales_model: "BUILT IN MI",
         widget_name: 'MSO_T0xB0',
-        widget_version: '5.0.0',
+        widget_version: '5.0.1',
+        lang: 'en',
         extra1: {
             sn8: '02TESTB0'
         },

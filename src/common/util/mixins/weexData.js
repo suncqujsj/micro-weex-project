@@ -418,7 +418,7 @@ let workingModalMixin  = {
             if(this.periodPauseCondition(cmdObj)){
                 this.timeShow = true;
                 this.hasSetting = true;
-                this.btnText = "继续";
+                this.btnText = this.getLanguage('resume');
                 this.btnSrc = "img/footer/icon_start@2x.png";
                 this.isTimerStop = true;
                 this.statusTag = this.getLanguage('pausing');

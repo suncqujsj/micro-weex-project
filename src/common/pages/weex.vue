@@ -173,7 +173,7 @@
 
                 <div class="child-lock-close" @click="childLock(false)">
                     <image class="child-lock-close-icon" src="img/childlock/mode_close@3x.png"></image>
-                    <text class="child-lock-close-text">关闭童锁</text>
+                    <text class="child-lock-close-text">{{language.closeChildLock}}</text>
                 </div>
             </div>
         </modal>

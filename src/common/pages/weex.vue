@@ -168,7 +168,7 @@
             <div class="a-c j-c" slot="content" :style="{height: wrapHeight+'px'}">
                 <div class="child-lock">
                     <image class="child-lock-icon" src="img/childlock/large_childlock@3x.png"></image>
-                    <text class="child-lock-text">童锁已开启</text>
+                    <text class="child-lock-text">{{language.childLockOpenedText}}</text>
                 </div>
 
                 <div class="child-lock-close" @click="childLock(false)">

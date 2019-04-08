@@ -6,7 +6,7 @@
 const bridgeModule = weex.requireModule('bridgeModule');
 const objectAssign = require('object-assign');
 import nativeService from '@/common/services/nativeService';
-// import languages from '../../mapping/languages';
+import languages from '../../mapping/_languages';
 
 let commonMixin = {
     data(){
@@ -16,6 +16,11 @@ let commonMixin = {
             stateTime: null,
             count:0
         };
+    },
+    computed:{
+        language(){
+            return languages[this.getLang()];
+        }
     },
     methods:{
         back: function(){

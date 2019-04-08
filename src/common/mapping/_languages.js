@@ -45,7 +45,8 @@ const cn = {
     fireAmount: '火力',
     weight: '重量',
     quantity: '数量',
-    quantityDefaultUnit: '份'
+    quantityDefaultUnit: '份',
+    morePageTitle: '更多功能',
 };
 
 const en = {
@@ -84,7 +85,8 @@ const en = {
     fireAmount: 'Fire Amount',
     weight: 'Weight',
     quantity: 'Quantity',
-    quantityDefaultUnit: 'Copies'
+    quantityDefaultUnit: 'Copies',
+    morePageTitle: 'More functions'
 };
 
 const lang = {

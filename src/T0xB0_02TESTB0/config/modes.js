@@ -3,7 +3,7 @@
  * 2018/10/20
  */
 import modeIcons from "../../common/mapping/modeIcons";
-import constant from "@/T0xB0_0EM34A2E/config/constant";
+import constant from "../config/constant";
 
 let lang = constant.device.lang || 'cn';
 
@@ -18,7 +18,7 @@ let modes = [
                 time:{
                     set: true,
                     default:5,
-                    range:[1,59,1],
+                    range:[1,95,1],
                 },
                 temperature:{
                     set: false,
@@ -50,7 +50,7 @@ let modes = [
                 time:{
                     set: true,
                     default:30,
-                    range:[1,59,1],
+                    range:[1,95,1],
                 },
                 temperature:{
                     set: true,
@@ -85,7 +85,7 @@ let modes = [
                     range:[100,2000,100],
                 },
                 fireAmount: {
-                    set:true,
+                    set:false,
                     default:5,
                     range: [1,10, 1]
                 },
@@ -116,7 +116,7 @@ let modes = [
                 'text': modeIcons[24][lang],
                 'mode': 0xA1,
                 fireAmount: {
-                    set:true,
+                    set:false,
                     default:5,
                     range: [1,10, 1]
                 },
@@ -149,12 +149,12 @@ let modes = [
         iconButtons: [
             {
                 'icon': modeIcons[22].dir,
-                'text': modeIcons[22].cn,
+                'text': "Micro&Grill",
                 'mode': 0x70,
                 time:{
                     set: true,
                     default:30,
-                    range:[1,59,1],
+                    range:[1,95,1],
                 },
                 temperature:{
                     set: true,

@@ -300,7 +300,7 @@ let data = [
                         default:1,
                         range:[1,3,1],
                         ratio:1,
-                        index:1,
+                        index:0,
                         unit:"cup"
                     },
                     recipeId:{

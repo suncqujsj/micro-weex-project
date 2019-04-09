@@ -39,7 +39,7 @@
 <script>  
 import base from '../base'
 
-import mideaGridSelect from '@/component/optionList.vue'
+import mideaGridSelect from '@/midea-component/optionList.vue'
 import nativeService from '@/common/services/nativeService'
 const modal = weex.requireModule('modal');
 

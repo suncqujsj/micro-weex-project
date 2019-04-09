@@ -12,7 +12,7 @@
 </style>
 <script>  
 import base from '../base'
-import mideaImageSlider from '@/component/image-slider.vue'
+import mideaImageSlider from '@/midea-component/image-slider.vue'
 import nativeService from '@/common/services/nativeService'
 export default {
     components: { mideaImageSlider },

@@ -141,8 +141,7 @@ module.exports = {
             { title: 'Tab', link: "tab" },
             // { title: 'TimeCycle时间转盘', link: "timeCycle" },
             { title: 'Video视频', link: "video" },
-            { title: 'scrollPicker滚动选择器', link: "scrollPicker" },
-            // { title: 'customLoading自定义加载', link: 'customLoading' },
+            { title: 'scrollPicker滚动选择器', link: "scrollPicker" }
         ],
         interfacelist: [
             { title: 'callTel打电话', link: "callTel" },
@@ -178,6 +177,7 @@ module.exports = {
             { title: 'showLoading打开原生loading界面', link: "showLoading" },
             { title: 'showLoadingWithMsg打开原生loading界面', link: "showLoadingWithMsg" },
             { title: 'showSharePanel打开分享界面', link: "showSharePanel" },
+            { title: 'showControlPanelPage打开控制页', link: "showControlPanelPage" },
             { title: 'startCmdProcess透传', link: "startCmdProcess" },
             { title: 'takePhoto照相', link: "takePhoto" },
             { title: 'updateDeviceInfo更新当前设备信息', link: "updateDeviceInfo" },

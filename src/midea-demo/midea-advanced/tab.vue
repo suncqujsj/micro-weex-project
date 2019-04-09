@@ -150,7 +150,7 @@ import base from '../base'
 
 import mideaTab from '@/midea-component/mTab.vue'
 import mideaFlowTab from '@/midea-component/mFlowTab.vue'
-import mideaCell from '@/component/cell.vue'
+import mideaCell from '@/midea-component/cell.vue'
 const modal = weex.requireModule('modal');
 
 module.exports = {

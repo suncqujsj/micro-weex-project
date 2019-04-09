@@ -131,11 +131,11 @@
     import nativeService from "../common/services/nativeService";
     import cmdFun from "./utils/util.js"; //解析指令
     import query from "../dummy/query";
-    import {wxcProgress, wxProgress} from "@/component/sf/wx-progress";
-    import sfAccordion from '@/component/sf/custom/accordion.vue'
-    import sfDialog from '@/component/sf/custom/dialog.vue'
-    import WxPicker from '@/component/sf/custom/picker.vue';
-    import mideaDialog from '@/component/dialog.vue';
+    import {wxcProgress, wxProgress} from "@/midea-component/sf/wx-progress";
+    import sfAccordion from '@/midea-component/sf/custom/accordion.vue'
+    import sfDialog from '@/midea-component/sf/custom/dialog.vue'
+    import WxPicker from '@/midea-component/sf/custom/picker.vue';
+    import mideaDialog from '@/midea-component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
     import mideaSwitch2 from '@/midea-component/switch2.vue'
 

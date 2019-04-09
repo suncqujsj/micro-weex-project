@@ -12,7 +12,7 @@
     const animation = weex.requireModule('animation')
     const modal = weex.requireModule('modal')
     import nativeService from "@/common/services/nativeService";
-    import sfState from "@/component/sf/custom/state.vue"
+    import sfState from "@/midea-component/sf/custom/state.vue"
     import mideaButton from '@/midea-component/button.vue'
 
 

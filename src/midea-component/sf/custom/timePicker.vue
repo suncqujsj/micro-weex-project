@@ -22,7 +22,7 @@
 <script>
 
     import base from '@/midea-demo/base'
-    import mideaScrollPicker from '@/component/sf/custom/base/scrollPicker.vue'
+    import mideaScrollPicker from '@/midea-component/sf/custom/base/scrollPicker.vue'
     // import mideaScrollPicker from '@/midea-component/scrollPicker.vue'
     import nativeService from '@/common/services/nativeService'
 

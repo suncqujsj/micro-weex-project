@@ -46,7 +46,7 @@
     import mideaHeader from '@/midea-component/header.vue'
     import mideaCell from '@/midea-component/cell.vue'
     import mideaButton from '@/midea-component/button.vue'
-    import sfState from "@/component/sf/custom/state.vue"
+    import sfState from "@/midea-component/sf/custom/state.vue"
 
 
     import nativeService from "../common/services/nativeService";

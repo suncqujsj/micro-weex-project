@@ -18,7 +18,7 @@
 import base from '../base'
 
 import mideaButton from '@/midea-component/button.vue'
-import mideaPromt from '@/component/promt.vue'
+import mideaPromt from '@/midea-component/promt.vue'
 import nativeService from '@/common/services/nativeService'
 
 module.exports = {

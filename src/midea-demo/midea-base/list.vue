@@ -42,13 +42,14 @@
 import base from '../base'
 
 import mideaItem from '@/midea-component/item.vue'
-import mideaCell from '@/component/cell.vue'
+import mideaOperationModal from '@/midea-component/operation-modal.vue'
+import mideaCell from '@/midea-component/cell.vue'
 import mideaSwitch2 from '@/midea-component/switch2.vue'
 import nativeService from '@/common/services/nativeService'
 const modal = weex.requireModule('modal');
 
 export default {
-    components: { mideaItem, mideaCell, mideaSwitch2 },
+    components: { mideaItem, mideaCell, mideaSwitch2, mideaOperationModal },
     mixins: [base],
     data() {
         return {

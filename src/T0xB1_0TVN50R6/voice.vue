@@ -39,8 +39,8 @@
 <script>
     import mideaHeader from '@/midea-component/header.vue'
     import mideaCell from '@/midea-component/item.vue';
-    import mideaSwitch2 from '@/component/sf/custom/switch.vue'
-    import sfState from "@/component/sf/custom/state.vue"
+    import mideaSwitch2 from '@/midea-component/sf/custom/switch.vue'
+    import sfState from "@/midea-component/sf/custom/state.vue"
 
     import nativeService from "../common/services/nativeService";
     import commonMixin from  "@/common/util/mixins/common"

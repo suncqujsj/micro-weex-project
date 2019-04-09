@@ -9,7 +9,7 @@
 <script>
 
     import nativeService from '@/common/services/nativeService';
-    import timePicker from '@/component/sf/custom/timePicker.vue'
+    import timePicker from '@/midea-component/sf/custom/timePicker.vue'
 
     export default {
         data(){

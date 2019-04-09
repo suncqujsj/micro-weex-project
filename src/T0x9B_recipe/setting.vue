@@ -13,7 +13,7 @@
 
 <script>
 
-    import mideaCell from '@/component/cell.vue'
+    import mideaCell from '@/midea-component/cell.vue'
     import MideaHeader from '@/midea-component/header.vue'
     import nativeService from '@/common/services/nativeService'
     export default {

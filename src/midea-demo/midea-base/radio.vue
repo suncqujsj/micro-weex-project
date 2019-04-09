@@ -21,7 +21,7 @@
 <script>  
 import base from '../base'
 
-import mideaRadioList from '@/component/radioList.vue'
+import mideaRadioList from '@/midea-component/radioList.vue'
 import nativeService from '@/common/services/nativeService'
 const modal = weex.requireModule('modal');
 

@@ -3,16 +3,18 @@
 </style>
 
 <template>
-    <more-page :list="list"></more-page>
+    <more-page :list="list" :constant="constant"></more-page>
 </template>
 
 <script>
     import morePage from "@/common/pages/more.vue";
     import list from "./config/more.js";
+    import constant from "./config/constant.js";
 
     export default {
         data(){
             return {
+                constant,
                 list
             }
         },

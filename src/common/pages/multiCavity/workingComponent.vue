@@ -108,8 +108,8 @@
 
 <script>
     
-    import headerTab from '@/component/sf/custom/headerTab.vue'
-    import mHeader from '@/component/sf/custom/header.vue'
+    import headerTab from '@/midea-component/sf/custom/headerTab.vue'
+    import mHeader from '@/midea-component/sf/custom/header.vue'
     import commonMixin from  "@/common/util/mixins/common"
     export default {
         mixins: [commonMixin],

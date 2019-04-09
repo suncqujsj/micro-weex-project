@@ -37,7 +37,7 @@ import nativeService from '../../common/services/nativeService';
 import bindingx from 'weex-bindingx';
 import mideaHeader from '@/midea-component/header.vue'
 import mideaFlowTab from '@/midea-component/mFlowTab.vue'
-import mideaCell from '@/component/cell.vue'
+import mideaCell from '@/midea-component/cell.vue'
 import mideaSwitch2 from '@/midea-component/switch2.vue'
 
 

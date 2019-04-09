@@ -92,8 +92,6 @@ module.exports = {
             { key: 7, value: "T0xB1_0TVN50R6",desc: "E厨R6大烤箱" },
             { key: 8, value: "T0xB1_0D50S3AT",desc: "双腔体" },
             { key: 9, value: "T0xB1_0ET470QL",desc: "G55辅助蒸汽" },
-            { key: 10, value: "T0xE1_000000H3",desc: "T0xE1_000000H3" },
-            { key: 11, value: "T0xE1_000000H5",desc: "T0xE1_000000H5" },
             { key: 12, value: "T0xB0_0M3L20A8",desc: "年轻套系20L微波炉" },
             { key: 13, value: "T0xB0_0X5L23A8",desc: "G100一体机" },
             { key: 14, value: "T0xB2",desc: "蒸汽炉" },

@@ -380,7 +380,7 @@ let workingModalMixin  = {
             if(cmdObj.workingState.value === 3){
                 this.timeShow = true;
                 this.hasSetting = true;
-                this.btnText = "暂停";
+                this.btnText = this.getLanguage("pause");
                 this.btnSrc = "img/footer/icon_pause@2x.png";
                 this.hasStopOrContinueBtn = true;
                 if(cmdObj.light.value){
@@ -570,7 +570,7 @@ let workingModalMixin  = {
                         allSeconds = this.getAllSeconds(cmdObj)-1;
                     }
                     this.workSpecialStatusText = allSeconds;
-                    this.tag_next = '秒';
+                    this.tag_next = this.getLanguage('second');
                 }            
             }
         },

@@ -39,7 +39,7 @@ let modes = [
                     range:[30,90,1],
                 },
                 probe,//支持肉类探针
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                settingHide:false, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             },
             {
@@ -70,7 +70,7 @@ let modes = [
                     range:[30,90,1],
                 },
                 probe,//支持肉类探针
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                settingHide:false, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             },
             {
@@ -101,7 +101,7 @@ let modes = [
                     range:[30,90,1],
                 },
                 probe,//支持肉类探针
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                settingHide:false, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             },
             {
@@ -132,7 +132,7 @@ let modes = [
                     range:[30,90,1],
                 },
                 probe,//支持肉类探针
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                settingHide:false, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             }
         ]

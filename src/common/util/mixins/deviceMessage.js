@@ -222,10 +222,10 @@ const deviceMessageMixin = {
         startOrPause(){
             var self = this;
             var record = 3;
-            if(this.btnText == "暂停"){
+            if(this.btnText == this.getLanguage("pause")){
                 record = 6;
             }
-             if(this.btnText == "继续" || this.btnText == "开始"){
+             if(this.btnText == this.getLanguage("resume") || this.btnText == this.getLanguage("start")){
                 record = 3;
             }
             var deviceCmd = cmdFun.cmdStartOrPause(record,this.device);

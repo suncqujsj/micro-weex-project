@@ -480,12 +480,12 @@ let workingModalMixin  = {
             if(cmdObj.workingState.value != 4 && cmdObj.displaySign.preheat == 1){
                 this.timeShow = false;
                 this.hasHour = false;
-                this.workSpecialStatusText =  this.getLanguages(['preheating', 'ing']);
+                this.workSpecialStatusText =  this.getLanguages(['preheating']);
                 let mode_text = cmdObj.mode.text;
                 if(cmdObj.mode.value == 0x4B){ //如果是快速预热，文案就变为快速
                     mode_text = "快速";
                 }
-                this.cmdObj.mode.text = mode_text + this.getLanguages(['preheat', 'to']);
+                this.cmdObj.mode.text = mode_text+" " + this.getLanguages(['preheat', 'to']);
                 this.tag_next = '';
                 this.statusTag = '';
                 this.hasSetting = true;

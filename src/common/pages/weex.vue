@@ -7,7 +7,7 @@
             <midea-header bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png" :title="constant.device.page_title" titleText="white" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2Native" >
                 <div slot="customerContent" class="header-top-wrapper">
                     <div class="header-top-inner-wrapper">
-                        <div class="header-right-image-wrapper" @click="onCloudMenuIconClicked">
+                        <div v-if="iconVisibility('hideCloudRecipe', 'standby')" class="header-right-image-wrapper" @click="onCloudMenuIconClicked">
                             <image class="header-right-image" :src="'img/header/public_ic_cloud_recipe@3x.png'"></image>
                         </div>
                         <div v-if="childLockVisibility('standby')" class="header-right-image-wrapper" @click="childLock(true)">

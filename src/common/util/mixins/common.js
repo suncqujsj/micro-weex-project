@@ -244,7 +244,15 @@ let commonMixin = {
             this.state  = {
                 display: false,
             };
-        }
+        },
+
+        /**
+         * 导航栏显示判断
+         * 举例子 key:hideCloudRecipe, state:standby/working
+         */
+        iconVisibility(key, state){
+            return !this.constant.device[key] || !this.constant.device[key][state]
+        },
     }
 };
 

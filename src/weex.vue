@@ -73,7 +73,7 @@ module.exports = {
         moduleList: [
             { key: -6, value: "T0xB0_02TESTB0", desc: "嵌入式微波炉" },
             { key: -5, value: "T0xB1_04TESTB1", desc: "嵌入式大烤箱" },
-            { key: -5, value: "T0xB4_03TESTB4", desc: "小烤箱7" },
+            { key: -5, value: "T0xB4_03TESTB4", desc: "小烤箱" },
             { key: -4, value: "T0xB0_01TESTB0", desc: "白色微波炉" },
             { key: -3, value: "T0xB0_0EM34A2E", desc: "V项目" },
             { key: -2, value: "T0xB4_08T7428E", desc: "美的Fun烤箱II代， T7-428E" },

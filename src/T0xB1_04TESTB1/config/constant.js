@@ -8,10 +8,11 @@
 module.exports = {
     device: {
         type: 0xB1,
-        page_title: "嵌入式大烤箱",
-        sales_model: "嵌入式大烤箱",
+        page_title: "Built-in Oven",
+        sales_model: "Built-in Oven",
         widget_name: 'MSO_T0xB1',
         widget_version: '5.0.0',
+        lang: 'en',
         extra1: {
             sn8: '04TESTB1'
         },

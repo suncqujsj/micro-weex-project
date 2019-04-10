@@ -18,6 +18,10 @@ module.exports = {
         hideChildLock:{
             standby: true,
             working:true
+        },
+        hideCloudRecipe:{
+            standby:true,
+            working:true
         }
     }
 };

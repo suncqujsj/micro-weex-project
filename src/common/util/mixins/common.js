@@ -152,6 +152,10 @@ let commonMixin = {
 
             // nativeService.alert(data);
             // return;
+
+            /**
+             * 以下是原埋点数据 20190410
+             * */
             let param = {
                 operation: 'burialPoint',
                 actionType: 'plugin',
@@ -162,6 +166,20 @@ let commonMixin = {
                 extra1: { //浏览页面，如不需设备信息，可不传该字段 ‘key’:’value’,
                      }
             };
+
+            // let param = {
+            //     operation: 'burialPoint',
+            //     widget_name: 'MSO_BX_SN8', // constant
+            //     widget_version: '1.0.0', // constant
+            //     actionType: 'common',
+            //     subAction: '', // required
+            //     prev_page_name:'mideaHomePage',
+            //     pageName: 'standbyPage',
+            //     action_result:null,
+            //     load_duration:null,
+            //     extra1: { //浏览页面，如不需设备信息，可不传该字段 ‘key’:’value’,
+            //     }
+            // };
 
             param = objectAssign(param, data);
 
@@ -174,6 +192,12 @@ let commonMixin = {
                 // nativeService.alert('upload error');
             });
         },
+
+        /**
+         * 获取组件名称
+         * 格式：MSO_BX_SN8
+         */
+        getWidgetName(){},
 
         /**
          * 初始化deviceId
@@ -220,7 +244,15 @@ let commonMixin = {
             this.state  = {
                 display: false,
             };
-        }
+        },
+
+        /**
+         * 导航栏显示判断
+         * 举例子 key:hideCloudRecipe, state:standby/working
+         */
+        iconVisibility(key, state){
+            return !this.constant.device[key] || !this.constant.device[key][state]
+        },
     }
 };
 

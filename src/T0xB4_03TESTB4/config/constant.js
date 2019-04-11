@@ -5,9 +5,9 @@
 
 module.exports = {
     device: {
-        page_title: "Toast Oven",
+        page_title: "Table Top Oven",
         type: 0xB4,
-        sales_model: "Toast Oven",
+        sales_model: "Table Top Oven",
         lang: 'en',
         widget_name: 'MSO_T0xB4',  // 埋点的时候，只保留 B0，B1，B2
         widget_version: '5.0.0',

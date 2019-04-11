@@ -90,7 +90,6 @@ let modes = [
             {
                 'icon': modeIcons[2].dir,
                 'text': "All&Hot Wind",
-                'ellipsisText': 'All&Hot Wind',
                 'mode': 0x52,
                 time:{
                     set: true,
@@ -165,8 +164,8 @@ let modes = [
         iconButtons: [
             {
                 'icon': modeIcons[9].dir,
-                'text': "Top&Infrared&HotWind",
-                'ellipsisText': 'Top&Infrared&H..',
+                'text': "Top&Infrared&Wind",
+                'ellipsisText': 'Top&Infrared&W..',
                 'mode': 0x51,
                 time:{
                     set: true,

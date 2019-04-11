@@ -16,7 +16,11 @@ module.exports = {
         extra1: {
             sn8: '04TESTB1'
         },
-        hasLight: true , //是否有炉灯 
-        preheatingCanSetting: true,  //预热中可以设置时间温度等 ，默认不可设置 
+        hasLight: true , //是否有炉灯
+        preheatingCanSetting: true,  //预热中可以设置时间温度等 ，默认不可设置
+        hideCloudRecipe:{
+            standby:true,
+            working:true
+        }
     }
 };

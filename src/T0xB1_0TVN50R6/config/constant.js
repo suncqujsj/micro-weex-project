@@ -16,6 +16,7 @@ module.exports = {
             standby: true,
             working:true
         },
-        preheatingCanSetting: true
+        preheatingCanSetting: true,
+        voiceAuth: true
     }
 };

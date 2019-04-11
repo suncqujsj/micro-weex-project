@@ -89,7 +89,8 @@ let modes = [
             },
             {
                 'icon': modeIcons[2].dir,
-                'text': "All Wind",
+                'text': "All&Hot Wind",
+                'ellipsisText': 'All&Hot Wind',
                 'mode': 0x52,
                 time:{
                     set: true,
@@ -164,7 +165,8 @@ let modes = [
         iconButtons: [
             {
                 'icon': modeIcons[9].dir,
-                'text': "TopInfraredWind",
+                'text': "Top&Infrared&HotWind",
+                'ellipsisText': 'Top&Infrared&H..',
                 'mode': 0x51,
                 time:{
                     set: true,
@@ -193,7 +195,7 @@ let modes = [
             },
             {
                 'icon': `${'img/modes/'}${'up_double_grill@3x'}${'.png'}`,
-                'text': "Top Grill",
+                'text': "Top&Grill",
                 'mode': 0x46,
                 time:{
                     set: true,

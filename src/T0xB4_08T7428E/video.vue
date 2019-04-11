@@ -56,11 +56,11 @@
             };
         },
         mounted(){
-            this.setVideoModeSize();
+            // this.setVideoModeSize();
         },
         created(){
             // this.init();
-            // this.setVideoModeSize();
+            this.setVideoModeSize();
         },
         methods: {
 
@@ -92,7 +92,7 @@
                     context.$refs.ppvideo,
                     param, (result)=>{
                     nativeService.alert('success');
-                        context.start();
+                        // context.start();
                 } ,(result)=>{
                     nativeService.alert(result);
                 })
@@ -109,6 +109,7 @@
                     },
                     () => {
                         nativeService.toast("start 成功");
+                        // context.setVideoModeSize();
                     },
                     () => {
                         nativeService.toast("start failed");

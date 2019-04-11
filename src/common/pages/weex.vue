@@ -361,7 +361,7 @@
             let self = this;
             let {constant,tabs} = this;
 
-            constant.device.voiceAuth && this.initVoiceWithParams(true); // sf 判断设备是否显示语音授权提示框
+            // constant.device.voiceAuth && this.initVoiceWithParams(true); // sf 判断设备是否显示语音授权提示框
 
             this.srcollPaddingBottom = '80px';
             if(this.isip9()){

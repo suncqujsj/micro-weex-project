@@ -29,7 +29,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: 0,
+                    default: true,
                     workingPreheatHide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
@@ -59,8 +59,8 @@ let modes = [
                     unit:"℉"
                 },
                 preheat:{
-                    set:false,
-                    default: 0,
+                    set:true,
+                    default: true,
                     workingPreheatHide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
@@ -90,8 +90,8 @@ let modes = [
                     unit:"℉"
                 },
                 preheat:{
-                    set:false,
-                    default: 0,
+                    set:true,
+                    default: true,
                     workingPreheatHide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
@@ -122,7 +122,7 @@ let modes = [
                 },
                 preheat:{
                     set:false,
-                    default: 0,
+                    default: false,
                     workingPreheatHide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },

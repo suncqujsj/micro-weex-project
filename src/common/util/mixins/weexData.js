@@ -587,7 +587,7 @@ let workingModalMixin  = {
                 // return;  //parker: 如果不上报总的设定时间，如果直接return，函数后面的语句都不执行了。
             }
 
-            chartJson.progressCounter = parseInt(progress_step);
+            chartJson.progressCounter = parseInt(progress_step) || 0;
 
             if(cmdObj.probeRealTemperature.value>cmdObj.probeSetttingTemperature.value){
                 cmdObj.probeRealTemperature.value = cmdObj.probeSetttingTemperature.value;

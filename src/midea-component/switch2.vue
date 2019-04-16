@@ -1,8 +1,7 @@
 <template>
     <div class="switch-container" :style="{'width': width+'px', 'height':height+'px'}" @click="onchange" v-on:swipe="onSwipe($event)">
         <div class="switch-bar" :style="{'width': width+'px', 'height':height+'px'}">
-            <div :class="['container', checked?'selected':'unselected']" :style="{'width':(width-4)+'px'}"></div>
-            <!-- <div class="container unselected" :style="{'width':width}"></div> -->
+            <div :class="['container', isChecked?'selected':'unselected']" :style="{'width':(width-4)+'px'}"></div>
             <image ref="switchBar" class="switch-icon" :src="icon" resize='contain' :style="{'width':height+'px','height':height+'px', 'left':width-height+2+'px'}"></image>
         </div>
     </div>
@@ -13,10 +12,6 @@ const animation = weex.requireModule('animation')
 const modal = weex.requireModule('modal')
 export default {
     props: {
-        value: {
-            type: Number,
-            default: -1
-        },
         // 是否选中
         iconOn: {
             type: String,
@@ -42,35 +37,45 @@ export default {
     },
     computed: {
         icon() {
-            return this.checked ? this.iconOn : this.iconOff;
+            return this.isChecked ? this.iconOn : this.iconOff;
         }
     },
     data() {
         return {
+            isChecked: false
         }
     },
     watch: {
         checked(value) {
+            this.isChecked = this.checked
             this.updateIcon()
         }
     },
     methods: {
-        onSwipe(event) {
-            if (this.checked && event.direction == 'left') {
+        switchValue(value) {
+            if (value != undefined) {
+                this.isChecked = value
+                this.updateIcon()
+            } else {
                 this.onchange()
-            } else if (!this.checked && event.direction == 'right') {
+            }
+        },
+        onSwipe(event) {
+            if (this.isChecked && event.direction == 'left') {
+                this.onchange()
+            } else if (!this.isChecked && event.direction == 'right') {
                 this.onchange()
             }
         },
         onchange(event) {
-            this.checked = !this.checked
+            this.isChecked = !this.isChecked
             this.updateIcon()
 
-            this.$emit('change', { value: this.checked })
+            this.$emit('change', { value: this.isChecked })
         },
         updateIcon(durationTime = 100) {
             var switchBar = this.$refs.switchBar;
-            if (this.checked) {
+            if (this.isChecked) {
                 animation.transition(switchBar, {
                     styles: {
                         transform: 'translateX(0px)'
@@ -96,34 +101,37 @@ export default {
     },
     mounted() {
         this.updateIcon(0)
+    },
+    created() {
+        this.isChecked = this.checked
     }
 }
 </script>
 
 <style scoped>
 .switch-container {
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 .switch-bar {
-  position: relative;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+    position: relative;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 .container {
-  border-radius: 20px;
-  height: 10px;
+    border-radius: 20px;
+    height: 10px;
 }
 .selected {
-  background-color: #267aff;
+    background-color: #267aff;
 }
 .unselected {
-  background-color: #e5e5e8;
+    background-color: #e5e5e8;
 }
 .switch-icon {
-  position: absolute;
-  top: 0;
+    position: absolute;
+    top: 0;
 }
 </style>

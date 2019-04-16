@@ -27,33 +27,36 @@
 </template>
 <style scoped>
 .group {
-  flex-direction: row;
-  justify-content: space-around;
-  margin-top: 20px;
-  margin-bottom: 20px;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 .text {
-  font-size: 30px;
+    font-size: 30px;
 }
 .key {
-  width: 180px;
-  text-align: right;
-  color: #00b4ff;
+    width: 180px;
+    text-align: right;
+    color: #00b4ff;
 }
 .type {
-  width: 120px;
-  text-align: center;
-  color: #a0a0a0;
+    width: 120px;
+    text-align: center;
+    color: #a0a0a0;
 }
 .value {
-  width: 420px;
-  color: #525252;
+    width: 420px;
+    color: #525252;
 }
 </style>
 <script>
 import base from '../base'
 import nativeService from '@/common/services/nativeService'
-
+var startTime
+Vue.config.errorHandler = function (...args) {
+    nativeService.alert(args[0])
+}
 
 module.exports = {
     mixins: [base],
@@ -94,16 +97,26 @@ module.exports = {
         }
     },
     beforeCreate() {
+        startTime = new Date()
         console.log('beforeCreate:在初始化内部变量，并且添加了事件功能后被触发')
     },
     created() {
+        nativeService.asdf()
+        nativeService.getItem("consumeTime", (event) => {
+            if (event.data) {
+                let openTime = startTime.getTime() - event.data
+                this.appendLog('打开耗时：' + openTime)
+            }
+        })
         this.appendLog('created:完成数据绑定之后，模板编译之前被触发')
     },
     beforeMount() {
         this.appendLog('beforeMount:模板挂载前触发')
     },
     mounted() {
-        this.appendLog('mounted:模板已经编译并且生成了 Virtual DOM 之后被触发')
+        let comsumeTime = new Date().getTime() - startTime.getTime()
+        let openDesc
+        this.appendLog('mounted:模板已经编译并且生成了 Virtual DOM 之后被触发。\n\r插件初始化耗时(毫秒)：' + comsumeTime)
     },
     beforeUpdate() {
         // 不可用于修改页面，否则死循环

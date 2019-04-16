@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge, chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, viewport-fit=cover">
+    <!--viewport-fit适配iphonex-->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!--删除默认的苹果菜单栏，工具栏，全屏显示-->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!--设置苹果app应用下状态栏颜色-->
+    <meta name="format-detection" content="telephone=no,email=no">
+    <!--格式检测:（数字、邮箱） no不识别为电话号码、邮箱-->
+    <title></title>
+
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+    </script>
+</head>
+
+<body>
+    <div id="content" class="content" contenteditable="true">
+        <img id="test" class="image" src="/i/eg_chinarose.jpg" />
+    </div>
+    <div class="footer">
+        <button onclick="copyText()">Copy Text</button>
+        <input name="file1" type="file" accept="image/*"><input>
+    </div>
+</body>
+<style>
+    body {}
+
+    .content {
+        position: absolute;
+        width: 100%;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        overflow-y: scroll;
+        /* 解决ios滑动不流畅问题 */
+        -webkit-overflow-scrolling: touch;
+        background-color: blanchedalmond;
+    }
+
+    .image {
+        width: 100%;
+        height: 100vw;
+    }
+
+    .footer {
+        position: fixed;
+        left: 0px;
+        bottom: 0px;
+        width: 100%;
+        height: 44px;
+        background-color: azure;
+    }
+</style>
+<script>
+    function copyText() {
+        var data = { "kye": "vlue" };
+        data = JSON.stringify(data);
+        window["__WEEX_WEB_VIEW_BRIDGE"].postMessage(data, "custom");
+        alert(document.getElementById("content").innerHTML)
+    }
+    $(document).ready(function () {
+        $("input[name='file1']").change(function (e) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $("#test").attr("src", reader.result)
+                // console.log(reader.result);  //或者 e.target.result都是一样的，都是base64码
+            }
+            reader.readAsDataURL(this.files[0])
+            //filses就是input[type=file]文件列表，files[0]就是第一个文件，这里就是将选择的第一个图片文件转化为base64的码
+        })
+    });
+</script>
+
+</html>

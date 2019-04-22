@@ -2,7 +2,7 @@
     <div class="wrapper">
         <midea-header title="烤箱实时监控" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
-        <midea-ppvideo-view ref="ppvideo" class="video" :style="{height:videoHeight}" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
+        <midea-ppvideo-view v-if="deviceId && ppvideo_initdata.user" ref="ppvideo" class="video" :style="{height:videoHeight}" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
         <!--<midea-ppvideo-view ref="ppvideo" class="video" :ppvideo_initdata="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>-->
         <scroller class="scroller">
             <midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="开始" @mideaButtonClicked="start"/>
@@ -22,7 +22,6 @@
     }
     .video {
         width: 750px;
-        height: 480;
     }
     .scroller {
         padding-top: 20px;
@@ -36,7 +35,6 @@
     const ppvideoModule = weex.requireModule("ppVideoModule");
     let [width, height] = [640, 360]; //config
 
-    nativeService.alert(width)
     module.exports = {
         components: { mideaButton },
         mixins: [base],
@@ -62,25 +60,25 @@
             }
         },
         mounted(){
+            // this.init();
             this.setVideoModeSize();
         },
         created(){
-            // this.init();
-            // this.setVideoModeSize();
         },
         methods: {
 
             init(){
                 let context = this;
                 nativeService.getUserInfo().then((data)=>{
-                    data.uid && (this.uid = data.mobile);
-                    // nativeService.alert(data);
+                    data.userId && (context.ppvideo_initdata.user = data.mobile);
+                    nativeService.alert(data);
                     return nativeService.getDeviceInfo();
                 }).then((data)=>{
                     if(data.result && data.result.deviceId) {
                         context.deviceId = data.result.deviceSn;
                     }
-                    this.setVideoModeSize();
+                    // nativeService.alert(context.deviceId);
+                    context.setVideoModeSize();
                 });
             },
 

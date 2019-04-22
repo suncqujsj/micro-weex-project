@@ -20,3 +20,8 @@ module.exports = {
         voiceAuth: true
     }
 };
+
+/**
+ * 注意事项
+ * 1.md5 32 美居 5.0.9 => a8fc1874d8704b329bc0c82c5d9a5ae9
+ * */

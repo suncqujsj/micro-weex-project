@@ -2,8 +2,8 @@
     <div class="wrapper">
         <midea-header title="烤箱实时监控" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
-        <!--<midea-ppvideo-view ref="ppvideo" class="video" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>-->
-        <midea-ppvideo-view ref="ppvideo" class="video" :ppvideo_initdata="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
+        <midea-ppvideo-view ref="ppvideo" class="video" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
+        <!--<midea-ppvideo-view ref="ppvideo" class="video" :ppvideo_initdata="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>-->
         <scroller class="scroller">
             <midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="开始" @mideaButtonClicked="start"/>
             <midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="停止" @mideaButtonClicked="stop"/>
@@ -92,9 +92,9 @@
                     context.$refs.ppvideo,
                     param, (result)=>{
                     nativeService.alert('success');
-                        context.start();
+                        // context.start();
                 } ,(result)=>{
-                    nativeService.alert(result);
+                    nativeService.alert('error');
                 })
             },
             start() {
@@ -109,6 +109,7 @@
                     },
                     () => {
                         nativeService.toast("start 成功");
+                        // context.setVideoModeSize();
                     },
                     () => {
                         nativeService.toast("start failed");

@@ -9,7 +9,7 @@ let modes = [
         iconButtons: [
             {
                 'icon': modeIcons[0].dir,
-                'text': "上外+下管",
+                'text': "Conventional",
                 'mode': 0x4C,
                 time:{
                     set: true,
@@ -53,7 +53,7 @@ let modes = [
 
             {
                 'icon': modeIcons[1].dir,
-                'text': "普通热风",
+                'text': "Convection",
                 'mode': 0x41,
                 time:{
                     set: true,
@@ -89,7 +89,8 @@ let modes = [
             },
             {
                 'icon': modeIcons[2].dir,
-                'text': modeIcons[2].cn,
+                'text': "Conventional+Fan",
+                'ellipsisText': 'Conventional+F..',
                 'mode': 0x52,
                 time:{
                     set: true,
@@ -130,7 +131,7 @@ let modes = [
             },
             {
                 'icon': modeIcons[4].dir,
-                'text': modeIcons[4].cn,
+                'text': "Radiant Heat",
                 'mode': 0x47,
                 time:{
                     set: true,
@@ -164,7 +165,7 @@ let modes = [
         iconButtons: [
             {
                 'icon': modeIcons[9].dir,
-                'text': modeIcons[9].cn,
+                'text': "Double Grill+Fan",
                 'mode': 0x51,
                 time:{
                     set: true,
@@ -193,7 +194,7 @@ let modes = [
             },
             {
                 'icon': `${'img/modes/'}${'up_double_grill@3x'}${'.png'}`,
-                'text': "上管+红外",
+                'text': "Double Grill",
                 'mode': 0x46,
                 time:{
                     set: true,
@@ -222,7 +223,7 @@ let modes = [
             },
             {
                 'icon': modeIcons[8].dir,
-                'text': "披萨",
+                'text': "Pizza",
                 'mode': 0x42,
                 time:{
                     set: true,
@@ -262,7 +263,7 @@ let modes = [
             },
             {
                 'icon': modeIcons[3].dir,
-                'text': "下管",
+                'text': "Bottom Heat",
                 'mode': 0x49,
                 time:{
                     set: true,
@@ -299,7 +300,7 @@ let modes = [
         iconButtons: [
             {
                 'icon': modeIcons[24].dir,
-                'text': "解冻",
+                'text': "Defrost",
                 'mode': 0xa1,
                 time:{
                     set: true,
@@ -327,7 +328,7 @@ let modes = [
             },
             {
                 'icon': modeIcons[7].dir,
-                'text': "发酵",
+                'text': "Dough Proving",
                 'mode': 0xB0,
                 time:{
                     set: true,

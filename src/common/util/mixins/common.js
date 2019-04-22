@@ -152,6 +152,10 @@ let commonMixin = {
 
             // nativeService.alert(data);
             // return;
+
+            /**
+             * 以下是原埋点数据 20190410
+             * */
             let param = {
                 operation: 'burialPoint',
                 actionType: 'plugin',
@@ -163,6 +167,21 @@ let commonMixin = {
                      }
             };
 
+            // let param = {
+            //     operation: 'burialPoint',
+            //     widget_name: this.getWidgetName(), // constant
+            //     widget_version: this.getWidgetVersion(), // constant
+            //     actionType: 'common',
+            //     subAction: '', // required
+            //     prev_page_name:'mideaHomePage',
+            //     pageName: 'standbyPage',
+            //     action_result:null,
+            //     load_duration:null,
+            //     extra1: { //浏览页面，如不需设备信息，可不传该字段 ‘key’:’value’,
+            //     }
+            // };
+            // nativeService.alert(123);
+
             param = objectAssign(param, data);
 
             bridgeModule.commandInterface(JSON.stringify(param), function
@@ -173,6 +192,27 @@ let commonMixin = {
                 //失败的回调
                 // nativeService.alert('upload error');
             });
+        },
+
+        /**
+         * sf
+         * 返回 组件名称
+         * 格式：MSO_BX_SN8
+         */
+        getWidgetName(){
+            let prefix = 'MSO';
+            let {constant} = this;
+            let type = constant.device.type.toString(16).toUpperCase();
+            return `${prefix}_${type}_${constant.device.extra1.sn8}`;
+        },
+
+        /**
+         * sf
+         * 返回 组件版本
+         */
+         getWidgetVersion(){
+            let {constant} = this;
+            return constant.device.widget_version;
         },
 
         /**
@@ -220,7 +260,15 @@ let commonMixin = {
             this.state  = {
                 display: false,
             };
-        }
+        },
+
+        /**
+         * 导航栏显示判断
+         * 举例子 key:hideCloudRecipe, state:standby/working
+         */
+        iconVisibility(key, state){
+            return !this.constant.device[key] || !this.constant.device[key][state]
+        },
     }
 };
 

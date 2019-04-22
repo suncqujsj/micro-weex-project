@@ -8,14 +8,19 @@
 module.exports = {
     device: {
         type: 0xB1,
-        page_title: "嵌入式大烤箱",
-        sales_model: "嵌入式大烤箱",
+        page_title: "Built-in Oven",
+        sales_model: "Built-in Oven",
         widget_name: 'MSO_T0xB1',
-        widget_version: '5.0.0',
+        widget_version: '5.0.1',
+        lang: 'en',
         extra1: {
             sn8: '04TESTB1'
         },
-        hasLight: true , //是否有炉灯 
-        preheatingCanSetting: true,  //预热中可以设置时间温度等 ，默认不可设置 
+        hasLight: true , //是否有炉灯
+        preheatingCanSetting: true,  //预热中可以设置时间温度等 ，默认不可设置
+        hideCloudRecipe:{
+            standby:true,
+            working:true
+        }
     }
 };

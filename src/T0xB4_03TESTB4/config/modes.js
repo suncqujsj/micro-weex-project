@@ -29,7 +29,7 @@ let modes = [
                 },
                 preheat:{
                     set:true,
-                    default: 0,
+                    default: true,
                     workingPreheatHide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
@@ -39,7 +39,7 @@ let modes = [
                     range:[30,90,1],
                 },
                 probe,//支持肉类探针
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                settingHide:false, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             },
             {
@@ -59,8 +59,8 @@ let modes = [
                     unit:"℉"
                 },
                 preheat:{
-                    set:false,
-                    default: 0,
+                    set:true,
+                    default: true,
                     workingPreheatHide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
@@ -70,7 +70,7 @@ let modes = [
                     range:[30,90,1],
                 },
                 probe,//支持肉类探针
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                settingHide:false, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             },
             {
@@ -90,8 +90,8 @@ let modes = [
                     unit:"℉"
                 },
                 preheat:{
-                    set:false,
-                    default: 0,
+                    set:true,
+                    default: true,
                     workingPreheatHide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
@@ -101,7 +101,7 @@ let modes = [
                     range:[30,90,1],
                 },
                 probe,//支持肉类探针
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                settingHide:false, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             },
             {
@@ -122,7 +122,7 @@ let modes = [
                 },
                 preheat:{
                     set:false,
-                    default: 0,
+                    default: false,
                     workingPreheatHide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
@@ -132,7 +132,7 @@ let modes = [
                     range:[30,90,1],
                 },
                 probe,//支持肉类探针
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                settingHide:false, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             }
         ]

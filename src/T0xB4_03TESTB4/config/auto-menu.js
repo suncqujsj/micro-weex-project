@@ -33,8 +33,8 @@ let data = [
                         range:null
                     },
                     fireAmount:{
-                        set:true,
-                        default:4,
+                        set:false,
+                        default:10,
                         range:[1,6,1]
                     },
                     weight:{
@@ -43,7 +43,8 @@ let data = [
                         range:[1,6,1],
                         ratio:1,
                         index:0,
-                        unit:"Slice"
+                        unit:"Slice",
+                        text:"Piece"
                     },
                     recipeId:{
                         set:false,
@@ -79,8 +80,8 @@ let data = [
                         range:null
                     },
                     fireAmount:{
-                        set:true,
-                        default:4,
+                        set:false,
+                        default:10,
                         range:[1,6,1]
                     },
                     weight:{
@@ -89,7 +90,8 @@ let data = [
                         range:[2,6,2],
                         ratio:2,
                         index:0,
-                        unit:"Slice"
+                        unit:"Slice",
+                        text:"Piece"
                     },
                     recipeId:{
                         set:false,
@@ -126,7 +128,7 @@ let data = [
                     },
                     fireAmount:{
                         set:false,
-                        default:4,
+                        default:0,
                         range:[1,6,1]
                     },
                     weight:{

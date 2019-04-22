@@ -1,37 +1,24 @@
 <template>
     <div>
         <midea-header title="bindingx" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
-        <div class="scroller" @touchstart="canvasTouchstart" @touchmove="canvasTouchmove" @touchend="canvasTouchend">
-            <gcanvas ref="gcanvess" @touchstart="ontouchstartCanvas" style="width: 750;height: 600px;background-color: yellow;">
-            </gcanvas>
-            <div :ref="'box'" class="box" @touchstart="ontouchstart" @appear="onappear"></div>
+        <div class="scroller">
+            <div :ref="'box'" class="box" @touchstart="ontouchstart" @touchmove="ontouchmove" @touchend="ontouchend"></div>
         </div>
-        <text>{{zoom}}</text>
-        <text>{{x}}</text>
-        <text>{{y}}</text>
-        <text>{{x1}}</text>
-        <text>{{y1}}</text>
-        <text>{{dragObject}}</text>
     </div>
 </template>
 
 <style scoped>
 .scroller {
+    flex: 1;
     overflow: hidden;
-    height: 600px;
-    border-width: 2px;
-    border-style: solid;
-    border-color: #bbbbbb;
+    background-color: yellow;
 }
 .box {
-    position: absolute;
-    top: 0px;
-    left: 0px;
     border-width: 2px;
     border-style: solid;
     border-color: #bbbbbb;
-    width: 250px;
-    height: 250px;
+    width: 450px;
+    height: 450px;
     margin-top: 250px;
     margin-left: 250px;
     background-color: #eeeeee;
@@ -43,9 +30,8 @@
 import base from '../base'
 import mideaHeader from '@/midea-component/header.vue'
 import bindingx from 'weex-bindingx';
+const animation = weex.requireModule('animation')
 
-var GCanvas = require('weex-gcanvas')
-var Image = require('weex-gcanvas/gcanvasimage');
 
 function getEl(el) {
     if (typeof el === 'string' || typeof el === 'number') return el;
@@ -60,6 +46,7 @@ export default {
             x: 0,
             y: 0,
             flag: 0,
+            dragToken: null,
             x1: 0,
             y1: 0,
             dragObject: {},
@@ -68,12 +55,9 @@ export default {
         }
     },
     methods: {
-        onappear() {
-            this.bind();
-        },
-        bind() {
+        bindDrag() {
             var box = getEl(this.$refs.box);
-            bindingx.bind({
+            this.dragToken = bindingx.bind({
                 anchor: box,
                 eventType: 'pan',
                 props: [
@@ -101,127 +85,62 @@ export default {
                 }
             });
         },
-        ontouchstart(event) {
-            this.bind();
-        },
-
-        bindCanvas() {
-            var box = getEl(this.$refs.gcanvess);
-            bindingx.bind({
-                anchor: box,
-                eventType: 'pan',
-                props: [
-                    {
-                        element: box,
-                        property: 'transform.translateX',
-                        expression: {
-                            origin: `x+${this.x1}`,
-                            transformed: `{\"type\":\"+\",\"children\":[{\"type\":\"Identifier\",\"value\":\"x\"},{\"type\":\"NumericLiteral\",\"value\":\"${this.x1}\"}]}`
-                        }
-                    },
-                    {
-                        element: box,
-                        property: 'transform.translateY',
-                        expression: {
-                            origin: `y+${this.y1}`,
-                            transformed: `{\"type\":\"+\",\"children\":[{\"type\":\"Identifier\",\"value\":\"y\"},{\"type\":\"NumericLiteral\",\"value\":\"${this.y1}\"}]}`
-                        }
-                    }
-                ]
-            }, (e) => {
-                if (e.state === 'end') {
-                    this.x1 += e.deltaX;
-                    this.y1 += e.deltaY;
-                }
-            });
-        },
-        ontouchstartCanvas(event) {
-            this.bindCanvas();
-        },
-        canvasDraw() {
-            // 第二部分canvas
-            /*获取元素引用*/
-            var ref = this.$refs.gcanvess
-            /*通过元素引用获取canvas对象*/
-            this.canvasObj = GCanvas.start(ref)
-            /*获取绘图所需的上下文，目前不支持3d*/
-            this.context = this.canvasObj.getContext('2d')
-            /*设置字体大小*/
-            this.context.font = '34px'
-            /*在指定位置绘制文字*/
-            this.context.fillText('Hello Word', 200, 100)
-            /*指定绘制图形的线的宽度*/
-            this.context.lineWidth = 10
-            /*在指定位置绘制矩形*/
-            this.context.strokeRect(200, 200, 200, 90)
-            /*绘制三角形*/
-            this.context.beginPath()
-            this.context.moveTo(20, 20)
-            this.context.lineTo(20, 100)
-            this.context.lineTo(0, 100)
-            this.context.closePath()
-            this.context.stroke()
-        },
-        canvasTouchstart(e) {
-            this.starLine = 0
-            this.dragObject.zoom = this.zoom
-        },
-        canvasTouchmove(e) {
-            if (e.changedTouches.length === 2) {
-                // this.scrolling = true
-                const gcanvessEl = this.$refs.gcanvess;
-                const boxEl = this.$refs.box;
-                const dragObject = this.dragObject
-                const touch = e.changedTouches[0]
-                const touch2 = e.changedTouches[1]
-                const diffX = touch.pageX - touch2.pageX
-                const diffY = touch.pageY - touch2.pageY
-                const line = Math.pow((diffX * diffX + diffY * diffY), 0.5) - this.starLine
-                let zoom = Number(dragObject.zoom + (line / 2 / 300))
-                if (this.starLine == 0) {
-                    this.starLine = line
-                } else {
-                    var box = gcanvessEl.ref;
-                    if (zoom>=0 && zoom<=1){
-                        this.zoom = zoom
-                        bindingx.bind({
-                            anchor: box,
-                            eventType: 'timing',
-                            exitExpression: {
-                                origin: `t>0`
-                            },
-                            props: [
-                                {
-                                    element: gcanvessEl.ref,
-                                    property: 'transform.scale',
-                                    expression: {
-                                    origin: `linear(t,${1},${1 + zoom},100)`
-                                    }
-                                },
-                                {
-                                    element: boxEl.ref,
-                                    property: 'transform.scale',
-                                    expression: {
-                                    origin: `linear(t,${1},${1 + zoom},0)`
-                                    }
-                                }
-                            ]
-                        }, (e) => {
-                            if (e.state === 'end') {
-                                
-                            }
-                        });
-                    }
+        bindZoom(e) {
+            // this.scrolling = true
+            var box = getEl(this.$refs.box);
+            const dragObject = this.dragObject
+            const touch = e.changedTouches[0]
+            const touch2 = e.changedTouches[1]
+            const diffX = touch.pageX - touch2.pageX
+            const diffY = touch.pageY - touch2.pageY
+            const line = Math.pow((diffX * diffX + diffY * diffY), 0.5) - this.starLine
+            let zoom = Number(dragObject.zoom + (line / 2 / 300))
+            console.log("zoom" + zoom)
+            if (this.starLine == 0) {
+                this.starLine = line
+            } else {
+                if (zoom >= 0 && zoom <= 1) {
+                    let self = this
+                    self.zoom = zoom
+                    animation.transition(this.$refs.box, {
+                        styles: {
+                            transform: 'scale(' + 1 + self.zoom + ')',
+                            transformOrigin: 'center center'
+                        },
+                        duration: 0, //ms
+                        timingFunction: 'linear',
+                        delay: 0 //ms
+                    }, function () {
+                    })
                 }
             }
         },
-        canvasTouchend(e) {
+        ontouchstart(event) {
+            console.log("ontouchstart")
+            this.starLine = 0
+            this.dragObject.zoom = this.zoom
+            bindingx.unbindAll()
+            this.bindDrag();
+        },
+        ontouchmove(e) {
+            console.log("" + e.changedTouches.length)
+            if (e.changedTouches.length === 2) {
+                if (this.dragToken) {
+                    bindingx.unbind({
+                        eventType: 'pan',
+                        token: this.dragToken
+                    });
+                    this.dragToken = undefined;
+                }
+                this.bindZoom(e)
+            }
+        },
+        ontouchend(e) {
             this.starLine = 0
             this.dragObject.zoom = this.zoom
         }
     },
     mounted() {
-        this.canvasDraw()
     }
 }
 </script>

@@ -18,7 +18,7 @@ let list = [
     },
     {
         title: '烤箱实时监控',
-        link:'video1.js'
+        link:'video.js'
     }
 ];
 

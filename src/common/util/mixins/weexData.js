@@ -380,7 +380,7 @@ let workingModalMixin  = {
             if(cmdObj.workingState.value === 3){
                 this.timeShow = true;
                 this.hasSetting = true;
-                this.btnText = "暂停";
+                this.btnText = this.getLanguage("pause");
                 this.btnSrc = "img/footer/icon_pause@2x.png";
                 this.hasStopOrContinueBtn = true;
                 if(cmdObj.light.value){
@@ -450,7 +450,7 @@ let workingModalMixin  = {
             if(cmdObj.workingState.value === 4){
                 this.timeShow = false;
                 this.hasHour = false;
-                this.workSpecialStatusText = this.getLanguages(['cooking', 'finish']);
+                this.workSpecialStatusText = this.getLanguages(['cookFinished']);
                 this.isTimerStop = true;
                 this.tag_next = '';
                 this.statusTag = this.getLanguage('hotCaution');
@@ -480,12 +480,12 @@ let workingModalMixin  = {
             if(cmdObj.workingState.value != 4 && cmdObj.displaySign.preheat == 1){
                 this.timeShow = false;
                 this.hasHour = false;
-                this.workSpecialStatusText =  this.getLanguages(['preheating', 'ing']);
+                this.workSpecialStatusText =  this.getLanguages(['preheating']);
                 let mode_text = cmdObj.mode.text;
                 if(cmdObj.mode.value == 0x4B){ //如果是快速预热，文案就变为快速
                     mode_text = "快速";
                 }
-                this.cmdObj.mode.text = mode_text + this.getLanguages(['preheat', 'to']);
+                this.cmdObj.mode.text = mode_text+" " + this.getLanguages(['preheat', 'to']);
                 this.tag_next = '';
                 this.statusTag = '';
                 this.hasSetting = true;
@@ -570,7 +570,7 @@ let workingModalMixin  = {
                         allSeconds = this.getAllSeconds(cmdObj)-1;
                     }
                     this.workSpecialStatusText = allSeconds;
-                    this.tag_next = '秒';
+                    this.tag_next = this.getLanguage('second');
                 }            
             }
         },
@@ -587,7 +587,7 @@ let workingModalMixin  = {
                 // return;  //parker: 如果不上报总的设定时间，如果直接return，函数后面的语句都不执行了。
             }
 
-            chartJson.progressCounter = parseInt(progress_step);
+            chartJson.progressCounter = parseInt(progress_step) || 0;
 
             if(cmdObj.probeRealTemperature.value>cmdObj.probeSetttingTemperature.value){
                 cmdObj.probeRealTemperature.value = cmdObj.probeSetttingTemperature.value;

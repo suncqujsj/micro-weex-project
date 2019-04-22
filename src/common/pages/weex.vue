@@ -7,7 +7,7 @@
             <midea-header bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png" :title="constant.device.page_title" titleText="white" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2Native" >
                 <div slot="customerContent" class="header-top-wrapper">
                     <div class="header-top-inner-wrapper">
-                        <div class="header-right-image-wrapper" @click="onCloudMenuIconClicked">
+                        <div v-if="iconVisibility('hideCloudRecipe', 'standby')" class="header-right-image-wrapper" @click="onCloudMenuIconClicked">
                             <image class="header-right-image" :src="'img/header/public_ic_cloud_recipe@3x.png'"></image>
                         </div>
                         <div v-if="childLockVisibility('standby')" class="header-right-image-wrapper" @click="childLock(true)">
@@ -357,12 +357,12 @@
         components: {MideaHeader,sfDialog,mideaActionsheet,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modal,modalHeader,rowWrapItems,light,timePicker},
         created(){
 
-
-            this.initVoiceWithParams(true); // sf 判断设备是否显示语音授权提示框
-
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             let self = this;
             let {constant,tabs} = this;
+
+            // constant.device.voiceAuth && this.initVoiceWithParams(true); // sf 判断设备是否显示语音授权提示框
+
             this.srcollPaddingBottom = '80px';
             if(this.isip9()){
                 this.srcollPaddingBottom = '50px';

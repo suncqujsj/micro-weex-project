@@ -9,7 +9,7 @@
 <script>
     import morePage from "@/common/pages/more.vue";
     import list from "./config/more.js";
-    import constant from "./config/constant.js";
+    import constant from "./config/constant";
 
     export default {
         data(){

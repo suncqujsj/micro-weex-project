@@ -2,7 +2,7 @@
     <div class="wrapper">
         <midea-header title="烤箱实时监控" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
-        <midea-ppvideo-view v-if="deviceId && ppvideo_initdata.user" ref="ppvideo" class="video" :style="{height:videoHeight}" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
+        <midea-ppvideo-view v-if="sn32 && ppvideo_initdata.user" ref="ppvideo" class="video" :style="{height:videoHeight}" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
         <!--<midea-ppvideo-view ref="ppvideo" class="video" :ppvideo_initdata="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>-->
         <scroller class="scroller">
             <midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="开始" @mideaButtonClicked="start"/>
@@ -40,8 +40,27 @@
         mixins: [base],
         data() {
             return {
-                ppvideo_initdata: {
-                    user: 13631449763, // userId auth，必填3项字段之一
+                // ppvideo_initdata: {
+                //     user: 13631449763, // userId auth，必填3项字段之一
+                //     password: "",
+                //     serverAdd: "120.55.73.80:7781", // userId auth，必填3项字段之一
+                //     relayAddr: "",
+                //     iP2PTryTime: 1,
+                //     sInitParam: "(Debug){1}",
+                //     sVideoParam: "(MaxStream){0}",
+                //     sAudioParam: ""
+                // },
+                sn32: null,
+                user: null
+            };
+        },
+        computed:{
+            videoHeight(){
+                return 750*height/640 +'px' ;
+            },
+            ppvideo_initdata(){
+                return {
+                    user: this.user, // userId auth，必填3项字段之一
                     password: "",
                     serverAdd: "120.55.73.80:7781", // userId auth，必填3项字段之一
                     relayAddr: "",
@@ -49,19 +68,12 @@
                     sInitParam: "(Debug){1}",
                     sVideoParam: "(MaxStream){0}",
                     sAudioParam: ""
-                },
-                deviceId: '0000B411108T7428E18A150000680000',
-                uid: null
-            };
-        },
-        computed:{
-            videoHeight(){
-                return 750*height/640 +'px' ;
+                };
             }
         },
         mounted(){
-            // this.init();
-            this.setVideoModeSize();
+            this.init();
+            // this.setVideoModeSize();
         },
         created(){
         },
@@ -70,19 +82,20 @@
             init(){
                 let context = this;
                 nativeService.getUserInfo().then((data)=>{
-                    data.userId && (context.ppvideo_initdata.user = data.mobile);
-                    nativeService.alert(data);
+                    data.mobile && (context.user = data.mobile);
+                    // nativeService.alert(data);
                     return nativeService.getDeviceInfo();
                 }).then((data)=>{
-                    if(data.result && data.result.deviceId) {
-                        context.deviceId = data.result.deviceSn;
+                    if(data.result && data.result.deviceSn) {
+                        context.sn32 = data.result.deviceSn.toString();
                     }
-                    // nativeService.alert(context.deviceId);
+                    // nativeService.alert(context.sn32);
                     context.setVideoModeSize();
                 });
             },
 
             setVideoModeSize(){
+                // nativeService.alert(this.user+':'+this.sn32)
                 let param = {
                     api: "setVideoModeSize",
                     params: {
@@ -96,7 +109,7 @@
                     context.$refs.ppvideo,
                     param, (result)=>{
                         nativeService.alert('success');
-                        // context.start();
+                        context.start();
                     } ,(result)=>{
                         nativeService.alert('error');
                     })
@@ -109,7 +122,7 @@
                     context.$refs.ppvideo,
                     {
                         api: "startLive",
-                        params: { captureId: context.deviceId } // device sn，必填3项字段之一
+                        params: { captureId: context.sn32 } // device sn，必填3项字段之一
                     },
                     () => {
                         nativeService.toast("start 成功");

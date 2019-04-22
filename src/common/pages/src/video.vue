@@ -2,7 +2,7 @@
     <div class="wrapper">
         <midea-header title="烤箱实时监控" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
-        <midea-ppvideo-view v-if="sn32 && ppvideo_initdata.user" ref="ppvideo" class="video" :style="{height:videoHeight}" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
+        <midea-ppvideo-view v-if="ppvideo_initdata.user && sn32" ref="ppvideo" class="video" :style="{height:videoHeight}" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
         <!--<midea-ppvideo-view ref="ppvideo" class="video" :ppvideo_initdata="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>-->
         <scroller class="scroller">
             <midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="开始" @mideaButtonClicked="start"/>
@@ -51,7 +51,8 @@
                 //     sAudioParam: ""
                 // },
                 sn32: null,
-                user: null
+                user: null,
+                ready: false
             };
         },
         computed:{

@@ -9,7 +9,7 @@ let modes = [
         iconButtons: [
             {
                 'icon': modeIcons[0].dir,
-                'text': "Top&Bottom",
+                'text': "Conventional",
                 'mode': 0x4C,
                 time:{
                     set: true,
@@ -53,7 +53,7 @@ let modes = [
 
             {
                 'icon': modeIcons[1].dir,
-                'text': "Hot Wind",
+                'text': "Convection",
                 'mode': 0x41,
                 time:{
                     set: true,
@@ -89,7 +89,8 @@ let modes = [
             },
             {
                 'icon': modeIcons[2].dir,
-                'text': "All&Hot Wind",
+                'text': "Conventional+Fan",
+                'ellipsisText': 'Conventional+F..',
                 'mode': 0x52,
                 time:{
                     set: true,
@@ -130,7 +131,7 @@ let modes = [
             },
             {
                 'icon': modeIcons[4].dir,
-                'text': "Infrared Grill",
+                'text': "Radiant Heat",
                 'mode': 0x47,
                 time:{
                     set: true,
@@ -164,8 +165,7 @@ let modes = [
         iconButtons: [
             {
                 'icon': modeIcons[9].dir,
-                'text': "Top&Infrared&Wind",
-                'ellipsisText': 'Top&Infrared&W..',
+                'text': "Double Grill+Fan",
                 'mode': 0x51,
                 time:{
                     set: true,
@@ -194,7 +194,7 @@ let modes = [
             },
             {
                 'icon': `${'img/modes/'}${'up_double_grill@3x'}${'.png'}`,
-                'text': "Top&Grill",
+                'text': "Double Grill",
                 'mode': 0x46,
                 time:{
                     set: true,
@@ -263,7 +263,7 @@ let modes = [
             },
             {
                 'icon': modeIcons[3].dir,
-                'text': "Bottom",
+                'text': "Bottom Heat",
                 'mode': 0x49,
                 time:{
                     set: true,
@@ -328,7 +328,7 @@ let modes = [
             },
             {
                 'icon': modeIcons[7].dir,
-                'text': "Fermentation",
+                'text': "Dough Proving",
                 'mode': 0xB0,
                 time:{
                     set: true,

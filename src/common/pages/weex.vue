@@ -294,7 +294,10 @@
 
             <!-- 炉灯 -->
             <!--<image :class="['light_icon',cmdObj.light.value && 'light_on']" :src="lightImg"  @click="sendLightCmd(cmdObj.light.value,tabs,constant.device)"></image>-->
-            <light :hasLight="constant.device.hasLight" :lightValue="cmdObj.light.value" :event="sendLightCmd"></light>         
+            <light :hasLight="constant.device.show" :lightValue="cmdObj.light.value" :event="sendLightCmd"></light>
+
+            <!--视频监控入口-->
+            <video-entrance :show="true"></video-entrance>
         </div>
     </div>
 </template>
@@ -316,6 +319,7 @@
     import mideaDialog from '@/midea-component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
     import light from "@/midea-component/sf/common/light.vue";
+    import videoEntrance from "@/midea-component/sf/common/videoEntrance.vue";
 
     // config data
     // import modes from "./config/modes.js";
@@ -339,7 +343,7 @@
         mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin,copyMixin,weexData,modalMixin,voiceMixin],
         data(){
             return {
-               
+
             }
         },
         props: {
@@ -354,7 +358,7 @@
                 default: () => ({})
             },
         },
-        components: {MideaHeader,sfDialog,mideaActionsheet,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modal,modalHeader,rowWrapItems,light,timePicker},
+        components: {MideaHeader,sfDialog,mideaActionsheet,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modal,modalHeader,rowWrapItems,light,timePicker,videoEntrance},
         created(){
 
             this.isIos = weex.config.env.platform == "iOS" ? true : false;

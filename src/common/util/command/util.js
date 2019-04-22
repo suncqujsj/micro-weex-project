@@ -330,7 +330,8 @@ export default {
             message.setByte(messageBody, 13,  this.getHighTemperature(downTemp));
             message.setByte(messageBody, 14,  this.getLowTemperature(downTemp));
             // message.setByte(messageBody, 14, params.temperature);
-            message.setByte(messageBody, 15, params.isFireAmountChange?params.fireAmount/10:0xff);
+            // message.setByte(messageBody, 15, params.isFireAmountChange?params.fireAmount/10:0xff); //parker
+            message.setByte(messageBody, 15, params.isFireAmountChange?params.fireAmount:0xff); //parker: 统一新协议
             message.setByte(messageBody, 16, params.isSteamAmountChange?(this.setByte26(params)):0xff);
             message.setByte(messageBody, 18,  0xff);
         }
@@ -532,7 +533,8 @@ export default {
         obj.timeSetting.minute = parseInt(requestCmd[39]);
         obj.timeSetting.second = parseInt(requestCmd[40]);
 
-        obj.fire.value = parseInt(requestCmd[24])*10;
+        // obj.fire.value = parseInt(requestCmd[24])*10;  //parker
+        obj.fire.value = parseInt(requestCmd[24]);  //parker: 火力不用*10了，统一用新协议0-10
         obj.weight.value = parseInt(requestCmd[25])*10;
         obj.steam.value = parseInt(requestCmd[25]);
 

@@ -2,7 +2,7 @@
     <div class="wrapper">
         <midea-header title="烤箱实时监控" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
-        <midea-ppvideo-view ref="ppvideo" class="video" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
+        <midea-ppvideo-view ref="ppvideo" class="video" :style="{height:videoHeight}" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
         <!--<midea-ppvideo-view ref="ppvideo" class="video" :ppvideo_initdata="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>-->
         <scroller class="scroller">
             <midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="开始" @mideaButtonClicked="start"/>
@@ -15,27 +15,28 @@
         </scroller>
     </div>
 </template>
-<style scoped>
+<style lang="less" type="text/less" scoped>
+    //@import (reference)
     .wrapper {
         background-color: #f2f2f2;
     }
     .video {
-        top: 20;
-        left: 20;
-        width: 640;
+        width: 750px;
         height: 480;
     }
     .scroller {
         padding-top: 20px;
         padding-bottom: 50px;
     }
-</style>
+</style>~
 <script>
     import base from "@/midea-demo/base";
     import mideaButton from "@/midea-component/button.vue";
     import nativeService from "@/common/services/nativeService";
     const ppvideoModule = weex.requireModule("ppVideoModule");
+    let [width, height] = [640, 360]; //config
 
+    nativeService.alert(width)
     module.exports = {
         components: { mideaButton },
         mixins: [base],
@@ -54,6 +55,11 @@
                 deviceId: '0000B411108T7428E18A150000680000',
                 uid: null
             };
+        },
+        computed:{
+            videoHeight(){
+                return 750*height/640 +'px' ;
+            }
         },
         mounted(){
             this.setVideoModeSize();
@@ -83,8 +89,8 @@
                     api: "setVideoModeSize",
                     params: {
                         mode: 5,
-                        width:640,
-                        height: 360
+                        width,
+                        height
                     }
                 };
                 let context = this;

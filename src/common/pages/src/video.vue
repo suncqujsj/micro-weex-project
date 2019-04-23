@@ -1,6 +1,6 @@
 <template>
-    <div class="wrapper" :style="{height: wrapHeight}">
-        <midea-header class="fixed-top" titleText="white" title="烤箱实时监控" bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png"  @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
+    <div class="wrapper" >
+        <midea-header class="fixed-top" titleText="white" :title="title" bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png"  @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
         <div class="content" :style="{height: wrapHeight}">
             <midea-ppvideo-view v-if="ppvideo_initdata.user" ref="ppvideo" class="video" :style="{height:videoHeight}" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
@@ -70,6 +70,9 @@
             };
         },
         computed:{
+            title(){
+                return '烤箱实时监控';
+            },
             videoHeight(){
                 return 750*height/640 +'px' ;
             }

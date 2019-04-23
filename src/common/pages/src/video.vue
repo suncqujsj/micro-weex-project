@@ -66,7 +66,7 @@
     import mideaButton from "@/midea-component/button.vue";
     import nativeService from "@/common/services/nativeService";
     const ppvideoModule = weex.requireModule("ppVideoModule");
-    import commonMixin from  "@/common/util/mixins/common"
+    import commonMixin from  "@/common/util/mixins/common.js"
 
     let [width, height] = [640, 360]; //config
 

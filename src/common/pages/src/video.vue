@@ -111,6 +111,8 @@
             this.init();
         },
         created(){
+            this.getPhotoLibraryAuthorizationStatus();
+            this.requestPhotoLibraryAuthorization();
         },
         methods: {
 
@@ -190,9 +192,11 @@
                     }
                 );
             },
-            record(){
+            updateRecordState(){
                 this.recording = !this.recording;
-                if(this.recording) {
+            },
+            record(){
+                if(!this.recording) {
                     this.recordStart();
                     return;
                 }
@@ -209,6 +213,7 @@
                     },
                     () => {
                         nativeService.toast("RecordStart 成功");
+                        context.updateRecordState();
                         context.startCounting();
                     },
                     () => {
@@ -233,6 +238,7 @@
                     },
                     () => {
                         nativeService.toast("RecordStop 成功");
+                        context.updateRecordState();
                         context.stopCounting();
                     },
                     () => {
@@ -252,7 +258,7 @@
                         params:{}
                     },
                     () => {
-                        nativeService.toast("captureImage 成功");
+                        nativeService.alert("captureImage 成功");
                     },
                     () => {
                         nativeService.toast("captureImage failed");

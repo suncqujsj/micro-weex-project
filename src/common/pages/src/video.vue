@@ -87,12 +87,17 @@
                 },
                 sn32: null,
                 user: null,
-                recording:false
+                recording:false,
+                t:null,
+                second:0
             };
         },
         computed:{
             title(){
-                return '烤箱实时监控';
+                if(!this.second) {
+                    return '';
+                }
+                return this.hms();
             },
             videoHeight(){
                 return 750*height/640 +'px' ;
@@ -108,6 +113,19 @@
         created(){
         },
         methods: {
+
+            hms(){
+                let [h,m,s] = [0,0,0];
+                h = Math.floor(this.second/3600);
+                m = Math.floor(this.second/60);
+                s = this.second%60;
+
+                return `${this.addZero(h)}:${this.addZero(m)}:${this.addZero(s)}`
+            },
+
+            addZero(n){
+                return n<10 ? ('0' + n) : n;
+            },
 
             async init(){
                 let userInfo = await nativeService.getUserInfo();
@@ -182,6 +200,7 @@
                 this.recordStop();
             },
             recordStart() {
+                let context = this;
                 ppvideoModule.ppvideoInterface(
                     this.$refs.ppvideo,
                     {
@@ -190,13 +209,22 @@
                     },
                     () => {
                         nativeService.toast("RecordStart 成功");
+                        context.startCounting();
                     },
                     () => {
                         nativeService.toast("RecordStart failed");
                     }
                 );
             },
+            startCounting(){
+                this.t  = setInterval(
+                    ()=>{
+                        ++this.second;
+                    }, 1000
+                );
+            },
             recordStop() {
+                let context = this;
                 ppvideoModule.ppvideoInterface(
                     this.$refs.ppvideo,
                     {
@@ -205,11 +233,16 @@
                     },
                     () => {
                         nativeService.toast("RecordStop 成功");
+                        context.stopCounting();
                     },
                     () => {
                         nativeService.toast("RecordStop failed");
                     }
                 );
+            },
+            stopCounting(){
+                clearInterval(this.t);
+                this.second = 0;
             },
             captureImage() {
                 ppvideoModule.ppvideoInterface(

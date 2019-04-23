@@ -4,6 +4,13 @@
 
         <div class="content" :style="{height: wrapHeight}">
             <midea-ppvideo-view v-if="ppvideo_initdata.user" ref="ppvideo" class="video" :style="{height:videoHeight}" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
+
+            <!--录像按钮-->
+            <image class="record-icon" :src="recordIcon" @click="record"></image>
+
+            <!--拍照按钮-->
+            <image class="camera-icon" :src="'img/particular/video_camera_icon.png'" @click="captureImage"></image>
+
         </div>
 
         <!--<scroller class="scroller">-->
@@ -30,6 +37,20 @@
     }
     .video {
         width: 750px;
+    }
+
+    .record-icon{
+        .square(56*2px);
+        .pos(a);
+        bottom:72px;
+    }
+
+    .camera-icon{
+        width: 68px;
+        height: 56px;
+        .pos(a);
+        right: 124px;
+        bottom:100px;
     }
 
     .fixed-top{
@@ -66,7 +87,7 @@
                 },
                 sn32: null,
                 user: null,
-                ready: false
+                recording:false
             };
         },
         computed:{
@@ -75,7 +96,10 @@
             },
             videoHeight(){
                 return 750*height/640 +'px' ;
-            }
+            },
+            recordIcon(){
+                return `img/particular/video_${this.recording ? 'recording' : 'record'}_icon.png`
+            },
         },
         mounted(){
             // this.setVideoModeSize();
@@ -147,6 +171,15 @@
                         nativeService.toast("stop failed");
                     }
                 );
+            },
+            record(){
+                this.recording = !this.recording;
+                if(this.recording) {
+                    this.recordStart();
+                    return;
+                }
+
+                this.recordStop();
             },
             recordStart() {
                 ppvideoModule.ppvideoInterface(

@@ -58,19 +58,7 @@
         computed:{
             videoHeight(){
                 return 750*height/640 +'px' ;
-            },
-            // ppvideo_initdata(){
-            //     return {
-            //         user: this.user, // userId auth，必填3项字段之一
-            //         password: "",
-            //         serverAdd: "120.55.73.80:7781", // userId auth，必填3项字段之一
-            //         relayAddr: "",
-            //         iP2PTryTime: 1,
-            //         sInitParam: "(Debug){1}",
-            //         sVideoParam: "(MaxStream){0}",
-            //         sAudioParam: ""
-            //     };
-            // }
+            }
         },
         mounted(){
             // this.setVideoModeSize();
@@ -80,19 +68,14 @@
         },
         methods: {
 
-            init(){
-                let context = this;
-                nativeService.getUserInfo().then((data)=>{
-                    data.mobile && (context.ppvideo_initdata.user = data.mobile);
-                    // nativeService.alert(data);
-                    return nativeService.getDeviceInfo();
-                }).then((data)=>{
-                    if(data.result && data.result.deviceSn) {
-                        context.sn32 = data.result.deviceSn;
-                    }
-                    // nativeService.alert(context.sn32);
-                    context.setVideoModeSize();
-                });
+            async init(){
+                let userInfo = await nativeService.getUserInfo();
+                userInfo.mobile && (this.ppvideo_initdata.user = userInfo.mobile);
+                let deviceInfo = await nativeService.getDeviceInfo();
+                if(deviceInfo.result && deviceInfo.result.deviceSn) {
+                    this.sn32 = deviceInfo.result.deviceSn;
+                }
+                this.setVideoModeSize();
             },
 
             setVideoModeSize(){

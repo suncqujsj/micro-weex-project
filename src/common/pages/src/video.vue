@@ -2,7 +2,7 @@
     <div class="wrapper">
         <midea-header title="烤箱实时监控" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
-        <midea-ppvideo-view v-if="ppvideo_initdata.user && sn32" ref="ppvideo" class="video" :style="{height:videoHeight}" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
+        <midea-ppvideo-view v-if="ppvideo_initdata.user" ref="ppvideo" class="video" :style="{height:videoHeight}" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
         <!--<midea-ppvideo-view ref="ppvideo" class="video" :ppvideo_initdata="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>-->
         <scroller class="scroller">
             <midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="开始" @mideaButtonClicked="start"/>
@@ -40,16 +40,16 @@
         mixins: [base],
         data() {
             return {
-                // ppvideo_initdata: {
-                //     user: 13631449763, // userId auth，必填3项字段之一
-                //     password: "",
-                //     serverAdd: "120.55.73.80:7781", // userId auth，必填3项字段之一
-                //     relayAddr: "",
-                //     iP2PTryTime: 1,
-                //     sInitParam: "(Debug){1}",
-                //     sVideoParam: "(MaxStream){0}",
-                //     sAudioParam: ""
-                // },
+                ppvideo_initdata: {
+                    user: null, // userId auth，必填3项字段之一
+                    password: "",
+                    serverAdd: "120.55.73.80:7781", // userId auth，必填3项字段之一
+                    relayAddr: "",
+                    iP2PTryTime: 1,
+                    sInitParam: "(Debug){1}",
+                    sVideoParam: "(MaxStream){0}",
+                    sAudioParam: ""
+                },
                 sn32: null,
                 user: null,
                 ready: false
@@ -59,22 +59,22 @@
             videoHeight(){
                 return 750*height/640 +'px' ;
             },
-            ppvideo_initdata(){
-                return {
-                    user: this.user, // userId auth，必填3项字段之一
-                    password: "",
-                    serverAdd: "120.55.73.80:7781", // userId auth，必填3项字段之一
-                    relayAddr: "",
-                    iP2PTryTime: 1,
-                    sInitParam: "(Debug){1}",
-                    sVideoParam: "(MaxStream){0}",
-                    sAudioParam: ""
-                };
-            }
+            // ppvideo_initdata(){
+            //     return {
+            //         user: this.user, // userId auth，必填3项字段之一
+            //         password: "",
+            //         serverAdd: "120.55.73.80:7781", // userId auth，必填3项字段之一
+            //         relayAddr: "",
+            //         iP2PTryTime: 1,
+            //         sInitParam: "(Debug){1}",
+            //         sVideoParam: "(MaxStream){0}",
+            //         sAudioParam: ""
+            //     };
+            // }
         },
         mounted(){
-            this.init();
             // this.setVideoModeSize();
+            this.init();
         },
         created(){
         },
@@ -83,12 +83,12 @@
             init(){
                 let context = this;
                 nativeService.getUserInfo().then((data)=>{
-                    data.mobile && (context.user = data.mobile);
+                    data.mobile && (context.ppvideo_initdata.user = data.mobile);
                     // nativeService.alert(data);
                     return nativeService.getDeviceInfo();
                 }).then((data)=>{
                     if(data.result && data.result.deviceSn) {
-                        context.sn32 = data.result.deviceSn.toString();
+                        context.sn32 = data.result.deviceSn;
                     }
                     // nativeService.alert(context.sn32);
                     context.setVideoModeSize();
@@ -110,13 +110,13 @@
                     context.$refs.ppvideo,
                     param, (result)=>{
                         nativeService.alert('success');
-                        context.start();
+                        // context.start();
                     } ,(result)=>{
                         nativeService.alert('error');
                     })
             },
             start() {
-                // nativeService.alert(JSON.stringify(ppvideoModule) == '{}');
+                // nativeService.alert(this.sn32);
                 // return;
                 let context = this;
                 ppvideoModule.ppvideoInterface(

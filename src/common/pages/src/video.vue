@@ -1,43 +1,57 @@
 <template>
-    <div class="wrapper">
-        <midea-header title="烤箱实时监控" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
+    <div class="wrapper" :style="{height: wrapHeight}">
+        <midea-header class="fixed-top" titleText="white" title="烤箱实时监控" bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png"  @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
-        <midea-ppvideo-view v-if="ppvideo_initdata.user" ref="ppvideo" class="video" :style="{height:videoHeight}" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
-        <!--<midea-ppvideo-view ref="ppvideo" class="video" :ppvideo_initdata="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>-->
-        <scroller class="scroller">
-            <midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="开始" @mideaButtonClicked="start"/>
-            <midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="停止" @mideaButtonClicked="stop"/>
-            <midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="开始录像" @mideaButtonClicked="recordStart"/>
-            <midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="停止录像" @mideaButtonClicked="recordStop"/>
-            <midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="截图" @mideaButtonClicked="captureImage"/>
-            <midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="查询权限" @mideaButtonClicked="getPhotoLibraryAuthorizationStatus"/>
-            <midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="获取权限" @mideaButtonClicked="requestPhotoLibraryAuthorization"/>
-        </scroller>
+        <div class="content" :style="{height: wrapHeight}">
+            <midea-ppvideo-view v-if="ppvideo_initdata.user" ref="ppvideo" class="video" :style="{height:videoHeight}" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
+        </div>
+
+        <!--<scroller class="scroller">-->
+            <!--<midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="开始" @mideaButtonClicked="start"/>-->
+            <!--<midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="停止" @mideaButtonClicked="stop"/>-->
+            <!--<midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="开始录像" @mideaButtonClicked="recordStart"/>-->
+            <!--<midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="停止录像" @mideaButtonClicked="recordStop"/>-->
+            <!--<midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="截图" @mideaButtonClicked="captureImage"/>-->
+            <!--<midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="查询权限" @mideaButtonClicked="getPhotoLibraryAuthorizationStatus"/>-->
+            <!--<midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="获取权限" @mideaButtonClicked="requestPhotoLibraryAuthorization"/>-->
+        <!--</scroller>-->
     </div>
 </template>
 <style lang="less" type="text/less" scoped>
-    //@import (reference)
+    @import (reference) '../../less/common';
     .wrapper {
-        background-color: #f2f2f2;
+        background-color: #000000;
+    }
+    .content{
+        width:750px;
+        .row;
+        .j-c;
+        .a-c;
     }
     .video {
         width: 750px;
+    }
+
+    .fixed-top{
+        .fixed_top;
     }
     .scroller {
         padding-top: 20px;
         padding-bottom: 50px;
     }
-</style>~
+</style>
 <script>
     import base from "@/midea-demo/base";
     import mideaButton from "@/midea-component/button.vue";
     import nativeService from "@/common/services/nativeService";
     const ppvideoModule = weex.requireModule("ppVideoModule");
+    import commonMixin from  "@/common/util/mixins/common"
+
     let [width, height] = [640, 360]; //config
 
     module.exports = {
         components: { mideaButton },
-        mixins: [base],
+        mixins: [base, commonMixin],
         data() {
             return {
                 ppvideo_initdata: {
@@ -79,7 +93,6 @@
             },
 
             setVideoModeSize(){
-                // nativeService.alert(this.user+':'+this.sn32)
                 let param = {
                     api: "setVideoModeSize",
                     params: {
@@ -92,8 +105,8 @@
                 ppvideoModule.ppvideoInterface(
                     context.$refs.ppvideo,
                     param, (result)=>{
-                        nativeService.alert('success');
-                        // context.start();
+                        // nativeService.alert('success');
+                        context.start();
                     } ,(result)=>{
                         nativeService.alert('error');
                     })
@@ -110,7 +123,6 @@
                     },
                     () => {
                         nativeService.toast("start 成功");
-                        // context.setVideoModeSize();
                     },
                     () => {
                         nativeService.toast("start failed");
@@ -210,7 +222,7 @@
                 );
             },
             event(event){
-                nativeService.toast('event sData:' +event.sData+",sRender:"+event.sRender);
+                // nativeService.toast('event sData:' +event.sData+",sRender:"+event.sRender);
             }
         }
     };

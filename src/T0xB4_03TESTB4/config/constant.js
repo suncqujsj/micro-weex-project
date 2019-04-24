@@ -5,12 +5,12 @@
 
 module.exports = {
     device: {
-        page_title: "Table Top Oven",
+        page_title: "Mini Oven",
         type: 0xB4,
-        sales_model: "Table Top Oven",
+        sales_model: "Mini Oven",
         lang: 'en',
         widget_name: 'MSO_T0xB4',  // 埋点的时候，只保留 B0，B1，B2
-        widget_version: '5.0.0',
+        widget_version: '5.0.1',
         extra1: {
             sn8: '03TESTB4'
         },

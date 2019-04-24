@@ -28,7 +28,7 @@ let tests = [
                 fireAmount: {
                     set:true,
                     default:10,
-                    range:fireAmountRange
+                    range:[1,5,2,8,10,2]
                 },
             },
             {
@@ -85,8 +85,8 @@ let tests = [
                     range:[100,1000,100],
                 },
                 fireAmount: {
-                    set:true,
-                    default:5,
+                    set:false,
+                    default:10,
                     range:fireAmountRange
                 },
             },
@@ -96,8 +96,8 @@ let tests = [
                 'mode': 0xA1,
                 time: timeCommon,
                 fireAmount: {
-                    set:true,
-                    default:3,
+                    set:false,
+                    default:10,
                     range:fireAmountRange
                 },
             },

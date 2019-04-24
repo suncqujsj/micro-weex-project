@@ -40,8 +40,8 @@ let modes = [
                     range:[1,5,2,8,10,2],
                     hide: null
                 },
-                settingHide:true,
-                circleProgressPointHide: true,
+                // settingHide:true,
+                // circleProgressPointHide: true,
             },
             {
                 'icon': modeIcons[13].dir,
@@ -72,8 +72,8 @@ let modes = [
                     range:null,
                     hide: null
                 },
-                settingHide:true,
-                circleProgressPointHide: true,
+                // settingHide:true,
+                // circleProgressPointHide: true,
             },
             {
                 'icon': modeIcons[23].dir,
@@ -108,8 +108,8 @@ let modes = [
                     default:null,
                     range:null,
                 },
-                settingHide:true,
-                circleProgressPointHide: true,
+                // settingHide:true,
+                // circleProgressPointHide: true,
             },
             {
                 'icon': modeIcons[24].dir,
@@ -139,8 +139,8 @@ let modes = [
                     default:null,
                     range:null,
                 },
-                settingHide: true,
-                circleProgressPointHide: true,
+                // settingHide: true,
+                // circleProgressPointHide: true,
             },
         ],
     },
@@ -176,8 +176,8 @@ let modes = [
                     range:[1,5,2,8,10,2],
                     hide: null
                 },
-                settingHide:true,
-                circleProgressPointHide: true,
+                // settingHide:true,
+                // circleProgressPointHide: true,
             },
         ],
     },

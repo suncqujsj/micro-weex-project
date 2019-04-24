@@ -11,7 +11,7 @@ module.exports = {
         page_title: "Built-in Oven",
         sales_model: "Built-in Oven",
         widget_name: 'MSO_T0xB1',
-        widget_version: '5.0.0',
+        widget_version: '5.0.1',
         lang: 'en',
         extra1: {
             sn8: '04TESTB1'

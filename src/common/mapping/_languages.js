@@ -51,11 +51,12 @@ const cn = {
     closeChildLock: '关闭童锁',
     pausing: '暂停中',
     resume: '继续',
-    pause: '暂停'
+    pause: '暂停',
+    cookFinished: '烹饪结束'
 };
 
 const en = {
-    standbyState: 'standby',
+    standbyState: 'Standby',
     tabs: ['Auto Menu', 'Heat Mode'],
     start: 'Start',
     cancel: 'Cancel',
@@ -69,7 +70,7 @@ const en = {
     ing: 'period',
     wait: 'Wait A Moment',
     confirmClose: 'Close Anyway',
-    finish: 'finished',
+    finish: 'Finished',
     to: 'To',
     hour: 'H',
     minute: 'M',
@@ -96,7 +97,8 @@ const en = {
     closeChildLock: 'Close the Child lock',
     pausing: 'Pausing',
     resume: 'Resume',
-    pause: 'Pause'
+    pause: 'Pause',
+    cookFinished: 'End of cook'
 };
 
 const lang = {

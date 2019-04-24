@@ -450,7 +450,7 @@ let workingModalMixin  = {
             if(cmdObj.workingState.value === 4){
                 this.timeShow = false;
                 this.hasHour = false;
-                this.workSpecialStatusText = this.getLanguages(['cooking', 'finish']);
+                this.workSpecialStatusText = this.getLanguages(['cookFinished']);
                 this.isTimerStop = true;
                 this.tag_next = '';
                 this.statusTag = this.getLanguage('hotCaution');

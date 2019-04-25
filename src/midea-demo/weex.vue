@@ -117,7 +117,7 @@ module.exports = {
             { title: 'BindingX拖拽(^5.2.0)', link: "bindingx_Pan" },
             { title: 'BindingX拖动条(^5.2.0)', link: "bindingx_dragBar" },
             { title: 'BindingX方向控制(^5.2.0)', link: "bindingx_control" },
-            // { title: 'BindingX手势放缩(^5.2.0)', link: "bindingx_zoom" },
+            { title: 'BindingX手势放缩(^5.2.0)', link: "bindingx_zoom" },
             { title: 'Barchart柱状图', link: "barchart" },
             { title: 'GCanvas画布(^5.2.0)', link: "gcanvas" },
             { title: 'Grid Select', link: "gridSelect" },

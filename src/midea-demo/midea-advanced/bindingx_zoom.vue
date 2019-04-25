@@ -1,8 +1,10 @@
 <template>
     <div>
-        <midea-header title="bindingx" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
+        <midea-header :title="'bindingx'+length" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <div class="scroller">
-            <div :ref="'box'" class="box" @touchstart="ontouchstart" @touchmove="ontouchmove" @touchend="ontouchend"></div>
+            <div :ref="'box'" class="box" @panstart="ontouchstart" @panmove="ontouchmove" @panend="ontouchend" style="background-color: green;">
+                <gcanvas ref="gcanvas" style="width: 750;height: 600px;background-color: yellow;"></gcanvas>
+            </div>
         </div>
     </div>
 </template>
@@ -11,18 +13,12 @@
 .scroller {
     flex: 1;
     overflow: hidden;
-    background-color: yellow;
 }
 .box {
     border-width: 2px;
     border-style: solid;
     border-color: #bbbbbb;
-    width: 450px;
-    height: 450px;
-    margin-top: 250px;
-    margin-left: 250px;
     background-color: #eeeeee;
-    margin-bottom: 500px;
 }
 </style>
 
@@ -31,6 +27,8 @@ import base from '../base'
 import mideaHeader from '@/midea-component/header.vue'
 import bindingx from 'weex-bindingx';
 const animation = weex.requireModule('animation')
+var GCanvas = require('weex-gcanvas')
+var Image = require('weex-gcanvas/gcanvasimage');
 
 
 function getEl(el) {
@@ -49,15 +47,20 @@ export default {
             dragToken: null,
             x1: 0,
             y1: 0,
-            dragObject: {},
+            zoomObject: {
+                zoom: 1
+            },
             starLine: 0,
-            zoom: 0
+            zoom: 0,
+            length: 0,
+            canvasObj: null,
+            context: null
         }
     },
     methods: {
         bindDrag() {
             var box = getEl(this.$refs.box);
-            this.dragToken = bindingx.bind({
+            let dragObj = bindingx.bind({
                 anchor: box,
                 eventType: 'pan',
                 props: [
@@ -84,33 +87,37 @@ export default {
                     this.y += e.deltaY;
                 }
             });
+
+            this.dragToken = dragObj.token
         },
         bindZoom(e) {
-            // this.scrolling = true
             var box = getEl(this.$refs.box);
-            const dragObject = this.dragObject
+            const zoomObject = this.zoomObject
             const touch = e.changedTouches[0]
             const touch2 = e.changedTouches[1]
             const diffX = touch.pageX - touch2.pageX
             const diffY = touch.pageY - touch2.pageY
-            const line = Math.pow((diffX * diffX + diffY * diffY), 0.5) - this.starLine
-            let zoom = Number(dragObject.zoom + (line / 2 / 300))
-            console.log("zoom" + zoom)
+            const line = Math.sqrt(diffX * diffX + diffY * diffY) - this.starLine
+            let zoom = Number(+zoomObject.zoom + (line / 2 / 300))
+            if (zoom) zoom = zoom.toFixed(4)
             if (this.starLine == 0) {
                 this.starLine = line
             } else {
-                if (zoom >= 0 && zoom <= 1) {
+                if (zoom >= 0 && zoom <= 3) {
+                    this.zoom = zoom
                     let self = this
-                    self.zoom = zoom
+                    console.log("zoom" + zoom)
                     animation.transition(this.$refs.box, {
                         styles: {
-                            transform: 'scale(' + 1 + self.zoom + ')',
+                            transform: 'scale(' + self.zoom + ')',
                             transformOrigin: 'center center'
                         },
                         duration: 0, //ms
                         timingFunction: 'linear',
                         delay: 0 //ms
                     }, function () {
+                        self.starLine = 0
+                        self.zoomObject.zoom = self.zoom
                     })
                 }
             }
@@ -118,12 +125,10 @@ export default {
         ontouchstart(event) {
             console.log("ontouchstart")
             this.starLine = 0
-            this.dragObject.zoom = this.zoom
-            bindingx.unbindAll()
+            this.zoomObject.zoom = this.zoom
             this.bindDrag();
         },
         ontouchmove(e) {
-            console.log("" + e.changedTouches.length)
             if (e.changedTouches.length === 2) {
                 if (this.dragToken) {
                     bindingx.unbind({
@@ -132,15 +137,49 @@ export default {
                     });
                     this.dragToken = undefined;
                 }
+
                 this.bindZoom(e)
             }
         },
         ontouchend(e) {
-            this.starLine = 0
-            this.dragObject.zoom = this.zoom
+            bindingx.unbindAll()
+        },
+        test1() {
+            // 第一部分canvas
+            //1、初始化 GCanvas
+
+            //2、执行渲染操作
+            //rect
+            this.context.fillStyle = 'red';
+            this.context.fillRect(0, 0, 100, 100);
+
+            //rect
+            this.context.fillStyle = 'black';
+            this.context.fillRect(100, 100, 100, 100);
+            this.context.fillRect(25, 210, 700, 5);
+
+            //circle
+            this.context.arc(450, 200, 100, 0, Math.PI * 2, true);
+            this.context.fill();
+
+            //drawImage
+            var image = new Image();
+            image.onload = function () {
+                this.context.drawImage(image, 100, 330);
+                this.context.drawImage(image, 100, 330, 225, 75);
+            }
+            image.src = 'https://www.khronos.org/assets/uploads/ceimg/made/assets/uploads/apis/OpenGL-ES_100px_May16_225_75.png';
         }
     },
     mounted() {
+        this.bindDrag();
+        /*获取元素引用*/
+        var ref = this.$refs.gcanvas
+        /*通过元素引用获取canvas对象*/
+        this.canvasObj = GCanvas.start(ref)
+        /*获取绘图所需的上下文，目前不支持3d*/
+        this.context = this.canvasObj.getContext('2d')
+        this.test1()
     }
 }
 </script>

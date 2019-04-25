@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" >
-        <midea-header class="fixed-top" titleText="white" :title="title" bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png"  @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
+        <midea-header class="fixed-top" titleText="white" :title="countingText" bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png"  @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
         <div class="content" :style="{height: wrapHeight}">
             <midea-ppvideo-view v-if="ppvideo_initdata.user" ref="ppvideo" class="video" :style="{height:videoHeight}" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
@@ -93,11 +93,8 @@
             };
         },
         computed:{
-            title(){
-                if(!this.second) {
-                    return '';
-                }
-                return this.hms();
+            countingText(){
+                return this.second ? this.hms() : '';
             },
             videoHeight(){
                 return 750*height/640 +'px' ;
@@ -224,6 +221,7 @@
             startCounting(){
                 this.t  = setInterval(
                     ()=>{
+                        // nativeService.toast(this.countingText)
                         ++this.second;
                     }, 1000
                 );

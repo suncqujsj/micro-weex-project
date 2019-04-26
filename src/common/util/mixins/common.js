@@ -14,8 +14,12 @@ let commonMixin = {
             wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
             state: null,
             stateTime: null,
-            count:0
+            count:0,
+            startTime: null
         };
+    },
+    beforeCreate(){
+        this.startTime = new Date();
     },
     computed:{
         language(){
@@ -172,7 +176,7 @@ let commonMixin = {
             //     widget_name: this.getWidgetName(), // constant
             //     widget_version: this.getWidgetVersion(), // constant
             //     actionType: 'common',
-            //     subAction: '', // required
+            //     subAction: 'page_view', // required
             //     prev_page_name:'mideaHomePage',
             //     pageName: 'standbyPage',
             //     action_result:null,

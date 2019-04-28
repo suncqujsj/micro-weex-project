@@ -174,10 +174,10 @@ let commonMixin = {
                 operation: 'burialPoint', // insertion will fail without this key.
                 widget_name: this.getWidgetName(), // constant
                 widget_version: this.getWidgetVersion(), // constant
-                actionType: 'common',
-                subAction: 'page_view', // required
+                action_type: 'common',
+                sub_action: 'page_view', // required
                 prev_page_name:'mideaHomePage',
-                pageName: 'standbyPage',
+                page_name: 'standbyPage',
                 action_result:null,
                 load_duration:null
             };

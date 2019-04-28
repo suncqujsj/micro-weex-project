@@ -378,7 +378,10 @@
             nativeService.initMockData({
                 query: query
             });
-            this.queryStatus(tabs,constant.device);
+            this.queryStatus(tabs,constant.device, ()=>{
+                let load_duration = (new Date()).getTime() - this.startTime.getTime();
+                this.statisticsUpload({load_duration});
+            });
             // if(constant.device.standby03 && !this.isIos) {
             // if(!this.isIos) {
             //     this.queryRunTimer(10);//轮询 已放在解析指令那里处理

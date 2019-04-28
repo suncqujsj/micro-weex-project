@@ -112,9 +112,7 @@ const deviceMessageMixin = {
                     var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
                     self.analysisFun(analysisObj,self.tabs);
 
-                    // let load_duration = (new Date()).getTime() - self.startTime.getTime();
-                    // self.statisticsUpload({load_duration});
-                    // cb && cb();
+                    cb && cb();
                 },
                 function (result) {
                     //nativeService.hideLoading();

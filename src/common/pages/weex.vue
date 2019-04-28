@@ -297,7 +297,7 @@
             <light :hasLight="constant.device.show" :lightValue="cmdObj.light.value" :event="sendLightCmd"></light>
 
             <!--视频监控入口-->
-            <video-entrance :show="true"></video-entrance>
+            <video-entrance :show="constant.device.showVideo"></video-entrance>
         </div>
     </div>
 </template>

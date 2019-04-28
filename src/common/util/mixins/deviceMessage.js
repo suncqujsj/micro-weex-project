@@ -112,12 +112,13 @@ const deviceMessageMixin = {
                     var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
                     self.analysisFun(analysisObj,self.tabs);
 
-                    let load_time = new Date() - this.startTime.getTime();
-                    // nativeService.alert(load_time)
+                    // let load_time = (new Date()).getTime() - self.startTime.getTime();
+                    // nativeService.alert(self.startTime)
                     // cb && cb();
                 },
                 function (result) {
                     //nativeService.hideLoading();
+
                     //nativeService.toast("查询失败" + JSON.stringify(result));
                 }
             );

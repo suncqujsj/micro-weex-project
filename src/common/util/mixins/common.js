@@ -14,8 +14,7 @@ let commonMixin = {
             wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
             state: null,
             stateTime: null,
-            count:0,
-            startTime: null
+            count:0
         };
     },
     beforeCreate(){

@@ -54,8 +54,8 @@
 import base from '../base'
 import nativeService from '@/common/services/nativeService'
 var startTime
-Vue.config.errorHandler = function (...args) {
-    nativeService.alert(args[0])
+Vue.config.errorHandler = function (err, vm, info) {
+    nativeService.alert(err)
 }
 
 module.exports = {

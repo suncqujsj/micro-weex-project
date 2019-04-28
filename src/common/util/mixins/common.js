@@ -159,33 +159,32 @@ let commonMixin = {
             /**
              * 以下是原埋点数据 20190410
              * */
-            let param = {
-                operation: 'burialPoint',
-                actionType: 'plugin',
-                pageName: 'homePage',
-                subAction: 'pageView',
-                widget_name: 'MSO_T0xBx', // constant
-                widget_version: '1.0.0', // constant
-                extra1: { //浏览页面，如不需设备信息，可不传该字段 ‘key’:’value’,
-                     }
-            };
-
             // let param = {
             //     operation: 'burialPoint',
-            //     widget_name: this.getWidgetName(), // constant
-            //     widget_version: this.getWidgetVersion(), // constant
-            //     actionType: 'common',
-            //     subAction: 'page_view', // required
-            //     prev_page_name:'mideaHomePage',
-            //     pageName: 'standbyPage',
-            //     action_result:null,
-            //     load_duration:null,
+            //     actionType: 'plugin',
+            //     pageName: 'homePage',
+            //     subAction: 'pageView',
+            //     widget_name: 'MSO_T0xBx', // constant
+            //     widget_version: '1.0.0', // constant
             //     extra1: { //浏览页面，如不需设备信息，可不传该字段 ‘key’:’value’,
-            //     }
+            //          }
             // };
-            // nativeService.alert(123);
+
+            let param = {
+                operation: 'burialPoint', // insertion will fail without this key.
+                widget_name: this.getWidgetName(), // constant
+                widget_version: this.getWidgetVersion(), // constant
+                actionType: 'common',
+                subAction: 'page_view', // required
+                prev_page_name:'mideaHomePage',
+                pageName: 'standbyPage',
+                action_result:null,
+                load_duration:null
+            };
 
             param = objectAssign(param, data);
+            // nativeService.alert(param);
+            // return;
 
             bridgeModule.commandInterface(JSON.stringify(param), function
                 (resData) {

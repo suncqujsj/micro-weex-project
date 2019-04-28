@@ -89,7 +89,7 @@ const deviceMessageMixin = {
             this.tabs = tabs;
             this.device = device;
         },
-        queryStatus(tabs=this.tabs,device=this.device) {//传入模式配置数据tabs
+        queryStatus(tabs=this.tabs,device=this.device, cb=null) {//传入模式配置数据tabs
             if(device) {
                 this.initData(tabs, device);
             }
@@ -111,6 +111,10 @@ const deviceMessageMixin = {
                     // nativeService.alert(arr);
                     var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
                     self.analysisFun(analysisObj,self.tabs);
+
+                    let load_time = new Date() - this.startTime.getTime();
+                    // nativeService.alert(load_time)
+                    // cb && cb();
                 },
                 function (result) {
                     //nativeService.hideLoading();

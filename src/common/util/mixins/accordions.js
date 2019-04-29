@@ -167,6 +167,7 @@ const accordionMixin = {
             if (e.type === 'cancel' || e.type === 'close'){
                 this.show = false;
                 this.resetState();
+                this.statisticsUpload({subAction: 'cancel_mode_click'});
                 return;
             }
 

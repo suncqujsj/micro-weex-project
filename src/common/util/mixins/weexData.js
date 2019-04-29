@@ -84,7 +84,14 @@ let workingModalMixin  = {
         };
     },
     methods: {
-      
+
+        /**
+         * 当前状态是否待机中
+         */
+        isStandby(){
+            return !this.isWorkingPage
+        },
+
         analysisFun(analysisObj,tabs) {
             clearInterval(this.queryTimer);  
             this.initStandbyData(analysisObj);//初始待机页面数据

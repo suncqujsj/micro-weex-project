@@ -174,10 +174,10 @@ let commonMixin = {
                 operation: 'burialPoint', // insertion will fail without this key.
                 widget_name: this.getWidgetName(), // constant
                 widget_version: this.getWidgetVersion(), // constant
-                action_type: 'common',
-                sub_action: 'page_view', // required
+                actionType: 'common',
+                subAction: 'page_view', // required
                 prev_page_name:'mideaHomePage',
-                page_name: 'standbyPage',
+                pageName: 'standbyPage',
                 action_result:null,
                 load_duration:null
             };
@@ -189,7 +189,7 @@ let commonMixin = {
             bridgeModule.commandInterface(JSON.stringify(param), function
                 (resData) {
                 //成功的回调
-                // nativeService.alert(resData);
+                nativeService.alert(resData);
             }, function (error) {
                 //失败的回调
                 // nativeService.alert('upload error');

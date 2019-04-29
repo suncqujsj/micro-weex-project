@@ -151,6 +151,7 @@ let commonMixin = {
             this.hintDialog = objectAssign({}, hintDialog, config)
         },
 
+
         statisticsUpload: function(data={}){
 
             // nativeService.alert(data);

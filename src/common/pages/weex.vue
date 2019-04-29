@@ -488,6 +488,12 @@
                     nativeService.toast(text);
                     return;
                 }
+
+                let isAutoMode = item.mode === 0xE0;
+                let subAction = isAutoMode ? 'auto_mode_click' : 'mode_click';
+                let action_result = isAutoMode ? item.recipeId.default : item.mode;
+                this.statisticsUpload({subAction,  action_result:action_result.toString(16).toUpperCase()});
+
                 this.currentItem = item;
                 // nativeService.alert(this.currentItem);
                 this.modeText = item.text;

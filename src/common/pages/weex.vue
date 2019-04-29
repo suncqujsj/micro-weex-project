@@ -433,7 +433,10 @@
                 return tab.rows[0].title && tab.rows[0].title !== 'mode'
             },
             onCloudMenuIconClicked(){
+
+
                 if(this.isFun2Oven() && this.isProbeInserted(this.cmdObj)) {
+                    this.statisticsUpload({actionType:'popup', subAction: 'cloud_recipe_click'});
                     this.setHintDialog({
                         show:true,
                         content: '主人，检测到烤箱插入了探针，云食谱目前不支持此功能，请取出探针后再操作。',
@@ -451,12 +454,14 @@
                 this.openCloudMenuPage();
             },
             openCloudMenuPage: function(){
+                this.statisticsUpload({subAction: 'cloud_recipe_click'});
                 nativeService.jumpNativePage({
                     "pageName": "CookbookHome",
                     "data": {}
                 })
             },
             openMorePage: function(){
+                this.statisticsUpload({subAction: 'more_icon_click'});
                 nativeService.goTo('more.js', {animated: true});
             },
             onTabClicked: function(index){

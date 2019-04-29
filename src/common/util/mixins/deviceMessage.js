@@ -66,6 +66,7 @@ const deviceMessageMixin = {
                 deviceCmd,
                 function(result){
                     context.loading = false;
+                    context.statisticsUpload({subAction: 'child_lock_click', action_result:childLock});
                     context.queryStatus();
                 },
                 function(result){

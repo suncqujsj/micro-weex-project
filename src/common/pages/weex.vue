@@ -468,6 +468,7 @@
                 // debugger;
                 // let tabs = JSON.parse(JSON.stringify(this.tabs));
                 let tabs = this.tabs;
+                this.statisticsUpload({subAction: 'tab_click', action_result:index});
                 if(tabs[index].active) return;
                 for(let i=0; i<tabs.length; i++) {
                     if(parseInt(i) === index) {

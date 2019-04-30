@@ -723,6 +723,7 @@ let workingModalMixin  = {
         //点击某个item的事件
         actionsheetItemClick: function (event) {
             this.showBar = false;
+            this.statisticsUpload({subAction:'confirm_close_click'});
             if(event.index == 0){
                this.cancleWorking();
             }
@@ -731,6 +732,7 @@ let workingModalMixin  = {
         //点击取消/确定按钮事件
         actionsheetBtnClick: function () {
             this.showBar = false;
+            this.statisticsUpload({subAction:'cancel_close_click'});
         },
     }
 };

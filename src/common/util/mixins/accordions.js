@@ -208,17 +208,40 @@ const accordionMixin = {
             // if(jsonCmd.mode === 0xE0) { // 自动菜单
             //     jsonCmd.recipeId =  this.setValue('recipeId');
             // }
-            // for(let accordion of this.accordions) {
-            //     let key = accordion.key;
-            //     if(this.currentItem[key].set && this.currentItem[key].default !== jsonCmd[key]) {
-            //         nativeService.alert(typeof jsonCmd['minute']);
-            //     }
-            // }
+
+            this.dialogParamsStatistics(jsonCmd);
 
             jsonCmd = this.formatJsonCmd(jsonCmd);
 
             this.statisticsUpload({subAction: 'start_mode_click', action_result:this.currentItem.mode});
             this.controlDevice(jsonCmd, e);
+        },
+        /**
+         * 弹窗参数数据埋点
+         */
+        dialogParamsStatistics(jsonCmd){
+            try {
+                if(this.isStandby()) {
+                    for(let accordion of this.accordions) {
+                        let key = accordion.key;
+                        if(!!this.currentItem[key] && this.currentItem[key].set && this.currentItem[key].default != jsonCmd[key]) { // bool to test
+                            nativeService.toast(`${!!this.currentItem[key]}:${this.currentItem[key].set}:${this.currentItem[key].default != jsonCmd[key]}`);
+                            this.statisticsUpload({subAction: `${key}_${accordion.type}`, action_result:`${this.currentItem[key].default}->${jsonCmd[key]}`});
+                        }
+                    }
+                    return;
+                }
+
+                for(let accordion of this.accordions) {
+                    let key = accordion.key;
+                    if(!!this.currentItem[key] && this.currentItem[key].set && !this.currentItem[key].hide) { // bool to test
+                        this.statisticsUpload({subAction: `${key}_${accordion.type}`, action_result:`${jsonCmd[key]}`});
+                    }
+                }
+
+            }catch (e) {
+                nativeService.toast(e)
+            }
         },
         validate(jsonCmd){
             // nativeService.alert(this.cmdObj.isProbe.value)

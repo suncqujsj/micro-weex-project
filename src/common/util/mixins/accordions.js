@@ -174,7 +174,7 @@ const accordionMixin = {
             let jsonCmd = {
                 currentItem: this.currentItem,
                 mode: this.currentItem.mode,
-                minute: this.setValue('time'),
+                time: this.setValue('time'),
                 temperature: this.setValue('temperature'),
                 preheat: this.current.preheat,
                 preheatHide:  this.current.preheatHide,
@@ -207,6 +207,12 @@ const accordionMixin = {
             
             // if(jsonCmd.mode === 0xE0) { // 自动菜单
             //     jsonCmd.recipeId =  this.setValue('recipeId');
+            // }
+            // for(let accordion of this.accordions) {
+            //     let key = accordion.key;
+            //     if(this.currentItem[key].set && this.currentItem[key].default !== jsonCmd[key]) {
+            //         nativeService.alert(typeof jsonCmd['minute']);
+            //     }
             // }
 
             jsonCmd = this.formatJsonCmd(jsonCmd);

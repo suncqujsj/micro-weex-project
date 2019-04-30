@@ -239,6 +239,7 @@ const deviceMessageMixin = {
                 deviceCmd,
                 function(result){
                     nativeService.hideLoading();
+                    self.statisticsUpload({subAction:'pause_continue_click', action_result: record})
                     self.queryStatus();
                 },
                 function(result){

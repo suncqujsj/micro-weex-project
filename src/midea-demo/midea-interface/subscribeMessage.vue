@@ -1,10 +1,13 @@
 <template>
     <div>
         <midea-header title="subscribeMessage 订阅设备状态推送" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
+        <div class="content">
+            <text>当前家庭设备id如下：</text>
+            <text v-for="item in dArray">{{item}}</text>
+        </div>
         <input class="deviceid-input" type="text" placeholder="输入设备的deviceId, 多个用英文,分隔" @input="setDeviceId">
         <midea-button text="订阅设备状态推送" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
-        {{deviceIdArray}}
     </div>
 </template>
 <style>
@@ -13,6 +16,9 @@
         width: 700px;
         margin: 25px;
         padding: 12px;
+    }
+    .content{
+        margin: 24px;
     }
 </style>
 <script>
@@ -28,12 +34,14 @@ module.exports = {
     mixins: [base],
     data() {
         return {
-            deviceId: ''
+            deviceId: '',
+            dArray: []
         }
     },
     methods: {
         mideaButtonClicked() {
             let deviceIdArray = this.deviceId.length>0 ? this.deviceId.split(',') : []
+            nativeService.toast('请求设备id数组：' + JSON.stringify(deviceIdArray))
             nativeService.subscribeMessage({//埋点客厅
                 deviceId: deviceIdArray
             }).then(()=>{
@@ -47,6 +55,13 @@ module.exports = {
         }
     },
     created() {
+        nativeService.getCurrentHomeInfo().then(homeInfo => {
+            let tmpDArray = []
+            homeInfo.deviceList.map(item =>{
+                tmpDArray.push(item.deviceId)
+            })
+            this.dArray = tmpDArray
+        })
         globalEvent.addEventListener("receiveMessage", (data) => {
             nativeService.alert("receiveMessage 触发:\n"+JSON.stringify(data))
         })

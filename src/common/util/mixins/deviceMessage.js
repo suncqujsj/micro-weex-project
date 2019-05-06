@@ -144,6 +144,7 @@ const deviceMessageMixin = {
             )
         },
         setting(cmdObj){
+            this.statisticsUpload({subAction:'edit_click'});
             if(!this.hasSetting){
                 return;
             }

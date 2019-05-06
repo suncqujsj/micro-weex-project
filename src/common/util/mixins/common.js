@@ -27,10 +27,15 @@ let commonMixin = {
     },
     methods:{
         back: function(){
+            this.onBackIconClicked();
             nativeService.goBack();
         },
         back2Native(){
+            this.onBackIconClicked();
             nativeService.backToNative()
+        },
+        onBackIconClicked(){
+            this.statisticsUpload({subAction:'back_icon_click'});
         },
         openPage: function(pageName){
             nativeService.goTo(`${pageName}.js`, {animated: true});

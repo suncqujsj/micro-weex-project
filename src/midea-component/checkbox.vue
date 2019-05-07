@@ -71,16 +71,6 @@
 </style>
 
 <script>
-<<<<<<< HEAD
-  import mideaCell from './cell.vue';
-  const modal = weex.requireModule('modal');
-  //to be changed
-  var CHECKED="./img/check/public_ic_done@2x.png";
-  var UNCHECKED="./img/check/unchecked.png";
-  var CHECKED_DISABLED="./img/check/dischecked.png";
-  var UNCHECKED_DISABLED="./img/check/disuncheked.png"
-  export default {
-=======
 import mideaCell from './cell.vue';
 const modal = weex.requireModule('modal');
 //to be changed
@@ -89,7 +79,6 @@ var UNCHECKED = "./img/check/unchecked.png";
 var CHECKED_DISABLED = "./img/check/dischecked.png";
 var UNCHECKED_DISABLED = "./img/check/disuncheked.png"
 export default {
->>>>>>> 8448141f304123a0a56f912431e28726a100840a
     components: { mideaCell },
     props: {
         hasTopBorder: {

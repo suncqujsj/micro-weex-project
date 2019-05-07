@@ -4,6 +4,7 @@ const stream = weex.requireModule('stream')
 const storage = weex.requireModule('storage');
 const bridgeModule = weex.requireModule('bridgeModule');
 const blueToothModule = weex.requireModule('blueToothModule');
+const blueToothMeshModule = weex.requireModule('blueToothMeshModule');
 const globalEvent = weex.requireModule("globalEvent");
 
 
@@ -1023,7 +1024,7 @@ export default {
         return this.commandInterfaceWrapper(params)
     },
     //二维码/条形码扫码功能，用于读取二维码/条形码的内容
-    scanCode(params={}) {
+    scanCode(params = {}) {
         let param = Object.assign(params, {
             operation: 'scanCode'
         })
@@ -1222,7 +1223,29 @@ export default {
     },
     //LottieView接口
     showLottieView() {
-        
+
+    },
+    /* setIdleTimerDisabled 设置屏幕常亮 ^5.7
+        1.插件调用setIdleTimerDisabled,原生APP定时60秒后重新开启系统自动屏灭的操作。
+        1.1 假如插件要长时间保持屏亮，需要调用setIdleTimerDisabled后，隔60秒后再次调用来维持一直屏亮。
+        1.2 插件调用setIdleTimerDisabled，间隔不到60秒又调用setIdleTimerDisabled，原生app的定时时间，重新设置，60秒后再重新启动系统的自动灭屏操作！
+    */
+    setIdleTimerDisabled() {
+        let param = {
+            operation: 'setIdleTimerDisabled'
+        }
+        bridgeModule.commandInterface(param, function () { }, function () { })
+    },
+    /*  
+     * ^5.7.0 [subscribeMessage]-订阅设备状态推送
+     * @params: { deviceId: []}  
+     * deviceId是想订阅的设备id,空数组-清空订阅设备，['all']-订阅用户该家庭所有设备消息推送， [deviceId]订阅指定设备
+    */
+    subscribeMessage(params){
+        let param = Object.assign(params, {
+            operation: 'subscribeMessage',
+        })
+        return this.commandInterfaceWrapper(param)
     },
     //**********APP业务接口***************END
 
@@ -1300,6 +1323,79 @@ export default {
     */
     disconnectBlueConnection(params = {}) {
         return this.blueToothModuleWrapper("disconnectBlueConnection", params)
+    },
+    //**********蓝牙接口***************END
+
+
+    //**********蓝牙MESH接口***************START
+    blueToothMeshModuleWrapper(apiName, param) {
+        return new Promise((resolve, reject) => {
+            blueToothMeshModule[apiName](JSON.stringify(param),
+                (resData) => {
+                    resolve(this.convertToJson(resData))
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
+    },
+    //根据蓝牙信息建立蓝牙连接
+    /* param:{
+        mac:"xxx", //设备mac地址，可通getDeviceBlueMeshInfo接口获取
+        ssid:"xxxxx", //设备ssid，可通getDeviceBlueMeshInfo接口获取
+    } */
+    /* 当收到蓝牙数据，app -> 插件: 
+    receiveMessageFromApp({ messageType: "receiveBlueInfo", messageBody: { deviceKey:"xxxxx", data: "xxx" } })
+    */
+    setupBlueMeshConnection(params = {}) {
+        return this.blueToothMeshModuleWrapper("setupBlueMeshConnection", params)
+    },
+    //断开当前蓝牙连接
+    /* 若是蓝牙意外断开, app -> 插件: 
+       receiveMessageFromApp({ messageType: "blueConnectionBreak", messageBody: {} }) 
+    */
+    disconnectBlueMeshConnection(params = {}) {
+        return this.blueToothMeshModuleWrapper("disconnectBlueMeshConnection", params)
+    },
+    //获取当前家庭的所有Mesh设备的信息
+    /* param:{ deviceType: 品类码 }
+       result:{status：0, //0: 执行成功, 1:执行失败, name:"xxx", deviceKey:"xxxxx"}
+    */
+    getDeviceBlueMeshListInfo(params = {}) {
+        return this.blueToothModuleWrapper("getDeviceBlueMeshListInfo", params)
+    },
+    // 向蓝牙Mesh发送控制指令
+    /* param:{
+        destAddress: xxx  //目标控制地址  ，可为 单播地址，群播地址
+        name:xxx //例如 GenericOnOff 、GenericLevel 、LightCtlTemperature
+        params :{     // name字段的不同，params需要不同的数据，例如  ,
+        onoff:  xxx // 0 或1 ,name 为 GenericOnOff 需要  0或者1
+        level:    xxx // GenericLevel 需要 0~100 之类的数值
+        temperature:  xxxx //  LightCtlTemperature 才会需要的温度数值
+        deltaUV: xxxx // LightCtlTemperature 才会需要
+    } */
+    sendBlueMeshControlMessage(params = {}) {
+        return this.blueToothModuleWrapper("sendBlueMeshControlMessage", params)
+    },
+    // 蓝牙Mesh增加群订阅
+    /*  ps1:一个mesh node element 可以订阅多个群地址
+        ps2:一个群地址可以配置多个modelNumberId，以响应不同的控制消息
+    param:{
+        groupAddress:xxx  // 组播地址  这个理论上是 事业部应用服务器从 iot服务器上申请分配，建议从0xD000开始分配
+        deviceAddress: xxx  //mesh node 的 element 单播地址
+        modelNumberId:xxx // 控制模式的id , 例如  GenericOnOff 组播，需要传入 0x1000 ,之后就可以通过 sendBlueMeshControlMessage {name : “GenericOnOff”  群控制设备开关 }
+    } */
+    addBlueMeshModelSubscription(params = {}) {
+        return this.blueToothModuleWrapper("addBlueMeshModelSubscription", params)
+    },
+    // 蓝牙Mesh取消群订阅
+    /* param:{
+        groupAddress:xxx  // 组播地址  这个理论上是 事业部应用服务器从 iot服务器上申请分配，建议从0xD000开始分配
+        deviceAddress: xxx  //mesh node 的 element 单播地址
+        modelNumberId:xxx // 控制模式的id , 例如  GenericOnOff 组播，需要传入 0x1000 ,之后就可以通过 sendBlueMeshControlMessage {name : “GenericOnOff”  群控制设备开关 }
+    } */
+    deleteBlueMeshModelSubscription(params = {}) {
+        return this.blueToothModuleWrapper("deleteBlueMeshModelSubscription", params)
     }
     //**********蓝牙接口***************END
 }

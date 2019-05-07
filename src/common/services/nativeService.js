@@ -1226,6 +1226,17 @@ export default {
         }
         bridgeModule.commandInterface(param, function () { }, function () { })
     },
+    /*  
+     * ^5.7.0 [subscribeMessage]-订阅设备状态推送
+     * @params: { deviceId: []}  
+     * deviceId是想订阅的设备id,空数组-清空订阅设备，['all']-订阅用户该家庭所有设备消息推送， [deviceId]订阅指定设备
+    */
+    subscribeMessage(params){
+        let param = Object.assign(params, {
+            operation: 'subscribeMessage',
+        })
+        return this.commandInterfaceWrapper(param)
+    },
     //**********APP业务接口***************END
 
 

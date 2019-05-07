@@ -187,6 +187,7 @@ module.exports = {
             { title: 'weexBundleToWeb跳转web页面', link: "weexBundleToWeb" },
             { title: 'burialPoint美居埋点', link: "burialPoint" },
             { title: 'gesturePassword手势密码', link: "gesturePassword" },
+            { title: 'setIdleTimerDisabled屏幕常亮', link: "setIdleTimerDisabled" },
             { title: 'subscribeMessage 订阅设备状态推送', link: "subscribeMessage" }
         ],
         pagesList: [

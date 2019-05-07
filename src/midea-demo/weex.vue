@@ -186,7 +186,8 @@ module.exports = {
             { title: 'uploadImgFile上传图片', link: "uploadImgFile" },
             { title: 'weexBundleToWeb跳转web页面', link: "weexBundleToWeb" },
             { title: 'burialPoint美居埋点', link: "burialPoint" },
-            { title: 'gesturePassword手势密码', link: "gesturePassword" }
+            { title: 'gesturePassword手势密码', link: "gesturePassword" },
+            { title: 'setIdleTimerDisabled屏幕常亮', link: "setIdleTimerDisabled" },
         ],
         pagesList: [
             { title: '滑动显示更多菜单', link: "moreMenu" },

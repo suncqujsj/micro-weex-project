@@ -47,7 +47,7 @@ const cn = {
     quantity: '数量',
     quantityDefaultUnit: '份',
     morePageTitle: '更多功能',
-    childLockOpenedText: '童锁已开启',
+    childLockOpenedText: '童锁开启',
     closeChildLock: '关闭童锁',
     pausing: '暂停中',
     resume: '继续',

@@ -113,7 +113,9 @@ const deviceMessageMixin = {
                     var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
                     self.analysisFun(analysisObj,self.tabs);
 
-                    cb && cb();
+                    if(typeof cb === 'function') {
+                        cb();
+                    }
                 },
                 function (result) {
                     //nativeService.hideLoading();
@@ -214,7 +216,11 @@ const deviceMessageMixin = {
                         }
                     
                     }
-                    context.queryStatus();
+                    if(context.isStandby()) {
+                        context.queryStatus(null, null, context.pageViewStatistics);
+                    }else{
+                        context.queryStatus();
+                    }
                 },
                 function(result){
                     nativeService.hideLoading();

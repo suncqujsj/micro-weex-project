@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper" >
-        <midea-header class="fixed-top" titleText="white" :title="countingText" bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png"  @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
+        <midea-header class="fixed-top" titleText="white" :title="frmplay" bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png"  @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
         <div class="content" :style="{height: wrapHeight}">
             <midea-ppvideo-view v-if="ppvideo_initdata.user" ref="ppvideo" class="video" :style="{height:videoHeight}" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
@@ -12,6 +12,8 @@
             <image class="camera-icon" :src="'img/particular/video_camera_icon.png'" @click="captureImage"></image>
 
         </div>
+
+        <sf-state v-if="state" :display="state.display" :text="state.text" :type="state.type"></sf-state>
 
         <!--<scroller class="scroller">-->
             <!--<midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="开始" @mideaButtonClicked="start"/>-->
@@ -64,6 +66,8 @@
 <script>
     import base from "@/midea-demo/base";
     import mideaButton from "@/midea-component/button.vue";
+    import sfState from "@/midea-component/sf/custom/state.vue"
+
     import nativeService from "@/common/services/nativeService";
     const ppvideoModule = weex.requireModule("ppVideoModule");
     import commonMixin from  "@/common/util/mixins/common.js"
@@ -71,7 +75,7 @@
     let [width, height] = [640, 360]; //config
 
     module.exports = {
-        components: { mideaButton },
+        components: { mideaButton, sfState},
         mixins: [base, commonMixin],
         data() {
             return {
@@ -89,7 +93,8 @@
                 user: null,
                 recording:false,
                 t:null,
-                second:0
+                second:0,
+                frmplay:0
             };
         },
         computed:{
@@ -108,6 +113,7 @@
             this.init();
         },
         created(){
+            nativeService.showLoading()
             this.getPhotoLibraryAuthorizationStatus();
             this.requestPhotoLibraryAuthorization();
         },
@@ -296,6 +302,13 @@
             },
             event(event){
                 // nativeService.toast('event sData:' +event.sData+",sRender:"+event.sRender);
+                let paramsArr = event.sData.split('&');
+                for(let param of paramsArr) {
+                    let pair = param.split('=');
+                    if(pair[0] === 'frmplay') {
+                        this.frmplay = pair[1];
+                    }
+                }
             }
         }
     };

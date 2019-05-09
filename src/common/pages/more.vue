@@ -38,6 +38,10 @@
         components: {mideaHeader, mideaCell},
         created(){
         },
+        mounted(){
+            let load_duration = (new Date()).getTime() - this.startTime.getTime();
+            this.statisticsUpload({load_duration});
+        },
         // computed:{
         // },
         methods: {
@@ -49,7 +53,13 @@
                     url: item.link,
                     title: '测试'
                 })
-            }
+            },
+            getPageName(){
+                return 'morePage';
+            },
+            getPrePageName(){
+                return 'standbyPage'
+            },
         }
     }
 </script>

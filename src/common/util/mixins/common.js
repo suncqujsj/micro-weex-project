@@ -17,6 +17,9 @@ let commonMixin = {
             count:0
         };
     },
+    beforeCreate(){
+        this.startTime = new Date();
+    },
     computed:{
         language(){
             return languages[this.getLang()];
@@ -24,10 +27,15 @@ let commonMixin = {
     },
     methods:{
         back: function(){
+            this.onBackIconClicked();
             nativeService.goBack();
         },
         back2Native(){
+            this.onBackIconClicked();
             nativeService.backToNative()
+        },
+        onBackIconClicked(){
+            this.statisticsUpload({subAction:'back_icon_click'});
         },
         openPage: function(pageName){
             nativeService.goTo(`${pageName}.js`, {animated: true});
@@ -148,6 +156,7 @@ let commonMixin = {
             this.hintDialog = objectAssign({}, hintDialog, config)
         },
 
+
         statisticsUpload: function(data={}){
 
             // nativeService.alert(data);
@@ -156,38 +165,37 @@ let commonMixin = {
             /**
              * 以下是原埋点数据 20190410
              * */
-            let param = {
-                operation: 'burialPoint',
-                actionType: 'plugin',
-                pageName: 'homePage',
-                subAction: 'pageView',
-                widget_name: 'MSO_T0xBx', // constant
-                widget_version: '1.0.0', // constant
-                extra1: { //浏览页面，如不需设备信息，可不传该字段 ‘key’:’value’,
-                     }
-            };
-
             // let param = {
             //     operation: 'burialPoint',
-            //     widget_name: this.getWidgetName(), // constant
-            //     widget_version: this.getWidgetVersion(), // constant
-            //     actionType: 'common',
-            //     subAction: '', // required
-            //     prev_page_name:'mideaHomePage',
-            //     pageName: 'standbyPage',
-            //     action_result:null,
-            //     load_duration:null,
+            //     actionType: 'plugin',
+            //     pageName: 'homePage',
+            //     subAction: 'pageView',
+            //     widget_name: 'MSO_T0xBx', // constant
+            //     widget_version: '1.0.0', // constant
             //     extra1: { //浏览页面，如不需设备信息，可不传该字段 ‘key’:’value’,
-            //     }
+            //          }
             // };
-            // nativeService.alert(123);
+
+            let param = {
+                operation: 'burialPoint', // insertion will fail without this key.
+                widget_name: this.getWidgetName(), // constant
+                widget_version: this.getWidgetVersion(), // constant
+                actionType: 'common',
+                subAction: 'page_view', // required
+                prev_page_name: this.getPrePageName(),
+                pageName: this.getPageName(),
+                action_result:null,
+                load_duration:null
+            };
 
             param = objectAssign(param, data);
+            // nativeService.alert(param);
+            // return;
 
             bridgeModule.commandInterface(JSON.stringify(param), function
                 (resData) {
                 //成功的回调
-                // nativeService.alert(resData);
+                // nativeService.toast(resData);
             }, function (error) {
                 //失败的回调
                 // nativeService.alert('upload error');
@@ -213,6 +221,23 @@ let commonMixin = {
          getWidgetVersion(){
             let {constant} = this;
             return constant.device.widget_version;
+        },
+
+
+        /**
+         * sf
+         * 返回 当前页面名称
+         */
+        getPageName(){
+            return this.isStandby() ? 'standbyPage' : 'workingPage'
+        },
+
+        /**
+         * sf
+         * 返回 前一个页面名称
+         */
+        getPrePageName(){
+            return 'mideaHomePage'
         },
 
         /**

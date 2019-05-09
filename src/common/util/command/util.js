@@ -268,7 +268,7 @@ export default {
         }
 
 
-        var time = params.minute;
+        var time = params.time;
         var hour = Math.floor(time/60);
         var minute = time%60;
         var second = 0;

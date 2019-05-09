@@ -294,7 +294,10 @@
 
             <!-- 炉灯 -->
             <!--<image :class="['light_icon',cmdObj.light.value && 'light_on']" :src="lightImg"  @click="sendLightCmd(cmdObj.light.value,tabs,constant.device)"></image>-->
-            <light :hasLight="constant.device.hasLight" :lightValue="cmdObj.light.value" :event="sendLightCmd"></light>         
+            <light :hasLight="constant.device.show" :lightValue="cmdObj.light.value" :event="sendLightCmd"></light>
+
+            <!--视频监控入口-->
+            <video-entrance :show="constant.device.showVideo"></video-entrance>
         </div>
     </div>
 </template>
@@ -316,6 +319,7 @@
     import mideaDialog from '@/midea-component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
     import light from "@/midea-component/sf/common/light.vue";
+    import videoEntrance from "@/midea-component/sf/common/videoEntrance.vue";
 
     // config data
     // import modes from "./config/modes.js";
@@ -339,7 +343,7 @@
         mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin,copyMixin,weexData,modalMixin,voiceMixin],
         data(){
             return {
-               
+
             }
         },
         props: {
@@ -354,7 +358,7 @@
                 default: () => ({})
             },
         },
-        components: {MideaHeader,sfDialog,mideaActionsheet,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modal,modalHeader,rowWrapItems,light,timePicker},
+        components: {MideaHeader,sfDialog,mideaActionsheet,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modal,modalHeader,rowWrapItems,light,timePicker,videoEntrance},
         created(){
 
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
@@ -374,7 +378,10 @@
             nativeService.initMockData({
                 query: query
             });
-            this.queryStatus(tabs,constant.device);
+            this.queryStatus(tabs,constant.device, ()=>{
+                let load_duration = (new Date()).getTime() - this.startTime.getTime();
+                this.statisticsUpload({load_duration});
+            });
             // if(constant.device.standby03 && !this.isIos) {
             // if(!this.isIos) {
             //     this.queryRunTimer(10);//轮询 已放在解析指令那里处理
@@ -400,7 +407,6 @@
             //     // nativeService.alert(typeof context.statisticsUpload);
             //     return context.statisticsUpload({...constant.device, iot_device_id:dataSn});
             // });
-            this.statisticsUpload({...constant.device});
 
             //console.dir(JSON.stringify(this.foodMaterialItems));
         },
@@ -427,7 +433,10 @@
                 return tab.rows[0].title && tab.rows[0].title !== 'mode'
             },
             onCloudMenuIconClicked(){
+
+
                 if(this.isFun2Oven() && this.isProbeInserted(this.cmdObj)) {
+                    this.statisticsUpload({actionType:'popup', subAction: 'cloud_recipe_click'});
                     this.setHintDialog({
                         show:true,
                         content: '主人，检测到烤箱插入了探针，云食谱目前不支持此功能，请取出探针后再操作。',
@@ -445,18 +454,21 @@
                 this.openCloudMenuPage();
             },
             openCloudMenuPage: function(){
+                this.statisticsUpload({subAction: 'cloud_recipe_click'});
                 nativeService.jumpNativePage({
                     "pageName": "CookbookHome",
                     "data": {}
                 })
             },
             openMorePage: function(){
+                this.statisticsUpload({subAction: 'more_icon_click'});
                 nativeService.goTo('more.js', {animated: true});
             },
             onTabClicked: function(index){
                 // debugger;
                 // let tabs = JSON.parse(JSON.stringify(this.tabs));
                 let tabs = this.tabs;
+                this.statisticsUpload({subAction: 'tab_click', action_result:index});
                 if(tabs[index].active) return;
                 for(let i=0; i<tabs.length; i++) {
                     if(parseInt(i) === index) {
@@ -476,6 +488,12 @@
                     nativeService.toast(text);
                     return;
                 }
+
+                let isAutoMode = item.mode === 0xE0;
+                let subAction = isAutoMode ? 'auto_mode_click' : 'mode_click';
+                let action_result = isAutoMode ? item.recipeId.default : item.mode;
+                this.statisticsUpload({subAction,  action_result:action_result.toString(16).toUpperCase()});
+
                 this.currentItem = item;
                 // nativeService.alert(this.currentItem);
                 this.modeText = item.text;

@@ -84,7 +84,14 @@ let workingModalMixin  = {
         };
     },
     methods: {
-      
+
+        /**
+         * 当前状态是否待机中
+         */
+        isStandby(){
+            return !this.isWorkingPage
+        },
+
         analysisFun(analysisObj,tabs) {
             clearInterval(this.queryTimer);  
             this.initStandbyData(analysisObj);//初始待机页面数据
@@ -693,6 +700,8 @@ let workingModalMixin  = {
             }
         },
         cancle(){
+            let subAction  = this.cmdObj.workingState.value === 3 ? 'close_mode_click' : 'finish_mode_click';
+            this.statisticsUpload({subAction});
             var self = this;
             if(this.finishStatus){
                 this.cancleWorking();
@@ -714,6 +723,7 @@ let workingModalMixin  = {
         //点击某个item的事件
         actionsheetItemClick: function (event) {
             this.showBar = false;
+            this.statisticsUpload({subAction:'confirm_close_click'});
             if(event.index == 0){
                this.cancleWorking();
             }
@@ -722,6 +732,7 @@ let workingModalMixin  = {
         //点击取消/确定按钮事件
         actionsheetBtnClick: function () {
             this.showBar = false;
+            this.statisticsUpload({subAction:'cancel_close_click'});
         },
     }
 };

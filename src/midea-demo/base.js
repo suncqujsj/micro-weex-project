@@ -17,6 +17,9 @@ import mideaHeader from '@/midea-component/header.vue'
 const appDataChannel = new BroadcastChannel(plugin_name + 'appData')
 const pushDataChannel = new BroadcastChannel(plugin_name + 'pushData')
 
+Vue.config.errorHandler = function (err, vm, info) {
+    console.error(err)
+}
 export default {
     components: {
         mideaHeader

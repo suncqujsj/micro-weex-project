@@ -167,13 +167,14 @@ const accordionMixin = {
             if (e.type === 'cancel' || e.type === 'close'){
                 this.show = false;
                 this.resetState();
+                this.statisticsUpload({subAction: 'cancel_mode_click'});
                 return;
             }
 
             let jsonCmd = {
                 currentItem: this.currentItem,
                 mode: this.currentItem.mode,
-                minute: this.setValue('time'),
+                time: this.setValue('time'),
                 temperature: this.setValue('temperature'),
                 preheat: this.current.preheat,
                 preheatHide:  this.current.preheatHide,
@@ -208,9 +209,39 @@ const accordionMixin = {
             //     jsonCmd.recipeId =  this.setValue('recipeId');
             // }
 
+            this.dialogParamsStatistics(jsonCmd);
+
             jsonCmd = this.formatJsonCmd(jsonCmd);
 
+            this.statisticsUpload({subAction: 'start_mode_click', action_result:this.currentItem.mode});
             this.controlDevice(jsonCmd, e);
+        },
+        /**
+         * 弹窗参数数据埋点
+         */
+        dialogParamsStatistics(jsonCmd){
+            try {
+                if(this.isStandby()) {
+                    for(let accordion of this.accordions) {
+                        let key = accordion.key;
+                        if(!!this.currentItem[key] && this.currentItem[key].set && this.currentItem[key].default != jsonCmd[key]) { // bool to test
+                            nativeService.toast(`${!!this.currentItem[key]}:${this.currentItem[key].set}:${this.currentItem[key].default != jsonCmd[key]}`);
+                            this.statisticsUpload({subAction: `${key}_${accordion.type}`, action_result:`${this.currentItem[key].default}->${jsonCmd[key]}`});
+                        }
+                    }
+                    return;
+                }
+
+                for(let accordion of this.accordions) {
+                    let key = accordion.key;
+                    if(!!this.currentItem[key] && this.currentItem[key].set && !this.currentItem[key].hide) { // bool to test
+                        this.statisticsUpload({subAction: `${key}_${accordion.type}`, action_result:`${jsonCmd[key]}`});
+                    }
+                }
+
+            }catch (e) {
+                nativeService.toast(e)
+            }
         },
         validate(jsonCmd){
             // nativeService.alert(this.cmdObj.isProbe.value)

@@ -52,7 +52,8 @@ import base from '../base'
 import mideaTitleBar from '@/midea-component/title-bar.vue'
 import mideaButton from '@/midea-component/button.vue'
 import nativeService from '@/common/services/nativeService'
-// const defaultUrl = "./editor.html"
+// const defaultUrl = "http://10.8.81.30:8082/index.html?title=aaa&content=bbb"
+// const defaultUrl = "../static/htmlEditor/index.html"
 const defaultUrl = "http://living.midea.com/v1/foodRecipes/enterMdotMenu?userId=1741829&menuId=11001&deviceId=28587302423321&deviceType=0xEA&modelNo=00000027&openId=1741829&flag=mSmartControl&targetInt=rice_detail&riceCode=6957901500358"
 module.exports = {
     components: { mideaButton, mideaTitleBar },
@@ -86,7 +87,13 @@ module.exports = {
             })
         },
         onMessage(data) {
-            nativeService.alert(1234)
+            if (!data) return
+            if (data.data.action == "goBack") {
+                nativeService.goBack()
+            }
+            else if (data.data.action == "submit") {
+                nativeService.alert(data.data)
+            }
         }
     },
     created() {

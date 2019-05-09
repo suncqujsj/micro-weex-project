@@ -135,6 +135,10 @@ function runWalk(dir) {
                     }
                     let targetImgFolder = path.join(distPath, targetDir, "assets")
                     subProjectAssets.push({ from: fullpath, to: targetImgFolder })
+                } else if (file == "static") {
+                    let targetDir = dir
+                    let targetImgFolder = path.join(distPath, targetDir, "static")
+                    subProjectAssets.push({ from: fullpath, to: targetImgFolder })
                 } else if (file !== "components") {
                     let subdir = path.join(dir, file)
                     runWalk(subdir)

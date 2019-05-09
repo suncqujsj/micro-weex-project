@@ -17,7 +17,8 @@ module.exports = {
             standby: true,
             working:true
         },
-        showPreheatContinueBtn: true // 当设备预热完成时，显示继续按钮
+        showPreheatContinueBtn: true, // 当设备预热完成时，显示继续按钮
+        showVideo: true // 显示视频监控入口
     }
 };
 

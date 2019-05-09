@@ -66,6 +66,7 @@ const deviceMessageMixin = {
                 deviceCmd,
                 function(result){
                     context.loading = false;
+                    context.statisticsUpload({subAction: 'child_lock_click', action_result:childLock});
                     context.queryStatus();
                 },
                 function(result){
@@ -89,7 +90,7 @@ const deviceMessageMixin = {
             this.tabs = tabs;
             this.device = device;
         },
-        queryStatus(tabs=this.tabs,device=this.device) {//传入模式配置数据tabs
+        queryStatus(tabs=this.tabs,device=this.device, cb=null) {//传入模式配置数据tabs
             if(device) {
                 this.initData(tabs, device);
             }
@@ -111,9 +112,12 @@ const deviceMessageMixin = {
                     // nativeService.alert(arr);
                     var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
                     self.analysisFun(analysisObj,self.tabs);
+
+                    cb && cb();
                 },
                 function (result) {
                     //nativeService.hideLoading();
+
                     //nativeService.toast("查询失败" + JSON.stringify(result));
                 }
             );
@@ -140,6 +144,7 @@ const deviceMessageMixin = {
             )
         },
         setting(cmdObj){
+            this.statisticsUpload({subAction:'edit_click'});
             if(!this.hasSetting){
                 return;
             }
@@ -235,6 +240,7 @@ const deviceMessageMixin = {
                 deviceCmd,
                 function(result){
                     nativeService.hideLoading();
+                    self.statisticsUpload({subAction:'pause_continue_click', action_result: record})
                     self.queryStatus();
                 },
                 function(result){

@@ -35,7 +35,7 @@ let tests = [
                 'mode': 0xA0,
                 weight:{
                     set:true,
-                    default:4,
+                    default:20,
                     range:[4,70,1],
                     unit:"oz"
                 },

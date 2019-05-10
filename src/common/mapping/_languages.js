@@ -61,7 +61,7 @@ const en = {
     start: 'Start',
     cancel: 'Cancel',
     timeLeft: 'Time Remaining',
-    close: 'Close',
+    close: 'Cancel',
     putIntoFoodMaterial: 'Put Into Food Material',
     pressToStart: 'Press To Start',
     preheat: 'Preheat',
@@ -88,7 +88,7 @@ const en = {
     probeTemperature: 'Probe Temperature',
     isProbeSettingTemperature: 'Temperature',
     steamAmount: 'Steam Amount',
-    fireAmount: 'Fire Amount',
+    fireAmount: 'Power Level',
     weight: 'Weight',
     quantity: 'Quantity',
     quantityDefaultUnit: 'Copies',
@@ -96,8 +96,8 @@ const en = {
     childLockOpenedText: 'Child lock opened',
     closeChildLock: 'Close the Child lock',
     pausing: 'Pausing',
-    resume: 'Resume',
-    pause: 'Pause',
+    resume: 'Start',
+    pause: 'Stop',
     cookFinished: 'End of cook'
 };
 

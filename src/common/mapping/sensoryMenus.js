@@ -16,7 +16,8 @@ let menus = {
     0x61:{ cn:'宫保鸡丁', en:''},
     0x62:{ cn:'银耳莲子羹', en:''},
     0x63:{ cn:'椰汁木瓜露', en:''},
-    0x64:{ cn:'薏米红豆汤', en:''}
+    0x64:{ cn:'薏米红豆汤', en:''},
+    0x8f:{ cn:'Reheat', en:''},//翻热
 };
 
 export default menus;

@@ -384,6 +384,7 @@ let workingModalMixin  = {
          * 工作状态判断以及数据处理
          */
         getWorkingStatusHandle(cmdObj,chartJson){
+            // nativeService.toast(cmdObj);
             if(cmdObj.workingState.value === 3){
                 this.timeShow = true;
                 this.hasSetting = true;
@@ -605,6 +606,7 @@ let workingModalMixin  = {
          * 工作页面
          */
         analysisWorkingFun(analysisObj,tabs) {
+            // nativeService.toast(analysisObj);
             var self = this , timer = null;
             this.initWorkingData();
 

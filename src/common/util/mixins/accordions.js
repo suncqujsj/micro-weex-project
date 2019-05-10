@@ -214,6 +214,9 @@ const accordionMixin = {
             jsonCmd = this.formatJsonCmd(jsonCmd);
 
             this.statisticsUpload({subAction: 'start_mode_click', action_result:this.currentItem.mode});
+
+            this.resetStartTime();
+
             this.controlDevice(jsonCmd, e);
         },
         /**

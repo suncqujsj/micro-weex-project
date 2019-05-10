@@ -18,6 +18,7 @@ let commonMixin = {
         };
     },
     beforeCreate(){
+        // this.resetStartTime();
         this.startTime = new Date();
     },
     computed:{
@@ -238,6 +239,18 @@ let commonMixin = {
          */
         getPrePageName(){
             return 'mideaHomePage'
+        },
+
+        resetStartTime(){
+            this.startTime = new Date();
+        },
+
+        /**
+         * 计算页面加载时间
+         */
+        pageViewStatistics(){
+            let load_duration = (new Date()).getTime() - this.startTime.getTime();
+            this.statisticsUpload({load_duration});
         },
 
         /**

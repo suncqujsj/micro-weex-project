@@ -94,7 +94,8 @@
                 recording:false,
                 t:null,
                 second:0,
-                frmplay:0
+                frmplay:0,
+                tt:null
             };
         },
         computed:{
@@ -113,7 +114,7 @@
             this.init();
         },
         created(){
-            nativeService.showLoading()
+            this.initLoading();
             this.getPhotoLibraryAuthorizationStatus();
             this.requestPhotoLibraryAuthorization();
         },
@@ -300,13 +301,30 @@
                     }
                 );
             },
+            initLoading(){
+                this.tt = setInterval(()=>{
+                    if(!this.frmplay) {
+                        nativeService.showLoading();
+                        return;
+                    }
+                    nativeService.hideLoading();
+                    clearInterval(this.tt);
+                },1000);
+            },
             event(event){
                 // nativeService.toast('event sData:' +event.sData+",sRender:"+event.sRender);
                 let paramsArr = event.sData.split('&');
                 for(let param of paramsArr) {
                     let pair = param.split('=');
                     if(pair[0] === 'frmplay') {
-                        this.frmplay = pair[1];
+                        let frmplay = pair[1];
+                        if(this.frmplay === frmplay) {
+                            nativeService.showLoading();
+                            return;
+                        }
+
+                        this.frmplay = frmplay;
+                        nativeService.hideLoading();
                     }
                 }
             }

@@ -39,8 +39,7 @@
         created(){
         },
         mounted(){
-            let load_duration = (new Date()).getTime() - this.startTime.getTime();
-            this.statisticsUpload({load_duration});
+            this.pageViewStatistics();
         },
         // computed:{
         // },

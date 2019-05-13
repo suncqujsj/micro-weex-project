@@ -40,7 +40,7 @@ let modes = [
                     range:[1,5,2,8,10,2],
                     hide: null
                 },
-                // settingHide:true,
+                settingHide:true,
                 // circleProgressPointHide: true,
             },
             {
@@ -108,7 +108,7 @@ let modes = [
                     default:null,
                     range:null,
                 },
-                // settingHide:true,
+                settingHide:true,
                 // circleProgressPointHide: true,
             },
             {
@@ -176,7 +176,7 @@ let modes = [
                     range:[1,5,2,8,10,2],
                     hide: null
                 },
-                // settingHide:true,
+                settingHide:true,
                 // circleProgressPointHide: true,
             },
         ],

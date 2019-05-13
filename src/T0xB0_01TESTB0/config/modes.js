@@ -30,6 +30,7 @@ let tests = [
                     default:10,
                     range:[1,5,2,8,10,2]
                 },
+                settingHide:true,
             },
             {
                 'icon': modeIcons[13].dir,
@@ -41,6 +42,7 @@ let tests = [
                     default:160,
                     range:[160,230,10],
                 },
+                settingHide:true,
             },
             {
                 'icon': modeIcons[22].dir,
@@ -57,6 +59,7 @@ let tests = [
                     default:160,
                     range:[160,230,10],
                 },
+                settingHide:true,
             },
             {
                 'icon': modeIcons[1].dir,
@@ -68,6 +71,7 @@ let tests = [
                     default:160,
                     range:[160,230,10],
                 },
+                settingHide:true,
             },
         ]
     },
@@ -89,6 +93,7 @@ let tests = [
                     default:10,
                     range:fireAmountRange
                 },
+                settingHide:true,
             },
             {
                 'icon': modeIcons[24].dir,
@@ -100,6 +105,7 @@ let tests = [
                     default:10,
                     range:fireAmountRange
                 },
+                // settingHide:true,
             },
             // {
             //     'icon': modeIcons[27].dir,

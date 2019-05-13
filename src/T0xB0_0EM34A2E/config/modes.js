@@ -9,7 +9,6 @@ let lang = constant.device.lang || 'cn';
 
 let fireAmountRange = [1,10, 1];
 
-
 let tests = [
     {
         title: '',
@@ -21,7 +20,7 @@ let tests = [
                 time: {
                     set: true,
                     default:1,
-                    range:[1,60,1],
+                    range:[1,99,1],
                 },
                 fireAmount: {
                     set:true,
@@ -36,17 +35,16 @@ let tests = [
                 'mode': 0xA0,
                 weight:{
                     set:true,
-                    default:4,
-                    range:[4,10,1],
+                    default:20,
+                    range:[4,70,1],
                     unit:"oz"
                 },
                 fireAmount: {
-                    set:true,
-                    default:5,
+                    set:false,
+                    default:null,
                     range:fireAmountRange
                 },
                 settingHide:true
-
             },
             {
                 'icon': modeIcons[24].dir,
@@ -55,15 +53,14 @@ let tests = [
                 time: {
                     set: true,
                     default:10,
-                    range:[1,60,1],
+                    range:[1,99,1],
                 },
                 fireAmount: {
                     set:true,
                     default:3,
                     range:fireAmountRange
                 },
-                settingHide:true
-
+                // settingHide:true
             },
         ]
     },

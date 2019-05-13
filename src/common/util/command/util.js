@@ -471,7 +471,6 @@ export default {
         //   return;
         // }
         // latesFrameRecord = receiveFrame;
-        // nativeService.toast(latesFrameRecord,6);
         var obj = this.initAnalysisObj();
         obj.cmdLength = parseInt(requestCmd[1]); // 指令长度
         obj.workingState.value = parseInt(requestCmd[11]);
@@ -537,7 +536,7 @@ export default {
         obj.fire.value = parseInt(requestCmd[24]);  //parker: 火力不用*10了，统一用新协议0-10
         obj.weight.value = parseInt(requestCmd[25])*10;
         obj.steam.value = parseInt(requestCmd[25]);
-
+        // nativeService.toast(requestCmd);
         return obj;
     },
 };

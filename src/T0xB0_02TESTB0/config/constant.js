@@ -6,8 +6,8 @@
 module.exports = {
     device: {
         type: 0xB0,
-        page_title: "BUILT-IN MWO",
-        sales_model: "BUILT-IN MWO",
+        page_title: "Built-in MWO",
+        sales_model: "Built-in MWO",
         widget_name: 'MSO_T0xB0',
         widget_version: '5.0.1',
         lang: 'en',

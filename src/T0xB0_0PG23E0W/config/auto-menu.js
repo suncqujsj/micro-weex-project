@@ -1577,7 +1577,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:4,
+                        default:15,
                         range: null
                     },
                     temperature:{

@@ -193,6 +193,7 @@ module.exports = {
         pagesList: [
             { title: '滑动显示更多菜单', link: "moreMenu" },
             { title: '滑动放缩图片', link: "scrollHeader" },
+            { title: '带背景环形进度条', link: "mprogresscycle" },
         ],
         weexList: [
             { title: 'BroadcastChannel示例', link: "broadcastChannelA" },

@@ -41,7 +41,7 @@ export default {
         },
         chartColor: {
         	type: String,
-        	default:'#dfe5ef'
+        	default:'#FF9500'
         }
     },
     computed: {

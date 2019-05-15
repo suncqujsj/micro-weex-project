@@ -96,7 +96,8 @@
                 t:null,
                 second:0,
                 frmplay:0,
-                tt:null
+                tt:null,
+                loading:false
             };
         },
         computed:{
@@ -230,7 +231,7 @@
                 this.t  = setInterval(
                     ()=>{
                         // nativeService.toast(this.countingText)
-                        ++this.second;
+                        !this.loading && ++this.second;
                     }, 1000
                 );
             },
@@ -321,11 +322,13 @@
                         let frmplay = pair[1];
                         if(this.frmplay === frmplay) {
                             nativeService.showLoading();
+                            this.loading = true;
                             return;
                         }
 
                         this.frmplay = frmplay;
                         nativeService.hideLoading();
+                        this.loading = false;
                     }
                 }
             }

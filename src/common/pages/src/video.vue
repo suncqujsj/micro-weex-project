@@ -44,6 +44,7 @@
     .record-icon{
         .square(56*2px);
         .pos(a);
+        left: 319px;
         bottom:72px;
     }
 

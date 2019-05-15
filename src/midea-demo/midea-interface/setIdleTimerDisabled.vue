@@ -8,6 +8,7 @@
             <text class="display-block">
                 nativeService.setIdleTimerDisabled()
             </text>
+        </midea-button>
     </div>
 </template>
 <style scoped>
@@ -47,5 +48,6 @@ module.exports = {
         },
         created() {
         }
-    };
+    }
+}
 </script>

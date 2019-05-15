@@ -2,9 +2,62 @@
  * Created by sf
  * 2018/10/20
  */
+
+import sensoryMenu from '@/common/mapping/sensoryMenus';
+
+function sensoryMenuItem(recipeId, t) {
+    return {
+        'icon': '',
+        'text': sensoryMenu[recipeId].cn,
+        'mode': 0xE2,
+        time:{
+            set: false,
+            text: t
+        },
+        recipeId:{
+            set:false,
+            default: recipeId,
+            range:null
+        },
+        detail: null,
+        settingHide:true, //工作页面，隐藏设置参数
+    };
+}
+
 let data = [
     {
-        title: 'mode',
+        title: '中式家常',
+        iconButtons: [
+            [
+                sensoryMenuItem(0x5b, "25'"),
+                sensoryMenuItem(0x1b, "14'"),
+                sensoryMenuItem(0x29, "8'"),
+                sensoryMenuItem(0x5e, "7'"),
+            ],
+        ]
+    },
+    {
+        title: '中式家常',
+        iconButtons: [
+            [
+                sensoryMenuItem(0x5f, "47'"),
+                sensoryMenuItem(0x60, "9'"),
+            ],
+        ]
+    },
+    {
+        title: '养颜甜品',
+        iconButtons: [
+            [
+                sensoryMenuItem(0x2c, "48'"),
+                sensoryMenuItem(0x62, "55'"),
+                sensoryMenuItem(0x63, "45'"),
+                sensoryMenuItem(0x64, "78'"),
+            ],
+        ]
+    },
+    {
+        title: '特色风味',
         iconButtons: [
             [
                 {
@@ -175,7 +228,7 @@ let data = [
         ]
     },
     {
-        title: '所有人群',
+        title: '特色风味',
         iconButtons: [
             [
                 {
@@ -260,6 +313,15 @@ let data = [
                     detail: null,
                     settingHide:true
                 }, 
+
+            ],
+
+        ]
+    },
+    {
+        title: '烧烤小吃',
+        iconButtons: [
+            [
                 {
                     'icon': '',
                     'text': '黑椒烤鲜虾',
@@ -300,7 +362,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true
-                }, 
+                },
                 {
                     'icon': '',
                     'text': '蒜香鸡中翅',
@@ -341,15 +403,7 @@ let data = [
                     },
                     detail: null,
                     settingHide:true
-                }, 
-            ],
-
-        ]
-    },
-    {
-        title: '所有人群',
-        iconButtons: [
-            [
+                },
                 {
                     'icon': '',
                     'text': '孜然肉串',

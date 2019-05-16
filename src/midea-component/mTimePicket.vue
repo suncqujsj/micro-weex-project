@@ -3,8 +3,10 @@
         <div class="midea-body">
             <div style="width:750px">
                 <title-bar title="重复周期"></title-bar> 
-                <midea-radio-list :list="repeatList" :needShowTopBorder="true" @mideaRadioItemChecked="repeatSelect"></midea-radio-list>   
-                <option-list-circle :cols="cols" :customStyles="customStyles" :list="dayList"  @optionClick="dayChange" v-if="repeatType==4"></option-list-circle>
+                <midea-radio-list :list="repeatList" :needShowTopBorder="true" :needShowLastBottomBorder="true" @mideaRadioItemChecked="repeatSelect"></midea-radio-list>   
+                <div v-if="currentSelectedType=='4'">
+                	<option-list-circle  :cols="cols" :customStyles="customStyles" :list="dayList"  @optionClick="dayChange" ></option-list-circle>
+                </div>
             </div>
         </div>
    </div>
@@ -35,7 +37,7 @@
 	        },
 	        selectedDays: {
 	        	type:String,
-	        	default: "0110000"
+	        	default: "0000000"
 	        }
 	    },
         data(){
@@ -54,7 +56,7 @@
 			        alignItems: "center",
 			        justifyContent:"center",
             	},
-                repeatType: 1,
+            	currentSelectedType:this.repeatType,
                 repeatList: [
                     { title: '每天', value: 1 , checked: true,data:"1111111"},
                     { title: '工作日', value: 2 ,data:"1111100"},
@@ -76,30 +78,34 @@
         computed:{
         },
         methods: {
-            leftBtnClick(){
-                nativeService.goBack()
-            },
             repeatSelect(e) {
-                this.repeatType = e.value;
-                this.$emit('onRepeatSelect', {value:this.repeatType})
+            	const {repeatType} = this;
+            	this.currentSelectedType = e.value;
+                this.$emit('onRepeatSelect', {value:e.value})
             },
             dayChange(e) {
                this.checkedList=e.checkedList;
                this.$emit('onDayChange', {value:this.checkedList})
             },
             init(){
-              let isFindItem=false;
-              let dayList = this.selectedDays.split("");
+              const {repeatType,selectedDays} = this;
+              this.currentSelectedType = repeatType;
+              let currentDayList = selectedDays.split("");
+              let isFindItem = false;
               this.repeatList.forEach(item=>{
-                   if(item.value==this.repeatType){
+                   if(item.value==repeatType){
                        item.checked=true;
-                       isFindItem=true;
+                       isFindItem = true;
                    }else{
                        item.checked=false;
                    }
                })
+               if(!isFindItem){
+                   this.repeatList[3].checked=true;
+                   this.currentSelectedType="4";
+               }
                this.dayList.forEach((item,idx)=>{
-                    if(dayList[idx]==1){
+                    if(currentDayList[idx]==1){
                        item.checked=true;  
                     }else{
                        item.checked=false;  

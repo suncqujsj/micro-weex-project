@@ -21,7 +21,7 @@ module.exports = {
     mixins: [base],
     data() {
         return {
-            repeatType:"2",
+            repeatType:"3",
             selectedDays:"1111000",
             selectedType:"2",
             selectedDay:"1111000".split("")

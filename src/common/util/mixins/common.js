@@ -38,8 +38,8 @@ let commonMixin = {
         onBackIconClicked(){
             this.statisticsUpload({subAction:'back_icon_click'});
         },
-        openPage: function(pageName){
-            nativeService.goTo(`${pageName}.js`, {animated: true});
+        openPage: function(pageName, params=null){
+            nativeService.goTo(`${pageName}.js`, {animated: true}, params);
         },
         isip9(){
            return  weex && (weex.config.env.deviceModel === 'iPhone9,2');
@@ -251,6 +251,20 @@ let commonMixin = {
         pageViewStatistics(){
             let load_duration = (new Date()).getTime() - this.startTime.getTime();
             this.statisticsUpload({load_duration});
+        },
+
+        /**
+         * 获取url指定参数值
+         */
+        getUrlParam(url, key){
+            let params = url.split('?')[1].split('&');
+            for(let param of params) {
+                let pair = param.split('=');
+                if(pair[0] === key) {
+                    return pair[1];
+                }
+            }
+
         },
 
         /**

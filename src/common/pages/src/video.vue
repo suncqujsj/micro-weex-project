@@ -114,13 +114,23 @@
         mounted(){
             // this.setVideoModeSize();
             this.init();
+            this.prePageName = this.getUrlParam(weex.config.bundleUrl, 'pageName');
         },
         created(){
+            // nativeService.alert(weex.config.bundleUrl);
             this.initLoading();
             this.getPhotoLibraryAuthorizationStatus();
             this.requestPhotoLibraryAuthorization();
         },
         methods: {
+
+            getPageName(){
+                return 'videoPage';
+            },
+
+            getPrePageName(){
+                return this.prePageName;
+            },
 
             hms(){
                 let [h,m,s] = [0,0,0];
@@ -176,6 +186,7 @@
                     },
                     () => {
                         nativeService.toast("start 成功");
+                        context.pageViewStatistics();
                     },
                     () => {
                         nativeService.toast("start failed");

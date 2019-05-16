@@ -16,7 +16,7 @@
 </style>
 
 <template>
-    <image v-if="show" class="icon position" :src="icon" @click="openPage('video')"></image>
+    <image v-if="show" class="icon position" :src="icon" @click="openPage('video', {pageName:'workingPage'})"></image>
 </template>
 
 <script>

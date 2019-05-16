@@ -3,7 +3,7 @@
     	<div class="displayText" :style="displayTextstyle">
     		<slot name="displayText"></slot>
     	</div>
-        <midea-progresscycle-view  class="progresscycle" :data="chartData">
+        <midea-progresscycle-view  :style="cycleStyle" :data="chartData">
         </midea-progresscycle-view>
     </div>
 </template>
@@ -15,13 +15,6 @@
 	height: 154px;
 	border-radius: 77px;
    	background-color: red;
-}
-.progresscycle {
-	position: relative;
-    width: 480px;
-    height: 480px;
-    margin-left:-27px;
-    margin-top:-27px;
 }
 .displayText {
 	position:absolute;
@@ -44,15 +37,28 @@ export default {
         	default:'#FF9500'
         }
     },
+    data() {
+        return {
+            configObj: weex.config
+        }
+    },
     computed: {
     	progresscycleStyle () {
 	        const { chartData,chartColor } = this;
 	        let returnData = {};
 	        if (chartData.cornerRadius) {
-	            returnData = {
-	            	width:(chartData.cornerRadius-7)*2 + 'px',
-	            	height:(chartData.cornerRadius-7)*2 + 'px',
-	            	borderRadius: (chartData.cornerRadius-7) + 'px'
+	            if( this.configObj && this.configObj.env && this.configObj.env.platform == 'android') {
+	            	returnData = {
+		            	width:(chartData.cornerRadius-7)*2 + 'px',
+		            	height:(chartData.cornerRadius-7)*2 + 'px',
+		            	borderRadius: (chartData.cornerRadius-7) + 'px'
+		            }
+	            } else {
+	            	returnData = {
+		            	width:(chartData.cornerRadius+7)*2 + 'px',
+		            	height:(chartData.cornerRadius+7)*2 + 'px',
+		            	borderRadius: (chartData.cornerRadius+7) + 'px'
+		            }
 	            }
 	        }
 	        if(chartColor)  {
@@ -69,6 +75,27 @@ export default {
 	        	}
 	        }
 	        return {}
+	    },
+	    cycleStyle() {
+	    	let returnData = {};
+	    	if( this.configObj && this.configObj.env && this.configObj.env.platform == 'android') {
+            	returnData = {
+	            	position: 'relative',
+				    width: '480px',
+				    height: '480px',
+				    marginLeft:'-27px',
+				    marginTop:'-27px'
+	            }
+            } else {
+            	returnData = {
+	            	position: 'relative',
+				    width: '480px',
+				    height: '480px',
+				    marginLeft:'8px',
+				    marginTop:'8px'
+	            }
+            }
+            return returnData;
 	    }
     },
     methods: {

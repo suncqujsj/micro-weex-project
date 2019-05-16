@@ -129,12 +129,19 @@ let data = [
                         range:null
                     },
                     weight:{
-                        set:true,
-                        default:1,
+                        set:false,
+                        default:0,
                         range:[1,4,1],
                         unit:" ",
                         index:0,
                         ratio:1
+                    },
+                    quantity:{
+                        set:true,
+                        title:"Potatoes",
+                        default:1,
+                        range:[1,4,1],
+                        unit:" ",
                     },
                     recipeId:{
                         set:false,

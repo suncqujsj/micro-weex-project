@@ -4,9 +4,7 @@
             <div style="width:750px">
                 <title-bar title="重复周期"></title-bar> 
                 <midea-radio-list :list="repeatList" :needShowTopBorder="true" :needShowLastBottomBorder="true" @mideaRadioItemChecked="repeatSelect"></midea-radio-list>   
-                <div v-if="currentSelectedType=='4'">
-                	<option-list-circle  :cols="cols" :customStyles="customStyles" :list="dayList"  @optionClick="dayChange" ></option-list-circle>
-                </div>
+                <option-list-circle v-if="currentSelectedType=='4'"  :cols="cols" :customStyles="customStyles" :list="dayList"  @optionClick="dayChange" ></option-list-circle>
             </div>
         </div>
    </div>

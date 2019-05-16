@@ -52,6 +52,53 @@ let data = [
                     detail: null,
                     settingHide:true, //工作页面，隐藏设置参数
                 },
+
+                {
+                    'icon': '',
+                    'text': 'REHEAT',
+                    'mode': 0xE2,
+                    time:{
+                        set: false,
+                        default:0,
+                        range: null,
+                        text:2
+                    },
+                    temperature:{
+                        set: false,
+                        default:0,
+                        range:null
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    weight:{
+                        set:false,
+                        default:2.75,
+                        range:[2.75,3.2,0.45],
+                        unit:"oz",
+                        index:2.3,
+                        ratio:0.45
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x8F,
+                        range:null
+                    },
+                    detail: null,
+                    settingHide:true, //工作页面，隐藏设置参数
+                },
+
                 {
                     'icon': '',
                     'text': 'POTATO',
@@ -60,7 +107,7 @@ let data = [
                         set: false,
                         default:15,
                         range: null,
-                        text:2
+                        text:3
                     },
                     temperature:{
                         set: false,

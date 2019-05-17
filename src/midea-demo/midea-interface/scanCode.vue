@@ -1,6 +1,8 @@
 <template>
     <div class="wrapper">
         <midea-header title="scanCode扫描" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
+        <midea-title-bar title="接口参数:（可修改）"></midea-title-bar>
+        <textarea type="text" placeholder="Input Text" class="textarea" :value="messageParamString" @input="dataChange" rows=5 />
         <midea-button text="扫描" @mideaButtonClicked="mideaButtonClicked">
         </midea-button>
         <midea-button v-if="result" text="打开扫描结果weex连接" @mideaButtonClicked="mideaButtonClicked1">
@@ -50,12 +52,26 @@ module.exports = {
     mixins: [base],
     data() {
         return {
+            messageParam: {
+                "desc": "对准二维码，即可自动扫描", //跳转的目标页面
+            },
             result: ''
         }
     },
+    computed: {
+        messageParamString() {
+            return JSON.stringify(this.messageParam)
+        }
+    },
     methods: {
+        dataChange(event) {
+            try {
+                this.messageParam = JSON.parse(event.value)
+            } catch (error) {
+            }
+        },
         mideaButtonClicked() {
-            nativeService.scanCode().then(
+            nativeService.scanCode(this.messageParam).then(
                 (resp) => {
                     this.result = resp
                 }

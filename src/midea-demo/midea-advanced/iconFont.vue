@@ -79,7 +79,7 @@ module.exports = {
         var domModule = weex.requireModule('dom');
         try {
             nativeService.getPath((path) => {
-                let fontUrl = path + 'assets/font/midea_font.ttf'
+                let fontUrl = path + '../assets/font/midea_font.ttf'
                 domModule.addRule('fontFace', {
                     'fontFamily': "iconfont2",
                     'src': "url('" + fontUrl + "')"

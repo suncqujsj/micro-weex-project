@@ -117,6 +117,7 @@ module.exports = {
             { title: 'BindingX拖拽(^5.2.0)', link: "bindingx_Pan" },
             { title: 'BindingX拖动条(^5.2.0)', link: "bindingx_dragBar" },
             { title: 'BindingX方向控制(^5.2.0)', link: "bindingx_control" },
+            { title: 'BindingX手势放缩(^5.2.0)', link: "bindingx_zoom" },
             { title: 'Barchart柱状图', link: "barchart" },
             { title: 'GCanvas画布(^5.2.0)', link: "gcanvas" },
             { title: 'Grid Select', link: "gridSelect" },
@@ -141,8 +142,7 @@ module.exports = {
             { title: 'Tab', link: "tab" },
             // { title: 'TimeCycle时间转盘', link: "timeCycle" },
             { title: 'Video视频', link: "video" },
-            { title: 'scrollPicker滚动选择器', link: "scrollPicker" },
-            // { title: 'customLoading自定义加载', link: 'customLoading' },
+            { title: 'scrollPicker滚动选择器', link: "scrollPicker" }
         ],
         interfacelist: [
             { title: 'callTel打电话', link: "callTel" },
@@ -178,6 +178,7 @@ module.exports = {
             { title: 'showLoading打开原生loading界面', link: "showLoading" },
             { title: 'showLoadingWithMsg打开原生loading界面', link: "showLoadingWithMsg" },
             { title: 'showSharePanel打开分享界面', link: "showSharePanel" },
+            { title: 'showControlPanelPage打开控制页', link: "showControlPanelPage" },
             { title: 'startCmdProcess透传', link: "startCmdProcess" },
             { title: 'takePhoto照相', link: "takePhoto" },
             { title: 'updateDeviceInfo更新当前设备信息', link: "updateDeviceInfo" },
@@ -185,11 +186,17 @@ module.exports = {
             { title: 'uploadImgFile上传图片', link: "uploadImgFile" },
             { title: 'weexBundleToWeb跳转web页面', link: "weexBundleToWeb" },
             { title: 'burialPoint美居埋点', link: "burialPoint" },
-            { title: 'gesturePassword手势密码', link: "gesturePassword" }
+            { title: 'gesturePassword手势密码', link: "gesturePassword" },
+            { title: 'setIdleTimerDisabled屏幕常亮', link: "setIdleTimerDisabled" },
+            { title: 'subscribeMessage 订阅设备状态推送', link: "subscribeMessage" }
         ],
         pagesList: [
             { title: '滑动显示更多菜单', link: "moreMenu" },
             { title: '滑动放缩图片', link: "scrollHeader" },
+            { title: '带背景环形进度条', link: "mprogresscycle" },
+            { title: '时间选择器', link: "mTimePicket" },
+            { title: '底部弹框', link:"bottomContent"},
+            {title:'cell',link:"cellPage"}
         ],
         weexList: [
             { title: 'BroadcastChannel示例', link: "broadcastChannelA" },

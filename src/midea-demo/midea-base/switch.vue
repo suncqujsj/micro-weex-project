@@ -4,17 +4,17 @@
 
         <midea-cell :title="'Midea切换按钮'">
             <div slot="value">
-                <midea-switch2 :checked="mideaChecked" @change="onMideachange" slot="value"></midea-switch2>
+                <midea-switch2 ref="switch" @change="onMideachange"></midea-switch2>
             </div>
         </midea-cell>
         <midea-cell :title="'Midea切换按钮失败复原'">
             <div slot="value">
-                <midea-switch2 :checked="mideaCheckedA" @change="onMideachangeA"></midea-switch2>
+                <midea-switch2 ref="switchA" @change="onMideachangeA"></midea-switch2>
             </div>
         </midea-cell>
         <midea-cell :title="'Midea切换按钮失败复原'">
             <div slot="value">
-                <midea-switch2 :checked="mideaCheckedB.isChecked" @change="onMideachangeB"></midea-switch2>
+                <midea-switch2 ref="switchB" @change="onMideachangeB"></midea-switch2>
             </div>
         </midea-cell>
         <div style="padding:20px;">
@@ -33,7 +33,7 @@
 </style>
 <script>  
 import base from '../base'
-import mideaCell from '@/component/cell.vue'
+import mideaCell from '@/midea-component/cell.vue'
 import mideaSwitch2 from '@/midea-component/switch2.vue'
 import nativeService from '@/common/services/nativeService'
 const modal = weex.requireModule('modal');
@@ -58,16 +58,21 @@ module.exports = {
             this.mideaCheckedA = event.value;
             setTimeout(() => {
                 //模拟请求耗时
-                this.mideaCheckedA = !event.value;
+                this.$refs["switchA"].switchValue(!event.value)
             }, 500);
         },
         onMideachangeB(event) {
             this.mideaCheckedB.isChecked = event.value;
             setTimeout(() => {
                 //模拟请求耗时
-                this.mideaCheckedB.isChecked = !event.value;
+                this.$refs["switchB"].switchValue(!event.value)
             }, 500);
         },
+    },
+    mounted() {
+        this.$refs["switch"].switchValue(this.mideaChecked)
+        this.$refs["switchA"].switchValue(this.mideaCheckedA)
+        this.$refs["switchB"].switchValue(this.mideaCheckedB.isChecked)
     },
     created() {
     }

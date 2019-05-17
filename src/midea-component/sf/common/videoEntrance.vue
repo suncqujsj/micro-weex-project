@@ -16,7 +16,7 @@
 </style>
 
 <template>
-    <image v-if="show" class="icon position" :src="icon" @click="openPage('video', {pageName:'workingPage'})"></image>
+    <image v-if="show" class="icon position" :src="icon" @click="onVideoIconClicked"></image>
 </template>
 
 <script>
@@ -36,6 +36,10 @@
             }
         },
         methods:{
+            onVideoIconClicked(){
+                this.statisticsUpload({subAction:''})
+                this.openPage('video', {pageName:'workingPage'});
+            }
         }
     };
 </script>

@@ -100,6 +100,12 @@
                 loading:false
             };
         },
+        props:{
+            constant:{
+                type: Object,
+                default: () => ({})
+            }
+        },
         computed:{
             countingText(){
                 return this.second ? this.hms() : '';
@@ -186,7 +192,6 @@
                     },
                     () => {
                         nativeService.toast("start 成功");
-                        context.pageViewStatistics();
                     },
                     () => {
                         nativeService.toast("start failed");
@@ -335,6 +340,10 @@
                             nativeService.showLoading();
                             this.loading = true;
                             return;
+                        }
+
+                        if(!this.frmplay && frmplay) {
+                            this.pageViewStatistics(); // 上报视频加载时间
                         }
 
                         this.frmplay = frmplay;

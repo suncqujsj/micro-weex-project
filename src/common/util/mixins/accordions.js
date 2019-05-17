@@ -228,7 +228,7 @@ const accordionMixin = {
                     for(let accordion of this.accordions) {
                         let key = accordion.key;
                         if(!!this.currentItem[key] && this.currentItem[key].set && this.currentItem[key].default != jsonCmd[key]) { // bool to test
-                            nativeService.toast(`${!!this.currentItem[key]}:${this.currentItem[key].set}:${this.currentItem[key].default != jsonCmd[key]}`);
+                            // nativeService.toast(`${!!this.currentItem[key]}:${this.currentItem[key].set}:${this.currentItem[key].default != jsonCmd[key]}`);
                             this.statisticsUpload({subAction: `${key}_${accordion.type}`, action_result:`${this.currentItem[key].default}->${jsonCmd[key]}`});
                         }
                     }

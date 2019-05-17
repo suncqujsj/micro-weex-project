@@ -7,7 +7,7 @@
             <midea-header bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png" :title="constant.device.page_title" titleText="white" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2Native" >
                 <div slot="customerContent" class="header-top-wrapper">
                     <div class="header-top-inner-wrapper">
-                        <div class="header-right-image-wrapper" @click="onCloudMenuIconClicked">
+                        <div v-if="iconVisibility('hideCloudRecipe', 'standby')" class="header-right-image-wrapper" @click="onCloudMenuIconClicked">
                             <image class="header-right-image" :src="'img/header/public_ic_cloud_recipe@3x.png'"></image>
                         </div>
                         <div v-if="childLockVisibility('standby')" class="header-right-image-wrapper" @click="childLock(true)">
@@ -50,7 +50,9 @@
                                 <div class="icon-button column" v-for="item in items" @click="onIconButtonClicked(item)" v-if="!item.standbyHide">
                                     <image v-if="item.icon" class="button-icon" :src="item.icon"></image>
                                     <div v-else class="button-icon row a-c j-c">
-                                        <text style="font-size: 30px;">{{item.time.default}}'</text>
+                                        <text v-if="item.time.text" style="font-size: 30px;">{{item.time.text}}</text>
+                                        <text v-else style="font-size: 30px;">{{item.time.default}}'</text>
+                                        <!--<text style="font-size: 30px;">{{item.time.default}}'</text>-->
                                     </div>
                                     <!-- 不支持肉类探针的模式遮罩层 -->
                                     <div v-if="!item.probe && cmdObj.isProbe.value" class="button-icon a-c j-c probeClass"></div>
@@ -166,12 +168,12 @@
             <div class="a-c j-c" slot="content" :style="{height: wrapHeight+'px'}">
                 <div class="child-lock">
                     <image class="child-lock-icon" src="img/childlock/large_childlock@3x.png"></image>
-                    <text class="child-lock-text">童锁已开启</text>
+                    <text class="child-lock-text">{{language.childLockOpenedText}}</text>
                 </div>
 
                 <div class="child-lock-close" @click="childLock(false)">
                     <image class="child-lock-close-icon" src="img/childlock/mode_close@3x.png"></image>
-                    <text class="child-lock-close-text">关闭童锁</text>
+                    <text class="child-lock-close-text">{{language.closeChildLock}}</text>
                 </div>
             </div>
         </modal>
@@ -292,28 +294,32 @@
 
             <!-- 炉灯 -->
             <!--<image :class="['light_icon',cmdObj.light.value && 'light_on']" :src="lightImg"  @click="sendLightCmd(cmdObj.light.value,tabs,constant.device)"></image>-->
-            <light :hasLight="constant.device.hasLight" :lightValue="cmdObj.light.value" :event="sendLightCmd"></light>         
+            <light :hasLight="constant.device.show" :lightValue="cmdObj.light.value" :event="sendLightCmd"></light>
+
+            <!--视频监控入口-->
+            <video-entrance :show="constant.device.showVideo"></video-entrance>
         </div>
     </div>
 </template>
 
 <script>
     import MideaHeader from '@/midea-component/header.vue'
-    import modalHeader from '@/component/sf/custom/modal-header.vue'
-    import rowWrapItems from '@/component/sf/custom/row-wrap-items.vue'
-    import sfAccordion from '@/component/sf/custom/accordion.vue'
-    import detailModal from '@/component/sf/custom/detail-modal.vue'
-    import modal from '@/component/sf/custom/modal.vue'
-    import sfDialog from '@/component/sf/custom/dialog.vue'
+    import modalHeader from '@/midea-component/sf/custom/modal-header.vue'
+    import rowWrapItems from '@/midea-component/sf/custom/row-wrap-items.vue'
+    import sfAccordion from '@/midea-component/sf/custom/accordion.vue'
+    import detailModal from '@/midea-component/sf/custom/detail-modal.vue'
+    import modal from '@/midea-component/sf/custom/modal.vue'
+    import sfDialog from '@/midea-component/sf/custom/dialog.vue'
     import nativeService from "@/common/services/nativeService";
     import query from "../../dummy/query";
     import mideaSwitch2 from '@/midea-component/switch2.vue'
-    import WxPicker from '@/component/sf/custom/picker_amui.vue';
-    //  import WxPicker from '@/component/sf/custom/picker_time.vue';
-    import timePicker from '@/component/sf/custom/timePicker.vue'
-    import mideaDialog from '@/component/dialog.vue';
+    import WxPicker from '@/midea-component/sf/custom/picker_amui.vue';
+    //  import WxPicker from '@/midea-component/sf/custom/picker_time.vue';
+    import timePicker from '@/midea-component/sf/custom/timePicker.vue'
+    import mideaDialog from '@/midea-component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
-    import light from "@/component/sf/common/light.vue";
+    import light from "@/midea-component/sf/common/light.vue";
+    import videoEntrance from "@/midea-component/sf/common/videoEntrance.vue";
 
     // config data
     // import modes from "./config/modes.js";
@@ -337,7 +343,7 @@
         mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin,copyMixin,weexData,modalMixin,voiceMixin],
         data(){
             return {
-               
+
             }
         },
         props: {
@@ -352,15 +358,15 @@
                 default: () => ({})
             },
         },
-        components: {MideaHeader,sfDialog,mideaActionsheet,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modal,modalHeader,rowWrapItems,light,timePicker},
+        components: {MideaHeader,sfDialog,mideaActionsheet,WxPicker,sfAccordion,mideaSwitch2, mideaDialog, detailModal,modal,modalHeader,rowWrapItems,light,timePicker,videoEntrance},
         created(){
-
-
-            this.initVoiceWithParams(true); // sf 判断设备是否显示语音授权提示框
 
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             let self = this;
             let {constant,tabs} = this;
+
+            // constant.device.voiceAuth && this.initVoiceWithParams(true); // sf 判断设备是否显示语音授权提示框
+
             this.srcollPaddingBottom = '80px';
             if(this.isip9()){
                 this.srcollPaddingBottom = '50px';
@@ -372,7 +378,9 @@
             nativeService.initMockData({
                 query: query
             });
-            this.queryStatus(tabs,constant.device);
+
+            this.queryStatus(tabs,constant.device, this.pageViewStatistics);
+
             // if(constant.device.standby03 && !this.isIos) {
             // if(!this.isIos) {
             //     this.queryRunTimer(10);//轮询 已放在解析指令那里处理
@@ -398,7 +406,6 @@
             //     // nativeService.alert(typeof context.statisticsUpload);
             //     return context.statisticsUpload({...constant.device, iot_device_id:dataSn});
             // });
-            this.statisticsUpload({...constant.device});
 
             //console.dir(JSON.stringify(this.foodMaterialItems));
         },
@@ -410,9 +417,6 @@
                     width: `${progress_radius * 2}px`,
                     marginTop: `${wrapHeight/2-progress_radius*2-60}px`
                 }
-            },
-            language(){
-                return languages[this.getLang()];
             }
         },
         methods: {
@@ -428,7 +432,10 @@
                 return tab.rows[0].title && tab.rows[0].title !== 'mode'
             },
             onCloudMenuIconClicked(){
+
+
                 if(this.isFun2Oven() && this.isProbeInserted(this.cmdObj)) {
+                    this.statisticsUpload({actionType:'popup', subAction: 'cloud_recipe_click'});
                     this.setHintDialog({
                         show:true,
                         content: '主人，检测到烤箱插入了探针，云食谱目前不支持此功能，请取出探针后再操作。',
@@ -446,18 +453,21 @@
                 this.openCloudMenuPage();
             },
             openCloudMenuPage: function(){
+                this.statisticsUpload({subAction: 'cloud_recipe_click'});
                 nativeService.jumpNativePage({
                     "pageName": "CookbookHome",
                     "data": {}
                 })
             },
             openMorePage: function(){
+                this.statisticsUpload({subAction: 'more_icon_click'});
                 nativeService.goTo('more.js', {animated: true});
             },
             onTabClicked: function(index){
                 // debugger;
                 // let tabs = JSON.parse(JSON.stringify(this.tabs));
                 let tabs = this.tabs;
+                this.statisticsUpload({subAction: 'tab_click', action_result:index});
                 if(tabs[index].active) return;
                 for(let i=0; i<tabs.length; i++) {
                     if(parseInt(i) === index) {
@@ -477,6 +487,12 @@
                     nativeService.toast(text);
                     return;
                 }
+
+                let isAutoMode = item.mode === 0xE0;
+                let subAction = isAutoMode ? 'auto_mode_click' : 'mode_click';
+                let action_result = isAutoMode ? item.recipeId.default : item.mode;
+                this.statisticsUpload({subAction,  action_result:action_result.toString(16).toUpperCase()});
+
                 this.currentItem = item;
                 // nativeService.alert(this.currentItem);
                 this.modeText = item.text;

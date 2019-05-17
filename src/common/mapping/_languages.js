@@ -45,16 +45,23 @@ const cn = {
     fireAmount: '火力',
     weight: '重量',
     quantity: '数量',
-    quantityDefaultUnit: '份'
+    quantityDefaultUnit: '份',
+    morePageTitle: '更多功能',
+    childLockOpenedText: '童锁开启',
+    closeChildLock: '关闭童锁',
+    pausing: '暂停中',
+    resume: '继续',
+    pause: '暂停',
+    cookFinished: '烹饪结束'
 };
 
 const en = {
-    standbyState: 'standby',
+    standbyState: 'Standby',
     tabs: ['Auto Menu', 'Heat Mode'],
     start: 'Start',
     cancel: 'Cancel',
     timeLeft: 'Time Remaining',
-    close: 'Close',
+    close: 'Cancel',
     putIntoFoodMaterial: 'Put Into Food Material',
     pressToStart: 'Press To Start',
     preheat: 'Preheat',
@@ -63,7 +70,7 @@ const en = {
     ing: 'period',
     wait: 'Wait A Moment',
     confirmClose: 'Close Anyway',
-    finish: 'finished',
+    finish: 'Finished',
     to: 'To',
     hour: 'H',
     minute: 'M',
@@ -81,10 +88,17 @@ const en = {
     probeTemperature: 'Probe Temperature',
     isProbeSettingTemperature: 'Temperature',
     steamAmount: 'Steam Amount',
-    fireAmount: 'Fire Amount',
+    fireAmount: 'Power Level',
     weight: 'Weight',
     quantity: 'Quantity',
-    quantityDefaultUnit: 'Copies'
+    quantityDefaultUnit: 'Copies',
+    morePageTitle: 'More functions',
+    childLockOpenedText: 'Child lock opened',
+    closeChildLock: 'Close the Child lock',
+    pausing: 'Pausing',
+    resume: 'Start',
+    pause: 'Stop',
+    cookFinished: 'End of cook'
 };
 
 const lang = {

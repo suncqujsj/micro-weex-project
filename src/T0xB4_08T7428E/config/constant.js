@@ -8,7 +8,7 @@ module.exports = {
         page_title: "烤箱",
         type: 0xB4,
         widget_name: 'MSO_T0xB1',  // 埋点的时候，只保留 B0，B1，B2
-        widget_version: '5.0.3',
+        widget_version: '5.1.0',
         extra1: {
             sn8: '08T7428E'
         },
@@ -17,7 +17,8 @@ module.exports = {
             standby: true,
             working:true
         },
-        showPreheatContinueBtn: true // 当设备预热完成时，显示继续按钮
+        showPreheatContinueBtn: true, // 当设备预热完成时，显示继续按钮
+        showVideo: true // 显示视频监控入口
     }
 };
 

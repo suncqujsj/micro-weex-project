@@ -28,12 +28,13 @@ let tests = [
                 fireAmount: {
                     set:true,
                     default:10,
-                    range:fireAmountRange
+                    range:[1,5,2,8,10,2]
                 },
+                settingHide:true,
             },
             {
                 'icon': modeIcons[13].dir,
-                'text': modeIcons[13][lang],
+                'text': "Grill",
                 'mode': 0x40,
                 time: timeCommon,
                 temperature: {
@@ -41,10 +42,11 @@ let tests = [
                     default:160,
                     range:[160,230,10],
                 },
+                settingHide:true,
             },
             {
                 'icon': modeIcons[22].dir,
-                'text': modeIcons[22][lang],
+                'text': "Micro&Grill",
                 'mode': 0x70,
                 time: timeCommon,
                 fireAmount: {
@@ -57,10 +59,11 @@ let tests = [
                     default:160,
                     range:[160,230,10],
                 },
+                settingHide:true,
             },
             {
                 'icon': modeIcons[1].dir,
-                'text': modeIcons[1][lang],
+                'text': "Hot Wind",
                 'mode': 0x41,
                 time: timeCommon,
                 temperature: {
@@ -68,6 +71,7 @@ let tests = [
                     default:160,
                     range:[160,230,10],
                 },
+                settingHide:true,
             },
         ]
     },
@@ -85,10 +89,11 @@ let tests = [
                     range:[100,1000,100],
                 },
                 fireAmount: {
-                    set:true,
-                    default:5,
+                    set:false,
+                    default:10,
                     range:fireAmountRange
                 },
+                settingHide:true,
             },
             {
                 'icon': modeIcons[24].dir,
@@ -96,22 +101,23 @@ let tests = [
                 'mode': 0xA1,
                 time: timeCommon,
                 fireAmount: {
-                    set:true,
-                    default:3,
-                    range:fireAmountRange
-                },
-            },
-            {
-                'icon': modeIcons[27].dir,
-                'text': modeIcons[27][lang],
-                'mode': 0x03,
-                time: timeCommon,
-                fireAmount: {
-                    set:true,
+                    set:false,
                     default:10,
                     range:fireAmountRange
                 },
+                // settingHide:true,
             },
+            // {
+            //     'icon': modeIcons[27].dir,
+            //     'text': "Quick Micro",
+            //     'mode': 0x03,
+            //     time: timeCommon,
+            //     fireAmount: {
+            //         set:true,
+            //         default:10,
+            //         range:fireAmountRange
+            //     },
+            // },
         ]
     },
 ];

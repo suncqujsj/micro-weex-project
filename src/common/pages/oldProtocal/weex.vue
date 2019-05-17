@@ -286,21 +286,21 @@
 
 <script>
     import MideaHeader from '@/midea-component/header.vue'
-    import modalHeader from '@/component/sf/custom/modal-header.vue'
-    import rowWrapItems from '@/component/sf/custom/row-wrap-items.vue'
-    import sfAccordion from '@/component/sf/custom/accordion.vue'
-    import detailModal from '@/component/sf/custom/detail-modal.vue'
-    import modal from '@/component/sf/custom/modal.vue'
-    import sfDialog from '@/component/sf/custom/dialog.vue'
+    import modalHeader from '@/midea-component/sf/custom/modal-header.vue'
+    import rowWrapItems from '@/midea-component/sf/custom/row-wrap-items.vue'
+    import sfAccordion from '@/midea-component/sf/custom/accordion.vue'
+    import detailModal from '@/midea-component/sf/custom/detail-modal.vue'
+    import modal from '@/midea-component/sf/custom/modal.vue'
+    import sfDialog from '@/midea-component/sf/custom/dialog.vue'
     import nativeService from "@/common/services/nativeService";
     import query from "../../../dummy/query";
     import mideaSwitch2 from '@/midea-component/switch2.vue'
-    import WxPicker from '@/component/sf/custom/picker_amui.vue';
-    //  import WxPicker from '@/component/sf/custom/picker_time.vue';
-    import timePicker from '@/component/sf/custom/timePicker.vue'
-    import mideaDialog from '@/component/dialog.vue';
+    import WxPicker from '@/midea-component/sf/custom/picker_amui.vue';
+    //  import WxPicker from '@/midea-component/sf/custom/picker_time.vue';
+    import timePicker from '@/midea-component/sf/custom/timePicker.vue'
+    import mideaDialog from '@/midea-component/dialog.vue';
     import mideaActionsheet from '@/midea-component/actionsheet.vue'
-    import light from "@/component/sf/common/light.vue";
+    import light from "@/midea-component/sf/common/light.vue";
 
     // config data
     // import modes from "./config/modes.js";

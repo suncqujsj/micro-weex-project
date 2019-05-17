@@ -14,7 +14,8 @@ let data = [
                     time:{
                         set: false,
                         default:9,
-                        range: null
+                        range: null,
+                        text:1
                     },
                     temperature:{
                         set: false,
@@ -37,8 +38,11 @@ let data = [
                     },
                     weight:{
                         set:true,
-                        default:10,
-                        range:[10,20,10],
+                        default:2.75,
+                        range:[2.75,3.2,0.45],
+                        unit:"oz",
+                        index:2.3,
+                        ratio:0.45
                     },
                     recipeId:{
                         set:false,
@@ -55,7 +59,8 @@ let data = [
                     time:{
                         set: false,
                         default:15,
-                        range: null
+                        range: null,
+                        text:2
                     },
                     temperature:{
                         set: false,
@@ -78,8 +83,11 @@ let data = [
                     },
                     weight:{
                         set:true,
-                        default:10,
-                        range:[10,40,10],
+                        default:1,
+                        range:[1,4,1],
+                        unit:" ",
+                        index:0,
+                        ratio:1
                     },
                     recipeId:{
                         set:false,

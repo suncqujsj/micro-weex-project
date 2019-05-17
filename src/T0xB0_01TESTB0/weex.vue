@@ -15,13 +15,13 @@
         data(){
             return {
                 tabs:[
+                    // {
+                    //     name:'Auto Menu',
+                    //     active:false,
+                    //     rows:autoMenu
+                    // },
                     {
-                        name:'Auto Menu',
-                        active:false,
-                        rows:autoMenu
-                    },
-                    {
-                        name:'heat mode',
+                        name:'Heat Mode',
                         active:true,
                         rows:modes
                     },

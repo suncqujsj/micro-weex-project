@@ -236,62 +236,6 @@ let data = [
             [
                 {
                     'icon': '',
-                    'text': '清蒸柠檬鲈鱼',
-                    'mode': 0xE0,
-                    time:{
-                        set: true,
-                        default:12,
-                        range: [11,13,1],
-                    },
-                    temperature:{
-                        set: false,
-                        default:0,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    weight:{
-                        set:false,
-                        default:100,
-                        range:[100,400,100],
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 0x6B,
-                        range:null
-                    },
-                    detail: {
-                        foodMaterial:
-                            '新鲜鲈鱼1条 400克\n' +
-                            '红辣椒 3个 \n' +
-                            '蒜 6瓣\n' +
-                            '姜 3片\n' +
-                            '香葱 2根\n' +
-                            '鱼露 约50克\n' +
-                            '柠檬 1个挤汁',
-                        cookingSteps:
-                            '1.将收拾干净的鲈鱼抹干水分，两面分别割上三刀， 将生姜切薄片，塞到鱼肚子里。\n' +
-                            '2.将红辣椒、蒜、香葱切碎，然后将鱼露、柠檬汁、辣椒、蒜、香葱倒入一个碗中，拌匀备用；\n' +
-                            '3.把鱼放蒸鱼碟里，然后把碟子放蒸架上，把蒸架放平板上，关上炉门，水盒加水，选择菜单：清蒸柠檬鲈鱼，启动即可；\n' +
-                            '4.烹饪结束后，把蒸鱼碟取出，倒掉鱼里面的汤汁，然后趁热浇上搅拌均匀的调味料即可。',
-
-                    },
-                    settingHide:true
-                },
-                {
-                    'icon': '',
                     'text': '蒜蓉蒸虾',
                     'mode': 0xE0,
                     time:{
@@ -348,12 +292,68 @@ let data = [
                 },
                 {
                     'icon': '',
-                    'text': '南瓜粉丝蒸排骨',
+                    'text': '清蒸柠檬鲈鱼',
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:45,
-                        range: [38,52,1],
+                        default:12,
+                        range: [10,15,1],
+                    },
+                    temperature:{
+                        set: false,
+                        default:0,
+                        range:null
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    weight:{
+                        set:false,
+                        default:100,
+                        range:[100,400,100],
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x6B,
+                        range:null
+                    },
+                    detail: {
+                        foodMaterial:
+                            '新鲜鲈鱼1条 400克\n' +
+                            '红辣椒 3个 \n' +
+                            '蒜 6瓣\n' +
+                            '姜 3片\n' +
+                            '香葱 2根\n' +
+                            '鱼露 约50克\n' +
+                            '柠檬 1个挤汁',
+                        cookingSteps:
+                            '1.将收拾干净的鲈鱼抹干水分，两面分别割上三刀， 将生姜切薄片，塞到鱼肚子里。\n' +
+                            '2.将红辣椒、蒜、香葱切碎，然后将鱼露、柠檬汁、辣椒、蒜、香葱倒入一个碗中，拌匀备用；\n' +
+                            '3.把鱼放蒸鱼碟里，然后把碟子放蒸架上，把蒸架放平板上，关上炉门，水盒加水，选择菜单：清蒸柠檬鲈鱼，启动即可；\n' +
+                            '4.烹饪结束后，把蒸鱼碟取出，倒掉鱼里面的汤汁，然后趁热浇上搅拌均匀的调味料即可。',
+
+                    },
+                    settingHide:true
+                },
+                {
+                    'icon': '',
+                    'text': '南瓜蒸排骨',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:25,
+                        range: [21,29,1],
                     },
                     temperature:{
                         set: false,
@@ -409,7 +409,7 @@ let data = [
                 },
                 {
                     'icon': '',
-                    'text': '枸杞百合蒸鸡',
+                    'text': '红枣枸杞蒸滑鸡',
                     'mode': 0xE0,
                     time:{
                         set: true,
@@ -475,6 +475,62 @@ let data = [
             [
                 {
                     'icon': '',
+                    'text': '蒜蓉蒸娃娃菜',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:12,
+                        range: [10,14,1],
+                    },
+                    temperature:{
+                        set: false,
+                        default:0,
+                        range:null
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    weight:{
+                        set:false,
+                        default:100,
+                        range:[100,400,100],
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x6E,
+                        range:null
+                    },
+                    detail: {
+                        foodMaterial:
+                            '娃娃菜 3颗（约500克）\n' +
+                            '香葱 1根\n' +
+                            '蒜头 7-8瓣\n' +
+                            '生抽 1勺\n' +
+                            '蚝油 半勺\n' +
+                            '白糖 半勺\n' +
+                            '植物油 1勺\n' +
+                            '盐 1勺\n' ,
+                        cookingSteps:
+                            '1.娃娃菜掰开，洗净。\n' +
+                            '2.香葱和蒜头切末，蒜末中拌入生抽、蚝油、植物油和盐调配成酱汁备用。\n' +
+                            '3.在娃娃菜上淋上步骤2的酱汁，把碟子放入蒸架上，烤架置于平板上。\n' +
+                            '4.关上炉门，水盒加水，选择菜单：蒜蓉蒸娃娃菜，启动即可。' ,
+                    },
+                    settingHide:true
+                },
+                {
+                    'icon': '',
                     'text': '蒜蓉粉丝蒸扇贝',
                     'mode': 0xE0,
                     time:{
@@ -531,12 +587,12 @@ let data = [
                 },
                 {
                     'icon': '',
-                    'text': '蒜蓉蒸娃娃菜',
+                    'text': '时蔬海鲜烩',
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:12,
-                        range: [10,14,1],
+                        default:10,
+                        range: [9,11,1],
                     },
                     temperature:{
                         set: false,
@@ -564,27 +620,98 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x6E,
+                        default: 0x71,
                         range:null
                     },
                     detail: {
                         foodMaterial:
-                            '娃娃菜 3颗（约500克）\n' +
-                            '香葱 1根\n' +
-                            '蒜头 7-8瓣\n' +
-                            '生抽 1勺\n' +
-                            '蚝油 半勺\n' +
-                            '白糖 半勺\n' +
-                            '植物油 1勺\n' +
-                            '盐 1勺\n' ,
+                            '花甲 100克\n' +
+                            '沙虾 100克\n' +
+                            '鱿鱼须 100克\n' +
+                            '洋葱 半个\n' +
+                            '胡萝卜 半个\n' +
+                            '青辣椒 1个\n' +
+                            '植物油 2勺\n' +
+                            '咖喱块 2-3块\n' +
+                            '温开水 200克' ,
                         cookingSteps:
-                            '1.娃娃菜掰开，洗净。\n' +
-                            '2.香葱和蒜头切末，蒜末中拌入生抽、蚝油、植物油和盐调配成酱汁备用。\n' +
-                            '3.在娃娃菜上淋上步骤2的酱汁，把碟子放入蒸架上，烤架置于平板上。\n' +
-                            '4.关上炉门，水盒加水，选择菜单：蒜蓉蒸娃娃菜，启动即可。' ,
+                            '1.准备好所有食材。\n' +
+                            '2.洋葱和青辣椒切块，胡萝卜切片，鱿鱼须洗净切开，鲜虾剪去虾须，剪开虾背，去虾线，花甲洗净，咖喱块用温水泡开备用。\n' +
+                            '3.把洋葱和植物油倒入微波适用的大且深的容器中搅拌均匀，放入微波炉底盘，微波1000W火力加热2分钟。\n' +
+                            '4.取出，加入各种海鲜和蔬菜搅拌均匀，加盖留孔放回微波炉底盘，微波1000W火力加热3分钟。\n' +
+                            '5.取出，倒入咖喱汁搅拌均匀，放回微波炉底盘，微波1000W火力加热5分钟即可。',
                     },
                     settingHide:true
                 },
+                {
+                    'icon': '',
+                    'text': '农家小炒肉',
+                    'mode': 0xE0,
+                    time:{
+                        set: true,
+                        default:9,
+                        range: [8,10,1],
+                    },
+                    temperature:{
+                        set: false,
+                        default:0,
+                        range:null
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    weight:{
+                        set:false,
+                        default:100,
+                        range:[100,400,100],
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x72,
+                        range:null
+                    },
+                    detail: {
+                        foodMaterial:
+                            '五花肉 250g\n' +
+                            '青尖椒 150g\n' +
+                            '蒜苗 1根\n' +
+                            '豆豉 15g\n' +
+                            '姜片 2片\n' +
+                            '大蒜 3瓣\n' +
+                            '盐 2g\n' +
+                            '豆瓣酱 1勺\n' +
+                            '老抽 5g\n' +
+                            '水淀粉 2勺\n' +
+                            '料酒 1勺\n' +
+                            '花生油 2勺' ,
+                        cookingSteps:
+                            '1.准备好所有食材。\n' +
+                            '2.五花肉切薄片，青红椒洗净斜切段，蒜苗斜切成2cm长的段，姜切小粒，蒜切片，豆豉切碎。\n' +
+                            '3.五花肉加入蒜片、姜粒、老抽、少许盐和1勺油搅拌均匀，取另外一只碗，加入豆豉碎、豆瓣酱、料酒、生抽、水淀粉、花生油拌匀作为酱汁备用。\n' +
+                            '4.取一个微波适用的深盘，平铺上五花肉，不加盖放入微波炉底盘，微波高火加热4分钟。\n' +
+                            '5.取出五花肉，加入青红椒、蒜苗，倒入酱汁拌匀，加盖留孔放入微波炉中，微波1000W火力加热4分钟。' ,
+                    },
+                    settingHide:true
+                },
+            ]
+
+        ]
+    },
+    {
+        title: '健康家常',  // 首个 title 很重要，决定了是否平铺所有菜。当 title = mode，平铺； 当title = xxx，按分类显示
+        iconButtons: [
+            [
                 {
                     'icon': '',
                     'text': '麻婆豆腐',
@@ -653,8 +780,8 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:6,
-                        range: [5,7,1],
+                        default:11,
+                        range: [9,13,1],
                     },
                     temperature:{
                         set: false,
@@ -705,14 +832,6 @@ let data = [
                     },
                     settingHide:true
                 },
-            ]
-
-        ]
-    },
-    {
-        title: '健康家常',  // 首个 title 很重要，决定了是否平铺所有菜。当 title = mode，平铺； 当title = xxx，按分类显示
-        iconButtons: [
-            [
                 {
                     'icon': '',
                     'text': '糖醋小排',
@@ -770,125 +889,6 @@ let data = [
                             '3.微波适用盘中加入腌制排骨，加盖留孔，放入微波炉底盘，微波1000W火力加热5分钟。\n' +
                             '4.取出，加入100g水，加盖留孔，放入微波炉底盘，微波1000W火力加热5分钟后，转微波500W火力继续加热10分钟。\n' +
                             '5.最后按照个人口味调入食盐并撒入熟芝麻即可。',
-                    },
-                    settingHide:true
-                },
-                {
-                    'icon': '',
-                    'text': '时蔬海鲜烩',
-                    'mode': 0xE0,
-                    time:{
-                        set: true,
-                        default:10,
-                        range: [9,11,1],
-                    },
-                    temperature:{
-                        set: false,
-                        default:0,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    weight:{
-                        set:false,
-                        default:100,
-                        range:[100,400,100],
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 0x71,
-                        range:null
-                    },
-                    detail: {
-                        foodMaterial:
-                            '花甲 100克\n' +
-                            '沙虾 100克\n' +
-                            '鱿鱼须 100克\n' +
-                            '洋葱 半个\n' +
-                            '胡萝卜 半个\n' +
-                            '青辣椒 1个\n' +
-                            '植物油 2勺\n' +
-                            '咖喱块 2-3块\n' +
-                            '温开水 200克' ,
-                        cookingSteps:
-                            '1.准备好所有食材。\n' +
-                            '2.洋葱和青辣椒切块，胡萝卜切片，鱿鱼须洗净切开，鲜虾剪去虾须，剪开虾背，去虾线，花甲洗净，咖喱块用温水泡开备用。\n' +
-                            '3.把洋葱和植物油倒入微波适用的大且深的容器中搅拌均匀，放入微波炉底盘，微波1000W火力加热2分钟。\n' +
-                            '4.取出，加入各种海鲜和蔬菜搅拌均匀，加盖留孔放回微波炉底盘，微波1000W火力加热3分钟。\n' +
-                            '5.取出，倒入咖喱汁搅拌均匀，放回微波炉底盘，微波1000W火力加热5分钟即可。',
-                    },
-                    settingHide:true
-                },
-                {
-                    'icon': '',
-                    'text': '农家小炒肉',
-                    'mode': 0xE0,
-                    time:{
-                        set: true,
-                        default:8,
-                        range: [7,9,1],
-                    },
-                    temperature:{
-                        set: false,
-                        default:0,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    weight:{
-                        set:false,
-                        default:100,
-                        range:[100,400,100],
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 0x72,
-                        range:null
-                    },
-                    detail: {
-                        foodMaterial:
-                            '五花肉 250g\n' +
-                            '青尖椒 150g\n' +
-                            '蒜苗 1根\n' +
-                            '豆豉 15g\n' +
-                            '姜片 2片\n' +
-                            '大蒜 3瓣\n' +
-                            '盐 2g\n' +
-                            '豆瓣酱 1勺\n' +
-                            '老抽 5g\n' +
-                            '水淀粉 2勺\n' +
-                            '料酒 1勺\n' +
-                            '花生油 2勺' ,
-                        cookingSteps:
-                            '1.准备好所有食材。\n' +
-                            '2.五花肉切薄片，青红椒洗净斜切段，蒜苗斜切成2cm长的段，姜切小粒，蒜切片，豆豉切碎。\n' +
-                            '3.五花肉加入蒜片、姜粒、老抽、少许盐和1勺油搅拌均匀，取另外一只碗，加入豆豉碎、豆瓣酱、料酒、生抽、水淀粉、花生油拌匀作为酱汁备用。\n' +
-                            '4.取一个微波适用的深盘，平铺上五花肉，不加盖放入微波炉底盘，微波高火加热4分钟。\n' +
-                            '5.取出五花肉，加入青红椒、蒜苗，倒入酱汁拌匀，加盖留孔放入微波炉中，微波1000W火力加热4分钟。' ,
                     },
                     settingHide:true
                 },
@@ -1577,7 +1577,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:4,
+                        default:15,
                         range: null
                     },
                     temperature:{
@@ -2226,6 +2226,62 @@ let data = [
                 },
                 {
                     'icon': '',
+                    'text': '法式焦糖布丁',
+                    'mode': 0xE0,
+                    time:{
+                        set: false,
+                        default:30,
+                        range: null
+                    },
+                    temperature:{
+                        set: false,
+                        default:0,
+                        range:null
+                    },
+                    preheat:{
+                        set:false,
+                        default: false
+                    },
+                    steamAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    fireAmount:{
+                        set:false,
+                        default:0,
+                        range:null
+                    },
+                    weight:{
+                        set:false,
+                        default:100,
+                        range:[100,400,100],
+                    },
+                    recipeId:{
+                        set:false,
+                        default: 0x87,
+                        range:null
+                    },
+                    detail: {
+                        foodMaterial:
+                            '布丁液部分：牛奶 400克\n' +
+                            '布丁液部分：细砂糖 40克\n' +
+                            '布丁液部分：全蛋 3个\n' +
+                            '布丁液部分：蛋黄 1个\n' +
+                            '布丁液部分：香草精 5克\n' +
+                            '焦糖部分：细砂糖 100克\n' +
+                            '焦糖部分：水 100克',
+                        cookingSteps:
+                            '1.将牛奶、细砂糖、全蛋和蛋黄混合均匀。\n' +
+                            '2.细砂糖和水充分混合，放微波炉里中火煮至焦糖色。\n' +
+                            '3.煮好焦糖后，将焦糖液趁热分入布丁模具中。\n' +
+                            '4.再将布丁液均分到每个布丁模具中。\n' +
+                            '5.选择菜单预热，将烤架置于微波炉第1层，关上炉门，按启动键开始烹饪。'  ,
+                    },
+                    settingHide:true
+                },
+                {
+                    'icon': '',
                     'text': '斑马纹戚风蛋糕',
                     'mode': 0xE0,
                     time:{
@@ -2283,62 +2339,7 @@ let data = [
                     },
                     settingHide:true
                 },
-                {
-                    'icon': '',
-                    'text': '法式焦糖布丁',
-                    'mode': 0xE0,
-                    time:{
-                        set: false,
-                        default:30,
-                        range: null
-                    },
-                    temperature:{
-                        set: false,
-                        default:0,
-                        range:null
-                    },
-                    preheat:{
-                        set:false,
-                        default: false
-                    },
-                    steamAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    fireAmount:{
-                        set:false,
-                        default:0,
-                        range:null
-                    },
-                    weight:{
-                        set:false,
-                        default:100,
-                        range:[100,400,100],
-                    },
-                    recipeId:{
-                        set:false,
-                        default: 0x87,
-                        range:null
-                    },
-                    detail: {
-                        foodMaterial:
-                            '布丁液部分：牛奶 400克\n' +
-                            '布丁液部分：细砂糖 40克\n' +
-                            '布丁液部分：全蛋 3个\n' +
-                            '布丁液部分：蛋黄 1个\n' +
-                            '布丁液部分：香草精 5克\n' +
-                            '焦糖部分：细砂糖 100克\n' +
-                            '焦糖部分：水 100克',
-                        cookingSteps:
-                            '1.将牛奶、细砂糖、全蛋和蛋黄混合均匀。\n' +
-                            '2.细砂糖和水充分混合，放微波炉里中火煮至焦糖色。\n' +
-                            '3.煮好焦糖后，将焦糖液趁热分入布丁模具中。\n' +
-                            '4.再将布丁液均分到每个布丁模具中。\n' +
-                            '5.选择菜单预热，将烤架置于微波炉第1层，关上炉门，按启动键开始烹饪。'  ,
-                    },
-                    settingHide:true
-                },
+
             ]
 
         ]

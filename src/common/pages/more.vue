@@ -6,7 +6,7 @@
 <template>
     <div class="bg-gray" :style="{height: wrapHeight}">
 
-        <midea-header class="bg-white" title="更多功能" titleText="black" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back"></midea-header>
+        <midea-header class="bg-white" :title="language.morePageTitle" titleText="black" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back"></midea-header>
 
         <list style="margin-top: 24px;" show-scrollbar="false">
             <midea-cell :clickActivied="false" v-for="(item,index) in list" :hasBottomBorder="(list.length - 1) !== index" :key="index" :title="item.title" :rightText="item.rightText" :hasArrow="!!item.link" @mideaCellClick="link(item)">
@@ -21,7 +21,7 @@
     import mideaCell from '@/midea-component/item.vue';
     import nativeService from "@/common/services/nativeService";
 
-    import commonMixin from  "@/common/util/mixins/common.js"
+    import commonMixin from  "@/common/util/mixins/common"
 
     export default {
         mixins: [commonMixin],
@@ -29,14 +29,20 @@
             list:{
                 type: Array,
                 default: []
+            },
+            constant:{
+                type: Object,
+                default: () => ({})
             }
         },
         components: {mideaHeader, mideaCell},
         created(){
-
         },
-        computed:{
+        mounted(){
+            this.pageViewStatistics();
         },
+        // computed:{
+        // },
         methods: {
             link: function(item){
                 if(!item.link) return;
@@ -46,7 +52,13 @@
                     url: item.link,
                     title: '测试'
                 })
-            }
+            },
+            getPageName(){
+                return 'morePage';
+            },
+            getPrePageName(){
+                return 'standbyPage'
+            },
         }
     }
 </script>

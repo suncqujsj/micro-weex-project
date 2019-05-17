@@ -1,16 +1,11 @@
 /**
  * Created by sf
- * 2019/03/20
+ * 2018/10/20
  */
 
 import modeIcons from "../../common/mapping/modeIcons";
+import constant from "@/T0xB0_01TESTB0/config/constant";
 let probe = false;
-let preheatDefault = false;
-let udTemperature = {
-        set: true,
-        default:220,
-        range:[60,230,5],
-    };
 
 let modes = [
     {
@@ -18,11 +13,11 @@ let modes = [
         iconButtons: [
             {
                 'icon': modeIcons[15].dir,
-                'text': modeIcons[15].cn,
+                'text': "Top",
                 'mode': 0x40,
                 time:{
                     set: true,
-                    default:30,
+                    default:20,
                     range:[1,120,1],
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
@@ -30,11 +25,11 @@ let modes = [
                     set: true,
                     default:350,
                     range:[300,450,10],
-                    unit: '℉'
+                    unit:'℉'
                 },
                 preheat:{
                     set:true,
-                    default: preheatDefault,
+                    default: true,
                     workingPreheatHide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
@@ -44,27 +39,28 @@ let modes = [
                     range:[30,90,1],
                 },
                 probe,//支持肉类探针
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                settingHide:false, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             },
             {
                 'icon': modeIcons[3].dir,
-                'text': modeIcons[3].cn,
+                'text': "Bottom",
                 'mode': 0x49,
                 time:{
                     set: true,
-                    default:30,
+                    default:25,
                     range:[1,120,1],
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 temperature:{
                     set: true,
-                    default:220,
-                    range:[60,230,5],
+                    default:350,
+                    range:[300,450,10],
+                    unit:"℉"
                 },
                 preheat:{
                     set:true,
-                    default: preheatDefault,
+                    default: true,
                     workingPreheatHide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
@@ -74,54 +70,28 @@ let modes = [
                     range:[30,90,1],
                 },
                 probe,//支持肉类探针
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                settingHide:false, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             },
             {
                 'icon': modeIcons[0].dir,
-                'text': modeIcons[0].cn,
+                'text': "Top&Bottom",
                 'mode': 0x4C,
                 time:{
                     set: true,
-                    default:30,
-                    range:[1,120,1],
-                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
-                },
-                upTemperature:udTemperature,
-                downTemperature:udTemperature,
-                preheat:{
-                    set:true,
-                    default: preheatDefault,
-                    workingPreheatHide: true,
-                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
-                },
-                probeTemperature:{
-                    set: probe,
-                    default:65,
-                    range:[30,90,1],
-                },
-                probe,//支持肉类探针
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
-                stopBtnHide: true
-            },
-            {
-                'icon': modeIcons[31].dir,
-                'text': modeIcons[31].cn,
-                'mode': 0x43,
-                time:{
-                    set: true,
-                    default:30,
+                    default:10,
                     range:[1,120,1],
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 temperature:{
                     set: true,
-                    default:220,
-                    range:[60,230,5],
+                    default:350,
+                    range:[300,450,10],
+                    unit:"℉"
                 },
                 preheat:{
                     set:true,
-                    default: preheatDefault,
+                    default: true,
                     workingPreheatHide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
@@ -131,56 +101,40 @@ let modes = [
                     range:[30,90,1],
                 },
                 probe,//支持肉类探针
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                settingHide:false, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                stopBtnHide: true
+            },
+            {
+                'icon': modeIcons[28].dir,
+                'text': "Keep Warm",
+                'mode': 0xD0,
+                time:{
+                    set: true,
+                    default:60,
+                    range:[1,120,1],
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
+                },
+                temperature:{
+                    set: true,
+                    default:180,
+                    range:[100,200,10],
+                    unit:'℉'
+                },
+                preheat:{
+                    set:false,
+                    default: false,
+                    workingPreheatHide: true,
+                    isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
+                },
+                probeTemperature:{
+                    set: probe,
+                    default:65,
+                    range:[30,90,1],
+                },
+                probe,//支持肉类探针
+                settingHide:false, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             }
-        ]
-    },
-    {
-        title: '',
-        iconButtons: [
-            {
-                'icon': modeIcons[32].dir,
-                'text': modeIcons[32].cn,
-                'mode': 0x4E,
-                time:{
-                    set: true,
-                    default:30,
-                    range:[1,120,1]
-                },
-                temperature:{
-                    set: true,
-                    default:220,
-                    range:[60,230,5]
-                },
-                preheat:{
-                    set:true,
-                    default: preheatDefault,
-                    workingPreheatHide: true,
-                },
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
-                stopBtnHide: true
-            },
-            {
-                'icon': modeIcons[7].dir,
-                'text': modeIcons[7].cn,
-                'mode': 0xB0,
-                time:{
-                    set: true,
-                    default:40,
-                    range:[1,240,1]
-                },
-                temperature:{
-                    set: true,
-                    default:40,
-                    range:[35,40,1]
-                },
-                preheat:{
-                    set:false
-                },
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
-                stopBtnHide: true
-            },
         ]
     },
 ];

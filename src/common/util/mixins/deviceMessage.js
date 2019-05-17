@@ -66,6 +66,7 @@ const deviceMessageMixin = {
                 deviceCmd,
                 function(result){
                     context.loading = false;
+                    context.statisticsUpload({subAction: 'child_lock_click', action_result:childLock});
                     context.queryStatus();
                 },
                 function(result){
@@ -89,7 +90,7 @@ const deviceMessageMixin = {
             this.tabs = tabs;
             this.device = device;
         },
-        queryStatus(tabs=this.tabs,device=this.device) {//传入模式配置数据tabs
+        queryStatus(tabs=this.tabs,device=this.device, cb=null) {//传入模式配置数据tabs
             if(device) {
                 this.initData(tabs, device);
             }
@@ -111,9 +112,14 @@ const deviceMessageMixin = {
                     // nativeService.alert(arr);
                     var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
                     self.analysisFun(analysisObj,self.tabs);
+
+                    if(typeof cb === 'function') {
+                        cb();
+                    }
                 },
                 function (result) {
                     //nativeService.hideLoading();
+
                     //nativeService.toast("查询失败" + JSON.stringify(result));
                 }
             );
@@ -140,6 +146,7 @@ const deviceMessageMixin = {
             )
         },
         setting(cmdObj){
+            this.statisticsUpload({subAction:'edit_click'});
             if(!this.hasSetting){
                 return;
             }
@@ -209,7 +216,11 @@ const deviceMessageMixin = {
                         }
                     
                     }
-                    context.queryStatus();
+                    if(context.isStandby()) {
+                        context.queryStatus(null, null, context.pageViewStatistics);
+                    }else{
+                        context.queryStatus();
+                    }
                 },
                 function(result){
                     nativeService.hideLoading();
@@ -222,10 +233,10 @@ const deviceMessageMixin = {
         startOrPause(){
             var self = this;
             var record = 3;
-            if(this.btnText == "暂停"){
+            if(this.btnText == this.getLanguage("pause")){
                 record = 6;
             }
-             if(this.btnText == "继续" || this.btnText == "开始"){
+             if(this.btnText == this.getLanguage("resume") || this.btnText == this.getLanguage("start")){
                 record = 3;
             }
             var deviceCmd = cmdFun.cmdStartOrPause(record,this.device);
@@ -235,6 +246,7 @@ const deviceMessageMixin = {
                 deviceCmd,
                 function(result){
                     nativeService.hideLoading();
+                    self.statisticsUpload({subAction:'pause_continue_click', action_result: record})
                     self.queryStatus();
                 },
                 function(result){

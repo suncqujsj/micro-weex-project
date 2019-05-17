@@ -5,17 +5,22 @@
 
 module.exports = {
     device: {
-        page_title: "小烤箱",
+        page_title: "Mini Oven",
         type: 0xB4,
-        widget_name: 'MSO_T0xB1',  // 埋点的时候，只保留 B0，B1，B2
+        sales_model: "Mini Oven",
+        lang: 'en',
+        widget_name: 'MSO_T0xB4',  // 埋点的时候，只保留 B0，B1，B2
         widget_version: '5.0.1',
         extra1: {
             sn8: '03TESTB4'
         },
         standby03:true, // 待机中打开03轮询
-        lang: 'en',
         hideChildLock:{
             standby: true,
+            working:true
+        },
+        hideCloudRecipe:{
+            standby:true,
             working:true
         }
     }

@@ -62,7 +62,7 @@ module.exports = {
         MideaSwitch2
     },
     data: () => ({
-        host: '192.168.1.136',
+        host: '192.168.1.183',
         isShowHostList: false,
         hostIndex: null,
         hostList: [],
@@ -71,7 +71,9 @@ module.exports = {
         isShowModuleList: false,
         moduleIndex: null,
         moduleList: [
-            { key: -5, value: "T0xB4_03TESTB4", desc: "小烤箱7" },
+            { key: -6, value: "T0xB0_02TESTB0", desc: "嵌入式微波炉" },
+            { key: -5, value: "T0xB1_04TESTB1", desc: "嵌入式大烤箱" },
+            { key: -5, value: "T0xB4_03TESTB4", desc: "小烤箱" },
             { key: -4, value: "T0xB0_01TESTB0", desc: "白色微波炉" },
             { key: -3, value: "T0xB0_0EM34A2E", desc: "V项目" },
             { key: -2, value: "T0xB4_08T7428E", desc: "美的Fun烤箱II代， T7-428E" },
@@ -90,8 +92,6 @@ module.exports = {
             { key: 7, value: "T0xB1_0TVN50R6",desc: "E厨R6大烤箱" },
             { key: 8, value: "T0xB1_0D50S3AT",desc: "双腔体" },
             { key: 9, value: "T0xB1_0ET470QL",desc: "G55辅助蒸汽" },
-            { key: 10, value: "T0xE1_000000H3",desc: "T0xE1_000000H3" },
-            { key: 11, value: "T0xE1_000000H5",desc: "T0xE1_000000H5" },
             { key: 12, value: "T0xB0_0M3L20A8",desc: "年轻套系20L微波炉" },
             { key: 13, value: "T0xB0_0X5L23A8",desc: "G100一体机" },
             { key: 14, value: "T0xB2",desc: "蒸汽炉" },

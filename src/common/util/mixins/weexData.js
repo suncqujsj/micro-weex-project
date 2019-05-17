@@ -32,7 +32,6 @@ let workingModalMixin  = {
                 // ],
                 warningDialog: this.initWarningDialog(),
                 hintDialog: this.initHintDialog(),
-                modeText:'',
                 srcollPaddingBottom:'',
                 cmdObj: cmdFun.initAnalysisObj(),
 
@@ -85,7 +84,14 @@ let workingModalMixin  = {
         };
     },
     methods: {
-      
+
+        /**
+         * 当前状态是否待机中
+         */
+        isStandby(){
+            return !this.isWorkingPage
+        },
+
         analysisFun(analysisObj,tabs) {
             clearInterval(this.queryTimer);  
             this.initStandbyData(analysisObj);//初始待机页面数据
@@ -234,22 +240,22 @@ let workingModalMixin  = {
             //   }
             
             if(this.isProbeInserted(cmdObj) && !this.isCloudMenu(cmdObj)) { // 有探针显示探针温度
-                customData.temperatureText = this.addTemperatureUnit(cmdObj.probeSetttingTemperature.value, cmdObj.temperature.unit);
+                customData.temperatureText = this.addTemperatureUnit(cmdObj,cmdObj.probeSetttingTemperature.value, cmdObj.temperature.unit);
             } else { // 非探针模式显示较大温度
-                customData.temperatureText = this.getTemperatureTextWithoutProbe(cmdObj);
+                customData.temperatureText = this.getTemperatureTextWithoutProbe(cmdObj, cmdObj.temperature.unit);
             }
 
             if(this.isLargeOven1065()){ //大烤箱旧插件 0ET1065Q ，上报的温度问题，下管上报了错乱的温度...需要只读上管温度
-                customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature, cmdObj.temperature.unit);
+                customData.temperatureText = this.addTemperatureUnit(cmdObj,cmdObj.temperature.upLowTemperature, cmdObj.temperature.unit);
             }
 
-            if(this.isSteamOven36L() && cmdObj.isProbe.value==1){//如果是旧插件36L蒸汽烤箱0TQN36QL，探针模式下，强行转换为非探针模式，因为该型号，探针模式下，还可以启动所有的模式
-                if(this.currentIsWorkingPage(cmdObj)){
+            if(this.isSteamOven36L()){//如果是旧插件36L蒸汽烤箱0TQN36QL，探针模式下，强行转换为非探针模式，因为该型号，探针模式下，还可以启动所有的模式
+                if(this.currentIsWorkingPage(cmdObj) && cmdObj.isProbe.value==1){
                     if(cmdObj.mode.value!=0x31 && cmdObj.mode.value!=0x33 && cmdObj.mode.value!=0x3A){
                         cmdObj.isProbe.value = 0;
-                        customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature, cmdObj.temperature.unit);
+                        customData.temperatureText = this.addTemperatureUnit(cmdObj,cmdObj.temperature.upLowTemperature, 0); 
                     }else{
-                        customData.temperatureText = this.addTemperatureUnit(cmdObj.temperature.upLowTemperature, cmdObj.temperature.unit);
+                        customData.temperatureText = this.addTemperatureUnit(cmdObj,cmdObj.probeSetttingTemperature.value, 0);
                     }
                 }
             }
@@ -258,7 +264,7 @@ let workingModalMixin  = {
             return buffer;
         },
 
-        getTemperatureTextWithoutProbe(cmdObj){ // 获取未插入探针时，工作中温度的显示文案
+        getTemperatureTextWithoutProbe(cmdObj,unit){ // 获取未插入探针时，工作中温度的显示文案
             if(!cmdObj.temperature.upLowTemperature && !cmdObj.temperature.downLowTemperature) {
                 return '';
             }
@@ -273,10 +279,15 @@ let workingModalMixin  = {
                 return '';
             }
 
-            return this.addTemperatureUnit(temperature);
+            return this.addTemperatureUnit(cmdObj,temperature,unit);
         },
 
-        addTemperatureUnit(temp, unitValue=0){
+        addTemperatureUnit(cmdObj,temp, unitValue=0){
+
+            if(cmdObj.cmdLength<=34){//parker: 现在的温度单位判断放在了byte34，以前旧插件会存在上报长度的指令小于或者等于34的情况例如蒸汽烤箱0TQN36QL
+                unitValue = 0;
+            }
+
             let unit = unitValue === 1 ? '℉' :'°';
             return temp + unit;
         },
@@ -373,10 +384,11 @@ let workingModalMixin  = {
          * 工作状态判断以及数据处理
          */
         getWorkingStatusHandle(cmdObj,chartJson){
+            // nativeService.toast(cmdObj);
             if(cmdObj.workingState.value === 3){
                 this.timeShow = true;
                 this.hasSetting = true;
-                this.btnText = "暂停";
+                this.btnText = this.getLanguage("pause");
                 this.btnSrc = "img/footer/icon_pause@2x.png";
                 this.hasStopOrContinueBtn = true;
                 if(cmdObj.light.value){
@@ -414,10 +426,10 @@ let workingModalMixin  = {
             if(this.periodPauseCondition(cmdObj)){
                 this.timeShow = true;
                 this.hasSetting = true;
-                this.btnText = "继续";
+                this.btnText = this.getLanguage('resume');
                 this.btnSrc = "img/footer/icon_start@2x.png";
                 this.isTimerStop = true;
-                this.statusTag = '暂停中';
+                this.statusTag = this.getLanguage('pausing');
                 this.hasStopOrContinueBtn = true;
             }
         },
@@ -446,7 +458,7 @@ let workingModalMixin  = {
             if(cmdObj.workingState.value === 4){
                 this.timeShow = false;
                 this.hasHour = false;
-                this.workSpecialStatusText = this.getLanguages(['cooking', 'finish']);
+                this.workSpecialStatusText = this.getLanguages(['cookFinished']);
                 this.isTimerStop = true;
                 this.tag_next = '';
                 this.statusTag = this.getLanguage('hotCaution');
@@ -476,12 +488,12 @@ let workingModalMixin  = {
             if(cmdObj.workingState.value != 4 && cmdObj.displaySign.preheat == 1){
                 this.timeShow = false;
                 this.hasHour = false;
-                this.workSpecialStatusText =  this.getLanguages(['preheating', 'ing']);
+                this.workSpecialStatusText =  this.getLanguages(['preheating']);
                 let mode_text = cmdObj.mode.text;
                 if(cmdObj.mode.value == 0x4B){ //如果是快速预热，文案就变为快速
                     mode_text = "快速";
                 }
-                this.cmdObj.mode.text = mode_text + this.getLanguages(['preheat', 'to']);
+                this.cmdObj.mode.text = mode_text+" " + this.getLanguages(['preheat', 'to']);
                 this.tag_next = '';
                 this.statusTag = '';
                 this.hasSetting = true;
@@ -566,7 +578,7 @@ let workingModalMixin  = {
                         allSeconds = this.getAllSeconds(cmdObj)-1;
                     }
                     this.workSpecialStatusText = allSeconds;
-                    this.tag_next = '秒';
+                    this.tag_next = this.getLanguage('second');
                 }            
             }
         },
@@ -577,14 +589,13 @@ let workingModalMixin  = {
         getProgressStepHandle(cmdObj,chartJson){
             var allSettingSeconds = cmdObj.timeSetting.hour*60*60+cmdObj.timeSetting.minute*60+cmdObj.timeSetting.second;
             var progress_step = (allSettingSeconds-this.getAllSeconds(cmdObj))/allSettingSeconds*360; //360度倒计时为例
-
+            chartJson.pointShow = true;
             if(!allSettingSeconds) { // 如果设置时间不上报，自动隐藏倒计时小球 sf
                 chartJson.pointShow = false;
-                return;
+                // return;  //parker: 如果不上报总的设定时间，如果直接return，函数后面的语句都不执行了。
             }
 
-            chartJson.pointShow = true;
-            chartJson.progressCounter = parseInt(progress_step);
+            chartJson.progressCounter = parseInt(progress_step) || 0;
 
             if(cmdObj.probeRealTemperature.value>cmdObj.probeSetttingTemperature.value){
                 cmdObj.probeRealTemperature.value = cmdObj.probeSetttingTemperature.value;
@@ -595,6 +606,7 @@ let workingModalMixin  = {
          * 工作页面
          */
         analysisWorkingFun(analysisObj,tabs) {
+            // nativeService.toast(analysisObj);
             var self = this , timer = null;
             this.initWorkingData();
 
@@ -684,11 +696,14 @@ let workingModalMixin  = {
          * 工作状态中 模式不可编辑设置
          */
         settingHide(item){
-            if(item.settingHide || item.standbyHide || this.isCloudMenu(this.cmdObj)) {
+            // if(item.settingHide || item.standbyHide || this.isCloudMenu(this.cmdObj)) {
+            if(item.settingHide || item.standbyHide) { // 云菜谱可编辑 sf 杨工提的需求
                 this.hasSetting = false;
             }
         },
         cancle(){
+            let subAction  = this.cmdObj.workingState.value === 3 ? 'close_mode_click' : 'finish_mode_click';
+            this.statisticsUpload({subAction});
             var self = this;
             if(this.finishStatus){
                 this.cancleWorking();
@@ -710,6 +725,7 @@ let workingModalMixin  = {
         //点击某个item的事件
         actionsheetItemClick: function (event) {
             this.showBar = false;
+            this.statisticsUpload({subAction:'confirm_close_click'});
             if(event.index == 0){
                this.cancleWorking();
             }
@@ -718,6 +734,7 @@ let workingModalMixin  = {
         //点击取消/确定按钮事件
         actionsheetBtnClick: function () {
             this.showBar = false;
+            this.statisticsUpload({subAction:'cancel_close_click'});
         },
     }
 };

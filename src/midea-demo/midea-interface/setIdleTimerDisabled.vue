@@ -1,13 +1,13 @@
 <template>
     <div class="wrapper">
         <midea-header title="setIdleTimerDisabled" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
-        <midea-button text="单次执行setIdleTimerDisabled" @mideaButtonClicked="mideaButtonClicked">
-            <midea-button text="循环执行setIdleTimerDisabled" @mideaButtonClicked="mideaButtonClickedA">
-            </midea-button>
-            <midea-title-bar title="代码"></midea-title-bar>
-            <text class="display-block">
-                nativeService.setIdleTimerDisabled()
-            </text>
+        <!--<midea-button text="单次执行setIdleTimerDisabled" @mideaButtonClicked="mideaButtonClicked">-->
+            <!--<midea-button text="循环执行setIdleTimerDisabled" @mideaButtonClicked="mideaButtonClickedA">-->
+            <!--</midea-button>-->
+            <!--<midea-title-bar title="代码"></midea-title-bar>-->
+            <!--<text class="display-block">-->
+                <!--nativeService.setIdleTimerDisabled()-->
+            <!--</text>-->
     </div>
 </template>
 <style scoped>
@@ -46,6 +46,6 @@ module.exports = {
             }, 60 * 1000);
         },
         created() {
-        }
+        }}
     };
 </script>

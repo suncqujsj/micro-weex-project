@@ -15,7 +15,7 @@ let tests = [
         iconButtons: [
             {
                 'icon': modeIcons[12].dir,
-                'text': modeIcons[12][lang],
+                'text': "MICROWAVE",
                 'mode': 0x01,
                 time: {
                     set: true,
@@ -31,7 +31,8 @@ let tests = [
             },
             {
                 'icon': modeIcons[23].dir,
-                'text': modeIcons[23][lang],
+                'text': "WEIGHT DEFROST",
+                'ellipsisText': 'WEIGHT DEFRO..',
                 'mode': 0xA0,
                 weight:{
                     set:true,
@@ -48,7 +49,7 @@ let tests = [
             },
             {
                 'icon': modeIcons[24].dir,
-                'text': modeIcons[24][lang],
+                'text': "TIME DEFROST",
                 'mode': 0xA1,
                 time: {
                     set: true,
@@ -58,7 +59,8 @@ let tests = [
                 fireAmount: {
                     set:true,
                     default:3,
-                    range:fireAmountRange
+                    range:fireAmountRange,
+                    hide:true
                 },
                 // settingHide:true
             },

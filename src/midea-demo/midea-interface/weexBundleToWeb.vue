@@ -7,7 +7,15 @@
         <midea-title-bar title="代码"></midea-title-bar>
         <text class="display-block">
             nativeService.weexBundleToWeb({
+<<<<<<< HEAD
+<<<<<<< HEAD
+                "url": "http://qrcode.midea.com/tests/h5Demo/demo.html#/base", //跳转的目标页面
+=======
                 "url": "http://qrcode.midea.com/test/h5Demo/demo.html", //跳转的目标页面
+>>>>>>> 4f67f5207aa6bf3d74f5eec9e959d532826c919e
+=======
+                "url": "http://qrcode.midea.com/test/h5Demo/demo.html", //跳转的目标页面
+>>>>>>> 4dda1248329f08a2099c2932245105316b11d537
                 "title": "美居H5测试页面"
             })
         </text>
@@ -49,7 +57,15 @@ module.exports = {
     data() {
         return {
             messageParam: {
+<<<<<<< HEAD
+<<<<<<< HEAD
+                "url": "http://qrcode.midea.com/tests/h5Demo/demo.html#/base", //跳转的目标页面
+=======
                 "url": "http://qrcode.midea.com/test/h5Demo/demo.html", //跳转的目标页面
+>>>>>>> 4f67f5207aa6bf3d74f5eec9e959d532826c919e
+=======
+                "url": "http://qrcode.midea.com/test/h5Demo/demo.html", //跳转的目标页面
+>>>>>>> 4dda1248329f08a2099c2932245105316b11d537
                 "title": "美居H5测试页面"
             },
             result: ''

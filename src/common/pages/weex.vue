@@ -294,7 +294,7 @@
 
             <!-- 炉灯 -->
             <!--<image :class="['light_icon',cmdObj.light.value && 'light_on']" :src="lightImg"  @click="sendLightCmd(cmdObj.light.value,tabs,constant.device)"></image>-->
-            <light :hasLight="constant.device.show" :lightValue="cmdObj.light.value" :event="sendLightCmd"></light>
+            <light :hasLight="constant.device.hasLight" :lightValue="cmdObj.light.value" :event="sendLightCmd"></light>
 
             <!--视频监控入口-->
             <video-entrance :show="constant.device.showVideo" @onVideoIconClicked="onVideoIconClicked"></video-entrance>

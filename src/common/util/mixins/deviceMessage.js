@@ -136,6 +136,7 @@ const deviceMessageMixin = {
                 function(result){
                     nativeService.hideLoading();
                     // nativeService.alert(result);
+                    context.statisticsUpload({subAction:'light_click', action_result:lightValue?0:1});
                     context.queryStatus();
                 },
                 function(result){

@@ -365,6 +365,17 @@
             let self = this;
             let {constant,tabs} = this;
 
+            //  //获取nfc码 action值
+            //  nativeService.getNfcInfo({key:1},(getData)=>{
+            //     if(getData.data && parseInt(getData.data)==2){
+            //         self.openCloudMenuPage();
+            //     }
+            //     if(getData.data && parseInt(getData.data)==1){
+            //         nativeService.goTo('more.js', {animated: true});
+            //     }
+            //  },(errData)=>{}
+            //  );
+
             // constant.device.voiceAuth && this.initVoiceWithParams(true); // sf 判断设备是否显示语音授权提示框
 
             this.srcollPaddingBottom = '80px';

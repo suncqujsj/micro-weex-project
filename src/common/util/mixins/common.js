@@ -190,7 +190,7 @@ let commonMixin = {
             };
 
             param = objectAssign(param, data);
-            nativeService.alert(param);
+            // nativeService.alert(param);
             // return;
 
             bridgeModule.commandInterface(JSON.stringify(param), function

@@ -217,6 +217,7 @@ const deviceMessageMixin = {
                     
                     }
                     if(context.isStandby()) {
+                        context.fromStandBy = true;
                         context.queryStatus(null, null, context.pageViewStatistics);
                     }else{
                         context.queryStatus();

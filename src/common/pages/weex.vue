@@ -297,7 +297,7 @@
             <light :hasLight="constant.device.show" :lightValue="cmdObj.light.value" :event="sendLightCmd"></light>
 
             <!--视频监控入口-->
-            <video-entrance :show="constant.device.showVideo"></video-entrance>
+            <video-entrance :show="constant.device.showVideo" @onVideoIconClicked="onVideoIconClicked"></video-entrance>
         </div>
     </div>
 </template>
@@ -343,7 +343,7 @@
         mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin,copyMixin,weexData,modalMixin,voiceMixin],
         data(){
             return {
-
+                fromStandBy:false // 标记此次打开插件是否从待机状态启动模式进入到工作中状态
             }
         },
         props: {

@@ -20,10 +20,8 @@
 </template>
 
 <script>
-    import commonMixin from  "@/common/util/mixins/common"
 
     export default {
-        mixins:[commonMixin],
         props:{
             show: {
                 type: Boolean,
@@ -37,8 +35,7 @@
         },
         methods:{
             onVideoIconClicked(){
-                this.statisticsUpload({subAction:''})
-                this.openPage('video', {pageName:'workingPage'});
+                this.$emit('onVideoIconClicked');
             }
         }
     };

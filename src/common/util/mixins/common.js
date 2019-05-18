@@ -321,6 +321,15 @@ let commonMixin = {
         iconVisibility(key, state){
             return !this.constant.device[key] || !this.constant.device[key][state]
         },
+
+        /**
+         * 视频直播入口点击事件
+         */
+        onVideoIconClicked(){
+            let prev_page_name = this.fromStandBy ? 'standbyPage' : 'mideaHomePage';
+            this.statisticsUpload({subAction:'video_icon_click', prev_page_name});
+            this.openPage('video', {pageName:'workingPage'});
+        }
     }
 };
 

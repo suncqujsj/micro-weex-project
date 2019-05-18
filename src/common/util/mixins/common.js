@@ -190,7 +190,7 @@ let commonMixin = {
             };
 
             param = objectAssign(param, data);
-            // nativeService.alert(param);
+            nativeService.alert(param);
             // return;
 
             bridgeModule.commandInterface(JSON.stringify(param), function
@@ -238,7 +238,7 @@ let commonMixin = {
          * 返回 前一个页面名称
          */
         getPrePageName(){
-            return 'mideaHomePage'
+            return this.fromStandBy ? 'standbyPage' : 'mideaHomePage';
         },
 
         resetStartTime(){
@@ -326,8 +326,7 @@ let commonMixin = {
          * 视频直播入口点击事件
          */
         onVideoIconClicked(){
-            let prev_page_name = this.fromStandBy ? 'standbyPage' : 'mideaHomePage';
-            this.statisticsUpload({subAction:'video_icon_click', prev_page_name});
+            this.statisticsUpload({subAction:'video_icon_click'});
             this.openPage('video', {pageName:'workingPage'});
         }
     }

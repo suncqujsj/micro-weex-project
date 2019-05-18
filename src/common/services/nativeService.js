@@ -1249,6 +1249,34 @@ export default {
     },
     //**********APP业务接口***************END
 
+    // NFC相关
+    getNfcInfo(param,callback,callbackFail){
+        let that = this;
+        let params = {"operation" :"checkNFC"};
+        bridgeModule.getNfcInfo(params,(resData)=>{
+            callback(that.convertToJson(resData));
+        },
+        (errorData)=>{
+            callbackFail(errorData);
+        });
+    },
+    // getNfcInfo(){
+    //     let that = this;
+    //     let params = {"operation" :"checkNFC"};
+    //     that.alert(params);
+    //     return new Promise((resolve, reject) => {
+    //         bridgeModule.getNfcInfo(params,(resData)=>{
+    //             that.alert(resData);
+    //             resolve(that.convertToJson(resData))
+    //         },
+    //         (errorData)=>{
+    //             reject(error)
+    //         });
+    //     })
+       
+    // },
+
+
 
     //**********蓝牙接口***************START
     blueToothModuleWrapper(apiName, param) {

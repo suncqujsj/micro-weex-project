@@ -37,7 +37,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0xA0,
+                        default: 0xB4,
                         range:null
                     },
                     detail: null,
@@ -72,7 +72,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0xA1,
+                        default: 0xB5,
                         range:null
                     },
                     detail: null,
@@ -107,7 +107,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0xA2,
+                        default: 0xB6,
                         range:null
                     },
                     detail: null,
@@ -142,7 +142,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0xA3,
+                        default: 0xB7,
                         range:null
                     },
                     detail: null,
@@ -184,7 +184,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0xA4,
+                        default: 0xB8,
                         range:null
                     },
                     detail: null,
@@ -219,7 +219,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0xA5,
+                        default: 0xB9,
                         range:null
                     },
                     detail: null,

@@ -248,7 +248,8 @@
                 this.t  = setInterval(
                     ()=>{
                         // nativeService.toast(this.countingText)
-                        !this.loading && ++this.second;
+                        // !this.loading && ++this.second;
+                        ++this.second;
                     }, 1000
                 );
             },

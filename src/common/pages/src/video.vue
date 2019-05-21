@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" >
+    <div class="wrapper" @viewdisappear="stop">
         <midea-header class="fixed-top" titleText="white" :title="countingText" bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png"  @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
         <div class="content" :style="{height: wrapHeight}">
@@ -74,6 +74,7 @@
     import commonMixin from  "@/common/util/mixins/common.js"
 
     let [width, height] = [640, 360]; //config
+    const shortestVideoTime = 10;
 
     module.exports = {
         components: { mideaButton, sfState},
@@ -191,10 +192,10 @@
                         params: { captureId: context.sn32 } // device sn，必填3项字段之一
                     },
                     () => {
-                        nativeService.toast("start 成功");
+                        // nativeService.toast("start 成功");
                     },
                     () => {
-                        nativeService.toast("start failed");
+                        nativeService.toast("初始化失败");
                     }
                 );
             },
@@ -210,7 +211,7 @@
                         nativeService.toast("stop 成功");
                     },
                     () => {
-                        nativeService.toast("stop failed");
+                        // nativeService.toast("stop failed");
                     }
                 );
             },
@@ -234,12 +235,12 @@
                         params:{}
                     },
                     () => {
-                        nativeService.toast("RecordStart 成功");
+                        nativeService.toast("开始录屏");
                         context.updateRecordState();
                         context.startCounting();
                     },
                     () => {
-                        nativeService.toast("RecordStart failed");
+                        nativeService.toast("开始录屏失败");
                     }
                 );
             },
@@ -252,6 +253,12 @@
                 );
             },
             recordStop() {
+
+                if(this.second< shortestVideoTime) {
+                    nativeService.toast(`录屏最短时间为${shortestVideoTime}秒`);
+                    return;
+                }
+
                 let context = this;
                 ppvideoModule.ppvideoInterface(
                     this.$refs.ppvideo,
@@ -260,12 +267,12 @@
                         params:{}
                     },
                     () => {
-                        nativeService.toast("RecordStop 成功");
+                        nativeService.toast("视频保存成功");
                         context.updateRecordState();
                         context.stopCounting();
                     },
                     () => {
-                        nativeService.toast("RecordStop failed");
+                        nativeService.toast("视频保存失败");
                     }
                 );
             },
@@ -281,10 +288,10 @@
                         params:{}
                     },
                     () => {
-                        nativeService.alert("captureImage 成功");
+                        nativeService.toast("拍照保存成功");
                     },
                     () => {
-                        nativeService.toast("captureImage failed");
+                        nativeService.toast("拍照保存失败");
                     }
                 );
             },

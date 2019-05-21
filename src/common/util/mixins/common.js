@@ -327,7 +327,7 @@ let commonMixin = {
          */
         onVideoIconClicked(){
             this.statisticsUpload({subAction:'video_icon_click'});
-            this.openPage('video', {pageName:'workingPage'});
+            this.openPage('video', {pageName:this.getPageName()});
         }
     }
 };

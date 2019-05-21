@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" @viewdisappear="stop">
+    <div class="wrapper">
         <midea-header class="fixed-top" titleText="white" :title="countingText" bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png"  @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
         <div class="content" :style="{height: wrapHeight}">

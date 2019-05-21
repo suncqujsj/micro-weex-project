@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-header class="fixed-top" titleText="white" :title="countingText" bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png"  @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
+        <midea-header class="fixed-top" titleText="white" :title="countingText" bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png"  @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png"></midea-header>
 
         <div class="content" :style="{height: wrapHeight}">
             <midea-ppvideo-view v-if="ppvideo_initdata.user" ref="ppvideo" class="video" :style="{height:videoHeight}" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
@@ -329,10 +329,10 @@
             initLoading(){
                 this.tt = setInterval(()=>{
                     if(!this.frmplay) {
-                        nativeService.showLoading();
+                        this.showLoading();
                         return;
                     }
-                    nativeService.hideLoading();
+                    this.hideLoading();
                     clearInterval(this.tt);
                 },1000);
             },
@@ -344,7 +344,7 @@
                     if(pair[0] === 'frmplay') {
                         let frmplay = pair[1];
                         if(this.frmplay === frmplay) {
-                            nativeService.showLoading();
+                            this.showLoading();
                             this.loading = true;
                             return;
                         }
@@ -354,10 +354,16 @@
                         }
 
                         this.frmplay = frmplay;
-                        nativeService.hideLoading();
+                        this.hideLoading();
                         this.loading = false;
                     }
                 }
+            },
+            showLoading(){
+                this.showState('加载中...');
+            },
+            hideLoading(){
+                this.hideState();
             }
         }
     };

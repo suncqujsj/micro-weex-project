@@ -121,12 +121,12 @@
         },
         mounted(){
             // this.setVideoModeSize();
-            // this.init();
+            this.init();
             this.prePageName = this.getUrlParam(weex.config.bundleUrl, 'pageName');
         },
         created(){
             // nativeService.alert(weex.config.bundleUrl);
-            // this.initLoading();
+            this.initLoading();
             this.getPhotoLibraryAuthorizationStatus();
             this.requestPhotoLibraryAuthorization();
         },

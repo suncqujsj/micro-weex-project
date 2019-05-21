@@ -1,7 +1,5 @@
 <template>
     <div class="wrapper">
-        <midea-header class="fixed-top" titleText="white" :title="countingText" bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png"  @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png"></midea-header>
-
         <div class="content" :style="{height: wrapHeight}">
             <midea-ppvideo-view v-if="ppvideo_initdata.user" ref="ppvideo" class="video" :style="{height:videoHeight}" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
 
@@ -24,6 +22,9 @@
             <!--<midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="查询权限" @mideaButtonClicked="getPhotoLibraryAuthorizationStatus"/>-->
             <!--<midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="获取权限" @mideaButtonClicked="requestPhotoLibraryAuthorization"/>-->
         <!--</scroller>-->
+
+        <midea-header class="fixed-top" titleText="white" :title="countingText" bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png"  @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png"></midea-header>
+
     </div>
 </template>
 <style lang="less" type="text/less" scoped>
@@ -120,12 +121,12 @@
         },
         mounted(){
             // this.setVideoModeSize();
-            this.init();
+            // this.init();
             this.prePageName = this.getUrlParam(weex.config.bundleUrl, 'pageName');
         },
         created(){
             // nativeService.alert(weex.config.bundleUrl);
-            this.initLoading();
+            // this.initLoading();
             this.getPhotoLibraryAuthorizationStatus();
             this.requestPhotoLibraryAuthorization();
         },

@@ -129,6 +129,8 @@
             this.initLoading();
             this.getPhotoLibraryAuthorizationStatus();
             this.requestPhotoLibraryAuthorization();
+
+            this.getDeviceStatus(this.handleSnapshot);
         },
         methods: {
 
@@ -366,7 +368,10 @@
             },
             hideLoading(){
                 this.hideState();
-            }
+            },
+            handleSnapshot(statusArray){
+                nativeService.alert(statusArray)
+            },
         }
     };
 </script>

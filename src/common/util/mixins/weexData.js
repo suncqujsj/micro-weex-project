@@ -696,8 +696,9 @@ let workingModalMixin  = {
          * 工作状态中 模式不可编辑设置
          */
         settingHide(item){
-            // if(item.settingHide || item.standbyHide || this.isCloudMenu(this.cmdObj)) {
-            if(item.settingHide || item.standbyHide) { // 云菜谱可编辑 sf 杨工提的需求
+
+            if(item.settingHide || item.standbyHide || (this.isCloudMenu(this.cmdObj) && !this.device.cloudMenuEditable)) { // 云菜谱默认不可修改参数 不过可配置
+            // if(item.settingHide || item.standbyHide) { // 云菜谱可编辑 sf 杨工提的需求 后来黄蓉又在M3微波炉反对 修改如上
                 this.hasSetting = false;
             }
         },

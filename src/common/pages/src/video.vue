@@ -25,6 +25,17 @@
 
         <midea-header class="fixed-top" titleText="white" :title="countingText" bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png"  @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png"></midea-header>
 
+        <!--警告弹窗-->
+        <midea-dialog :title="warningDialog.title"
+                      :show="warningDialog.show"
+                      :single="true"
+                      confirmText="我知道了"
+                      @mideaDialogConfirmBtnClicked="knowClicked"
+                      :content="warningDialog.content"
+                      mainBtnColor="#FFB632"
+        >
+        </midea-dialog>
+
     </div>
 </template>
 <style lang="less" type="text/less" scoped>
@@ -68,7 +79,9 @@
 <script>
     import base from "@/midea-demo/base";
     import mideaButton from "@/midea-component/button.vue";
-    import sfState from "@/midea-component/sf/custom/state.vue"
+    import sfState from "@/midea-component/sf/custom/state.vue";
+    import mideaDialog from '@/midea-component/dialog.vue';
+
 
     import nativeService from "@/common/services/nativeService";
     const ppvideoModule = weex.requireModule("ppVideoModule");
@@ -78,7 +91,7 @@
     const shortestVideoTime = 10;
 
     module.exports = {
-        components: { mideaButton, sfState},
+        components: { mideaButton, sfState, mideaDialog},
         mixins: [base, commonMixin],
         data() {
             return {
@@ -99,7 +112,9 @@
                 second:0,
                 frmplay:0,
                 tt:null,
-                loading:false
+                loading:false,
+                ttt: null,
+                cooking:true
             };
         },
         props:{
@@ -130,7 +145,7 @@
             this.getPhotoLibraryAuthorizationStatus();
             this.requestPhotoLibraryAuthorization();
 
-            this.getDeviceStatus(this.handleSnapshot);
+            this.timingQuery();
         },
         methods: {
 
@@ -341,6 +356,12 @@
                 },1000);
             },
             event(event){
+
+                if(!this.cooking) {
+                    this.hideLoading();
+                    return;
+                }
+
                 // nativeService.toast('event sData:' +event.sData+",sRender:"+event.sRender);
                 let paramsArr = event.sData.split('&');
                 for(let param of paramsArr) {
@@ -369,9 +390,38 @@
             hideLoading(){
                 this.hideState();
             },
-            handleSnapshot(statusArray){
-                nativeService.alert(statusArray)
+
+            timingQuery(){
+                const TIME = 1000;
+                let context = this;
+                this.ttt = setInterval(function(){
+                    context.getDeviceStatus(context.handleSnapshot);
+                }, TIME);
             },
+
+            handleSnapshot(statusArray){
+                let byte11 = parseInt(statusArray[11]);
+                // nativeService.toast(byte11);
+                if(byte11 !== 4) {
+                    return;
+                }
+
+                this.cooking = false;
+                if(!this.recording){
+                    this.setWarningDialog("视频直播已结束", this.back);
+                  return;
+                }
+
+                this.recordStop();
+                clearInterval(this.ttt);
+                this.setWarningDialog("视频已自动保存", this.back);
+            },
+
+            knowClicked(){
+                this.show = false;
+                this.warningDialog.callback && this.warningDialog.callback();
+                // this.warningDialog = this.initWarningDialog();
+            }
         }
     };
 </script>

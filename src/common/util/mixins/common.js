@@ -16,7 +16,9 @@ let commonMixin = {
             wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
             state: null,
             stateTime: null,
-            count:0
+            count:0,
+            warningDialog: this.initWarningDialog(),
+            hintDialog: this.initHintDialog()
         };
     },
     beforeCreate(){
@@ -345,7 +347,7 @@ let commonMixin = {
                 "query",
                 sendCmd,
                 function (result) {
-                    // nativeService.alert(result[11]);
+                    // nativeService.alert(result);
                     // var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
                     // var arr = result_arr.split(",");
                     // // nativeService.alert(arr);
@@ -353,7 +355,7 @@ let commonMixin = {
                     // self.analysisFun(analysisObj,self.tabs);
 
                     if(typeof cb === 'function') {
-                        cb(result);
+                        cb(JSON.parse(result));
                     }
                 },
                 function (result) {

@@ -30,8 +30,6 @@ let workingModalMixin  = {
                 //         rows:modes
                 //     }
                 // ],
-                warningDialog: this.initWarningDialog(),
-                hintDialog: this.initHintDialog(),
                 srcollPaddingBottom:'',
                 cmdObj: cmdFun.initAnalysisObj(),
 

@@ -702,7 +702,7 @@ let workingModalMixin  = {
             }
         },
         cancle(){
-            let subAction  = this.cmdObj.workingState.value === 3 ? 'close_mode_click' : 'finish_mode_click';
+            let subAction  = this.cmdObj.workingState.value === 4 ? 'finish_mode_click' : 'close_mode_click';
             this.statisticsUpload({subAction});
             var self = this;
             if(this.finishStatus){

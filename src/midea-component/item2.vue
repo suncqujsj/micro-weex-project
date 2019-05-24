@@ -236,9 +236,11 @@ module.exports = {
             this.$emit('mideaCellClick', { e });
         },
         onDelete(e) {
+            if (!this.canEdit) return;
             this.$emit('onDelete', { e });
         },
         showEdit(e) {
+            if (!this.canEdit) return;
             this.$emit('onItemPress', { e });
         }
     }

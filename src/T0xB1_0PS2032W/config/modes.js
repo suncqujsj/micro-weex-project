@@ -89,7 +89,7 @@ let modes = [
             },
 
             {   // 慢蒸
-                'icon': modeIcons[25].dir,
+                'icon': modeIcons[48].dir,
                 'text': '慢蒸',
                 'mode': 0x22,
                 time:{

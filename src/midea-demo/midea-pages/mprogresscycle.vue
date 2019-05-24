@@ -2,9 +2,6 @@
     <div class="wrapper">
         <midea-header title="progresscycle" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <scroller class="scroller">
-            <m-progress-cycle :chartData="chartData" :chartColor="chartColor" @onClick="callClick($event,1)">
-            	<text style="font-size: 30px;margin-left:10px" slot="displayText">R0</text>
-            </m-progress-cycle> 
             <m-progress-cycle :chartData="chartData" :chartColor="chartColor1" @onClick="callClick($event,2)">
             	<text style="font-size: 30px;margin-left:0px" slot="displayText">PCB</text>
             </m-progress-cycle> 
@@ -22,6 +19,7 @@
 </template>
 <style scoped>
 .wrapper {
+    background-color: blue
 }
 .scroller {
 	margin-top: 100px;
@@ -48,7 +46,7 @@ module.exports = {
                 "completedColor": "#eeffffff", //环形进度条未完成后的颜色默认#267AFF
                 "incompletedColor": "#eef5d5d5", //环形进度条未完成后的颜色，默认透明
                 "thickness": 2, //环形进度条宽度，默认4
-                "cornerRadius": 60,  //环形的半径，默认是width/2
+                "cornerRadius": 200,  //环形的半径，默认是width/2
                 "totalCounter": 360, //环形进度条的最大值，默认是360
                 "progressCounter": 100, //设置进度值，默认是从0-360, 默认为0
                 "autoProgress": false, //设置是否需要自动执行环形进度，默认false, 如果设置为true，则每秒进度值+1操作

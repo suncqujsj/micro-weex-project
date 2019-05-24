@@ -2,9 +2,10 @@
     <div>
         <midea-header title="底部弹框" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <midea-button @mideaButtonClicked="showComp" text='show'></midea-button>
-        <heater-confirm-box :inputHeight='580' :show="show" @cancel='cancel'>
+        <heater-confirm-box :inputHeight='670' :show="show" @cancel='cancel'>
             <heater-cell title="半胆速热" desc='快速加热，提供少量热水' :isActive='true' iconSrc='../assets/img/smart_ic_reline@3x.png' />
             <heater-cell title="半胆速热" desc='快速加热，提供少量热水' :isActive='false' iconSrc='../assets/img/smart_ic_reline@3x.png' />
+            <heater-cell title="半胆速热" desc='快速加热，提供少量热水' :isActive='false' />
             <heater-cell title="半胆速热" desc='快速加热，提供少量热水' :isActive='false' />
             <heater-cell title="半胆速热" desc='快速加热，提供少量热水' :isActive='false' />
         </heater-confirm-box>

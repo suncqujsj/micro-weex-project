@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <midea-lottie-view v-if="lottieDataA" ref="lottieViewA" class="lottieA" :data="lottieDataA" :loop="false"></midea-lottie-view>
+        <!-- <midea-lottie-view v-if="lottieDataA" ref="lottieViewA" class="lottieA" :data="JSON.stringify(this.lottieDemo[5])" :loop="false"></midea-lottie-view> -->
         <midea-header title="lottieView动效视图" bgColor="transparent" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <scroller>
             <div>

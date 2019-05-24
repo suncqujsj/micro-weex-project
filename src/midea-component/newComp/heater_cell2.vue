@@ -307,7 +307,8 @@ module.exports = {
                         backgroundColor: '#8A8A8F',
                         transform: 'translateX(0px) scale(1)'
                     },
-                    duration: 500
+                    duration: 300,
+                    timingFunction:'ease-out'
                 })
             } else {
                 // animation.transition(this.$refs.switch,{
@@ -321,7 +322,8 @@ module.exports = {
                         backgroundColor: '#ffffff',
                         transform: 'translateX(52px) scale(2.25)'
                     },
-                    duration: 500
+                    duration: 300,
+                    timingFunction:'ease-out'
                 })
             }
 

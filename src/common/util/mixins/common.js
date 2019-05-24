@@ -1,3 +1,5 @@
+import cmdFun from "@/common/util/command/util";
+
 /**
  * Created by sf
  * 2018/10/30
@@ -14,7 +16,9 @@ let commonMixin = {
             wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
             state: null,
             stateTime: null,
-            count:0
+            count:0,
+            warningDialog: this.initWarningDialog(),
+            hintDialog: this.initHintDialog()
         };
     },
     beforeCreate(){
@@ -327,8 +331,38 @@ let commonMixin = {
          */
         onVideoIconClicked(){
             this.statisticsUpload({subAction:'video_icon_click'});
-            this.openPage('video', {pageName:'workingPage'});
-        }
+            this.openPage('video', {pageName:this.getPageName()});
+        },
+
+        /**
+         * 03查询 支持传入回调
+         */
+        getDeviceStatus(cb=null) {//传入模式配置数据tabs
+
+            let self = this;
+            let {constant} = this;
+            let sendCmd = cmdFun.createQueryMessage(constant.device);
+
+            nativeService.startCmdProcess(
+                "query",
+                sendCmd,
+                function (result) {
+                    // nativeService.alert(result);
+                    // var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
+                    // var arr = result_arr.split(",");
+                    // // nativeService.alert(arr);
+                    // var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
+                    // self.analysisFun(analysisObj,self.tabs);
+
+                    if(typeof cb === 'function') {
+                        cb(JSON.parse(result));
+                    }
+                },
+                function (result) {
+                    //nativeService.toast("查询失败" + JSON.stringify(result));
+                }
+            );
+        },
     }
 };
 

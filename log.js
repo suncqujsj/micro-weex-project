@@ -15,3 +15,10 @@
  * 示例代码位置“T0xB4_03TESTB4\config\auto-menu.js”
  * 86-93的weight 2 4 6 分别发送1 2 3；132-138的weight 6 9 12 分别发送1 2 3
  * */
+
+
+/**
+ * 20190523 sf
+ * 云菜谱工作中默认不可编辑，如需可编辑添加如下配置。
+ * cloudMenuEditable: true
+ */

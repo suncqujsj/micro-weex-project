@@ -88,6 +88,7 @@
     justify-content: center;
     align-items: center;
     padding-right: 18px;
+    height: 160px;
 }
 
 .midea-sub-cell-inner {

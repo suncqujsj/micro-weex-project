@@ -8,9 +8,9 @@
       <text slot="right" style="font-size: 32px; color: #ffffff">删除</text>
     </midea-swipe-cell>
 
-    <midea-swipe-cell :left-width="130" :right-width="130" :disabled="true" @longpress="onLongPress">
+    <midea-swipe-cell :left-width="130" :right-width="130" :disabled="true">
       <text slot="left" style="font-size: 32px; color: #ffffff">选择</text>
-      <midea-cell title="禁用侧滑" :hasArrow="true" :hasMargin="true" :hasTopBorder="false" :hasBottomBorder="false" :hasSubBottomBorder="false" :clickActivied="true" :cell-style="{width: '750px'}" @mideaCellClick="itemClicked">
+      <midea-cell title="禁用侧滑" :hasArrow="true" :hasMargin="true" :hasTopBorder="false" :hasBottomBorder="false" :hasSubBottomBorder="false" :clickActivied="true" :cell-style="{width: '750px'}" @mideaCellClick="itemClicked" @cellLongPress="onLongPress">
       </midea-cell>
       <text slot="right" style="font-size: 32px; color: #ffffff">删除</text>
     </midea-swipe-cell>
@@ -21,9 +21,9 @@
       <text slot="right" style="font-size: 32px; color: #ffffff">取消收藏</text>
     </midea-swipe-cell>
 
-    <midea-swipe-cell :left-width="130" :right-width="130" :disabled="!isIos" @click="onClick" @longpress="onLongPress">
+    <midea-swipe-cell :left-width="130" :right-width="130" :disabled="!isIos" @click="onClick">
       <text slot="left" style="font-size: 32px; color: #ffffff">选择</text>
-      <midea-cell title="andorid长按/ios侧滑" :hasArrow="true" :hasMargin="true" :hasTopBorder="false" :hasBottomBorder="false" :hasSubBottomBorder="false" :clickActivied="true" :cell-style="{marginTop: '24px', width: '750px'}" @mideaCellClick="itemClicked">
+      <midea-cell title="andorid长按/ios侧滑" :hasArrow="true" :hasMargin="true" :hasTopBorder="false" :hasBottomBorder="false" :hasSubBottomBorder="false" :clickActivied="true" :cell-style="{marginTop: '24px', width: '750px'}" @mideaCellClick="itemClicked" @cellLongPress="onLongPress">
       </midea-cell>
       <text slot="right" style="font-size: 32px; color: #ffffff">删除</text>
     </midea-swipe-cell>

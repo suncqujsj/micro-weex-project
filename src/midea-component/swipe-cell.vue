@@ -2,7 +2,6 @@
   <div
     class="midea-swipe-cell"
     @click="onClick('cell')"
-    @longpress="onLongPress"
     @touchstart.stop="startDrag"
     @touchmove.stop="onDrag"
     @touchend.stop="endDrag"
@@ -119,12 +118,6 @@ export default {
         this.onClose(position, this)
       } else {
         this.swipeMove(0)
-      }
-    },
-
-    onLongPress () {
-      if (this.disabled) {
-        this.$emit('longpress')
       }
     },
 

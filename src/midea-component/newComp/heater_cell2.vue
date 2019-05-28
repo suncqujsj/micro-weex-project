@@ -167,6 +167,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    margin-right: 12px;
 }
 
 .switch-active {

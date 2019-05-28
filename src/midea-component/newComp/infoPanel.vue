@@ -80,20 +80,21 @@ const config = [{
     src: '../assets/E2_new/highTempBg3x.png',
     bg: '../assets/E2_new/highTempBg3x.png',
     data: demo3
-},{
+}, {
     src: '../assets/E2_new/keepHeatBg3x.png',
     bg: '../assets/E2_new/keepHeatBg3x.png',
     data: demo1,
     btnSrc: demo5,
-},{
+}, {
     bg: '../assets/E2_new/poweredOff3x.png',
-},{
+}, {
     bg: '../assets/E2_new/poweredOff3x.png',
 }];
 export default {
     mixins: [base],
     props: {
-        state: { //0:保温中  1:加热中 2:高温杀菌中3:待机中 4:关机 5:离线	 待机和保温动效相同,待机没有状态按钮动画
+        //0:保温中  1:加热中 2:高温杀菌中3:待机中 4:关机 5:离线   待机和保温动效相同,待机没有状态按钮动画
+        state: {
             type: Number,
             default: 0
         },
@@ -117,13 +118,13 @@ export default {
             type: String,
             default: '已关机'
         },
-        hotWaterContent:{
+        hotWaterContent: {
             type: String,
             default: '80%'
         },
-        availableTime:{
-            type:String,
-            default:'10min'
+        availableTime: {
+            type: String,
+            default: '10min'
         }
 
     },
@@ -146,27 +147,25 @@ export default {
             clearInterval(timer);
             var doAnimate = () => {
 
-                animation.transition(this.$refs.bgImg,{
-                    styles:{
-                        transform:'scale(0.8,0.8)',
-                        opacity:1
+                animation.transition(this.$refs.bgImg, {
+                    styles: {
+                        transform: 'scale(0.8,0.8)',
+                        opacity: 1
                     },
-                    duration:0,
-                    delay:0
+                    duration: 0,
+                    delay: 0
                 })
 
-                animation.transition(this.$refs.bgImg,{
-                    styles:{
-                        transform:'scale(1.35,1.35)',
-                        opacity:0
+                animation.transition(this.$refs.bgImg, {
+                    styles: {
+                        transform: 'scale(1.35,1.35)',
+                        opacity: 0
                     },
-                    duration:2000,
-                    delay:100
+                    duration: 2000,
+                    delay: 100
                 })
 
-                
-                
-                if(this.state==1){
+                if (this.state == 1) {
                     animation.transition(this.$refs.btnImgDh, {
                         styles: {
                             width: 0,
@@ -210,7 +209,7 @@ export default {
                 setTimeout(() => {
                     this.startAnimation()
                 }, 100)
-                
+
             },
             // 表示首次绑定时就会执行Num监测
             immediate: false
@@ -232,25 +231,30 @@ export default {
     justify-content: center;
     align-items: center;
 }
-.opacity50{
+
+.opacity50 {
     opacity: 0.2;
 }
+
 .center {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.has-right-border{
+
+.has-right-border {
     padding-right: 32px;
     border-right-style: solid;
     border-right-width: 1px;
     border-right-color: #E5E5E8;
 }
-.ver-line{
+
+.ver-line {
     background-color: #E5E5E8;
     width: 1px;
     height: 60px;
 }
+
 .wrapper {
     width: 750px;
     height: 750px;
@@ -387,14 +391,17 @@ line-height: 200px;*/
     right: 30px;
     top: 10px;
 }
-.gray3{
+
+.gray3 {
     color: #666666;
     font-size: 24px;
 }
+
 .gray1 {
     color: #8A8A8F;
     font-size: 24px;
 }
+
 .gray2 {
     color: #666666;
     font-size: 32px;

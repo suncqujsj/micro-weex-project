@@ -142,7 +142,8 @@ module.exports = {
             { title: 'Tab', link: "tab" },
             // { title: 'TimeCycle时间转盘', link: "timeCycle" },
             { title: 'Video视频', link: "video" },
-            { title: 'scrollPicker滚动选择器', link: "scrollPicker" }
+            { title: 'scrollPicker滚动选择器', link: "scrollPicker" },
+            { title: 'SwipeCell侧滑', link: "swipeCell"}
         ],
         interfacelist: [
             { title: 'callTel打电话', link: "callTel" },
@@ -199,7 +200,9 @@ module.exports = {
             { title: 'cell',link:"cellPage"},
             { title: '热水器中间的环',link:"heaterWidget"},
             { title: '净水器顶部背景',link:'topCircleBg'},
-            { title: '拼装',link:'example'}
+            { title: '拼装示例1',link:'examplePage1'},
+            { title: '拼装示例2',link:'examplePage2'},
+            { title: '拼装示例3',link:'examplePage3'}
         ],
         weexList: [
             { title: 'BroadcastChannel示例', link: "broadcastChannelA" },

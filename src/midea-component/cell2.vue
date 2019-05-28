@@ -1,5 +1,5 @@
 <template>
-    <div :class="['midea-cell',clickActivied&& 'active-cell', hasTopBorder && 'cell-top-border', hasBottomBorder && 'cell-bottom-border', hasMargin && 'cell-margin', desc && 'has-desc']" :style="outputCellStyle" @click="cellClicked">
+    <div :class="['midea-cell',clickActivied&& 'active-cell', hasTopBorder && 'cell-top-border', hasBottomBorder && 'cell-bottom-border', hasMargin && 'cell-margin', desc && 'has-desc']" :style="outputCellStyle" @click="cellClicked" @longpress="onLongPress">
 
         <slot name="itemImg">
             <image v-if="itemImg&&itemImg!=''" :src="itemImg" class="item-img" resize='contain'>
@@ -234,6 +234,10 @@ module.exports = {
         cellClicked(e) {
 
             this.$emit('mideaCellClick', { e });
+        },
+
+        onLongPress() {
+            this.$emit('cellLongPress')
         }
     }
 };

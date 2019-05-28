@@ -74,9 +74,7 @@ export default {
         onchange(event) {
             this.isChecked = !this.isChecked
             this.updateIcon()
-
-            this.$emit('change', { value: this.isChecked,itemKey: this.itemKey }) //iot
-
+            this.$emit('change', { value: this.isChecked,itemKey: this.itemKey }) 
         },
         updateIcon(durationTime = 100) {
             var switchBar = this.$refs.switchBar;

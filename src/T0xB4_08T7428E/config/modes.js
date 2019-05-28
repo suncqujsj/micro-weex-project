@@ -5,6 +5,7 @@
 
 import modeIcons from "../../common/mapping/modeIcons";
 let probe = false;
+let settingHide = false;
 
 let modes = [
     {
@@ -37,7 +38,7 @@ let modes = [
                     range:[30,90,1],
                 },
                 probe,//支持肉类探针
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                settingHide, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             },
             {
@@ -67,7 +68,7 @@ let modes = [
                     range:[30,90,1],
                 },
                 probe,//支持肉类探针
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                settingHide, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             },
             {
@@ -97,7 +98,7 @@ let modes = [
                     range:[30,90,1],
                 },
                 probe,//支持肉类探针
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                settingHide, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             },
             {
@@ -127,7 +128,7 @@ let modes = [
                     range:[30,90,1],
                 },
                 probe,//支持肉类探针
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                settingHide, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             }
         ]
@@ -154,7 +155,7 @@ let modes = [
                     default: 1,
                     workingPreheatHide: true,
                 },
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                settingHide, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             },
             {
@@ -174,7 +175,7 @@ let modes = [
                 preheat:{
                     set:false
                 },
-                settingHide:true, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
+                settingHide, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true
             },
         ]

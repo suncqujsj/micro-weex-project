@@ -1,7 +1,5 @@
 <template>
-    <div class="wrapper" >
-        <midea-header class="fixed-top" titleText="white" :title="frmplay" bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png"  @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
-
+    <div class="wrapper">
         <div class="content" :style="{height: wrapHeight}">
             <midea-ppvideo-view v-if="ppvideo_initdata.user" ref="ppvideo" class="video" :style="{height:videoHeight}" :data="ppvideo_initdata" @Login="event" @VideoStatus="event"></midea-ppvideo-view>
 
@@ -24,6 +22,20 @@
             <!--<midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="查询权限" @mideaButtonClicked="getPhotoLibraryAuthorizationStatus"/>-->
             <!--<midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="获取权限" @mideaButtonClicked="requestPhotoLibraryAuthorization"/>-->
         <!--</scroller>-->
+
+        <midea-header class="fixed-top" titleText="white" :title="countingText" bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png"  @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png"></midea-header>
+
+        <!--警告弹窗-->
+        <midea-dialog :title="warningDialog.title"
+                      :show="warningDialog.show"
+                      :single="true"
+                      confirmText="我知道了"
+                      @mideaDialogConfirmBtnClicked="knowClicked"
+                      :content="warningDialog.content"
+                      mainBtnColor="#FFB632"
+        >
+        </midea-dialog>
+
     </div>
 </template>
 <style lang="less" type="text/less" scoped>
@@ -44,6 +56,7 @@
     .record-icon{
         .square(56*2px);
         .pos(a);
+        left: 319px;
         bottom:72px;
     }
 
@@ -66,16 +79,19 @@
 <script>
     import base from "@/midea-demo/base";
     import mideaButton from "@/midea-component/button.vue";
-    import sfState from "@/midea-component/sf/custom/state.vue"
+    import sfState from "@/midea-component/sf/custom/state.vue";
+    import mideaDialog from '@/midea-component/dialog.vue';
+
 
     import nativeService from "@/common/services/nativeService";
     const ppvideoModule = weex.requireModule("ppVideoModule");
     import commonMixin from  "@/common/util/mixins/common.js"
 
     let [width, height] = [640, 360]; //config
+    const shortestVideoTime = 10;
 
     module.exports = {
-        components: { mideaButton, sfState},
+        components: { mideaButton, sfState, mideaDialog},
         mixins: [base, commonMixin],
         data() {
             return {
@@ -95,8 +111,17 @@
                 t:null,
                 second:0,
                 frmplay:0,
-                tt:null
+                tt:null,
+                loading:false,
+                ttt: null,
+                cooking:true
             };
+        },
+        props:{
+            constant:{
+                type: Object,
+                default: () => ({})
+            }
         },
         computed:{
             countingText(){
@@ -112,13 +137,25 @@
         mounted(){
             // this.setVideoModeSize();
             this.init();
+            this.prePageName = this.getUrlParam(weex.config.bundleUrl, 'pageName');
         },
         created(){
+            // nativeService.alert(weex.config.bundleUrl);
             this.initLoading();
             this.getPhotoLibraryAuthorizationStatus();
             this.requestPhotoLibraryAuthorization();
+
+            this.timingQuery();
         },
         methods: {
+
+            getPageName(){
+                return 'videoPage';
+            },
+
+            getPrePageName(){
+                return this.prePageName;
+            },
 
             hms(){
                 let [h,m,s] = [0,0,0];
@@ -173,10 +210,10 @@
                         params: { captureId: context.sn32 } // device sn，必填3项字段之一
                     },
                     () => {
-                        nativeService.toast("start 成功");
+                        // nativeService.toast("start 成功");
                     },
                     () => {
-                        nativeService.toast("start failed");
+                        nativeService.toast("初始化失败");
                     }
                 );
             },
@@ -192,7 +229,7 @@
                         nativeService.toast("stop 成功");
                     },
                     () => {
-                        nativeService.toast("stop failed");
+                        // nativeService.toast("stop failed");
                     }
                 );
             },
@@ -216,12 +253,12 @@
                         params:{}
                     },
                     () => {
-                        nativeService.toast("RecordStart 成功");
+                        nativeService.toast("开始录屏");
                         context.updateRecordState();
                         context.startCounting();
                     },
                     () => {
-                        nativeService.toast("RecordStart failed");
+                        nativeService.toast("开始录屏失败");
                     }
                 );
             },
@@ -229,11 +266,18 @@
                 this.t  = setInterval(
                     ()=>{
                         // nativeService.toast(this.countingText)
+                        // !this.loading && ++this.second;
                         ++this.second;
                     }, 1000
                 );
             },
             recordStop() {
+
+                if(this.second< shortestVideoTime) {
+                    nativeService.toast(`录屏最短时间为${shortestVideoTime}秒`);
+                    return;
+                }
+
                 let context = this;
                 ppvideoModule.ppvideoInterface(
                     this.$refs.ppvideo,
@@ -242,12 +286,12 @@
                         params:{}
                     },
                     () => {
-                        nativeService.toast("RecordStop 成功");
+                        nativeService.toast("视频保存成功");
                         context.updateRecordState();
                         context.stopCounting();
                     },
                     () => {
-                        nativeService.toast("RecordStop failed");
+                        nativeService.toast("视频保存失败");
                     }
                 );
             },
@@ -263,10 +307,10 @@
                         params:{}
                     },
                     () => {
-                        nativeService.alert("captureImage 成功");
+                        nativeService.toast("拍照保存成功");
                     },
                     () => {
-                        nativeService.toast("captureImage failed");
+                        nativeService.toast("拍照保存失败");
                     }
                 );
             },
@@ -304,14 +348,20 @@
             initLoading(){
                 this.tt = setInterval(()=>{
                     if(!this.frmplay) {
-                        nativeService.showLoading();
+                        this.showLoading();
                         return;
                     }
-                    nativeService.hideLoading();
+                    this.hideLoading();
                     clearInterval(this.tt);
                 },1000);
             },
             event(event){
+
+                if(!this.cooking) {
+                    this.hideLoading();
+                    return;
+                }
+
                 // nativeService.toast('event sData:' +event.sData+",sRender:"+event.sRender);
                 let paramsArr = event.sData.split('&');
                 for(let param of paramsArr) {
@@ -319,14 +369,58 @@
                     if(pair[0] === 'frmplay') {
                         let frmplay = pair[1];
                         if(this.frmplay === frmplay) {
-                            nativeService.showLoading();
+                            this.showLoading();
+                            this.loading = true;
                             return;
                         }
 
+                        if(!this.frmplay && frmplay) {
+                            this.pageViewStatistics(); // 上报视频加载时间
+                        }
+
                         this.frmplay = frmplay;
-                        nativeService.hideLoading();
+                        this.hideLoading();
+                        this.loading = false;
                     }
                 }
+            },
+            showLoading(){
+                this.showState('加载中...');
+            },
+            hideLoading(){
+                this.hideState();
+            },
+
+            timingQuery(){
+                const TIME = 1000;
+                let context = this;
+                this.ttt = setInterval(function(){
+                    context.getDeviceStatus(context.handleSnapshot);
+                }, TIME);
+            },
+
+            handleSnapshot(statusArray){
+                let byte11 = parseInt(statusArray[11]);
+                // nativeService.toast(byte11);
+                if(byte11 !== 4) {
+                    return;
+                }
+
+                this.cooking = false;
+                if(!this.recording){
+                    this.setWarningDialog("视频直播已结束", this.back);
+                  return;
+                }
+
+                this.recordStop();
+                clearInterval(this.ttt);
+                this.setWarningDialog("视频已自动保存", this.back);
+            },
+
+            knowClicked(){
+                this.show = false;
+                this.warningDialog.callback && this.warningDialog.callback();
+                // this.warningDialog = this.initWarningDialog();
             }
         }
     };

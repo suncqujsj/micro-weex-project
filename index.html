@@ -21,7 +21,7 @@
         <div id="app">
             <div class="mock-phone">
                 <div class="inner">
-                    <iframe id="preview" src="./weex.html"></iframe>
+                    <iframe id="preview" src="./dist/midea-demo/weex.html"></iframe>
                 </div>
                 <div class="camera"></div>
                 <div class="earpiece"></div>
@@ -47,7 +47,7 @@
             var protocol = location.protocol + '//'
             var hostname = typeof CURRENT_IP === 'string' ? CURRENT_IP : location.hostname
             var port = location.port ? ':' + location.port : ''
-            var url = protocol + hostname + port + location.pathname.replace(/\/index\.html$/, '/').replace(/\/$/, '/dist/index.js?ip=' + CURRENT_IP)
+            var url = protocol + hostname + port + location.pathname.replace(/\/index\.html$/, '/').replace(/\/$/, '/dist/midea-demo/weex.js?ip=' + CURRENT_IP)
             console.log('QR CODE URL: ' + url)
             new Vue({
                 el: '#app',

@@ -16,10 +16,10 @@ let list = [
         rightText: constant.device.widget_version,
         link: ''
     },
-    {
-        title: '烤箱实时监控',
-        link:'video.js'
-    }
+    // {
+    //     title: '烤箱实时监控',
+    //     link:'video.js?pageName=morePage'
+    // }
 ];
 
 export default list;

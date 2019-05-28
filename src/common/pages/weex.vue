@@ -294,10 +294,10 @@
 
             <!-- 炉灯 -->
             <!--<image :class="['light_icon',cmdObj.light.value && 'light_on']" :src="lightImg"  @click="sendLightCmd(cmdObj.light.value,tabs,constant.device)"></image>-->
-            <light :hasLight="constant.device.show" :lightValue="cmdObj.light.value" :event="sendLightCmd"></light>
+            <light :hasLight="constant.device.hasLight" :lightValue="cmdObj.light.value" :event="sendLightCmd"></light>
 
             <!--视频监控入口-->
-            <video-entrance :show="constant.device.showVideo"></video-entrance>
+            <video-entrance :show="constant.device.showVideo" @onVideoIconClicked="onVideoIconClicked"></video-entrance>
         </div>
     </div>
 </template>
@@ -343,7 +343,7 @@
         mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin,copyMixin,weexData,modalMixin,voiceMixin],
         data(){
             return {
-
+                fromStandBy:false // 标记此次打开插件是否从待机状态启动模式进入到工作中状态
             }
         },
         props: {
@@ -364,6 +364,17 @@
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             let self = this;
             let {constant,tabs} = this;
+
+            //  //获取nfc码 action值
+            //  nativeService.getNfcInfo({key:1},(getData)=>{
+            //     if(getData.data && parseInt(getData.data)==2){
+            //         self.openCloudMenuPage();
+            //     }
+            //     if(getData.data && parseInt(getData.data)==1){
+            //         nativeService.goTo('more.js', {animated: true});
+            //     }
+            //  },(errData)=>{}
+            //  );
 
             // constant.device.voiceAuth && this.initVoiceWithParams(true); // sf 判断设备是否显示语音授权提示框
 

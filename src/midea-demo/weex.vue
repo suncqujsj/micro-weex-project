@@ -193,6 +193,13 @@ module.exports = {
         pagesList: [
             { title: '滑动显示更多菜单', link: "moreMenu" },
             { title: '滑动放缩图片', link: "scrollHeader" },
+            { title: '带背景环形进度条', link: "mprogresscycle" },
+            { title: '时间选择器', link: "mTimePicket" },
+            { title: '底部弹框', link:"bottomContent"},
+            { title: 'cell',link:"cellPage"},
+            { title: '热水器中间的环',link:"heaterWidget"},
+            { title: '净水器顶部背景',link:'topCircleBg'},
+            { title: '拼装',link:'example'}
         ],
         weexList: [
             { title: 'BroadcastChannel示例', link: "broadcastChannelA" },

@@ -102,6 +102,7 @@ module.exports = {
             { key: 19, value: "T0x9B",desc: "50QL 蒸烤" },
             { key: 20, value: "T0x9B",desc: "36QL 蒸烤" },
             { key: 21, value: "T0xB0_0PG23E0W",desc: "PG23E0" },
+            { key: 22, value: "T0xB1_0PS2032W",desc: "PS2032W" },
         ],
         card: 'T0xB1',
         isShowCardList: false,

@@ -1,3 +1,5 @@
+import cmdFun from "@/common/util/command/util";
+
 /**
  * Created by sf
  * 2018/10/30
@@ -14,7 +16,9 @@ let commonMixin = {
             wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
             state: null,
             stateTime: null,
-            count:0
+            count:0,
+            warningDialog: this.initWarningDialog(),
+            hintDialog: this.initHintDialog()
         };
     },
     beforeCreate(){
@@ -38,8 +42,8 @@ let commonMixin = {
         onBackIconClicked(){
             this.statisticsUpload({subAction:'back_icon_click'});
         },
-        openPage: function(pageName){
-            nativeService.goTo(`${pageName}.js`, {animated: true});
+        openPage: function(pageName, params=null){
+            nativeService.goTo(`${pageName}.js`, {animated: true}, params);
         },
         isip9(){
            return  weex && (weex.config.env.deviceModel === 'iPhone9,2');
@@ -238,7 +242,7 @@ let commonMixin = {
          * 返回 前一个页面名称
          */
         getPrePageName(){
-            return 'mideaHomePage'
+            return this.fromStandBy ? 'standbyPage' : 'mideaHomePage';
         },
 
         resetStartTime(){
@@ -251,6 +255,20 @@ let commonMixin = {
         pageViewStatistics(){
             let load_duration = (new Date()).getTime() - this.startTime.getTime();
             this.statisticsUpload({load_duration});
+        },
+
+        /**
+         * 获取url指定参数值
+         */
+        getUrlParam(url, key){
+            let params = url.split('?')[1].split('&');
+            for(let param of params) {
+                let pair = param.split('=');
+                if(pair[0] === key) {
+                    return pair[1];
+                }
+            }
+
         },
 
         /**
@@ -306,6 +324,44 @@ let commonMixin = {
          */
         iconVisibility(key, state){
             return !this.constant.device[key] || !this.constant.device[key][state]
+        },
+
+        /**
+         * 视频直播入口点击事件
+         */
+        onVideoIconClicked(){
+            this.statisticsUpload({subAction:'video_icon_click'});
+            this.openPage('video', {pageName:this.getPageName()});
+        },
+
+        /**
+         * 03查询 支持传入回调
+         */
+        getDeviceStatus(cb=null) {//传入模式配置数据tabs
+
+            let self = this;
+            let {constant} = this;
+            let sendCmd = cmdFun.createQueryMessage(constant.device);
+
+            nativeService.startCmdProcess(
+                "query",
+                sendCmd,
+                function (result) {
+                    // nativeService.alert(result);
+                    // var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
+                    // var arr = result_arr.split(",");
+                    // // nativeService.alert(arr);
+                    // var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
+                    // self.analysisFun(analysisObj,self.tabs);
+
+                    if(typeof cb === 'function') {
+                        cb(JSON.parse(result));
+                    }
+                },
+                function (result) {
+                    //nativeService.toast("查询失败" + JSON.stringify(result));
+                }
+            );
         },
     }
 };

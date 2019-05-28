@@ -16,14 +16,12 @@
 </style>
 
 <template>
-    <image v-if="show" class="icon position" :src="icon" @click="openPage('video')"></image>
+    <image v-if="show" class="icon position" :src="icon" @click="onVideoIconClicked"></image>
 </template>
 
 <script>
-    import commonMixin from  "@/common/util/mixins/common"
 
     export default {
-        mixins:[commonMixin],
         props:{
             show: {
                 type: Boolean,
@@ -36,6 +34,9 @@
             }
         },
         methods:{
+            onVideoIconClicked(){
+                this.$emit('onVideoIconClicked');
+            }
         }
     };
 </script>

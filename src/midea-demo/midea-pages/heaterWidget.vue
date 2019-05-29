@@ -24,7 +24,7 @@ export default {
     data(){
         return {
             state:0,
-            btns:['保温','加热','待机','关机','离线']
+            btns:['保温','加热','高温杀菌','待机','关机','离线']
         }
     },
     methods:{
@@ -37,12 +37,15 @@ export default {
                     this.state = 1;
                     return
                 case 2:
-                    this.state = 3;
+                    this.state = 2;
                     return
                 case 3:
-                    this.state = 4;
+                    this.state = 3;
                     return
                 case 4:
+                    this.state = 4;
+                    return
+                case 5:
                     this.state = 5;
                     return
             }

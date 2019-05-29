@@ -9,12 +9,9 @@
             <heater-cell title="半胆速热" desc='快速加热，提供少量热水' :isActive='false' />
             <heater-cell title="半胆速热" desc='快速加热，提供少量热水' :isActive='false' />
         </heater-confirm-box>
-
     </div>
-    
 </template>
 <style>
-
 </style>
 <script>
 import base from '../base'

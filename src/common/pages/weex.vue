@@ -464,11 +464,12 @@
                 this.openCloudMenuPage();
             },
             openCloudMenuPage: function(){
-                this.statisticsUpload({subAction: 'cloud_recipe_click'});
-                nativeService.jumpNativePage({
-                    "pageName": "CookbookHome",
-                    "data": {}
-                })
+                nativeService.goTo('recipeList.js', {animated: true});
+                // this.statisticsUpload({subAction: 'cloud_recipe_click'});
+                // nativeService.jumpNativePage({
+                //     "pageName": "CookbookHome",
+                //     "data": {}
+                // })
             },
             openMorePage: function(){
                 this.statisticsUpload({subAction: 'more_icon_click'});

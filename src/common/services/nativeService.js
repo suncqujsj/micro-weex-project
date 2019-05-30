@@ -907,10 +907,18 @@ export default {
         }
         return this.commandInterfaceWrapper(param)
     },
-    //触发手机震动
-    hapticFeedback() {
-        let param = {
-            operation: 'hapticFeedback'
+    //触发手机震动  intensity 1：轻微震动 2：中等震动 3：强烈震动  intensity为空：猛烈♂震动
+    hapticFeedback(intensity) {
+        let param
+        if(intensity && (typeof intensity=='number')){
+            param = {
+                operation: 'hapticFeedback',
+                intensity: intensity
+            }
+        }else{
+            param = {
+                operation: 'hapticFeedback'
+            }
         }
         return this.commandInterfaceWrapper(param)
     },

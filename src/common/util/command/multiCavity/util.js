@@ -458,6 +458,7 @@ export default {
 
   // 蒸腔体
   analysisCmdUp: function(requestCmd,pages) {
+    // nativeService.alert(this.cmdToEasy(requestCmd));
     let tabs = pages[0].tabs;
     var obj = this.initAnalysisObj();
     let length = 30;

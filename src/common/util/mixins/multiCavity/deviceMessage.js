@@ -188,13 +188,13 @@ const deviceMessageMixin = {
                 function(result){
                     nativeService.hideLoading();
                     // nativeService.alert(result);
-                    // context.queryStatus();
-                    if(context.isStandby()) {
-                        context.fromStandBy = true;
-                        context.queryStatus(null, null, context.pageViewStatistics);
-                    }else{
-                        context.queryStatus();
-                    }
+                    context.queryStatus();
+                    // if(context.isStandby()) {
+                    //     context.fromStandBy = true;
+                    //     context.queryStatus(null, null, context.pageViewStatistics);
+                    // }else{
+                    //     context.queryStatus();
+                    // }
                 },
                 function(result){
                     nativeService.hideLoading();

@@ -49,6 +49,7 @@ let commonMixin = {
             this.list[this.controlIndex].value = data.micStatus === 'On'; // 注意O是大写
             let t = setInterval(()=>{
                 this.hideState();
+                this.pageViewStatistics();
                 clearInterval(t);
                 this.loading = false;
             }, 1000);
@@ -66,6 +67,7 @@ let commonMixin = {
                 if(parseInt(JSON.parse(resp.returnData).code) === 0) {
                     this.setSwitchValue(index, !value);
                     nativeService.hideLoading();
+                    this.statisticsUpload({subAction:'voice_microphone_switch', action_result:!value?1:0})
                 }
             });
 
@@ -129,6 +131,7 @@ let commonMixin = {
         onAuthSwitchChange(event) {
             let index = this.authIndex;
             let value = this.getSwitchValue(index);
+            let subAction = 'voice_auth_switch';
             // nativeService.toast(value);
             if(value) {
                 nativeService.showLoading();
@@ -137,6 +140,7 @@ let commonMixin = {
                     if(parseInt(JSON.parse(resp.returnData).code) === 0) {
                         this.setSwitchValue(index, !value);
                         nativeService.hideLoading();
+                        this.statisticsUpload({subAction, action_result:0})
                     }
 
                 });
@@ -147,6 +151,7 @@ let commonMixin = {
                 // nativeService.alert(resp);
                 if(resp.code === 0) {
                     this.setSwitchValue(index, !value);
+                    this.statisticsUpload({subAction, action_result:1})
                 }
             });
 

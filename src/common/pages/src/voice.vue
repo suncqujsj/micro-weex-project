@@ -50,6 +50,12 @@
 
     export default {
         mixins: [commonMixin, voiceMixin, voiceOtaMixin],
+        props:{
+            constant:{
+                type: Object,
+                default: () => ({})
+            }
+        },
         data(){
             return {
                 loading:true,
@@ -93,6 +99,13 @@
             };
         },
         methods:{
+            getPageName(){
+                return 'voicePage';
+            },
+
+            getPrePageName(){
+                return 'morePage';
+            },
         }
     }
 </script>

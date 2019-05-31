@@ -57,6 +57,12 @@
 
     export default {
         mixins: [commonMixin, voiceOtaMixin],
+        props:{
+            constant:{
+                type: Object,
+                default: () => ({})
+            }
+        },
         data(){
             return {
                 t:null,
@@ -89,6 +95,9 @@
                 let data = returnDataJson.data;
                 if(data.status === 'upgrading') { // 发现固件在升级中
                     // nativeService.toast(data);
+
+                    this.pageViewStatistics();
+
                     this.setData(true, data);
                     this.markButtonPressedState();
                     this.showUpgradingState();
@@ -98,6 +107,9 @@
 
                 this.checkUpgradeVersion().then((resp)=>{ // 发现当前无固件在升级中
                     // nativeService.alert(resp);
+
+                    this.pageViewStatistics();
+
                     let data = JSON.parse(resp.returnData).data;
                     if(data.hasNewVer) {
                         this.setData(true, data.nextFmVer);
@@ -117,11 +129,19 @@
                     clearInterval(this.a);
                 },2000);
             },
+            getPageName(){
+                return 'otaPage';
+            },
+
+            getPrePageName(){
+                return 'voicePage';
+            },
             markButtonPressedState(){
                 this.pressed = true;
             },
             upgrade(){
                 if(this.pressed) return;
+                this.statisticsUpload({subAction:'ota_update_button'});
                 this.UpgradeFireware().then((resp)=>{ // 点击按钮，让设备升级语音固件
                     // nativeService.alert(resp);
                     let returnData = JSON.parse(resp.returnData);

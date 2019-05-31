@@ -194,6 +194,7 @@
 </style>
 
 <script>
+import nativeService from '../../common/services/nativeService.js'
 const animation = weex.requireModule('animation')
 
 module.exports = {
@@ -273,6 +274,10 @@ module.exports = {
         switchActive: {
             type: Boolean,
             default: false
+        },
+        hapticFeedbackActive:{
+            type:Boolean,
+            default:false
         }
     },
     computed: {
@@ -298,12 +303,13 @@ module.exports = {
         },
         clickSwitch() {
             if (this.switchActive) {
-                // animation.transition(this.$refs.switch,{
-                //   styles:{
-                //     backgroundColor:'#ffffff'
-                //   },
-                //   duration:500
-                // })
+                animation.transition(this.$refs.switchDot, {
+                    styles: {
+                        backgroundColor: '#8A8A8F'
+                    },
+                    duration: 0,
+                    delay:10
+                })
                 animation.transition(this.$refs.switchDot, {
                     styles: {
                         backgroundColor: '#8A8A8F',
@@ -313,15 +319,16 @@ module.exports = {
                     timingFunction:'ease-out'
                 })
             } else {
-                // animation.transition(this.$refs.switch,{
-                //   styles:{
-                //     backgroundColor: '#FFAA10',
-                //   },
-                //   duration:500
-                // })
                 animation.transition(this.$refs.switchDot, {
                     styles: {
-                        backgroundColor: '#ffffff',
+                        backgroundColor: '#ffffff'
+                    },
+                    duration: 0,
+                    delay:10
+                })
+                animation.transition(this.$refs.switchDot, {
+                    styles: {
+                        // backgroundColor: '#ffffff',
                         transform: 'translateX(52px) scale(2.25)'
                     },
                     duration: 300,
@@ -330,6 +337,9 @@ module.exports = {
             }
 
             this.$emit('clickSwitch')
+            if(this.hapticFeedbackActive){
+                nativeService.hapticFeedback(1)
+            }
         }
     },
     mounted() {

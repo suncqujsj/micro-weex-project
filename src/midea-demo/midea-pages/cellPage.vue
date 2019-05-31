@@ -1,7 +1,7 @@
 <template>
     <div>
         <midea-header title="cell" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
-        <heater-cell itemImg='../assets/img/smart_ic_reline@3x.png' title='title' desc='desc' :hasSwitch='true' @clickSwitch='clickSwitch' :switchActive='switchActive' :hasArrow='false' :hasSubBottomBorder='true' />
+        <heater-cell itemImg='../assets/img/smart_ic_reline@3x.png' title='title' desc='desc' :hasSwitch='true' @clickSwitch='clickSwitch' :switchActive='switchActive' :hasArrow='false' :hasSubBottomBorder='true' :hapticFeedbackActive='true'/>
         <heater-cell itemImg='../assets/img/smart_ic_reline@3x.png' title='title' desc='desc' rightText='righttext' />
     </div>
     

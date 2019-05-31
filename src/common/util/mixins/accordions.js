@@ -172,6 +172,7 @@ const accordionMixin = {
                 return;
             }
 
+
             let jsonCmd = {
                 currentItem: this.currentItem,
                 mode: this.currentItem.mode,
@@ -212,7 +213,9 @@ const accordionMixin = {
 
             this.dialogParamsStatistics(jsonCmd);
 
+
             jsonCmd = this.formatJsonCmd(jsonCmd);
+            // nativeService.alert(this.currentItem.mode);
 
             this.statisticsUpload({subAction: 'start_mode_click', action_result: this.currentItem.mode});
 

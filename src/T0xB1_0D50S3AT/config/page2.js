@@ -155,9 +155,9 @@ let modes = [
         iconButtons: [
           
             {
-                'icon': modeIcons[18].dir,
-                'text': modeIcons[18].cn,
-                'mode': 0x53,
+                'icon': modeIcons[28].dir,
+                'text': modeIcons[28].cn,
+                'mode': 0xD0,
                 time:{
                     set: true,
                     default:45,
@@ -165,8 +165,8 @@ let modes = [
                 },
                 temperature:{
                     set: true,
-                    default:180,
-                    range:[50,250,1]
+                    default:75,
+                    range:[60,100,1]
                 },
                 preheat:{
                     set:false,

@@ -394,7 +394,7 @@
         mixins: [commonMixin, deviceMessageMixin, accordionMixin, detailModalMixin,copyMixin,modalMixin,weexData],
         data(){
             return {
-               
+               fromStandBy:false // 标记此次打开插件是否从待机状态启动模式进入到工作中状态
             }
         },
         computed:{

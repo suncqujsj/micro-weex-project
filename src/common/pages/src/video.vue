@@ -237,6 +237,8 @@
                 this.recording = !this.recording;
             },
             record(){
+                let action_result = this.recording ? 0 : 1;
+                this.statisticsUpload({subAction:'shoot_video_icon_click', action_result});
                 if(!this.recording) {
                     this.recordStart();
                     return;
@@ -300,6 +302,7 @@
                 this.second = 0;
             },
             captureImage() {
+                this.statisticsUpload({subAction:'take_picture_icon_click'});
                 ppvideoModule.ppvideoInterface(
                     this.$refs.ppvideo,
                     {

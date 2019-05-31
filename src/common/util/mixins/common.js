@@ -192,7 +192,7 @@ let commonMixin = {
                 action_result:null,
                 load_duration:null
             };
-
+            // nativeService.alert(data);
             param = objectAssign(param, data);
             // nativeService.alert(param);
             // return;
@@ -225,6 +225,7 @@ let commonMixin = {
          */
          getWidgetVersion(){
             let {constant} = this;
+            
             return constant.device.widget_version;
         },
 

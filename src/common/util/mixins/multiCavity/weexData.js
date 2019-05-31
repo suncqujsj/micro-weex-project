@@ -84,6 +84,13 @@ let workingModalMixin  = {
         };
     },
     methods: {
+        /**
+         * 当前状态是否待机中
+         */
+        isStandby(){
+            return !this.isWorkingPage
+        },
+
         dialogTips(obj){
             this.setWarningDialog("",null,false);
             this.modalVisibility = false;

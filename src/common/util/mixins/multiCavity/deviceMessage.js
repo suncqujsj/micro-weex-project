@@ -98,7 +98,6 @@ const deviceMessageMixin = {
             var self = this;
             var sendCmd = cmdFun.createQueryMessage(this.device);
             // nativeService.alert(sendCmd);
-
             //nativeService.showLoading();
             // debugger;
             nativeService.startCmdProcess(
@@ -110,7 +109,7 @@ const deviceMessageMixin = {
                     var arr = result_arr.split(",");
                     // nativeService.alert(arr);
                     var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
-                    // nativeService.alert(analysisObj);
+                    nativeService.alert(analysisObj);
                     self.analysisFun(analysisObj);
                 },
                 function (result) {
@@ -181,7 +180,7 @@ const deviceMessageMixin = {
             // this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
             // return;
             nativeService.showLoading();
-            // nativeService.alert(cmdFun.cmdToEasy(deviceCmd));
+            nativeService.alert(cmdFun.cmdToEasy(deviceCmd));
             nativeService.startCmdProcess(
                 "control",
                 deviceCmd,

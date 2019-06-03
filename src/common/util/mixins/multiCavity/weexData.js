@@ -133,20 +133,21 @@ let workingModalMixin  = {
             chartJson.progressCounter = 0;
             this.chartJson = JSON.parse(JSON.stringify(chartJson));
 
-            //nativeService.alert(analysisObj);
-            if(analysisObj.workingState.value > 2) {
-                this.showDetailVisibility = false;
-                this.show = false;
-            }
+            // nativeService.alert(analysisObj);  //parker: 双腔体不能这样区分
+            // if(analysisObj.workingState.value > 2) {
+            //     this.showDetailVisibility = false;
+            //     this.show = false;
+            // }
             if(this.settingClickRecord){
                 this.show = true;    
             }
             this.dialogSetting(analysisObj);
-           
+            
             this.isCavityWorking = false;
             this.isWorkingPage = false;
             let downCavityStatus = analysisObj.down_cavity.workingState.value;
             let upCavityStatus = analysisObj.up_cavity.workingState.value;
+            
             if(this.index==0 && (upCavityStatus==2||upCavityStatus==1)){
                 this.queryRunTimer(10);//6秒轮询 
             }
@@ -248,7 +249,7 @@ let workingModalMixin  = {
             }
             var _item = cmdFun.getCurrentModeItem(tabs,analysisObj.recipeId.value,analysisObj.mode.value,_isRecipe);
             //this.currentItem = _item;
-            //nativeService.alert(_item);
+            // nativeService.alert(_item);
             if(_item.settingHide){
                 this.hasSetting = false;
             }

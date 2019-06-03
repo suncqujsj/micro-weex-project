@@ -91,7 +91,7 @@ const deviceMessageMixin = {
             this.device = device;
             this.index = index;
         },
-        queryStatus(tabs=this.tabs,device=this.device,index=this.index) {//传入模式配置数据tabs
+        queryStatus(tabs=this.tabs,device=this.device,index=this.index, cb=null) {//传入模式配置数据tabs
             if(device) {
                 this.initData(tabs, device,index);
             }
@@ -109,8 +109,12 @@ const deviceMessageMixin = {
                     var arr = result_arr.split(",");
                     // nativeService.alert(arr);
                     var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
-                    nativeService.alert(analysisObj);
+                    // nativeService.alert(analysisObj);
                     self.analysisFun(analysisObj);
+
+                    if(typeof cb === 'function') {
+                        cb();
+                    }
                 },
                 function (result) {
                     //nativeService.hideLoading();
@@ -180,20 +184,20 @@ const deviceMessageMixin = {
             // this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
             // return;
             nativeService.showLoading();
-            nativeService.alert(cmdFun.cmdToEasy(deviceCmd));
+            // nativeService.alert(cmdFun.cmdToEasy(deviceCmd));
             nativeService.startCmdProcess(
                 "control",
                 deviceCmd,
                 function(result){
                     nativeService.hideLoading();
                     // nativeService.alert(result);
-                    context.queryStatus();
-                    // if(context.isStandby()) {
-                    //     context.fromStandBy = true;
-                    //     context.queryStatus(null, null, context.pageViewStatistics);
-                    // }else{
-                    //     context.queryStatus();
-                    // }
+                    // context.queryStatus();
+                    if(context.isStandby()) {
+                        context.fromStandBy = true;
+                        context.queryStatus(null, null,null, context.pageViewStatistics);
+                    }else{
+                        context.queryStatus();
+                    }
                 },
                 function(result){
                     nativeService.hideLoading();
@@ -301,7 +305,7 @@ const deviceMessageMixin = {
                 context.settingClickRecord = false;
                 var str = e.data;
                 var arr = str.split(",");
-                // nativeService.alert(arr);
+                // nativeService.alert("back"+arr);
                 if(parseInt(arr[9])==0x0A){
                     return;
                 }
@@ -311,6 +315,16 @@ const deviceMessageMixin = {
 
              //监听设备在线离线状态
              globalEvent.addEventListener("receiveMessageFromApp", (data) => {
+                // 网络状态判断
+                if(data.messageType === 'networkStatusChanged') {
+                    if(data.messageBody.status === 1) {
+                        this.hideWarningDialog();
+                        return;
+                    }
+
+                    this.setWarningDialog('主人，您的手机没有网络。');
+                }
+
                if(data && data.messageType == "deviceOnlineStatus") {
                    if(data.messageBody && data.messageBody.onlineStatus == "online") {
                        // this.onlineStatus = "1";

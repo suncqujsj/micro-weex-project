@@ -11,7 +11,7 @@ module.exports = {
         page_title: "烤箱",
         sales_model: "双子星 D50S3AT1",
         widget_name: 'MSO_T0xB1',
-        widget_version: '5.31.0',
+        widget_version: '6.3.0',
         extra1: {
             sn8: '0D50S3AT'
         },

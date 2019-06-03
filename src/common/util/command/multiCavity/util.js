@@ -244,7 +244,8 @@ export default {
  
   //控制启动指令
   createControlMessage(params,callbackData,whichCavity) {
-    var time = params.minute;
+    // nativeService.alert(callbackData);
+    var time = params.time;
     var hour = time/60;
     var minute = time%60;
     var second = 0;
@@ -328,7 +329,7 @@ export default {
 
     var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
   
-    nativeService.alert(sendcmd);
+    // nativeService.alert(sendcmd);
 
     return sendcmd;
   },
@@ -390,6 +391,7 @@ export default {
     return sendMessage;
   },
   analysisCmd: function(requestCmd,pages) {
+    //  nativeService.alert(this.cmdToEasy(requestCmd));
     // var receiveFrame = parseInt(requestCmd[3]);
 
     // if(latesFrameRecord > receiveFrame){
@@ -513,7 +515,6 @@ export default {
     obj.timeSetting.hour = parseInt(requestCmd[62]);
     obj.timeSetting.minute = parseInt(requestCmd[63]);
     obj.timeSetting.second = parseInt(requestCmd[64]);
-
     
     return obj;
   }

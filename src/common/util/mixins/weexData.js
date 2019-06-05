@@ -157,13 +157,13 @@ let workingModalMixin  = {
         initStandbyData(cmdObj){
             
             this.modalVisibility = false;
-            if(cmdObj.workingState.value > 2) {
-                this.showDetailVisibility = false;
-                this.show = false;
-            }
-            if(this.settingClickRecord){
-                this.show = true;
-            }
+            // if(cmdObj.workingState.value > 2) {
+            //     this.showDetailVisibility = false;
+            //     this.show = false;
+            // }
+            // if(this.settingClickRecord){
+            //     this.show = true;
+            // }
             this.isWorkingPage = false;
             this.probeTempText = '°C';
         },

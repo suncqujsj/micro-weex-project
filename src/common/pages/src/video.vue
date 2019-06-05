@@ -405,11 +405,14 @@
             handleSnapshot(statusArray){
                 let byte11 = parseInt(statusArray[11]);
                 // nativeService.toast(byte11);
-                if(byte11 !== 4) {
+                let ingArr = [3,6,7];
+                if(ingArr.indexOf(byte11) > -1 ) {
                     return;
                 }
 
                 this.cooking = false;
+                let doneArr = [1,2,4]; //非工作状态
+
                 if(!this.recording){
                     this.setWarningDialog("视频直播已结束", this.back);
                   return;

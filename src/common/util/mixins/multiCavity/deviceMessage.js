@@ -302,7 +302,7 @@ const deviceMessageMixin = {
             let context = this;
             // nativeService.toast(this.tabs);
             globalEvent.addEventListener("receiveMessage", function(e) {
-                context.settingClickRecord = false;
+                //context.settingClickRecord = false;
                 var str = e.data;
                 var arr = str.split(",");
                 // nativeService.alert("back"+arr);

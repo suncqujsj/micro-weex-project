@@ -164,6 +164,13 @@ let workingModalMixin  = {
             // if(this.settingClickRecord){
             //     this.show = true;
             // }
+
+
+             // 关闭弹窗在错误场景的隐藏
+             if(cmdObj.workingState.value < 4 && cmdObj.workingState.value !== 3 && this.showBar  ) {
+                 this.showBar = false;
+             }
+
             this.isWorkingPage = false;
             this.probeTempText = '°C';
         },

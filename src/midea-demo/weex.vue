@@ -202,7 +202,8 @@ module.exports = {
             { title: '净水器顶部背景',link:'topCircleBg'},
             { title: '拼装示例1',link:'examplePage1'},
             { title: '拼装示例2',link:'examplePage2'},
-            { title: '拼装示例3',link:'examplePage3'}
+            { title: '拼装示例3',link:'examplePage3'},
+            { title: '头部动画',link:'headerAnimation'}
         ],
         weexList: [
             { title: 'BroadcastChannel示例', link: "broadcastChannelA" },

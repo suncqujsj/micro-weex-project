@@ -95,7 +95,7 @@ let modes = [
                 time:{
                     set: true,
                     default:50,
-                    range:[1,300,5]
+                    range:[1,60,1,65,300,5]
                 },
                 temperature:{
                     set: true,
@@ -186,7 +186,7 @@ let modes = [
             {   // 蒸烤
                 'icon': modeIcons[35].dir,
                 'text': '蒸烤',
-                'mode': 0x31,
+                'mode': 0x30,
                 time:{
                     set: true,
                     default:30,

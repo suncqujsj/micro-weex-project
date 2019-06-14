@@ -27,7 +27,7 @@ let data = [
                     },
                     steamAmount:{
                         set:false,
-                        default:2,
+                        default:110,
                         range:null
                     },
                     fireAmount:{

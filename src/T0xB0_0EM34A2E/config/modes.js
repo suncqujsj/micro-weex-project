@@ -32,7 +32,7 @@ let tests = [
             {
                 'icon': modeIcons[23].dir,
                 'text': "WEIGHT DEFROST",
-                'ellipsisText': 'WEIGHT DEFRO..',
+                'ellipsisText': 'WEIGHT DEFR..',
                 'mode': 0xA0,
                 weight:{
                     set:true,

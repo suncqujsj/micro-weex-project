@@ -8,7 +8,6 @@
     import modes from "./config/modes.js";
     import autoMenu from "./config/auto-menu.js";
     import commonWeex from "@/common/pages/weex.vue";
-    import nativeService from "@/common/services/nativeService";
 
     var numberRecord = 0; //记录跳页面的次数
     export default {
@@ -16,24 +15,27 @@
             return {
                 tabs:[
                     {
-                        name:'自动菜单',
-                        active:false,
+                        name:'Auto Menu',
+                        active:true,
                         rows:autoMenu
                     },
                     {
-                        name:'加热模式',
-                        active:true,
+                        name:'Heat Mode',
+                        active:false,
                         rows:modes
-                    }
+                    },
+                    // {
+                    //     name:'test',
+                    //     active:true,
+                    //     rows:tests
+                    // }
                 ],
                 constant:constant
             }
         },
         components:{commonWeex},
         created(){
-            // let context = this;
-            // nativeService.setItem("modeData",context.tabs);
-            // nativeService.setItem("constantData",context.constant);
+          
         },
         methods: {
            

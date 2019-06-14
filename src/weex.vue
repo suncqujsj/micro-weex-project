@@ -71,8 +71,9 @@ module.exports = {
         isShowModuleList: false,
         moduleIndex: null,
         moduleList: [
-            { key: -6, value: "T0xB0_02TESTB0", desc: "嵌入式微波炉" },
-            { key: -5, value: "T0xB1_04TESTB1", desc: "嵌入式大烤箱" },
+            { key: -8, value: "T0xB1_0PS2032W", desc: "XXX大烤箱" },
+            { key: -7, value: "T0xB0_02TESTB0", desc: "嵌入式微波炉" },
+            { key: -6, value: "T0xB1_04TESTB1", desc: "嵌入式大烤箱" },
             { key: -5, value: "T0xB4_03TESTB4", desc: "小烤箱" },
             { key: -4, value: "T0xB0_01TESTB0", desc: "白色微波炉" },
             { key: -3, value: "T0xB0_0EM34A2E", desc: "V项目" },

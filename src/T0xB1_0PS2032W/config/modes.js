@@ -33,12 +33,12 @@ let modes = [
                 time:{
                     set: true,
                     default:20,
-                    range:[1,120,1]
+                    range:[1,60,1,65,120,5]
                 },
                 temperature:{
                     set: true,
                     default:100,
-                    range:[35,100,1]
+                    range:[35,100,5]
                 },
                 preheat:{
                     set:false,
@@ -127,7 +127,7 @@ let modes = [
                 temperature:{
                     set: true,
                     default:35,
-                    range:[30,45,1]
+                    range:[30,45,5]
                 },
                 preheat:{
                     set:false,
@@ -159,7 +159,7 @@ let modes = [
                 time:{
                     set: true,
                     default:30,
-                    range:[1,120,1]
+                    range:[1,60,1,65,120,5]
                 },
                 temperature:{
                     set: true,
@@ -186,11 +186,11 @@ let modes = [
             {   // 蒸烤
                 'icon': modeIcons[35].dir,
                 'text': '蒸烤',
-                'mode': 0x30,
+                'mode': 0x31,
                 time:{
                     set: true,
                     default:30,
-                    range:[1,120,1]
+                    range:[1,60,1,65,120,5]
                 },
                 temperature:{
                     set: true,

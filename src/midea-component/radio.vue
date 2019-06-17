@@ -1,16 +1,27 @@
 <template>
-  <midea-cell :has-top-border="hasTopBorder"
-            :hasBottomBorder="hasBottomBorder"
-            :itemImg="itemImg"
-            v-on:mideaCellClick="mideaCellClick">
-    <text :style="{color:color}"
-          class="title-text"
-          slot="title">{{title}}</text>
-    <image :src="radioIcon"
-           v-if="radioIcon"
-           slot="value"
-           class="radio"></image>
-  </midea-cell>
+  <div
+        :class="['midea-cell','active-cell', hasTopBorder && 'cell-top-border', hasBottomBorder && 'cell-bottom-border']"
+        @click="mideaCellClick"
+    >
+        <image
+            v-if="itemImg&&itemImg!=''"
+            :src="itemImg"
+            class="item-img"
+        >
+        </image>
+        <div class="cell-title">
+            <text
+                :style="{color:color}"
+                class="title-text"
+                slot="title"
+            >{{title}}</text>
+        </div>
+        <image
+            :src="radioIcon"
+            v-if="radioIcon"
+            class="radio"
+        ></image>
+    </div>
 </template>
 
 <style scoped>
@@ -22,6 +33,35 @@
   .title-text {
     font-size: 30px;
   }
+
+  .midea-cell {
+    height: 108px;
+    position: relative;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 32px;
+    padding-right: 32px;
+    background-color: #ffffff;
+}
+
+.active-cell:active {
+    background-color: #f5f5f5;
+}
+
+.cell-title {
+    flex: 1;
+}
+
+.cell-top-border {
+    border-top-color: #e2e2e2;
+    border-top-width: 1px;
+}
+
+.cell-bottom-border {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: #e2e2e2;
+}
 </style>
 
 <script>

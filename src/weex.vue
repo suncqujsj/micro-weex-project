@@ -93,7 +93,7 @@ module.exports = {
             { key: 10, value: "T0xB0_0X5L23A8",desc: "G100一体机" },
             { key: 11, value: "T0xB0_0PG23E0W",desc: "PG23E0" },
             { key: 12, value: "T0xB1_0PS2032W",desc: "PS2032W" },
-            { key: 13, value: "mike",desc: "mike项目" },
+            { key: 13, value: "T0xB1_mike",desc: "mike项目" },
 
         ],
         card: 'T0xB1',

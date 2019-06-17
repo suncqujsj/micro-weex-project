@@ -325,7 +325,8 @@ export default {
             message.setByte(messageBody, 7, params.isTimeChange ? hour : 0xff);
             message.setByte(messageBody, 8, params.isTimeChange ? minute : 0xff);
             message.setByte(messageBody, 9, params.isTimeChange ? second : 0xff);
-            message.setByte(messageBody, 10, set_mode);
+            //新协议先该为0xff message.setByte(messageBody, 10, set_mode);
+            message.setByte(messageBody, 10, 0xff);
             message.setByte(messageBody, 11, this.getHighTemperature(upTemp));
             message.setByte(messageBody, 12, this.getLowTemperature(upTemp));
             message.setByte(messageBody, 13, this.getHighTemperature(downTemp));

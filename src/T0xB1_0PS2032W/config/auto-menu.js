@@ -12,8 +12,8 @@ let data = [
                     'text': '蒸杂粮',
                     'mode': 0xE0,
                     time:{
-                        set: true,
-                        default:35,
+                        set: false,
+                        default:40,
                         range: [29,40,1]
                     },
                     temperature:{
@@ -41,13 +41,14 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
                 {
                     'icon': '',
                     'text': '珍珠圆子',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:25,
                         range: [21,28,1]
                     },
@@ -76,13 +77,14 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
                 {
                     'icon': '',
                     'text': '蒸面包蟹',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:15,
                         range: [12,17,1]
                     },
@@ -111,13 +113,14 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
                 {
                     'icon': '',
                     'text': '蒜蓉开背虾',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:5,
                         range: [4,6,1]
                     },
@@ -146,6 +149,7 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
             ],
         ]
@@ -159,7 +163,7 @@ let data = [
                     'text': '低调的小海鲜',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:7,
                         range: [6,8,1]
                     },
@@ -188,13 +192,14 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
                 {
                     'icon': '',
                     'text': '青柠檬蒸鲈鱼',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:11,
                         range: [9,13,1]
                     },
@@ -223,13 +228,14 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
                 {
                     'icon': '',
                     'text': '原只炖椰子鸡',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:90,
                         range: [76,104,1]
                     },
@@ -258,13 +264,14 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
                 {
                     'icon': '',
                     'text': '秋葵蒸蛋羹',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:8,
                         range: [6,9,1]
                     },
@@ -293,6 +300,7 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
             ],
         ]
@@ -306,7 +314,7 @@ let data = [
                     'text': '桂花山药糕',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:25,
                         range: [21,28,1]
                     },
@@ -335,13 +343,14 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
                 {
                     'icon': '',
                     'text': '网红小青团',
                     'mode': 0xE0,
                     time:{
-                        set: true,
+                        set: false,
                         default:15,
                         range: [12,17,1]
                     },
@@ -370,6 +379,7 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
                 {
                     'icon': '',
@@ -405,6 +415,7 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
                 {
                     'icon': '',
@@ -440,6 +451,7 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
             ],
         ]
@@ -482,6 +494,7 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
                 {
                     'icon': '',
@@ -517,6 +530,7 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
                 {
                     'icon': '',
@@ -552,6 +566,7 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
                 {
                     'icon': '',
@@ -587,6 +602,7 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
             ],
         ]
@@ -629,6 +645,7 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
                 {
                     'icon': '',
@@ -664,6 +681,7 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
                 {
                     'icon': '',
@@ -699,6 +717,7 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
                 {
                     'icon': '',
@@ -734,6 +753,7 @@ let data = [
                         range:null
                     },
                     detail: null,
+                    settingHide:true,
                 },
             ],
         ]

@@ -25,7 +25,7 @@ let tests = [
                 fireAmount: {
                     set:true,
                     default:10,
-                    range:fireAmountRange
+                    range:[0,10, 1]
                 },
 
             },

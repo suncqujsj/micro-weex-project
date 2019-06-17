@@ -9,13 +9,13 @@ module.exports = {
     device: {
         type: 0xB1,
         page_title: "烤箱",
-        sales_model: "双子星 D50S3AT1",
+        sales_model: "G55蒸汽补湿烤箱",
         widget_name: 'MSO_T0xB1',
-        widget_version: '6.17.0',
+        widget_version: '5.1.31',
         extra1: {
-            sn8: '0D50S3AT'
+            sn8: '0ET470QL'
         },
         hasLight: true , //是否有炉灯 
-        hasStopButton: false,       
+        preheatingCanSetting: true,  //预热中可以设置时间温度等 ，默认不可设置 
     }
 };

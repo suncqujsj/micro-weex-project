@@ -9,7 +9,7 @@ module.exports = {
         page_title: "MW Oven",
         sales_model: "MW Oven",
         widget_name: 'MSO_T0xB0',
-        widget_version: '5.0.3',
+        widget_version: '5.0.4',
         extra1: {
             sn8: '0EM34A2E'
         },

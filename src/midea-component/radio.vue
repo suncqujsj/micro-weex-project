@@ -66,7 +66,7 @@
 
 <script>
   import mideaCell from './cell.vue';
-  var CHECKED="../img/check/public_ic_done@2x.png";
+  var CHECKED="./img/check/public_ic_done@2x.png";
   //import { CHECKED, UNCHECKED } from './icon.base64.js'
   export default {
     components: { mideaCell },

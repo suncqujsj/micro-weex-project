@@ -390,7 +390,7 @@
                 query: query
             });
 
-            this.queryStatus(tabs,constant.device, this.pageViewStatistics);
+            this.queryStatus(tabs,constant.device, this.pageViewStatistics,"firstEnter");
 
             // if(constant.device.standby03 && !this.isIos) {
             // if(!this.isIos) {

@@ -17,7 +17,8 @@ module.exports = {
             working:true
         },
         preheatingCanSetting: true,
-        voiceAuth: true
+        voiceAuth: true,
+        hasLight: true , //是否有炉灯
     }
 };
 

@@ -90,13 +90,16 @@ const deviceMessageMixin = {
             this.tabs = tabs;
             this.device = device;
         },
-        queryStatus(tabs=this.tabs,device=this.device, cb=null) {//传入模式配置数据tabs
+        queryStatus(tabs=this.tabs,device=this.device, cb=null, isFirstEnter=null) {//传入模式配置数据tabs
             if(device) {
                 this.initData(tabs, device);
             }
+            if(isFirstEnter=='firstEnter'){
+                nativeService.showLoading();
+            }
             var self = this;
             // nativeService.alert(this.device);
-            nativeService.hideLoading();
+            // nativeService.hideLoading();
             var sendCmd = cmdFun.createQueryMessage(this.device);
             // nativeService.alert(this.device);
 
@@ -106,7 +109,7 @@ const deviceMessageMixin = {
                 "query",
                 sendCmd,
                 function (result) {
-                    //nativeService.hideLoading();
+                    nativeService.hideLoading();
                     var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
                     var arr = result_arr.split(",");
                     // nativeService.alert(arr);
@@ -118,9 +121,9 @@ const deviceMessageMixin = {
                     }
                 },
                 function (result) {
-                    //nativeService.hideLoading();
+                    nativeService.hideLoading();
 
-                    //nativeService.toast("查询失败" + JSON.stringify(result));
+                    nativeService.toast("查询失败" + JSON.stringify(result));
                 }
             );
         },

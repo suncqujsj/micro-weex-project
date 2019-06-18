@@ -68,7 +68,7 @@ export default {
                     {
                         "maxValue": [10, 10, 8, 10, 2, 5, 8],
                         "value": [2, 2, 2, 2, 2, 2, 2],
-                        "color": "#FF5BD2FF", //柱子颜色ARGB格式
+                        "color": "#605BD2FF", //柱子颜色ARGB格式
                         "maxColor": '#205BD2FF', //柱子上面颜色ARGB格式
                         "background": "#ffffff",
                         "maxHighLightColor":"#805BD2FF", //高亮颜色
@@ -104,8 +104,8 @@ export default {
                     {
                         "maxValue": [4, 3, 10, 8.5, 1, 6, 6],
                         "value": [1, 1, 2, 3.5, 1, 3, 3],
-                        "label": ["3L", "2L", "8L", "5L", "1L", "3L", "3L"],
-                        "color": "#FF5BD2FF", //柱子颜色ARGB格式
+                        // "label": ["3L", "2L", "8L", "5L", "1L", "3L", "3L"],
+                        "color": "#605BD2FF", //柱子颜色ARGB格式
                         "maxColor": '#205BD2FF', //柱子上面颜色ARGB格式
                         "maxHighLightColor":"#805BD2FF", //高亮颜色
                         "highLightColor":"#FF5BD2FF", //高亮颜色
@@ -115,7 +115,7 @@ export default {
                 ],
                 "xAxisColor": "#e5e5e8", //x轴线的颜色，如果不设置，则默认是白色线
                 "xAxisLabelColor": "#8a8a8f", //x label的字体颜色，如果不设置，则默认是白色线 
-                "yAxisColor": "#e5e5e8", //y轴线的颜色，如果不设置，则默认是白色线
+                "yAxisColor": "transparent", //y轴线的颜色，如果不设置，则默认是白色线
                 "yAxisLabelColor": "#8a8a8f", // label的字体颜色，如果不设置，则默认是白色线 
                 // "background": "#ffffff", //不传，则默认使用透明背景
                 "borderRadius": "5",//柱子顶部的圆角，默认为0px
@@ -153,8 +153,8 @@ export default {
                     {
                         "maxValue": [9, 1, 7, 3, 7, 4, 4, 3, 3, 10, 4, 8],
                         "value": [3, 1, 3, 1.5, 3, 1, 1, 1, 1, 2, 1, 2],
-                        "label": ["6L", "1L", "4L", "2.5L", "4L", "3L", "3L", "2L", "2L", "8L", "3L", "6L"],
-                        "color": "#FF5BD2FF", //柱子颜色ARGB格式
+                        // "label": ["6L", "1L", "4L", "2.5L", "4L", "3L", "3L", "2L", "2L", "8L", "3L", "6L"],
+                        "color": "#605BD2FF", //柱子颜色ARGB格式
                         "maxColor": '#205BD2FF', //柱子上面颜色ARGB格式
                         "maxHighLightColor":"#805BD2FF", //高亮颜色
                         "highLightColor":"#FF5BD2FF", //高亮颜色
@@ -164,7 +164,7 @@ export default {
                 ],
                 "xAxisColor": "#e5e5e8", //x轴线的颜色，如果不设置，则默认是白色线
                 "xAxisLabelColor": "#8a8a8f", //x label的字体颜色，如果不设置，则默认是白色线 
-                "yAxisColor": "#e5e5e8", //y轴线的颜色，如果不设置，则默认是白色线
+                "yAxisColor": "transparent", //y轴线的颜色，如果不设置，则默认是白色线
                 "yAxisLabelColor": "#8a8a8f", // label的字体颜色，如果不设置，则默认是白色线 
                 // "background": "#ffffff", //不传，则默认使用透明背景
                 "borderRadius": "5",//柱子顶部的圆角，默认为0px
@@ -202,8 +202,8 @@ export default {
                     {
                         "maxValue": [10, 5, 3, 7, 1.8, 8.8, 9, 1, 1, 4, 3, 7, 4, 8.5, 7, 9, 8.6, 1.8, 3, 4, 10, 8, 7, 3, 3.8, 3.6, 4, 7, 4, 4],
                         "value": [3, 2, 1.5, 2.5, 0.3, 3.8, 2, 0.2, 1, 1, 1, 3, 1, 0.5, 3.2, 2, 2, 0.5, 1, 1, 3, 2, 2, 0.5, 0.8, 1.1, 1, 1, 1, 1],
-                        "label": ["7L", "3L", "2.5L", "4.5L", "1.5L", "5L", "7L", "0.8L", "1L", "3L", "2L", "4L", "3L", "8L", "3.8L", "7L", "6.6L", "1.3L", "2L", "3L", "7L", "6L", "5L", "2.5L", "3L", "2.5L", "3L", "6L", "3L", "3L"],
-                        "color": "#FF5BD2FF", //柱子颜色ARGB格式
+                        // "label": ["7L", "3L", "2.5L", "4.5L", "1.5L", "5L", "7L", "0.8L", "1L", "3L", "2L", "4L", "3L", "8L", "3.8L", "7L", "6.6L", "1.3L", "2L", "3L", "7L", "6L", "5L", "2.5L", "3L", "2.5L", "3L", "6L", "3L", "3L"],
+                        "color": "#605BD2FF", //柱子颜色ARGB格式
                         "maxColor": '#205BD2FF', //柱子上面颜色ARGB格式
                         "maxHighLightColor":"#805BD2FF", //高亮颜色
                         "highLightColor":"#FF5BD2FF", //高亮颜色
@@ -213,7 +213,7 @@ export default {
                 ],
                 "xAxisColor": "#e5e5e8", //x轴线的颜色，如果不设置，则默认是白色线
                 "xAxisLabelColor": "#8a8a8f", //x label的字体颜色，如果不设置，则默认是白色线 
-                "yAxisColor": "#e5e5e8", //y轴线的颜色，如果不设置，则默认是白色线
+                "yAxisColor": "transparent", //y轴线的颜色，如果不设置，则默认是白色线
                 "yAxisLabelColor": "#8a8a8f", // label的字体颜色，如果不设置，则默认是白色线 
                 // "background": "#ffffff", //不传，则默认使用透明背景
                 "borderRadius": "3",//柱子顶部的圆角，默认为0px

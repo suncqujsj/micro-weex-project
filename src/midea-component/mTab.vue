@@ -22,8 +22,8 @@
 .tab-wrapper {
   width: 750px;
   flex-direction: row;
-  height: 84px;
-  background-color: #ffffff;
+  height: 100px;
+  background-color: black;
 }
 .tab-item {
   flex: 1;
@@ -34,15 +34,15 @@
 .tab-txt {
   font-family: PingFangSC-Medium;
   font-size: 32px;
-  line-height: 45px;
-  color: #666666;
+  line-height: 50px;
+  color: #ffffff;
 }
 .tab-txt-selected {
-  color: #000000;
+  color: #029ffd;
 }
 .tab-indicator {
   border-top-style: solid;
-  border-top-color: #000000;
+  border-top-color: #029ffd;
   border-top-width: 2px;
   position: relative;
   align-items: center;

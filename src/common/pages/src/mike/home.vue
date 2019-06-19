@@ -1,13 +1,5 @@
 <style lang="less" type="text/less">
-    @import "../../less/recipeHome.less";
-    .list {
-    width: 750px;
-    background-color: #EFEFEF;
-  }
-  .banner-image {
-    width: 750px;
-    height: 235px;
-  }
+    @import "../../../less/recipeHome.less";
 </style>
 <template>
   <div>
@@ -27,47 +19,55 @@
         </div>
     </midea-header>
     
-    <list class="list" @loadmore="loadmore"  loadmoreoffset=50 show-scrollbar=false>
-      <cell class="cell" v-for="num in lists">
-        <div class="panel">
-          <text class="text">{{num}}</text>
-        </div>
-      </cell>
-    </list>
+    <recipe-page v-if="recipePageShow" />
 
-    <div class="recipe-bottom-bar">
-      <midea-tab ref="mTab" :tabArray="tabData" @tabClicked="tabClicked">
-      </midea-tab>
-    </div>
+    <mike-page v-if="mikePageShow" />
+
+    <me-page v-if="mePageShow" />
+
+    <mike-home-footer-bar @tabClickHandle="_tabClickHandle" />
   </div>
 </template>
 
 <script>
   import MideaHeader from '@/midea-component/header.vue'
-  import mideaTab from '@/midea-component/mTab.vue'
-  import recipeContent from './recipeContent.vue'
+  import recipePage from './recipePage.vue'
+  import mikePage from './mikePage.vue'
+  import mePage from './mePage.vue'
+  import mikeHomeFooterBar from './component/mikeHomeFooterBar.vue'
   import nativeService from "@/common/services/nativeService";
+
   export default {
+    mixins: [],
     data () {
-    
       return {
-        lists: ['A', 'B', 'C', 'D', 'E',1,2,1,1,1,1,1,1,1,1,1,1,,1,1,1,1,11,1,88],
-         tabData:[
-            {"name":"菜谱","selected":true},
-            {"name":"mike","selected":false},
-            {"name":"我的","selected":false},
-          ]
+          recipePageShow: true,
+          mikePageShow: false,
+          mePageShow: false,
       }
     },
-    components:{MideaHeader,mideaTab,recipeContent},
+    components:{MideaHeader,recipePage,mikeHomeFooterBar,mikePage,mePage},
     methods: {
-      loadmore(){
-        let self = this;
-        // setTimeout(() => {
-        //   for(var i=0; i< 10; i++){
-        //     self.lists.push(i+'dd');
-        //   }
-        // }, 100);
+      back2Native(){
+          nativeService.backToNative()
+      },
+      _tabClickHandle(data){
+        this.recipePageShow = false;
+        this.mikePageShow = false;
+        this.mePageShow = false;
+        switch (data) {
+          case 0:
+            this.recipePageShow = true;
+            break;
+          case 1:
+            this.mikePageShow = true;
+            break;
+          case 2:
+            this.mePageShow = true;
+            break;
+          default:
+            break;
+        }
       }
     }
   }

@@ -7,7 +7,7 @@
     import constant from "./config/constant";
     import modes from "./config/modes.js";
     import autoMenu from "./config/auto-menu.js";
-    import recipeHome from "@/common/pages/src/recipeHome.vue";
+    import recipeHome from "@/common/pages/src/mike/home.vue";
     import nativeService from "@/common/services/nativeService";
 
     var numberRecord = 0; //记录跳页面的次数

@@ -15,7 +15,8 @@ module.exports = {
         standby03:true, // 待机中打开03轮询
         hideChildLock:{
             working:true
-        }
+        },
+        cloudMenuEditable:false
     }
 };
 

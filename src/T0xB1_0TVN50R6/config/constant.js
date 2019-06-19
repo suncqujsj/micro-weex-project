@@ -19,6 +19,7 @@ module.exports = {
         preheatingCanSetting: true,
         voiceAuth: true,
         // hasLight: true , //是否有炉灯
+        cloudMenuEditable:true
     }
 };
 

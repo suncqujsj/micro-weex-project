@@ -1,56 +1,74 @@
+<style lang="less" type="text/less">
+    @import "../../less/recipeHome.less";
+    .list {
+    width: 750px;
+    background-color: #EFEFEF;
+  }
+  .banner-image {
+    width: 750px;
+    height: 235px;
+  }
+</style>
 <template>
-  <waterfall column-count="2" column-width="auto">
-    <cell class="cell" v-for="num in lists">
-      <div class="panel" :style="{height: 300+num*40 + 'px'}">
-        <text class="text">{{num}}</text>
-      </div>
-    </cell>
-    <header class="footer" ref="footer"  @appear="footerAppear">
-      <text class="text">loading...</text>
-    </header>
-  </waterfall>
+  <div>
+     <midea-header bgColor="transparent" leftImg="img/header/public_ic_gray@3x.png" title="mike" titleText="black" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2Native" >
+        <div slot="customerContent" class="header-top-wrapper">
+            <div class="header-top-inner-wrapper">
+                <div  class="header-right-image-wrapper" @click="onCloudMenuIconClicked">
+                    <image class="header-right-image" :src="'img/header/public_ic_cloud_recipe@3x.png'"></image>
+                </div>
+                <div class="header-right-image-wrapper" @click="childLock(true)">
+                    <image class="header-right-image" :src="'img/header/public_ic_babylock@3x.png'"></image>
+                </div>
+                <div class="header-right-image-wrapper" @click="openMorePage">
+                    <image class="header-right-image" :src="'img/header/me_ic_set@3x.png'"></image>
+                </div>
+            </div>
+        </div>
+    </midea-header>
+    
+    <list class="list" @loadmore="loadmore"  loadmoreoffset=50 show-scrollbar=false>
+      <cell class="cell" v-for="num in lists">
+        <div class="panel">
+          <text class="text">{{num}}</text>
+        </div>
+      </cell>
+    </list>
+
+    <div class="recipe-bottom-bar">
+      <midea-tab ref="mTab" :tabArray="tabData" @tabClicked="tabClicked">
+      </midea-tab>
+    </div>
+  </div>
 </template>
 
 <script>
+  import MideaHeader from '@/midea-component/header.vue'
+  import mideaTab from '@/midea-component/mTab.vue'
+  import recipeContent from './recipeContent.vue'
+  import nativeService from "@/common/services/nativeService";
   export default {
     data () {
-      let repeatItems = [];  
-      let items = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
-      for (let i = 0; i < 3; i++) {
-        repeatItems.push(...items)
-      } 
+    
       return {
-        lists: repeatItems
+        lists: ['A', 'B', 'C', 'D', 'E',1,2,1,1,1,1,1,1,1,1,1,1,,1,1,1,1,11,1,88],
+         tabData:[
+            {"name":"菜谱","selected":true},
+            {"name":"mike","selected":false},
+            {"name":"我的","selected":false},
+          ]
       }
     },
+    components:{MideaHeader,mideaTab,recipeContent},
     methods: {
-      footerAppear: function(e) {
-        let items = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
-        this.lists.push(...items);
+      loadmore(){
+        let self = this;
+        // setTimeout(() => {
+        //   for(var i=0; i< 10; i++){
+        //     self.lists.push(i+'dd');
+        //   }
+        // }, 100);
       }
     }
   }
 </script>
-
-<style scoped>
-  .panel {
-    margin-top: 45px;
-    flex-direction: column;
-    justify-content: center;
-    border-width: 2px;
-    border-style: solid;
-    border-color: rgb(162, 217, 192);
-    background-color: rgba(162, 217, 192, 0.2);
-  }
-  .text {
-    font-size: 88px;
-    text-align: center;
-    color: #41B883;
-  }
-  .footer {
-    height: 94px;
-    justify-content: center;
-    align-items: center;
-    background-color: #00cc99;
-  }
-</style>

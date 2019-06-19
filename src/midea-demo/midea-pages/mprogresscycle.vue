@@ -34,8 +34,8 @@ module.exports = {
     data() {
         return {
             chartData: {
-                "completedColor": "#00ffff", //环形进度条未完成后的颜色默认#267AFF
-                "incompletedColor": "#eef5d5d5", //环形进度条未完成后的颜色，默认透明
+                "completedColor": "#00ffff", //环形进度条已完成的颜色默认#267AFF
+                "incompletedColor": "#eef5d5d5", //环形进度条未完成的颜色，默认透明
                 "thickness": 4, //环形进度条宽度，默认4
                 "cornerRadius": 40,  //环形的半径，默认是width/2
                 "totalCounter": 360, //环形进度条的最大值，默认是360

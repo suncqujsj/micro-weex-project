@@ -8,7 +8,7 @@ module.exports = {
         page_title: "烤箱",
         type: 0xB1,
         widget_name: 'MSO_T0xB1',
-        widget_version: '5.2.0',
+        widget_version: '5.2.1',
         extra1: {
             sn8: '0TVN50R6'
         },
@@ -18,7 +18,7 @@ module.exports = {
         },
         preheatingCanSetting: true,
         voiceAuth: true,
-        hasLight: true , //是否有炉灯
+        // hasLight: true , //是否有炉灯
     }
 };
 

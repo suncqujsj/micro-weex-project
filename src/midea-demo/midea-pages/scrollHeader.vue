@@ -21,7 +21,7 @@
             <image ref="title_img1" class="header_bg" src="https://gw.alicdn.com/tfs/TB1PDWiXSBYBeNjy0FeXXbnmFXa-1024-576.jpg" />
         </div>
 
-        <midea-header ref="app_bar" class="app_bar" title="滑动显示更多菜单" bgColor="transparent" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
+        <midea-header ref="app_bar" class="app_bar" title="滑动放缩图片" bgColor="transparent" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
     </div>
 </template>

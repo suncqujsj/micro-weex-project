@@ -136,10 +136,17 @@ const accordionMixin = {
             return keys.indexOf(key) > -1
         },
         onPreheatChange(event) {
+            if (this.currentItem.sn = '0PS2032W' && (this.currentItem.mode == 0x41||this.currentItem.mode == 0x31)) {
+                this.currentItem.time.set = !event.value;
+            }
             this.current[event.itemKey] = event.value;
             // console.log('currentPreheat', this.current.preheat);
         },
         openDialog() {
+            if (this.currentItem.sn = '0PS2032W' && (this.currentItem.mode == 0x41||this.currentItem.mode == 0x31)) {
+                this.currentItem.time.set = !this.currentItem.preheat.default;
+            }
+
             //弹出时，重新初始值
             if (!this.isWorkingPage) { //弹出框的参数为初始默认值,否则如果是工作页面，弹出框的参数为当前的温度时间蒸汽等
                 this.current = this.initCurrentData();

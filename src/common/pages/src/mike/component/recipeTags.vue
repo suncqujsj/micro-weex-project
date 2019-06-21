@@ -2,7 +2,7 @@
 
     <scroller class="recipe-tags" scroll-direction="horizontal" show-scrollbar="false">
 
-        <div class="tag-item" v-for="(tag,index) in tags" :class="[tag.selected  && 'checked']"
+        <div class="tag-item" v-for="(tag,index) in tags" :class="[tag.selected  && 'checked',index===0 && 'first']"
              @click="clickOnTag(tag)">
             <text class="tag-text" :class="[tag.selected  && 'tag-text-checked']">{{tag.text}}</text>
         </div>
@@ -51,8 +51,13 @@
 
         padding: 8px 30px;
         border-radius: 30px;
+
+
     }
 
+    .first {
+        margin-left: 30px;
+    }
 
     .tag-text {
         font-size: 13px*2;

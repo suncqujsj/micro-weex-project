@@ -107,6 +107,7 @@
 <script>
     import nativeService from "@/common/services/nativeService";
 
+    import MikeNetwork from "@/common/services/mikeNetwork/network"
     import RecipeSearchBar from "@/common/pages/src/mike/component/recipeSearchBar.vue";
     import RecipeTags from "@/common/pages/src/mike/component/recipeTags.vue";
     import RecipeVideoSwiper from "@/common/pages/src/mike/component/recipeVideoSwiper.vue";
@@ -139,23 +140,31 @@
             }
         },
         created() {
-            let self = this;
-            //测试接口
-            let _url = "http://120.25.95.38:8200/cloud-menu/home/midea/menu/collection/all";
-            let _body = JSON.stringify({});
-            let requestData = {url: _url, body: _body};
-            nativeService.sendHttpRequest(requestData).then(function (res) {
-                self.collectionData = res.data;
-                nativeService.alert(res);
-            }).catch((resp) => {
-                nativeService.alert(resp);
-            });
+
+
+            this.loadHotMenus();
+            // let self = this;
+            // //测试接口
+            // let _url = "http://120.25.95.38:8200/cloud-menu/home/midea/menu/collection/all";
+            // let _body = JSON.stringify({});
+            // let requestData = {url: _url, body: _body};
+            // nativeService.sendHttpRequest(requestData).then(function (res) {
+            //     self.collectionData = res.data;
+            //     nativeService.alert(res);
+            // }).catch((resp) => {
+            //     nativeService.alert(resp);
+            // });
 
         },
         methods: {
 
+            loadHotMenus() {
+                MikeNetwork.menu.getHotMenus().then(res => {
+                })
+            },
+
             loadmore() {
-                let self = this;
+                // let self = this;
                 // setTimeout(() => {
                 //   for(var i=0; i< 10; i++){
                 //     self.lists.push(i+'dd');
@@ -163,7 +172,7 @@
                 // }, 100);
             }
         }
-     
+
     }
-    
+
 </script>

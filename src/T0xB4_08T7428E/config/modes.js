@@ -29,7 +29,7 @@ let modes = [
                 preheat:{
                     set:true,
                     default: 1,
-                    workingPreheatHide: true,
+                   hide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 probeTemperature:{
@@ -59,7 +59,7 @@ let modes = [
                 preheat:{
                     set:true,
                     default: 1,
-                    workingPreheatHide: true,
+                   hide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 probeTemperature:{
@@ -89,7 +89,7 @@ let modes = [
                 preheat:{
                     set:true,
                     default: 1,
-                    workingPreheatHide: true,
+                   hide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 probeTemperature:{
@@ -119,7 +119,7 @@ let modes = [
                 preheat:{
                     set:true,
                     default: 1,
-                    workingPreheatHide: true,
+                   hide: true,
                     isProbeThenThisHide: true,//如果是探针模式，则隐藏该选择
                 },
                 probeTemperature:{
@@ -153,7 +153,7 @@ let modes = [
                 preheat:{
                     set:true,
                     default: 1,
-                    workingPreheatHide: true,
+                   hide: true,
                 },
                 settingHide, // 工作页面，收否隐藏设置参数，true = 隐藏，false = 显示
                 stopBtnHide: true

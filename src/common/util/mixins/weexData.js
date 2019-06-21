@@ -326,6 +326,10 @@ let workingModalMixin  = {
             return sns.indexOf(this.device.extra1.sn8) > -1;
         },
 
+        isS20Oven(){
+
+        },
+
         /**
          * 大烤箱 1065
          */

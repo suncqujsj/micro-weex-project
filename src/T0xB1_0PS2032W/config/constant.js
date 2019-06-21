@@ -8,15 +8,20 @@ module.exports = {
         page_title: "蒸汽烤箱",
         type: 0xB1,
         widget_name: 'MSO_T0xB1',
-        widget_version: '5.0.3',
+        widget_version: '5.0.5',
         extra1: {
             sn8: '0PS2032W'
         },
+        hasLight: true , //是否有炉灯
+        preheatingCanSetting: false,  //预热中可以设置时间温度等 ，默认不可设置
         hideChildLock:{
             standby: true,
             working:true
         },
-        preheatingCanSetting: true,
+        hideCloudRecipe:{
+            standby:true,
+            working:true
+        },
         voiceAuth: false
     }
 };

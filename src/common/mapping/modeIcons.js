@@ -67,4 +67,6 @@ icons[45] = getIcon('热风对流+微波', 'hot_wind_and_microwave');
 icons[46] = getIcon('热风烧烤+微波', 'hot_wind_and_broil_and_microwave');
 icons[47] = getIcon('烧烤+微波', 'up_tube_and_microwave');
 icons[48] = getIcon('慢蒸', 'slow_steam@3x');
+
+icons[49] = getIcon('餐具清洁', 'dining_utensil_clean');
 export default icons;

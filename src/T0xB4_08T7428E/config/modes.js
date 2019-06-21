@@ -164,13 +164,13 @@ let modes = [
                 'mode': 0xB0,
                 time:{
                     set: true,
-                    default:40,
+                    default:60,
                     range:[1,240,1]
                 },
                 temperature:{
                     set: true,
-                    default:40,
-                    range:[35,40,1]
+                    default:30,
+                    range:[20,40,1]
                 },
                 preheat:{
                     set:false

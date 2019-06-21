@@ -104,7 +104,7 @@
 
             <recipe-search-bar></recipe-search-bar>
             <!--                <div class="search-tag">-->
-            <!--                    <text class="text">我会吸附在顶部</text>-->
+            <!--                    <text classs="text">我会吸附在顶部</text>-->
             <!--                </div>-->
         </header>
         <cell class="tags">

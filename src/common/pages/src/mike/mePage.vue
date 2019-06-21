@@ -38,6 +38,7 @@
 .tag-item-number{
   color:#dddddd;
 }
+
 </style>
 <template>
     <div>
@@ -52,14 +53,13 @@
               </div>
           </div>
        </div>
-       <div class="">
-          
-          <image src="http://121.41.75.163:8000/source/image/20181126/1543210828723ngy8.jpg" style="width:200px;height:100px"></image>
-       </div>
+
+        <done-recipe />
     </div>
 </template>
 
 <script>
+  import doneRecipe from './component/doneRecipe.vue';
   export default {
     props: [],
     data(){
@@ -71,6 +71,7 @@
           ]
         }
     },
+    components:{doneRecipe},
     methods:{
         
     }

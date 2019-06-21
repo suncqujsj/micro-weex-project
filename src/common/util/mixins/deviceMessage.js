@@ -130,6 +130,7 @@ const deviceMessageMixin = {
         sendLightCmd(lightValue){
             let context = this;
             let deviceCmd = cmdFun.cmdLight(lightValue, this.device);
+            // nativeService.alert(deviceCmd);
             // this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
             // return;
             nativeService.showLoading();

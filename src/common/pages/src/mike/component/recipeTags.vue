@@ -1,0 +1,73 @@
+<template>
+
+    <scroller class="recipe-tags" scroll-direction="horizontal" show-scrollbar="false">
+
+        <div class="tag-item" v-for="(tag,index) in tags" :class="[tag.selected  && 'checked']"
+             @click="clickOnTag(tag)">
+            <text class="tag-text" :class="[tag.selected  && 'tag-text-checked']">{{tag.text}}</text>
+        </div>
+    </scroller>
+</template>
+
+<script>
+
+    export default {
+        name: "recipeTags",
+        props: {
+            tags: {
+                type: Array,
+                default: []
+            },
+        },
+        mounted() {
+
+        },
+        methods: {
+            clickOnTag(tag) {
+
+                this.tags.forEach((item) => {
+                    item.selected = item.text === tag.text;
+                })
+            }
+        },
+    }
+</script>
+
+<style scoped lang="less">
+
+    .recipe-tags {
+        height: 64px;
+        width: 750px;
+        margin-bottom: 10px;
+
+    }
+
+    .tag-item {
+
+        padding: 8px 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 30px;
+
+        &:first-child {
+            margin-left: 40px;
+        }
+    }
+
+
+    .tag-text {
+        font-size: 13px*2;
+        color: #808080;
+    }
+
+    .tag-text-checked {
+        color: #ffffff;
+    }
+
+    .checked {
+
+        background-color: #095cb9;
+    }
+</style>

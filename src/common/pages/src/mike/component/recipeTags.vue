@@ -40,20 +40,17 @@
         width: 750px;
         margin-bottom: 10px;
 
+        display: flex;
+        flex-direction: row;
     }
 
     .tag-item {
 
-        padding: 8px 30px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
         justify-content: center;
-        border-radius: 30px;
+        align-items: center;
 
-        &:first-child {
-            margin-left: 40px;
-        }
+        padding: 8px 30px;
+        border-radius: 30px;
     }
 
 

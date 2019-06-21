@@ -44,6 +44,7 @@
         height: 900px;
 
         position: relative;
+        background-color: #808080;
     }
 
     .slider-img {
@@ -185,7 +186,7 @@
                 nativeService.alert(res);
             }).catch((resp) => {
                 nativeService.alert(resp);
-            })
+            });
 
             this.loadCovers();
         },

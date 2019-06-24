@@ -74,17 +74,45 @@
             <image src="./img/mike/search.png" resize="contain" class="search-icon"></image>
             <input type="text" class="search-input"></input>
 
-            <image src="./img/mike/microphone.png" resize="contain" class="microphone-icon"></image>
+            <image src="./img/mike/microphone.png" resize="contain" class="microphone-icon"
+                   @click="clickOnAudio"></image>
         </div>
         <div class="camera">
-            <image src="./img/mike/camera_dark.png" resize="contain" class="icon">
+            <image src="./img/mike/camera_dark.png" resize="contain" class="icon" @click="clickOnCamera">
         </div>
     </div>
 </template>
 
 <script>
+    import nativeService from "@/common/services/nativeService";
+
     export default {
-        name: "recipeSearchBar"
+        name: "recipeSearchBar",
+        methods: {
+            clickOnAudio() {
+                // TODO: press to record
+
+                nativeService.startRecordAudio({
+                    max: 30000, //最长录音时间, 单位为秒
+                    isSave: true, //是否保存语音录音文件
+                    isTransform: true, //是否需要转换语音成文字
+                }).then(res => {
+
+
+                })
+            },
+            clickOnCamera() {
+
+                // TODO: is choose photo and take photo getting along ?
+
+                nativeService.takePhoto({
+                    compressRage: 60,  //number, 返回照片的压缩率，范围为0~100，数值越高保真率越高
+                    type: 'jpg',
+                    isNeedBase64: true //是否需要返回相片base64数据
+                }).then((resp) => {
+                })
+            }
+        },
     }
 </script>
 

@@ -123,7 +123,7 @@
         </cell>
 
 
-        <cell class="hot">
+        <cell class="hot" v-if="hotData && hotData.length>0">
             <div class="recipe-section">
 
                 <div class="section-title">
@@ -135,7 +135,7 @@
                           class="section-content section-content__horizontal_slide hot-section-content">
 
                     <div class="hot-section-item" v-for="(item,index) in hotData">
-                        <recipe-collection-item :title="item.name" :img-width="288"
+                        <recipe-collection-item :title="item.name" :img-width="288" :cover="item.picUrl"
                                                 :img-height="192" :first="index===0"></recipe-collection-item>
                     </div>
 
@@ -158,6 +158,7 @@
 
                     <div class="pro-swiper-item" v-for="(item,index) in proData">
                         <recipe-collection-item :title="item.name" :img-width="638" :info-display-style="'Cover'"
+                                                :play-btn-shown="true"
                                                 :img-height="366"></recipe-collection-item>
                     </div>
 
@@ -168,7 +169,7 @@
         </cell>
 
 
-        <cell class="menu-collection">
+        <cell class="menu-collection" v-if="menuCollectData && menuCollectData.length>0">
 
             <div class="recipe-section">
                 <div class="section-title">
@@ -181,7 +182,8 @@
 
                     <div class="menu-collection-item" v-for="(item,index) in menuCollectData"
                          :class="[(index%2)===0 && 'menu-collection-item__odd']">
-                        <recipe-collection-item :title="item.name" :img-width="303" :info-display-style="'Cover'"
+                        <recipe-collection-item :title="item.collectionName" :img-width="303"
+                                                :info-display-style="'Cover'"
                                                 :img-height="192" :title-font-size="15*2"></recipe-collection-item>
                     </div>
 
@@ -240,18 +242,7 @@
                     text: '川香麻辣',
                     selected: false,
                 }],
-                collectionData: [],
-                hotData: [{
-                    name: "牛肉披萨",
-                }, {
-                    name: "牛肉披萨",
-                }, {
-                    name: "牛肉披萨",
-                }, {
-                    name: "牛肉披萨",
-                }, {
-                    name: "牛肉披萨",
-                }],
+                hotData: [],
                 proData: [
                     {
                         name: "牛肉披萨",
@@ -265,19 +256,7 @@
                         name: "牛肉披萨",
                     }
                 ],
-                menuCollectData: [
-                    {
-                        name: "牛肉披萨",
-                    }, {
-                        name: "牛肉披萨",
-                    }, {
-                        name: "牛肉披萨",
-                    }, {
-                        name: "牛肉披萨",
-                    }, {
-                        name: "牛肉披萨",
-                    }
-                ]
+                menuCollectData: []
             }
         },
 
@@ -285,23 +264,21 @@
 
 
             this.loadHotMenus();
-            // let self = this;
-            // //测试接口
-            // let _url = "http://120.25.95.38:8200/cloud-menu/home/midea/menu/collection/all";
-            // let _body = JSON.stringify({});
-            // let requestData = {url: _url, body: _body};
-            // nativeService.sendHttpRequest(requestData).then(function (res) {
-            //     self.collectionData = res.data;
-            //     nativeService.alert(res);
-            // }).catch((resp) => {
-            //     nativeService.alert(resp);
-            // });
+            this.loadCollections();
+
 
         },
         methods: {
 
             loadHotMenus() {
                 MikeNetwork.menu.getHotMenus().then(res => {
+                    this.hotData.push(...res);
+                })
+            },
+            loadCollections() {
+
+                MikeNetwork.menu.getAllCollections().then(res => {
+                    this.menuCollectData.push(...res)
                 })
             },
 

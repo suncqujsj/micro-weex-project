@@ -43,6 +43,24 @@
         border-radius: @collection-item-cover-radius;
     }
 
+    .cover-play {
+        position: absolute;
+
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .play-icon {
+        width: 144px;
+        height: 144px;
+    }
+
     .cover-title {
         color: #ffffff;
         font-size: 18px *2;
@@ -113,6 +131,10 @@
 
         </div>
 
+        <div class="cover-play" :style="imgSize" v-if="playBtnShown">
+            <image class="play-icon" resize="contain" src="./img/mike/video_play.png"></image>
+        </div>
+
 
         <div class="info" v-if="isShowUnderlineInfo">
             <text class="title">{{title}}</text>
@@ -172,6 +194,10 @@
             titleFontSize: {
                 type: Number,
                 default: 18 * 2
+            },
+            playBtnShown: {
+                type: Boolean,
+                default: false
             },
 
             infoDisplayStyle: {

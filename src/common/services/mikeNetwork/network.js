@@ -54,6 +54,17 @@ function transformActionToRequest(networkAction) {
             nativeService.sendHttpRequest(requestOptions).then(function (res) {
                 let data = res.data;
 
+                //TODO :check on status code
+
+                if (res.code && res.code !== 200) {
+
+                    if (res.reason && res.reason.length > 0) {
+                        nativeService.toast(res.reason)
+                    }
+                    reject(res)
+                    return;
+                }
+
                 if (typeof networkAction.response === 'function') {
 
                     // TODO : structure on model to handle data , and sepecify the key/values

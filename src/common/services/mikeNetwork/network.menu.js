@@ -7,12 +7,12 @@ export default {
     },
     // 获取所有合集
     getAllCollections: {
-        url: "/home/midea/collection/all",
+        url: "/home/midea/menu/collection/all",
         method: "POST"
     },
     // 获取合集详情
     getCollectionDetail: {
-        url: "/home/midea/collection/{{collectionId}}",
+        url: "/home/midea/collection/:collectionId",
         method: "POST",
         segments: ['collectionId']
     },

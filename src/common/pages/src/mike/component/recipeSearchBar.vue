@@ -72,10 +72,10 @@
 
 
             <image src="./img/mike/search.png" resize="contain" class="search-icon"></image>
-            <input type="text" class="search-input"></input>
+            <input type="text" class="search-input" v-model="word"></input>
 
             <image src="./img/mike/microphone.png" resize="contain" class="microphone-icon"
-                   @click="clickOnAudio"></image>
+                   @touchstart="microPhoneTouchStarted" @touchend="microPhoneTouchEnded"></image>
         </div>
         <div class="camera">
             <image src="./img/mike/camera_dark.png" resize="contain" class="icon" @click="clickOnCamera">
@@ -88,9 +88,13 @@
 
     export default {
         name: "recipeSearchBar",
+        data() {
+            return {
+                word: ''
+            }
+        },
         methods: {
-            clickOnAudio() {
-                // TODO: press to record
+            microPhoneTouchStarted() {
 
                 nativeService.startRecordAudio({
                     max: 30000, //最长录音时间, 单位为秒
@@ -98,19 +102,28 @@
                     isTransform: true, //是否需要转换语音成文字
                 }).then(res => {
 
+                    nativeService.showLoadingWithMsg('录音中...')
+                })
+            },
+            microPhoneTouchEnded() {
 
+                nativeService.stopRecordAudio().then(res => {
+                    nativeService.hideLoading()
+                    if (!res || !res.data || res.data.length <= 0) {
+                        nativeService.toast('识别失败，请稍后重试')
+                        return;
+                    }
+
+                    this.word = res.data;
                 })
             },
             clickOnCamera() {
 
-                // TODO: is choose photo and take photo getting along ?
+                nativeService.scanCode().then(res => {
 
-                nativeService.takePhoto({
-                    compressRage: 60,  //number, 返回照片的压缩率，范围为0~100，数值越高保真率越高
-                    type: 'jpg',
-                    isNeedBase64: true //是否需要返回相片base64数据
-                }).then((resp) => {
+                    // TODO: what to do with this barcode ?
                 })
+
             }
         },
     }

@@ -20,5 +20,12 @@ export default {
     getMenuSort: {
         url: '/home/midea/menu/sort',
         method: 'POST'
+    },
+
+    // 根据分类和词汇查询菜谱
+    searchMenus: {
+        url: "/home/midea/menu/listall/:name/:sort",
+        method: "POST",
+        segments: ['name', 'sort']
     }
 }

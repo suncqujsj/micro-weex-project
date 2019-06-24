@@ -40,7 +40,7 @@
 
                         <div class="slider-item-info__fav">
 
-                            <image src="./img/mike/heart_white.png" resize="contain" class="fav-icon"></image>
+                            <image src="./img/mike/heart_white_shadow.png" resize="contain" class="fav-icon"></image>
                             <text class="fav-text">2.3M</text>
                         </div>
                     </div>

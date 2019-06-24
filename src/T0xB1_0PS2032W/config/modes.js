@@ -247,7 +247,9 @@ let modes = [
                     set: false,
                     default: 0,
                     range: null
-                }
+                },
+                settingHide:true
+
             },
             {   // 腔体清洁
                 'icon': modeIcons[20].dir,
@@ -278,7 +280,8 @@ let modes = [
                     set: false,
                     default: 0,
                     range: null
-                }
+                },
+                settingHide:true
             },
         ]
     },
@@ -314,7 +317,8 @@ let modes = [
                     set: false,
                     default: 0,
                     range: null
-                }
+                },
+                settingHide:true
             },
         ]
     }

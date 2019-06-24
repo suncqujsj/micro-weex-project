@@ -47,6 +47,9 @@
         height: 288px;
     }
 
+    .hot-section-item {
+        margin-right: 30px;
+    }
 
     .pros-section-content {
 
@@ -56,6 +59,24 @@
     .pro-swiper-item {
         padding: 0 56px;
         height: 376px;
+    }
+
+    .menu-collection-content {
+        padding: 0 56px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+
+    }
+
+    .menu-collection-item {
+        margin-bottom: 30px;
+
+    }
+
+    .menu-collection-item__odd {
+        margin-right: 30px;
     }
 
     /*轮播指引点*/
@@ -113,8 +134,11 @@
                 <scroller show-scrollbar="false" scroll-direction="horizontal"
                           class="section-content section-content__horizontal_slide hot-section-content">
 
-                    <recipe-collection-item v-for="(item,index) in hotData" :title="item.name" :img-width="288"
-                                            :img-height="192" :first="index===0"></recipe-collection-item>
+                    <div class="hot-section-item" v-for="(item,index) in hotData">
+                        <recipe-collection-item :title="item.name" :img-width="288"
+                                                :img-height="192" :first="index===0"></recipe-collection-item>
+                    </div>
+
                 </scroller>
             </div>
 
@@ -141,6 +165,29 @@
                     <indicator class="slider-indicator"></indicator>
                 </slider>
             </div>
+        </cell>
+
+
+        <cell class="menu-collection">
+
+            <div class="recipe-section">
+                <div class="section-title">
+                    <text class="section-title-text">食谱合集</text>
+
+                </div>
+
+                <div class="section-content menu-collection-content">
+
+
+                    <div class="menu-collection-item" v-for="(item,index) in menuCollectData"
+                         :class="[(index%2)===0 && 'menu-collection-item__odd']">
+                        <recipe-collection-item :title="item.name" :img-width="303" :info-display-style="'Cover'"
+                                                :img-height="192" :title-font-size="15*2"></recipe-collection-item>
+                    </div>
+
+                </div>
+            </div>
+
         </cell>
 
         <cell class="bottom-cell">
@@ -206,6 +253,19 @@
                     name: "牛肉披萨",
                 }],
                 proData: [
+                    {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }
+                ],
+                menuCollectData: [
                     {
                         name: "牛肉披萨",
                     }, {

@@ -4,7 +4,7 @@
     .recipe-collection-item {
         display: flex;
         flex-direction: column;
-        margin-right: 30px;
+        /*margin-right: 30px;*/
         position: relative;
     }
 
@@ -109,7 +109,7 @@
         </div>
         <div class="cover-info" v-if="isShowCoverInfo" :style="imgSize">
 
-            <text class="cover-title">{{title}}</text>
+            <text class="cover-title" :style="{'fontSize':titleFontSize}">{{title}}</text>
 
         </div>
 
@@ -169,6 +169,11 @@
                 type: Number,
                 default: 192
             },
+            titleFontSize: {
+                type: Number,
+                default: 18 * 2
+            },
+
             infoDisplayStyle: {
                 type: String,
                 default: 'Underline' // Underline : 底部显示(附带收藏、阅读信息) Cover:图片上显示

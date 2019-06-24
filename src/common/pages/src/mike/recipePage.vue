@@ -1,41 +1,11 @@
 <style lang="less" type="text/less">
-    .wrapper {
-        width: 750px;
-        display: flex;
-        flex-direction: column;
-    }
 
-    .list {
-
-    }
-
-    .search-tag {
-        height: 200px;
-        width: 750px;
-    }
-
-
-    .panel {
-        width: 600px;
-        height: 300px;
-        margin-left: 75px;
-        margin-top: 35px;
-        margin-bottom: 35px;
-        flex-direction: column;
-        justify-content: center;
-        border-width: 2px;
-        border-style: solid;
-        border-color: rgb(162, 217, 192);
-        background-color: rgba(162, 217, 192, 0.2);
-    }
-
-    .text {
-        font-size: 88px;
-        text-align: center;
-        color: #41B883;
-    }
 
     .swiper {
+        flex-direction: column;
+    }
+
+    .hot {
         flex-direction: column;
     }
 
@@ -46,30 +16,70 @@
 
 
     .recipe-section {
-        width: 650px;
-        height: 300px;
-        margin-left: 50px;
-        margin-top: 35px;
-        margin-bottom: 35px;
+
+        display: flex;
         flex-direction: column;
-        justify-content: center;
-        // border-width: 2px;
-        // border-style: solid;
-        // border-color: rgb(162, 217, 192);
-        background-color: rgba(162, 217, 192, 0.2);
+        padding-top: 65px;
+
     }
 
-    .text {
-        font-size: 50px;
-        text-align: center;
-        color: #333;
+    .section-title {
+        padding-left: 55px;
+        padding-bottom: 28px;
+
     }
 
-    .recipe-section-title {
-        font-size: 40px;
-        text-align: left;
-        color: #333;
+    .section-title-text {
+        font-size: '18wx';
+        color: #333333;
+        font-weight: bold;
     }
+
+
+    .section-content__horizontal_slide {
+        flex-direction: row;
+        display: flex;
+        align-items: center;
+    }
+
+
+    .hot-section-content {
+        height: 288px;
+    }
+
+
+    .pros-section-content {
+
+        height: 411px;
+    }
+
+    .pro-swiper-item {
+        padding: 0 56px;
+        height: 376px;
+    }
+
+    /*轮播指引点*/
+    .slider-indicator {
+        width: 750px;
+        height: 14px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        item-color: #d1d1d1; //rgba(255, 255, 255, .5);
+        item-selectedColor: #808080; //rgba(255, 255, 255, 1);
+        item-size: 14px;
+    }
+
+    .bottom-cell {
+
+    }
+
+    .bottom-cell-content {
+        width: 750px;
+        height: 200px;
+    }
+
+
 </style>
 <template>
 
@@ -79,9 +89,7 @@
         <header>
 
             <recipe-search-bar></recipe-search-bar>
-            <!--                <div class="search-tag">-->
-            <!--                    <text classs="text">我会吸附在顶部</text>-->
-            <!--                </div>-->
+
         </header>
         <cell class="tags">
 
@@ -92,15 +100,63 @@
             <recipe-video-swiper></recipe-video-swiper>
 
         </cell>
-        <cell class="cell" v-for="item in collectionData">
+
+
+        <cell class="hot">
             <div class="recipe-section">
-                <text class="recipe-section-title">人气推荐</text>
-                <image src="http://121.41.75.163:8000/source/image/20180905/1536112973897g364.jpg"
-                       style="width:100px;height:200px"></image>
-                <text>{{item.collectionName}}</text>
+
+                <div class="section-title">
+                    <text class="section-title-text">人气推荐</text>
+
+                </div>
+
+                <scroller show-scrollbar="false" scroll-direction="horizontal"
+                          class="section-content section-content__horizontal_slide hot-section-content">
+
+                    <recipe-collection-item v-for="(item,index) in hotData" :title="item.name" :img-width="288"
+                                            :img-height="192" :first="index===0"></recipe-collection-item>
+                </scroller>
+            </div>
+
+        </cell>
+
+        <cell class="pro">
+
+            <div class="recipe-section">
+                <div class="section-title">
+                    <text class="section-title-text">达人菜谱</text>
+
+                </div>
+
+                <slider interval="3000" auto-play="true" infinite="true"
+                        class="section-content section-content-swiper pros-section-content">
+
+
+                    <div class="pro-swiper-item" v-for="(item,index) in proData">
+                        <recipe-collection-item :title="item.name" :img-width="638" :info-display-style="'Cover'"
+                                                :img-height="366"></recipe-collection-item>
+                    </div>
+
+
+                    <indicator class="slider-indicator"></indicator>
+                </slider>
             </div>
         </cell>
+
+        <cell class="bottom-cell">
+
+            <div class="bottom-cell-content"></div>
+        </cell>
+        <!--        <cell class="cell" v-for="item in collectionData">-->
+        <!--            <div class="recipe-section">-->
+        <!--                <text class="recipe-section-title">人气推荐</text>-->
+        <!--                <image src="http://121.41.75.163:8000/source/image/20180905/1536112973897g364.jpg"-->
+        <!--                       style="width:100px;height:200px"></image>-->
+        <!--                <text>{{item.collectionName}}</text>-->
+        <!--            </div>-->
+        <!--        </cell>-->
     </list>
+
 
 </template>
 
@@ -111,9 +167,10 @@
     import RecipeSearchBar from "@/common/pages/src/mike/component/recipeSearchBar.vue";
     import RecipeTags from "@/common/pages/src/mike/component/recipeTags.vue";
     import RecipeVideoSwiper from "@/common/pages/src/mike/component/recipeVideoSwiper.vue";
+    import RecipeCollectionItem from "@/common/pages/src/mike/component/recipeCollectionItem.vue";
 
     export default {
-        components: {RecipeVideoSwiper, RecipeTags, RecipeSearchBar},
+        components: {RecipeCollectionItem, RecipeVideoSwiper, RecipeTags, RecipeSearchBar},
         props: [],
         data() {
             return {
@@ -137,8 +194,33 @@
                     selected: false,
                 }],
                 collectionData: [],
+                hotData: [{
+                    name: "牛肉披萨",
+                }, {
+                    name: "牛肉披萨",
+                }, {
+                    name: "牛肉披萨",
+                }, {
+                    name: "牛肉披萨",
+                }, {
+                    name: "牛肉披萨",
+                }],
+                proData: [
+                    {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }
+                ]
             }
         },
+
         created() {
 
 

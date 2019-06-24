@@ -1,9 +1,11 @@
 <style scoped lang="less">
 
+    @collection-item-cover-radius: 20px;
     .recipe-collection-item {
         display: flex;
         flex-direction: column;
         margin-right: 30px;
+        position: relative;
     }
 
     .first-item {
@@ -12,11 +14,42 @@
     }
 
     .collection-cover {
-        height: 192px;
-        width: 288px;
+
         margin-bottom: 10px;
-        border-radius: 20px;
+        border-radius: @collection-item-cover-radius;
     }
+
+    .cover-info {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        border-radius: @collection-item-cover-radius;
+
+    }
+
+    .cover-info-mask {
+        position: absolute;
+        left: 0;
+        height: 170px;
+
+        background-image: linear-gradient(to top, rgba(0, 0, 0, 1.0), transparent);
+        background-repeat: no-repeat;
+        background-size: contain;
+        border-radius: @collection-item-cover-radius;
+    }
+
+    .cover-title {
+        color: #ffffff;
+        font-size: 18px *2;
+        padding-left: 40px;
+        padding-bottom: 30px;
+    }
+
 
     .info {
         display: flex;
@@ -69,10 +102,19 @@
 
         <!--        :style="imgSize"-->
 
-        <image resize="cover" class="collection-cover" :src="cover" :style="imgStyle"
+        <image resize="cover" class="collection-cover" :src="cover" :style="imgSize"
                placeholder="https://via.placeholder.com/288x192?text=Loading"></image>
+        <div class="cover-info-mask" v-if="isShowCoverInfo" :style="coverInfoMaskStyle">
 
-        <div class="info">
+        </div>
+        <div class="cover-info" v-if="isShowCoverInfo" :style="imgSize">
+
+            <text class="cover-title">{{title}}</text>
+
+        </div>
+
+
+        <div class="info" v-if="isShowUnderlineInfo">
             <text class="title">{{title}}</text>
 
 
@@ -126,15 +168,34 @@
             imgHeight: {
                 type: Number,
                 default: 192
+            },
+            infoDisplayStyle: {
+                type: String,
+                default: 'Underline' // Underline : 底部显示(附带收藏、阅读信息) Cover:图片上显示
             }
         },
         computed: {
+
+            isShowUnderlineInfo() {
+                return this.infoDisplayStyle === 'Underline'
+            },
+            isShowCoverInfo() {
+
+                return this.infoDisplayStyle === 'Cover'
+            },
+            coverInfoMaskStyle() {
+
+                return {
+                    width: this.imgWidth + 'px',
+                    top: (this.imgHeight - 170) + 'px'
+                }
+            },
             imgSize() {
 
 
                 return {
-                    width: imgWidth + 'px',
-                    height: imgHeight + 'px'
+                    width: this.imgWidth + 'px',
+                    height: this.imgHeight + 'px'
                 }
             }
         }

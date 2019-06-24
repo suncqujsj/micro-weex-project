@@ -42,13 +42,33 @@
         align-items: center;
     }
 
-    .section-content {
-    }
 
     .hot-section-content {
         height: 288px;
     }
 
+
+    .pros-section-content {
+
+        height: 411px;
+    }
+
+    .pro-swiper-item {
+        padding: 0 56px;
+        height: 376px;
+    }
+
+    /*轮播指引点*/
+    .slider-indicator {
+        width: 750px;
+        height: 14px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        item-color: #d1d1d1; //rgba(255, 255, 255, .5);
+        item-selectedColor: #808080; //rgba(255, 255, 255, 1);
+        item-size: 14px;
+    }
 
     .bottom-cell {
 
@@ -82,7 +102,7 @@
         </cell>
 
 
-        <cell class="hot ">
+        <cell class="hot">
             <div class="recipe-section">
 
                 <div class="section-title">
@@ -98,6 +118,29 @@
                 </scroller>
             </div>
 
+        </cell>
+
+        <cell class="pro">
+
+            <div class="recipe-section">
+                <div class="section-title">
+                    <text class="section-title-text">达人菜谱</text>
+
+                </div>
+
+                <slider interval="3000" auto-play="true" infinite="true"
+                        class="section-content section-content-swiper pros-section-content">
+
+
+                    <div class="pro-swiper-item" v-for="(item,index) in proData">
+                        <recipe-collection-item :title="item.name" :img-width="638" :info-display-style="'Cover'"
+                                                :img-height="366"></recipe-collection-item>
+                    </div>
+
+
+                    <indicator class="slider-indicator"></indicator>
+                </slider>
+            </div>
         </cell>
 
         <cell class="bottom-cell">
@@ -161,7 +204,20 @@
                     name: "牛肉披萨",
                 }, {
                     name: "牛肉披萨",
-                }]
+                }],
+                proData: [
+                    {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }
+                ]
             }
         },
 

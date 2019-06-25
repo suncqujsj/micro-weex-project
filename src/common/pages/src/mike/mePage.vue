@@ -10,80 +10,21 @@
 
     }
 
-    .hearder-section {
-        height: @header-height;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+
+    .eaten-scroller {
         position: relative;
+        padding-top: @header-height;
     }
 
-
-    .scroller {
-        position: relative;
-    }
-
-    .head-bg {
-        position: absolute;
-        width: 750px;
-        height: @header-height;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        right: 0;
-    }
-
-    .header-icon {
-        border-radius: 100px;
-
-    }
-
-    .header-name {
-        color: #fefefe;
-        font-size: 40px;
-        margin-top: 20px;
-    }
-
-    .header-sub-name {
-        color: #fefefe;
-        margin-top: 10px;
-    }
-
-    .select-tags {
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        padding-top: 55px;
-        padding-bottom: 28px;
-    }
-
-
-    .tag-item {
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        width: 200px;
-    }
-
-    .yellow-item {
-        color: #ffbc05;
-    }
-
-    .tag-item-icon {
-        height: 50px;
-        width: 50px;
-    }
-
-
-    .tag-item-number {
-        margin-top: 24px;
-        color: rgba(254, 254, 254, 0.3);
-        font-size: 10.5px*2;
-    }
 
     .segment-content {
         flex: 3;
         flex-grow: 3;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
 
     }
 
@@ -97,17 +38,22 @@
     }
 
     .favorite-waterfall {
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
+
         width: 750px;
-        padding: 100px 39px;
+        padding: @header-height+100px 39px 100px 39px;
     }
 
     .share-segement-content {
 
+    }
+
+    .share-list {
+
+    }
+
+    .share-list-empty-cell-content {
+        width: 750;
+        height: @header-height;
     }
 
     .share-list-cell {
@@ -139,41 +85,26 @@
         color: #1a1a1a;
     }
 
+    .me-header-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        width: 750px;
+    }
+
 </style>
 <template>
     <div class="me-page-container">
-        <div class="hearder-section" ref="header">
 
-            <image class="head-bg" src="./img/mike/mike_me_bg.png" resize="cover"></image>
-            <image class="header-icon"
-                   :src="user.avatar"
-                   style="width:200px;height:200px"></image>
-            <text class="header-name">{{user.nickName}}</text>
-            <text class="header-sub-name">ID：</text>
-            <div class="select-tags">
-                <div class="tag-item" @click="clickOnTagItem(0)">
-                    <image class="tag-item-icon eat-icon" resize="contain"
-                           :src="eatenImg"></image>
-                    <text class="tag-item-number" :class="[isEatenShown && 'yellow-item']">264</text>
-                </div>
-                <div class="tag-item" @click="clickOnTagItem(1)">
-                    <image class="tag-item-icon heart-icon" resize="contain"
-                           :src="favImg"></image>
-                    <text class="tag-item-number" :class="[isFavShown && 'yellow-item']">264</text>
-                </div>
-                <div class="tag-item" @click="clickOnTagItem(2)">
-                    <image class="tag-item-icon share-icon" resize="contain"
-                           :src="shareImg"></image>
-                    <text class="tag-item-number" :class="[isSharedShown && 'yellow-item']">264</text>
-                </div>
-            </div>
-        </div>
         <!--        烹饪过的/看过的/用过的模式 -->
 
         <div class="segment-content eaten-segment-content" v-if="isEatenShown">
 
-            <scroller class="eaten-scroller" show-scrollbar="false">
-                <div class="section">
+            <scroller class="eaten-scroller" ref="eatenScroller">
+
+
+                <div class="section" @scroll="onScroll">
                     <div class="section-title">
 
                         <text class="section-title-text">烹饪过的食谱</text>
@@ -209,26 +140,18 @@
             </scroller>
 
         </div>
-
-        <!--        分享过的 -->
-        <div class="segment-content share-segement-content" v-if="isSharedShown">
-
-
-            <list class="share-list ">
-
-                <cell class="share-list-cell" v-for="item in shareList">
-                    <recipe-share-list-item :menu="item"></recipe-share-list-item>
-
-                </cell>
-            </list>
-        </div>
-
         <!--        收藏的 -->
         <div class="segment-content favorite-segment-content" v-if="isFavShown">
             <!--            <my-favorite-waterfall></my-favorite-waterfall>-->
 
             <waterfall column-count="2" column-width="322" column-gap="28" show-scrollbar="false" scrollable="true"
-                       class="favorite-waterfall">
+                       class="favorite-waterfall" @scroll="onScroll" ref="waterfallScroller">
+
+                <!--                <header ref="waterfallHeader">-->
+                <!--                    <me-header :is-eaten-shown="isEatenShown" :is-fav-shown="isFavShown"-->
+                <!--                               :is-shared-shown="isSharedShown"-->
+                <!--                               :user="user"></me-header>-->
+                <!--                </header>-->
                 <cell v-for="(item,index) in favoriteData" class="cell">
 
                     <my-favorite-waterfall-item :img-height="index%2===0?500:250"></my-favorite-waterfall-item>
@@ -236,6 +159,35 @@
                     <!--          -->
                 </cell>
             </waterfall>
+        </div>
+
+        <!--        分享过的 -->
+        <div class="segment-content share-segement-content" v-if="isSharedShown">
+
+
+            <list class="share-list " @scroll="onScroll" ref="shareScroller">
+
+                <cell class="share-list-empty-cell">
+                    <div class="share-list-empty-cell-content">
+
+                    </div>
+                </cell>
+                <!--                <cell ref="shareHeader">-->
+                <!--                    <me-header :is-eaten-shown="isEatenShown" :is-fav-shown="isFavShown"-->
+                <!--                               :is-shared-shown="isSharedShown"-->
+                <!--                               :user="user"></me-header>-->
+                <!--                </cell>-->
+                <cell class="share-list-cell" v-for="item in shareList">
+                    <recipe-share-list-item :menu="item"></recipe-share-list-item>
+
+                </cell>
+            </list>
+        </div>
+
+
+        <div class="me-header-wrapper" ref="meHeader">
+            <me-header :is-eaten-shown="isEatenShown" :is-fav-shown="isFavShown" :is-shared-shown="isSharedShown"
+                       :user="user" @onTagItemChanged="clickOnTagItem"></me-header>
         </div>
 
 
@@ -246,6 +198,9 @@
 
 <script>
 
+    import Binding from 'weex-bindingx';
+
+
     import ImageGrid from "@/common/pages/src/mike/component/imageGrid.vue";
 
     const dom = weex.requireModule('dom');
@@ -253,6 +208,7 @@
     import CommendListItem from "@/common/pages/src/mike/component/commendListItem.vue";
     import RecipeShareListItem from "@/common/pages/src/mike/component/recipeShareListItem.vue";
     import MyFavoriteWaterfallItem from "@/common/pages/src/mike/component/myFavoriteWaterfallItem.vue";
+    import MeHeader from "@/common/pages/src/mike/component/meHeader.vue";
 
 
     export default {
@@ -262,7 +218,6 @@
                 selectingTag: 0, // 0 : eaten 1 : hearted/faved 2 : shared
 
                 user: {},
-                headerSize: undefined,
                 isHeaderFixed: false,
                 commends: [
                     {
@@ -368,10 +323,14 @@
                     }, {
                         src: 'https://via.placeholder.com/215?text=Loading'
                     }
-                ]
+                ],
+                eatenBindingToken: undefined,
+                favBindingToken: undefined,
+                shareBindingToken: undefined,
             }
         },
         components: {
+            MeHeader,
             MyFavoriteWaterfallItem,
             RecipeShareListItem,
             CommendListItem,
@@ -388,53 +347,112 @@
             isSharedShown() {
                 return this.selectingTag === 2;
             },
-            eatenImg() {
-                return this.isEatenShown ? './img/mike/eat_yellow.png' : './img/mike/eat_light_gray.png'
-            },
-            favImg() {
-                return this.isFavShown ? './img/mike/heart_yellow.png' : './img/mike/heart_light_gray.png'
-            },
-            shareImg() {
-                return this.isSharedShown ? './img/mike/share_yellow.png' : './img/mike/share_light_gray.png'
-            }
+
 
         },
         created() {
 
             this.loadUserInfo();
+        },
+        mounted() {
+            this.bindingHeadAnimation();
 
+        },
+        destroyed() {
 
+            this.unbindAnimation();
         },
 
 
         methods: {
 
 
-            // onScroll(e) {
-            //
-            //     let contentOffset = e.contentOffset;
-            //
-            //     if (!this.headerSize) {
-            //         dom.getComponentRect(this.$refs.header, (res) => {
-            //             this.headerSize = res.size;
-            //         })
-            //         return;
-            //     }
-            //
-            //     if (-contentOffset.y > this.headerSize.height - 200) {
-            //         this.isHeaderFixed = true;
-            //     } else {
-            //         this.isHeaderFixed = false;
-            //     }
-            //     // TODO: need more testing on the scrolling
-            //
-            //
-            // },
             clickOnTagItem(index) {
+
+                // this.unbindAnimation();
 
                 this.selectingTag = index;
 
+
+                setTimeout(() => {
+
+                    this.bindingHeadAnimation()
+                })
+
             },
+
+            unbindAnimation() {
+
+
+                Binding.unbindAll()
+                // if (this.eatenBindingToken && this.eatenBindingToken.token) {
+                //     BindingX.unbind({
+                //         token: this.eatenBindingToken.token,
+                //         eventType: 'scroll'
+                //     })
+                // }
+                // if (this.favBindingToken && this.favBindingToken.token) {
+                //     BindingX.unbind({
+                //         token: this.favBindingToken.token,
+                //         eventType: 'scroll'
+                //     })
+                // }
+                // if (this.shareBindingToken && this.shareBindingToken.token) {
+                //     BindingX.unbind({
+                //         token: this.shareBindingToken.token,
+                //         eventType: 'scroll'
+                //     })
+                // }
+
+
+            },
+
+            bindingHeadAnimation() {
+
+
+                let scroller = this.isEatenShown ? this.$refs.eatenScroller.ref : (this.isFavShown ? this.$refs.waterfallScroller.ref : this.$refs.shareScroller.ref)
+                let header = this.$refs.meHeader.ref;
+
+                Binding.bind({
+                    eventType: 'scroll',
+                    anchor: scroller,
+                    props: [
+                        {
+                            element: header,
+                            property: "transform.translateY",
+                            expression: "y>0?(0-y<-520?-520:0-y):0"
+                        },
+
+
+                    ]
+                }, function (e) {
+                });
+
+
+            },
+
+            onScroll(e) {
+
+                // let contentOffset = e.contentOffset;
+                //
+                // nativeService.toast(contentOffset)
+                // if (!this.headerSize) {
+                //     dom.getComponentRect(this.$refs.header, (res) => {
+                //         this.headerSize = res.size;
+                //     })
+                //     return;
+                // }
+                //
+                // if (-contentOffset.y > this.headerSize.height - 200) {
+                //     this.isHeaderFixed = true;
+                // } else {
+                //     this.isHeaderFixed = false;
+                // }
+                // TODO: need more testing on the scrolling
+
+
+            },
+
 
             loadUserInfo() {
                 nativeService.getUserInfo().then(res => {

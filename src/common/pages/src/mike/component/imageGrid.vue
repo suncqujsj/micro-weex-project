@@ -49,6 +49,6 @@
 
     .have-interval-item {
 
-        margin-left: 12.5px;
+        margin-left: 12px;
     }
 </style>

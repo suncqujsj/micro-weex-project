@@ -75,6 +75,10 @@
 
     }
 
+    .share-segement-content {
+        padding: 50px 57px;
+    }
+
     .section {
 
         padding: 66px 40px;
@@ -165,6 +169,11 @@
 
         </div>
 
+        <div class="segment-content share-segement-content" v-if="isSharedShown">
+
+
+            <recipe-share-list-item v-for="item in shareList" :menu="item"></recipe-share-list-item>
+        </div>
 
     </scroller>
 
@@ -178,6 +187,7 @@
     import doneRecipe from './component/doneRecipe.vue';
     import nativeService from "@/common/services/nativeService";
     import CommendListItem from "@/common/pages/src/mike/component/commendListItem.vue";
+    import RecipeShareListItem from "@/common/pages/src/mike/component/recipeShareListItem.vue";
 
 
     export default {
@@ -206,6 +216,19 @@
                         degree: '100度',
                         time: '01分 00秒'
 
+                    }
+                ],
+                shareList: [
+                    {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
                     }
                 ],
                 images: [
@@ -237,7 +260,7 @@
                 ]
             }
         },
-        components: {CommendListItem, ImageGrid, doneRecipe},
+        components: {RecipeShareListItem, CommendListItem, ImageGrid, doneRecipe},
 
         computed: {
             isEatenShown() {

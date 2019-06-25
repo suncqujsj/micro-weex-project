@@ -268,6 +268,7 @@
 
 
         },
+
         methods: {
 
             loadHotMenus() {

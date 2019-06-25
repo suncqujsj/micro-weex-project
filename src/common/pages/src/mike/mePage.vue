@@ -8,6 +8,11 @@
         position: relative;
     }
 
+
+    .scroller {
+        position: relative;
+    }
+
     .head-bg {
         position: absolute;
         width: 750px;
@@ -38,8 +43,10 @@
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        margin-top: 55px;
+        padding-top: 55px;
+        padding-bottom: 28px;
     }
+
 
     .tag-item {
         flex-direction: column;
@@ -64,10 +71,38 @@
         font-size: 10.5px*2;
     }
 
+    .segment-content {
+
+    }
+
+    .section {
+
+        padding: 66px 40px;
+    }
+
+    .section-title {
+        margin-bottom: 27px;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .section-title-text {
+        font-size: 16px*2;
+        color: #333333;
+        font-weight: bold;
+    }
+
+    .more {
+        padding-right: 30px;
+        font-size: 11px*2;
+        color: #1a1a1a;
+    }
 </style>
 <template>
-    <div>
-        <div class="hearder-section">
+    <scroller class="scroller" show-scrollbar="false" @scroll="onScroll" @viewappear="viewappear">
+        <div class="hearder-section" ref="header">
 
             <image class="head-bg" src="./img/mike/mike_me_bg.png" resize="cover"></image>
             <image class="header-icon"
@@ -94,13 +129,55 @@
             </div>
         </div>
 
-        <done-recipe/>
-    </div>
+        <div class="segment-content eaten-segment-content" v-if="isEatenShown">
+
+            <div class="section">
+                <div class="section-title">
+
+                    <text class="section-title-text">烹饪过的食谱</text>
+                    <text class="more">more</text>
+                </div>
+
+                <image-grid :images="images"></image-grid>
+            </div>
+            <div class="section">
+                <div class="section-title">
+
+                    <text class="section-title-text">使用过的模式</text>
+                    <text class="more">more</text>
+                </div>
+
+                <commend-list-item v-for="item in commends" :type="item.type" :degree="item.degree"
+                                   :time="item.time"></commend-list-item>
+
+            </div>
+
+
+            <div class="section">
+                <div class="section-title">
+
+                    <text class="section-title-text">我看过的</text>
+                    <text class="more">more</text>
+                </div>
+
+                <image-grid :images="images"></image-grid>
+            </div>
+
+        </div>
+
+
+    </scroller>
+
 </template>
 
 <script>
+
+    import ImageGrid from "@/common/pages/src/mike/component/imageGrid.vue";
+
+    const dom = weex.requireModule('dom');
     import doneRecipe from './component/doneRecipe.vue';
     import nativeService from "@/common/services/nativeService";
+    import CommendListItem from "@/common/pages/src/mike/component/commendListItem.vue";
 
 
     export default {
@@ -109,10 +186,58 @@
             return {
                 selectingTag: 0, // 0 : eaten 1 : hearted/faved 2 : shared
 
-                user: {}
+                user: {},
+                headerSize: undefined,
+                isHeaderFixed: false,
+                commends: [
+                    {
+                        type: '发酵',
+                        degree: '100度',
+                        time: '01分 00秒'
+
+                    },
+                    {
+                        type: '发酵',
+                        degree: '100度',
+                        time: '01分 00秒'
+
+                    }, {
+                        type: '发酵',
+                        degree: '100度',
+                        time: '01分 00秒'
+
+                    }
+                ],
+                images: [
+                    {
+                        src: 'https://via.placeholder.com/215?text=Loading'
+                    },
+                    {
+                        src: 'https://via.placeholder.com/215?text=Loading'
+                    },
+                    {
+                        src: 'https://via.placeholder.com/215?text=Loading'
+                    },
+                    {
+                        src: 'https://via.placeholder.com/215?text=Loading'
+                    },
+                    {
+                        src: 'https://via.placeholder.com/215?text=Loading'
+                    },
+                    {
+                        src: 'https://via.placeholder.com/215?text=Loading'
+                    },
+                    {
+                        src: 'https://via.placeholder.com/215?text=Loading'
+                    }, {
+                        src: 'https://via.placeholder.com/215?text=Loading'
+                    }, {
+                        src: 'https://via.placeholder.com/215?text=Loading'
+                    }
+                ]
             }
         },
-        components: {doneRecipe},
+        components: {CommendListItem, ImageGrid, doneRecipe},
 
         computed: {
             isEatenShown() {
@@ -138,9 +263,32 @@
         created() {
 
             this.loadUserInfo();
+
         },
+
         methods: {
 
+
+            onScroll(e) {
+
+                let contentOffset = e.contentOffset;
+
+                if (!this.headerSize) {
+                    dom.getComponentRect(this.$refs.header, (res) => {
+                        this.headerSize = res.size;
+                    })
+                    return;
+                }
+
+                if (-contentOffset.y > this.headerSize.height - 200) {
+                    this.isHeaderFixed = true;
+                } else {
+                    this.isHeaderFixed = false;
+                }
+                // TODO: need more testing on the scrolling s
+
+
+            },
             clickOnTagItem(index) {
 
                 this.selectingTag = index;

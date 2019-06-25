@@ -1,5 +1,15 @@
 <style lang="less" type="text/less">
+
     @header-height: 580px;
+    .me-page-container {
+
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+
+    }
+
     .hearder-section {
         height: @header-height;
         flex-direction: column;
@@ -72,10 +82,35 @@
     }
 
     .segment-content {
+        flex: 3;
+        flex-grow: 3;
 
     }
 
+    .favorite-segment-content {
+
+        position: relative;
+
+        flex-direction: column;
+
+
+    }
+
+    .favorite-waterfall {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 750px;
+        padding: 100px 39px;
+    }
+
     .share-segement-content {
+
+    }
+
+    .share-list-cell {
         padding: 50px 57px;
     }
 
@@ -103,9 +138,10 @@
         font-size: 11px*2;
         color: #1a1a1a;
     }
+
 </style>
 <template>
-    <scroller class="scroller" show-scrollbar="false" @scroll="onScroll" @viewappear="viewappear">
+    <div class="me-page-container">
         <div class="hearder-section" ref="header">
 
             <image class="head-bg" src="./img/mike/mike_me_bg.png" resize="cover"></image>
@@ -132,50 +168,79 @@
                 </div>
             </div>
         </div>
+        <!--        烹饪过的/看过的/用过的模式 -->
 
         <div class="segment-content eaten-segment-content" v-if="isEatenShown">
 
-            <div class="section">
-                <div class="section-title">
+            <scroller class="eaten-scroller" show-scrollbar="false">
+                <div class="section">
+                    <div class="section-title">
 
-                    <text class="section-title-text">烹饪过的食谱</text>
-                    <text class="more">more</text>
+                        <text class="section-title-text">烹饪过的食谱</text>
+                        <text class="more">more</text>
+                    </div>
+
+                    <image-grid :images="images"></image-grid>
+                </div>
+                <div class="section">
+                    <div class="section-title">
+
+                        <text class="section-title-text">使用过的模式</text>
+                        <text class="more">more</text>
+                    </div>
+
+                    <commend-list-item v-for="item in commends" :type="item.type" :degree="item.degree"
+                                       :time="item.time"></commend-list-item>
+
                 </div>
 
-                <image-grid :images="images"></image-grid>
-            </div>
-            <div class="section">
-                <div class="section-title">
 
-                    <text class="section-title-text">使用过的模式</text>
-                    <text class="more">more</text>
+                <div class="section">
+                    <div class="section-title">
+
+                        <text class="section-title-text">我看过的</text>
+                        <text class="more">more</text>
+                    </div>
+
+                    <image-grid :images="images"></image-grid>
                 </div>
 
-                <commend-list-item v-for="item in commends" :type="item.type" :degree="item.degree"
-                                   :time="item.time"></commend-list-item>
 
-            </div>
-
-
-            <div class="section">
-                <div class="section-title">
-
-                    <text class="section-title-text">我看过的</text>
-                    <text class="more">more</text>
-                </div>
-
-                <image-grid :images="images"></image-grid>
-            </div>
+            </scroller>
 
         </div>
 
+        <!--        分享过的 -->
         <div class="segment-content share-segement-content" v-if="isSharedShown">
 
 
-            <recipe-share-list-item v-for="item in shareList" :menu="item"></recipe-share-list-item>
+            <list class="share-list ">
+
+                <cell class="share-list-cell" v-for="item in shareList">
+                    <recipe-share-list-item :menu="item"></recipe-share-list-item>
+
+                </cell>
+            </list>
         </div>
 
-    </scroller>
+        <!--        收藏的 -->
+        <div class="segment-content favorite-segment-content" v-if="isFavShown">
+            <!--            <my-favorite-waterfall></my-favorite-waterfall>-->
+
+            <waterfall column-count="2" column-width="322" column-gap="28" show-scrollbar="false" scrollable="true"
+                       class="favorite-waterfall">
+                <cell v-for="(item,index) in favoriteData" class="cell">
+
+                    <my-favorite-waterfall-item :img-height="index%2===0?500:250"></my-favorite-waterfall-item>
+
+                    <!--          -->
+                </cell>
+            </waterfall>
+        </div>
+
+
+    </div>
+
 
 </template>
 
@@ -184,10 +249,10 @@
     import ImageGrid from "@/common/pages/src/mike/component/imageGrid.vue";
 
     const dom = weex.requireModule('dom');
-    import doneRecipe from './component/doneRecipe.vue';
     import nativeService from "@/common/services/nativeService";
     import CommendListItem from "@/common/pages/src/mike/component/commendListItem.vue";
     import RecipeShareListItem from "@/common/pages/src/mike/component/recipeShareListItem.vue";
+    import MyFavoriteWaterfallItem from "@/common/pages/src/mike/component/myFavoriteWaterfallItem.vue";
 
 
     export default {
@@ -231,6 +296,52 @@
                         name: "牛肉披萨",
                     }
                 ],
+                favoriteData: [
+                    {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    },
+                    {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    },
+                    {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    },
+                    {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    }, {
+                        name: "牛肉披萨",
+                    },
+                ],
                 images: [
                     {
                         src: 'https://via.placeholder.com/215?text=Loading'
@@ -260,7 +371,12 @@
                 ]
             }
         },
-        components: {RecipeShareListItem, CommendListItem, ImageGrid, doneRecipe},
+        components: {
+            MyFavoriteWaterfallItem,
+            RecipeShareListItem,
+            CommendListItem,
+            ImageGrid
+        },
 
         computed: {
             isEatenShown() {
@@ -287,34 +403,37 @@
 
             this.loadUserInfo();
 
+
         },
+
 
         methods: {
 
 
-            onScroll(e) {
-
-                let contentOffset = e.contentOffset;
-
-                if (!this.headerSize) {
-                    dom.getComponentRect(this.$refs.header, (res) => {
-                        this.headerSize = res.size;
-                    })
-                    return;
-                }
-
-                if (-contentOffset.y > this.headerSize.height - 200) {
-                    this.isHeaderFixed = true;
-                } else {
-                    this.isHeaderFixed = false;
-                }
-                // TODO: need more testing on the scrolling s
-
-
-            },
+            // onScroll(e) {
+            //
+            //     let contentOffset = e.contentOffset;
+            //
+            //     if (!this.headerSize) {
+            //         dom.getComponentRect(this.$refs.header, (res) => {
+            //             this.headerSize = res.size;
+            //         })
+            //         return;
+            //     }
+            //
+            //     if (-contentOffset.y > this.headerSize.height - 200) {
+            //         this.isHeaderFixed = true;
+            //     } else {
+            //         this.isHeaderFixed = false;
+            //     }
+            //     // TODO: need more testing on the scrolling
+            //
+            //
+            // },
             clickOnTagItem(index) {
 
                 this.selectingTag = index;
+
             },
 
             loadUserInfo() {

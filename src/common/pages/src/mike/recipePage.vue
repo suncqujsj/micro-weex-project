@@ -5,6 +5,22 @@
         flex-direction: column;
     }
 
+    .swiper-empty-placeholder {
+        height: 900px;
+        background-color: #f2f2f2;
+
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .swiper-empty-placeholder-text {
+        font-size: 18px*2;
+        color: #333333;
+    }
+
     .hot {
         flex-direction: column;
     }
@@ -114,11 +130,17 @@
         </header>
         <cell class="tags">
 
-            <recipe-tags :tags="tags"></recipe-tags>
+            <recipe-tags :tags="tags" @onRecipeTagChanged="onRecipeTagChanged"></recipe-tags>
         </cell>
         <cell class="swiper">
 
-            <recipe-video-swiper></recipe-video-swiper>
+            <recipe-video-swiper :menus="swiperMenus" v-if="swiperMenus && swiperMenus.length>0"></recipe-video-swiper>
+
+            <div class="swiper-empty-placeholder" v-if="!swiperMenus || swiperMenus.length<=0">
+
+
+                <text class="swiper-empty-placeholder-text">暂无内容</text>
+            </div>
 
         </cell>
 
@@ -223,25 +245,8 @@
         props: [],
         data() {
             return {
-                tags: [{
-                    text: '快手菜',
-                    selected: true,
-                }, {
-                    text: '轻食塑身',
-                    selected: false,
-                }, {
-                    text: '烘焙/甜点',
-                    selected: false,
-                }, {
-                    text: '西式烹饪',
-                    selected: false,
-                }, {
-                    text: '健康饮食',
-                    selected: false,
-                }, {
-                    text: '川香麻辣',
-                    selected: false,
-                }],
+                tags: [],
+                swiperMenus: [],
                 hotData: [],
                 proData: [
                     {
@@ -256,12 +261,13 @@
                         name: "牛肉披萨",
                     }
                 ],
-                menuCollectData: []
+                menuCollectData: [],
             }
         },
 
         created() {
 
+            this.loadTags();
 
             this.loadHotMenus();
             this.loadCollections();
@@ -271,6 +277,49 @@
 
         methods: {
 
+            /**
+             * Events
+             * */
+            onRecipeTagChanged() {
+
+                this.loadMenusByTagAndWord()
+                // nativeService.toast('recipe tag changed' + JSON.stringify(tag))
+            },
+
+            /*
+            * Network requests
+            * */
+            loadTags() {
+
+                MikeNetwork.menu.getMenuTypes().then(res => {
+
+                    if (!res || res.length <= 0) {
+                        return;
+                    }
+
+                    this.tags = res.map((item, index) => {
+                        item.selected = index === 0;
+                        return item;
+                    });
+
+                    this.loadMenusByTagAndWord();
+                })
+            },
+            loadMenusByTagAndWord() {
+
+                let selectedTag = this.tags.find((item) => {
+                    return item.selected
+                })
+
+
+                // TODO: search by word
+
+                MikeNetwork.menu.searchMenus({
+                    sort: selectedTag.id
+                }).then(res => {
+                    this.swiperMenus = res;
+                })
+            },
             loadHotMenus() {
                 MikeNetwork.menu.getHotMenus().then(res => {
                     this.hotData.push(...res);

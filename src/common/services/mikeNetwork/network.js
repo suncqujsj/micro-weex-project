@@ -46,7 +46,11 @@ function transformActionToRequest(networkAction) {
 
         const requestOptions = {
             url: url,
-            method: networkAction.method
+            type: 'json',
+            method: networkAction.method,
+            headers: {'Content-Type': 'application/json'},
+
+            body: params && params.length > 0 ? JSON.stringify(params) : params
         };
 
         return new Promise((resolve, reject) => {

@@ -4,9 +4,9 @@
 
 
         <slider interval="3000" auto-play="true" infinite="true" class="swiper-slider">
-            <div v-for="(item,index) in covers" class="slider-img-wrapper">
+            <div v-for="(item,index) in menus" class="slider-img-wrapper">
                 <image class="slider-img"
-                       :src="item.download_url"
+                       :src="item.picUrl"
                        resize="cover" placeholder="https://via.placeholder.com/750x900?text=Loading">
 
                 </image>
@@ -23,10 +23,11 @@
 
                     <div class="slider-item-info">
                         <div class="slider-item-info__detail">
-                            <text class="info-detail-name">海鲜烩意面</text>
+                            <text class="info-detail-name">{{item.name}}</text>
 
                             <div class="info-detail-rating">
 
+                                <!--                               TODO: rate star -->
                                 <image class="rate-star-icon" resize="contain"
                                        v-for="item in [0,1,2,3,4]"
                                        :src="rateStarImgSrc(item)"></image>
@@ -35,11 +36,12 @@
                             <div class="info-detail-line">
 
                             </div>
-                            <text class="info-detail-desc">海鲜赋予意面浓浓的鲜味，这样一份意面很让人满足</text>
+                            <text class="info-detail-desc">{{item.abstruct}}</text>
                         </div>
 
                         <div class="slider-item-info__fav">
 
+                            <!--                            fav number-->
                             <image src="./img/mike/heart_white_shadow.png" resize="contain" class="fav-icon"></image>
                             <text class="fav-text">2.3M</text>
                         </div>
@@ -60,6 +62,12 @@
     const stream = weex.requireModule('stream');
     export default {
         name: "recipeVideoSwiper",
+        props: {
+            menus: {
+                type: Array,
+                default: []
+            },
+        },
         data() {
             return {
                 covers: [],
@@ -68,7 +76,7 @@
         },
         created() {
 
-            this.loadCovers();
+            // this.loadCovers();
         },
 
         methods: {
@@ -76,20 +84,20 @@
                 return index < 3 ? './img/mike/star_yellow@3x.png' : './img/mike/star_gray@3x.png'
             },
 
-            loadCovers() {
-                this.loading = true;
-
-                stream.fetch({
-                    // 'https://api.unsplash.com/search/photos/?client_id=d21ba57d8242976d132b325b947e9bcc41068dc8e682aa9c01da311f72887387&query=noodles&per_page=5',
-                    url: 'https://picsum.photos/v2/list?limit=5&page=1',
-                    method: 'GET',
-                    type: 'json'
-                }, response => {
-                    this.loading = false;
-                    this.covers = response.data;
-
-                })
-            },
+            // loadCovers() {
+            //     this.loading = true;
+            //
+            //     stream.fetch({
+            //         // 'https://api.unsplash.com/search/photos/?client_id=d21ba57d8242976d132b325b947e9bcc41068dc8e682aa9c01da311f72887387&query=noodles&per_page=5',
+            //         url: 'https://picsum.photos/v2/list?limit=5&page=1',
+            //         method: 'GET',
+            //         type: 'json'
+            //     }, response => {
+            //         this.loading = false;
+            //         this.covers = response.data;
+            //
+            //     })
+            // },
         },
     }
 </script>
@@ -106,7 +114,7 @@
         height: 900px;
 
         position: relative;
-        background-color: #808080;
+        background-color: #f2f2f2;
     }
 
     .slider-img-wrapper {

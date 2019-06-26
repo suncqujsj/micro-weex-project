@@ -1,3 +1,6 @@
+import MikeMenu from "@/common/pages/src/mike/model/MMenu";
+import nativeService from "@/common/services/nativeService";
+
 export default {
 
     // 获取人气菜谱
@@ -17,15 +20,21 @@ export default {
         segments: ['collectionId']
     },
     // 获取菜谱分类
-    getMenuSort: {
-        url: '/home/midea/menu/sort',
+    getMenuTypes: {
+        url: '/home/midea/menu/listall/alltabs',
         method: 'POST'
     },
 
     // 根据分类和词汇查询菜谱
     searchMenus: {
-        url: "/home/midea/menu/listall/:name/:sort",
+        url: "/home/midea/menu/listall/tab",
         method: "POST",
-        segments: ['name', 'sort']
+        response: (data) => {
+
+            data = data.map((item) => {
+                return new MikeMenu(item);
+            });
+            return data
+        }
     }
 }

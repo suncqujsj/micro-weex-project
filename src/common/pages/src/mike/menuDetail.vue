@@ -20,6 +20,11 @@
 
     }
 
+    .menu-detail-font-color {
+
+        color: #595959;
+    }
+
     .header-left-image-wrapper {
         width: 88px;
         height: 88px;
@@ -252,6 +257,113 @@
         width: 40px;
     }
 
+    .detail-mode-section {
+        padding: 30px 0;
+        margin: 0 40px;
+        border-bottom-style: solid;
+        border-bottom-width: 2px;
+        border-bottom-color: #e1e1e1;
+
+    }
+
+    .detail-mode-section-head {
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+    }
+
+    .detail-mode-section-head__left {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .detail-mode-section-head__left__title {
+        .menu-detail-font-color;
+        font-size: 20px*2;
+
+
+    }
+
+    .ingredient-user-icon {
+        width: 32px;
+        height: 32px;
+        margin-left: 10px;
+        margin-right: 5px;
+    }
+
+    .ingredient-user-number {
+
+        .menu-detail-font-color;
+    }
+
+    .detail-mode-section-head__right {
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        .menu-detail-font-color;
+        font-size: 17px*2;
+    }
+
+    .head_arrow {
+        width: 18px;
+        height: 9px;
+    }
+
+    .arrow-right {
+        transform: rotate(90deg);
+    }
+
+    .posting-num {
+        margin-right: 5px;
+        .menu-detail-font-color;
+        font-size: 15px*2;
+    }
+
+    .ingredient-section-content {
+        padding-top: 60px;
+    }
+
+    .ingredient-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .ingredient-item__left {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding-left: 63px;
+    }
+
+    .checkmark {
+        width: 23px;
+        height: 23px;
+        margin-right: 5px;
+
+    }
+
+    .ingredient-name {
+        .menu-detail-font-color;
+        font-size: 20px*2;
+    }
+
+    .ingredient-item__right {
+        padding-right: 63px;
+    }
+
+    .ingredient-amount {
+        .menu-detail-font-color;
+        font-size: 20px*2;
+    }
+
 
 </style>
 <template>
@@ -360,6 +472,115 @@
 
                     </div>
 
+
+                    <!--                    用料-->
+                    <div class="detail-mode-section detail-mode-ingredient">
+
+                        <div class="detail-mode-section-head ingredient-head ">
+
+                            <div class="detail-mode-section-head__left">
+                                <text class="detail-mode-section-head__left__title">用料</text>
+
+                                <image resize="contain" class="ingredient-user-icon"
+                                       src="img/mike/user_blue.png"></image>
+                                <text class="ingredient-user-number">x2</text>
+                            </div>
+                            <div class="detail-mode-section-head__right">
+                                <text class="ingredient-buy">购买</text>
+                            </div>
+                        </div>
+
+                        <div class="detail-mode-section-content ingredient-section-content">
+
+                            <div class="ingredient-item" v-for="item in [2,3,4,5]">
+                                <div class="ingredient-item__left">
+                                    <image class="checkmark" src="img/mike/checkmark_black.png"
+                                           resize="contain"></image>
+                                    <text class="ingredient-name">芝士</text>
+                                </div>
+
+                                <div class="ingredient-item__right">
+                                    <text class="ingredient-amount">100g</text>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <!--                    步骤-->
+
+                    <div class="detail-mode-section detail-mode-steps">
+
+                        <div class="detail-mode-section-head ingredient-head ">
+
+                            <div class="detail-mode-section-head__left">
+                                <text class="detail-mode-section-head__left__title">步骤</text>
+
+
+                            </div>
+                            <div class="detail-mode-section-head__right">
+
+                                <image class="head_arrow arrow-up" src="img/mike/arrow_up_blue.png"
+                                       resize="contain"></image>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!--                    评分-->
+                    <div class="detail-mode-section detail-mode-scores">
+
+                        <div class="detail-mode-section-head ingredient-head ">
+
+                            <div class="detail-mode-section-head__left">
+                                <text class="detail-mode-section-head__left__title">评分</text>
+
+
+                            </div>
+                            <div class="detail-mode-section-head__right">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--                    晒作品-->
+                    <div class="detail-mode-section detail-mode-posting">
+
+                        <div class="detail-mode-section-head ingredient-head ">
+
+                            <div class="detail-mode-section-head__left">
+                                <text class="detail-mode-section-head__left__title">晒作品</text>
+
+
+                            </div>
+                            <div class="detail-mode-section-head__right">
+
+                                <text class="posting-num">全部24个作品</text>
+                                <image class="head_arrow arrow-right" src="img/mike/arrow_up_blue.png"
+                                       resize="contain"></image>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!--                    推荐菜谱-->
+                    <div class="detail-mode-section detail-mode-recommend-menus">
+
+                        <div class="detail-mode-section-head ingredient-head ">
+
+                            <div class="detail-mode-section-head__left">
+                                <text class="detail-mode-section-head__left__title">推荐菜谱</text>
+
+
+                            </div>
+                            <div class="detail-mode-section-head__right">
+
+                                <image class="head_arrow arrow-up" src="img/mike/arrow_up_blue.png"
+                                       resize="contain"></image>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--                    TODO: bottom bar -->
                 </div>
             </div>
 

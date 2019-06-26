@@ -1,6 +1,13 @@
 <template>
     <div class="wrapper">
-        <midea-header bg-color="transparent" title="净水器柱状图" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
+        <midea-header
+          bg-color="transparent"
+          title="净水器柱状图"
+          @leftImgClick="back"
+          :showRightImg="true"
+          :isImmersion="isImmersion"
+          rightImg="../assets/img/smart_ic_reline@3x.png"
+          @rightImgClick="reload"></midea-header>
         <top-circle-bg :state='widgetState' />
         <list class="list">
             <cell class="content-wrapper">

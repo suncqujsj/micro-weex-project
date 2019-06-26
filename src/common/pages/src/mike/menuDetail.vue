@@ -2,6 +2,7 @@
 
     @import "../../../less/recipeHome.less";
 
+    /* Customize menu detail header styles*/
     .menu-detail-header {
 
         position: fixed;
@@ -33,6 +34,7 @@
         width: 58px;
     }
 
+    /* Detail page contents*/
     .menu-detail-page {
 
         width: 750px;
@@ -47,9 +49,9 @@
 
     }
 
+    /* Cover mode style*/
     .cover-mode {
 
-        background-color: #fff6d6;
         position: relative;
 
 
@@ -131,7 +133,11 @@
         margin-bottom: 5px;
     }
 
+
+    /* Detail Mode Styles*/
+
     .detail-mode {
+
 
         display: flex;
         flex-direction: column;
@@ -149,6 +155,92 @@
 
     }
 
+    .detail-mode-image-swiper {
+        position: relative;
+        padding-bottom: 40px;
+    }
+
+    /*轮播指引点*/
+    .slider-indicator {
+        width: 750px;
+        height: 24px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        item-color: rgba(199, 199, 199, 1);
+        item-selectedColor: rgba(89, 87, 85, 1);
+        item-size: 14px;
+    }
+
+
+    .detail-mode-content-wrapper {
+
+
+    }
+
+    .detail-mode-content-basic-info {
+        padding: 60px 0;
+        margin: 0 40px;
+        border-bottom-style: solid;
+        border-bottom-width: 2px;
+        border-bottom-color: #e1e1e1;
+
+    }
+
+    .basic-info-menu-name {
+        color: #595959;
+        font-size: 23px*2;
+        margin-bottom: 9px;
+    }
+
+    .basic-info-rate-star {
+        margin-bottom: 5px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+    }
+
+
+    .basic-info-hashtags {
+
+        margin-bottom: 66px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+    }
+
+    .basic-info-hashtag-item {
+        color: #595959;
+        font-size: 17px*2;
+
+
+        margin-right: 4px;
+    }
+
+    .basic-info-others-item {
+        margin-bottom: 5px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+
+    }
+
+    .others-icon {
+
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+    }
+
+    .others-text {
+        color: #595959;
+        font-size: 17px*2;
+    }
+
+
     .loadingbox {
         align-items: center;
         padding: 20px;
@@ -165,23 +257,6 @@
 <template>
     <div class="menu-detail-page" :style="{height: wrapHeight}">
 
-        <!--        leftImg="img/header/public_ic_gray@3x.png"-->
-
-        <!--        <midea-header bg-color="transparent" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2Native">-->
-        <!--            <div slot="customerContent" class="header-top-wrapper">-->
-        <!--                <div class="header-top-inner-wrapper">-->
-        <!--                    <div class="header-right-image-wrapper" @click="onCloudMenuIconClicked">-->
-        <!--                        <image class="header-right-image" :src="'img/header/public_ic_cloud_recipe@3x.png'"></image>-->
-        <!--                    </div>-->
-        <!--                    <div class="header-right-image-wrapper" @click="childLock(true)">-->
-        <!--                        <image class="header-right-image" :src="'img/header/public_ic_babylock@3x.png'"></image>-->
-        <!--                    </div>-->
-        <!--                    <div class="header-right-image-wrapper" @click="openMorePage">-->
-        <!--                        <image class="header-right-image" :src="'img/header/me_ic_set@3x.png'"></image>-->
-        <!--                    </div>-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--        </midea-header>-->
 
         <div class="menu-detail-header" :style="headerStyleObj">
 
@@ -195,6 +270,7 @@
         <scroller class="content-scroller" :style="{height: wrapHeight}" @scroll="onScroll" @loadmore="onloadmore">
 
 
+            <!--            Full screen cover image -->
             <div class="cover-mode" :style="{height: wrapHeight}" v-if="isShowCoverMode">
 
                 <image src="https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80"
@@ -225,17 +301,28 @@
             </div>
 
 
+            <!--             Loading indicator between cover and detail mode -->
             <div class="loadingbox" v-if="loading">
 
                 <image class="loading" src="https://img.alicdn.com/tfs/TB1CWnby7yWBuNjy0FpXXassXXa-32-32.gif"/>
             </div>
 
 
+            <!--             Detail information mode -->
+            <!--             TODO: with and without video -->
             <div class="detail-mode" v-if="isShowDetailMode" ref="detailMode">
 
-                <image class="square-image"
-                       src="https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80"
-                       resize="cover" :style="detailModeCoverStyle"></image>
+                <slider interval="3000" auto-play="true" infinite="true" class="detail-mode-image-swiper">
+
+                    <div class="detail-mode-image-swiper-item" v-for="item in [1,2,3,4]">
+                        <image class="square-image"
+                               src="https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80"
+                               resize="cover" :style="detailModeCoverStyle"></image>
+                    </div>
+
+                    <indicator class="slider-indicator"></indicator>
+
+                </slider>
 
 
                 <div class="detail-mode-empty-content" :style="{height:wrapHeight}" v-if="loading">
@@ -244,6 +331,34 @@
 
                 <div class="detail-mode-content-wrapper">
 
+                    <div class="detail-mode-content-basic-info">
+                        <text class="basic-info-menu-name">芝士焗西兰花</text>
+
+                        <div class="basic-info-rate-star">
+                            <image class="rate-star-icon" resize="contain"
+                                   v-for="item in [0,1,2,3,4]"
+                                   :src="rateStarImgSrc(item)"></image>
+                        </div>
+
+                        <div class="basic-info-hashtags">
+                            <text class="basic-info-hashtag-item">#清淡</text>
+                            <text class="basic-info-hashtag-item">#塑身</text>
+                        </div>
+
+                        <div class="basic-info-others">
+                            <div class="basic-info-others-item">
+                                <image class="others-icon" resize="contain" src="img/mike/clock_blue.png"></image>
+                                <text class="others-text">时间： 约5-10分钟</text>
+                            </div>
+                            <div class="basic-info-others-item">
+                                <image class="others-icon" resize="contain" src="img/mike/knife_blue.png"></image>
+
+                                <text class="others-text">难度： 零厨艺</text>
+                            </div>
+                        </div>
+
+
+                    </div>
 
                 </div>
             </div>
@@ -337,7 +452,7 @@
                     this.isShowCoverMode = false;
 
                     this.showDetailMode();
-                }, 1000)
+                }, 500)
 
 
             },
@@ -346,7 +461,7 @@
                     this.isShowDetailMode = true;
 
                     this.loading = false;
-                }, 1000)
+                }, 500)
             },
             onScroll(e) {
 

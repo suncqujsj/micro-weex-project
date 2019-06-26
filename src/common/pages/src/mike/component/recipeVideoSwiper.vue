@@ -4,7 +4,7 @@
 
 
         <slider interval="3000" auto-play="true" infinite="true" class="swiper-slider">
-            <div v-for="(item,index) in menus" class="slider-img-wrapper">
+            <div v-for="(item,index) in menus" class="slider-img-wrapper" @click="clickOnCover(item)">
                 <image class="slider-img"
                        :src="item.picUrl"
                        resize="cover" placeholder="https://via.placeholder.com/750x900?text=Loading">
@@ -80,6 +80,15 @@
         },
 
         methods: {
+            clickOnCover(item) {
+
+                if (!item || !item.id || item.id.length <= 0) {
+                    return;
+                }
+
+                nativeService.goTo('detail.js', {animate: true}, {params: {id: item.id}})
+
+            },
             rateStarImgSrc(index) {
                 return index < 3 ? './img/mike/star_yellow@3x.png' : './img/mike/star_gray@3x.png'
             },

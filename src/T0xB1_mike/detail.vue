@@ -1,5 +1,5 @@
 <template>
-    <menu-detail></menu-detail>
+    <menu-detail :constant="constant"></menu-detail>
 </template>
 
 <script>

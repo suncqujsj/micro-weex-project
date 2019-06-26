@@ -86,6 +86,8 @@
     import nativeService from "@/common/services/nativeService";
     const ppvideoModule = weex.requireModule("ppVideoModule");
     import commonMixin from  "@/common/util/mixins/common.js"
+    var globalEvent = weex.requireModule('globalEvent');
+    const modal = weex.requireModule('modal')
 
     let [width, height] = [640, 360]; //config
     const shortestVideoTime = 10;
@@ -114,7 +116,8 @@
                 tt:null,
                 loading:false,
                 ttt: null,
-                cooking:true
+                cooking:true,
+                ground:'foreground'
             };
         },
         props:{
@@ -146,6 +149,7 @@
             this.requestPhotoLibraryAuthorization();
 
             this.timingQuery();
+            // this.onAppToggle();
         },
         methods: {
 

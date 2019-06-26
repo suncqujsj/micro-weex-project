@@ -10,7 +10,7 @@
       rightImg="../assets/img/smart_ic_reline@3x.png"
       @rightImgClick="reload">
     </midea-header>
-    <list class="list" @scroll="onScroll">
+    <list class="list" @scroll="onScroll" :show-scrollbar="false">
       <cell class="main-cell">
         <div class="cell-header">
           <text class="test-time">测量时间:  今天 ({{time}})</text>
@@ -448,7 +448,7 @@ export default {
 
     onScroll(event) {
       this.scrollTop = Math.abs(event.contentOffset.y);
-      if (this.scrollTop >= 320) {
+      if (this.scrollTop >= 330) {
         this.isScroll = true;
       } else {
         this.isScroll = false;
@@ -598,9 +598,13 @@ export default {
     height: 468px;
     background-color: #999999;
   }
+   
+  .flow-item-right {
+    justify-content: flex-start;
+  }
 
   .flow-r-item {
-    padding-bottom: 24px;
+    height: 486px;
   }
 
   .flow-r-title {
@@ -646,7 +650,7 @@ export default {
   }
 
   .r-list-txt {
-    padding-bottom: 40px;
+    padding-bottom: 30px;
     width: 227px;
     font-family: PingFangSC-Regular;
     font-size: 28px;

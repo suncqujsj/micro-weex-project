@@ -1,6 +1,16 @@
 <template>
   <div class="wrapper">
-    <list class="list">
+    <midea-header
+      bg-color="#07c160"
+      title-text="#ffffff"
+      title="体脂秤"
+      @leftImgClick="back"
+      :showRightImg="true"
+      leftImg="./img/header/ic_back@3x.png"
+      rightImg="../assets/img/smart_ic_reline@3x.png"
+      @rightImgClick="reload">
+    </midea-header>
+    <list class="list" :show-scrollbar="false">
       <refresh class="refresh" @refresh="onrefresh" :display="refreshing ? 'show' : 'hide'">
       </refresh>
       <cell class="status-wrapper">
@@ -16,17 +26,7 @@
         </div>
       </cell>
     </list>
-    <midea-header
-      bg-color="transparent"
-      title-text="#ffffff"
-      title="体脂秤"
-      @leftImgClick="back"
-      :showRightImg="true"
-      leftImg="./img/header/ic_back@3x.png"
-      rightImg="../assets/img/smart_ic_reline@3x.png"
-      @rightImgClick="reload">
-    </midea-header>
-    <list class="content-wrapper">
+    <list class="content-wrapper" :show-scrollbar="false">
       <cell class="main-cell">
         <midea-collapse title="BMI 19.1" desc="标准" height="108">
           <div slot="left-icon" class="collapse-icon"></div>
@@ -164,10 +164,8 @@ export default {
     background-color: #f5f5f5;
   }
   .list {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 750px;
+    height: 420px;
     background-color: #07c160;
   }
    
@@ -186,12 +184,13 @@ export default {
     justify-content: center;
     align-items: center;
     width: 750px;
-    height: 560px;
+    height: 420px;
   }
 
   .status {
     justify-content: center;
     align-items: center;
+    margin-top: -32px;
     width: 750px;
   }
 
@@ -214,14 +213,13 @@ export default {
   }
 
   .tip {
-    padding-top: 32px;
     font-family: PingFangSC-Regular;
     font-size: 28px;
     color: #ffffff;
   }
 
   .content-wrapper {
-    margin-top: 380px;
+    margin-top: -60px;
     width: 686px;
     height: 626px;
     background-color: #ffffff;

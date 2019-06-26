@@ -1,9 +1,10 @@
-import cmdFun from "@/common/util/command/util";
-
 /**
  * Created by sf
  * 2018/10/30
  */
+
+import cmdFun from "@/common/util/command/util";
+var globalEvent = weex.requireModule('globalEvent');
 
 const bridgeModule = weex.requireModule('bridgeModule');
 const objectAssign = require('object-assign');
@@ -363,6 +364,19 @@ let commonMixin = {
                     //nativeService.toast("查询失败" + JSON.stringify(result));
                 }
             );
+        },
+
+        onAppToggle(showCallback, hideCallback){
+            // 应用被前台的时候触发
+            globalEvent.addEventListener('WXApplicationDidBecomeActiveEvent', function(e) {
+                nativeService.alert('WXApplicationDidBecomeActiveEvent')
+            });
+
+
+            // 应用即将被后台时候触发
+            globalEvent.addEventListener('WXApplicationWillResignActiveEvent，', function(e) {
+                nativeService.alert('WXApplicationWillResignActiveEvent');
+            });
         },
     }
 };

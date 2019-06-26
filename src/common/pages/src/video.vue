@@ -114,7 +114,8 @@
                 tt:null,
                 loading:false,
                 ttt: null,
-                cooking:true
+                cooking:true,
+                ground:'foreground'
             };
         },
         props:{
@@ -146,6 +147,7 @@
             this.requestPhotoLibraryAuthorization();
 
             this.timingQuery();
+            // this.onAppToggle();
         },
         methods: {
 

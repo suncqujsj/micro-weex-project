@@ -13,7 +13,12 @@
 
     .eaten-scroller {
         position: relative;
-        padding-top: @header-height;
+    }
+
+    .eaten-scroller-empty {
+        height: @header-height;
+        width: 750;
+
     }
 
 
@@ -40,7 +45,12 @@
     .favorite-waterfall {
 
         width: 750px;
-        padding: @header-height+100px 39px 100px 39px;
+        padding: 100px 39px 100px 39px;
+    }
+
+    .waterfall-empty-header {
+        height: @header-height;
+        width: 750;
     }
 
     .share-segement-content {
@@ -103,6 +113,9 @@
 
             <scroller class="eaten-scroller" ref="eatenScroller">
 
+                <div class="eaten-scroller-empty">
+
+                </div>
 
                 <div class="section" @scroll="onScroll">
                     <div class="section-title">
@@ -147,11 +160,12 @@
             <waterfall column-count="2" column-width="322" column-gap="28" show-scrollbar="false" scrollable="true"
                        class="favorite-waterfall" @scroll="onScroll" ref="waterfallScroller">
 
-                <!--                <header ref="waterfallHeader">-->
-                <!--                    <me-header :is-eaten-shown="isEatenShown" :is-fav-shown="isFavShown"-->
-                <!--                               :is-shared-shown="isSharedShown"-->
-                <!--                               :user="user"></me-header>-->
-                <!--                </header>-->
+                <header>
+
+                    <div class="waterfall-empty-header">
+
+                    </div>
+                </header>
                 <cell v-for="(item,index) in favoriteData" class="cell">
 
                     <my-favorite-waterfall-item :img-height="index%2===0?500:250"></my-favorite-waterfall-item>

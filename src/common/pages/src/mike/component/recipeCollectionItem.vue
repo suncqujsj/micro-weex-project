@@ -116,7 +116,7 @@
     }
 </style>
 <template>
-    <div class="recipe-collection-item" :class="[first && 'first-item']">
+    <div class="recipe-collection-item" :class="[first && 'first-item']" @click="clickOnItem">
 
         <!--        :style="imgSize"-->
 
@@ -160,9 +160,19 @@
 </template>
 
 <script>
+    import nativeService from "@/common/services/nativeService";
+
     export default {
         name: "recipeCollectionItem",
         props: {
+            collectionId: {
+                type: String,
+                default: ''
+            },
+            recipeId: {
+                type: String,
+                default: ''
+            },
             first: {
                 type: Boolean,
                 default: false
@@ -229,6 +239,24 @@
                     height: this.imgHeight + 'px'
                 }
             }
-        }
+        },
+        methods: {
+            clickOnItem() {
+
+                if (this.recipeId && this.recipeId.length > 0) {
+
+
+                    nativeService.goTo('detail.js', {animate: true}, {params: {id: this.recipeId}})
+                    return;
+                }
+
+                if (this.collectionId && this.collectionId.length > 0) {
+
+                    nativeService.goTo('detail.js', {animate: true}, {params: {id: this.collectionId}})
+                }
+
+
+            }
+        },
     }
 </script>

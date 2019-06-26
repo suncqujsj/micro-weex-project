@@ -183,7 +183,7 @@
                     <div class="menu-collection-item" v-for="(item,index) in menuCollectData"
                          :class="[(index%2)===0 && 'menu-collection-item__odd']">
                         <recipe-collection-item :title="item.collectionName" :img-width="303"
-                                                :info-display-style="'Cover'"
+                                                :info-display-style="'Cover'" :collection-id="item.id"
                                                 :img-height="192" :title-font-size="15*2"></recipe-collection-item>
                     </div>
 

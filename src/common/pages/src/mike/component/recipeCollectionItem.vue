@@ -4,7 +4,7 @@
     .recipe-collection-item {
         display: flex;
         flex-direction: column;
-        margin-right: 30px;
+        /*margin-right: 30px;*/
         position: relative;
     }
 
@@ -41,6 +41,24 @@
         background-repeat: no-repeat;
         background-size: contain;
         border-radius: @collection-item-cover-radius;
+    }
+
+    .cover-play {
+        position: absolute;
+
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .play-icon {
+        width: 144px;
+        height: 144px;
     }
 
     .cover-title {
@@ -109,8 +127,12 @@
         </div>
         <div class="cover-info" v-if="isShowCoverInfo" :style="imgSize">
 
-            <text class="cover-title">{{title}}</text>
+            <text class="cover-title" :style="{'fontSize':titleFontSize}">{{title}}</text>
 
+        </div>
+
+        <div class="cover-play" :style="imgSize" v-if="playBtnShown">
+            <image class="play-icon" resize="contain" src="./img/mike/video_play.png"></image>
         </div>
 
 
@@ -169,6 +191,15 @@
                 type: Number,
                 default: 192
             },
+            titleFontSize: {
+                type: Number,
+                default: 18 * 2
+            },
+            playBtnShown: {
+                type: Boolean,
+                default: false
+            },
+
             infoDisplayStyle: {
                 type: String,
                 default: 'Underline' // Underline : 底部显示(附带收藏、阅读信息) Cover:图片上显示

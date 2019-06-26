@@ -374,7 +374,7 @@ let commonMixin = {
 
 
             // 应用即将被后台时候触发
-            globalEvent.addEventListener('WXApplicationWillResignActiveEvent，', function(e) {
+            globalEvent.addEventListener('WXApplicationWillResignActiveEvent', function(e) {
                 nativeService.alert('WXApplicationWillResignActiveEvent');
             });
         },

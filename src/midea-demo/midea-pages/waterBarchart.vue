@@ -90,6 +90,7 @@ export default {
                 // "background": "#ffffff", //不传，则默认使用透明背景
                 "borderRadius": "5",//柱子顶部的圆角，默认为0px
                 "bottomBorderRadius": "5",
+                "barWidth":"20",  //设置柱状的宽度
                 "description": "图标描叙",
                 "legend": {
                     "position": "TOP_RIGHT", //"TOP_LEFT"/"TOP_RIGHT"
@@ -127,6 +128,7 @@ export default {
                 // "background": "#ffffff", //不传，则默认使用透明背景
                 "borderRadius": "5",//柱子顶部的圆角，默认为0px
                 "bottomBorderRadius": "5", //底部的圆角值
+                "barWidth":"20",  //设置柱状的宽度
                 "description": "图标描叙",
                 "legend": {
                     "position": "TOP_RIGHT", //"TOP_LEFT"/"TOP_RIGHT"
@@ -176,6 +178,7 @@ export default {
                 // "background": "#ffffff", //不传，则默认使用透明背景
                 "borderRadius": "5",//柱子顶部的圆角，默认为0px
                 "bottomBorderRadius": "5", //底部的圆角值
+                "barWidth":"20",  //设置柱状的宽度
                 "description": "图标描叙",
                 "legend": {
                     "position": "TOP_RIGHT", //"TOP_LEFT"/"TOP_RIGHT"
@@ -225,6 +228,7 @@ export default {
                 // "background": "#ffffff", //不传，则默认使用透明背景
                 "borderRadius": "3",//柱子顶部的圆角，默认为0px
                 "bottomBorderRadius": "3", //底部的圆角值
+                "barWidth":"10",  //设置柱状的宽度
                 "description": "图标描叙",
                 "legend": {
                     "position": "TOP_RIGHT", //"TOP_LEFT"/"TOP_RIGHT"

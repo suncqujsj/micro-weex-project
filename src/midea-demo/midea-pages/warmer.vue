@@ -256,9 +256,9 @@ export default {
       currentTemp: 20,
       outSideTemp: '24',
       gear: '中',
-      gearValue: 26,
+      gearValue: 50,
       gearMax: 100, //最大值
-      gearMin: 1, //最小值
+      gearMin: 25, //最小值
       gearStep: 25, //步长
       axisH: 3, //轴高度(px)
       pointH: 18, //圆球高度（px)
@@ -521,13 +521,13 @@ export default {
 
     slideEnd1(event) {
       this.gearValue = event.value;
-      if (event.value === 1) {
+      if (event.value === 25) {
         this.gear = '低';
-      } else if (event.value === 26) {
+      } else if (event.value === 50) {
         this.gear = '中';
-      } else if (event.value === 76) {
+      } else if (event.value === 75) {
         this.gear = '高';
-      } else if (event.value === 101) {
+      } else if (event.value === 100) {
         this.gear = '强';
       }
       return false;

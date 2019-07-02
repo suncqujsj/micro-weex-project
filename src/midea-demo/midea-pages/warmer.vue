@@ -236,9 +236,9 @@ import nativeService from '../../common/services/nativeService';
 import headerAnimation from '@/midea-component/newComp/headerAnimation.vue';
 import heaterCell from '@/midea-component/newComp/heater_cell2.vue';
 const blueChange = "../assets/FB/blue_change.png";
-const blueCircle = "../assets/FB/warm_img_circle_blue@3x.png";
+const blueCircle = "/FB/warm_img_circle_blue@3x.png";
 const redChange = "../assets/FB/red_change.png";
-const redCircle = "../assets/FB/warm_img_circle_red@3x.png";
+const redCircle = "/FB/warm_img_circle_red@3x.png";
 
 const picker = weex.requireModule('picker');
 export default {

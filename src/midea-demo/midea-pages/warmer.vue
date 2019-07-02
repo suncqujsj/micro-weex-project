@@ -13,24 +13,25 @@
       @rightImgClick="reload">
     </midea-header>
     
-    <div class="status-wrapper">
-      <text class="current-model-desc">{{currentModelDesc}}</text>
-      <text class="current-gear" v-if="model === 'wind'">{{onOff ? gear : '--'}}档</text>
-      <div class="current-temp" v-if="model === 'sleep'">
-        <text class="c-temp-txt">{{onOff ? currentTemp : '--'}}</text>
-        <text class="c-temp-unit">°</text>
-      </div>
-      <text class="outside-temp-txt">周围温度约</text>
-      <text class="outside-temp-txt">{{onOff ? outSideTemp : '--'}}°</text>
-      <div class="current-model-wrapper" :class="currentModelClass">
-        <text class="current-model-txt">{{onOff ? modelName + '模式' : '--'}}</text>
-        <text class="divider">|</text>
-        <text class="current-run-txt">{{runText}}</text>
-      </div>
-    </div>
-
     <list class="list" :show-scrollbar="false">
       <cell class="main-cell">
+        <div class="status-wrapper">
+          <text class="current-model-desc">{{currentModelDesc}}</text>
+          <text class="current-gear" v-if="model === 'wind'">{{onOff ? gear : '--'}}档</text>
+          <div class="current-temp" v-if="model === 'sleep'">
+            <text class="c-temp-txt">{{onOff ? currentTemp : '--'}}</text>
+            <text class="c-temp-unit">°</text>
+          </div>
+          <text class="outside-temp-txt">周围温度约</text>
+          <text class="outside-temp-txt">{{onOff ? outSideTemp : '--'}}°</text>
+          <div class="current-model-wrapper" :class="currentModelClass">
+            <text class="current-model-txt">{{onOff ? modelName + '模式' : '--'}}</text>
+            <text class="divider">|</text>
+            <text class="current-run-txt">{{runText}}</text>
+          </div>
+        </div>
+
+    
         <div class="cell-item" v-if="model === 'sleep'">
           <div class="cell-item-top">
             <div class="cell-item-top-icon" :class="cellTopIconClass"></div>
@@ -579,6 +580,7 @@ export default {
     justify-content: center;
     align-items: center;
     padding-top: 48px;
+    padding-bottom: 50px;
   }
   
   .current-model-desc {
@@ -663,15 +665,13 @@ export default {
   }
   
   .list {
-    margin-top: 40px;
     width: 750px;
-    height: 600px;
     justify-content: flex-start;
     align-items: center;
   }
 
   .main-cell {
-    padding-bottom: 32px;
+    padding-bottom: 200px;
     width: 750px;
     justify-content: flex-start;
     align-items: center;

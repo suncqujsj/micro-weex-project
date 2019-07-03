@@ -250,6 +250,8 @@ export default {
                   "cursorHigh":"20",       //标签（三角形）本身高度
                   "cursorMarginBottom":"0",
                   "show": true, //默认是 false 是否显示底部界面
+                  "showType":"ends", //端点的显示样式，支持 all,ends,none 三种模式
+                  "isSelectedDisappear":true, //是否标签 滑动到的端点消失不见
                 }
             }
         }

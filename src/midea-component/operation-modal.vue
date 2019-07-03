@@ -1,10 +1,12 @@
 <template>
   <div ref="container" v-if="show" class="container">
     <midea-mask @click="layoutClick"></midea-mask>
-    <div class="operate-box">
-       <div @click="onDelete" class="operate-box-item">
-          <text class="operate-box-item-text">{{delTitle}}</text>
-       </div>
+    <div class="operate-wrapper" :style="{height:pageHeight+'px'}">
+      <div class="operate-box">
+        <div @click="onDelete" class="operate-box-item">
+            <text class="operate-box-item-text">{{delTitle}}</text>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -12,15 +14,22 @@
 <style scoped>
   .container {
     width: 750px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .operate-wrapper {
+    position: fixed;
+    top: 0px;
+    width: 750px;
+    align-items: center;
+    justify-content: center;
   }
 
   .operate-box {
     background-color: #FFFFFF;
     width: 558px;
-    position:fixed;
-    left:96px;
     z-index:100;
-    top:400px;
   }
   .operate-box-item{
      padding:36px;
@@ -52,11 +61,8 @@
       
     }),
     created () {
-      var self=this;
-      /* setTimeout(function(){
-          self.checkDomHeight();
-       },300);*/
-
+      var env = weex.config.env;
+      this.pageHeight = env.deviceHeight / env.deviceWidth * 750;
     },
     methods: {
       onDelete(){

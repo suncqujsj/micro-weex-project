@@ -1,8 +1,8 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper" :style="{top: top + 'px'}">
     	<image resize="stretch" class="back-img" :src="bgImg"></image>
-        <image  class="circle-img" :src='animationImg' ref="circle"></image>
-        <image  class="circle-img2" :src='animationImg' ref="circle2"></image>
+        <image  class="circle-img" :src='assetsPath+animationImg' ref="circle"></image>
+        <image  class="circle-img2" :src='assetsPath+animationImg' ref="circle2"></image>
     </div>
 </template>
 <style scoped>
@@ -36,14 +36,23 @@ const animation = weex.requireModule('animation')
 import nativeService from '@/common/services/nativeService'
 export default {
     props: {
+        top: {
+          type: [String, Number],
+          default: -100
+        },
         bgImg: {
         	type:String,
-        	default:"../assets/FB/blue_change.png"
+        	default:"/FB/blue_change.png"
         },
         animationImg: {
             type: String,
-            default: "../assets/FB/warm_img_circle_blue@3x.png"
+            default: "/FB/warm_img_circle_blue@3x.png"
+        },
+        assetsPath:{
+            type:String,
+            default:'../assets'
         }
+
     },
     data() {
         return {

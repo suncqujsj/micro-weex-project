@@ -28,7 +28,7 @@
 
         </div>
         <slot name="switch">
-            <div v-if="hasSwitch" ref="switch" @click="clickSwitch" :class="['switch',switchActive&&'switch-active']">
+            <div v-if="hasSwitch" ref="switch" @click="clickSwitch" :class="['switch',switchActive && switchActiveClass]">
                 <div ref="switchDot" class='switch-dot'></div>
             </div>
         </slot>
@@ -45,8 +45,6 @@
     padding-left: 32px;
     background-color: #f9f9f9;
     height: 160px;
-    margin-left: 32px;
-    margin-right: 32px;
 }
 
 .active-cell:active {
@@ -170,15 +168,19 @@
     margin-right: 12px;
 }
 
-.switch-active {
-    width: 96px;
-    height: 48px;
-    border-radius: 24px;
+.switch-active-default {
     border-width: 0px;
     background-color: #FFAA10;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+}
+
+.switch-active-primary {
+    border-width: 0px;
+    background-color: #267aff;
+}
+
+.switch-active-danger {
+    border-width: 0px;
+    background-color: #dd6161;
 }
 
 .switch-dot {
@@ -278,6 +280,10 @@ module.exports = {
         hapticFeedbackActive:{
             type:Boolean,
             default:false
+        },
+        switchType: {
+            type: String,
+            default: 'default'
         }
     },
     computed: {
@@ -292,6 +298,11 @@ module.exports = {
                 temp["height"] = height + "px"
             }
             return temp
+        },
+
+        switchActiveClass() {
+            const {switchType} = this;
+            return `switch-active-${switchType}`;
         }
     },
     data: () => ({}),

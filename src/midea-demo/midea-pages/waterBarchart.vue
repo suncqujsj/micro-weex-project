@@ -1,6 +1,13 @@
 <template>
     <div class="wrapper">
-        <midea-header bg-color="transparent" title="净水器柱状图" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
+        <midea-header
+          bg-color="transparent"
+          title="净水器柱状图"
+          @leftImgClick="back"
+          :showRightImg="true"
+          :isImmersion="isImmersion"
+          rightImg="../assets/img/smart_ic_reline@3x.png"
+          @rightImgClick="reload"></midea-header>
         <top-circle-bg :state='widgetState' />
         <list class="list">
             <cell class="content-wrapper">
@@ -83,6 +90,7 @@ export default {
                 // "background": "#ffffff", //不传，则默认使用透明背景
                 "borderRadius": "5",//柱子顶部的圆角，默认为0px
                 "bottomBorderRadius": "5",
+                "barWidth":"20",  //设置柱状的宽度
                 "description": "图标描叙",
                 "legend": {
                     "position": "TOP_RIGHT", //"TOP_LEFT"/"TOP_RIGHT"
@@ -120,6 +128,7 @@ export default {
                 // "background": "#ffffff", //不传，则默认使用透明背景
                 "borderRadius": "5",//柱子顶部的圆角，默认为0px
                 "bottomBorderRadius": "5", //底部的圆角值
+                "barWidth":"20",  //设置柱状的宽度
                 "description": "图标描叙",
                 "legend": {
                     "position": "TOP_RIGHT", //"TOP_LEFT"/"TOP_RIGHT"
@@ -169,6 +178,7 @@ export default {
                 // "background": "#ffffff", //不传，则默认使用透明背景
                 "borderRadius": "5",//柱子顶部的圆角，默认为0px
                 "bottomBorderRadius": "5", //底部的圆角值
+                "barWidth":"20",  //设置柱状的宽度
                 "description": "图标描叙",
                 "legend": {
                     "position": "TOP_RIGHT", //"TOP_LEFT"/"TOP_RIGHT"
@@ -218,6 +228,7 @@ export default {
                 // "background": "#ffffff", //不传，则默认使用透明背景
                 "borderRadius": "3",//柱子顶部的圆角，默认为0px
                 "bottomBorderRadius": "3", //底部的圆角值
+                "barWidth":"10",  //设置柱状的宽度
                 "description": "图标描叙",
                 "legend": {
                     "position": "TOP_RIGHT", //"TOP_LEFT"/"TOP_RIGHT"
@@ -239,6 +250,8 @@ export default {
                   "cursorHigh":"20",       //标签（三角形）本身高度
                   "cursorMarginBottom":"0",
                   "show": true, //默认是 false 是否显示底部界面
+                  "showType":"ends", //端点的显示样式，支持 all,ends,none 三种模式
+                  "isSelectedDisappear":true, //是否标签 滑动到的端点消失不见
                 }
             }
         }

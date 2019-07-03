@@ -1,5 +1,5 @@
 // var CURRENT_IP = '10.74.149.81'
-var CURRENT_IP = '10.73.8.50'
+var CURRENT_IP = '10.73.8.49'
 
 //var CURRENT_IP = '192.168.43.187'
 
@@ -38,6 +38,7 @@ function getIPs(callback) {
     //construct a new RTCPeerConnection
     var pc = new RTCPeerConnection(servers, mediaConstraints);
     //listen for candidate events
+    
     pc.onicecandidate = function (ice) {
         //skip non-candidate events
         if (ice.candidate) {

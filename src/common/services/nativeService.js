@@ -4,9 +4,10 @@ const stream = weex.requireModule('stream')
 const storage = weex.requireModule('storage');
 const bridgeModule = weex.requireModule('bridgeModule');
 // const blueToothModule = weex.requireModule('blueToothModule');
-const singleBlueToothModule = weex.requireModule('singleBlueToothModule');
+const singleBlueToothModule = weex.requireModule('singleBlueToothModule'); // ^5.9.0
 const blueToothMeshModule = weex.requireModule('blueToothMeshModule');
 const globalEvent = weex.requireModule("globalEvent");
+const aiSpeechModule = weex.requireModule("aiSpeechModule"); // ^5.9.0
 
 
 const isIos = weex.config.env.platform == "iOS" ? true : false;
@@ -1490,7 +1491,7 @@ export default {
     },
     //**********蓝牙接口新蓝牙接口^5.9.0***************END
 
-    
+
     //**********蓝牙MESH接口***************START
     blueToothMeshModuleWrapper(apiName, param) {
         return new Promise((resolve, reject) => {
@@ -1560,6 +1561,37 @@ export default {
     } */
     deleteBlueMeshModelSubscription(params = {}) {
         return this.blueToothModuleWrapper("deleteBlueMeshModelSubscription", params)
-    }
+    },
     //**********蓝牙接口***************END
+
+    
+    //**********思必驰语音识别接口***************START
+    // 启动语音监听
+    /* param: null
+       当收到语音识别数据，app -> 插件: 
+        receiveMessageFromApp({ messageType: "aiSpeechNotification", messageBody: {key:"xxxxxxxx"} }) //xxxxxx为匹配到的热词
+    */
+    startSpeechMonitor(params = {}) {
+        return new Promise((resolve, reject) => {
+            aiSpeechModule["startSpeechMonitor"](JSON.stringify(params),
+                (resData) => {
+                    resolve(this.convertToJson(resData))
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
+    },
+    stopSpeechMonitor(params = {}) {
+        return new Promise((resolve, reject) => {
+            aiSpeechModule["stopSpeechMonitor"](JSON.stringify(params),
+                (resData) => {
+                    resolve(this.convertToJson(resData))
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
+    },
+    //**********思必驰语音识别接口***************START
 }

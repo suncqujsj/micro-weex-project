@@ -367,13 +367,13 @@ let commonMixin = {
         },
 
         onAppToggle(showCallback, hideCallback){
-            // 应用被前台的时候触发
+            // 应用由后台到前台
             globalEvent.addEventListener('WXApplicationDidBecomeActiveEvent', function(e) {
                 nativeService.alert('WXApplicationDidBecomeActiveEvent')
             });
 
 
-            // 应用即将被后台时候触发
+            // 应用由前台到后台
             globalEvent.addEventListener('WXApplicationWillResignActiveEvent', function(e) {
                 nativeService.alert('WXApplicationWillResignActiveEvent');
             });

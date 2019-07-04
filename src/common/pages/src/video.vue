@@ -149,9 +149,14 @@
             this.requestPhotoLibraryAuthorization();
 
             this.timingQuery();
-            // this.onAppToggle();
+            this.onAppToggle();
         },
         methods: {
+            foreground2backgroundCallback(){
+
+            },
+
+            background2foreground(){},
 
             getPageName(){
                 return 'videoPage';
@@ -402,11 +407,11 @@
                 const TIME = 1000;
                 let context = this;
                 this.ttt = setInterval(function(){
-                    context.getDeviceStatus(context.handleSnapshot);
+                    context.getDeviceStatus(context.handleScreenRecord);
                 }, TIME);
             },
 
-            handleSnapshot(statusArray){
+            handleScreenRecord(statusArray){
                 let byte11 = parseInt(statusArray[11]);
                 // nativeService.toast(byte11);
                 let ingArr = [3,6,7];

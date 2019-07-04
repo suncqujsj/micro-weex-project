@@ -11,7 +11,7 @@
                 <text v-if="text" class="text">{{text}}</text>
             </div>
         </div>
-        <midea-header class="fixed-top" titleText="white" title="哈哈哈" bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png"  @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png"></midea-header>
+        <midea-header class="fixed-top" titleText="white" title="" bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png"  @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png"></midea-header>
     </div>
 </template>
 

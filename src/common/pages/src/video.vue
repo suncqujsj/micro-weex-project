@@ -255,8 +255,7 @@
                 );
             },
             updateRecordState(){
-                this.recording = !this.recording;
-                this.saving = !this.saving;
+                this.recording = false;
             },
             record(){
 
@@ -272,8 +271,6 @@
                     return;
                 }
 
-                this.saving = true;
-
                 this.recordStop();
             },
             recordStart() {
@@ -286,7 +283,7 @@
                     },
                     () => {
                         nativeService.toast("开始录屏");
-                        context.updateRecordState();
+                        context.recording = true;
                         context.startCounting();
                     },
                     () => {
@@ -310,12 +307,10 @@
                     return;
                 }
 
-                let context = this;
 
-                let commonCallback = function(){
-                    context.updateRecordState();
-                    context.stopCounting();
-                };
+                this.saving = true;
+
+                let context = this;
 
                 ppvideoModule.ppvideoInterface(
                     this.$refs.ppvideo,
@@ -329,7 +324,7 @@
                         } else {
                             nativeService.toast("视频保存成功");
                         }
-                        commonCallback();
+                        this.recordCommonCallback();
                     },
                     () => {
                         if(typeof failCallback === 'function') {
@@ -337,10 +332,17 @@
                         } else {
                             nativeService.toast("视频保存失败");
                         }
-                        commonCallback();
+                        this.recordCommonCallback();
                     }
                 );
             },
+
+            recordCommonCallback(){
+                this.updateRecordState();
+                this.saving = false;
+                this.stopCounting();
+            },
+
             stopCounting(){
                 clearInterval(this.t);
                 this.second = 0;

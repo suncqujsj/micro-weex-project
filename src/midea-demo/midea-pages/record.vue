@@ -6,6 +6,7 @@
       title="记录统计"
       @leftImgClick="back"
       :showRightImg="true"
+      :isImmersion="isImmersion"
       :leftImg="leftImg"
       rightImg="../assets/img/smart_ic_reline@3x.png"
       @rightImgClick="reload">

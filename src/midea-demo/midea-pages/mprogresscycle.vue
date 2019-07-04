@@ -15,12 +15,12 @@
 .scroller {
 	margin-top: 0px;
 	margin-left:0px;
+    justify-content: center;
+    align-items: center;
 }
 .progresscycle {
     width: 490px;
     height: 490px;
-    top:100px;
-    margin-left:100px;
     justify-content: center;
     align-items: center;
 }
@@ -37,7 +37,7 @@ module.exports = {
                 "completedColor": "#00ffff", //环形进度条已完成的颜色默认#267AFF
                 "incompletedColor": "#eef5d5d5", //环形进度条未完成的颜色，默认透明
                 "thickness": 4, //环形进度条宽度，默认4
-                "cornerRadius": 40,  //环形的半径，默认是width/2
+                "cornerRadius": 60,  //环形的半径，默认是width/2
                 "totalCounter": 360, //环形进度条的最大值，默认是360
                 "progressCounter": 100, //设置进度值，默认是从0-360, 默认为0
                 "autoProgress": false, //设置是否需要自动执行环形进度，默认false, 如果设置为true，则每秒进度值+1操作
@@ -46,8 +46,8 @@ module.exports = {
                 "pointShow": false, //环形进度中的进度球是否需要显示，默认不显示
                 "pointRadius": 8, //默认是环形进度宽度的一半
                 "pointColor": "#FFFFFF", //环形进度中的进度球颜色
-                "backgroundColor":"#FF3B30",//环形背景色默认透明 
-                "backgroundRadius" : 48,  //环形背景半径，默认和cornerRadius 持平 
+                "backgroundColor":"#ff3d30",//环形背景色默认透明 
+                "backgroundRadius" : 68,  //环形背景半径，默认和cornerRadius 持平 
                 "text":"PCB", //中间字体
                 "textSize":18, //字体大小 默认14
                 "textColor":"#FFFFFF", //字体颜色

@@ -2,9 +2,9 @@
 <div class="mgbot">
     <!--在线状态-->
     <div class="wrapper" v-if="state!=5">
-        <image ref="bgImg" class="bg" v-if="state!=5 && state!=4" :src="srcList.src"></image>
-        <image v-if="state==4" class="bg" :src="srcList.bg"></image>
-        <image class="bg" :src="srcList.bg"></image>
+        <image ref="bgImg" class="bg" v-if="state!=5 && state!=4" :src="assetsPath+srcList.src"></image>
+        <image v-if="state==4" class="bg" :src="assetsPath+srcList.bg"></image>
+        <image class="bg" :src="assetsPath+srcList.bg"></image>
         <!-- <image class="bg opacity50" :src="srcList.bg"></image> -->
         <midea-lottie-view v-if="state!=5 && state!=4" class="lottie" :data="srcList.data" :loop="true"></midea-lottie-view>
         <div class="textPanel">
@@ -47,8 +47,8 @@
     </div>
     <!--离线状态-->
     <div class="wrapper" v-if="state==5">
-        <image class="bg" :src="srcList.bg"></image>
-        <image class="bg" :src="srcList.bg"></image>
+        <image class="bg" :src="assetsPath+srcList.bg"></image>
+        <image class="bg" :src="assetsPath+srcList.bg"></image>
         <text class="offLine">已离线</text>
 
     </div>
@@ -58,40 +58,37 @@
 
 <script>
 const animation = weex.requireModule('animation');
-import nativeService from '@/common/services/nativeService';
-import base from '@/midea-demo/base.js';
 
-import demo1 from '@/midea-demo/assets/E2_new/keepHeat.json';
-import demo2 from '@/midea-demo/assets/E2_new/heating.json';
-import demo3 from '@/midea-demo/assets/E2_new/highTemp.json';
-import demo5 from '@/midea-demo/assets/E2_new/btn-keepHeat.json';
+import demo1 from './assets/E2_new/keepHeat.json';
+import demo2 from './assets/E2_new/heating.json';
+import demo3 from './assets/E2_new/highTemp.json';
+import demo5 from './assets/E2_new/btn-keepHeat.json';
 
 var timer = undefined;
 const config = [{
-    src: '../assets/E2_new/keepHeatBg3x.png',
-    bg: '../assets/E2_new/keepHeatBg3x.png',
+    src: '/E2_new/keepHeatBg3x.png',
+    bg: '/E2_new/keepHeatBg3x.png',
     data: demo1,
     btnSrc: demo5,
 }, {
-    src: '../assets/E2_new/heatingBg3x.png',
-    bg: '../assets/E2_new/heatingBg3x.png',
+    src: '/E2_new/heatingBg3x.png',
+    bg: '/E2_new/heatingBg3x.png',
     data: demo2
 }, {
-    src: '../assets/E2_new/highTempBg3x.png',
-    bg: '../assets/E2_new/highTempBg3x.png',
+    src: '/E2_new/highTempBg3x.png',
+    bg: '/E2_new/highTempBg3x.png',
     data: demo3
 }, {
-    src: '../assets/E2_new/keepHeatBg3x.png',
-    bg: '../assets/E2_new/keepHeatBg3x.png',
+    src: '/E2_new/keepHeatBg3x.png',
+    bg: '/E2_new/keepHeatBg3x.png',
     data: demo1,
     btnSrc: demo5,
 }, {
-    bg: '../assets/E2_new/poweredOff3x.png',
+    bg: '/E2_new/poweredOff3x.png',
 }, {
-    bg: '../assets/E2_new/poweredOff3x.png',
+    bg: '/E2_new/poweredOff3x.png',
 }];
 export default {
-    mixins: [base],
     props: {
         //0:保温中  1:加热中 2:高温杀菌中3:待机中 4:关机 5:离线   待机和保温动效相同,待机没有状态按钮动画
         state: {
@@ -125,6 +122,10 @@ export default {
         availableTime: {
             type: String,
             default: '10min'
+        },
+        assetsPath:{
+            type:String,
+            default:'../assets'
         }
 
     },

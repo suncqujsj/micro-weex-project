@@ -55,7 +55,11 @@ import base from '../base'
 import nativeService from '@/common/services/nativeService'
 var startTime
 Vue.config.errorHandler = function (err, vm, info) {
-    nativeService.alert(err)
+    let msg = err
+    try {
+        msg = JSON.stringify(err)
+    } catch (error) { }
+    nativeService.alert("执行时错误信息：" + msg)
 }
 
 module.exports = {
@@ -85,23 +89,25 @@ module.exports = {
         }
     },
     methods: {
+        viewappear() {
+            console.log('viewappear:页面显示')
+            this.appendLog('viewappear:页面展现')
+        },
         viewdisappear() {
+            console.log('viewdisappear:页面消失')
             this.leftLog = "页面消失" + '\n'
             nativeService.toast(this.leftLog)
-        },
-        viewappear() {
-            this.appendLog('viewappear:页面展现')
         },
         appendLog(msg) {
             this.lifeCycleLog = this.lifeCycleLog + msg + '\n\r'
         }
     },
     beforeCreate() {
-        startTime = new Date()
         console.log('beforeCreate:在初始化内部变量，并且添加了事件功能后被触发')
+        startTime = new Date()
     },
     created() {
-        nativeService.asdf()
+        console.log('created:已经创建完成')
         nativeService.getItem("consumeTime", (event) => {
             if (event.data) {
                 let openTime = startTime.getTime() - event.data
@@ -111,12 +117,16 @@ module.exports = {
         this.appendLog('created:完成数据绑定之后，模板编译之前被触发')
     },
     beforeMount() {
+        console.log('beforeMount:模板挂载前')
         this.appendLog('beforeMount:模板挂载前触发')
     },
     mounted() {
+        console.log('mounted:页面加载完成')
         let comsumeTime = new Date().getTime() - startTime.getTime()
-        let openDesc
         this.appendLog('mounted:模板已经编译并且生成了 Virtual DOM 之后被触发。\n\r插件初始化耗时(毫秒)：' + comsumeTime)
+
+        //错误代码测试
+        nativeService.errortest()
     },
     beforeUpdate() {
         // 不可用于修改页面，否则死循环

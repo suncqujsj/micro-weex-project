@@ -466,10 +466,10 @@
 
                 this.recordStop(()=>{
                     this.setWarningDialog("视频已自动保存", this.back);
-                    clearInterval(context.ttt);
+                    clearInterval(this.ttt);
                 }, ()=>{
                     this.setWarningDialog("视频保存失败", this.back);
-                    clearInterval(context.ttt);
+                    clearInterval(this.ttt);
                 });
             },
 

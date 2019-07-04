@@ -122,7 +122,7 @@ let commonMixin = {
         setWarningDialog(content, callback=null, show=true){
             this.warningDialog.show = show;
             this.warningDialog.content = content;
-            this.warningDialog.callback = callback;
+            this.warningDialog.callback = callback || this.hideWarningDialog;
         },
 
         hideWarningDialog(){
@@ -366,16 +366,19 @@ let commonMixin = {
             );
         },
 
-        onAppToggle(showCallback, hideCallback){
+        onAppToggle(hideCallback, showCallback){
             // 应用由后台到前台
             globalEvent.addEventListener('WXApplicationDidBecomeActiveEvent', function(e) {
-                nativeService.alert('WXApplicationDidBecomeActiveEvent')
+                // nativeService.alert('WXApplicationDidBecomeActiveEvent')
+                typeof showCallback === 'function' && showCallback();
             });
 
 
             // 应用由前台到后台
             globalEvent.addEventListener('WXApplicationWillResignActiveEvent', function(e) {
-                nativeService.alert('WXApplicationWillResignActiveEvent');
+                // nativeService.alert('WXApplicationWillResignActiveEvent');
+                typeof hideCallback === 'function' && hideCallback();
+
             });
         },
     }

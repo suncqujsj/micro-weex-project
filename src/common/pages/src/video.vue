@@ -110,10 +110,10 @@
                 sn32: null,
                 user: null,
                 recording:false,
-                t:null,
+                t:null, // 录频倒计时任务
                 second:0,
                 frmplay:0,
-                tt:null,
+                tt:null, // 控制loading显示
                 loading:false,
                 ttt: null,
                 cooking:true,
@@ -149,7 +149,19 @@
             this.requestPhotoLibraryAuthorization();
 
             this.timingQuery();
-            this.onAppToggle();
+            this.onAppToggle(()=>{
+
+                if(!this.recording){
+                    return;
+                }
+
+                this.recordStop(()=>{
+                    this.setWarningDialog("视频已自动保存");
+                }, ()=>{
+                    this.setWarningDialog("视频保存失败");
+                });
+            }, ()=>{
+            });
         },
         methods: {
             foreground2backgroundCallback(){
@@ -282,7 +294,7 @@
                     }, 1000
                 );
             },
-            recordStop() {
+            recordStop(successCallback=null, failCallback=null) {
 
                 if(this.second< shortestVideoTime) {
                     nativeService.toast(`录屏最短时间为${shortestVideoTime}秒`);
@@ -297,12 +309,21 @@
                         params:{}
                     },
                     () => {
-                        nativeService.toast("视频保存成功");
+                        if(typeof successCallback === 'function') {
+                            successCallback();
+                        } else {
+                            nativeService.toast("视频保存成功");
+                        }
                         context.updateRecordState();
                         context.stopCounting();
                     },
                     () => {
-                        nativeService.toast("视频保存失败");
+                        if(typeof failCallback === 'function') {
+                            failCallback();
+                        } else {
+                            nativeService.toast("视频保存失败");
+                        }
+                        clearInterval(context.ttt);
                     }
                 );
             },
@@ -406,7 +427,7 @@
             timingQuery(){
                 const TIME = 1000;
                 let context = this;
-                this.ttt = setInterval(function(){
+                this.ttt = setInterval(function(){ // 工作状态查询定时任务
                     context.getDeviceStatus(context.handleScreenRecord);
                 }, TIME);
             },
@@ -427,9 +448,13 @@
                   return;
                 }
 
-                this.recordStop();
-                clearInterval(this.ttt);
-                this.setWarningDialog("视频已自动保存", this.back);
+                this.recordStop(()=>{
+                    this.setWarningDialog("视频已自动保存", this.back);
+                    clearInterval(context.ttt);
+                }, ()=>{
+                    this.setWarningDialog("视频保存失败", this.back);
+                    clearInterval(context.ttt);
+                });
             },
 
             knowClicked(){

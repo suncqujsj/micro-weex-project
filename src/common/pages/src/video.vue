@@ -426,8 +426,8 @@
                         }
 
                         this.frmplay = frmplay;
-                        // this.hideLoading();
-                        // this.loading = false;
+                        this.hideLoading();
+                        this.loading = false;
                     }
                 }
             },

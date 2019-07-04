@@ -11,7 +11,7 @@
 
         </div>
 
-        <sf-state v-if="state" :display="state.display" :text="state.text" :type="state.type"></sf-state>
+        <sf-state v-if="state" :back="back" :display="state.display" :text="state.text" :type="state.type"></sf-state>
 
         <!--<scroller class="scroller">-->
             <!--<midea-button :btnStyle="{'margin-top': '15px','margin-bottom': '15px'}" text="开始" @mideaButtonClicked="start"/>-->
@@ -166,7 +166,6 @@
         },
         methods: {
             foreground2backgroundCallback(){
-
             },
 
             background2foreground(){},
@@ -427,8 +426,8 @@
                         }
 
                         this.frmplay = frmplay;
-                        this.hideLoading();
-                        this.loading = false;
+                        // this.hideLoading();
+                        // this.loading = false;
                     }
                 }
             },

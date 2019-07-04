@@ -11,10 +11,13 @@
                 <text v-if="text" class="text">{{text}}</text>
             </div>
         </div>
+        <midea-header class="fixed-top" titleText="white" title="哈哈哈" bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png"  @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png"></midea-header>
     </div>
 </template>
 
 <script>
+    import MideaHeader from '@/midea-component/header.vue'
+
     const animation = weex.requireModule('animation');
     import commonMixin from "@/common/util/mixins/common";
     import nativeService from "@/common/services/nativeService";
@@ -22,6 +25,7 @@
 
     export default {
         mixin:{commonMixin},
+        components:{MideaHeader},
         props: {
             display: {
                 type: Boolean,
@@ -39,6 +43,10 @@
                 type: Boolean,
                 default: true
             },
+            back: {
+                type: Function,
+                default: ()=>{}
+            }
             // bgColor: {
             //     type: String,
             //     default: 'transparent'
@@ -184,5 +192,9 @@
         .ma-t(9*2px);
         .f-32;
         .lh(22*2px);
+    }
+
+    .fixed-top{
+        .fixed_top;
     }
 </style>

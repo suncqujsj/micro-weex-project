@@ -117,7 +117,8 @@
                 loading:false,
                 ttt: null,
                 cooking:true,
-                ground:'foreground'
+                ground:'foreground',
+                saving: false // 录屏保存中状态
             };
         },
         props:{
@@ -256,14 +257,23 @@
             },
             updateRecordState(){
                 this.recording = !this.recording;
+                this.saving = !this.saving;
             },
             record(){
+
                 let action_result = this.recording ? 0 : 1;
                 this.statisticsUpload({subAction:'shoot_video_icon_click', action_result});
                 if(!this.recording) {
                     this.recordStart();
                     return;
                 }
+
+                if(this.saving){
+                    nativeService.toast('视频正在保存中');
+                    return;
+                }
+
+                this.saving = true;
 
                 this.recordStop();
             },
@@ -302,6 +312,12 @@
                 }
 
                 let context = this;
+
+                let commonCallback = function(){
+                    context.updateRecordState();
+                    context.stopCounting();
+                };
+
                 ppvideoModule.ppvideoInterface(
                     this.$refs.ppvideo,
                     {
@@ -314,8 +330,7 @@
                         } else {
                             nativeService.toast("视频保存成功");
                         }
-                        context.updateRecordState();
-                        context.stopCounting();
+                        commonCallback();
                     },
                     () => {
                         if(typeof failCallback === 'function') {
@@ -323,7 +338,7 @@
                         } else {
                             nativeService.toast("视频保存失败");
                         }
-                        clearInterval(context.ttt);
+                        commonCallback();
                     }
                 );
             },

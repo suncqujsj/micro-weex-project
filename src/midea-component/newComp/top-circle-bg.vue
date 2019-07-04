@@ -1,7 +1,7 @@
 <template>
     <div class="wrap">
         <midea-lottie-view  class="lottie" :data="srcList.data" :loop="true"></midea-lottie-view>
-        <image v-if="srcList.hasWave" class="circle-img" src='../assets/E2_new/watercleaner_img_ing.png' ref="circle" />
+        <image v-if="srcList.hasWave" class="circle-img" :src='waveSrc' ref="circle" />
     </div>
 </template>
 <style>
@@ -25,9 +25,9 @@
 }
 </style>
 <script>
-import waterInit from '@/midea-demo/assets/E2_new/water-init.json';
-import waterNormal from '@/midea-demo/assets/E2_new/water-normal.json';
-import waterOffline from '@/midea-demo/assets/E2_new/water-offline.json';
+import waterInit from './assets/E2_new/water-init.json';
+import waterNormal from './assets/E2_new/water-normal.json';
+import waterOffline from './assets/E2_new/water-offline.json';
 const animation = weex.requireModule('animation')
 var timer
 export default {
@@ -35,11 +35,15 @@ export default {
         state:{
             type:Number,
             default:0
+        },
+        assetsPath:{
+            type:String,
+            default:'../assets'
         }
     },
     data(){
         return {
-
+            waveSrc:this.assetsPath+'/E2_new/watercleaner_img_ing.png'
         }
     },
     computed:{

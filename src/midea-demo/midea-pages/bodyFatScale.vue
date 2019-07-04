@@ -5,6 +5,7 @@
       title-text="#ffffff"
       title="体脂秤"
       @leftImgClick="back"
+      :isImmersion="isImmersion"
       :showRightImg="true"
       leftImg="./img/header/ic_back@3x.png"
       rightImg="../assets/img/smart_ic_reline@3x.png"
@@ -139,7 +140,7 @@ export default {
         || weex.config.env.deviceModel === 'iPhone11,2' //iPhone XS
         || weex.config.env.deviceModel === 'iPhone11,4' || weex.config.env.deviceModel === 'iPhone11,6' //iPhone XS Max
         );
-    },
+    }
   },
 
   methods: {

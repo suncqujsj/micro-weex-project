@@ -205,7 +205,8 @@ module.exports = {
             { title: '拼装示例3',link:'examplePage3'},
             { title: '头部动画',link:'headerAnimation'},
             { title: '净水器柱状图',link:'waterBarchart'},
-            { title: '体脂秤',link:'bodyFatScale'}
+            { title: '体脂秤',link:'bodyFatScale'},
+            { title: '暖风机', link: 'warmer'}
         ],
         weexList: [
             { title: 'BroadcastChannel示例', link: "broadcastChannelA" },

@@ -169,7 +169,8 @@ let modes = [
                     set: true,
                     default: 170,
                     range: [100, 230, 5],
-                    hide: true
+                    preheatingCanSet: true,
+                    // hide: true
                 },
                 preheat: {
                     set: true,
@@ -200,7 +201,8 @@ let modes = [
                     set: true,
                     default: 190,
                     range: [190, 230, 5],
-                    hide: true
+                    preheatingCanSet: true,
+                    // hide: true
                 },
                 preheat: {
                     set: true,

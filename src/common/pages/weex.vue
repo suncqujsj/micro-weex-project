@@ -95,7 +95,7 @@
                              </div>
                          </sf-accordion>
                     </div>
-                    <div v-if="item.type==='picker' && (currentItem && currentItem[item.key] && (!currentItem[item.key].hide && isWorkingPage || !isWorkingPage))">
+                    <div v-if="item.type==='picker' && (currentItem && currentItem[item.key] && (!currentItem[item.key].hide && isWorkingPage || !isWorkingPage) && (isB1_PS2032W() && currentItem[item.key].preheatingCanSet || !isB1_PS2032W()) )">
                         <sf-accordion :type="item.type" v-if="currentItem && currentItem[item.key] && currentItem[item.key].set && ((!cmdObj.isProbe.value && item.key!='probeTemperature' && item.key!='isProbeSettingTemperature') || (currentItem.probe && cmdObj.isProbe.value && !currentItem[item.key].isProbeThenThisHide)) " :value="setValue(item.key)" :unit="currentItem[item.key].unit||item.unit[constant.device.lang]||item.unit" :index="index" :title="currentItem[item.key].title || language[item.key]" :isFolded="item.isFolded"  @callback="updateAccordionFoldingStatus">
                             <div slot="content">
                                 <wx-picker :pickerIndex="index" :data="range(item.key)" :target="item.key" :visible="true" @wxChange="handlePickerChange"></wx-picker>
@@ -326,12 +326,16 @@
     // import autoMenu from "./config/auto-menu.js";
 
     import accordionMixin from "@/common/util/mixins/accordions"
-    import deviceMessageMixin from "@/common/util/mixins/deviceMessage"
+    // import deviceMessageMixin from "@/common/util/mixins/deviceMessage"
+   // 改为lua下行指令
+    import deviceMessageMixin from "@/common/util/command/lua/send"
     import detailModalMixin from "@/common/util/mixins/detailModal"
     import commonMixin from "@/common/util/mixins/common"
     import copyMixin from "@/common/util/mixins/copy"
     import modalMixin from "@/common/util/mixins/modal"
-    import weexData from "@/common/util/mixins/weexData"
+    // import weexData from "@/common/util/mixins/weexData"
+    // 改为lua解析指令
+    import weexData from "@/common/util/mixins/lua/weexData"
     const globalEvent = weex.requireModule("globalEvent");
 
 

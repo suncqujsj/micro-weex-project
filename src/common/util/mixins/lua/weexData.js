@@ -4,7 +4,7 @@
  * 用于解析待机页面
  */
 // var numberRecord = 0; //记录跳页面的次数
-import cmdFun from "../command/util.js"; //解析指令
+import cmdFun from "../../command/lua/util.js"; //解析指令
 const objectAssign = require('object-assign');
 
 import nativeService  from '@/common/services/nativeService';
@@ -109,7 +109,7 @@ let workingModalMixin  = {
             /**
              * 待机页面10s轮询
              */
-            if(analysisObj.workingState.value == 2 || analysisObj.workingState.value == 1 ){
+            if(analysisObj.work_status === 'save_power' || analysisObj.work_status === 'standby'){
                 this.queryRunTimer(10);//10秒轮询 
                 if(this.isProbeInserted(analysisObj) && !this.currentItem.probe && t) {//探针特殊处理
                     this.show = false;
@@ -126,15 +126,15 @@ let workingModalMixin  = {
             /**
              * fun 二代特殊处理
              */
-            if(analysisObj.workingState.value == 4 && this.getAllSeconds(analysisObj) > 0 && this.isFun2Oven(analysisObj)) {
-                analysisObj.workingState.value = 3
+            if(analysisObj.work_status === 'work_finish' && this.getAllSeconds(analysisObj) > 0 && this.isFun2Oven(analysisObj)) {
+                analysisObj.work_status = 'work';
             }
 
             /**
              * 微波炉X7 预热完成特殊处理
              */
-            if(analysisObj.workingState.value == 2 && this.isX7Micro() &&  analysisObj.displaySign.preheatTemperature == 1) {
-                analysisObj.workingState.value = 3
+            if(this.isX7Micro() &&  analysisObj.tips_code == 9) {
+                analysisObj.work_status = 'work';
             }
 
             
@@ -144,7 +144,7 @@ let workingModalMixin  = {
             if (this.currentIsWorkingPage(analysisObj)) {
                 this.isWorkingPage = true;
                 this.analysisWorkingFun(analysisObj,tabs); //跳转到工作页面数据处理
-                if(this.getAllSeconds(analysisObj)<=60 && analysisObj.workingState.value == 3){
+                if(this.getAllSeconds(analysisObj)<=60 && analysisObj.work_status === 'work'){
                     this.queryRunTimer(1);//工作状态小于等于1分钟 1秒轮询 
                 }else{
                     this.queryRunTimer(10);//10秒轮询 
@@ -169,7 +169,7 @@ let workingModalMixin  = {
 
 
              // 关闭弹窗在错误场景的隐藏
-             if(cmdObj.workingState.value < 4 && cmdObj.workingState.value !== 3 && this.showBar  ) {
+             if(cmdObj.work_status === 'save_power' || cmdObj.work_status === 'standby' && this.showBar  ) {
                  this.showBar = false;
              }
 
@@ -182,25 +182,25 @@ let workingModalMixin  = {
          */
         getWarningDialog(cmdObj){
             let isLackWater = false , isWaterBox = false, isDoorSwitch = false, isError = false;
-            if(cmdObj.workingState.value == 2 || cmdObj.workingState.value == 1 ){
+            if(cmdObj.work_status === 'save_power' || cmdObj.work_status === 'standby'){
                 this.setWarningDialog("",null,false);
             }
-            if(cmdObj.workingState.value == 3 || cmdObj.workingState.value == 4 ||  cmdObj.workingState.value === 5 || this.periodPauseCondition(cmdObj)){
-                if(cmdObj.displaySign.lackWater && cmdObj.mode.value!=0xC4){
+            if(cmdObj.work_status === 'work' || cmdObj.work_status === 'work_finish' || this.periodPauseCondition(cmdObj)){
+                if(cmdObj.tips_code === 2 && cmdObj.work_mode!='dry'){
                     isLackWater = true;
                     this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
                 }
-                if(cmdObj.displaySign.waterBox && cmdObj.mode.value!=0xC4){
+                if(cmdObj.tips_code === 6 && cmdObj.work_mode!='dry'){
                     isWaterBox = true;
                     this.setWarningDialog("主人，您的设备缺水盒了");
 
                 }
-                if(cmdObj.displaySign.doorSwitch){
+                if(cmdObj.tips_code === 1){
                     isDoorSwitch = true;
                     this.setWarningDialog("主人，您的设备炉门开了");
                 }
             }
-            if(cmdObj.displaySign.isError){
+            if(cmdObj.error_code){
                 isError = true;
                 this.setWarningDialog("主人，您的设备发生故障了，请联系售后人员");
             }
@@ -208,13 +208,14 @@ let workingModalMixin  = {
                 this.setWarningDialog("",null,false);
             }
 
-            if(cmdObj.displaySign.lock){
+            if(cmdObj.lock=='on'){
                 !this.modalVisibility && this.showModal();
             }
 
-            if(cmdObj.highClearLock.value==1){
-                this.setWarningDialog("高温自清洁锁检查失效");
-            }
+            //lua没有
+            // if(cmdObj.highClearLock.value==1){
+            //     this.setWarningDialog("高温自清洁锁检查失效");
+            // }
         },
 
 
@@ -222,7 +223,7 @@ let workingModalMixin  = {
          * 获取当前上报的总时间秒
          */
         getAllSeconds(cmdObj){
-            var _hour = cmdObj.timeRemaining.hour, _minute = cmdObj.timeRemaining.minute, _second = cmdObj.timeRemaining.second;
+            var _hour = cmdObj.work_hour, _minute = cmdObj.work_minute, _second = cmdObj.work_second;
             var allSeconds = _hour*60*60+_minute*60+_second;
             return allSeconds;
         },
@@ -231,8 +232,8 @@ let workingModalMixin  = {
          * 段间等待判断条件
          */
         periodPauseCondition(cmdObj){
-            let workingState = cmdObj.workingState.value;
-            return workingState === 6 || workingState === 7;
+            let workingState = cmdObj.work_status;
+            return workingState === 'pause' || workingState === 'pause_c';
         },
 
         /**
@@ -405,13 +406,13 @@ let workingModalMixin  = {
          */
         getWorkingStatusHandle(cmdObj,chartJson){
             // nativeService.toast(cmdObj);
-            if(cmdObj.workingState.value === 3){
+            if(cmdObj.work_status === 'work'){
                 this.timeShow = true;
                 this.hasSetting = true;
                 this.btnText = this.getLanguage("pause");
                 this.btnSrc = "img/footer/icon_pause@2x.png";
                 this.hasStopOrContinueBtn = true;
-                if(cmdObj.light.value){
+                if(cmdObj.furnace_light==='on'){
                     this.lightImg = "img/light_on@3x.png";
                 }else{
                     this.lightImg = "img/light_off@3x.png";
@@ -457,25 +458,25 @@ let workingModalMixin  = {
         /**
          * 预约状态
          */
-        getOrderStatusHandle(cmdObj){
-            if(cmdObj.workingState.value == 5){
-                this.timeShow = false;
-                this.hasSetting = false;
-                this.workSpecialStatusText = "预约中";
-                this.btnText = "";
-                this.btnSrc = "img/footer/icon_start@2x.png";
-                this.isTimerStop = true;
-                this.statusTag = '';
-                this.tag_next = '';
-                this.hasStopOrContinueBtn = false;
-            }
-        },
+        // getOrderStatusHandle(cmdObj){
+        //     if(cmdObj.workingState.value == 5){
+        //         this.timeShow = false;
+        //         this.hasSetting = false;
+        //         this.workSpecialStatusText = "预约中";
+        //         this.btnText = "";
+        //         this.btnSrc = "img/footer/icon_start@2x.png";
+        //         this.isTimerStop = true;
+        //         this.statusTag = '';
+        //         this.tag_next = '';
+        //         this.hasStopOrContinueBtn = false;
+        //     }
+        // },
 
         /**
          * 烹饪完成状态
          */
         getCookingFinishStatus(cmdObj){
-            if(cmdObj.workingState.value === 4){
+            if(cmdObj.work_status === 'work_finish'){
                 this.timeShow = false;
                 this.hasHour = false;
                 this.workSpecialStatusText = this.getLanguages(['cookFinished']);
@@ -505,7 +506,7 @@ let workingModalMixin  = {
          * 不是烹饪完成 ，并且处于预热中状态
          */
         getPreheatStatusHandle(cmdObj,chartJson,_item){
-            if(cmdObj.workingState.value != 4 && cmdObj.displaySign.preheat == 1){
+            if(cmdObj.work_status != 'work_finish' && cmdObj.tips_code == 8){
                 this.preheatingRecord = true;
                 this.timeShow = false;
                 this.hasHour = false;
@@ -533,7 +534,7 @@ let workingModalMixin  = {
          * 不是烹饪完成 ，并且处于预热温度到达,预热完成
          */
         getPreheatFinishStatusHandle(cmdObj){
-            if(cmdObj.workingState.value != 4 &&  cmdObj.displaySign.preheatTemperature == 1){
+            if(cmdObj.tips_code === 9){
                 this.timeShow = false;
                 this.hasHour = false;
                 this.workSpecialStatusText = this.getLanguages(['preheating', 'finish']);
@@ -577,7 +578,7 @@ let workingModalMixin  = {
          * 时间倒计时
          */
         getTimeGoingHandle(cmdObj){    
-            var _hour = cmdObj.timeRemaining.hour, _minute = cmdObj.timeRemaining.minute, _second = cmdObj.timeRemaining.second;
+            var _hour = cmdObj.work_hour, _minute = cmdObj.work_minute, _second = cmdObj.work_second;
             if(this.timeShow&&this.getAllSeconds(cmdObj)>0){
                 if(this.getAllSeconds(cmdObj)>=60*60){ //大于1小时，有‘时’显示
                     if(_hour>9){
@@ -660,16 +661,16 @@ let workingModalMixin  = {
             /**
              * 预约状态
              */
-            this.getOrderStatusHandle(analysisObj);
+            // this.getOrderStatusHandle(analysisObj);
             
             /**
              * 获取配置文件mode.js或者auto-menu.js的对象
              */
             var _isRecipe = false;
-            if(this.cmdObj.mode.value == 0xE0){
+            if(this.cmdObj.work_mode === 'auto_menu'){
                 _isRecipe = true;
             }
-            var _item = cmdFun.getCurrentModeItem(tabs,analysisObj.recipeId.value,analysisObj.mode.value,_isRecipe);
+            var _item = cmdFun.getCurrentModeItem(tabs,analysisObj.cloudmenuid,analysisObj.work_mode,_isRecipe);
             // nativeService.alert(_item);
             this.settingHide(_item);
             if(_item.circleProgressPointHide){
@@ -702,7 +703,7 @@ let workingModalMixin  = {
             /**
              * 是否有暂停，继续按钮
              */
-            if(_item.stopBtnHide && (!this.constant.device.showPreheatContinueBtn || !analysisObj.displaySign.preheatTemperature)){
+            if(_item.stopBtnHide && (!this.constant.device.showPreheatContinueBtn || !analysisObj.tips_code)){
                 this.hasStopOrContinueBtn = false;
             }
 
@@ -724,7 +725,7 @@ let workingModalMixin  = {
             }
         },
         cancle(){
-            let subAction  = this.cmdObj.workingState.value === 4 ? 'finish_mode_click' : 'close_mode_click';
+            let subAction  = this.cmdObj.work_status === 'work_finish' ? 'finish_mode_click' : 'close_mode_click';
             this.statisticsUpload({subAction});
             var self = this;
             if(this.finishStatus){

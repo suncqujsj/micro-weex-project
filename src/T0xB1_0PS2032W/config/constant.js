@@ -13,7 +13,7 @@ module.exports = {
             sn8: '0PS2032W'
         },
         hasLight: true , //是否有炉灯
-        preheatingCanSetting: false,  //预热中可以设置时间温度等 ，默认不可设置
+        preheatingCanSetting: true,  //预热中可以设置时间温度等 ，默认不可设置
         hideChildLock:{
             standby: true,
             working:true

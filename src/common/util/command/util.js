@@ -3,10 +3,7 @@
 import message from "@/common/util/smartMessage";
 import sensoryMenus from '@/common/mapping/sensoryMenus'
 import nativeService from '@/common/services/nativeService';
-// import {device} from "../config/constant";
-// import modes from "../config/modes.js";
-// import autoMenu from "../config/auto-menu.js";
-var latesFrameRecord = 0;
+import modeConfig from '@/common/mapping/modeConfig'
 export default {
     //10进制转换8位2进制的方法
     doorStatus: 0,
@@ -465,79 +462,107 @@ export default {
         // nativeService.alert(this.cmdToEasy(sendMessage));
         return sendMessage;
     },
-    analysisCmd: function (requestCmd, tabs) {
-        // var receiveFrame = parseInt(requestCmd[3]);
 
-        // if(latesFrameRecord > receiveFrame){
-        //   // latesFrameRecord = newFrame;
-        //   return;
-        // }
-        // latesFrameRecord = receiveFrame;
+    tranformToStausValue(requestCmd){
+        let val = 1;        
+        switch ( requestCmd.work_status ) {
+            case 'save_power':
+                val = 1;
+                break;
+            case 'standby':
+                val = 2;
+                break;
+            case 'work':
+                val = 3;
+                break;
+            case 'pause':
+                val = 6;
+                break;
+            case 'pause_c':
+                val = 7;
+                break;
+            case 'work_finish':
+                val = 4;
+                break;
+            default:
+                val = 1;
+                break;
+        }  
+        return val;                         
+    },
+    modeTovalue(requestCmd){
+        let mode = requestCmd.work_mode || 'double_tube';
+        let modeValue = modeConfig[mode].value;
+        // nativeService.alert(modeValue);
+        return modeValue;
+    },
+
+    analysisCmd: function (requestCmd, tabs) {
         var obj = this.initAnalysisObj();
-        obj.cmdLength = parseInt(requestCmd[1]); // 指令长度
-        obj.workingState.value = parseInt(requestCmd[11]);
-        if (parseInt(requestCmd[11]) == 3 || parseInt(requestCmd[11]) == 6) {
+        obj.workingState.value = this.tranformToStausValue(requestCmd);
+        if (obj.workingState.value === 3 || obj.workingState.value === 6) {
             this.isWorking = true;
         } else {
             this.isWorking = false;
         }
-        var recipeId = parseInt(requestCmd[12]) * 256 * 256 + parseInt(requestCmd[13]) * 256 + parseInt(requestCmd[14]);
+        var recipeId = requestCmd.cloudmenuid || 0;
         obj.recipeId.value = recipeId;
-        obj.timeRemaining.hour = parseInt(requestCmd[16]);
-        obj.timeRemaining.minute = parseInt(requestCmd[17]);
-        obj.timeRemaining.second = parseInt(requestCmd[18]);
-        obj.mode.value = parseInt(requestCmd[19]);
+        obj.timeRemaining.hour = requestCmd.work_hour || 0;
+        obj.timeRemaining.minute = requestCmd.work_minute || 0 ;
+        obj.timeRemaining.second = requestCmd.work_second || 0;
+        obj.mode.value = this.modeTovalue(requestCmd);
 
-        obj.mode.text = this.modeValueToModeText(recipeId, parseInt(requestCmd[19]), tabs);
+        obj.mode.text = this.modeValueToModeText(recipeId,obj.mode.value, tabs);
 
         //实际温度
-        obj.realTemperature.upHighTemperature = parseInt(requestCmd[20]);
-        obj.realTemperature.upLowTemperature = parseInt(requestCmd[21]);
-        obj.realTemperature.downHighTemperature = parseInt(requestCmd[22]);
-        obj.realTemperature.downLowTemperature = parseInt(requestCmd[23]);
+        obj.realTemperature.upHighTemperature = requestCmd.cur_temperature_above || 0;
+        obj.realTemperature.upLowTemperature = requestCmd.cur_temperature_above || 0;
+        obj.realTemperature.downHighTemperature = requestCmd.cur_temperature_underside || 0;
+        obj.realTemperature.downLowTemperature =requestCmd.cur_temperature_underside || 0;
 
-        obj.displaySign.lock = message.getBit(requestCmd, 26, 0);
-        obj.displaySign.doorSwitch = message.getBit(requestCmd, 26, 1);
-        this.doorStatus = message.getBit(requestCmd, 26, 1);
-        obj.displaySign.waterBox = message.getBit(requestCmd, 26, 2);
-        obj.displaySign.lackWater = message.getBit(requestCmd, 26, 3);
-        obj.displaySign.changeWater = message.getBit(requestCmd, 26, 4);
-        obj.displaySign.preheat = message.getBit(requestCmd, 26, 5);
-        obj.displaySign.preheatTemperature = message.getBit(requestCmd, 26, 6);
-        obj.displaySign.isError = message.getBit(requestCmd, 26, 7);
+        /*提醒代码tips_code 数字
+        1		门没有关紧，提醒用户防止蒸汽烫伤	只读	
+        2		缺水	只读	
+        4		食物翻面	只读	
+        5		搅拌	只读	
+        6		缺水箱	只读	
+        7		需要换水	只读	
+        8		预热中	只读	
+        */
+    
+        obj.displaySign.lock = requestCmd.lock === 'on'?1:0;
+        obj.displaySign.doorSwitch = requestCmd.door_open === 'on'?1:0;;
+        this.doorStatus =  requestCmd.door_open === 'on'?1:0;
+        obj.displaySign.waterBox = requestCmd.tips_code === 6?1:0;
+        obj.displaySign.lackWater = requestCmd.tips_code === 2?1:0;
+        obj.displaySign.changeWater = requestCmd.tips_code === 7?1:0;
+        obj.displaySign.preheat = requestCmd.tips_code === 8?1:0;
+        obj.displaySign.preheatTemperature = requestCmd.tips_code === 9?1:0;
+        obj.displaySign.isError = requestCmd.error_code?1:0;
 
-        obj.light.value = message.getBit(requestCmd, 27, 2);
-        obj.isProbe.value = message.getBit(requestCmd, 27, 6);
-        obj.highClearLock.value = message.getBit(requestCmd, 27, 3);
-        obj.menuFeel.value = message.getBit(requestCmd, 27, 1);
+        obj.light.value = requestCmd.furnace_light === 'on'?1:0;
+        obj.isProbe.value = requestCmd.furnace_light === 'on'?1:0; //探针暂时没有返回
+        obj.highClearLock.value = requestCmd.furnace_light === 'on'?1:0; //高温自清洁锁暂时没有返回
+        obj.menuFeel.value = requestCmd.furnace_light === 'on'?1:0; //菜单感应中暂时没有返回
         //设置温度
 
-        obj.temperature.upHighTemperature = parseInt(requestCmd[28]);
-        obj.temperature.upLowTemperature = parseInt(requestCmd[28]) > 0 ? (256 + parseInt(requestCmd[29])) : parseInt(requestCmd[29]);
-        obj.temperature.downHighTemperature = parseInt(requestCmd[30]);
-        obj.temperature.downLowTemperature = parseInt(requestCmd[30]) > 0 ? (256 + parseInt(requestCmd[31])) : parseInt(requestCmd[31]);
+        obj.temperature.upHighTemperature = 0;
+        obj.temperature.upLowTemperature = requestCmd.temperature;
+        obj.temperature.downHighTemperature = 0;
+        obj.temperature.downLowTemperature = 0;
 
         //探针温度
-        obj.probeRealTemperature.value = parseInt(requestCmd[32]);
-        obj.probeSetttingTemperature.value = parseInt(requestCmd[33]);
-        // if(obj.isProbe.value){ //如果是探针，则为显示为探针设定温度
-        //   obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
-        // }
-        obj.temperature.unit = message.getBit(requestCmd, 34, 4);
-        // nativeService.alert(obj.temperature.unit);
+        obj.probeRealTemperature.value = requestCmd.furnace_light === 'on'?1:0; //探针实际温度暂时没有返回
+        obj.probeSetttingTemperature.value = requestCmd.furnace_light === 'on'?1:0; //探针设置温度暂时没有返回
+        obj.temperature.unit = requestCmd.furnace_light === 'on'?1:0; //温度单位暂时没有返回
 
-        if (parseInt(requestCmd[19]) == 0xC4) {//如果是烘干，则不显示温度
-            obj.temperature.upLowTemperature = 0;
-        }
+        obj.timeSetting.hour = 0; //设定的总时间暂时没有返回
+        obj.timeSetting.minute = 0; //设定的总时间暂时没有返回
+        obj.timeSetting.second = 0; //设定的总时间暂时没有返回
 
-        obj.timeSetting.hour = parseInt(requestCmd[38]);
-        obj.timeSetting.minute = parseInt(requestCmd[39]);
-        obj.timeSetting.second = parseInt(requestCmd[40]);
-
-        // obj.fire.value = parseInt(requestCmd[24])*10;  //parker
-        obj.fire.value = parseInt(requestCmd[24]);  //parker: 火力不用*10了，统一用新协议0-10
-        obj.weight.value = parseInt(requestCmd[25]) * 10;
-        obj.steam.value = parseInt(requestCmd[25]);
+        obj.fire.value =  0;  //parker: 火力不用*10了，统一用新协议0-10
+        obj.weight.value = 0;
+        obj.steam.value =  0;
         // nativeService.toast(requestCmd);
         return obj;
     },

@@ -3,7 +3,7 @@
  * 2019/1/29
  */
 
-let modeTextKey = {
+let mode = {
     'double_tube':{ value: 0x4c, text:'上下烧烤'},
     'hot_wind_bake':{ value: 0x41, text:'热风对流'},
     'double_tube_fan':{ value: 0x52, text:'上下烧烤+风扇'},

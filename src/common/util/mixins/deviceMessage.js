@@ -134,8 +134,9 @@ const deviceMessageMixin = {
         .then(resp => {
           nativeService.hideLoading();
           let resultObj = resp.result;
-          //   nativeService.alert(resultObj);
-          let analysisObj = cmdFun.analysisCmd(resultObj, self.tabs);
+          // nativeService.alert(resultObj);
+          let getObj = self.tranformToInt(resultObj);
+          let analysisObj = cmdFun.analysisCmd(getObj, self.tabs);
           self.analysisFun(analysisObj, self.tabs);
 
           if (typeof cb === "function") {
@@ -251,7 +252,7 @@ const deviceMessageMixin = {
         work_mode: modeSec
       };
       if (jsonCmd.time) {
-        let time = jsonCmd.time;
+        let time = parseInt(jsonCmd.time);
         let hour = Math.floor(time / 60);
         let minute = time % 60;
         sendParmas.work_hour = hour;
@@ -259,7 +260,7 @@ const deviceMessageMixin = {
         sendParmas.work_second = 0;
       }
       if (jsonCmd.temperature) {
-        let temperature = jsonCmd.temperature;
+        let temperature = parseInt(jsonCmd.temperature);
         sendParmas.temperature = temperature;
       }
 
@@ -275,7 +276,7 @@ const deviceMessageMixin = {
         delete sendParmas.work_mode;
       }
 
-      // nativeService.alert(sendParmas);
+      nativeService.alert(sendParmas);
       let params = {
         operation: "luaControl",
 
@@ -448,7 +449,7 @@ const deviceMessageMixin = {
         //     return;
         // }
         let getObj = context.tranformToInt(obj);
-
+        // nativeService.alert(getObj);
         var analysisObj = cmdFun.analysisCmd(getObj, context.tabs);
         context.analysisFun(analysisObj, context.tabs);
       });

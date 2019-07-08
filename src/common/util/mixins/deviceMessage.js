@@ -252,21 +252,29 @@ const deviceMessageMixin = {
         work_mode: modeSec
       };
       if (jsonCmd.time) {
-        let time = parseInt(jsonCmd.time);
-        let hour = Math.floor(time / 60);
-        let minute = time % 60;
+        var time = parseInt(jsonCmd.time);
+        var hour = Math.floor(time / 60);
+        var minute = time % 60;
         sendParmas.work_hour = hour;
         sendParmas.work_minute = minute;
         sendParmas.work_second = 0;
       }
       if (jsonCmd.temperature) {
-        let temperature = parseInt(jsonCmd.temperature);
+        var temperature = parseInt(jsonCmd.temperature);
         sendParmas.temperature = temperature;
       }
-
       if (callbackData.working) {
         //工作类设置类
-        delete sendParmas.work_mode;
+        sendParmas = {};
+      
+        if (jsonCmd.time) {
+          sendParmas.hour_set = hour;
+          sendParmas.minute_set = minute;
+          // sendParmas.second_set = hour;
+        }
+        if (jsonCmd.temperature) {
+          sendParmas.temp_set = temperature;
+        }
       }
       if (jsonCmd.probe && callbackData.isProbe) {
         //假如当前插上探针，并且 该模式支持探针，则，do 探针开始类
@@ -276,7 +284,7 @@ const deviceMessageMixin = {
         delete sendParmas.work_mode;
       }
 
-      nativeService.alert(sendParmas);
+      // nativeService.alert(sendParmas);
       let params = {
         operation: "luaControl",
 

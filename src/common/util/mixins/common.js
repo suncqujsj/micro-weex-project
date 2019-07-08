@@ -217,7 +217,22 @@ let commonMixin = {
             let prefix = 'MSO';
             let {constant} = this;
             let type = constant.device.type.toString(16).toUpperCase();
+            type = this.getMappingType(type);
             return `${prefix}_${type}_${constant.device.extra1.sn8}`;
+        },
+
+        /**
+         * sf
+         * 针对已上市的设备类型的映射关系
+         */
+        getMappingType(type){
+            const changeTypes = ['B4', '9B', 'BF'];
+            if(changeTypes.indexOf(type) > -1) {
+                return 'B1'
+            }
+
+            // B0 B1 B2 不需要映射
+            return type;
         },
 
         /**

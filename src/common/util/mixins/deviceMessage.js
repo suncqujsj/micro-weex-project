@@ -217,7 +217,7 @@ const deviceMessageMixin = {
     },
     controlDevice(jsonCmd, callbackData) {
       let context = this;
-
+      
       // 蒸汽烤箱0TQN36QL判断探针温度与设定的常规温度
       if (this.device.extra1.sn8 == "0TQN36QL") {
         if (jsonCmd.isProbeSettingTemperature < jsonCmd.probeTemperature) {
@@ -276,12 +276,12 @@ const deviceMessageMixin = {
       }
 
       // nativeService.alert(sendParmas);
-      nativeService.showLoading();
       let params = {
         operation: "luaControl",
 
         params: sendParmas
       };
+      nativeService.showLoading();
       nativeService
         .sendLuaRequest(params)
         .then(resp => {

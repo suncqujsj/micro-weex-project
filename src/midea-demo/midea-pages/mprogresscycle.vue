@@ -1,10 +1,10 @@
 <template>
     <div class="wrapper">
         <midea-header title="progresscycle" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
-        <scroller class="scroller">
+        <div class="content">
             <midea-progresscycle-view  class="progresscycle" :data="chartData" @progresscycleTap="progresscycleTap">
         	</midea-progresscycle-view>
-        </scroller>
+        </div>
     </div>
 </template>
 <style scoped>
@@ -12,17 +12,15 @@
 	width:750px;
 	height:750px;
 }
-.scroller {
-	margin-top: 0px;
-	margin-left:0px;
-    justify-content: center;
-    align-items: center;
+.content {
+    width: 600px;
+    height: 600px;
+    background-color: #267aff;
 }
 .progresscycle {
     width: 490px;
     height: 490px;
-    justify-content: center;
-    align-items: center;
+    background-color: #07c160;
 }
 </style>
 <script>  

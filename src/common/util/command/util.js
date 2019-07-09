@@ -560,9 +560,9 @@ export default {
         obj.timeSetting.minute = 0; //设定的总时间暂时没有返回
         obj.timeSetting.second = 0; //设定的总时间暂时没有返回
 
-        obj.fire.value =  0;  //parker: 火力不用*10了，统一用新协议0-10
-        obj.weight.value = 0;
-        obj.steam.value =  0;
+        obj.fire.value =  0;  //parker: 火力不用*10了，统一用新协议0-10  ，lua 没有返回
+        obj.weight.value = 0; //lua 没有返回
+        obj.steam.value =  0; //lua 没有返回
         // nativeService.toast(requestCmd);
         return obj;
     },

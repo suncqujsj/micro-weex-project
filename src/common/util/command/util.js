@@ -498,6 +498,7 @@ export default {
     },
 
     analysisCmd: function (requestCmd, tabs) {
+        // nativeService.alert(requestCmd);
         var obj = this.initAnalysisObj();
         obj.workingState.value = this.tranformToStausValue(requestCmd);
         if (obj.workingState.value === 3 || obj.workingState.value === 6) {
@@ -556,9 +557,9 @@ export default {
         obj.probeSetttingTemperature.value = requestCmd.furnace_light === 'on'?1:0; //探针设置温度暂时没有返回
         obj.temperature.unit = requestCmd.furnace_light === 'on'?1:0; //温度单位暂时没有返回
 
-        obj.timeSetting.hour = 0; //设定的总时间暂时没有返回
-        obj.timeSetting.minute = 0; //设定的总时间暂时没有返回
-        obj.timeSetting.second = 0; //设定的总时间暂时没有返回
+        obj.timeSetting.hour = requestCmd.hour_set; //设定的总时间暂时没有返回
+        obj.timeSetting.minute = requestCmd.minute_set; //设定的总时间暂时没有返回
+        obj.timeSetting.second = requestCmd.second_set; //设定的总时间暂时没有返回
 
         obj.fire.value =  0;  //parker: 火力不用*10了，统一用新协议0-10  ，lua 没有返回
         obj.weight.value = 0; //lua 没有返回

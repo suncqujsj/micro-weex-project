@@ -245,6 +245,13 @@ const deviceMessageMixin = {
         (upTemp = jsonCmd.upTemperature), (downTemp = jsonCmd.downTemperature);
       }
 
+      if (parseInt(jsonCmd.temperature) < 100 && !this.isSmallOven(callbackData.device.type)) { // sf 不是小烤箱判断
+        jsonCmd.preheat = false;
+      }
+      if (this.isWorking && jsonCmd.currentItem && jsonCmd.currentItem.preheat && jsonCmd.currentItem.preheat.hide) {//如果隐藏
+        jsonCmd.preheat = false;
+      }
+
       let modeSec = this.modeTextSec(jsonCmd.mode);
       // nativeService.alert(modeSec);
       let sendParmas = {
@@ -258,6 +265,11 @@ const deviceMessageMixin = {
         sendParmas.work_hour = hour;
         sendParmas.work_minute = minute;
         sendParmas.work_second = 0;
+      }
+      if (jsonCmd.preheat) { // 非探针预热设置 sf
+          sendParmas.pre_heat = "on";
+      }else{
+          delete sendParmas.pre_heat;
       }
       if (jsonCmd.temperature) {
         var temperature = parseInt(jsonCmd.temperature);
@@ -442,6 +454,15 @@ const deviceMessageMixin = {
       if (obj.cur_temperature_underside) {
         obj.cur_temperature_underside = parseInt(obj.cur_temperature_underside);
       }
+      if (obj.hour_set) {
+        obj.hour_set = parseInt(obj.hour_set);
+      }
+      if (obj.minute_set) {
+        obj.minute_set = parseInt(obj.minute_set);
+      }
+      if (obj.second_set) {
+        obj.second_set = parseInt(obj.second_set);
+      }
       return obj;
     },
 
@@ -449,15 +470,11 @@ const deviceMessageMixin = {
       //传入模式配置数据
       let context = this;
       globalEvent.addEventListener("receiveMessage", function(e) {
+        // nativeService.alert(e);
         nativeService.hideLoading();
         context.settingClickRecord = false;
         let obj = e.result;
-        // var arr = str.split(",");
-        // if(parseInt(arr[9])==0x0A){
-        //     return;
-        // }
         let getObj = context.tranformToInt(obj);
-        // nativeService.alert(getObj);
         var analysisObj = cmdFun.analysisCmd(getObj, context.tabs);
         context.analysisFun(analysisObj, context.tabs);
       });

@@ -196,6 +196,7 @@
 </style>
 
 <script>
+//带switch按钮的cell
 import nativeService from '../../common/services/nativeService.js'
 const animation = weex.requireModule('animation')
 
@@ -306,30 +307,9 @@ module.exports = {
         }
     },
     data: () => ({}),
-    methods: {
-        cellClicked(e) {
-            this.$emit('mideaCellClick', {
-                e
-            });
-        },
-        clickSwitch() {
-            if (this.switchActive) {
-                animation.transition(this.$refs.switchDot, {
-                    styles: {
-                        backgroundColor: '#8A8A8F'
-                    },
-                    duration: 0,
-                    delay:10
-                })
-                animation.transition(this.$refs.switchDot, {
-                    styles: {
-                        backgroundColor: '#8A8A8F',
-                        transform: 'translateX(0px) scale(1)'
-                    },
-                    duration: 300,
-                    timingFunction:'ease-out'
-                })
-            } else {
+    watch:{
+        switchActive(newVal,oldVal){
+            if(newVal==true&&oldVal==false){
                 animation.transition(this.$refs.switchDot, {
                     styles: {
                         backgroundColor: '#ffffff'
@@ -345,7 +325,32 @@ module.exports = {
                     duration: 300,
                     timingFunction:'ease-out'
                 })
+            }else if(newVal==false&&oldVal==true){
+                animation.transition(this.$refs.switchDot, {
+                    styles: {
+                        backgroundColor: '#8A8A8F'
+                    },
+                    duration: 0,
+                    delay:10
+                })
+                animation.transition(this.$refs.switchDot, {
+                    styles: {
+                        backgroundColor: '#8A8A8F',
+                        transform: 'translateX(0px) scale(1)'
+                    },
+                    duration: 300,
+                    timingFunction:'ease-out'
+                })
             }
+        }
+    },
+    methods: {
+        cellClicked(e) {
+            this.$emit('mideaCellClick', {
+                e
+            });
+        },
+        clickSwitch() {
 
             this.$emit('clickSwitch')
             if(this.hapticFeedbackActive){

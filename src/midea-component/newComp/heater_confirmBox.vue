@@ -12,7 +12,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: rgba(0, 0, 0, 0.6)
+    /* background-color: rgba(0, 0, 0, 0.6) */
 }
 
 .wrap {
@@ -46,7 +46,7 @@
 }
 </style>
 <template>
-<div v-if="show" class="bg" @click="cancel">
+<div v-if="show" class="bg" :style="{backgroundColor:maskBgColor}" @click="cancel">
     <div class="wrap">
         <scroller class="slot-floor" :style="{height:inputHeight}" :show-scrollbar="false">
             <slot></slot>
@@ -57,6 +57,7 @@
 </template>
 
 <script>
+//之前的底部弹框，不带向上滑动动画效果，废弃
 export default {
     props: {
         show: {
@@ -70,6 +71,10 @@ export default {
         btnText: {
             type: String,
             default: '取消'
+        },
+        maskBgColor:{
+            type:String,
+            default:'rgba(0, 0, 0, 0.6)'
         }
     },
     data() {

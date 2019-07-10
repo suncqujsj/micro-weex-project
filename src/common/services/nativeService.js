@@ -655,7 +655,7 @@ export default {
 
             if (this.isDummy != true) {
                 if (isShowLoading) {
-                    this.showLoading()
+                    // this.showLoading()
                 }
                 let msgid = this.genMessageId()
                 bridgeModule.commandInterface(JSON.stringify(params),

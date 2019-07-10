@@ -92,7 +92,7 @@ const deviceMessageMixin = {
           })
           .catch(error => {
             context.loading = false;
-            nativeService.toast("控制失败");
+            // nativeService.toast("控制失败");
           });
       }else{
         let deviceCmd = cmdFun.cmdLock({childLock},this.device);
@@ -163,7 +163,7 @@ const deviceMessageMixin = {
           })
           .catch(error => {
             nativeService.hideLoading();
-            nativeService.toast("查询失败");
+            // nativeService.toast("查询失败");
           });
       }else{
         let sendCmd = cmdFun.createQueryMessage(this.device);
@@ -213,7 +213,7 @@ const deviceMessageMixin = {
           })
           .catch(error => {
             nativeService.hideLoading();
-            nativeService.toast("控制失败");
+            // nativeService.toast("控制失败");
           });
       }else{
         let deviceCmd = cmdFun.cmdLight(lightValue, this.device);

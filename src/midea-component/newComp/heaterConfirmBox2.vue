@@ -209,14 +209,6 @@
             }
         },
         methods: {
-            leftBtnClick () {
-                this.appearPopup(false);
-                this.$emit('leftBtnClick');
-            },
-            rightBtnClick () {
-                this.appearPopup(false);
-                this.$emit('rightBtnClick');
-            },
             handleTouchEnd (e) {
                 // 在支付宝上面有点击穿透问题
                 const { platform } = weex.config.env;

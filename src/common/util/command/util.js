@@ -497,7 +497,7 @@ export default {
         return modeValue;
     },
 
-    analysisCmd: function (requestCmd, tabs) {
+    analysisLua: function (requestCmd, tabs) {
         // nativeService.alert(requestCmd);
         var obj = this.initAnalysisObj();
         obj.workingState.value = this.tranformToStausValue(requestCmd);
@@ -564,6 +564,75 @@ export default {
         obj.fire.value =  0;  //parker: 火力不用*10了，统一用新协议0-10  ，lua 没有返回
         obj.weight.value = 0; //lua 没有返回
         obj.steam.value =  0; //lua 没有返回
+        // nativeService.toast(requestCmd);
+        return obj;
+    },
+    analysisCmd: function (requestCmd, tabs) {
+        var obj = this.initAnalysisObj();
+        obj.cmdLength = parseInt(requestCmd[1]); // 指令长度
+        obj.workingState.value = parseInt(requestCmd[11]);
+        if (parseInt(requestCmd[11]) == 3 || parseInt(requestCmd[11]) == 6) {
+            this.isWorking = true;
+        } else {
+            this.isWorking = false;
+        }
+        var recipeId = parseInt(requestCmd[12]) * 256 * 256 + parseInt(requestCmd[13]) * 256 + parseInt(requestCmd[14]);
+        obj.recipeId.value = recipeId;
+        obj.timeRemaining.hour = parseInt(requestCmd[16]);
+        obj.timeRemaining.minute = parseInt(requestCmd[17]);
+        obj.timeRemaining.second = parseInt(requestCmd[18]);
+        obj.mode.value = parseInt(requestCmd[19]);
+
+        obj.mode.text = this.modeValueToModeText(recipeId, parseInt(requestCmd[19]), tabs);
+
+        //实际温度
+        obj.realTemperature.upHighTemperature = parseInt(requestCmd[20]);
+        obj.realTemperature.upLowTemperature = parseInt(requestCmd[21]);
+        obj.realTemperature.downHighTemperature = parseInt(requestCmd[22]);
+        obj.realTemperature.downLowTemperature = parseInt(requestCmd[23]);
+
+        obj.displaySign.lock = message.getBit(requestCmd, 26, 0);
+        obj.displaySign.doorSwitch = message.getBit(requestCmd, 26, 1);
+        this.doorStatus = message.getBit(requestCmd, 26, 1);
+        obj.displaySign.waterBox = message.getBit(requestCmd, 26, 2);
+        obj.displaySign.lackWater = message.getBit(requestCmd, 26, 3);
+        obj.displaySign.changeWater = message.getBit(requestCmd, 26, 4);
+        obj.displaySign.preheat = message.getBit(requestCmd, 26, 5);
+        obj.displaySign.preheatTemperature = message.getBit(requestCmd, 26, 6);
+        obj.displaySign.isError = message.getBit(requestCmd, 26, 7);
+
+        obj.light.value = message.getBit(requestCmd, 27, 2);
+        obj.isProbe.value = message.getBit(requestCmd, 27, 6);
+        obj.highClearLock.value = message.getBit(requestCmd, 27, 3);
+        obj.menuFeel.value = message.getBit(requestCmd, 27, 1);
+        //设置温度
+
+        obj.temperature.upHighTemperature = parseInt(requestCmd[28]);
+        obj.temperature.upLowTemperature = parseInt(requestCmd[28]) > 0 ? (256 + parseInt(requestCmd[29])) : parseInt(requestCmd[29]);
+        obj.temperature.downHighTemperature = parseInt(requestCmd[30]);
+        obj.temperature.downLowTemperature = parseInt(requestCmd[30]) > 0 ? (256 + parseInt(requestCmd[31])) : parseInt(requestCmd[31]);
+
+        //探针温度
+        obj.probeRealTemperature.value = parseInt(requestCmd[32]);
+        obj.probeSetttingTemperature.value = parseInt(requestCmd[33]);
+        // if(obj.isProbe.value){ //如果是探针，则为显示为探针设定温度
+        //   obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
+        // }
+        obj.temperature.unit = message.getBit(requestCmd, 34, 4);
+        // nativeService.alert(obj.temperature.unit);
+
+        if (parseInt(requestCmd[19]) == 0xC4) {//如果是烘干，则不显示温度
+            obj.temperature.upLowTemperature = 0;
+        }
+
+        obj.timeSetting.hour = parseInt(requestCmd[38]);
+        obj.timeSetting.minute = parseInt(requestCmd[39]);
+        obj.timeSetting.second = parseInt(requestCmd[40]);
+
+        // obj.fire.value = parseInt(requestCmd[24])*10;  //parker
+        obj.fire.value = parseInt(requestCmd[24]);  //parker: 火力不用*10了，统一用新协议0-10
+        obj.weight.value = parseInt(requestCmd[25]) * 10;
+        obj.steam.value = parseInt(requestCmd[25]);
         // nativeService.toast(requestCmd);
         return obj;
     },

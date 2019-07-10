@@ -8,6 +8,7 @@ import nativeService from "@/common/services/nativeService";
 import modeConfig from "@/common/mapping/modeConfig";
 const globalEvent = weex.requireModule("globalEvent");
 const storage = weex.requireModule("storage");
+const isLuaControl = true; //是否是lua 控制
 
 const deviceMessageMixin = {
   data() {
@@ -42,7 +43,7 @@ const deviceMessageMixin = {
         nativeService.alert(data);
       });
 
-      var self = this;
+      var context = this;
       var sendCmd = cmdFun.createQueryMessage(this.device);
       nativeService.toast("下发03查询:" + JSON.stringify(sendCmd), 2);
       nativeService.startCmdProcess(
@@ -55,7 +56,7 @@ const deviceMessageMixin = {
           nativeService.alert(easyCmd);
         },
         function(result) {
-          nativeService.toast("查询失败" + JSON.stringify(result));
+          nativeService.toast("查询失败");
         }
       );
     },
@@ -70,29 +71,45 @@ const deviceMessageMixin = {
       if (this.loading) return;
 
       this.loading = true;
-
       let context = this;
-      let params = {
-        operation: "luaControl",
-
-        params: {
-          lock: childLock ? "on" : "off"
-        }
-      };
-      nativeService
-        .sendLuaRequest(params)
-        .then(resp => {
-          context.loading = false;
-          context.statisticsUpload({
-            subAction: "child_lock_click",
-            action_result: childLock
+      if(isLuaControl){
+        let params = {
+          operation: "luaControl",
+  
+          params: {
+            lock: childLock ? "on" : "off"
+          }
+        };
+        nativeService
+          .sendLuaRequest(params)
+          .then(resp => {
+            context.loading = false;
+            context.statisticsUpload({
+              subAction: "child_lock_click",
+              action_result: childLock
+            });
+            context.queryStatus();
+          })
+          .catch(error => {
+            context.loading = false;
+            nativeService.toast("控制失败");
           });
-          context.queryStatus();
-        })
-        .catch(error => {
-          context.loading = false;
-          nativeService.toast("控制失败" + JSON.stringify(error));
-        });
+      }else{
+        let deviceCmd = cmdFun.cmdLock({childLock},this.device);
+            nativeService.startCmdProcess(
+                "control",
+                deviceCmd,
+                function(result){
+                    context.loading = false;
+                    context.statisticsUpload({subAction: 'child_lock_click', action_result:childLock});
+                    context.queryStatus();
+                },
+                function(result){
+                    context.loading = false;
+                    nativeService.toast("控制失败");
+                }
+            )
+      }
     },
     goTo(url) {
       let path = url + ".js";
@@ -122,57 +139,100 @@ const deviceMessageMixin = {
       if (isFirstEnter == "firstEnter") {
         nativeService.showLoading();
       }
-      var self = this;
+      var context = this;
 
-      let params = {
-        operation: "luaQuery",
+      if(isLuaControl){
+        let params = {
+          operation: "luaQuery",
+  
+          params: {}
+        };
+        nativeService
+          .sendLuaRequest(params)
+          .then(resp => {
+            nativeService.hideLoading();
+            let resultObj = resp.result;
+            // nativeService.alert(resultObj);
+            let getObj = context.tranformToInt(resultObj);
+            let analysisObj = cmdFun.analysisLua(getObj, context.tabs);
+            context.analysisFun(analysisObj, context.tabs);
+  
+            if (typeof cb === "function") {
+              cb();
+            }
+          })
+          .catch(error => {
+            nativeService.hideLoading();
+            nativeService.toast("查询失败");
+          });
+      }else{
+        let sendCmd = cmdFun.createQueryMessage(this.device);
+        nativeService.startCmdProcess(
+            "query",
+            sendCmd,
+            function (result) {
+                nativeService.hideLoading();
+                var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
+                var arr = result_arr.split(",");
+                // nativeService.alert(arr);
+                var analysisObj = cmdFun.analysisCmd(arr,context.tabs);
+                context.analysisFun(analysisObj,context.tabs);
 
-        params: {}
-      };
-      nativeService
-        .sendLuaRequest(params)
-        .then(resp => {
-          nativeService.hideLoading();
-          let resultObj = resp.result;
-          // nativeService.alert(resultObj);
-          let getObj = self.tranformToInt(resultObj);
-          let analysisObj = cmdFun.analysisCmd(getObj, self.tabs);
-          self.analysisFun(analysisObj, self.tabs);
-
-          if (typeof cb === "function") {
-            cb();
-          }
-        })
-        .catch(error => {
-          nativeService.hideLoading();
-          nativeService.toast("查询失败" + JSON.stringify(error));
-        });
+                if(typeof cb === 'function') {
+                    cb();
+                }
+            },
+            function (result) {
+                nativeService.hideLoading();
+                nativeService.toast("查询失败");
+            }
+        );
+      }
     },
     sendLightCmd(lightValue) {
       let context = this;
       nativeService.showLoading();
-      let params = {
-        operation: "luaControl",
 
-        params: {
-          furnace_light: lightValue ? "on" : "off"
-        }
-      };
-      nativeService
-        .sendLuaRequest(params)
-        .then(resp => {
-          nativeService.hideLoading();
-          // nativeService.alert(result);
-          context.statisticsUpload({
-            subAction: "light_click",
-            action_result: lightValue ? 0 : 1
+      if(isLuaControl){
+        let params = {
+          operation: "luaControl",
+  
+          params: {
+            furnace_light: lightValue ? "on" : "off"
+          }
+        };
+        nativeService
+          .sendLuaRequest(params)
+          .then(resp => {
+            nativeService.hideLoading();
+            context.statisticsUpload({
+              subAction: "light_click",
+              action_result: lightValue ? 0 : 1
+            });
+            context.queryStatus();
+          })
+          .catch(error => {
+            nativeService.hideLoading();
+            nativeService.toast("控制失败");
           });
-          context.queryStatus();
-        })
-        .catch(error => {
-          nativeService.hideLoading();
-          nativeService.toast("控制失败" + JSON.stringify(error));
-        });
+      }else{
+        let deviceCmd = cmdFun.cmdLight(lightValue, this.device);
+            nativeService.startCmdProcess(
+                "control",
+                deviceCmd,
+                function(result){
+                    nativeService.hideLoading();
+                    // nativeService.alert(result);
+                    context.statisticsUpload({subAction:'light_click', action_result:lightValue?0:1});
+                    context.queryStatus();
+                },
+                function(result){
+                    nativeService.hideLoading();
+                    nativeService.toast('控制失败，请检查网络或者设置的参数');
+                    //console.log('fail', result);
+                }
+            )
+      }
     },
     setting(cmdObj) {
       this.statisticsUpload({ subAction: "edit_click" });
@@ -226,103 +286,144 @@ const deviceMessageMixin = {
           return;
         }
       }
-      if (this.doorStatus) {
-        nativeService.toast("主人，您的设备炉门开了");
-        return;
-      }
+      nativeService.showLoading();
 
-      var upTemp = jsonCmd.temperature,
-        downTemp = jsonCmd.temperature;
-      if (jsonCmd.upTemperature || jsonCmd.downTemperature) {
-        //如果是上下烧烤 独立控温
-        let abs_value = Math.abs(
-          jsonCmd.upTemperature - jsonCmd.downTemperature
-        );
-        if (abs_value > 30) {
-          nativeService.toast("上管与下管的温度相差不能超过30哦");
+      if(isLuaControl){
+        if (this.doorStatus) {
+          nativeService.toast("主人，您的设备炉门开了");
           return;
         }
-        (upTemp = jsonCmd.upTemperature), (downTemp = jsonCmd.downTemperature);
-      }
-
-      if (parseInt(jsonCmd.temperature) < 100 && !this.isSmallOven(callbackData.device.type)) { // sf 不是小烤箱判断
-        jsonCmd.preheat = false;
-      }
-      if (this.isWorking && jsonCmd.currentItem && jsonCmd.currentItem.preheat && jsonCmd.currentItem.preheat.hide) {//如果隐藏
-        jsonCmd.preheat = false;
-      }
-
-      let modeSec = this.modeTextSec(jsonCmd.mode);
-      // nativeService.alert(modeSec);
-      let sendParmas = {
-        work_status: "work",
-        work_mode: modeSec
-      };
-      if (jsonCmd.time) {
-        var time = parseInt(jsonCmd.time);
-        var hour = Math.floor(time / 60);
-        var minute = time % 60;
-        sendParmas.work_hour = hour;
-        sendParmas.work_minute = minute;
-        sendParmas.work_second = 0;
-      }
-      if (jsonCmd.preheat) { // 非探针预热设置 sf
-          sendParmas.pre_heat = "on";
-      }else{
-          delete sendParmas.pre_heat;
-      }
-      if (jsonCmd.temperature) {
-        var temperature = parseInt(jsonCmd.temperature);
-        sendParmas.temperature = temperature;
-      }
-      if (callbackData.working) {
-        //工作类设置类
-        sendParmas = {};
-      
+  
+        let upTemp = jsonCmd.temperature,
+          downTemp = jsonCmd.temperature;
+        if (jsonCmd.upTemperature || jsonCmd.downTemperature) {
+          //如果是上下烧烤 独立控温
+          let abs_value = Math.abs(
+            jsonCmd.upTemperature - jsonCmd.downTemperature
+          );
+          if (abs_value > 30) {
+            nativeService.toast("上管与下管的温度相差不能超过30哦");
+            return;
+          }
+          (upTemp = jsonCmd.upTemperature), (downTemp = jsonCmd.downTemperature);
+        }
+  
+        if (parseInt(jsonCmd.temperature) < 100 && !this.isSmallOven(callbackData.device.type)) { // sf 不是小烤箱判断
+          jsonCmd.preheat = false;
+        }
+        if (this.isWorking && jsonCmd.currentItem && jsonCmd.currentItem.preheat && jsonCmd.currentItem.preheat.hide) {//如果隐藏
+          jsonCmd.preheat = false;
+        }
+  
+        let modeSec = this.modeTextSec(jsonCmd.mode);
+        // nativeService.alert(modeSec);
+        let sendParmas = {
+          work_status: "work",
+          work_mode: modeSec
+        };
         if (jsonCmd.time) {
-          sendParmas.hour_set = hour;
-          sendParmas.minute_set = minute;
-          // sendParmas.second_set = hour;
+          var time = parseInt(jsonCmd.time);
+          var hour = Math.floor(time / 60);
+          var minute = time % 60;
+          sendParmas.work_hour = hour;
+          sendParmas.work_minute = minute;
+          sendParmas.work_second = 0;
+        }
+        if (jsonCmd.preheat) { // 非探针预热设置 sf
+            sendParmas.pre_heat = "on";
+        }else{
+            delete sendParmas.pre_heat;
         }
         if (jsonCmd.temperature) {
-          sendParmas.temp_set = temperature;
+          var temperature = parseInt(jsonCmd.temperature);
+          sendParmas.temperature = temperature;
         }
-      }
-      if (jsonCmd.probe && callbackData.isProbe) {
-        //假如当前插上探针，并且 该模式支持探针，则，do 探针开始类
-      }
-      if (callbackData.working && jsonCmd.probe && callbackData.isProbe) {
-        //假如当前插上探针，并且 该模式支持探针，则，工作设置类,探针工作设置类
-        delete sendParmas.work_mode;
-      }
-
-      // nativeService.alert(sendParmas);
-      let params = {
-        operation: "luaControl",
-
-        params: sendParmas
-      };
-      nativeService.showLoading();
-      nativeService
-        .sendLuaRequest(params)
-        .then(resp => {
-          nativeService.hideLoading();
-          let resultObj = resp.result;
-          //   nativeService.alert(resultObj);
-          let analysisObj = cmdFun.analysisCmd(resultObj, self.tabs);
-          context.analysisFun(analysisObj, self.tabs);
-
-          if (context.isStandby()) {
-            context.fromStandBy = true;
-            context.queryStatus(null, null, context.pageViewStatistics);
-          } else {
-            context.queryStatus();
+        if (callbackData.working) {
+          //工作类设置类
+          sendParmas = {};
+        
+          if (jsonCmd.time) {
+            sendParmas.hour_set = hour;
+            sendParmas.minute_set = minute;
+            // sendParmas.second_set = hour;
           }
-        })
-        .catch(error => {
-          nativeService.hideLoading();
-          nativeService.toast("控制失败" + JSON.stringify(error));
-        });
+          if (jsonCmd.temperature) {
+            sendParmas.temp_set = temperature;
+          }
+        }
+        if (jsonCmd.probe && callbackData.isProbe) {
+          //假如当前插上探针，并且 该模式支持探针，则，do 探针开始类
+        }
+        if (callbackData.working && jsonCmd.probe && callbackData.isProbe) {
+          //假如当前插上探针，并且 该模式支持探针，则，工作设置类,探针工作设置类
+          delete sendParmas.work_mode;
+        }
+  
+        // nativeService.alert(sendParmas);
+        let params = {
+          operation: "luaControl",
+  
+          params: sendParmas
+        };
+        nativeService
+          .sendLuaRequest(params)
+          .then(resp => {
+            nativeService.hideLoading();
+            // let resultObj = resp.result;
+            // //   nativeService.alert(resultObj);
+            // let analysisObj = cmdFun.analysisLua(resultObj, context.tabs);
+            // context.analysisFun(analysisObj, context.tabs);
+  
+            if (context.isStandby()) {
+              context.fromStandBy = true;
+              context.queryStatus(null, null, context.pageViewStatistics);
+            } else {
+              context.queryStatus();
+            }
+          })
+          .catch(error => {
+            nativeService.hideLoading();
+            // nativeService.toast("控制失败" + JSON.stringify(error));
+          });
+      }else{
+        let deviceCmd = cmdFun.createControlMessage(jsonCmd, callbackData);
+            // this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
+            // return;
+            // nativeService.alert(cmdFun.cmdToEasy(deviceCmd));
+            nativeService.startCmdProcess(
+                "control",
+                deviceCmd,
+                function(result){
+                    nativeService.hideLoading();
+                    var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
+                    var arr = result_arr.split(",");
+                    // nativeService.alert(arr[11]);
+                    if(parseInt(arr[11])==254){
+                        if(parseInt(arr[13])==6){
+                            nativeService.toast('参数错误');
+                            return;
+                        }
+                        if(parseInt(arr[13])==7){
+                            nativeService.toast('腔体温度过高，请冷却后使用！');
+                            return;
+                        }
+                    
+                    }
+                    if(context.isStandby()) {
+                        context.fromStandBy = true;
+                        context.queryStatus(null, null, context.pageViewStatistics);
+                    }else{
+                        context.queryStatus();
+                    }
+                },
+                function(result){
+                    nativeService.hideLoading();
+                    nativeService.toast('控制失败，请检查网络或者设置的参数');
+                    //console.log('fail', result);
+                }
+            )
+      }
+     
     },
 
     startOrPause() {
@@ -338,47 +439,82 @@ const deviceMessageMixin = {
         record = 3;
       }
       nativeService.showLoading();
-      let params = {
-        operation: "luaControl",
-
-        params: {
-          work_status: record === 3 ? "work" : "pause"
-        }
-      };
-      nativeService
-        .sendLuaRequest(params)
-        .then(resp => {
-          nativeService.hideLoading();
-          context.statisticsUpload({
-            subAction: "pause_continue_click",
-            action_result: record
+      if(isLuaControl){
+        let params = {
+          operation: "luaControl",
+  
+          params: {
+            work_status: record === 3 ? "work" : "pause"
+          }
+        };
+        nativeService
+          .sendLuaRequest(params)
+          .then(resp => {
+            nativeService.hideLoading();
+            context.statisticsUpload({
+              subAction: "pause_continue_click",
+              action_result: record
+            });
+            context.queryStatus();
+          })
+          .catch(error => {
+            nativeService.hideLoading();
+            // nativeService.toast("控制失败" + JSON.stringify(error));
           });
-          context.queryStatus();
-        })
-        .catch(error => {
-          nativeService.hideLoading();
-          nativeService.toast("控制失败" + JSON.stringify(error));
-        });
+      }else{
+        var deviceCmd = cmdFun.cmdStartOrPause(record,this.device);
+        nativeService.startCmdProcess(
+            "control",
+            deviceCmd,
+            function(result){
+                nativeService.hideLoading();
+                context.statisticsUpload({subAction:'pause_continue_click', action_result: record})
+                context.queryStatus();
+            },
+            function(result){
+                 nativeService.toast('控制失败，请检查网络或者设置的参数');
+                //console.log('fail', result);
+            }
+        )
+      }
+      
     },
     cancleWorking() {
-      var self = this;
-      let params = {
-        operation: "luaControl",
-        params: {
-          work_status: "standby"
-        }
-      };
+      var context = this;
       nativeService.showLoading();
-      nativeService
-        .sendLuaRequest(params)
-        .then(resp => {
-          nativeService.hideLoading();
-          self.queryStatus();
-        })
-        .catch(error => {
-          nativeService.hideLoading();
-          nativeService.toast("控制失败" + JSON.stringify(error));
-        });
+      if(isLuaControl){
+        let params = {
+          operation: "luaControl",
+          params: {
+            work_status: "standby"
+          }
+        };
+        nativeService
+          .sendLuaRequest(params)
+          .then(resp => {
+            nativeService.hideLoading();
+            context.queryStatus();
+          })
+          .catch(error => {
+            nativeService.hideLoading();
+            // nativeService.toast("控制失败" + JSON.stringify(error));
+          });
+      }else{
+        var deviceCmd = cmdFun.cmdCancelWork(this.device);
+            nativeService.startCmdProcess(
+                "control",
+                deviceCmd,
+                function(result){
+                  nativeService.hideLoading();
+                  context.queryStatus();
+                },
+                function(result){
+                    nativeService.toast('控制失败，请检查网络或者设置的参数');
+                    //console.log('fail', result);
+                }
+            )
+      }
+      
     },
 
     getStorageItem(key) {
@@ -469,16 +605,27 @@ const deviceMessageMixin = {
     listenerDeviceReiveMessage() {
       //传入模式配置数据
       let context = this;
+      // lua返回字段有问题
       globalEvent.addEventListener("receiveMessage", function(e) {
         // nativeService.alert(e);
         nativeService.hideLoading();
         context.settingClickRecord = false;
-        let obj = e.result;
-        let getObj = context.tranformToInt(obj);
-        var analysisObj = cmdFun.analysisCmd(getObj, context.tabs);
-        context.analysisFun(analysisObj, context.tabs);
+        if(isLuaControl){
+          let obj = e.result;
+          let getObj = context.tranformToInt(obj);
+          var analysisObj = cmdFun.analysisLua(getObj, context.tabs);
+          context.analysisFun(analysisObj, context.tabs);
+        }else{
+          var str = e.data;
+          var arr = str.split(",");
+          if(parseInt(arr[9])==0x0A){
+              return;
+          }
+          var analysisObj = cmdFun.analysisCmd(arr,context.tabs);
+          context.analysisFun(analysisObj,context.tabs);
+        }
+       
       });
-
       //监听设备在线离线状态
       globalEvent.addEventListener("receiveMessageFromApp", data => {
         // 网络状态判断

@@ -1,5 +1,5 @@
 // var CURRENT_IP = '10.74.149.81'
-var CURRENT_IP = '10.73.8.49'
+var CURRENT_IP = '10.73.8.52'
 
 //var CURRENT_IP = '192.168.43.187'
 

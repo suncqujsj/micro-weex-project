@@ -143,7 +143,9 @@ module.exports = {
             // { title: 'TimeCycle时间转盘', link: "timeCycle" },
             { title: 'Video视频', link: "video" },
             { title: 'scrollPicker滚动选择器', link: "scrollPicker" },
-            { title: 'SwipeCell侧滑', link: "swipeCell"}
+            { title: 'SwipeCell侧滑', link: "swipeCell" },
+            { title: 'apngView动效视图', link: "apngView" },
+
         ],
         interfacelist: [
             { title: 'callTel打电话', link: "callTel" },
@@ -196,17 +198,17 @@ module.exports = {
             { title: '滑动放缩图片', link: "scrollHeader" },
             { title: '带背景环形进度条', link: "mprogresscycle" },
             { title: '时间选择器', link: "mTimePicket" },
-            { title: '底部弹框', link:"bottomContent"},
-            { title: 'cell',link:"cellPage"},
-            { title: '热水器中间的环',link:"heaterWidget"},
-            { title: '净水器顶部背景',link:'topCircleBg'},
-            { title: '拼装示例1',link:'examplePage1'},
-            { title: '拼装示例2',link:'examplePage2'},
-            { title: '拼装示例3',link:'examplePage3'},
-            { title: '头部动画',link:'headerAnimation'},
-            { title: '净水器柱状图',link:'waterBarchart'},
-            { title: '体脂秤',link:'bodyFatScale'},
-            { title: '暖风机', link: 'warmer'}
+            { title: '底部弹框', link: "bottomContent" },
+            { title: 'cell', link: "cellPage" },
+            { title: '热水器中间的环', link: "heaterWidget" },
+            { title: '净水器顶部背景', link: 'topCircleBg' },
+            { title: '拼装示例1', link: 'examplePage1' },
+            { title: '拼装示例2', link: 'examplePage2' },
+            { title: '拼装示例3', link: 'examplePage3' },
+            { title: '头部动画', link: 'headerAnimation' },
+            { title: '净水器柱状图', link: 'waterBarchart' },
+            { title: '体脂秤', link: 'bodyFatScale' },
+            { title: '暖风机', link: 'warmer' }
         ],
         weexList: [
             { title: 'BroadcastChannel示例', link: "broadcastChannelA" },

@@ -498,7 +498,7 @@ export default {
     },
 
     analysisLua: function (requestCmd, tabs) {
-        // nativeService.alert(requestCmd);
+        nativeService.alert(requestCmd);
         var obj = this.initAnalysisObj();
         obj.workingState.value = this.tranformToStausValue(requestCmd);
         if (obj.workingState.value === 3 || obj.workingState.value === 6) {
@@ -532,7 +532,7 @@ export default {
         */
     
         obj.displaySign.lock = requestCmd.lock === 'on'?1:0;
-        obj.displaySign.doorSwitch = requestCmd.door_open === 'on'?1:0;;
+        obj.displaySign.doorSwitch = requestCmd.door_open === 'on'?1:0;
         this.doorStatus =  requestCmd.door_open === 'on'?1:0;
         obj.displaySign.waterBox = requestCmd.tips_code === 6?1:0;
         obj.displaySign.lackWater = requestCmd.tips_code === 2?1:0;
@@ -542,9 +542,9 @@ export default {
         obj.displaySign.isError = requestCmd.error_code?1:0;
 
         obj.light.value = requestCmd.furnace_light === 'on'?1:0;
-        obj.isProbe.value = requestCmd.furnace_light === 'on'?1:0; //探针暂时没有返回
-        obj.highClearLock.value = requestCmd.furnace_light === 'on'?1:0; //高温自清洁锁暂时没有返回
-        obj.menuFeel.value = requestCmd.furnace_light === 'on'?1:0; //菜单感应中暂时没有返回
+        obj.isProbe.value = 0; //探针暂时没有返回
+        obj.highClearLock.value = 0; //高温自清洁锁暂时没有返回
+        obj.menuFeel.value = 0; //菜单感应中暂时没有返回
         //设置温度
 
         obj.temperature.upHighTemperature = 0;
@@ -553,9 +553,9 @@ export default {
         obj.temperature.downLowTemperature = 0;
 
         //探针温度
-        obj.probeRealTemperature.value = requestCmd.furnace_light === 'on'?1:0; //探针实际温度暂时没有返回
-        obj.probeSetttingTemperature.value = requestCmd.furnace_light === 'on'?1:0; //探针设置温度暂时没有返回
-        obj.temperature.unit = requestCmd.furnace_light === 'on'?1:0; //温度单位暂时没有返回
+        obj.probeRealTemperature.value = 0; //探针实际温度暂时没有返回
+        obj.probeSetttingTemperature.value = 0; //探针设置温度暂时没有返回
+        obj.temperature.unit = 0; //温度单位暂时没有返回
 
         obj.timeSetting.hour = requestCmd.hour_set; //设定的总时间暂时没有返回
         obj.timeSetting.minute = requestCmd.minute_set; //设定的总时间暂时没有返回

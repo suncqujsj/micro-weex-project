@@ -658,8 +658,10 @@ export default {
                     // this.showLoading()
                 }
                 let msgid = this.genMessageId()
+
                 bridgeModule.commandInterface(JSON.stringify(params),
                     (resData) => {
+
                         debugUtil.debugLog(debugLogSeperator, `Lua request(${msgid}): `, params)
                         debugUtil.debugLog(`Lua response(${msgid}):`, resData, debugLogSeperator)
                         if (typeof resData == 'string') {

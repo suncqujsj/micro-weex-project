@@ -8,14 +8,15 @@ import nativeService from "@/common/services/nativeService";
 import modeConfig from "@/common/mapping/modeConfig";
 const globalEvent = weex.requireModule("globalEvent");
 const storage = weex.requireModule("storage");
-const isLuaControl = true; //是否是lua 控制
+const isLuaControl = false; //是否是lua 控制
 
 const deviceMessageMixin = {
   data() {
     return {
       loading: false,
       device: null,
-      tabs: null
+      tabs: null,
+      doorStatus: 0,
     };
   },
   methods: {
@@ -39,7 +40,7 @@ const deviceMessageMixin = {
     },
     onlongpressQuery() {
       //隐藏调试，查看设备上报数据
-      nativeService.getDeviceInfo().then(function(data) {
+      nativeService.getDeviceInfo().then(function (data) {
         nativeService.alert(data);
       });
 
@@ -49,13 +50,13 @@ const deviceMessageMixin = {
       nativeService.startCmdProcess(
         "query",
         sendCmd,
-        function(result) {
+        function (result) {
           var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
           var arr = result_arr.split(",");
           var easyCmd = cmdFun.cmdToEasy(arr);
           nativeService.alert(easyCmd);
         },
-        function(result) {
+        function (result) {
           nativeService.toast("查询失败");
         }
       );
@@ -67,15 +68,15 @@ const deviceMessageMixin = {
         title: "云菜谱"
       });
     },
-    childLock: function(childLock) {
+    childLock: function (childLock) {
       if (this.loading) return;
 
       this.loading = true;
       let context = this;
-      if(isLuaControl){
+      if (isLuaControl) {
         let params = {
           operation: "luaControl",
-  
+
           params: {
             lock: childLock ? "on" : "off"
           }
@@ -94,21 +95,21 @@ const deviceMessageMixin = {
             context.loading = false;
             // nativeService.toast("控制失败");
           });
-      }else{
-        let deviceCmd = cmdFun.cmdLock({childLock},this.device);
-            nativeService.startCmdProcess(
-                "control",
-                deviceCmd,
-                function(result){
-                    context.loading = false;
-                    context.statisticsUpload({subAction: 'child_lock_click', action_result:childLock});
-                    context.queryStatus();
-                },
-                function(result){
-                    context.loading = false;
-                    nativeService.toast("控制失败");
-                }
-            )
+      } else {
+        let deviceCmd = cmdFun.cmdLock({ childLock }, this.device);
+        nativeService.startCmdProcess(
+          "control",
+          deviceCmd,
+          function (result) {
+            context.loading = false;
+            context.statisticsUpload({ subAction: 'child_lock_click', action_result: childLock });
+            context.queryStatus();
+          },
+          function (result) {
+            context.loading = false;
+            nativeService.toast("控制失败");
+          }
+        )
       }
     },
     goTo(url) {
@@ -117,7 +118,7 @@ const deviceMessageMixin = {
     },
     queryRunTimer(timeSet) {
       var self = this;
-      this.queryTimer = setInterval(function() {
+      this.queryTimer = setInterval(function () {
         self.queryStatus();
         // nativeService.toast(111);
       }, timeSet * 1000);
@@ -141,12 +142,12 @@ const deviceMessageMixin = {
       }
       var context = this;
 
-      if(isLuaControl){
+      if (isLuaControl) {
         let params = {
           operation: "luaQuery",
-  
           params: {}
         };
+        // nativeService.alert(params)
         nativeService
           .sendLuaRequest(params)
           .then(resp => {
@@ -155,37 +156,39 @@ const deviceMessageMixin = {
             // nativeService.alert(resultObj);
             let getObj = context.tranformToInt(resultObj);
             let analysisObj = cmdFun.analysisLua(getObj, context.tabs);
+            context.doorStatus = analysisObj.displaySign.doorSwitch;
             context.analysisFun(analysisObj, context.tabs);
-  
+
             if (typeof cb === "function") {
               cb();
             }
           })
           .catch(error => {
             nativeService.hideLoading();
-            // nativeService.toast("查询失败");
+            nativeService.toast("查询失败"+JSON.stringify(error));
           });
-      }else{
+      } else {
         let sendCmd = cmdFun.createQueryMessage(this.device);
+        // nativeService.alert(cmdFun.cmdTo16Hex(sendCmd));
         nativeService.startCmdProcess(
-            "query",
-            sendCmd,
-            function (result) {
-                nativeService.hideLoading();
-                var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
-                var arr = result_arr.split(",");
-                // nativeService.alert(arr);
-                var analysisObj = cmdFun.analysisCmd(arr,context.tabs);
-                context.analysisFun(analysisObj,context.tabs);
+          "query",
+          sendCmd,
+          function (result) {
+            nativeService.hideLoading();
+            var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
+            var arr = result_arr.split(",");
+            // nativeService.alert(arr);
+            var analysisObj = cmdFun.analysisCmd(arr, context.tabs);
+            context.analysisFun(analysisObj, context.tabs);
 
-                if(typeof cb === 'function') {
-                    cb();
-                }
-            },
-            function (result) {
-                nativeService.hideLoading();
-                nativeService.toast("查询失败");
+            if (typeof cb === 'function') {
+              cb();
             }
+          },
+          function (result) {
+            nativeService.hideLoading();
+            nativeService.toast("查询失败");
+          }
         );
       }
     },
@@ -193,14 +196,15 @@ const deviceMessageMixin = {
       let context = this;
       nativeService.showLoading();
 
-      if(isLuaControl){
+      if (isLuaControl) {
         let params = {
           operation: "luaControl",
-  
+
           params: {
-            furnace_light: lightValue ? "on" : "off"
+            furnace_light: lightValue ? "off" : "on"
           }
         };
+        // nativeService.alert(params);
         nativeService
           .sendLuaRequest(params)
           .then(resp => {
@@ -215,23 +219,24 @@ const deviceMessageMixin = {
             nativeService.hideLoading();
             // nativeService.toast("控制失败");
           });
-      }else{
+      } else {
         let deviceCmd = cmdFun.cmdLight(lightValue, this.device);
-            nativeService.startCmdProcess(
-                "control",
-                deviceCmd,
-                function(result){
-                    nativeService.hideLoading();
-                    // nativeService.alert(result);
-                    context.statisticsUpload({subAction:'light_click', action_result:lightValue?0:1});
-                    context.queryStatus();
-                },
-                function(result){
-                    nativeService.hideLoading();
-                    nativeService.toast('控制失败，请检查网络或者设置的参数');
-                    //console.log('fail', result);
-                }
-            )
+        // nativeService.alert(cmdFun.cmdTo16Hex(deviceCmd));
+        nativeService.startCmdProcess(
+          "control",
+          deviceCmd,
+          function (result) {
+            nativeService.hideLoading();
+            // nativeService.alert(result);
+            context.statisticsUpload({ subAction: 'light_click', action_result: lightValue ? 0 : 1 });
+            context.queryStatus();
+          },
+          function (result) {
+            nativeService.hideLoading();
+            nativeService.toast('控制失败，请检查网络或者设置的参数');
+            //console.log('fail', result);
+          }
+        )
       }
     },
     setting(cmdObj) {
@@ -278,7 +283,7 @@ const deviceMessageMixin = {
     },
     controlDevice(jsonCmd, callbackData) {
       let context = this;
-      
+
       // 蒸汽烤箱0TQN36QL判断探针温度与设定的常规温度
       if (this.device.extra1.sn8 == "0TQN36QL") {
         if (jsonCmd.isProbeSettingTemperature < jsonCmd.probeTemperature) {
@@ -286,14 +291,12 @@ const deviceMessageMixin = {
           return;
         }
       }
-      nativeService.showLoading();
 
-      if(isLuaControl){
+      if (isLuaControl) {
         if (this.doorStatus) {
           nativeService.toast("主人，您的设备炉门开了");
           return;
         }
-  
         let upTemp = jsonCmd.temperature,
           downTemp = jsonCmd.temperature;
         if (jsonCmd.upTemperature || jsonCmd.downTemperature) {
@@ -307,16 +310,18 @@ const deviceMessageMixin = {
           }
           (upTemp = jsonCmd.upTemperature), (downTemp = jsonCmd.downTemperature);
         }
-  
+
         if (parseInt(jsonCmd.temperature) < 100 && !this.isSmallOven(callbackData.device.type)) { // sf 不是小烤箱判断
           jsonCmd.preheat = false;
         }
         if (this.isWorking && jsonCmd.currentItem && jsonCmd.currentItem.preheat && jsonCmd.currentItem.preheat.hide) {//如果隐藏
           jsonCmd.preheat = false;
         }
-  
-        let modeSec = this.modeTextSec(jsonCmd.mode);
-        // nativeService.alert(modeSec);
+
+        let modeSec = this.modeTextSec(jsonCmd.mode); //加载模式对应的json 字段表
+        if (jsonCmd.mode === 0xE0) { //如果是自动菜单
+          modeSec = 'auto_menu';
+        }
         let sendParmas = {
           work_status: "work",
           work_mode: modeSec
@@ -330,9 +335,7 @@ const deviceMessageMixin = {
           sendParmas.work_second = 0;
         }
         if (jsonCmd.preheat) { // 非探针预热设置 sf
-            sendParmas.pre_heat = "on";
-        }else{
-            delete sendParmas.pre_heat;
+          sendParmas.pre_heat = "on";
         }
         if (jsonCmd.temperature) {
           var temperature = parseInt(jsonCmd.temperature);
@@ -341,7 +344,7 @@ const deviceMessageMixin = {
         if (callbackData.working) {
           //工作类设置类
           sendParmas = {};
-        
+
           if (jsonCmd.time) {
             sendParmas.hour_set = hour;
             sendParmas.minute_set = minute;
@@ -351,6 +354,9 @@ const deviceMessageMixin = {
             sendParmas.temp_set = temperature;
           }
         }
+        if (jsonCmd.recipeId) {
+          sendParmas.cloudmenuid = jsonCmd.recipeId;
+        }
         if (jsonCmd.probe && callbackData.isProbe) {
           //假如当前插上探针，并且 该模式支持探针，则，do 探针开始类
         }
@@ -358,11 +364,12 @@ const deviceMessageMixin = {
           //假如当前插上探针，并且 该模式支持探针，则，工作设置类,探针工作设置类
           delete sendParmas.work_mode;
         }
-  
+
+        nativeService.showLoading();
+
         // nativeService.alert(sendParmas);
         let params = {
           operation: "luaControl",
-  
           params: sendParmas
         };
         nativeService
@@ -373,7 +380,7 @@ const deviceMessageMixin = {
             // //   nativeService.alert(resultObj);
             // let analysisObj = cmdFun.analysisLua(resultObj, context.tabs);
             // context.analysisFun(analysisObj, context.tabs);
-  
+
             if (context.isStandby()) {
               context.fromStandBy = true;
               context.queryStatus(null, null, context.pageViewStatistics);
@@ -385,45 +392,45 @@ const deviceMessageMixin = {
             nativeService.hideLoading();
             // nativeService.toast("控制失败" + JSON.stringify(error));
           });
-      }else{
+      } else {
         let deviceCmd = cmdFun.createControlMessage(jsonCmd, callbackData);
-            // this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
-            // return;
-            // nativeService.alert(cmdFun.cmdToEasy(deviceCmd));
-            nativeService.startCmdProcess(
-                "control",
-                deviceCmd,
-                function(result){
-                    nativeService.hideLoading();
-                    var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
-                    var arr = result_arr.split(",");
-                    // nativeService.alert(arr[11]);
-                    if(parseInt(arr[11])==254){
-                        if(parseInt(arr[13])==6){
-                            nativeService.toast('参数错误');
-                            return;
-                        }
-                        if(parseInt(arr[13])==7){
-                            nativeService.toast('腔体温度过高，请冷却后使用！');
-                            return;
-                        }
-                    
-                    }
-                    if(context.isStandby()) {
-                        context.fromStandBy = true;
-                        context.queryStatus(null, null, context.pageViewStatistics);
-                    }else{
-                        context.queryStatus();
-                    }
-                },
-                function(result){
-                    nativeService.hideLoading();
-                    nativeService.toast('控制失败，请检查网络或者设置的参数');
-                    //console.log('fail', result);
-                }
-            )
+        // this.testCmdFun(cmdFun.cmdTo16Hex(deviceCmd));
+        // return;
+        // nativeService.alert(cmdFun.cmdToEasy(deviceCmd));
+        nativeService.startCmdProcess(
+          "control",
+          deviceCmd,
+          function (result) {
+            nativeService.hideLoading();
+            var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
+            var arr = result_arr.split(",");
+            // nativeService.alert(arr[11]);
+            if (parseInt(arr[11]) == 254) {
+              if (parseInt(arr[13]) == 6) {
+                nativeService.toast('参数错误');
+                return;
+              }
+              if (parseInt(arr[13]) == 7) {
+                nativeService.toast('腔体温度过高，请冷却后使用！');
+                return;
+              }
+
+            }
+            if (context.isStandby()) {
+              context.fromStandBy = true;
+              context.queryStatus(null, null, context.pageViewStatistics);
+            } else {
+              context.queryStatus();
+            }
+          },
+          function (result) {
+            nativeService.hideLoading();
+            nativeService.toast('控制失败，请检查网络或者设置的参数');
+            //console.log('fail', result);
+          }
+        )
       }
-     
+
     },
 
     startOrPause() {
@@ -439,10 +446,10 @@ const deviceMessageMixin = {
         record = 3;
       }
       nativeService.showLoading();
-      if(isLuaControl){
+      if (isLuaControl) {
         let params = {
           operation: "luaControl",
-  
+
           params: {
             work_status: record === 3 ? "work" : "pause"
           }
@@ -461,28 +468,28 @@ const deviceMessageMixin = {
             nativeService.hideLoading();
             // nativeService.toast("控制失败" + JSON.stringify(error));
           });
-      }else{
-        var deviceCmd = cmdFun.cmdStartOrPause(record,this.device);
+      } else {
+        var deviceCmd = cmdFun.cmdStartOrPause(record, this.device);
         nativeService.startCmdProcess(
-            "control",
-            deviceCmd,
-            function(result){
-                nativeService.hideLoading();
-                context.statisticsUpload({subAction:'pause_continue_click', action_result: record})
-                context.queryStatus();
-            },
-            function(result){
-                 nativeService.toast('控制失败，请检查网络或者设置的参数');
-                //console.log('fail', result);
-            }
+          "control",
+          deviceCmd,
+          function (result) {
+            nativeService.hideLoading();
+            context.statisticsUpload({ subAction: 'pause_continue_click', action_result: record })
+            context.queryStatus();
+          },
+          function (result) {
+            nativeService.toast('控制失败，请检查网络或者设置的参数');
+            //console.log('fail', result);
+          }
         )
       }
-      
+
     },
     cancleWorking() {
       var context = this;
       nativeService.showLoading();
-      if(isLuaControl){
+      if (isLuaControl) {
         let params = {
           operation: "luaControl",
           params: {
@@ -499,27 +506,27 @@ const deviceMessageMixin = {
             nativeService.hideLoading();
             // nativeService.toast("控制失败" + JSON.stringify(error));
           });
-      }else{
+      } else {
         var deviceCmd = cmdFun.cmdCancelWork(this.device);
-            nativeService.startCmdProcess(
-                "control",
-                deviceCmd,
-                function(result){
-                  nativeService.hideLoading();
-                  context.queryStatus();
-                },
-                function(result){
-                    nativeService.toast('控制失败，请检查网络或者设置的参数');
-                    //console.log('fail', result);
-                }
-            )
+        nativeService.startCmdProcess(
+          "control",
+          deviceCmd,
+          function (result) {
+            nativeService.hideLoading();
+            context.queryStatus();
+          },
+          function (result) {
+            nativeService.toast('控制失败，请检查网络或者设置的参数');
+            //console.log('fail', result);
+          }
+        )
       }
-      
+
     },
 
     getStorageItem(key) {
       // nativeService.alert('get:' + key);
-      return new Promise(function(resolve, reject) {
+      return new Promise(function (resolve, reject) {
         storage.getItem(key, event => {
           // nativeService.alert('get:' + event.data);
           resolve(event.data);
@@ -528,7 +535,7 @@ const deviceMessageMixin = {
     },
     setStorageItem(key, value) {
       // nativeService.alert('set:' + key);
-      return new Promise(function(resolve, reject) {
+      return new Promise(function (resolve, reject) {
         storage.setItem(key, JSON.stringify(value), event => {
           nativeService.alert("get:" + event.data);
           resolve(event.data);
@@ -536,15 +543,15 @@ const deviceMessageMixin = {
       });
     },
 
-    getDeviceInfo: function(key) {
+    getDeviceInfo: function (key) {
       // nativeService.alert(key);
       let context = this;
-      return this.getStorageItem(key).then(function(data) {
+      return this.getStorageItem(key).then(function (data) {
         // nativeService.alert(typeof data);
         // return;
         if (data === "undefined") {
           // nativeService.toast('comein', 3000);
-          return nativeService.getDeviceInfo().then(function(data) {
+          return nativeService.getDeviceInfo().then(function (data) {
             // nativeService.alert(data);
             return context.setStorageItem(key, data);
           });
@@ -555,7 +562,7 @@ const deviceMessageMixin = {
         if (dataJson && dataJson.result.deviceSn) {
           let deviceSn = dataJson.result.deviceSn;
           // nativeService.alert(deviceSn);
-          return new Promise(function(resolve, reject) {
+          return new Promise(function (resolve, reject) {
             resolve(deviceSn);
           });
         }
@@ -581,9 +588,9 @@ const deviceMessageMixin = {
       if (obj.error_code) {
         obj.error_code = parseInt(obj.error_code);
       }
-      if (obj.furnace_light) {
-        obj.furnace_light = parseInt(obj.furnace_light);
-      }
+      // if (obj.furnace_light) {
+      //   obj.furnace_light = parseInt(obj.furnace_light);
+      // }
       if (obj.cur_temperature_above) {
         obj.cur_temperature_above = parseInt(obj.cur_temperature_above);
       }
@@ -606,25 +613,26 @@ const deviceMessageMixin = {
       //传入模式配置数据
       let context = this;
       // lua返回字段有问题
-      globalEvent.addEventListener("receiveMessage", function(e) {
+      globalEvent.addEventListener("receiveMessage", function (e) {
         // nativeService.alert(e);
         nativeService.hideLoading();
         context.settingClickRecord = false;
-        if(isLuaControl){
+        if (isLuaControl) {
           let obj = e.result;
           let getObj = context.tranformToInt(obj);
           var analysisObj = cmdFun.analysisLua(getObj, context.tabs);
+          context.doorStatus = analysisObj.displaySign.doorSwitch;
           context.analysisFun(analysisObj, context.tabs);
-        }else{
+        } else {
           var str = e.data;
           var arr = str.split(",");
-          if(parseInt(arr[9])==0x0A){
-              return;
+          if (parseInt(arr[9]) == 0x0A) {
+            return;
           }
-          var analysisObj = cmdFun.analysisCmd(arr,context.tabs);
-          context.analysisFun(analysisObj,context.tabs);
+          var analysisObj = cmdFun.analysisCmd(arr, context.tabs);
+          context.analysisFun(analysisObj, context.tabs);
         }
-       
+
       });
       //监听设备在线离线状态
       globalEvent.addEventListener("receiveMessageFromApp", data => {

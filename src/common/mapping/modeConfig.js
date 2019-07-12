@@ -18,7 +18,13 @@ let mode = {
     'pure_steam':{ value: 0x20, text:'蒸汽'},
     'auto_menu':{ value: 0xE0, text:'自动菜单'},
     'dry':{ value: 0xc4, text:'烘干'},
-    'scale_clean':{ value: 0xc1, text:'清洁'},
+    'clean':{ value: 0xc6, text:'清洁'},
+
+    'microwave':{ value: 0x01,text:'微波' },
+    'above_tube':{ value: 0x40,text:'烧烤' },
+    'unfreeze':{ value: 0xa0,text:'解冻' },
+    'remove_odor':{ value: 0xc3,text:'除味' },
+    'scale_clean':{ value: 0xc1,text:'除垢' },
 };
 
 export default mode;

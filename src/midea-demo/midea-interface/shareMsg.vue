@@ -2,8 +2,10 @@
     <div class="wrapper">
         <midea-header title="shareMsg" :isImmersion="isImmersion" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
 
-        <midea-title-bar title="接口参数:"></midea-title-bar>
-        <textarea type="text" placeholder="Input Text" class="textarea" :value="messageParamString" @input="dataChange" rows=5 />
+        <div class="icon-group">
+            <textarea type="text" placeholder="Input Text" class="display-text" :value="messageParamString" @input="dataChange" rows=5 />
+            <image class="icon-scan" src="../assets/img/service_ic_scan@3x.png" @click="scanParam"></image>
+        </div>
         <midea-button text="微信分享" @mideaButtonClicked="mideaButtonClicked('wx')">
         </midea-button>
         <midea-button text="QQ分享" @mideaButtonClicked="mideaButtonClicked('qq')">
@@ -20,18 +22,37 @@
     </div>
 </template>
 <style scoped>
+.icon-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+}
+.icon-scan {
+    height: 44px;
+    width: 44px;
+}
+.display-text {
+    width: 640px;
+    font-size: 30px;
+    margin: 10px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #bbbbbb;
+}
 .textarea {
-  font-size: 30px;
-  width: 750px;
-  border-color: gray;
-  margin-top: 30px;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-bottom: 30px;
+    font-size: 30px;
+    width: 640px;
+    border-color: gray;
+    margin-top: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 30px;
 }
 .displayBtnStyle {
-  display: inline-flex;
-  border-radius: 0px;
+    display: inline-flex;
+    border-radius: 0px;
 }
 </style>
 <script>
@@ -76,6 +97,17 @@ module.exports = {
                 }
             ).catch((error) => {
                 nativeService.toast(error)
+            })
+        },
+        scanParam() {
+            nativeService.scanCode().then(
+                (resp) => {
+                    try {
+                        this.messageParam = JSON.parse(resp.data)
+                    } catch (error) {
+                    }
+                }
+            ).catch((error) => {
             })
         }
     },

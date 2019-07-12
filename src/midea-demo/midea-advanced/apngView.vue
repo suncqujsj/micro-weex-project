@@ -107,14 +107,12 @@ import nativeService from '@/common/services/nativeService'
 import mideaCell from '@/midea-component/cell2.vue'
 import MideaSwitch2 from '@/midea-component/switch2.vue'
 
-const apngModule = weex.requireModule('apngModule');
-
 export default {
     components: { mideaHeader, mideaButton, mideaCell, MideaSwitch2 },
     mixins: [base],
     data() {
         return {
-            elRef: null,
+            apngRef: null,
             isAuto: true,
             isLoop: true,
             apngSrc: "",
@@ -131,25 +129,29 @@ export default {
             switch (key) {
                 case "play":
                     this.messageParam = JSON.stringify({
-                        api: "play"
+                        api: "play",
+                        params: {}
                     })
                     this.execute()
                     break;
                 case "stop":
                     this.messageParam = JSON.stringify({
-                        api: "stop"
+                        api: "stop",
+                        params: {}
                     })
                     this.execute()
                     break;
                 case "pause":
                     this.messageParam = JSON.stringify({
-                        api: "pause"
+                        api: "pause",
+                        params: {}
                     })
                     this.execute()
                     break;
                 case "resume":
                     this.messageParam = JSON.stringify({
-                        api: "resume"
+                        api: "resume",
+                        params: {}
                     })
                     this.execute()
                     break;
@@ -181,10 +183,9 @@ export default {
             })
         },
         execute() {
-            nativeService.toast(this.messageParam);
-            apngModule.apngInterface(
-                this.elRef,
-                JSON.parse(this.messageParam),
+            nativeService.toast("接口：" + JSON.parse(this.messageParam).api + "\n参数:" + JSON.stringify(JSON.parse(this.messageParam).params));
+            this.apngRef[JSON.parse(this.messageParam).api](
+                JSON.parse(this.messageParam).params,
                 function (success) {
                 },
                 function (error) {
@@ -210,7 +211,7 @@ export default {
         },
     },
     mounted() {
-        this.elRef = this.$refs.apngView;
+        this.apngRef = this.$refs.apngView;
     },
     created() {
         this.apngSrc = this.localUrl

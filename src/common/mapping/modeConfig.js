@@ -25,6 +25,15 @@ let mode = {
     'unfreeze':{ value: 0xa0,text:'解冻' },
     'remove_odor':{ value: 0xc3,text:'除味' },
     'scale_clean':{ value: 0xc1,text:'除垢' },
+
+    /*
+     0PS2032W
+    */
+   'fast_steam':{ value: 0x90,text:'快蒸' },
+   'scale_clean':{ value: 0x22,text:'慢蒸' },
+   'scale_clean':{ value: 0x41,text:'烘烤' },
+   'scale_clean':{ value: 0x31,text:'蒸烤' },
+   'scale_clean':{ value: 0xc8,text:'餐具清洁' },
 };
 
 export default mode;

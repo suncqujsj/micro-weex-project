@@ -8,7 +8,7 @@ import nativeService from "@/common/services/nativeService";
 import modeConfig from "@/common/mapping/modeConfig";
 const globalEvent = weex.requireModule("globalEvent");
 const storage = weex.requireModule("storage");
-const isLuaControl = false; //是否是lua 控制
+const isLuaControl = true; //是否是lua 控制
 
 const deviceMessageMixin = {
   data() {

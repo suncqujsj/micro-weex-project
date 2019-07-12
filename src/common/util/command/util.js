@@ -498,7 +498,7 @@ export default {
     },
 
     analysisLua: function (requestCmd, tabs) {
-        nativeService.alert(requestCmd);
+        // nativeService.alert(requestCmd);
         var obj = this.initAnalysisObj();
         obj.workingState.value = this.tranformToStausValue(requestCmd);
         if (obj.workingState.value === 3 || obj.workingState.value === 6) {

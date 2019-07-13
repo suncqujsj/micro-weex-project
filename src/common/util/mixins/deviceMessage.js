@@ -343,15 +343,14 @@ const deviceMessageMixin = {
         }
         if (callbackData.working) {
           //工作类设置类
-          sendParmas = {};
+          sendParmas = {hour_set: hour,minute_set: minute,temp_set: temperature};
 
-          if (jsonCmd.time) {
-            sendParmas.hour_set = hour;
-            sendParmas.minute_set = minute;
-            // sendParmas.second_set = hour;
+          if (jsonCmd.time && jsonCmd.isTimeChange) {
+            delete sendParmas.temp_set;
           }
-          if (jsonCmd.temperature) {
-            sendParmas.temp_set = temperature;
+          if (jsonCmd.temperature && jsonCmd.isTemperatureChange) {
+            delete sendParmas.hour_set;
+            delete sendParmas.minute_set;
           }
         }
         if (jsonCmd.recipeId) {
@@ -588,9 +587,9 @@ const deviceMessageMixin = {
       if (obj.error_code) {
         obj.error_code = parseInt(obj.error_code);
       }
-      // if (obj.furnace_light) {
-      //   obj.furnace_light = parseInt(obj.furnace_light);
-      // }
+      if (obj.temperature) {
+        obj.temperature = parseInt(obj.temperature);
+      }
       if (obj.cur_temperature_above) {
         obj.cur_temperature_above = parseInt(obj.cur_temperature_above);
       }

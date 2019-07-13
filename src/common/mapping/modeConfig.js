@@ -30,10 +30,10 @@ let mode = {
      0PS2032W
     */
    'fast_steam':{ value: 0x90,text:'快蒸' },
-   'scale_clean':{ value: 0x22,text:'慢蒸' },
-   'scale_clean':{ value: 0x41,text:'烘烤' },
-   'scale_clean':{ value: 0x31,text:'蒸烤' },
-   'scale_clean':{ value: 0xc8,text:'餐具清洁' },
+   'fast_steam1':{ value: 0x22,text:'慢蒸' },
+   'fast_steam2':{ value: 0x41,text:'烘烤' },
+   'fast_steam3':{ value: 0x31,text:'蒸烤' },
+   'fast_steam4':{ value: 0xc8,text:'餐具清洁' },
 };
 
 export default mode;

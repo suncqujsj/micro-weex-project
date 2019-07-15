@@ -271,7 +271,7 @@ export default {
         var minute = time % 60;
         var second = 0;
         var set_mode = params.mode;
-        var messageBody = message.createMessageBody(22);
+        var messageBody = message.createMessageFFBody(22);
         var controltype = 0;//待机类
         if (callbackData.working) {
             controltype = 1 //工作类
@@ -378,9 +378,9 @@ export default {
         if (params.currentItem.temperature && params.currentItem.temperature.unit === '℉') {
             message.setBit(messageBody, 6, 4, 1);
         }
-
+        // nativeService.alert(messageBody);
         var sendcmd = message.createMessage(callbackData.device.type, 0x02, messageBody);
-        // nativeService.alert(this.cmdToEasy(sendcmd));
+        // nativeService.alert(sendcmd);
         return sendcmd;
     },
 

@@ -136,14 +136,14 @@ const accordionMixin = {
             return keys.indexOf(key) > -1
         },
         onPreheatChange(event) {
-            if (this.currentItem.sn = '0PS2032W' && (this.currentItem.mode == 0x41||this.currentItem.mode == 0x31)) {
+            if (this.device.extra1.sn8 === '0PS2032W' && (this.currentItem.mode == 0x41||this.currentItem.mode == 0x31)) {
                 this.currentItem.time.set = !event.value;
             }
             this.current[event.itemKey] = event.value;
             // console.log('currentPreheat', this.current.preheat);
         },
         openDialog() {
-            if (this.currentItem.sn = '0PS2032W' && (this.currentItem.mode == 0x41||this.currentItem.mode == 0x31)) {
+            if (this.device.extra1.sn8 === '0PS2032W' && (this.currentItem.mode == 0x41||this.currentItem.mode == 0x31)) {
                 this.currentItem.time.set = !this.currentItem.preheat.default;
             }
 

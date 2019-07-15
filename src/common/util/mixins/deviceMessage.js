@@ -6,6 +6,7 @@
 import cmdFun from "../command/util.js"; //解析指令
 import nativeService from "@/common/services/nativeService";
 import modeConfig from "@/common/mapping/modeConfig";
+import fireConfig from "@/common/mapping/fireConfig";
 const globalEvent = weex.requireModule("globalEvent");
 const storage = weex.requireModule("storage");
 
@@ -23,6 +24,15 @@ const deviceMessageMixin = {
       let modeSec = "";
       for (var key in modeConfig) {
         if (modeConfig[key].value === modeValue) {
+          modeSec = key;
+        }
+      }
+      return modeSec;
+    },
+    fireTextSec(fireValue) {
+      let modeSec = "";
+      for (var key in fireConfig) {
+        if (fireConfig[key].value === fireValue) {
           modeSec = key;
         }
       }
@@ -296,10 +306,14 @@ const deviceMessageMixin = {
         //假如当前插上探针，并且 该模式支持探针，则，工作设置类,探针工作设置类
         delete sendParmas.work_mode;
       }
+      if (jsonCmd.fireAmount) { //火力
+        let fire = this.fireTextSec(parseInt(jsonCmd.fireAmount));
+        sendParmas.fire_power = fire;
+      }
 
       nativeService.showLoading();
 
-      nativeService.alert(sendParmas);
+      // nativeService.alert(sendParmas);
       let params = {
         operation: "luaControl",
         params: sendParmas

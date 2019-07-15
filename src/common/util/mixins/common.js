@@ -356,29 +356,23 @@ let commonMixin = {
          */
         getDeviceStatus(cb=null) {//传入模式配置数据tabs
 
-            let self = this;
-            let {constant} = this;
-            let sendCmd = cmdFun.createQueryMessage(constant.device);
-
-            nativeService.startCmdProcess(
-                "query",
-                sendCmd,
-                function (result) {
-                    // nativeService.alert(result);
-                    // var result_arr = result.replace(/\[|]/g, ""); //去掉中括号
-                    // var arr = result_arr.split(",");
-                    // // nativeService.alert(arr);
-                    // var analysisObj = cmdFun.analysisCmd(arr,self.tabs);
-                    // self.analysisFun(analysisObj,self.tabs);
-
-                    if(typeof cb === 'function') {
-                        cb(JSON.parse(result));
-                    }
-                },
-                function (result) {
-                    //nativeService.toast("查询失败" + JSON.stringify(result));
+            let params = {
+                operation: "luaQuery",
+                params: {}
+              };
+            nativeService
+            .sendLuaRequest(params)
+            .then(resp => {
+                if(typeof cb === 'function') {
+                    cb(resp.result);
                 }
-            );
+                // nativeService.hideLoading();
+                // nativeService.alert(resp);
+            })
+            .catch(error => {
+                // nativeService.hideLoading();
+                // nativeService.toast("查询失败"+JSON.stringify(error));
+            });
         },
 
         onAppToggle(hideCallback, showCallback){

@@ -448,13 +448,17 @@
                 }, TIME);
             },
 
-            handleScreenRecord(statusArray){
-                let byte11 = parseInt(statusArray[11]);
+            handleScreenRecord(statusObj){
+                // let byte11 = parseInt(statusArray[11]);
                 // nativeService.toast(byte11);
-                let ingArr = [3,6,7];
-                if(ingArr.indexOf(byte11) > -1 ) {
+                // let ingArr = [3,6,7];
+                // if(ingArr.indexOf(byte11) > -1 ) {
+                //     return;
+                // }
+                if(statusObj.work_status === 'work' || statusObj.work_status === 'pause' || statusObj.work_status === 'pause_c'){
                     return;
                 }
+
 
                 this.cooking = false;
                 let doneArr = [1,2,4]; //非工作状态

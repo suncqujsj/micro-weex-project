@@ -40,7 +40,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -84,7 +84,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -148,7 +148,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -204,7 +204,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -264,7 +264,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -320,7 +320,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -376,7 +376,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -437,7 +437,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -503,7 +503,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -559,7 +559,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -615,7 +615,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -673,7 +673,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -742,7 +742,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -804,7 +804,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -862,7 +862,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -922,7 +922,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -991,7 +991,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -1041,7 +1041,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -1092,7 +1092,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -1147,7 +1147,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -1209,7 +1209,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -1262,7 +1262,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -1315,7 +1315,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -1368,7 +1368,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -1431,7 +1431,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -1483,7 +1483,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -1540,7 +1540,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -1601,7 +1601,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -1674,7 +1674,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -1725,7 +1725,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -1777,7 +1777,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -1831,7 +1831,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -1893,7 +1893,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -1947,7 +1947,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -2010,7 +2010,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -2073,7 +2073,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -2143,7 +2143,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -2199,7 +2199,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -2254,7 +2254,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -2310,7 +2310,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -2378,7 +2378,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -2434,7 +2434,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:null,
                         range:[100,400,100],
                     },
                     recipeId:{

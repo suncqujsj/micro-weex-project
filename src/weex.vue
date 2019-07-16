@@ -62,7 +62,8 @@ module.exports = {
         MideaSwitch2
     },
     data: () => ({
-        host: '192.168.1.184',
+        host: '192.168.1.183',
+        // host: '10.72.10.15',
         isShowHostList: false,
         hostIndex: null,
         hostList: [],
@@ -71,7 +72,7 @@ module.exports = {
         isShowModuleList: false,
         moduleIndex: null,
         moduleList: [
-            { key: -8, value: "T0xB1_0PS2032W", desc: "XXX大烤箱" },
+            { key: -8, value: "T0xB2_0PS2032W", desc: "S20蒸汽烤箱" },
             { key: -7, value: "T0xB0_02TESTB0", desc: "嵌入式微波炉" },
             { key: -6, value: "T0xB1_04TESTB1", desc: "嵌入式大烤箱" },
             { key: -5, value: "T0xB4_03TESTB4", desc: "小烤箱" },

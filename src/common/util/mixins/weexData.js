@@ -243,7 +243,7 @@ let workingModalMixin  = {
             // if(cmdObj.isProbe.value){ //如果是探针，则为显示为探针设定温度
             //     obj.temperature.upLowTemperature = parseInt(requestCmd[33]);
             //   }
-            
+
             if(this.isProbeInserted(cmdObj) && !this.isCloudMenu(cmdObj)) { // 有探针显示探针温度
                 customData.temperatureText = this.addTemperatureUnit(cmdObj,cmdObj.probeSetttingTemperature.value, cmdObj.temperature.unit);
             } else { // 非探针模式显示较大温度
@@ -363,7 +363,7 @@ let workingModalMixin  = {
         isNonCookingTypeComplete(cmdObj){
             return (cmdObj.mode.value == 0xC0 ||cmdObj.mode.value == 0xC1||cmdObj.mode.value == 0xC2||
                 cmdObj.mode.value == 0xC3||cmdObj.mode.value == 0xC4||cmdObj.mode.value == 0xC5 || cmdObj.mode.value == 0xC6 ||
-                cmdObj.mode.value == 0xA1);
+                cmdObj.mode.value == 0xC7 || cmdObj.mode.value == 0xC8 ||cmdObj.mode.value == 0xA1);
         },
 
         /**

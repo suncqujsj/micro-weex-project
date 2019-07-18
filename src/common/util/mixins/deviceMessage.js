@@ -322,10 +322,14 @@ const deviceMessageMixin = {
         let steamAmount = parseInt(jsonCmd.steamAmount);
         sendParmas.steam_quantity = steamAmount;
       }
+      if (jsonCmd.quantity) { //份量
+        let quantity = parseInt(jsonCmd.quantity);
+        sendParmas.people_number = quantity;
+      }
 
       nativeService.showLoading();
 
-      nativeService.alert(sendParmas);
+      // nativeService.alert(sendParmas);
       let params = {
         operation: "luaControl",
         params: sendParmas

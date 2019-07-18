@@ -48,12 +48,12 @@ let modes = [
                 },
                 steamAmount: {
                     set: false,
-                    default: 2,
+                    default: null,
                     range: [1, 4, 1, "取消"]
                 },
                 fireAmount: {
                     set: false,
-                    default: 0,
+                    default: null,
                     range: null
                 }
             },
@@ -75,17 +75,17 @@ let modes = [
                 },
                 preheat: {
                     set: false,
-                    hide: true,
+                    hide: null,
                     default: false
                 },
                 steamAmount: {
                     set: false,
-                    default: 2,
+                    default: null,
                     range: [1, 4, 1, "取消"]
                 },
                 fireAmount: {
                     set: false,
-                    default: 0,
+                    default: null,
                     range: null
                 }
             },
@@ -112,12 +112,12 @@ let modes = [
                 },
                 steamAmount: {
                     set: false,
-                    default: 2,
+                    default: null,
                     range: [1, 4, 1, "取消"]
                 },
                 fireAmount: {
                     set: false,
-                    default: 0,
+                    default: null,
                     range: null
                 }
             },
@@ -140,12 +140,12 @@ let modes = [
                 },
                 steamAmount: {
                     set: false,
-                    default: 2,
+                    default: null,
                     range: [1, 4, 1, "取消"]
                 },
                 fireAmount: {
                     set: false,
-                    default: 0,
+                    default: null,
                     range: null
                 }
             },
@@ -178,12 +178,12 @@ let modes = [
                 },
                 steamAmount: {
                     set: false,
-                    default: 2,
+                    default: null,
                     range: [40, 40, 1, "取消"]
                 },
                 fireAmount: {
                     set: false,
-                    default: 0,
+                    default: null,
                     range: null
                 }
             },
@@ -209,12 +209,12 @@ let modes = [
                 },
                 steamAmount: {
                     set: false,
-                    default: 2,
+                    default: null,
                     range: [40, 40, 1, "取消"]
                 },
                 fireAmount: {
                     set: false,
-                    default: 0,
+                    default: null,
                     range: null
                 }
             },
@@ -229,7 +229,7 @@ let modes = [
                 },
                 temperature: {
                     set: false,
-                    default: 190,
+                    default: null,
                     range: [190, 230, 5],
                     hide: true
                 },
@@ -240,12 +240,12 @@ let modes = [
                 },
                 steamAmount: {
                     set: false,
-                    default: 2,
+                    default: null,
                     range: [40, 40, 1, "取消"]
                 },
                 fireAmount: {
                     set: false,
-                    default: 0,
+                    default: null,
                     range: null
                 },
                 settingHide:true
@@ -262,7 +262,7 @@ let modes = [
                 },
                 temperature: {
                     set: false,
-                    default: 190,
+                    default: null,
                     range: [190, 230, 5],
                     hide: true
                 },
@@ -273,12 +273,12 @@ let modes = [
                 },
                 steamAmount: {
                     set: false,
-                    default: 2,
+                    default: null,
                     range: [40, 40, 1, "取消"]
                 },
                 fireAmount: {
                     set: false,
-                    default: 0,
+                    default: null,
                     range: null
                 },
                 settingHide:true
@@ -299,7 +299,7 @@ let modes = [
                 },
                 temperature: {
                     set: false,
-                    default: 170,
+                    default: null,
                     range: [100, 230, 5],
                     hide: true
                 },
@@ -310,12 +310,12 @@ let modes = [
                 },
                 steamAmount: {
                     set: false,
-                    default: 2,
+                    default: null,
                     range: [40, 40, 1, "取消"]
                 },
                 fireAmount: {
                     set: false,
-                    default: 0,
+                    default: null,
                     range: null
                 },
                 settingHide:true

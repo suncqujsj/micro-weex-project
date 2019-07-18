@@ -484,6 +484,9 @@ export default {
             case 'work_finish':
                 val = 4;
                 break;
+            case 'reaction':
+                val = 3;
+                break;
             default:
                 val = 1;
                 break;
@@ -506,14 +509,15 @@ export default {
         } else {
             this.isWorking = false;
         }
+
         var recipeId = requestCmd.cloudmenuid || 0;
         obj.recipeId.value = recipeId;
         obj.timeRemaining.hour = requestCmd.work_hour || 0;
         obj.timeRemaining.minute = requestCmd.work_minute || 0 ;
         obj.timeRemaining.second = requestCmd.work_second || 0;
         obj.mode.value = this.modeTovalue(requestCmd);
-
         obj.mode.text = this.modeValueToModeText(recipeId,obj.mode.value, tabs);
+
 
         //实际温度
         obj.realTemperature.upHighTemperature = requestCmd.cur_temperature_above || 0;
@@ -544,7 +548,7 @@ export default {
         obj.light.value = requestCmd.furnace_light === 'on'?1:0;
         obj.isProbe.value = 0; //探针暂时没有返回
         obj.highClearLock.value = 0; //高温自清洁锁暂时没有返回
-        obj.menuFeel.value = 0; //菜单感应中暂时没有返回
+        obj.menuFeel.value = (requestCmd.work_status === 'reaction'?1:0); //菜单感应中暂时没有返回
         //设置温度
 
         obj.temperature.upHighTemperature = 0;

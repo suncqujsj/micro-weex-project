@@ -310,6 +310,10 @@ const deviceMessageMixin = {
         let fire = this.fireTextSec(parseInt(jsonCmd.fireAmount));
         sendParmas.fire_power = fire;
       }
+      if (jsonCmd.weight) { //重量
+        let weight = parseInt(jsonCmd.weight);
+        sendParmas.weight = weight;
+      }
 
       nativeService.showLoading();
 

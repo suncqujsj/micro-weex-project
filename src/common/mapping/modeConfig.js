@@ -17,6 +17,7 @@ let mode = {
 
     'pure_steam':{ value: 0x20, text:'蒸汽'},
     'auto_menu':{ value: 0xE0, text:'自动菜单'},
+    'humidit_auto_menu ': {value: 0xE2, text:'湿度感应菜单'},
     'dry':{ value: 0xc4, text:'烘干'},
     'clean':{ value: 0xc6, text:'清洁'},
 
@@ -34,6 +35,8 @@ let mode = {
    'hot_wind_bake':{ value: 0x41,text:'烘烤' },
    'steam_and_hot_wind':{ value: 0x31,text:'蒸烤' },
    'dining_utensils_clean':{ value: 0xc8,text:'餐具清洁' },
+   
+   'fast_baking': { value: 0x70,text:'双模快烤' },
 };
 
 export default mode;

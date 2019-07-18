@@ -556,9 +556,9 @@ export default {
         obj.probeSetttingTemperature.value = 0; //探针设置温度暂时没有返回
         obj.temperature.unit = 0; //温度单位暂时没有返回
 
-        obj.timeSetting.hour = requestCmd.hour_set; //设定的总时间暂时没有返回
-        obj.timeSetting.minute = requestCmd.minute_set; //设定的总时间暂时没有返回
-        obj.timeSetting.second = requestCmd.second_set; //设定的总时间暂时没有返回
+        obj.timeSetting.hour = (requestCmd.hour_set===0xff?0:requestCmd.hour_set); 
+        obj.timeSetting.minute = (requestCmd.minute_set===0xff?0:requestCmd.minute_set); 
+        obj.timeSetting.second = (requestCmd.second_set===0xff?0:requestCmd.second_set); 
 
         obj.fire.value =  0;  //parker: 火力不用*10了，统一用新协议0-10  ，lua 没有返回
         obj.weight.value = 0; //lua 没有返回

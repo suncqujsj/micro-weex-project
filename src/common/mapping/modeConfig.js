@@ -30,13 +30,20 @@ let mode = {
     /*
      0PS2032W
     */
-   'fast_steam':{ value: 0x90,text:'快蒸' },
+   'fast_steam':{ value: 0x90,text:'快蒸' }, //微波 + 蒸汽/快蒸
    'slow_steam':{ value: 0x22,text:'慢蒸' },
    'hot_wind_bake':{ value: 0x41,text:'烘烤' },
-   'steam_and_hot_wind':{ value: 0x31,text:'蒸烤' },
+   'steam_and_hot_wind':{ value: 0x31,text:'蒸烤' }, //蒸汽 + 热风对流  / 蒸烤
    'dining_utensils_clean':{ value: 0xc8,text:'餐具清洁' },
-   
-   'fast_baking': { value: 0x70,text:'双模快烤' },
+   'fast_baking': { value: 0x70,text:'双模快烤' }, //微波 + 烧烤 / 微波 + 上外烧烤 /微波 +普通烧烤/ 变频烧烤 / 变频快烤？
+
+   /*
+     934FMJ
+    */
+   'hot_wind_and_broil':{ value: 0x43,text:'热风烧烤' }, 
+   'microwave_and_hot_wind':{ value: 0x71,text:'微波+热风对流' },
+   'fast_baking_and_hot_wind':{ value: 0x73,text:'微波+热风烧烤' },
+
 };
 
 export default mode;

@@ -282,7 +282,11 @@ const deviceMessageMixin = {
       }
       if (jsonCmd.temperature) {
         var temperature = parseInt(jsonCmd.temperature);
-        sendParmas.temperature = temperature;
+        if(temperature<6){ //温度档位
+          sendParmas.temperature_gear = temperature;
+        }else{
+          sendParmas.temperature = temperature;
+        }
       }
       if (callbackData.working) {
         //工作类设置类
@@ -314,10 +318,14 @@ const deviceMessageMixin = {
         let weight = parseInt(jsonCmd.weight);
         sendParmas.weight = weight;
       }
+      if (jsonCmd.steamAmount) { //蒸汽
+        let steamAmount = parseInt(jsonCmd.steamAmount);
+        sendParmas.steam_quantity = steamAmount;
+      }
 
       nativeService.showLoading();
 
-      // nativeService.alert(sendParmas);
+      nativeService.alert(sendParmas);
       let params = {
         operation: "luaControl",
         params: sendParmas
@@ -486,6 +494,13 @@ const deviceMessageMixin = {
       if (obj.reaction) {
         obj.reaction = parseInt(obj.reaction);
       }
+      if (obj.steam_quantity) {
+        obj.steam_quantity = parseInt(obj.steam_quantity);
+      }
+      if (obj.temperature_gear) {
+        obj.temperature_gear = parseInt(obj.temperature_gear);
+      }
+      
       
       return obj;
     },

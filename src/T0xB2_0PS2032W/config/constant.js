@@ -6,9 +6,9 @@
 module.exports = {
     device: {
         page_title: "蒸汽烤箱",
-        type: 0xB1,
-        widget_name: 'MSO_T0xB1',
-        widget_version: '5.0.5',
+        type: 0xB2,
+        widget_name: 'MSO_T0xB2',
+        widget_version: '5.1.8',
         extra1: {
             sn8: '0PS2032W'
         },
@@ -19,10 +19,11 @@ module.exports = {
             working:true
         },
         hideCloudRecipe:{
-            standby:true,
+            standby:false,
             working:true
         },
-        voiceAuth: false
+        voiceAuth: false,
+        // cloudMenuEditable: true
     }
 };
 

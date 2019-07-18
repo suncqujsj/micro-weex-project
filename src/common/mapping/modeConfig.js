@@ -17,7 +17,7 @@ let mode = {
 
     'pure_steam':{ value: 0x20, text:'蒸汽'},
     'auto_menu':{ value: 0xE0, text:'自动菜单'},
-    'humidit_auto_menu ': {value: 0xE2, text:'湿度感应菜单'},
+    'humidit_auto_menu': {value: 0xE2, text:'湿度感应菜单'},
     'dry':{ value: 0xc4, text:'烘干'},
     'clean':{ value: 0xc6, text:'清洁'},
 

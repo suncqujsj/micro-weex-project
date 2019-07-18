@@ -177,8 +177,8 @@ export default {
         var text = '';
         var modeArr = [];
         var isRecipe = false;
-
-        if (modeValue === 0xE2) {
+        
+        if (modeValue === 0xE2 && recipeId != 0) {
             return sensoryMenus[recipeId].cn;
         }
 
@@ -484,9 +484,6 @@ export default {
             case 'work_finish':
                 val = 4;
                 break;
-            case 'reaction':
-                val = 3;
-                break;
             default:
                 val = 1;
                 break;
@@ -496,7 +493,6 @@ export default {
     modeTovalue(requestCmd){
         let mode = requestCmd.work_mode || 'double_tube';
         let modeValue = modeConfig[mode].value;
-        // nativeService.alert(modeValue);
         return modeValue;
     },
 
@@ -517,7 +513,6 @@ export default {
         obj.timeRemaining.second = requestCmd.work_second || 0;
         obj.mode.value = this.modeTovalue(requestCmd);
         obj.mode.text = this.modeValueToModeText(recipeId,obj.mode.value, tabs);
-
 
         //实际温度
         obj.realTemperature.upHighTemperature = requestCmd.cur_temperature_above || 0;
@@ -548,7 +543,7 @@ export default {
         obj.light.value = requestCmd.furnace_light === 'on'?1:0;
         obj.isProbe.value = 0; //探针暂时没有返回
         obj.highClearLock.value = 0; //高温自清洁锁暂时没有返回
-        obj.menuFeel.value = (requestCmd.work_status === 'reaction'?1:0); //菜单感应中暂时没有返回
+        obj.menuFeel.value = requestCmd.reaction?1:0; 
         //设置温度
 
         obj.temperature.upHighTemperature = 0;

@@ -483,6 +483,10 @@ const deviceMessageMixin = {
       if (obj.second_set) {
         obj.second_set = parseInt(obj.second_set);
       }
+      if (obj.reaction) {
+        obj.reaction = parseInt(obj.reaction);
+      }
+      
       return obj;
     },
 

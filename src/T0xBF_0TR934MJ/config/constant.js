@@ -8,7 +8,7 @@ module.exports = {
         type: 0xBF,
         page_title: "微波蒸汽烤箱",
         widget_name: 'MSO_T0xB1',
-        widget_version: '5.0.7',
+        widget_version: '5.0.8',
         extra1: {
             sn8: '0TR934MJ'
         },

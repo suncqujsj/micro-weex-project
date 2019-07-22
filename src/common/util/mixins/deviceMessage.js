@@ -9,7 +9,7 @@ import modeConfig from "@/common/mapping/modeConfig";
 import fireConfig from "@/common/mapping/fireConfig";
 const globalEvent = weex.requireModule("globalEvent");
 const storage = weex.requireModule("storage");
-
+const isLuaControl = true;
 const deviceMessageMixin = {
   data() {
     return {
@@ -279,13 +279,13 @@ const deviceMessageMixin = {
         //sonCmd.time有小数（秒）的时候
         let num = jsonCmd.time;
         let str = num.toString().split('.');
-        let getStr = str[1] != undefined ? str[1]: '';
+        let getStr = str[1] != undefined ? str[1] : '';
         let getSecond = 0;
         var index = 6;
-        if(getStr){
-          for(var i=0; i< getStr.length; i++){
-            getSecond += parseInt(getStr[i])*index;
-            index = index/10;
+        if (getStr) {
+          for (var i = 0; i < getStr.length; i++) {
+            getSecond += parseInt(getStr[i]) * index;
+            index = index / 10;
           }
         }
         sendParmas.work_second = parseInt(getSecond);
@@ -295,9 +295,9 @@ const deviceMessageMixin = {
       }
       if (jsonCmd.temperature) {
         var temperature = parseInt(jsonCmd.temperature);
-        if(temperature<6){ //温度档位
+        if (temperature < 6) { //温度档位
           sendParmas.temperature_gear = temperature;
-        }else{
+        } else {
           sendParmas.temperature = temperature;
         }
       }
@@ -341,7 +341,7 @@ const deviceMessageMixin = {
       }
 
       nativeService.showLoading();
-      // nativeService.alert(sendParmas);
+      nativeService.alert(sendParmas);
       let params = {
         operation: "luaControl",
         params: sendParmas
@@ -516,8 +516,8 @@ const deviceMessageMixin = {
       if (obj.temperature_gear) {
         obj.temperature_gear = parseInt(obj.temperature_gear);
       }
-      
-      
+
+
       return obj;
     },
 

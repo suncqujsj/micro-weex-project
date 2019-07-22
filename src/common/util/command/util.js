@@ -13,7 +13,7 @@ export default {
             workingState: {
                 name: "工作状态",
                 value: 0x00,
-                view: {1: "省电", 2: "待机", 3: "工作中", 4: "烹饪完成", 5: "预约中", 6: "暂停", 7: "云菜谱段间等待", 8: "爱心3秒"}
+                view: { 1: "省电", 2: "待机", 3: "工作中", 4: "烹饪完成", 5: "预约中", 6: "暂停", 7: "云菜谱段间等待", 8: "爱心3秒" }
             },
             mode: {
                 name: "烹饪模式", text: '', value: 0x00
@@ -23,14 +23,14 @@ export default {
             },
             displaySign: {
                 name: "显示标志",
-                lock: {name: "童锁", value: 0x00, view: {0: "未锁", 1: "已锁"}},
-                doorSwitch: {name: "门状态", value: 0x00, view: {0: "门关", 1: "门开"}},
-                waterBox: {name: "水箱位", value: 0x00, view: {0: "有水箱", 1: "缺水箱"}},
-                lackWater: {name: "缺水位", value: 0x00, view: {0: "不缺水", 1: "缺水"}},
-                changeWater: {name: "换水位", value: 0x00, view: {0: "不需要换水", 1: "要换水"}},
-                preheat: {name: "是否预热", value: 0x00, view: {0: "非预热中", 1: "预热中"}},
-                preheatTemperature: {name: "预热温度位", value: 0x00, view: {0: "预热温度未到", 1: "预热温度已到"}},
-                isError: {name: "是否故障", value: 0x00, view: {0: "无故障", 1: "有故障"}},
+                lock: { name: "童锁", value: 0x00, view: { 0: "未锁", 1: "已锁" } },
+                doorSwitch: { name: "门状态", value: 0x00, view: { 0: "门关", 1: "门开" } },
+                waterBox: { name: "水箱位", value: 0x00, view: { 0: "有水箱", 1: "缺水箱" } },
+                lackWater: { name: "缺水位", value: 0x00, view: { 0: "不缺水", 1: "缺水" } },
+                changeWater: { name: "换水位", value: 0x00, view: { 0: "不需要换水", 1: "要换水" } },
+                preheat: { name: "是否预热", value: 0x00, view: { 0: "非预热中", 1: "预热中" } },
+                preheatTemperature: { name: "预热温度位", value: 0x00, view: { 0: "预热温度未到", 1: "预热温度已到" } },
+                isError: { name: "是否故障", value: 0x00, view: { 0: "无故障", 1: "有故障" } },
             },
             timeRemaining: {
                 name: "程序剩余时间",
@@ -40,18 +40,18 @@ export default {
             },
             temperature: {
                 name: "发热管设置的温度",
-                upHighTemperature: {name: "上管设置温度：高", value: 0x00},
-                upLowTemperature: {name: "上管设置温度：低", value: 0x00},
-                downHighTemperature: {name: "下管设置温度：高", value: 0x00},
-                downLowTemperature: {name: "下管设置温度：低", value: 0x00},
+                upHighTemperature: { name: "上管设置温度：高", value: 0x00 },
+                upLowTemperature: { name: "上管设置温度：低", value: 0x00 },
+                downHighTemperature: { name: "下管设置温度：高", value: 0x00 },
+                downLowTemperature: { name: "下管设置温度：低", value: 0x00 },
                 unit: 0
             },
             realTemperature: {
                 name: "发热管实际的温度",
-                upHighTemperature: {name: "上管实际温度：高", value: 0x00},
-                upLowTemperature: {name: "上管实际温度：低", value: 0x00},
-                downHighTemperature: {name: "下管实际温度：高", value: 0x00},
-                downLowTemperature: {name: "下管实际温度：低", value: 0x00},
+                upHighTemperature: { name: "上管实际温度：高", value: 0x00 },
+                upLowTemperature: { name: "上管实际温度：低", value: 0x00 },
+                downHighTemperature: { name: "下管实际温度：高", value: 0x00 },
+                downLowTemperature: { name: "下管实际温度：低", value: 0x00 },
             },
             light: {
                 name: "炉灯",
@@ -73,9 +73,9 @@ export default {
                 name: "探针设定温度",
                 value: 0
             },
-            fire: {name: "火力", value: 0x00},
-            weight: {name: "重量", value: 0x00},
-            steam: {name: "蒸汽量", value: 0x00},
+            fire: { name: "火力", value: 0x00 },
+            weight: { name: "重量", value: 0x00 },
+            steam: { name: "蒸汽量", value: 0x00 },
             timeSetting: {
                 name: "程序设定总时间",
                 hour: 0,
@@ -177,7 +177,7 @@ export default {
         var text = '';
         var modeArr = [];
         var isRecipe = false;
-        
+
         if (modeValue === 0xE2 && recipeId != 0) {
             return sensoryMenus[recipeId].cn;
         }
@@ -463,9 +463,9 @@ export default {
         return sendMessage;
     },
 
-    tranformToStausValue(requestCmd){
-        let val = 1;        
-        switch ( requestCmd.work_status ) {
+    tranformToStausValue(requestCmd) {
+        let val = 1;
+        switch (requestCmd.work_status) {
             case 'save_power':
                 val = 1;
                 break;
@@ -487,10 +487,10 @@ export default {
             default:
                 val = 1;
                 break;
-        }  
-        return val;                         
+        }
+        return val;
     },
-    modeTovalue(requestCmd){
+    modeTovalue(requestCmd) {
         let mode = requestCmd.work_mode || 'double_tube';
         let modeValue = modeConfig[mode].value;
         return modeValue;
@@ -509,16 +509,16 @@ export default {
         var recipeId = requestCmd.cloudmenuid || 0;
         obj.recipeId.value = recipeId;
         obj.timeRemaining.hour = requestCmd.work_hour || 0;
-        obj.timeRemaining.minute = requestCmd.work_minute || 0 ;
+        obj.timeRemaining.minute = requestCmd.work_minute || 0;
         obj.timeRemaining.second = requestCmd.work_second || 0;
         obj.mode.value = this.modeTovalue(requestCmd);
-        obj.mode.text = this.modeValueToModeText(recipeId,obj.mode.value, tabs);
+        obj.mode.text = this.modeValueToModeText(recipeId, obj.mode.value, tabs);
 
         //实际温度
         obj.realTemperature.upHighTemperature = requestCmd.cur_temperature_above || 0;
         obj.realTemperature.upLowTemperature = requestCmd.cur_temperature_above || 0;
         obj.realTemperature.downHighTemperature = requestCmd.cur_temperature_underside || 0;
-        obj.realTemperature.downLowTemperature =requestCmd.cur_temperature_underside || 0;
+        obj.realTemperature.downLowTemperature = requestCmd.cur_temperature_underside || 0;
 
         /*提醒代码tips_code 数字
         1		门没有关紧，提醒用户防止蒸汽烫伤	只读	
@@ -529,21 +529,21 @@ export default {
         7		需要换水	只读	
         8		预热中	只读	
         */
-    
-        obj.displaySign.lock = requestCmd.lock === 'on'?1:0;
-        obj.displaySign.doorSwitch = requestCmd.door_open === 'on'?1:0;
-        this.doorStatus =  requestCmd.door_open === 'on'?1:0;
-        obj.displaySign.waterBox = requestCmd.tips_code === 6?1:0;
-        obj.displaySign.lackWater = requestCmd.tips_code === 2?1:0;
-        obj.displaySign.changeWater = requestCmd.tips_code === 7?1:0;
-        obj.displaySign.preheat = requestCmd.tips_code === 8?1:0;
-        obj.displaySign.preheatTemperature = requestCmd.tips_code === 9?1:0;
-        obj.displaySign.isError = requestCmd.error_code?1:0;
 
-        obj.light.value = requestCmd.furnace_light === 'on'?1:0;
+        obj.displaySign.lock = requestCmd.lock === 'on' ? 1 : 0;
+        obj.displaySign.doorSwitch = requestCmd.door_open === 'on' ? 1 : 0;
+        this.doorStatus = requestCmd.door_open === 'on' ? 1 : 0;
+        obj.displaySign.waterBox = requestCmd.tips_code === 6 ? 1 : 0;
+        obj.displaySign.lackWater = requestCmd.tips_code === 2 ? 1 : 0;
+        obj.displaySign.changeWater = requestCmd.tips_code === 7 ? 1 : 0;
+        obj.displaySign.preheat = requestCmd.tips_code === 8 ? 1 : 0;
+        obj.displaySign.preheatTemperature = requestCmd.tips_code === 9 ? 1 : 0;
+        obj.displaySign.isError = requestCmd.error_code ? 1 : 0;
+
+        obj.light.value = requestCmd.furnace_light === 'on' ? 1 : 0;
         obj.isProbe.value = 0; //探针暂时没有返回
         obj.highClearLock.value = 0; //高温自清洁锁暂时没有返回
-        obj.menuFeel.value = requestCmd.reaction?1:0; 
+        obj.menuFeel.value = requestCmd.reaction ? 1 : 0;
         //设置温度
 
         obj.temperature.upHighTemperature = 0;
@@ -556,13 +556,13 @@ export default {
         obj.probeSetttingTemperature.value = 0; //探针设置温度暂时没有返回
         obj.temperature.unit = 0; //温度单位暂时没有返回
 
-        obj.timeSetting.hour = (requestCmd.hour_set===0xff?0:requestCmd.hour_set); 
-        obj.timeSetting.minute = (requestCmd.minute_set===0xff?0:requestCmd.minute_set); 
-        obj.timeSetting.second = (requestCmd.second_set===0xff?0:requestCmd.second_set); 
+        obj.timeSetting.hour = (requestCmd.hour_set === 0xff ? 0 : requestCmd.hour_set);
+        obj.timeSetting.minute = (requestCmd.minute_set === 0xff ? 0 : requestCmd.minute_set);
+        obj.timeSetting.second = (requestCmd.second_set === 0xff ? 0 : requestCmd.second_set);
 
-        obj.fire.value =  0;  //parker: 火力不用*10了，统一用新协议0-10  ，lua 没有返回
+        obj.fire.value = 0;  //parker: 火力不用*10了，统一用新协议0-10  ，lua 没有返回
         obj.weight.value = 0; //lua 没有返回
-        obj.steam.value =  0; //lua 没有返回
+        obj.steam.value = 0; //lua 没有返回
         // nativeService.toast(requestCmd);
         return obj;
     },

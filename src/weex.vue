@@ -95,7 +95,7 @@ module.exports = {
             { key: 11, value: "T0xB0_0PG23E0W",desc: "PG23E0" },
             { key: 12, value: "T0xB1_0PS2032W",desc: "PS2032W" },
             { key: 13, value: "T0xB1_mike",desc: "mike项目" },
-
+            { key: 14, value: "T0xB0_0PG2320W",desc: "PG2320W一体机" }
         ],
         card: 'T0xB1',
         isShowCardList: false,

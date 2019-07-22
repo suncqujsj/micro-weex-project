@@ -14,9 +14,9 @@ let modes = [
                 time:{
                     set: true,
                     default:1,
-                    range:[1,95,1],
+                    range:[1,95,1]
                 },
-                temperature:{
+                /* temperature:{
                     set: false,
                     default:null,
                     range:null,
@@ -30,14 +30,14 @@ let modes = [
                     set:false,
                     default:null,
                     range:null,
-                },
+                }, */
                 fireAmount:{
                     set:true,
                     default:10,
                     range:[1,5,2,8,10,2],
                     hide: true, //工作中，隐藏预热选择
-                },
-               
+                }
+                // settingHide: false // 工作中隐藏全部设置
             },
             { //烧烤
                 'icon': modeIcons[13].dir,
@@ -146,7 +146,6 @@ let modes = [
                     range:null,
                 },
                 settingHide:false
-
             },
         ]
     },
@@ -190,7 +189,6 @@ let modes = [
                     range:null,
                 },
                 settingHide:false
-
             },
             {   // 炉腔清洁
                 'icon': modeIcons[20].dir,
@@ -198,7 +196,7 @@ let modes = [
                 'mode': 0xC6,
                 time:{
                     set: false,
-                    default:5,
+                    default:10,
                     range:[1,95,1],
                 },
                 temperature:{
@@ -261,24 +259,9 @@ let modes = [
                 'text': modeIcons[10].cn,
                 'mode': 0xC1,
                 time:{
-                    set: false,
-                    default:5,
+                    set: false, 
+                    default:20,
                     range:[1,95,1],
-                },
-                temperature:{
-                    set: false,
-                    default:null,
-                    range:null,
-                },
-                preheat:{
-                    set:false,
-                    default: null,
-                    hide: true, //工作中，隐藏预热选择
-                },
-                steamAmount:{
-                    set:false,
-                    default:null,
-                    range:null,
                 },
                 fireAmount:{
                     set:false,
@@ -287,9 +270,9 @@ let modes = [
                     hide: true
                 },
                 settingHide:true
-            },
+            }
         ]
-    },
+    }
 ];
 
 export default modes;

@@ -14,35 +14,42 @@ let data = [
                     'icon': '',
                     'text': '整个番茄饭',
                     'mode': 0xE0,
+                    // 时间
                     time:{
                         set: true,
                         default:22,
                         range: [19,25,1],
                     },
+                    // 温度
                     temperature:{
                         set: false,
                         default:0,
                         range:null
                     },
+                    // 预热
                     preheat:{
                         set:false,
                         default: false
                     },
+                    // 蒸汽量
                     steamAmount:{
                         set:false,
                         default:0,
                         range:null
                     },
+                    // 火力
                     fireAmount:{
                         set:false,
                         default:0,
                         range:null
                     },
+                    // 重量
                     weight:{
                         set:false,
                         default:100,
                         range:[100,400,100],
                     },
+                    // 电控接收信号（菜谱ID，16进制）
                     recipeId:{
                         set:false,
                         default: 0xBA,

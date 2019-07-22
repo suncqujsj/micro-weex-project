@@ -5,7 +5,7 @@
 
 import cmdFun from "../../command/oldProtocal/util"; //解析指令
 import nativeService from "@/common/services/nativeService";
-import modeConfig from "@/common/mapping/modeConfig";
+import modeConfig from "@/common/mapping/oldModeConfig";
 import fireConfig from "@/common/mapping/fireConfig";
 const globalEvent = weex.requireModule("globalEvent");
 const storage = weex.requireModule("storage");
@@ -227,7 +227,6 @@ const deviceMessageMixin = {
         },
         controlDevice(jsonCmd, callbackData) {
             let context = this;
-
             // 蒸汽烤箱0TQN36QL判断探针温度与设定的常规温度
             if (this.device.extra1.sn8 == "0TQN36QL") {
                 if (jsonCmd.isProbeSettingTemperature < jsonCmd.probeTemperature) {
@@ -240,6 +239,7 @@ const deviceMessageMixin = {
                 nativeService.toast("主人，您的设备炉门开了");
                 return;
             }
+
             let upTemp = jsonCmd.temperature,
                 downTemp = jsonCmd.temperature;
             if (jsonCmd.upTemperature || jsonCmd.downTemperature) {
@@ -253,10 +253,10 @@ const deviceMessageMixin = {
                 }
                 (upTemp = jsonCmd.upTemperature), (downTemp = jsonCmd.downTemperature);
             }
-
             if (parseInt(jsonCmd.temperature) < 100 && !this.isSmallOven(callbackData.device.type)) { // sf 不是小烤箱判断
                 jsonCmd.preheat = false;
             }
+
             if (this.isWorking && jsonCmd.currentItem && jsonCmd.currentItem.preheat && jsonCmd.currentItem.preheat.hide) {//如果隐藏
                 jsonCmd.preheat = false;
             }

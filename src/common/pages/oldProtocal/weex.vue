@@ -355,7 +355,7 @@
             nativeService.initMockData({
                 query: query
             });
-            this.queryStatus(tabs,constant.device);
+             this.queryStatus(tabs,constant.device, this.pageViewStatistics,"firstEnter");
             // if(constant.device.standby03) {
             //     this.queryRunTimer(10);//轮询 已放在解析指令那里处理
             // }

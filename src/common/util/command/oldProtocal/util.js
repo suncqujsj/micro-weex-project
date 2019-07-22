@@ -2,7 +2,7 @@
 
 import message from "@/common/util/smartMessage";
 import nativeService from '@/common/services/nativeService';
-import modeConfig from '@/common/mapping/modeConfig'
+import modeConfig from '@/common/mapping/oldModeConfig'
 export default {
   //10进制转换8位2进制的方法
   initAnalysisObj() {
@@ -334,10 +334,7 @@ export default {
     obj.displaySign.preheat = requestCmd.tips_code === 8 ? 1 : 0;
     obj.displaySign.preheatTemperature = requestCmd.tips_code === 9 ? 1 : 0;
     obj.displaySign.isError = requestCmd.error_code ? 1 : 0;
-
     obj.light.value = requestCmd.furnace_light === 'on' ? 1 : 0;
-    obj.isProbe.value = 0; //探针暂时没有返回
-    obj.highClearLock.value = 0; //高温自清洁锁暂时没有返回
     obj.menuFeel.value = requestCmd.reaction ? 1 : 0;
     //设置温度
 

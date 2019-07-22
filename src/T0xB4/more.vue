@@ -3,17 +3,19 @@
 </style>
 
 <template>
-    <more-page :list="list" v-if="pageShow"></more-page>
+    <more-page :list="list" :constant="constant" v-if="pageShow"></more-page>
 </template>
 
 <script>
     import morePage from "@/common/pages/more.vue";
     import list from "./config/more.js";
+    import constant from "./config/constant";
     import nativeService from "@/common/services/nativeService";
     export default {
         data(){
             return {
                 list: list,
+                constant,
                 pageShow: false,
             }
         },
@@ -34,6 +36,7 @@
                 else{
                     list[0].rightText ='小烤箱 T7-388D';        
                 }
+
                 self.list = JSON.parse(JSON.stringify(list));
                 self.pageShow = true;
             });

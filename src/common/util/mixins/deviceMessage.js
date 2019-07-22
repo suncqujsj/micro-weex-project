@@ -275,14 +275,31 @@ const deviceMessageMixin = {
         var minute = time % 60;
         sendParmas.work_hour = hour;
         sendParmas.work_minute = minute;
-        sendParmas.work_second = 0;
+
+        //sonCmd.time有小数（秒）的时候
+        let num = jsonCmd.time;
+        let str = num.toString().split('.');
+        let getStr = str[1] != undefined ? str[1]: '';
+        let getSecond = 0;
+        var index = 6;
+        if(getStr){
+          for(var i=0; i< getStr.length; i++){
+            getSecond += parseInt(getStr[i])*index;
+            index = index/10;
+          }
+        }
+        sendParmas.work_second = parseInt(getSecond);
       }
       if (jsonCmd.preheat) { // 非探针预热设置 sf
         sendParmas.pre_heat = "on";
       }
       if (jsonCmd.temperature) {
         var temperature = parseInt(jsonCmd.temperature);
-        sendParmas.temperature = temperature;
+        if(temperature<6){ //温度档位
+          sendParmas.temperature_gear = temperature;
+        }else{
+          sendParmas.temperature = temperature;
+        }
       }
       if (callbackData.working) {
         //工作类设置类
@@ -314,9 +331,16 @@ const deviceMessageMixin = {
         let weight = parseInt(jsonCmd.weight);
         sendParmas.weight = weight;
       }
+      if (jsonCmd.steamAmount) { //蒸汽
+        let steamAmount = parseInt(jsonCmd.steamAmount);
+        sendParmas.steam_quantity = steamAmount;
+      }
+      if (jsonCmd.quantity) { //份量
+        let quantity = parseInt(jsonCmd.quantity);
+        sendParmas.people_number = quantity;
+      }
 
       nativeService.showLoading();
-
       // nativeService.alert(sendParmas);
       let params = {
         operation: "luaControl",
@@ -483,6 +507,17 @@ const deviceMessageMixin = {
       if (obj.second_set) {
         obj.second_set = parseInt(obj.second_set);
       }
+      if (obj.reaction) {
+        obj.reaction = parseInt(obj.reaction);
+      }
+      if (obj.steam_quantity) {
+        obj.steam_quantity = parseInt(obj.steam_quantity);
+      }
+      if (obj.temperature_gear) {
+        obj.temperature_gear = parseInt(obj.temperature_gear);
+      }
+      
+      
       return obj;
     },
 

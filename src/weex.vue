@@ -72,6 +72,7 @@ module.exports = {
         isShowModuleList: false,
         moduleIndex: null,
         moduleList: [
+            { key: -9, value: "T0xBF_0TR934MJ", desc: "蒸汽烤箱934" },
             { key: -8, value: "T0xB2_0PS2032W", desc: "S20蒸汽烤箱" },
             { key: -7, value: "T0xB0_02TESTB0", desc: "嵌入式微波炉" },
             { key: -6, value: "T0xB1_04TESTB1", desc: "嵌入式大烤箱" },

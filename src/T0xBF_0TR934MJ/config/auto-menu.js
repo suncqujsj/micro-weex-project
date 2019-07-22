@@ -1176,6 +1176,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
+                        default:0.59,
                         text:"35''",
                         range: [1,120,1]
                     },

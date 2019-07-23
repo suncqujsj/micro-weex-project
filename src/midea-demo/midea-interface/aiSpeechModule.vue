@@ -9,7 +9,7 @@
             <text class="display-block">执行回复结果：</text>
         </div>
         <scroller>
-            <text class="display-block">{{result}}</text>
+            <text class="display-block" v-for="(item, index) in result" :key="index">{{item}}</text>
         </scroller>
         <scroller>
             <div class="botton-group">
@@ -125,7 +125,7 @@ export default {
                     mode: "local"
                 }
             }),
-            result: ""
+            result: []
         }
     },
     methods: {
@@ -216,11 +216,17 @@ export default {
     created() {
         globalEvent.addEventListener('receiveMessageFromApp', (data) => {
             if (data.messageType == 'aiSpeechNotification') {
-                this.result = JSON.stringify(data.messageBody) + this.result + "\n"
+                this.result.unshift(data.messageBody)
+                nativeService.toast(this.result)
             } else if (data.messageType == 'aiSpeechAcyionResult') {
-                this.result = JSON.stringify(data.messageBody) + this.result + "\n"
+                this.result.unshift(data.messageBody)
+                nativeService.toast(this.result)
             }
         })
+    },
+    beforeDestory() {
+        console.log('beforeDestroy:在页面被销毁前调用')
+        nativeService.stopSpeechMonitor()
     }
 }
 </script>

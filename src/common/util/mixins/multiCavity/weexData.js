@@ -6,43 +6,43 @@
 // var timerRecord = 0;
 // var numberRecord = 0; //记录跳页面的次数
 import cmdFun from "../../command/multiCavity/util.js"; //解析指令
-import nativeService  from '@/common/services/nativeService';
+import nativeService from '@/common/services/nativeService';
 //ios5.4.0以下版本判断做兼容倒计时组件
 let isIosLess5_4 = false;
 let appVersion = weex.config.env.appVersion, platform = weex.config.env.platform;
 let appVersionArr = appVersion.split('.');
-if(platform=='iOS' && (parseInt(appVersionArr[0])==5 && parseInt(appVersionArr[1])<4)){
+if (platform == 'iOS' && (parseInt(appVersionArr[0]) == 5 && parseInt(appVersionArr[1]) < 4)) {
     isIosLess5_4 = true;
 }
-let workingModalMixin  = {
-    data(){
+let workingModalMixin = {
+    data() {
         return {
-            index:0,
+            index: 0,
             whichCavity: 0,
-            workingAnalysisObj:cmdFun.initAnalysisObj(),
+            workingAnalysisObj: cmdFun.initAnalysisObj(),
             warningDialog: this.initWarningDialog(),
-            modeText:'',
-            srcollPaddingBottom:'',
-            cmdObj: {'down_cavity':cmdFun.initAnalysisObj(),'up_cavity':cmdFun.initAnalysisObj()},
-            isCavityWorking:false,
+            modeText: '',
+            srcollPaddingBottom: '',
+            cmdObj: { 'down_cavity': cmdFun.initAnalysisObj(), 'up_cavity': cmdFun.initAnalysisObj() },
+            isCavityWorking: false,
             isWorkingPage: false,
 
             chartJson: {
-                "completedColor":"#FFFFFF", //环形进度条未完成后的颜色默认#267AFF
-                "incompletedColor":"#FFDB81", //环形进度条未完成后的颜色，默认透明
-                "thickness":2, //环形进度条宽度，默认4
-                "cornerRadius" : isIosLess5_4?140:240,  //环形的半径，默认是width/2
-                "totalCounter" : 360, //环形进度条的最大值，默认是360
-                "progressCounter" : 0, //设置进度值，默认是从0-360, 默认为0
-                "autoProgress" : false, //设置是否需要自动执行环形进度，默认false, 如果设置为true，则每秒进度值+1操作
-                "clockwise" : true, //环形自动执行进度的方向，默认是true，即顺时针方向，false为逆时针方向
-                "startingSlice" : 360, //环形进度开始的起始位置，当totalCounter为360的时候，0: 0点钟位置起点，90:3点钟位置起点 180:6点钟位置起点
-                "pointShow" : false, //环形进度中的进度球是否需要显示，默认不显示
-                "pointRadius" : 4, //默认是环形进度宽度的一半
-                "pointColor" :  "#FFFFFF", //环形进度中的进度球颜色
+                "completedColor": "#FFFFFF", //环形进度条未完成后的颜色默认#267AFF
+                "incompletedColor": "#FFDB81", //环形进度条未完成后的颜色，默认透明
+                "thickness": 2, //环形进度条宽度，默认4
+                "cornerRadius": isIosLess5_4 ? 140 : 240,  //环形的半径，默认是width/2
+                "totalCounter": 360, //环形进度条的最大值，默认是360
+                "progressCounter": 0, //设置进度值，默认是从0-360, 默认为0
+                "autoProgress": false, //设置是否需要自动执行环形进度，默认false, 如果设置为true，则每秒进度值+1操作
+                "clockwise": true, //环形自动执行进度的方向，默认是true，即顺时针方向，false为逆时针方向
+                "startingSlice": 360, //环形进度开始的起始位置，当totalCounter为360的时候，0: 0点钟位置起点，90:3点钟位置起点 180:6点钟位置起点
+                "pointShow": false, //环形进度中的进度球是否需要显示，默认不显示
+                "pointRadius": 4, //默认是环形进度宽度的一半
+                "pointColor": "#FFFFFF", //环形进度中的进度球颜色
                 // "pointImageBase64" :  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAhCAYAAABX5MJvAAAERklEQVRYR82Yf2jUdRjHX5875137cbcfOF1Omfij1DDC3BKEWeCPUMERy2pgkQvBQUY5EfrB6AfIlrVFG4gYJWmaxASV/AHlQKptRTRSywyHu5oudttOt+623T3x3Pe8rbntbiTdvv99P5/n83ne3/fn/Tyf5/ka4nkqxObKJd3RS1Y/FCI8JpBnDLOATASvQJuBVoSvptpoCKTQ6fPQTYUJxXJhYhlkV8t0PxRjWIeQH3Ya6zF0As0IJ51wtOMlc2O8JWOD2CtJbj9FCK8KLACcsXyPMu83cBnDOz1O6tlqBkbbY1QQGXvFHQpQJiHeABy6cKodpiXD/AxYPxcezIbcVEh3QrcfPLfgpw448Tv81gV/9UF/MOoyYGy8aXNQ27XV9IwEcgcI13syDzsVwDMI4fn7MmHT/ZbzBZlYg2M8Alz2WmCO/AK/eiOGBp06RJAK38vmyvDl/9pPGQj6qUV4CrAbA88uhp0FMD0ZptjiP5DBENzog8pG+OQCiEKAIIbDdidlwxkZAqEaCFAuwtvKQHISlD0EryyDe6ZYznsH4JoPzrbC6Va42gNdfshwwhw3rMmDVXkw2wUpSdaavwdhTzPU/gh9qgiDGMNrPQ6qbmskCsJdI0+KcEA1oAzsWDYEICjw/XU4cAGOX4GewNiMuB2wYR5sXgwPz1A6h4C82xxlJGAMm3u2m891pzAIDcMAnBFYou/PPQC7C4cY+PIqlJ8Dz83oJuOei35EbhpUrYTH5wwxsqsBPv7ZejfQ4oDVGr4GTUSZbCNElYahirC+CGamgjJwphVKTkAwZsq5E5fdBgfXw+o8i5E/bkLRsahY/dgo93mpM2kfSpYJ8inCWg3DXQWwfaklwsZ22HIK2nzxC3Kk5SwX7F8LBTkwEIIPfoDdjZHwNZwiSImZViPzA8J3mglnpkH9RiskVYQ7G+DgxfiOYCyYejQli6Cy0BKrhqyyoawAXofhEeOukVIR9unIytlwrMgSyqVOWHN0fBHGy4+K9XQxLMwinCw21sO5axFtCC8Yd7UcEnhah/Y8CqVhaVq0vX4+Xjex7d5aAS8utez2tcCOr6MC/cy4quUbYLkOnd0E+TOsyXVfwHlP7M3jtViRCyefsKybrsOqI9GV3+pxtImQq0OXtsC9qdbkoo+i5xavn3HtVG8Xn7dM/rwFC/dHmDB4FESvCMk61F4GyZHsmFMXyXB3BQJoBm7fZm3WNwg5tVEQfaqJNiGBTIBnkmhiMkSH+30pFZPgPJHQjGnodMDyyXF3hG/RdDR4/v9bFMp93dRNknoikowSXlmFcUyGGlNxjFlt50N2CiRNoNrWAqajFyqbJlJtR44l4X3H7bsqVge2YS4siXRgWu5r2a8dWEsHHL8bHVj00kx0Lzr89g535TaKkQl05eDF0PTfu/LhSDShuUh32MnqD1GIGfF/ArwiI/5PBOn0+eL7P/EPYtpkF4ik2AkAAAAASUVORK5CYII=", //环形进度中的进度球的图片base64
             },
-            progress:1,
+            progress: 1,
             progress_radius: 240,
             tag_next: '',
             btnText: "暂停",
@@ -57,18 +57,18 @@ let workingModalMixin  = {
             allSeconds: null,
 
             // cmdObj:cmdFun.initAnalysisObj(), //指令解析对象
-          
+
             timeShow: false, //是否显示时间
             workSpecialStatusText: '',  //显示当前状态
-            queryTimer: null,  
+            queryTimer: null,
             countDownTimer: null,
             isTimerStop: false,  //是否暂停
-            statusTag: "剩余时间", 
+            statusTag: "剩余时间",
             hasSetting: false, //是否有时间温度设置
             hasHour: false, //是否有小时
             hourMore10: false,//是否大于10小时
             hasStopOrContinueBtn: false,
-            modeText:'',
+            modeText: '',
             probeProgress: null, //探针工作倒计时
             probeTempText: "°C",
 
@@ -76,9 +76,9 @@ let workingModalMixin  = {
             warningDialogTitle: "温馨提示",
             warningDialogContent: "主人，您的水箱缺水了，要及时添加水哦",
 
-            showBar:false,
-            actionsheetItems:['确定关闭'],
-            lightImg:"img/light_off@3x.png",
+            showBar: false,
+            actionsheetItems: ['确定关闭'],
+            lightImg: "img/light_off@3x.png",
 
             settingClickRecord: false,
         };
@@ -87,45 +87,51 @@ let workingModalMixin  = {
         /**
          * 当前状态是否待机中
          */
-        isStandby(){
+        isStandby() {
             return !this.isWorkingPage
         },
+        /**
+       *  是否是小烤箱
+       */
+        isSmallOven() {
+            return this.constant.device.type === 0xB4;
+        },
 
-        dialogTips(obj){
-            this.setWarningDialog("",null,false);
+        dialogTips(obj) {
+            this.setWarningDialog("", null, false);
             this.modalVisibility = false;
-            if(obj.displaySign.isError){
+            if (obj.displaySign.isError) {
                 this.setWarningDialog("主人，您的设备发生故障了，请联系售后人员");
             }
-            if(obj.displaySign.lackWater){
+            if (obj.displaySign.lackWater && obj.mode.value != 0xC4) {
                 this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
             }
-            if(obj.displaySign.waterBox){
+            if (obj.displaySign.waterBox && obj.mode.value != 0xC4) {
                 this.setWarningDialog("主人，您的设备缺水盒了");
 
             }
-            if(obj.displaySign.doorSwitch){
+            if (obj.displaySign.doorSwitch && obj.mode.value != 0xC4) {
                 this.setWarningDialog("主人，您的设备炉门开了");
             }
 
-            if(obj.displaySign.lock){
+            if (obj.displaySign.lock) {
                 // let context = this;
                 // this.setWarningDialog("你需要关闭童锁吗？", function(){
                 //     context.childLock(false);
                 // });
                 !this.modalVisibility && this.showModal();
-            }    
-        },
-        dialogSetting(analysisObj){        
-            if(this.index==0){
-               this.dialogTips(analysisObj.up_cavity);
-            }
-            if(this.index==1){
-               this.dialogTips(analysisObj.down_cavity);
             }
         },
-        analysisFun(analysisObj) { 
-            clearInterval(this.queryTimer);    
+        dialogSetting(analysisObj) {
+            if (this.index == 0) {
+                this.dialogTips(analysisObj.up_cavity);
+            }
+            if (this.index == 1) {
+                this.dialogTips(analysisObj.down_cavity);
+            }
+        },
+        analysisFun(analysisObj) {
+            clearInterval(this.queryTimer);
             this.cmdObj = analysisObj;
             // 安卓手机倒计时进度条有问题，暂时隐藏
             let chartJson = JSON.parse(JSON.stringify(this.chartJson));
@@ -138,52 +144,53 @@ let workingModalMixin  = {
             //     this.showDetailVisibility = false;
             //     this.show = false;
             // }
-            if(this.settingClickRecord){
-                this.show = true;    
+            if (this.settingClickRecord) {
+                this.show = true;
             }
             this.dialogSetting(analysisObj);
-            
+
             this.isCavityWorking = false;
             this.isWorkingPage = false;
             let downCavityStatus = analysisObj.down_cavity.workingState.value;
             let upCavityStatus = analysisObj.up_cavity.workingState.value;
-            
-            if(this.index==0 && (upCavityStatus==2||upCavityStatus==1)){
+
+            if (this.index == 0 && (upCavityStatus == 2 || upCavityStatus == 1)) {
                 this.queryRunTimer(10);//6秒轮询 
             }
-            if(this.index==1 && (downCavityStatus==2||downCavityStatus==1)){
+            if (this.index == 1 && (downCavityStatus == 2 || downCavityStatus == 1)) {
                 this.queryRunTimer(10);//6秒轮询 
             }
-            
-            if(this.index==0 && (upCavityStatus==3||upCavityStatus==4||upCavityStatus==6)){
+
+            if (this.index == 0 && (upCavityStatus == 3 || upCavityStatus == 4 || upCavityStatus == 6)) {
                 this.isCavityWorking = true;
                 this.isWorkingPage = true;
-                this.analysisWorkingFun(analysisObj.up_cavity,this.pages[0].tabs);
+                this.analysisWorkingFun(analysisObj.up_cavity, this.pages[0].tabs);
                 var _hour = analysisObj.up_cavity.timeRemaining.hour, _minute = analysisObj.up_cavity.timeRemaining.minute, _second = analysisObj.up_cavity.timeRemaining.second;
-                var allSeconds = _hour*60*60+_minute*60+_second;
-                if(allSeconds<=60 && upCavityStatus==3){
+                var allSeconds = _hour * 60 * 60 + _minute * 60 + _second;
+                if (allSeconds <= 60 && upCavityStatus == 3) {
                     this.queryRunTimer(1);//6秒轮询 
-                }else{
+                } else {
                     this.queryRunTimer(10);//6秒轮询 
                 }
             }
-             if(this.index==1 && (downCavityStatus==3||downCavityStatus==4||downCavityStatus==6)){
+            if (this.index == 1 && (downCavityStatus == 3 || downCavityStatus == 4 || downCavityStatus == 6)) {
                 this.isCavityWorking = true;
                 this.isWorkingPage = true;
-                this.analysisWorkingFun(analysisObj.down_cavity,this.pages[1].tabs);
+                this.analysisWorkingFun(analysisObj.down_cavity, this.pages[1].tabs);
                 var _hour = analysisObj.down_cavity.timeRemaining.hour, _minute = analysisObj.down_cavity.timeRemaining.minute, _second = analysisObj.down_cavity.timeRemaining.second;
-                var allSeconds = _hour*60*60+_minute*60+_second;
-                if(allSeconds<=60 && downCavityStatus==3){
+                var allSeconds = _hour * 60 * 60 + _minute * 60 + _second;
+                if (allSeconds <= 60 && downCavityStatus == 3) {
                     this.queryRunTimer(1);//6秒轮询 
-                }else{
+                } else {
                     this.queryRunTimer(10);//6秒轮询 
                 }
             }
         },
-        analysisWorkingFun(analysisObj,tabs) {
+        analysisWorkingFun(analysisObj, tabs) {
             this.workingAnalysisObj = analysisObj;
             // nativeService.alert(this.workingAnalysisObj);
-            var self = this , timer = null;
+            this.dialogTips(analysisObj);
+            var self = this, timer = null;
             this.isWorking = false;
             this.isFooterShow = true;
             this.timeShow = false;
@@ -203,26 +210,26 @@ let workingModalMixin  = {
             this.cancleIcon = 'img/footer/icon_cancle@2x.png';
 
             var _hour = analysisObj.timeRemaining.hour, _minute = analysisObj.timeRemaining.minute, _second = analysisObj.timeRemaining.second;
-            var allSettingSeconds = analysisObj.timeSetting.hour*60*60+analysisObj.timeSetting.minute*60+analysisObj.timeSetting.second;
-            var allSeconds = _hour*60*60+_minute*60+_second;
-            var progress_step = (allSettingSeconds-allSeconds)/allSettingSeconds*360; //360度倒计时为例
+            var allSettingSeconds = analysisObj.timeSetting.hour * 60 * 60 + analysisObj.timeSetting.minute * 60 + analysisObj.timeSetting.second;
+            var allSeconds = _hour * 60 * 60 + _minute * 60 + _second;
+            var progress_step = (allSettingSeconds - allSeconds) / allSettingSeconds * 360; //360度倒计时为例
             let chartJson = JSON.parse(JSON.stringify(this.chartJson));
             chartJson.pointShow = true;
             chartJson.progressCounter = parseInt(progress_step);
-            
+
             //this.cmdObj = analysisObj;
-            if(analysisObj.probeRealTemperature.value>analysisObj.probeSetttingTemperature.value){
+            if (analysisObj.probeRealTemperature.value > analysisObj.probeSetttingTemperature.value) {
                 analysisObj.probeRealTemperature.value = analysisObj.probeSetttingTemperature.value;
             }
-            this.probeProgress =analysisObj.probeRealTemperature.value;
+            this.probeProgress = analysisObj.probeRealTemperature.value;
 
-            if(analysisObj.light.value){
+            if (analysisObj.light.value) {
                 this.lightImg = "img/light_on@3x.png";
-            }else{
+            } else {
                 this.lightImg = "img/light_off@3x.png";
             }
-            
-            if(analysisObj.workingState.value == 3){
+
+            if (analysisObj.workingState.value == 3) {
                 this.isWorking = true;
                 this.timeShow = true;
                 this.hasSetting = true;
@@ -230,7 +237,7 @@ let workingModalMixin  = {
                 this.btnSrc = "img/footer/icon_pause@2x.png";
             }
 
-             if(analysisObj.workingState.value == 6){
+            if (analysisObj.workingState.value == 6) {
                 this.timeShow = true;
                 this.hasSetting = true;
                 this.btnText = "继续";
@@ -239,63 +246,68 @@ let workingModalMixin  = {
                 this.statusTag = '暂停中';
                 this.hasStopOrContinueBtn = true;
             }
-            if(analysisObj.isProbe.value){
+            if (analysisObj.isProbe.value) {
                 this.statusTag = '当前实时温度';
             }
-            
+
             var _isRecipe = false;
-            if(analysisObj.mode.value == 0xE0){
+            if (analysisObj.mode.value == 0xE0) {
                 _isRecipe = true;
             }
-            var _item = cmdFun.getCurrentModeItem(tabs,analysisObj.recipeId.value,analysisObj.mode.value,_isRecipe);
+            var _item = cmdFun.getCurrentModeItem(tabs, analysisObj.recipeId.value, analysisObj.mode.value, _isRecipe);
             //this.currentItem = _item;
             // nativeService.alert(_item);
-            if(_item.settingHide){
+            if (_item.settingHide) {
                 this.hasSetting = false;
             }
 
-            if(analysisObj.workingState.value == 4){
-               this.timeShow = false;
-               this.hasHour = false;
-               this.workSpecialStatusText = "烹饪完成";
-               this.isTimerStop = true;
-               this.tag_next = '';
-               this.statusTag = '取出时小心烫手';
-               this.progressShow = false;
-               this.finishStatus = true;
-               this.probeProgress = '烹饪完成';
-               this.cancleBtnText = '完成';
-               this.cancleIcon = 'img/finish_icon@2x.png';
-                    
+            if (analysisObj.workingState.value == 4) {
+                this.timeShow = false;
+                this.hasHour = false;
+                this.workSpecialStatusText = "烹饪完成";
+                this.isTimerStop = true;
+                this.tag_next = '';
+                this.statusTag = '取出时小心烫手';
+                this.progressShow = false;
+                this.finishStatus = true;
+                this.probeProgress = '烹饪完成';
+                this.cancleBtnText = '完成';
+                this.cancleIcon = 'img/finish_icon@2x.png';
+
             }
             // 不是烹饪完成 ，并且处于预热中状态
-             if(analysisObj.workingState.value != 4 && analysisObj.displaySign.preheat == 1){
+            if (analysisObj.workingState.value != 4 && analysisObj.displaySign.preheat == 1) {
                 this.isWorking = true;
                 this.timeShow = false;
                 this.hasHour = false;
                 this.workSpecialStatusText = "预热中";
                 let mode_text = analysisObj.mode.text;
-                if(analysisObj.mode.value == 0x4B){ //如果是快速预热，文案就变为快速
+                if (analysisObj.mode.value == 0x4B) { //如果是快速预热，文案就变为快速
                     mode_text = "快速";
                 }
-                analysisObj.mode.text = mode_text+"预热到";
+                if (analysisObj.mode.value == 0xE0 && analysisObj.recipeId.value == 0x01) { //如果是蒸鱼
+                    mode_text = "蒸鱼";
+                }
+                let preheatText = '预热到';
+                analysisObj.mode.text = '';
+                analysisObj.mode.text = mode_text + preheatText;
                 this.tag_next = '';
                 this.statusTag = '';
                 this.hasSetting = true;
-                if(_item.settingHide){
+                if (_item.settingHide) {
                     this.hasSetting = false;
                 }
                 let settingTemp = analysisObj.temperature.upLowTemperature, realTemp = analysisObj.realTemperature.upLowTemperature;
-                let temp_step = realTemp/settingTemp*360; //360度倒计时为例
+                let temp_step = realTemp / settingTemp * 360; //360度倒计时为例
                 chartJson.pointShow = true;
                 chartJson.progressCounter = parseInt(temp_step);
-                
+
             }
             this.chartJson = JSON.parse(JSON.stringify(chartJson));
-            
+
 
             // 不是烹饪完成 ，并且处于预热温度到达
-            if(analysisObj.workingState.value != 4 &&  analysisObj.displaySign.preheatTemperature == 1){
+            if (analysisObj.workingState.value != 4 && analysisObj.displaySign.preheatTemperature == 1) {
                 this.timeShow = false;
                 this.hasHour = false;
                 this.workSpecialStatusText = "预热完成";
@@ -305,58 +317,58 @@ let workingModalMixin  = {
                 this.finishStatus = true;
                 this.preheatFinishTig = true;
                 this.tag_next = '';
-                this.statusTag = '已预热到'+analysisObj.temperature.upLowTemperature+'°';
+                this.statusTag = '已预热到' + analysisObj.temperature.upLowTemperature + '°';
                 this.hasSetting = false;
                 // this.hasStopOrContinueBtn = true;
                 // this.btnText = "开始";
                 // this.btnSrc = "img/footer/icon_start@2x.png";
-                if(analysisObj.mode.value == 0xE0 && analysisObj.recipeId.value==1){
+                if (analysisObj.mode.value == 0xE0 && analysisObj.recipeId.value == 1) {
                     this.hasStopOrContinueBtn = true;
                     this.btnText = "开始";
                     this.btnSrc = "img/footer/icon_start@2x.png";
-                }else{
+                } else {
                     this.cancleBtnText = '完成';
                     this.cancleIcon = 'img/finish_icon@2x.png';
                 }
             }
 
             //倒计时按照设计来
-            if(this.timeShow&&allSeconds>0){
-                if(allSeconds>=60*60){ //大于1小时，有‘时’显示
-                    if(_hour>9){
+            if (this.timeShow && allSeconds > 0) {
+                if (allSeconds >= 60 * 60) { //大于1小时，有‘时’显示
+                    if (_hour > 9) {
                         this.hourMore10 = true;
                     }
-                    this.workSpecialStatusText = _hour+"  "+(_minute>9?_minute:'0'+_minute);
+                    this.workSpecialStatusText = _hour + "  " + (_minute > 9 ? _minute : '0' + _minute);
                     this.tag_next = '分';
                     this.hasHour = true;
-                }else if(allSeconds>60){//大于1分钟，小于1小时，只显示分
+                } else if (allSeconds > 60) {//大于1分钟，小于1小时，只显示分
                     this.workSpecialStatusText = _minute;
                     this.tag_next = '分';
                     this.hasHour = false;
                 }
-                else{ //小于2分钟开始倒计时
+                else { //小于2分钟开始倒计时
                     this.hasHour = false;
-                    if(allSeconds==60){
-                        allSeconds = allSeconds-1;
+                    if (allSeconds == 60) {
+                        allSeconds = allSeconds - 1;
                     }
                     this.workSpecialStatusText = allSeconds;
                     this.tag_next = '秒';
-                    
+
                 }
             }
 
         },
-        cancle(){
-            if(this.finishStatus){
+        cancle() {
+            if (this.finishStatus) {
                 this.cancleWorking();
-            }else{
-                this.openActionsheet();            
+            } else {
+                this.openActionsheet();
             }
         },
-         //打开上拉菜单
+        //打开上拉菜单
         openActionsheet: function () {
             this.showBar = true;
-            this.$nextTick(e=>{
+            this.$nextTick(e => {
                 this.$refs.actionsheet.open();
             });
         },
@@ -367,10 +379,10 @@ let workingModalMixin  = {
         //点击某个item的事件
         actionsheetItemClick: function (event) {
             this.showBar = false;
-            if(event.index == 0){
-               this.cancleWorking();
+            if (event.index == 0) {
+                this.cancleWorking();
             }
-           
+
         },
         //点击取消/确定按钮事件
         actionsheetBtnClick: function () {

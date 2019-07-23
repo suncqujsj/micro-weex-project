@@ -8,9 +8,11 @@
     import  modes from "./config/modes.js";
     import  modes_0TQN50QL from "./config/modes_0TQN50QL.js";
     import  modes_0TQN36QL from "./config/modes_0TQN36QL.js";
+    import  modes_0TQN36XJ from "./config/modes_0TQN36XJ.js";
     import autoMenu from "./config/auto-menu.js";
     import autoMenu_0TQN50QL from "./config/auto-menu_0TQN50QL.js";
     import autoMenu_0TQN36QL from "./config/auto-menu_0TQN36QL.js";
+    import autoMenu_0TQN36XJ from "./config/auto-menu_0TQN36XJ.js";
     import commonWeex from "@/common/pages/weex.vue";
     import nativeService from "@/common/services/nativeService";
 
@@ -54,6 +56,10 @@
                         tabs[0].rows = autoMenu_0TQN36QL; 
                         tabs[1].rows = modes_0TQN36QL;               
                     }
+                    else if(data.result && data.result.deviceSn8=='0TQN36XJ'){
+                        tabs[0].rows = autoMenu_0TQN36XJ; 
+                        tabs[1].rows = modes_0TQN36XJ;               
+                    }
                     else{
                         tabs[0].rows = autoMenu;
                         tabs[1].rows = modes;
@@ -64,6 +70,9 @@
                     }
                     else if(data.result && data.result.deviceSn8=='0TQN36QL'){
                         tabs[0].rows = modes_0TQN36QL;               
+                    }
+                     else if(data.result && data.result.deviceSn8=='0TQN36XJ'){
+                        tabs[0].rows = modes_0TQN36XJ;               
                     }
                     else{
                         tabs[0].rows = modes;

@@ -9,7 +9,6 @@ import modeConfig from "@/common/mapping/modeConfig";
 import fireConfig from "@/common/mapping/fireConfig";
 const globalEvent = weex.requireModule("globalEvent");
 const storage = weex.requireModule("storage");
-const isLuaControl = true;
 const deviceMessageMixin = {
   data() {
     return {
@@ -341,7 +340,7 @@ const deviceMessageMixin = {
       }
 
       nativeService.showLoading();
-      nativeService.alert(sendParmas);
+      // nativeService.alert(sendParmas);
       let params = {
         operation: "luaControl",
         params: sendParmas
@@ -529,21 +528,11 @@ const deviceMessageMixin = {
         // nativeService.alert(e);
         nativeService.hideLoading();
         context.settingClickRecord = false;
-        if (isLuaControl) {
-          let obj = e.result;
-          let getObj = context.tranformToInt(obj);
-          var analysisObj = cmdFun.analysisLua(getObj, context.tabs);
-          context.doorStatus = analysisObj.displaySign.doorSwitch;
-          context.analysisFun(analysisObj, context.tabs);
-        } else {
-          var str = e.data;
-          var arr = str.split(",");
-          if (parseInt(arr[9]) == 0x0A) {
-            return;
-          }
-          var analysisObj = cmdFun.analysisCmd(arr, context.tabs);
-          context.analysisFun(analysisObj, context.tabs);
-        }
+        let obj = e.result;
+        let getObj = context.tranformToInt(obj);
+        var analysisObj = cmdFun.analysisLua(getObj, context.tabs);
+        context.doorStatus = analysisObj.displaySign.doorSwitch;
+        context.analysisFun(analysisObj, context.tabs);
 
       });
       //监听设备在线离线状态

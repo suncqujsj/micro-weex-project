@@ -47,6 +47,11 @@ let mode = {
   /*fun2*/
   'revolve_bake': { value: 0x4e, text: '旋转烧烤' },
 
+  /*双腔体 */
+  'warm': { value: 0xD0, text: '保温' },
+  'power_saving_bake': { value: 0x4D, text: 'ECO' },
+  'fast_preheat': { value: 0x4B, text: '快速预热' },
+
 };
 
 export default mode;

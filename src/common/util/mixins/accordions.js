@@ -136,14 +136,14 @@ const accordionMixin = {
             return keys.indexOf(key) > -1
         },
         onPreheatChange(event) {
-            if (this.device.extra1.sn8 === '0PS2032W' && (this.currentItem.mode == 0x41||this.currentItem.mode == 0x31)) {
+            if (this.device.extra1.sn8 === '0PS2032W' && (this.currentItem.mode == 0x41 || this.currentItem.mode == 0x31)) {
                 this.currentItem.time.set = !event.value;
             }
             this.current[event.itemKey] = event.value;
             // console.log('currentPreheat', this.current.preheat);
         },
         openDialog() {
-            if (this.device.extra1.sn8 === '0PS2032W' && (this.currentItem.mode == 0x41||this.currentItem.mode == 0x31)) {
+            if (this.device.extra1.sn8 === '0PS2032W' && (this.currentItem.mode == 0x41 || this.currentItem.mode == 0x31)) {
                 this.currentItem.time.set = !this.currentItem.preheat.default;
             }
 
@@ -175,7 +175,7 @@ const accordionMixin = {
             if (e.type === 'cancel' || e.type === 'close') {
                 this.show = false;
                 this.resetState();
-                this.statisticsUpload({subAction: 'cancel_mode_click'});
+                this.statisticsUpload({ subAction: 'cancel_mode_click' });
                 return;
             }
 
@@ -222,9 +222,8 @@ const accordionMixin = {
 
 
             jsonCmd = this.formatJsonCmd(jsonCmd);
-            // nativeService.alert(this.currentItem.mode);
 
-            this.statisticsUpload({subAction: 'start_mode_click', action_result: this.currentItem.mode});
+            this.statisticsUpload({ subAction: 'start_mode_click', action_result: this.currentItem.mode });
 
             this.resetStartTime();
 

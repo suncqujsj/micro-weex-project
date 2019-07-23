@@ -428,7 +428,7 @@
                 query: query
             });
             this.initialIndex();
-            this.queryStatus(pages,constant.device,index);
+            this.queryStatus(pages,constant.device,index,"firstEnter");
             //this.queryRunTimer(20);//20秒轮询 
             this.isIos = weex.config.env.platform == "iOS" ? true : false;
             // if(!this.isIos) {

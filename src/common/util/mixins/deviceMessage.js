@@ -9,7 +9,6 @@ import modeConfig from "@/common/mapping/modeConfig";
 import fireConfig from "@/common/mapping/fireConfig";
 const globalEvent = weex.requireModule("globalEvent");
 const storage = weex.requireModule("storage");
-
 const deviceMessageMixin = {
   data() {
     return {
@@ -279,13 +278,13 @@ const deviceMessageMixin = {
         //sonCmd.time有小数（秒）的时候
         let num = jsonCmd.time;
         let str = num.toString().split('.');
-        let getStr = str[1] != undefined ? str[1]: '';
+        let getStr = str[1] != undefined ? str[1] : '';
         let getSecond = 0;
         var index = 6;
-        if(getStr){
-          for(var i=0; i< getStr.length; i++){
-            getSecond += parseInt(getStr[i])*index;
-            index = index/10;
+        if (getStr) {
+          for (var i = 0; i < getStr.length; i++) {
+            getSecond += parseInt(getStr[i]) * index;
+            index = index / 10;
           }
         }
         sendParmas.work_second = parseInt(getSecond);
@@ -295,9 +294,9 @@ const deviceMessageMixin = {
       }
       if (jsonCmd.temperature) {
         var temperature = parseInt(jsonCmd.temperature);
-        if(temperature<6){ //温度档位
+        if (temperature < 6) { //温度档位
           sendParmas.temperature_gear = temperature;
-        }else{
+        } else {
           sendParmas.temperature = temperature;
         }
       }
@@ -516,8 +515,8 @@ const deviceMessageMixin = {
       if (obj.temperature_gear) {
         obj.temperature_gear = parseInt(obj.temperature_gear);
       }
-      
-      
+
+
       return obj;
     },
 
@@ -529,21 +528,11 @@ const deviceMessageMixin = {
         // nativeService.alert(e);
         nativeService.hideLoading();
         context.settingClickRecord = false;
-        if (isLuaControl) {
-          let obj = e.result;
-          let getObj = context.tranformToInt(obj);
-          var analysisObj = cmdFun.analysisLua(getObj, context.tabs);
-          context.doorStatus = analysisObj.displaySign.doorSwitch;
-          context.analysisFun(analysisObj, context.tabs);
-        } else {
-          var str = e.data;
-          var arr = str.split(",");
-          if (parseInt(arr[9]) == 0x0A) {
-            return;
-          }
-          var analysisObj = cmdFun.analysisCmd(arr, context.tabs);
-          context.analysisFun(analysisObj, context.tabs);
-        }
+        let obj = e.result;
+        let getObj = context.tranformToInt(obj);
+        var analysisObj = cmdFun.analysisLua(getObj, context.tabs);
+        context.doorStatus = analysisObj.displaySign.doorSwitch;
+        context.analysisFun(analysisObj, context.tabs);
 
       });
       //监听设备在线离线状态

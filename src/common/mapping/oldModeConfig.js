@@ -5,14 +5,14 @@
 
 let mode = {
   'double_tube': { value: 0x4c, text: '上下烧烤' },
-  'hot_wind_bake': { value: 0x41, text: '热风对流' },
+  'hot_wind_bake': { value: 0x08, text: '热风对流' },
   'double_tube_fan': { value: 0x52, text: '上下烧烤+风扇' },
-  'underside_tube': { value: 0x49, text: '下管烧烤' },
+  'underside_tube': { value: 0x0A, text: '下管烧烤' },
   'double_upside_tube_fan': { value: 0x51, text: '双上管+风扇' },
   'core_baking': { value: 0x46, text: '双上管烧烤' },
   'total_baking': { value: 0x47, text: '红外烧烤' },
   'underside_tube_hot_wind_bake': { value: 0x42, text: '下管烧烤+热风对流' },
-  'zymosis': { value: 0xb0, text: '发酵' },
+  'zymosis': { value: 0x09, text: '发酵' },
 
 
   'pure_steam': { value: 0x20, text: '蒸汽' },
@@ -22,7 +22,7 @@ let mode = {
   'clean': { value: 0xc6, text: '清洁' },
 
   'microwave': { value: 0x01, text: '微波' },
-  'above_tube': { value: 0x40, text: '烧烤' },
+  'above_tube': { value: 0x05, text: '上管烧烤' },
   'unfreeze': { value: 0xa0, text: '解冻' },
   'remove_odor': { value: 0xc3, text: '除味' },
   'scale_clean': { value: 0xc1, text: '除垢' },
@@ -32,7 +32,6 @@ let mode = {
   */
   'fast_steam': { value: 0x90, text: '快蒸' }, //微波 + 蒸汽/快蒸
   'slow_steam': { value: 0x22, text: '慢蒸' },
-  'hot_wind_bake': { value: 0x41, text: '烘烤' },
   'steam_and_hot_wind': { value: 0x31, text: '蒸烤' }, //蒸汽 + 热风对流  / 蒸烤
   'dining_utensils_clean': { value: 0xc8, text: '餐具清洁' },
   'fast_baking': { value: 0x70, text: '双模快烤' }, //微波 + 烧烤 / 微波 + 上外烧烤 /微波 +普通烧烤/ 变频烧烤 / 变频快烤？
@@ -45,12 +44,7 @@ let mode = {
   'fast_baking_and_hot_wind': { value: 0x73, text: '微波+热风烧烤' },
 
   /*fun2*/
-  'revolve_bake': { value: 0x4e, text: '旋转烧烤' },
-
-  /*双腔体 */
-  'warm': { value: 0xD0, text: '保温' },
-  'power_saving_bake': { value: 0x4D, text: 'ECO' },
-  'fast_preheat': { value: 0x4B, text: '快速预热' },
+  'revolve_bake': { value: 0x07, text: '旋转烧烤' },
 
 };
 

@@ -1567,9 +1567,17 @@ export default {
     
     //**********思必驰语音识别接口***************START
     // 启动语音监听
-    /* param: null
-       当收到语音识别数据，app -> 插件: 
+    /*
+    param为对象:
+        {
+        auto: true/false，是否启动后马上监听还是处于暂停状态，默认是true (^5.10.0)
+        mode: local/online //设置是APP本地词库识别还是网络在线识别，默认为local本地词库识别 (^5.10.0)
+        }
+        当收到语音识别数据，app -> 插件: 
         receiveMessageFromApp({ messageType: "aiSpeechNotification", messageBody: {key:"xxxxxxxx"} }) //xxxxxx为匹配到的热词
+
+        当收到语音执行结果，app -> 插件: 
+        receiveMessageFromApp({ messageType: "aiSpeechAcyionResult", messageBody: {...} }) //messageBody为思必驰执行返回结果
     */
     startSpeechMonitor(params = {}) {
         return new Promise((resolve, reject) => {
@@ -1585,6 +1593,30 @@ export default {
     stopSpeechMonitor(params = {}) {
         return new Promise((resolve, reject) => {
             aiSpeechModule["stopSpeechMonitor"](JSON.stringify(params),
+                (resData) => {
+                    resolve(this.convertToJson(resData))
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
+    },
+    /* (^5.10.0) 恢复监听。在暂停状态下可以恢复。 */
+    resumeSpeechMonitor(params = {}) {
+        return new Promise((resolve, reject) => {
+            aiSpeechModule["resumeSpeechMonitor"](JSON.stringify(params),
+                (resData) => {
+                    resolve(this.convertToJson(resData))
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
+    },
+    /* (^5.10.0)暂停监听。在监听状态下可以停止。 */
+    pauseSpeechMonitor(params = {}) {
+        return new Promise((resolve, reject) => {
+            aiSpeechModule["pauseSpeechMonitor"](JSON.stringify(params),
                 (resData) => {
                     resolve(this.convertToJson(resData))
                 },

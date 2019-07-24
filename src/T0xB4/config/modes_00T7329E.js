@@ -112,6 +112,41 @@ let modes = [
                 },
                 stopBtnHide: true,
                 settingHide: true,
+                standbyHide: true,
+                circleProgressPointHide: true,
+            },
+
+            { // 旋转
+                'icon': modeIcons[41].dir,
+                'text': modeIcons[41].cn,
+                'mode': 0x07,
+                time: {
+                    set: true,
+                    default: 30,
+                    range: [1, 120, 1]
+                },
+                temperature: {
+                    set: true,
+                    default: 180,
+                    range: [70, 180, 10]
+                },
+                preheat: {
+                    set: true,
+                    default: 0,
+                    workingPreheatHide: true,
+                },
+                steamAmount: {
+                    set: false,
+                    default: 0,
+                    range: [1, 4, 1, "取消"]
+                },
+                fireAmount: {
+                    set: false,
+                    default: 0,
+                    range: null
+                },
+                stopBtnHide: true,
+                settingHide: true,
                 circleProgressPointHide: true,
             },
 
@@ -154,40 +189,6 @@ let modes = [
     {
         title: '',
         iconButtons: [
-
-            { // 旋转
-                'icon': modeIcons[41].dir,
-                'text': modeIcons[41].cn,
-                'mode': 0x07,
-                time: {
-                    set: true,
-                    default: 30,
-                    range: [1, 120, 1]
-                },
-                temperature: {
-                    set: true,
-                    default: 180,
-                    range: [70, 180, 10]
-                },
-                preheat: {
-                    set: true,
-                    default: 0,
-                    workingPreheatHide: true,
-                },
-                steamAmount: {
-                    set: false,
-                    default: 0,
-                    range: [1, 4, 1, "取消"]
-                },
-                fireAmount: {
-                    set: false,
-                    default: 0,
-                    range: null
-                },
-                stopBtnHide: true,
-                settingHide: true,
-                circleProgressPointHide: true,
-            },
 
             { // 发酵
                 'icon': modeIcons[7].dir,

@@ -12,42 +12,42 @@ import nativeService from '@/common/services/nativeService';
 import languages from '../../mapping/_languages';
 
 let commonMixin = {
-    data(){
+    data() {
         return {
             wrapHeight: weex.config.env.deviceHeight / weex.config.env.deviceWidth * 750,
             state: null,
             stateTime: null,
-            count:0,
+            count: 0,
             warningDialog: this.initWarningDialog(),
             hintDialog: this.initHintDialog()
         };
     },
-    beforeCreate(){
+    beforeCreate() {
         // this.resetStartTime();
         this.startTime = new Date();
     },
-    computed:{
-        language(){
+    computed: {
+        language() {
             return languages[this.getLang()];
         }
     },
-    methods:{
-        back: function(){
+    methods: {
+        back: function () {
             this.onBackIconClicked();
             nativeService.goBack();
         },
-        back2Native(){
+        back2Native() {
             this.onBackIconClicked();
             nativeService.backToNative()
         },
-        onBackIconClicked(){
-            this.statisticsUpload({subAction:'back_icon_click'});
+        onBackIconClicked() {
+            this.statisticsUpload({ subAction: 'back_icon_click' });
         },
-        openPage: function(pageName, params=null){
-            nativeService.goTo(`${pageName}.js`, {animated: true}, params);
+        openPage: function (pageName, params = null) {
+            nativeService.goTo(`${pageName}.js`, { animated: true }, params);
         },
-        isip9(){
-           return  weex && (weex.config.env.deviceModel === 'iPhone9,2');
+        isip9() {
+            return weex && (weex.config.env.deviceModel === 'iPhone9,2');
         },
         isipx: function () {
             return weex && (
@@ -57,28 +57,28 @@ let commonMixin = {
                 || weex.config.env.deviceModel === 'iPhone11,4' || weex.config.env.deviceModel === 'iPhone11,6' //iPhone XS Max
             );
         },
-        dList(list, cols){
-            var length=list.length;
-            var mod=list.length%cols;
-            if(mod!=0){
-                var appendLen= cols-mod;
-                for(var i=0;i<appendLen;i++){
+        dList(list, cols) {
+            var length = list.length;
+            var mod = list.length % cols;
+            if (mod != 0) {
+                var appendLen = cols - mod;
+                for (var i = 0; i < appendLen; i++) {
                     list.push('');
                 }
             }
-            var resultList=[];
-            var obj={};
-            var index=0;
+            var resultList = [];
+            var obj = {};
+            var index = 0;
             // debugger;
-            for(var j=0;j<list.length;j++){
-                var item=list[j];
+            for (var j = 0; j < list.length; j++) {
+                var item = list[j];
                 // item.index=index;
                 index++;
-                if(j%cols==0){
-                    obj.items=[];
+                if (j % cols == 0) {
+                    obj.items = [];
                 }
                 obj.items.push(item);
-                if(j%cols==cols-1){
+                if (j % cols == cols - 1) {
                     resultList.push(Object.assign({}, obj));
                 }
             }
@@ -88,7 +88,7 @@ let commonMixin = {
         /**
          * 测试计数
          */
-        counts(key){
+        counts(key) {
             this.test = key;
             ++this.count;
         },
@@ -97,39 +97,39 @@ let commonMixin = {
         /**
          * 语言包
          */
-        getLang(){
+        getLang() {
             if (!this.constant.device.lang) this.constant.device.lang = 'cn';
             return this.constant.device.lang;
             // return this.constant.device.lang || 'cn'
         },
-        getLanguage(key){
+        getLanguage(key) {
             // return languages[key][this.getLang()];
             return this.language[key];
         },
-        getLanguages(keys){
+        getLanguages(keys) {
             let len = keys.length;
             let space = this.getLang() === 'cn' ? '' : ' ';
             let buffer = '';
-            for(let i=0;i<len;i++) {
+            for (let i = 0; i < len; i++) {
                 buffer += this.getLanguage(keys[i]) + space;
-             }
-             return buffer;
+            }
+            return buffer;
         },
 
         /**
          * 警告弹窗设置
          */
-        setWarningDialog(content, callback=null, show=true){
+        setWarningDialog(content, callback = null, show = true) {
             this.warningDialog.show = show;
             this.warningDialog.content = content;
             this.warningDialog.callback = callback || this.hideWarningDialog;
         },
 
-        hideWarningDialog(){
+        hideWarningDialog() {
             this.warningDialog.show = false;
         },
 
-        initWarningDialog(){
+        initWarningDialog() {
             return {
                 show: false,
                 title: "温馨提示",
@@ -141,29 +141,29 @@ let commonMixin = {
         /**
          * 提示弹窗设置
          */
-        initHintDialog(){
+        initHintDialog() {
             return {
                 show: false,
                 title: "温馨提示",
                 content: "请填写",
                 confirmText: '确定',
                 cancelText: '取消',
-                cancelCallback: ()=>{},
-                confirmCallback: ()=>{},
+                cancelCallback: () => { },
+                confirmCallback: () => { },
             };
         },
 
-        hideHintDialog(){
+        hideHintDialog() {
             this.hintDialog.show = false;
         },
 
-        setHintDialog(config){
+        setHintDialog(config) {
             let hintDialog = this.initHintDialog();
             this.hintDialog = objectAssign({}, hintDialog, config)
         },
 
 
-        statisticsUpload: function(data={}){
+        statisticsUpload: function (data = {}) {
 
             // nativeService.alert(data);
             // return;
@@ -190,8 +190,8 @@ let commonMixin = {
                 subAction: 'page_view', // required
                 prev_page_name: this.getPrePageName(),
                 pageName: this.getPageName(),
-                action_result:null,
-                load_duration:null
+                action_result: null,
+                load_duration: null
             };
             // nativeService.alert(data);
             param = objectAssign(param, data);
@@ -213,9 +213,9 @@ let commonMixin = {
          * 返回 组件名称
          * 格式：MSO_BX_SN8
          */
-        getWidgetName(){
+        getWidgetName() {
             let prefix = 'MSO';
-            let {constant} = this;
+            let { constant } = this;
             let type = constant.device.type.toString(16).toUpperCase();
             type = this.getMappingType(type);
             return `${prefix}_${type}_${constant.device.extra1.sn8}`;
@@ -225,9 +225,9 @@ let commonMixin = {
          * sf
          * 针对已上市的设备类型的映射关系
          */
-        getMappingType(type){
+        getMappingType(type) {
             const changeTypes = ['B4', '9B', 'BF'];
-            if(changeTypes.indexOf(type) > -1) {
+            if (changeTypes.indexOf(type) > -1) {
                 return 'B1'
             }
 
@@ -239,9 +239,9 @@ let commonMixin = {
          * sf
          * 返回 组件版本
          */
-         getWidgetVersion(){
-            let {constant} = this;
-            
+        getWidgetVersion() {
+            let { constant } = this;
+
             return constant.device.widget_version;
         },
 
@@ -250,7 +250,7 @@ let commonMixin = {
          * sf
          * 返回 当前页面名称
          */
-        getPageName(){
+        getPageName() {
             return this.isStandby() ? 'standbyPage' : 'workingPage'
         },
 
@@ -258,30 +258,30 @@ let commonMixin = {
          * sf
          * 返回 前一个页面名称
          */
-        getPrePageName(){
+        getPrePageName() {
             return this.fromStandBy ? 'standbyPage' : 'mideaHomePage';
         },
 
-        resetStartTime(){
+        resetStartTime() {
             this.startTime = new Date();
         },
 
         /**
          * 计算页面加载时间
          */
-        pageViewStatistics(){
+        pageViewStatistics() {
             let load_duration = (new Date()).getTime() - this.startTime.getTime();
-            this.statisticsUpload({load_duration});
+            this.statisticsUpload({ load_duration });
         },
 
         /**
          * 获取url指定参数值
          */
-        getUrlParam(url, key){
+        getUrlParam(url, key) {
             let params = url.split('?')[1].split('&');
-            for(let param of params) {
+            for (let param of params) {
                 let pair = param.split('=');
-                if(pair[0] === key) {
+                if (pair[0] === key) {
                     return pair[1];
                 }
             }
@@ -291,9 +291,9 @@ let commonMixin = {
         /**
          * 初始化deviceId
          * */
-        async setDeviceId(){
+        async setDeviceId() {
             let deviceInfo = await nativeService.getDeviceInfo();
-            if(deviceInfo.result && deviceInfo.result.deviceId ) {
+            if (deviceInfo.result && deviceInfo.result.deviceId) {
                 this.deviceId = deviceInfo.result.deviceId;
             }
         },
@@ -301,9 +301,9 @@ let commonMixin = {
         /**
          * 初始化uid
          * */
-        async setUid(){
+        async setUid() {
             let userInfo = await nativeService.getUserInfo();
-            if(userInfo.uid) {
+            if (userInfo.uid) {
                 this.uid = userInfo.uid;
             }
         },
@@ -311,15 +311,15 @@ let commonMixin = {
         /**
          * 状态组件state.vue的显示以及细节
          */
-        showState(text,type='loading'){
-            this.state  = {
+        showState(text, type = 'loading') {
+            this.state = {
                 display: true,
                 type,
                 text
             };
 
-            if(type === 'success') {
-                this.stateTime = setInterval(()=>{
+            if (type === 'success') {
+                this.stateTime = setInterval(() => {
                     this.hideState();
                     clearInterval(this.stateTime);
                 }, 2000);
@@ -329,8 +329,8 @@ let commonMixin = {
         /**
          * 状态组件state.vue的隐藏
          */
-        hideState(){
-            this.state  = {
+        hideState() {
+            this.state = {
                 display: false,
             };
         },
@@ -339,52 +339,52 @@ let commonMixin = {
          * 导航栏显示判断
          * 举例子 key:hideCloudRecipe, state:standby/working
          */
-        iconVisibility(key, state){
+        iconVisibility(key, state) {
             return !this.constant.device[key] || !this.constant.device[key][state]
         },
 
         /**
          * 视频直播入口点击事件
          */
-        onVideoIconClicked(){
-            this.statisticsUpload({subAction:'video_icon_click'});
-            this.openPage('video', {pageName:this.getPageName()});
+        onVideoIconClicked() {
+            this.statisticsUpload({ subAction: 'video_icon_click' });
+            this.openPage('video', { pageName: this.getPageName() });
         },
 
         /**
          * 03查询 支持传入回调
          */
-        getDeviceStatus(cb=null) {//传入模式配置数据tabs
+        getDeviceStatus(cb = null) {//传入模式配置数据tabs
 
             let params = {
                 operation: "luaQuery",
                 params: {}
-              };
+            };
             nativeService
-            .sendLuaRequest(params)
-            .then(resp => {
-                if(typeof cb === 'function') {
-                    cb(resp.result);
-                }
-                // nativeService.hideLoading();
-                // nativeService.alert(resp);
-            })
-            .catch(error => {
-                // nativeService.hideLoading();
-                // nativeService.toast("查询失败"+JSON.stringify(error));
-            });
+                .sendLuaRequest(params)
+                .then(resp => {
+                    if (typeof cb === 'function') {
+                        cb(resp.result);
+                    }
+                    // nativeService.hideLoading();
+                    // nativeService.alert(resp);
+                })
+                .catch(error => {
+                    // nativeService.hideLoading();
+                    // nativeService.toast("查询失败"+JSON.stringify(error));
+                });
         },
 
-        onAppToggle(hideCallback, showCallback){
+        onAppToggle(hideCallback, showCallback) {
             // 应用由后台到前台
-            globalEvent.addEventListener('WXApplicationDidBecomeActiveEvent', function(e) {
+            globalEvent.addEventListener('WXApplicationDidBecomeActiveEvent', function (e) {
                 // nativeService.alert('WXApplicationDidBecomeActiveEvent')
                 typeof showCallback === 'function' && showCallback();
             });
 
 
             // 应用由前台到后台
-            globalEvent.addEventListener('WXApplicationWillResignActiveEvent', function(e) {
+            globalEvent.addEventListener('WXApplicationWillResignActiveEvent', function (e) {
                 // nativeService.alert('WXApplicationWillResignActiveEvent');
                 typeof hideCallback === 'function' && hideCallback();
 

@@ -4,7 +4,7 @@
 <template>
     <div @viewappear="viewappear" @viewdisappear="viewdisappeaar">
         <div class="bg" v-if="!isWorkingPage">
-            <midea-header bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png" :title="constant.device.page_title" titleText="white" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2Native" >
+            <midea-header bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png" :title="constant.device.page_title" titleText="white" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2NativeFun" >
                 <div slot="customerContent" class="header-top-wrapper">
                     <div class="header-top-inner-wrapper">
                         <div class="header-right-image-wrapper" @click="openCloudRecipe">
@@ -398,6 +398,9 @@
         methods: {
             childLockVisibility(state){
                 return !this.constant.device.hideChildLock || !this.constant.device.hideChildLock[state]
+            },
+            back2NativeFun(){
+                nativeService.backToNative()
             },
             onChange(e){
                 // nativeService.alert(e);

@@ -404,7 +404,6 @@ export default {
     obj.fire.value = 0;  //parker: 火力不用*10了，统一用新协议0-10  ，lua 没有返回
     obj.weight.value = 0; //lua 没有返回
     obj.steam.value = 0; //lua 没有返回
-
     return obj;
   },
 };

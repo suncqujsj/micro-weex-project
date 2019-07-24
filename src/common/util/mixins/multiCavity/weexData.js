@@ -103,14 +103,13 @@ let workingModalMixin = {
             if (obj.displaySign.isError) {
                 this.setWarningDialog("主人，您的设备发生故障了，请联系售后人员");
             }
-            if (obj.displaySign.lackWater && obj.mode.value != 0xC4) {
+            if (obj.displaySign.lackWater && obj.mode.value != 0xC4 && (obj.workingState.value!=1 && obj.workingState.value!=2)) {
                 this.setWarningDialog("主人，您的水箱缺水了，要及时添加水哦");
             }
-            if (obj.displaySign.waterBox && obj.mode.value != 0xC4) {
+            if (obj.displaySign.waterBox && obj.mode.value != 0xC4 && (obj.workingState.value!=1 && obj.workingState.value!=2)) {
                 this.setWarningDialog("主人，您的设备缺水盒了");
-
             }
-            if (obj.displaySign.doorSwitch && obj.mode.value != 0xC4) {
+            if (obj.displaySign.doorSwitch && obj.mode.value != 0xC4 && (obj.workingState.value!=1 && obj.workingState.value!=2)) {
                 this.setWarningDialog("主人，您的设备炉门开了");
             }
 

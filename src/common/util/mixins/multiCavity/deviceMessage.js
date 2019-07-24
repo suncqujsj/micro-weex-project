@@ -18,6 +18,8 @@ const deviceMessageMixin = {
             tabs: null,
             index: 1,
             doorStatus: 0,
+            lackWater: 0,
+            waterBox: 0,
         }
     },
     methods: {
@@ -107,6 +109,9 @@ const deviceMessageMixin = {
             let path = url + '.js'
             nativeService.goTo(path, { animated: false, replace: true })
         },
+        changindex(value) {
+            this.index = value;
+        },
         queryRunTimer(timeSet) {
             var self = this;
             this.queryTimer = setInterval(function () {
@@ -140,7 +145,16 @@ const deviceMessageMixin = {
                     // nativeService.alert(resultObj);
                     let getObj = context.tranformToInt(resultObj);
                     let analysisObj = cmdFun.analysisLua(getObj, context.tabs);
-                    // context.doorStatus = analysisObj.displaySign.doorSwitch;
+                    if (context.index === 0) {
+                        context.doorStatus = analysisObj.up_cavity.displaySign.doorSwitch;
+                        context.lackWater = analysisObj.up_cavity.displaySign.lackWater;
+                        context.waterBox = analysisObj.up_cavity.displaySign.waterBox;
+                    }
+                    if (context.index === 1) {
+                        context.doorStatus = analysisObj.down_cavity.displaySign.doorSwitch;
+                        context.lackWater = analysisObj.down_cavity.displaySign.lackWater;
+                        context.waterBox = analysisObj.down_cavity.displaySign.waterBox;
+                    }
                     context.analysisFun(analysisObj);
 
                     if (typeof cb === "function") {
@@ -224,11 +238,17 @@ const deviceMessageMixin = {
                     return;
                 }
             }
-
-            // if (this.doorStatus) {
-            //     nativeService.toast("主人，您的设备炉门开了");
-            //     return;
-            // }
+            if (this.doorStatus && jsonCmd.mode != 0xC4 && this.index != 1) {
+                nativeService.toast("主人，您的设备炉门开了");
+                return;
+            } if (this.lackWater && jsonCmd.mode != 0xC4 && this.index != 1) {
+                nativeService.toast("主人，您的水箱缺水了，要及时添加水哦");
+                return;
+            }
+            if (this.waterBox && jsonCmd.mode != 0xC4 && this.index != 1) {
+                nativeService.toast("主人，您的设备缺水盒了");
+                return;
+            }
             let upTemp = jsonCmd.temperature,
                 downTemp = jsonCmd.temperature;
             if (jsonCmd.upTemperature || jsonCmd.downTemperature) {
@@ -565,7 +585,16 @@ const deviceMessageMixin = {
                 let obj = e.result;
                 let getObj = context.tranformToInt(obj);
                 var analysisObj = cmdFun.analysisLua(getObj, context.tabs);
-                // context.doorStatus = analysisObj.displaySign.doorSwitch;
+                if (context.index === 0) {
+                    context.doorStatus = analysisObj.up_cavity.displaySign.doorSwitch;
+                    context.lackWater = analysisObj.up_cavity.displaySign.lackWater;
+                    context.waterBox = analysisObj.up_cavity.displaySign.waterBox;
+                }
+                if (context.index === 1) {
+                    context.doorStatus = analysisObj.down_cavity.displaySign.doorSwitch;
+                    context.lackWater = analysisObj.down_cavity.displaySign.lackWater;
+                    context.waterBox = analysisObj.down_cavity.displaySign.waterBox;
+                }
                 context.analysisFun(analysisObj);
             });
 

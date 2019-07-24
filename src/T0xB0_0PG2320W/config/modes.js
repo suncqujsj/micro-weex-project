@@ -152,7 +152,7 @@ let modes = [
     {
         title: '',
         iconButtons: [
-            { //发酵
+            /* { //发酵
                 'icon': modeIcons[7].dir,
                 'text': modeIcons[7].cn,
                 'mode': 0xB0,
@@ -189,7 +189,7 @@ let modes = [
                     range:null,
                 },
                 settingHide:false
-            },
+            }, */
             {   // 炉腔清洁
                 'icon': modeIcons[20].dir,
                 'text': modeIcons[20].cn,

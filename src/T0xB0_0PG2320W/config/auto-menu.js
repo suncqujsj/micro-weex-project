@@ -59,7 +59,7 @@ let data = [
                     //     foodMaterial:'速冻水饺 300g \n' ,
                     //     cookingSteps:'1. 饺子皮边缘部分发白发干，整体加热后温度达到90度左右',
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -123,7 +123,7 @@ let data = [
                     //         '8.烤架直接放置在微波炉陶瓷板上关上炉门醒发20分钟后，选择菜单烹调。\n' +
                     //         '9.烹调结束，等待5分钟再打开炉门，以防包子由于瞬间降温导致表皮严重收缩影响外观。',
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -131,7 +131,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:6,
+                        default:6.5,
                         range: [5,8,1],
                     },
                     temperature:{
@@ -179,7 +179,7 @@ let data = [
                     //         '4.剩余10分钟时听到提示音后将米饭取出，把腊肠片铺在米饭上面，蒸箱水盒装满水放回蒸箱中不加盖继续蒸10分钟，蒸好之后，取出，在饭上撒上葱花即可。',
                     //
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -231,7 +231,7 @@ let data = [
                     //         '3.鸡蛋液先用过滤网过滤一遍，秋葵铺在蛋液上。\n' +
                     //         '4.把把碟子放烤架上，把蒸架放平板上，关上炉门，水盒加水，选择菜单，启动即可。',
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
             ]
 
@@ -295,7 +295,7 @@ let data = [
                     //         '5.蒸箱水盒装满水，食材放在碟子里后摆烤架上，把烤架放平板上，蒸汽温度100℃蒸9分钟即可。',
                     //
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -351,7 +351,7 @@ let data = [
                     //         '4.烹饪结束后，把蒸鱼碟取出，倒掉鱼里面的汤汁，然后趁热浇上搅拌均匀的调味料即可。',
                     //
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -359,7 +359,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:4,
+                        default:4.5,
                         range: [4,5,1],
                     },
                     temperature:{
@@ -412,7 +412,7 @@ let data = [
                     //         '5.烹饪结束后拿出撒上葱花即可。' ,
                     //
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -421,7 +421,7 @@ let data = [
                     time:{
                         set: true,
                         default:18,
-                        range: [15,21,1],
+                        range: [15,21,1]
                     },
                     temperature:{
                         set: false,
@@ -444,8 +444,9 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
-                        range:[100,400,100],
+                        default:600,
+                        range:null
+                        // range:[100,400,100],
                     },
                     recipeId:{
                         set:false,
@@ -470,7 +471,7 @@ let data = [
                     //         '4.烹调结束后即可享用。' ,
                     //
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
             ]
 
@@ -486,7 +487,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:12,
+                        default:12.5,
                         range: [10,14,1],
                     },
                     temperature:{
@@ -534,7 +535,7 @@ let data = [
                     //         '3.在娃娃菜上淋上步骤2的酱汁，把碟子放入蒸架上，烤架置于平板上。\n' +
                     //         '4.关上炉门，水盒加水，选择菜单：蒜蓉蒸娃娃菜，启动即可。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -590,7 +591,7 @@ let data = [
                     //         '5.蒸箱水盒装满水，食物放在平底碟上，烤架放在平板上，蒸汽温度100℃蒸8分钟。',
                     //
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -648,7 +649,7 @@ let data = [
                     //         '4.取出，加入各种海鲜和蔬菜搅拌均匀，加盖留孔放回微波炉底盘，微波1000W火力加热3分钟。\n' +
                     //         '5.取出，倒入咖喱汁搅拌均匀，放回微波炉底盘，微波1000W火力加热5分钟即可。',
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -709,7 +710,7 @@ let data = [
                     //         '4.取一个微波适用的深盘，平铺上五花肉，不加盖放入微波炉底盘，微波高火加热4分钟。\n' +
                     //         '5.取出五花肉，加入青红椒、蒜苗，倒入酱汁拌匀，加盖留孔放入微波炉中，微波1000W火力加热4分钟。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
             ]
 
@@ -779,7 +780,7 @@ let data = [
                     //         '4.取一只大而且深的盘子，放入豆腐，上面再均匀地平铺肉末，把调好的酱汁浇在豆腐表面，撒上花椒粒和蒜苗段，加盖留孔放入微波炉底盘，微波1000W火力加热5分钟。\n' +
                     //         '5.取出，轻轻拌匀，撒上香葱即可。'  ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -837,7 +838,7 @@ let data = [
                     //         '3.取一只碗，放入蒜蓉、生抽、植物油、盐、蚝油、水搅拌均匀，把葱段与红椒圈泡入酱汁中浸泡一会儿备用。\n' +
                     //         '4.准备一个盘子，摆上豆角和茄子段，均匀地浇上酱汁，加盖留孔放入微波炉底盘，微波1000W火力加热6分钟，中途搅拌一次。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -897,7 +898,7 @@ let data = [
                     //         '4.取出，加入100g水，加盖留孔，放入微波炉底盘，微波1000W火力加热5分钟后，转微波500W火力继续加热10分钟。\n' +
                     //         '5.最后按照个人口味调入食盐并撒入熟芝麻即可。',
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -958,7 +959,7 @@ let data = [
                     //         '4.汤盅中放入挤了水的榛蘑、鸡肉，加入切片的大葱，倒入步骤4调好的榛蘑水，加盖留孔放入微波炉中，微波1000W 加热10分钟后转微波500W火力再炖20分钟。\n' +
                     //         '5.炖好之后，取出，撒上葱花。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
             ]
 
@@ -1016,7 +1017,7 @@ let data = [
                     //         '2.在牛排上涂抹盐和黄油。\n' +
                     //         '3.选择菜单预热，预热结束后，将烤架放入微波炉1层，关上炉门，按启动键开始烹饪。',
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -1067,7 +1068,7 @@ let data = [
                     //         '3.烤盘铺上锡纸，在锡纸上刷上一层油（配方外），腌好的鳕鱼放在锡箔纸上，在鳕鱼两面刷上一层薄油。\n' +
                     //         '4.选择自动菜单预热，预热结束后，把烤盘放入烤箱中层，关上炉门，刷上食用油继续烤至程序结束。',
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -1122,7 +1123,7 @@ let data = [
                     //         '3.选择自动菜单预热，同时把虾用竹签串成4串，烤盘上铺上锡箔纸，放上虾串。\n' +
                     //         '4.预热结束后，将烤盘置于微波炉第2层，烹调结束后，取出即可。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -1176,7 +1177,7 @@ let data = [
                     //         '6.蚝油、蜂蜜、油按照2：2：1混合均匀（分量外）。\n' +
                     //         '7.剩余烹饪时间5分钟时，倒掉多余的汁水，然后用刷子在排骨表面刷上蚝油蜜汁，放回炉子内继续烹饪至结束即可。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
             ]
 
@@ -1192,7 +1193,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: false,
-                        default:8,
+                        default:20,
                         range: null
                     },
                     temperature:{
@@ -1216,7 +1217,7 @@ let data = [
                     },
                     weight:{
                         set:false,
-                        default:100,
+                        default:250,
                         range:[100,400,100],
                     },
                     recipeId:{
@@ -1237,7 +1238,7 @@ let data = [
                     //         '4.把腌制好的扇贝肉重新装在洗干净的扇贝壳上，放在垫了锡纸的烤盘上。\n' +
                     //         '5.选择自动菜单预热，预热结束后，把烤盘放入到第2层。扇贝烤好后取出，撒上适量葱花即可。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -1290,7 +1291,7 @@ let data = [
                     //         '2.选择自动菜单预热，腌制好的鸡翅排放在垫有烘焙纸或锡箔纸的烤盘里。\n' +
                     //         '3.预热结束后，将烤盘置于微波炉第1层，烹调结束后，取出即可。'  ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -1343,7 +1344,7 @@ let data = [
                     //         '4.玉米段放在垫了锡纸的烤盘中，用毛刷在玉米表面均匀地刷上调料。\n' +
                     //         '5.选择自动菜单预热，预热结束后，把烤盘放入炉子中第1层，烹饪结束后，取出即可。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -1398,7 +1399,7 @@ let data = [
                     //         '5.在压开花的土豆表面，刷一层橄榄油，均匀撒上一层黑胡椒碎、香芹碎、迷迭香碎、盐\n' +
                     //         '6.选择自动菜单预热，预热结束后，把烤盘放入炉子中第1层。在最后几分钟注意观察颜色，表面金黄，微微有点焦即可停止。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
             ]
 
@@ -1443,7 +1444,7 @@ let data = [
                     },
                     recipeId:{
                         set:false,
-                        default: 0x85,
+                        default: 0x39,
                         range:null
                     },
                     // detail: {
@@ -1458,7 +1459,7 @@ let data = [
                     //         '2.将红薯肉压成泥，加入黄油，牛奶和砂糖混合均匀，再将薯泥放入到外皮中，撒上马苏里拉芝士碎。\n' +
                     //         '3.选择菜单预热，预热结束后，把烤盘放入第2层，烘烤结束后即可取出。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -1515,7 +1516,7 @@ let data = [
                     //         '5.把意粉与肉酱放在一起搅拌均匀，放在耐高温烤盘中，再在上面铺厚厚一层马苏里拉芝士。\n' +
                     //         '6.选择自动菜单预热，预热结束后，把陶瓷烤盘连同烤架放入第1层，关上炉门，开始烘烤，表面芝士融化、微微焦黄即可。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -1575,7 +1576,7 @@ let data = [
                     //         '6.然后均匀地放上柠檬片、淋上紫甘蓝奶油酱汁，再撒满马苏里拉芝士碎。\n' +
                     //         '7.选择自动菜单预热，预热结束后，把陶瓷烤盘连同烤架放入第1层，关上炉门，开始烘烤，表面芝士融化、微微焦黄即可。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -1641,7 +1642,7 @@ let data = [
                     //         '9.重复上面的千层面皮-海鲜馅-奶油白酱-芝士-千层面皮，最后撒上马苏里拉芝士。\n' +
                     //         '10.选择自动菜单预热，预热结束后，把陶瓷烤盘连同烤架放入第1层，关上炉门，开始烘烤，表面芝士融化、微微焦黄即可。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
             ]
 
@@ -1700,7 +1701,7 @@ let data = [
                     //         '3.选择菜单：冰糖雪梨，启动即可。\n' +
                     //         '4.最后剩余5分钟时加入冰糖即可。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -1752,7 +1753,7 @@ let data = [
                     //         '3.微波适用锅中加入银耳、莲子和水，加盖或盖保鲜膜留孔，放微波炉中，关上炉门，选择菜单后开始烹饪。\n' +
                     //         '4.听到提示音后，取出，加入冰糖，加盖，放入微波炉中继续烹饪，待烹调结束即可享用。'  ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
             ]
 
@@ -1814,14 +1815,14 @@ let data = [
                     //         '6.将过滤好的蛋奶液慢慢的延碗边缘倒进刚刚留奶皮的碗里，盖上保鲜膜。\n' +
                     //         '7.蒸箱水盒装满水，食物放在烤架上，放入平板上，蒸汽温度100℃蒸15分钟，时间结束后，再利用热气在蒸箱中焖上3分钟，出炉就能吃了。',
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
                     'text': '椰汁木瓜露',
                     'mode': 0xE0,
                     time:{
-                        set: false,
+                        set: true,
                         default:35,
                         range: [31,39,1]
                     },
@@ -1877,7 +1878,7 @@ let data = [
                     //         '11.用虎口向上推，保持馅在面团的中心点，最后包紧收口，防止烤制过程中爆豆沙。每包好一个酥饼，都需要用保鲜膜封好。把包好的放进烤盘中。\n' +
                     //         '12.选择自动菜单预热，预热结束后，把烤盘放进第1层，烹饪结束后，取出即可。',
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -1940,7 +1941,7 @@ let data = [
                     //         '12.包好的蛋黄酥放在垫了油纸的烤盘中，每个蛋黄酥表面都刷上两层蛋黄液，撒上一小撮黑芝麻在顶部装饰。\n' +
                     //         '13.烤箱提前预热至180℃之后，把烤盘放入烤箱中层，以上下管发热模式烤25分钟左右。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -2002,7 +2003,7 @@ let data = [
                     //         '9.将红豆沙包入青团坯，操作过程戴手套、抹油。\n' +
                     //         '10.包好的青团表面刷上食用油，以缓解青团变硬，用裁剪好的保鲜膜包裹起来。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
             ]
 
@@ -2019,7 +2020,7 @@ let data = [
                     time:{
                         set: true,
                         default:60,
-                        range: [54,66]
+                        range: [54,66,1]
                     },
                     temperature:{
                         set: false,
@@ -2066,7 +2067,7 @@ let data = [
                     //         '6.模具底部、四周提前粘好油纸，将面糊倒进去，微震将气泡震出。\n' +
                     //         '7.选择自动菜单预热，预热结束后，把烤盘放进第1层，烹饪结束后，取出即可。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -2121,7 +2122,7 @@ let data = [
                     //         '4.将冷藏好的曲奇取出，切成5mm厚的正方形，排列在烤盘上。\n' +
                     //         '5.选择菜单预热。预热结束后，将烤盘放到第2层，烘烤约15分钟，取出晾凉即可。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
 
             ]
@@ -2138,7 +2139,7 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:300,
+                        default:360,
                         range: [1,60,1,65,120,5,130,480,10]
                     },
                     temperature:{
@@ -2186,7 +2187,7 @@ let data = [
                     //         '5.将过筛的挞水装入挞皮中，装到八分满即可。\n' +
                     //         '6.选择菜单预热，将烤架置于微波炉第1层，关上炉门，按启动键开始烹饪。',
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -2242,7 +2243,7 @@ let data = [
                     //         '7.把冷藏好的面糊，挤入模具中。\n' +
                     //         '8.选择菜单预热，将烤架置于微波炉第1层，关上炉门，按启动键开始烹饪，烘烤结束，立即脱模，开始享受美味吧。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
                 {
                     'icon': '',
@@ -2250,8 +2251,8 @@ let data = [
                     'mode': 0xE0,
                     time:{
                         set: true,
-                        default:2,
-                        range: [2,10,1]
+                        default:2.5,
+                        range: [1,10,1]
                     },
                     temperature:{
                         set: false,
@@ -2298,7 +2299,7 @@ let data = [
                     //         '7.把冷藏好的面糊，挤入模具中。\n' +
                     //         '8.选择菜单预热，将烤架置于微波炉第1层，关上炉门，按启动键开始烹饪，烘烤结束，立即脱模，开始享受美味吧。' ,
                     // },
-                    settingHide:true
+                    settingHide: true
                 },
             ]
 

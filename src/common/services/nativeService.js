@@ -1625,5 +1625,23 @@ export default {
                 })
         })
     },
+    /* (^5.10.0)播报文字。
+        params为对象:
+        {
+            content: string，//需要语音播报的句子
+        }
+    */
+    textToSpeech(params = {}) {
+        return new Promise((resolve, reject) => {
+            aiSpeechModule["textToSpeech"](JSON.stringify(params),
+                (resData) => {
+                    resolve(this.convertToJson(resData))
+                },
+                (error) => {
+                    reject(error)
+                })
+        })
+    },
+    
     //**********思必驰语音识别接口***************START
 }

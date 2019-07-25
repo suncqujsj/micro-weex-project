@@ -29,6 +29,8 @@
                 </midea-cell>
                 <midea-cell title="停止" :hasMargin="true" :hasArrow="true" :clickActivied="true" :hasTopBorder="false" :hasBottomBorder="true" :hasSubBottomBorder="false" @mideaCellClick="setParam('stopSpeechMonitor')">
                 </midea-cell>
+                <midea-cell title="语音播报" :hasMargin="true" :hasArrow="true" :clickActivied="true" :hasTopBorder="false" :hasBottomBorder="true" :hasSubBottomBorder="false" @mideaCellClick="setParam('textToSpeech')">
+                </midea-cell>
             </div>
         </scroller>
         <midea-button text="按参数执行" @mideaButtonClicked="execute()"></midea-button>
@@ -162,6 +164,15 @@ export default {
                     })
                     this.execute()
                     break;
+                case "textToSpeech":
+                    this.messageParam = JSON.stringify({
+                        api: "textToSpeech",
+                        params: {
+                            content: "测试语音播报"
+                        }
+                    })
+                    this.execute()
+                    break;
                 default:
                     break;
             }
@@ -217,10 +228,8 @@ export default {
         globalEvent.addEventListener('receiveMessageFromApp', (data) => {
             if (data.messageType == 'aiSpeechNotification') {
                 this.result.unshift(data.messageBody)
-                nativeService.toast(this.result)
             } else if (data.messageType == 'aiSpeechAcyionResult') {
                 this.result.unshift(data.messageBody)
-                nativeService.toast(this.result)
             }
         })
     },

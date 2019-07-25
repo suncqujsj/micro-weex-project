@@ -7,14 +7,14 @@ import modeIcons from "../../common/mapping/modeIcons";
 
 let timeCommon = {
     set: true,
-    default:30,
-    range: [1,60,1, 65,120,5, 150,540,30]
+    default: 30,
+    range: [1, 60, 1, 65, 120, 5, 150, 540, 30]
 };
 
 
-function temperatureRange(start, end){
-    let a=[];
-    if(start < 100) {
+function temperatureRange(start, end) {
+    let a = [];
+    if (start < 100) {
         a = [50, 50, 1];
     }
 
@@ -32,25 +32,25 @@ let modes = [
                 'text': modeIcons[0].cn,
                 'mode': 0x4C,
                 time: timeCommon,
-                temperature:{
+                temperature: {
                     set: true,
-                    default:180,
-                    range:temperatureRange(100, 235)
+                    default: 180,
+                    range: temperatureRange(100, 235)
                 },
-                preheat:{
-                    set:true,
-                    hide:true,
+                preheat: {
+                    set: true,
+                    hide: true,
                     default: false
                 },
-                steamAmount:{
-                    set:false,
-                    default:2,
-                    range:[1,4,1,"取消"]
+                steamAmount: {
+                    set: false,
+                    default: null,
+                    range: [1, 4, 1, "取消"]
                 },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
+                fireAmount: {
+                    set: false,
+                    default: 0,
+                    range: null
                 }
             },
 
@@ -59,25 +59,25 @@ let modes = [
                 'text': modeIcons[1].cn,
                 'mode': 0x41,
                 time: timeCommon,
-                temperature:{
+                temperature: {
                     set: true,
-                    default:160,
-                    range:temperatureRange(50, 250)
+                    default: 160,
+                    range: temperatureRange(50, 250)
                 },
-                preheat:{
-                    set:true,
-                    hide:true,
+                preheat: {
+                    set: true,
+                    hide: true,
                     default: false
                 },
-                steamAmount:{
-                    set:false,
-                    default:2,
-                    range:[1,4,1,"取消"]
+                steamAmount: {
+                    set: false,
+                    default: 2,
+                    range: [1, 4, 1, "取消"]
                 },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
+                fireAmount: {
+                    set: false,
+                    default: 0,
+                    range: null
                 }
             },
 
@@ -86,25 +86,25 @@ let modes = [
                 'text': modeIcons[2].cn,
                 'mode': 0x52,
                 time: timeCommon,
-                temperature:{
+                temperature: {
                     set: true,
-                    default:160,
-                    range:temperatureRange(50,235)
+                    default: 160,
+                    range: temperatureRange(50, 235)
                 },
-                preheat:{
-                    set:true,
-                    hide:true,
+                preheat: {
+                    set: true,
+                    hide: true,
                     default: false
                 },
-                steamAmount:{
-                    set:false,
-                    default:2,
-                    range:[40,40,1,"取消"]
+                steamAmount: {
+                    set: false,
+                    default: 2,
+                    range: [40, 40, 1, "取消"]
                 },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
+                fireAmount: {
+                    set: false,
+                    default: 0,
+                    range: null
                 }
             },
 
@@ -113,25 +113,25 @@ let modes = [
                 'text': modeIcons[4].cn,
                 'mode': 0x47,
                 time: timeCommon,
-                temperature:{
+                temperature: {
                     set: true,
-                    default:150,
-                    range: temperatureRange(100,235)
+                    default: 150,
+                    range: temperatureRange(100, 235)
                 },
-                preheat:{
-                    set:true,
-                    hide:true,
+                preheat: {
+                    set: true,
+                    hide: true,
                     default: false
                 },
-                steamAmount:{
-                    set:false,
-                    default:2,
-                    range:[40,40,1,"取消"]
+                steamAmount: {
+                    set: false,
+                    default: 2,
+                    range: [40, 40, 1, "取消"]
                 },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
+                fireAmount: {
+                    set: false,
+                    default: 0,
+                    range: null
                 }
             }
 
@@ -146,25 +146,25 @@ let modes = [
                 'text': modeIcons[5].cn,
                 'mode': 0x51,
                 time: timeCommon,
-                temperature:{
+                temperature: {
                     set: true,
-                    default:180,
-                    range:temperatureRange(100, 250)
+                    default: 180,
+                    range: temperatureRange(100, 250)
                 },
-                preheat:{
-                    set:true,
-                    hide:true,
+                preheat: {
+                    set: true,
+                    hide: true,
                     default: false
                 },
-                steamAmount:{
-                    set:false,
-                    default:2,
-                    range:[40,40,1,"取消"]
+                steamAmount: {
+                    set: false,
+                    default: 2,
+                    range: [40, 40, 1, "取消"]
                 },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
+                fireAmount: {
+                    set: false,
+                    default: 0,
+                    range: null
                 }
             },
 
@@ -173,25 +173,25 @@ let modes = [
                 'text': modeIcons[6].cn,
                 'mode': 0x46,
                 time: timeCommon,
-                temperature:{
+                temperature: {
                     set: true,
-                    default:180,
-                    range:temperatureRange(100, 235)
+                    default: 180,
+                    range: temperatureRange(100, 235)
                 },
-                preheat:{
-                    set:true,
-                    hide:true,
+                preheat: {
+                    set: true,
+                    hide: true,
                     default: false
                 },
-                steamAmount:{
-                    set:false,
-                    default:2,
-                    range:[40,40,1,"取消"]
+                steamAmount: {
+                    set: false,
+                    default: 2,
+                    range: [40, 40, 1, "取消"]
                 },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
+                fireAmount: {
+                    set: false,
+                    default: 0,
+                    range: null
                 }
             },
 
@@ -200,25 +200,25 @@ let modes = [
                 'text': modeIcons[8].cn,
                 'mode': 0x42,
                 time: timeCommon,
-                temperature:{
+                temperature: {
                     set: true,
-                    default:180,
-                    range:temperatureRange(50, 250)
+                    default: 180,
+                    range: temperatureRange(50, 250)
                 },
-                preheat:{
-                    set:true,
-                    hide:true,
+                preheat: {
+                    set: true,
+                    hide: true,
                     default: false
                 },
-                steamAmount:{
-                    set:false,
-                    default:2,
-                    range:[40,40,1,"取消"]
+                steamAmount: {
+                    set: false,
+                    default: 2,
+                    range: [40, 40, 1, "取消"]
                 },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
+                fireAmount: {
+                    set: false,
+                    default: 0,
+                    range: null
                 }
             },
 
@@ -227,25 +227,25 @@ let modes = [
                 'text': modeIcons[3].cn,
                 'mode': 0x49,
                 time: timeCommon,
-                temperature:{
+                temperature: {
                     set: true,
-                    default:150,
-                    range:temperatureRange(50, 235)
+                    default: 150,
+                    range: temperatureRange(50, 235)
                 },
-                preheat:{
-                    set:true,
-                    hide:true,
+                preheat: {
+                    set: true,
+                    hide: true,
                     default: false
                 },
-                steamAmount:{
-                    set:false,
-                    default:2,
-                    range:[40,40,1,"取消"]
+                steamAmount: {
+                    set: false,
+                    default: 2,
+                    range: [40, 40, 1, "取消"]
                 },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
+                fireAmount: {
+                    set: false,
+                    default: 0,
+                    range: null
                 }
             }
 
@@ -260,29 +260,29 @@ let modes = [
                 'icon': modeIcons[7].dir,
                 'text': modeIcons[7].cn,
                 'mode': 0xB0,
-                time:{
+                time: {
                     set: true,
-                    default:40,
-                    range:[5,60,1,65,120,5,150,720,30]
+                    default: 40,
+                    range: [5, 60, 1, 65, 120, 5, 150, 720, 30]
                 },
-                temperature:{
+                temperature: {
                     set: true,
-                    default:35,
-                    range:[35,45,1]
+                    default: 35,
+                    range: [35, 45, 1]
                 },
-                preheat:{
-                    set:false,
+                preheat: {
+                    set: false,
                     default: false
                 },
-                steamAmount:{
-                    set:false,
-                    default:2,
-                    range:[40,40,1,"取消"]
+                steamAmount: {
+                    set: false,
+                    default: null,
+                    range: [40, 40, 1, "取消"]
                 },
-                fireAmount:{
-                    set:false,
-                    default:0,
-                    range:null
+                fireAmount: {
+                    set: false,
+                    default: 0,
+                    range: null
                 }
             }
 

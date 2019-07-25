@@ -304,7 +304,7 @@ const deviceMessageMixin = {
         //工作类设置类
         sendParmas = { hour_set: hour, minute_set: minute, temp_set: temperature };
 
-        if (jsonCmd.time && jsonCmd.isTimeChange && !jsonCmd.isTemperatureChange) {
+        if (jsonCmd.time && jsonCmd.isTimeChange && !jsonCmd.isTemperatureChange && !this.isFun2Oven()) {
           delete sendParmas.temp_set;
         }
         if (jsonCmd.temperature && jsonCmd.isTemperatureChange && !jsonCmd.isTimeChange) {

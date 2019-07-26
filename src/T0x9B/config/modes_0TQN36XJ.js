@@ -181,7 +181,8 @@ let modes = [
                     set: false,
                     default: 0,
                     range: null
-                }
+                },
+                settingHide: true,
             },
             {
                 'icon': modeIcons[28].dir,

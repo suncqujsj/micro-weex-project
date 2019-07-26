@@ -61,6 +61,10 @@ let mode = {
   'steam_and_core_baking': { value: 0x36, text: '蒸汽+中心烧烤/(上内(红外)烧烤+上外烧烤)/大面积烧烤' },
   'steam_and_total_baking': { value: 0x37, text: '蒸汽 + 全烧烤/上内(红外)烧烤/小面积烧烤' },
 
+  'above_tube_fan': { value: 0x4a, text: '(上外烧烤）烧烤+风扇/热风+风扇' },
+  'steam_and_hot_wind_broil': { value: 0x33, text: '蒸汽+热风烧烤' },
+  'steam_and_bake_fan': { value: 0x3A, text: '蒸汽+烧烤+风扇' },
+
 };
 
 export default mode;

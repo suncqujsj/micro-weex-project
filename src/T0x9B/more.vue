@@ -31,7 +31,7 @@
                     list[0].rightText ='蒸汽烤箱 TQN50EQL_TS';      
                 }
                 else if(data.result && data.result.deviceSn8=='0TQN36XJ'){
-                    list[0].rightText ='蒸汽烤箱 0TQN36XJ_SS';      
+                    list[0].rightText ='蒸汽烤箱 0TQN36XJ_SA';      
                 }
                 else{
                     list[0].rightText ='蒸汽烤箱';        

@@ -7,15 +7,15 @@ module.exports = {
     device: {
         type: 0x9B,
         page_title: "蒸汽烤箱", // 此字段是页面顶端标题
-        sales_model: "TQN36FQL_SS", 
+        sales_model: "TQN36FQL_SS",
         widget_name: 'MSO_T0xB1',
-        widget_version: '5.2.4',
+        widget_version: '5.2.5',
         extra1: {
             sn8: '0TQN36QL'
         },
-        hideChildLock:{
-            standby:false,
-            working:true
+        hideChildLock: {
+            standby: false,
+            working: true
         }
         // hms:[0,1,1] //是否用时分秒组件
     }

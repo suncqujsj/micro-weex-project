@@ -57,8 +57,10 @@
                         tabs[1].rows = modes_0TQN36QL;               
                     }
                     else if(data.result && data.result.deviceSn8=='0TQN36XJ'){
-                        tabs[0].rows = autoMenu_0TQN36XJ; 
-                        tabs[1].rows = modes_0TQN36XJ;               
+                        //没有自动菜单
+                        tabs.length = 1;
+                        // tabs[0].rows = autoMenu_0TQN36XJ; 
+                        tabs[0].rows = modes_0TQN36XJ;               
                     }
                     else{
                         tabs[0].rows = autoMenu;

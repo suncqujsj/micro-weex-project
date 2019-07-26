@@ -52,6 +52,15 @@ let mode = {
   'power_saving_bake': { value: 0x4D, text: 'ECO' },
   'fast_preheat': { value: 0x4B, text: '快速预热' },
 
+  /*9B */
+  'cube_baking': { value: 0x44, text: '立体烧烤' },
+  'steam_and_double_tube': { value: 0x3C, text: '蒸汽+上下烧烤' },
+  'steam_and_cube_baking': { value: 0x34, text: '蒸汽+立体烧烤' },
+  'steam_and_underside_tube': { value: 0x39, text: '蒸汽+底部烧烤' },
+  'steam_and_double_upside_tube_fan': { value: 0x61, text: '蒸汽+上内(红外)+上外+风扇/大面积+风扇' },
+  'steam_and_core_baking': { value: 0x36, text: '蒸汽+中心烧烤/(上内(红外)烧烤+上外烧烤)/大面积烧烤' },
+  'steam_and_total_baking': { value: 0x37, text: '蒸汽 + 全烧烤/上内(红外)烧烤/小面积烧烤' },
+
 };
 
 export default mode;

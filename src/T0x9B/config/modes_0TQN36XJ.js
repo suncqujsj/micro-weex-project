@@ -7,7 +7,7 @@ let modes = [
     {
         title: '',
         iconButtons: [
-            {
+            {//蒸汽
                 'icon': modeIcons[33].dir,
                 'text': modeIcons[33].cn,
                 'mode': 0x20,
@@ -34,7 +34,7 @@ let modes = [
                     default: 0
                 }
             },
-            {
+            {//蒸汽+热风对流
                 'icon': modeIcons[35].dir,
                 'text': modeIcons[35].cn,
                 'mode': 0x31,
@@ -62,7 +62,7 @@ let modes = [
                     default: 0
                 }
             },
-            {
+            {//烧烤
                 'icon': modeIcons[13].dir,
                 'text': modeIcons[13].cn,
                 'mode': 0x40,
@@ -93,7 +93,7 @@ let modes = [
                     // range:null
                 },
             },
-            {
+            {//热风对流
                 'icon': modeIcons[1].dir,
                 'text': modeIcons[1].cn,
                 'mode': 0x41,
@@ -127,7 +127,7 @@ let modes = [
     {
         title: '',
         iconButtons: [
-            {
+            {//热风烧烤
                 'icon': modeIcons[31].dir,
                 'text': modeIcons[31].cn,
                 'mode': 0x43,
@@ -154,7 +154,7 @@ let modes = [
                     default: 0
                 }
             },
-            {
+            {//清洁
                 'icon': modeIcons[20].dir,
                 'text': modeIcons[20].cn,
                 'mode': 0xC1,
@@ -184,10 +184,10 @@ let modes = [
                 },
                 settingHide: true,
             },
-            {
+            {//保温，这款特殊，需要发0x41表示保温
                 'icon': modeIcons[28].dir,
                 'text': modeIcons[28].cn,
-                'mode': 0xD0,
+                'mode': 0x41,
                 time: {
                     set: true,
                     default: 10,
@@ -213,7 +213,7 @@ let modes = [
                     range: null
                 }
             },
-            {
+            {//发酵
                 'icon': modeIcons[7].dir,
                 'text': modeIcons[7].cn,
                 'mode': 0xB0,

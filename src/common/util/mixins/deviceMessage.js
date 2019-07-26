@@ -340,7 +340,7 @@ const deviceMessageMixin = {
       }
 
       nativeService.showLoading();
-      nativeService.alert(sendParmas);
+      // nativeService.alert(sendParmas);
       let params = {
         operation: "luaControl",
         params: sendParmas

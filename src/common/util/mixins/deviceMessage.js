@@ -339,6 +339,15 @@ const deviceMessageMixin = {
         sendParmas.people_number = quantity;
       }
 
+      //9b 0TQN36XJ ,保温需要下发0x41，温度50； 发酵需要下发0x43，温度35
+      if (this.is9B_36XJ()) {
+        if (sendParmas.work_mode === 'warm') {
+          sendParmas.work_mode = 'hot_wind_bake';
+        }
+        if (sendParmas.work_mode === 'zymosis') {
+          sendParmas.work_mode = 'hot_wind_and_broil';
+        }
+      }
       nativeService.showLoading();
       // nativeService.alert(sendParmas);
       let params = {

@@ -39,28 +39,33 @@
         created(){
             let self = this;
             let tabs = JSON.parse(JSON.stringify(this.tabs));
+            let constantObj = JSON.parse(JSON.stringify(this.constant));
              nativeService.getDeviceInfo().then(function(data){
-                var _tabs = self.loadOwnMode(data,tabs);
+                var _tabs = self.loadOwnMode(data,tabs,constantObj);
                 self.tabs = JSON.parse(JSON.stringify(_tabs));
                 self.pageShow = true;
             });
         },
         methods: {
-           loadOwnMode(data,tabs){
+           loadOwnMode(data,tabs,constantObj){
+               let self = this;
                if(tabs.length>1){
                     if(data.result && data.result.deviceSn8=='0TQN50QL'){
                         tabs[0].rows = autoMenu_0TQN50QL;   
-                        tabs[1].rows = modes_0TQN50QL;            
+                        tabs[1].rows = modes_0TQN50QL;
+                        constantObj.device.extra1.sn8 = '0TQN50QL';          
                     }
                     else if(data.result && data.result.deviceSn8=='0TQN36QL'){
                         tabs[0].rows = autoMenu_0TQN36QL; 
-                        tabs[1].rows = modes_0TQN36QL;               
+                        tabs[1].rows = modes_0TQN36QL;  
+                        constantObj.device.extra1.sn8 = '0TQN36QL';                   
                     }
                     else if(data.result && data.result.deviceSn8=='0TQN36XJ'){
                         //没有自动菜单
                         tabs.length = 1;
                         // tabs[0].rows = autoMenu_0TQN36XJ; 
-                        tabs[0].rows = modes_0TQN36XJ;               
+                        tabs[0].rows = modes_0TQN36XJ;    
+                        constantObj.device.extra1.sn8 = '0TQN36XJ';                 
                     }
                     else{
                         tabs[0].rows = autoMenu;
@@ -68,18 +73,22 @@
                     }
                }else{
                      if(data.result && data.result.deviceSn8=='0TQN50QL'){
-                        tabs[0].rows = modes_0TQN50QL;            
+                        tabs[0].rows = modes_0TQN50QL; 
+                        constantObj.device.extra1.sn8 = '0TQN50QL';            
                     }
                     else if(data.result && data.result.deviceSn8=='0TQN36QL'){
-                        tabs[0].rows = modes_0TQN36QL;               
+                        tabs[0].rows = modes_0TQN36QL;    
+                        constantObj.device.extra1.sn8 = '0TQN36QL';            
                     }
                      else if(data.result && data.result.deviceSn8=='0TQN36XJ'){
-                        tabs[0].rows = modes_0TQN36XJ;               
+                        tabs[0].rows = modes_0TQN36XJ; 
+                        constantObj.device.extra1.sn8 = '0TQN36XJ';               
                     }
                     else{
                         tabs[0].rows = modes;
                     }
                }
+               self.constant = JSON.parse(JSON.stringify(constantObj));
                return tabs;
            }
         }

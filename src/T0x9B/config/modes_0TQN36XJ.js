@@ -32,7 +32,8 @@ let modes = [
                 fireAmount: {
                     set: false,
                     default: 0
-                }
+                },
+                settingHide: true,
             },
             {//蒸汽+热风对流
                 'icon': modeIcons[35].dir,
@@ -55,12 +56,14 @@ let modes = [
                 steamAmount: {
                     set: true,
                     default: 3,
-                    range: [1, 3, 1]
+                    range: [1, 3, 1],
+                    hide: true
                 },
                 fireAmount: {
                     set: false,
                     default: 0
-                }
+                },
+                settingHide: true,
             },
             {//烧烤
                 'icon': modeIcons[13].dir,
@@ -92,6 +95,7 @@ let modes = [
                     // default:0,
                     // range:null
                 },
+                settingHide: true,
             },
             {//热风对流
                 'icon': modeIcons[1].dir,
@@ -120,7 +124,9 @@ let modes = [
                     set: false,
                     default: 0,
                     range: null
-                }
+                },
+                settingHide: true,
+
             }
         ]
     },
@@ -152,7 +158,8 @@ let modes = [
                 fireAmount: {
                     set: false,
                     default: 0
-                }
+                },
+                settingHide: true,
             },
             {//清洁
                 'icon': modeIcons[20].dir,
@@ -184,10 +191,10 @@ let modes = [
                 },
                 settingHide: true,
             },
-            {//保温，这款特殊，需要发0x41表示保温
+            {
                 'icon': modeIcons[28].dir,
                 'text': modeIcons[28].cn,
-                'mode': 0x41,
+                'mode': 0xD0,
                 time: {
                     set: true,
                     default: 10,
@@ -211,7 +218,8 @@ let modes = [
                     set: false,
                     default: 0,
                     range: null
-                }
+                },
+                settingHide: true,
             },
             {//发酵
                 'icon': modeIcons[7].dir,
@@ -240,7 +248,8 @@ let modes = [
                     set: false,
                     default: 0,
                     range: null
-                }
+                },
+                settingHide: true,
             }
         ]
     }

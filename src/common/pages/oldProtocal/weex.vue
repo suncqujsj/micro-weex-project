@@ -147,7 +147,7 @@
         <!--童锁遮罩-->
         <modal :show="modalVisibility">
             <div slot="header">
-                <modal-header leftImg="img/header/public_ic_home@3x.png" class="modal-header" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2Native"></modal-header>
+                <modal-header leftImg="img/header/public_ic_home@3x.png" class="modal-header" :isImmersion="true"  :showLeftImg="true" @leftImgClick="back2NativeFun"></modal-header>
             </div>
             <div class="a-c j-c" slot="content" :style="{height: wrapHeight+'px'}">
                 <div class="child-lock">
@@ -177,7 +177,7 @@
 
          <!-- 工作页面 -->
         <div class="working_section all_section" v-if="isWorkingPage" :style="{height: wrapHeight}">
-            <midea-header bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png" :title="constant.device.page_title" titleText="white" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2Native">
+            <midea-header bgColor="transparent" leftImg="img/header/public_ic_back_white@3x.png" :title="constant.device.page_title" titleText="white" :isImmersion="true" :showLeftImg="true" @leftImgClick="back2NativeFun">
                  <div slot="customerContent" class="header-top-wrapper">
                     <div class="header-top-inner-wrapper">
                         <!--<div class="header-right-image-wrapper" @click="openCloudRecipe">

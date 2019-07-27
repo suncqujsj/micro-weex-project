@@ -2,9 +2,9 @@
     <div class="wrapper">
         <midea-header title="apngView动效视图(^5.10)" bgColor="transparent" @leftImgClick="back" :showRightImg="true" rightImg="../assets/img/smart_ic_reline@3x.png" @rightImgClick="reload"></midea-header>
         <div>
-            <midea-apng-view v-if="apngSrc" ref="apngView" :src="apngSrc" :loop="isLoop" :auto="isAuto" class="apng-block"></midea-apng-view>
+            <midea-apng-view v-if="isShow && apngSrc" ref="apngView" :src="apngSrc" :loop="isLoop" :auto="isAuto" class="apng-block"></midea-apng-view>
             <div class="icon-group">
-                <textarea class="display-text" v-model="apngSrc" rows="1"></textarea>
+                <textarea class="display-text" v-model="apngSrc" rows="2"></textarea>
                 <image class="icon-scan" src="../assets/img/service_ic_scan@3x.png" @click="scanUrl"></image>
             </div>
             <div class="icon-group">
@@ -13,6 +13,22 @@
             </div>
         </div>
         <scroller>
+            <midea-title-bar title="参数" bgColor=" #EEF4F7"></midea-title-bar>
+            <div class="botton-group">
+                <midea-cell label="是否远程资源（否则本地源）" :hasMargin="true" :hasArrow="false" :hasTopBorder="false" :hasBottomBorder="false" :hasSubBottomBorder="false">
+                    <midea-switch2 class="value" slot="value" @change="changeSrc"> </midea-switch2>
+                </midea-cell>
+                <midea-cell label="是否自动执行" :hasMargin="true" :hasArrow="false" :hasTopBorder="false" :hasBottomBorder="false" :hasSubBottomBorder="false">
+                    <midea-switch2 ref="switchAuto" class="value" slot="value" @change="changeAuto"> </midea-switch2>
+                </midea-cell>
+                <midea-cell label="是否循环执行" :hasMargin="true" :hasArrow="false" :hasTopBorder="false" :hasBottomBorder="false" :hasSubBottomBorder="false">
+                    <midea-switch2 ref="switchLoop" class="value" slot="value" @change="changeLoop"> </midea-switch2>
+                </midea-cell>
+                <midea-cell label="是否显示（可用来刷新）" :hasMargin="true" :hasArrow="false" :hasTopBorder="false" :hasBottomBorder="false" :hasSubBottomBorder="false">
+                    <midea-switch2 ref="switchShow" class="value" slot="value" @change="changeShow"> </midea-switch2>
+                </midea-cell>
+            </div>
+            <midea-title-bar title="方法" bgColor=" #EEF4F7"></midea-title-bar>
             <div class="botton-group">
                 <midea-cell title="启动play" :hasMargin="true" :hasArrow="true" :clickActivied="true" :hasTopBorder="false" :hasBottomBorder="true" :hasSubBottomBorder="false" @mideaCellClick="setParam('play')">
                 </midea-cell>
@@ -25,9 +41,6 @@
                 <midea-cell title="goTo去到帧" :hasMargin="true" :hasArrow="true" :clickActivied="true" :hasTopBorder="false" :hasBottomBorder="true" :hasSubBottomBorder="false" @mideaCellClick="setParam('goTo')">
                 </midea-cell>
                 <midea-cell title="run运行帧" :hasMargin="true" :hasArrow="true" :clickActivied="true" :hasTopBorder="false" :hasBottomBorder="true" :hasSubBottomBorder="false" @mideaCellClick="setParam('run')">
-                </midea-cell>
-                <midea-cell label="切换远程/本地源" :hasArrow="false" :hasTopBorder="false" :hasBottomBorder="false" :hasSubBottomBorder="false">
-                    <midea-switch2 class="value" slot="value" @change="changeSrc"> </midea-switch2>
                 </midea-cell>
             </div>
         </scroller>
@@ -67,6 +80,7 @@
     margin-left: 10px;
     margin-right: 10px;
     flex-wrap: wrap;
+    padding-bottom: 80px;
 }
 .button-group-sub {
     flex-direction: row;
@@ -106,13 +120,15 @@ import mideaButton from '@/midea-component/button.vue'
 import nativeService from '@/common/services/nativeService'
 import mideaCell from '@/midea-component/cell2.vue'
 import MideaSwitch2 from '@/midea-component/switch2.vue'
+import mideaTitleBar from '@/midea-component/title-bar.vue'
 
 export default {
-    components: { mideaHeader, mideaButton, mideaCell, MideaSwitch2 },
+    components: { mideaHeader, mideaButton, mideaCell, MideaSwitch2, mideaTitleBar },
     mixins: [base],
     data() {
         return {
             apngRef: null,
+            isShow: true,
             isAuto: true,
             isLoop: true,
             apngSrc: "",
@@ -182,6 +198,21 @@ export default {
                 this.apngSrc = event.value ? this.url : this.localUrl
             })
         },
+        changeAuto(event) {
+            this.$nextTick(() => {
+                this.isAuto = event.value
+            })
+        },
+        changeLoop(event) {
+            this.$nextTick(() => {
+                this.isLoop = event.value
+            })
+        },
+        changeShow(event) {
+            this.$nextTick(() => {
+                this.isShow = event.value
+            })
+        },
         execute() {
             nativeService.toast("接口：" + JSON.parse(this.messageParam).api + "\n参数:" + JSON.stringify(JSON.parse(this.messageParam).params));
             this.apngRef[JSON.parse(this.messageParam).api](
@@ -212,9 +243,13 @@ export default {
     },
     mounted() {
         this.apngRef = this.$refs.apngView;
+        this.$refs["switchAuto"].switchValue(true)
+        this.$refs["switchLoop"].switchValue(true)
+        this.$refs["switchShow"].switchValue(true)
     },
     created() {
         this.apngSrc = this.localUrl
+
     }
 }
 </script>

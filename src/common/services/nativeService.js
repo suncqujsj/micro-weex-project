@@ -1611,7 +1611,9 @@ export default {
     param为对象:
         {
         auto: true/false，是否启动后马上监听还是处于暂停状态，默认是true (^5.10.0)
-        mode: local/online //设置是APP本地词库识别还是网络在线识别，默认为local本地词库识别 (^5.10.0)
+        mode: local/online, //设置是APP本地词库识别还是网络在线识别，默认为local本地词库识别 (^5.10.0)
+        deviceType: "xxxx", //设备类型，如0xAC，可选项，当需要控制指定设备时填写 (^5.10.0)
+        deviceId: "xxxxx", //设备ID，可选项，可选项，当需要控制指定设备时填写 (^5.10.0)
         }
         当收到语音识别数据，app -> 插件: 
         receiveMessageFromApp({ messageType: "aiSpeechNotification", messageBody: {key:"xxxxxxxx"} }) //xxxxxx为匹配到的热词

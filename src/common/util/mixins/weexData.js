@@ -179,6 +179,7 @@ let workingModalMixin = {
             }
 
             this.isWorkingPage = false;
+            this.fromStandBy = false;
             this.probeTempText = '°C';
         },
 

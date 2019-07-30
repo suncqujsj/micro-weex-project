@@ -75,9 +75,10 @@ let modes = [
                     range: [1, 90, 1]
                 },
                 temperature: {
-                    set: false,
-                    default: false,
-                    range: null
+                    set: true,
+                    default: 3,
+                    range: [1, 3, 1],
+                    unit: '档',
                 },
                 preheat: {
                     set: false,
@@ -87,14 +88,14 @@ let modes = [
                     set: false,
                     default: 0
                 },
-                fireAmount: {
-                    set: true,
-                    default: 3,
-                    range: [1, 3, 1]
-                    // set:false,
-                    // default:0,
-                    // range:null
-                },
+                // fireAmount: {
+                //     set: true,
+                //     default: 3,
+                //     range: [1, 3, 1]
+                //     // set:false,
+                //     // default:0,
+                //     // range:null
+                // },
                 settingHide: true,
             },
             {//热风对流
